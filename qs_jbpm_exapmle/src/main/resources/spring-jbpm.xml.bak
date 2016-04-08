@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+    <context:annotation-config />
+    <tx:annotation-driven />
+
+    <!-- 配置文件 -->
+    <context:property-placeholder location="classpath:jbpm-config.properties"/>
+
+    <!-- 数据源 -->
+    <bean id="jbpmDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+
+    <bean id="userTransaction" class="com.qs.jbpm.UserTransactionImpl" />
+    <bean id="transactionManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="userTransaction" ref="userTransaction" />
+    </bean>
+    <bean id="jbpmTx" class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="userTransaction" ref="userTransaction" />
+    </bean>
+
+    <bean id="jbpmEntityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" depends-on="jbpmTx">
+        <property name="persistenceXmlLocation" value="classpath:/jbpm-persistence.xml" />
+        <property name="jtaDataSource" ref="jbpmDataSource"/>
+    </bean>
+
+    <util:properties id="jbpmRoleProperties" location="classpath:/roles.properties" />
+    <bean id="jbpmUserGroupCallback" class="org.jbpm.services.task.identity.JBossUserGroupCallbackImpl">
+        <constructor-arg name="userGroups" ref="jbpmRoleProperties"></constructor-arg>
+    </bean>
+    <bean id="jbpmIdentityProvider" class="com.qs.jbpm.SpringSecurityIdentityProvider"/>
+
+    <bean id="jbpmRuntimeManagerFactory" class="org.kie.spring.manager.SpringRuntimeManagerFactoryImpl">
+        <property name="transactionManager" ref="jbpmTx"/>
+        <property name="userGroupCallback" ref="jbpmUserGroupCallback"/>
+    </bean>
+
+    <bean id="jbpmTransactionCmdService" class="org.jbpm.shared.services.impl.TransactionalCommandService">
+        <constructor-arg name="emf" ref="jbpmEntityManagerFactory"></constructor-arg>
+    </bean>
+
+    <bean id="jbpmTaskService" class="org.kie.spring.factorybeans.TaskServiceFactoryBean" destroy-method="close">
+        <property name="entityManagerFactory" ref="jbpmEntityManagerFactory"/>
+        <property name="transactionManager" ref="jbpmTx"/>
+        <property name="userGroupCallback" ref="jbpmUserGroupCallback"/>
+        <property name="listeners">
+            <list>
+                <bean class="org.jbpm.services.task.audit.JPATaskLifeCycleEventListener">
+                    <constructor-arg value="true"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <!-- definition service -->
+    <bean id="jbpmDefinitionService" class="org.jbpm.kie.services.impl.bpmn2.BPMN2DataServiceImpl"/>
+
+    <!-- runtime data service -->
+    <bean id="jbpmRuntimeDataService" class="org.jbpm.kie.services.impl.RuntimeDataServiceImpl">
+        <property name="commandService" ref="jbpmTransactionCmdService"/>
+        <property name="identityProvider" ref="jbpmIdentityProvider"/>
+        <property name="taskService" ref="jbpmTaskService"/>
+    </bean>
+
+    <!-- deployment service -->
+    <bean id="jbpmDeploymentService" class="org.jbpm.kie.services.impl.KModuleDeploymentService" depends-on="jbpmEntityManagerFactory" init-method="onInit">
+        <property name="bpmn2Service" ref="jbpmDefinitionService"/>
+        <property name="emf" ref="jbpmEntityManagerFactory"/>
+        <property name="managerFactory" ref="jbpmRuntimeManagerFactory"/>
+        <property name="identityProvider" ref="jbpmIdentityProvider"/>
+        <property name="runtimeDataService" ref="jbpmRuntimeDataService"/>
+    </bean>
+
+    <!-- process service -->
+    <bean id="jbpmProcessService" class="org.jbpm.kie.services.impl.ProcessServiceImpl" depends-on="jbpmDeploymentService">
+        <property name="dataService" ref="jbpmRuntimeDataService"/>
+        <property name="deploymentService" ref="jbpmDeploymentService"/>
+    </bean>
+
+    <!-- user task service -->
+    <bean id="jbpmUserTaskService" class="org.jbpm.kie.services.impl.UserTaskServiceImpl" depends-on="jbpmDeploymentService">
+        <property name="dataService" ref="jbpmRuntimeDataService"/>
+        <property name="deploymentService" ref="jbpmDeploymentService"/>
+    </bean>
+
+    <!-- register runtime data service as listener on deployment service so it can receive notification about deployed and undeployed units -->
+    <bean id="jbpmData" class="org.springframework.beans.factory.config.MethodInvokingFactoryBean" depends-on="jbpmDeploymentService">
+        <property name="targetObject" ref="jbpmDeploymentService"></property>
+        <property name="targetMethod"><value>addListener</value></property>
+        <property name="arguments">
+            <list>
+                <ref bean="jbpmRuntimeDataService"/>
+            </list>
+        </property>
+    </bean>
+
+
+
+    <!--
+
+    <bean id="jbpmEMF" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="persistenceUnitName" value="org.jbpm.persistence.spring.jta"/>
+        <property name="dataSource" ref="jbpmDataSource" />
+        <property name="persistenceXmlLocation" value="classpath:jbpm-persistence.xml" />
+    </bean>
+
+
+
+
+
+
+    <bean id="btmConfig" factory-method="getConfiguration" class="bitronix.tm.TransactionManagerServices"></bean>
+
+    <bean id="BitronixTransactionManager" factory-method="getTransactionManager"
+          class="bitronix.tm.TransactionManagerServices" depends-on="btmConfig" destroy-method="shutdown" />
+
+    <bean id="jbpmTxManager" class="org.springframework.transaction.jta.JtaTransactionManager">
+        <property name="transactionManager" ref="BitronixTransactionManager" />
+        <property name="userTransaction" ref="BitronixTransactionManager" />
+    </bean>
+
+    <bean id="process" factory-method="newClassPathResource" class="org.kie.internal.io.ResourceFactory">
+        <constructor-arg>
+            <value>jbpm/processes/sample.bpmn</value>
+        </constructor-arg>
+    </bean>
+
+    <bean id="runtimeEnvironment" class="org.kie.spring.factorybeans.RuntimeEnvironmentFactoryBean">
+        <property name="type" value="DEFAULT"/>
+        <property name="entityManagerFactory" ref="jbpmEMF"/>
+        <property name="transactionManager" ref="jbpmTxManager"/>
+        <property name="assets">
+            <map>
+                <entry key-ref="process"><util:constant static-field="org.kie.api.io.ResourceType.BPMN2"/></entry>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="runtimeManager" class="org.kie.spring.factorybeans.RuntimeManagerFactoryBean" destroy-method="close">
+        <property name="identifier" value="spring-rm"/>
+        <property name="runtimeEnvironment" ref="runtimeEnvironment"/>
+    </bean>-->
+</beans>

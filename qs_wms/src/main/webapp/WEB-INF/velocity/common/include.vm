@@ -1,0 +1,24 @@
+<link type="text/css" rel="stylesheet" href="$httpUrl/css/bootstrap.min.css" media="screen"></link>
+<link type="text/css" rel="stylesheet" href="$httpUrl/css/bootstrap-datetimepicker.min.css" media="screen"></link>
+<link type="text/css" rel="stylesheet" href="$httpUrl/css/swiper.css" media="screen"></link>
+<link type="text/css" rel="stylesheet" href="$httpUrl/css/font-awesome.css" media="screen"></link>
+<link type="text/css" rel="stylesheet" href="$httpUrl/css/common.css" media="screen"></link>
+<script src="$httpUrl/script/jquery.min.js"></script>
+<script src="$httpUrl/script/bootstrap.min.js"></script>
+<script src="$httpUrl/script/bootstrap-datetimepicker.min.js"></script>
+<script src="$httpUrl/script/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="$httpUrl/script/swiper.min.js"></script>
+<script src="$httpUrl/script/common.js"></script>
+
+#*
+<link type="text/css" rel="stylesheet" href="#springUrl('/css/bootstrap.min.css')" media="screen"></link>
+<link type="text/css" rel="stylesheet" href="#springUrl('/css/bootstrap-datetimepicker.min.css')" media="screen"></link>
+<link type="text/css" rel="stylesheet" href="#springUrl('/css/swiper.css')"></link>
+<link type="text/css" rel="stylesheet" href="#springUrl('/css/font-awesome.css')"></link>
+<link type="text/css" rel="stylesheet" href="#springUrl('/css/common.css')"></link>
+<script src="#springUrl('/script/jquery.min.js')"></script>
+<script src="#springUrl('/script/bootstrap.min.js')"></script>
+<script src="#springUrl('/script/bootstrap-datetimepicker.min.js')"></script>
+<script src="#springUrl('/script/locales/bootstrap-datetimepicker.zh-CN.js')"></script>
+<script src="#springUrl('/script/swiper.min.js')"></script>
+<script src="#springUrl('/script/common.js')"></script>*#

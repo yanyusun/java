@@ -1,0 +1,5 @@
+<div class="container-fluid">
+    <h1>Foot:h1. Bootstrap heading
+        <small>Secondary text</small>
+    </h1>
+</div>

@@ -1,0 +1,70 @@
+<style>
+    .mask_in {
+        top: 10%;
+        left: 15%;
+        width: 70%;
+    }
+
+    .mask_body {
+        height: 100%;
+        overflow: auto;
+    }
+</style>
+<div class="mask hidden">
+</div>
+<div class="mask_in hidden panel panel-default">
+    <div><span class="glyphicon glyphicon-remove color-red" aria-hidden="true"></span></div>
+    <div class="panel-body mask_body">
+    </div>
+</div>
+
+<script>
+    var maskInHeight = "40%";
+    function initMaskTriggerEl(selector, callback) {
+        $(selector).on("click", function () {
+            $(".mask").removeClass("hidden");
+            $(".mask_in").removeClass("hidden");
+            $(".mask_in").animate({
+                height: "+=" + maskInHeight,
+            }, 300, function () {
+                $(".mask_in .glyphicon-remove").animate({
+                    color: "+=red",
+                    top: "+=5px",
+                    right: "+=5px",
+                    "font-size": "+=2rem",
+                    "opacity": "+=1"
+                }, 300, function () {
+                    if (callback) {
+                        callback(".mask_body");
+                    }
+                });
+            });
+        });
+    }
+    function initMaskIn(top, left, width, height) {
+        $(".mask_in").css({"top": top, "left": left, "width": width});
+        maskInHeight = height;
+    }
+    function initMaskFoot(html, fn) {
+        $(".mask_in").append('<div class="panel-footer">' + html + '</div>');
+    }
+
+    $(document).ready(function () {
+        $(".mask_in .glyphicon-remove").on("click", function () {
+            $(".glyphicon-remove").animate({
+                color: "-=red",
+                top: "-=5px",
+                right: "-=5px",
+                "font-size": "-=2rem",
+                "opacity": "-=1"
+            }, 300, function () {
+                $(".mask_in").animate({
+                    height: "-=" + maskInHeight,
+                }, 300, function () {
+                    $(".mask").addClass("hidden");
+                    $(".mask_in").addClass("hidden");
+                });
+            });
+        });
+    });
+</script>

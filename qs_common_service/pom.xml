@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>jbpm</artifactId>
+    <artifactId>common_service</artifactId>
 
 
 </project>

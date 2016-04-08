@@ -1,0 +1,11 @@
+<style>
+    .pagebar {
+        margin: 0px;
+    }
+</style>
+<div>
+    <nav class="text-center">
+        <ul class="pagination pagebar">
+        </ul>
+    </nav>
+</div>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration status="WARN">
+    <Appenders>
+        <RandomAccessFile name="sysRAF" fileName="/mnt/logs/sys.log">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m %ex%n</Pattern>
+            </PatternLayout>
+        </RandomAccessFile>
+        <RandomAccessFile name="bizRAF" fileName="/mnt/logs/biz.log">
+            <PatternLayout>
+                <Pattern>%d %p %c{1.} [%t] %m %ex%n</Pattern>
+            </PatternLayout>
+        </RandomAccessFile>
+
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%m%n"/>
+        </Console>
+
+        <Async name="sysAsync">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="sysRAF"/>
+        </Async>
+        <Async name="bizAsync">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="bizRAF"/>
+        </Async>
+    </Appenders>
+
+    <Loggers>
+
+        <Root level="debug" includeLocation="false">
+            <AppenderRef ref="sysAsync"/>
+        </Root>
+        <Logger name="bizLog" level="debug" additivity="false">
+            <AppenderRef ref="bizAsync"/>
+        </Logger>
+        <Logger name="sysLog" level="debug" additivity="false">
+            <AppenderRef ref="sysAsync"/>
+        </Logger>
+
+        <Logger name="org.springframework.web.context.support.StandardServletEnvironment" level="info"
+                additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
+
+
+        <!--
+        <Logger name="java.sql.ResultSet" level="info">
+          <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="java.sql.Connection" level="info">
+          <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="java.sql.Statement" level="info">
+          <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="java.sql.PreparedStatement" level="info">
+          <AppenderRef ref="Console"/>
+        </Logger>
+
+        <Logger name="com.ibatis.common.jdbc.SimpleDataSource" level="info">
+          <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="com.ibatis.common.jdbc.ScriptRunner" level="info">
+          <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="info">
+          <AppenderRef ref="Console"/>
+        </Logger>
+        -->
+    </Loggers>
+</Configuration>

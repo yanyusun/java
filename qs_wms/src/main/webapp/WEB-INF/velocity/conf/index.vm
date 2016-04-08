@@ -1,0 +1,78 @@
+#set($layout =  "layout/nolayout.vm" )
+#if($errMsg)
+    <h1>${errMsg}</h1>
+#end
+<div class="flex_v full_size">
+    <div class="flex_h">
+        <div class="query_field f1"><input type="text" class="form-control" id="findById" placeholder="按ID查找"></div>
+        <div class="query_field f1"><input type="text" class="form-control" id="findByKey"  placeholder="按配置名称查找"></div>
+        <div class="query_field f1">
+            <select class="form-control" id="findByType" placeholder="类型">
+                <option value="">所有</option>
+                #foreach($e in $types)
+                <option value="$e.value">$e.desc</option>
+                #end
+            </select>
+        </div>
+        <div class="query_btn f1" id="searchBtn"><button class="query_btn btn btn-primary"><i class="fa fa-search"></i>搜索</button></div>
+        <div class="f1"><a class="btn btn-info" target="_blank" href="$!{request.contextPath}/property/detail/0">添加新配置</a>
+        </div>
+    </div>
+    <div class=" f1 full_size text-center" data-example-id="bordered-table">
+        <div class="data_header table_boder_bottom">
+            <div class="flex_h">
+                <div class='f1'>ID</div>
+                <div class='f2'>类型</div>
+                <div class='f3'>键</div>
+                <div class='f2'>值</div>
+                <div class='f3'>说明</div>
+                <div class='f2'>更新时间</div>
+                <div class='f1'>操作</div>
+            </div>
+        </div>
+        <div class="data_body overflow_auto"  id="showDiv">
+                <div class="data_content">
+                </div>
+        </div>
+        #parse("/common/paggingbar.vm")
+    </div>
+</div>
+<script type="text/javascript">
+$(document).ready(function (){
+    function queryData() {
+        selectedPage("$!{request.contextPath}/property/list", {
+            "id": $("#findById").val(),
+            "keyLike": $("#findByKey").val(),
+            "type": $("#findByType").val()
+        }, null, function callback(datas) {
+            $.each(datas, function (index, data) {
+                //转化显示
+                var type = data.type;
+                #foreach($e in $types)
+                    if(type == "$e.value") {
+                        type = "$e.desc";
+                    }
+                #end
+                data.updateAt = timerChanger(data.updateAt);
+                $(".data_content").append(
+                    "<div class=' flex_h table_boder_bottom'>" +
+                        "<input type='hidden' value='" + data.version + "' />" +
+                        "<div class='f1'> " + data.id + " </div>" +
+                        "<div class='f2'> " + type + "  </div>" +
+                        "<div class='f3'> " + data.propertyName + "  </div>" +
+                        "<div class='f2'> " + data.propertyValue + "  </div>" +
+                        "<div class='f3'> " + data.remark + "  </div>" +
+                        "<div class='f2'> " + data.updateAt + "  </div>" +
+                    "<div class='f1'> <a href='$!{request.contextPath}/property/detail/" + data.id + " ' target='_blank'>编辑</a>&nbsp;&nbsp;<a href='$!{request.contextPath}/property/delete/" + data.id + " ' target='_blank'>删除</a>" +
+                    "</div>"
+                );
+            });
+        });
+    }
+
+    $("#searchBtn").on("click", function() {
+        queryData();
+    });
+    queryData();
+});
+</script>

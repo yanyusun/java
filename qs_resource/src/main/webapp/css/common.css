@@ -1,0 +1,118 @@
+html,body {
+    width: 100%;
+    height: 100%;
+}
+/* size */
+.full_size {
+    width: 100%;
+    height: 100%;
+}
+
+
+/* display */
+.flex_h {
+    display: -webkit-flex;
+    display: flex;
+}
+.flex_v {
+    display: -webkit-flex;
+    display: flex;
+    flex-direction: column;
+}
+.inblock {
+    display: inline-block;
+}
+.flex_item_self_center {
+    align-self: center;
+}
+.overflow_auto {
+    overflow: auto;
+}
+.overflow-y_auto{
+    overflow-y: auto;
+}
+.f1 {
+    flex: 1;
+}
+
+/* bg-color */
+.bg-color-silver {
+    background-color: Silver;
+}
+
+/* color */
+.color-red {
+    color: #ff0000;
+}
+
+/* float */
+.fl {
+    float: left;
+}
+.fr {
+    float: right;
+}
+
+/* */
+.query {
+    height: 40px;
+}
+.query_field {
+    padding: 0px 10px 10px 0px;
+}
+.query_list {
+    width:70%;
+}
+.query_btn {
+    width: 100px;
+}
+.data_header {
+    margin-bottom: 0px;
+}
+.data_body {
+    height:75%;
+ margin-bottom: 20px;
+
+}
+/* 遮罩 */
+.mask {
+    width: 100%;
+    height: 100%;
+    display: -webkit-flex;
+    display: flex;
+    background-color: #222222;
+    opacity:0.4;
+    z-index:2001;
+    position: fixed;
+    top: 0;
+}
+.mask_in {
+    z-index: 2002;
+    position: fixed;
+}
+.mask_in {
+    z-index: 2002;
+    position: fixed;
+}
+.mask_in .glyphicon-remove{
+    position: absolute;
+}
+
+/*===== identity.vm====*/
+.idTable{width: 45px} .userNameTable{width: 150px} .mobileTable{width: 200px} .identityTable{width: 150px} .fileTable{width: 270px} .verify_status{width: 150px} .guanliTable{width: 100px}
+.remarkTableTitle{width: 138px }
+.table_overflow{ HEIGHT: 1px; OVERFLOW: scroll;}
+.f2{  flex: 2; overflow: hidden; }
+.f3{  flex: 3; overflow: hidden; }
+.f4{  flex: 4; overflow: hidden; }
+.data_header .flex_h div{ padding: 10px 5px;font-size: 16px;}
+.data_body .flex_h div { padding: 10px 5px}
+.table_boder_bottom {border-bottom: silver solid 1px;}
+
+.idfield input{
+    display: inline-block;
+    width: 5%;
+}
+.idfield span {
+    margin-right: 5%;
+}

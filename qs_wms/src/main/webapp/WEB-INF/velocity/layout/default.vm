@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>默认模板</title>
+</head>
+<style>
+    .header {
+        height: 10%;
+        flex: 1;
+    }
+
+    .main {
+        height: 85%;
+        padding: 5px;
+    }
+
+    .menu {
+        width: 15%;
+        height: 100%;
+        padding: 5px;
+    }
+
+    .content {
+        padding: 5px;
+        height: 100%;
+        flex: 1;
+    }
+</style>
+    #parse("/common/include.vm")
+<body>
+<div class="header">
+    #parse("/common/header.vm")
+</div>
+<div class="flex_h main">
+    <div class="menu overflow_auto">#parse("/common/menu.vm")</div>
+    <div class="content">$screen_content</div>
+</div>
+    #parse("/common/loadding.vm")
+</body>
+</html>

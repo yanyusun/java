@@ -1,0 +1,28 @@
+<style>
+    .header {
+        height: 80px;
+    }
+
+    .title {
+        width: 200px;
+        margin-left: 100px;
+        font-size: 3rem;
+    }
+
+    .title_blank {
+        flex: 1;
+    }
+
+    .title_logout {
+        width: 80px;
+    }
+</style>
+<div class="flex_h header">
+    <div class="title flex_item_self_center">管理后台</div>
+    <div class="title_blank"></div>
+    <div class="title_logout flex_item_self_center">
+        <form method="post" action="$!{request.contextPath}/member/logout">
+            <button type="submit" class="btn btn-info logoutBtn">登出</button>
+        </form>
+    </div>
+</div>
