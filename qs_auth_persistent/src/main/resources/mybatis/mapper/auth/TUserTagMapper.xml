@@ -11,12 +11,13 @@
     <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
     <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="user_type" property="userType" jdbcType="TINYINT" />
     <result column="role_id" property="roleId" jdbcType="TINYINT" />
     <result column="is_certified" property="isCertified" jdbcType="BIT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, version, create_at, update_at, stateflag, remark, user_type, role_id, is_certified
+    id, version, create_at, update_at, stateflag, remark, user_id, user_type, role_id, is_certified
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -34,6 +35,9 @@
       <if test="remark != null" >
         remark,
       </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
       <if test="userType != null" >
         user_type,
       </if>
@@ -47,6 +51,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
       </if>
       <if test="userType != null" >
         #{userType,jdbcType=TINYINT},
@@ -67,6 +74,9 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
       <if test="userType != null" >
         user_type = #{userType,jdbcType=TINYINT},
       </if>
@@ -81,4 +91,12 @@
     and version = #{version,jdbcType=INTEGER}
     and stateflag=0
   </update>
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    select
+    <include refid="Base_Column_List" />
+    from t_user_tag
+    where
+    user_id = #{userId,jdbcType=INTEGER}
+    and stateflag=0
+  </select>
 </mapper>

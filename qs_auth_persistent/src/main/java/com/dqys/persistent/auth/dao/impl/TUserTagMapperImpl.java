@@ -3,6 +3,7 @@ package com.dqys.persistent.auth.dao.impl;
 import com.dqys.core.base.BaseDao;
 import com.dqys.persistent.auth.dao.TUserTagMapper;
 import com.dqys.persistent.auth.pojo.TUserTag;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -30,5 +31,10 @@ public class TUserTagMapperImpl extends BaseDao implements TUserTagMapper {
     @Override
     public int updateByPrimaryKeySelective(TUserTag record) {
         return super.getSqlSession().getMapper(TUserTagMapper.class).updateByPrimaryKeySelective(record);
+    }
+
+    @Override
+    public TUserTag selectByUserId(@Param("userId") Integer uid) {
+        return super.getSqlSession().getMapper(TUserTagMapper.class).selectByUserId(uid);
     }
 }

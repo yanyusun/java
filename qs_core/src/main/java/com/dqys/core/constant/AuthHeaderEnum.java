@@ -7,9 +7,11 @@ package com.dqys.core.constant;
  */
 public enum AuthHeaderEnum {
 
-    X_QS_MEMBER("x-qs-member"),       //会员头名称
-    X_QS_IDENTITY("x-qs-identity"),       //会员身份
-    X_QS_DATETIME("x-qs-datetime"),       //会员登陆日期时间
+    X_QS_USER("x-qs-user"),       //会员头名称
+    X_QS_TYPE("x-qs-type"),       //会员身份
+    X_QS_ROLE("x-qs-role"),
+    X_QS_STATUS("x-qs-status"),
+    X_QS_CERTIFIED("x-qs-certified")
     ;
 
     private String value;

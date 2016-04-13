@@ -60,7 +60,6 @@
           p:hostName="${redis.host}" p:port="${redis.port}" p:usePool="${redis.user_pool}"
           p:password="${redis.password}">
     </bean>
-
     <!--<bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer">
     </bean>-->
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
@@ -72,6 +71,29 @@
     <bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
           p:connectionFactory-ref="jedisConnectionFactory">
         <property name="enableTransactionSupport" value="false"/>
+    </bean>
+
+    <!-- message/pubsub -->
+    <bean id="msgConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="hostName" value="${redis.msg.host}" />
+        <property name="port" value="${redis.msg.port}" />
+        <property name="usePool" value="${redis.msg.user_pool}" />
+        <property name="password" value="${redis.msg.password}" />
+    </bean>
+    <bean id="msgRedisListener" class="com.dqys.core.utils.EmailClientTool" />
+    <bean id="msgRedisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+          p:connectionFactory-ref="msgConnectionFactory" p:enableTransactionSupport="false" />
+    <bean id="msgRedisContainer" class="org.springframework.data.redis.listener.RedisMessageListenerContainer">
+        <property name="connectionFactory" ref="msgConnectionFactory" />
+        <property name="messageListeners">
+            <map>
+                <entry key-ref="msgRedisListener">
+                    <bean class="org.springframework.data.redis.listener.ChannelTopic">
+                        <constructor-arg value="mail" />
+                    </bean>
+                </entry>
+            </map>
+        </property>
     </bean>
 
     <!-- 缓存 -->

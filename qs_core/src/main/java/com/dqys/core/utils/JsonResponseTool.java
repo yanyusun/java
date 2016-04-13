@@ -3,6 +3,7 @@ package com.dqys.core.utils;
 
 import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
+import com.sun.org.apache.bcel.internal.generic.JSR;
 
 /**
  * @author by pan on 9/10/15.
@@ -33,6 +34,15 @@ public class JsonResponseTool {
     public static JsonResponse failure(String msg) {
         JsonResponse jsonResponse = new JsonResponse();
         jsonResponse.setCode(ResponseCodeEnum.FAILURE.getValue());
+        jsonResponse.setMsg(msg);
+        jsonResponse.setData(null);
+
+        return jsonResponse;
+    }
+
+    public static JsonResponse paramErr(String msg) {
+        JsonResponse jsonResponse = new JsonResponse();
+        jsonResponse.setCode(ResponseCodeEnum.PARAM_ERR.getValue());
         jsonResponse.setMsg(msg);
         jsonResponse.setData(null);
 
@@ -72,10 +82,10 @@ public class JsonResponseTool {
      *
      * @return
      */
-    public static JsonResponse authFailure() {
+    public static JsonResponse authFailure(String msg) {
         JsonResponse jsonResponse = new JsonResponse();
         jsonResponse.setCode(ResponseCodeEnum.AUTH_FAILURE.getValue());
-        jsonResponse.setMsg(ResponseCodeEnum.AUTH_FAILURE.getText());
+        jsonResponse.setMsg(null==msg?ResponseCodeEnum.AUTH_FAILURE.getText():msg);
         jsonResponse.setData(null);
 
         return jsonResponse;

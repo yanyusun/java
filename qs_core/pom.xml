@@ -19,7 +19,6 @@
         <mysql-connector.version>5.1.38</mysql-connector.version>
         <mybatis.version>3.3.1</mybatis.version>
         <mybatis-spring.version>1.2.5</mybatis-spring.version>
-        <slf4j.version>1.7.21</slf4j.version>
         <log4j2.version>2.5</log4j2.version>
         <lmax.version>3.3.4</lmax.version>
         <spring.redis.version>1.7.0.M1</spring.redis.version>
@@ -28,6 +27,7 @@
         <commons-lang.version>3.4</commons-lang.version>
         <commons-codec.version>1.10</commons-codec.version>
         <commons-io.version>2.4</commons-io.version>
+        <commons-email.version>1.4</commons-email.version>
         <junit.version>4.11</junit.version>
         <jackson.version>2.2.3</jackson.version>
     </properties>
@@ -108,10 +108,15 @@
         </dependency>
 
         <!-- logging asyn need lmax -->
-        <dependency>
+        <!--<dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>${slf4j.version}</version>
+        </dependency>-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j2.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -166,6 +171,11 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-email</artifactId>
+            <version>${commons-email.version}</version>
         </dependency>
 
         <!-- junit -->

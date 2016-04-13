@@ -5,6 +5,7 @@ package com.dqys.core.constant;
  */
 public enum ResponseCodeEnum {
     FAILURE(0, "失败"),
+    PARAM_ERR(1001, "参数错误"),
     SUCCESS(2000, "成功"),
     NODATA(3000, "没有数据"),
     AUTH_FAILURE(4000, "账号验证异常，请重新登陆"),

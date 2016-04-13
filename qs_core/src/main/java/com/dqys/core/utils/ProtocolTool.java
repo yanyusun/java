@@ -8,44 +8,63 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author by pan on 9/21/15.
  */
 public class ProtocolTool {
 
-    private static ProtocolTool protocolTool = null;
-    ;
-    private static String encode = "UTF-8";
+    private static final String ENCODE = "UTF-8";
 
-    private ProtocolTool() {
-    }
+    private static final String PROPERTY_PROTOCOL_SALT_KEY = "protocol_salt";
+    private static final String PROPERTY_USER_EXPIRE_DAYS_KEY = "user_login_expire";
 
-    private static ProtocolTool getInstance() {
-        if (protocolTool == null) {
-            protocolTool = new ProtocolTool();
-        }
-        return protocolTool;
-    }
+    private static final String USER_LOGIN_KEY = "user_login_";
+    private static final String LOGIN_SUB_TIME = "login_time";
 
     /**
-     * 校验会员头信息，返回会员ID
+     * 创建会员头信息
      *
-     * @param memberHeader
-     * @param identity
-     * @return
+     * @param uid
+     * @param userType
+     * @param roleId
+     * @param status
+     *@param isCertified  @return
      * @throws Exception
      */
-    public static Integer validateMemberHeader(String memberHeader, String identity) throws Exception {
-        if (StringUtils.isEmpty(memberHeader)) return 0;
+    public static Map<String, Object> createUserHeader(Integer uid, Byte userType, Byte roleId, Boolean status, Boolean isCertified) throws Exception {
+        String headerValue = encodeHeader(String.valueOf(uid), String.valueOf(userType), null == roleId?"":String.valueOf(roleId), String.valueOf(status), String.valueOf(isCertified));
+        Map<String, Object> userHeader = new HashMap();
+        userHeader.put(AuthHeaderEnum.X_QS_USER.getValue(), headerValue);
+        userHeader.put(AuthHeaderEnum.X_QS_TYPE.getValue(), userType);
+        userHeader.put(AuthHeaderEnum.X_QS_ROLE.getValue(), (null==roleId?"":roleId));
+        userHeader.put(AuthHeaderEnum.X_QS_STATUS.getValue(), status);
+        userHeader.put(AuthHeaderEnum.X_QS_CERTIFIED.getValue(), isCertified);
 
-        String[] strs = memberHeader.split("\\|\\|\\|\\|");
-        if (strs.length != 2) {
+        refreshUserHeader(uid);
+
+        return userHeader;
+    }
+
+    public static Integer validateUser(String userHeader, String userType, String roleId, String status, String isCertified) throws Exception {
+        if (StringUtils.isEmpty(userHeader)) return 0;
+
+        String[] strs = decodeHeader(userHeader).split("\\|\\|\\|\\|");
+        if(strs.length != 2) {
             return 0;
         }
 
-        String encodeStr = ProtocolTool.getInstance().encodeMemberHeader(Integer.decode(strs[1]), identity);
-        if (memberHeader.equalsIgnoreCase(encodeStr)) {
+        //长时间未登陆的需要重新登陆
+        Object o = NoSQLWithRedisTool.getHashObject(USER_LOGIN_KEY + strs[1], LOGIN_SUB_TIME);
+        if(null == o) {
+            return 0;
+        }
+
+        String headerValue = encodeHeader(strs[1], userType, null == roleId?"":roleId, status, isCertified);
+
+
+        if(userHeader.equals(headerValue)) {
             return Integer.decode(strs[1]);
         }
 
@@ -53,35 +72,32 @@ public class ProtocolTool {
     }
 
     /**
-     * 创建会员头部信息
-     *
-     * @param memberId
-     * @param identity
-     * @param loginTime
-     * @return
-     * @throws Exception
+     * 刷新头信息的过期时间
+     * @param uid
      */
-    public static Map<String, Object> createMemberHeader(Integer memberId, String identity, Date loginTime) throws Exception {
-        String headerValue = ProtocolTool.getInstance().encodeMemberHeader(memberId, identity);
-        //头部信息
-        Map<String, Object> memberHeader = new HashMap();
-        memberHeader.put(AuthHeaderEnum.X_QS_MEMBER.getValue(), headerValue);
-        //身份信息
-        memberHeader.put(AuthHeaderEnum.X_QS_IDENTITY.getValue(), identity);
-        //登陆时间
-        if (null == loginTime) {
-            memberHeader.put(AuthHeaderEnum.X_QS_DATETIME.getValue(), System.currentTimeMillis());
-        } else {
-            memberHeader.put(AuthHeaderEnum.X_QS_DATETIME.getValue(), loginTime.getTime());
-        }
-
-        return memberHeader;
+    public static void refreshUserHeader(Integer uid) {
+        NoSQLWithRedisTool.setHashObject(USER_LOGIN_KEY + uid, LOGIN_SUB_TIME, new Date());
+        NoSQLWithRedisTool.setExpire(USER_LOGIN_KEY + uid,
+                Integer.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.GLOBAL, PROPERTY_USER_EXPIRE_DAYS_KEY).getPropertyValue()),
+                TimeUnit.DAYS);
     }
 
-    /* 加密会员头部信息 */
-    private String encodeMemberHeader(Integer memberId, String identity) throws Exception {
-        String salt = SysPropertyTool.getProperty(SysPropertyTypeEnum.GLOBAL, "protocol_salt").getPropertyValue();
-        String headerValue = SignatureTool.base64Encode(SignatureTool.md5Encode("mid=" + memberId + "&" + "identity=" + identity, encode) + salt, encode) + "||||" + memberId;
-        return headerValue;
+    /* 编码头信息 */
+    private static String encodeHeader(String uid, String userType, String roleId, String status, String isCertified) throws Exception {
+        return SignatureTool.base64Encode(
+                SignatureTool.md5Encode(
+                        "uid=" + uid +
+                                "&type=" + userType.trim() +
+                                "&salt=" + SysPropertyTool.getProperty(SysPropertyTypeEnum.GLOBAL, PROPERTY_PROTOCOL_SALT_KEY).getPropertyValue().trim() +
+                                "&roleId=" + roleId.trim() +
+                                "&isCertified=" + isCertified.trim(), ENCODE) +
+                        "||||" + uid,
+                ENCODE
+        );
+    }
+
+    /* 解码头信息 */
+    private static String decodeHeader(String header) throws Exception {
+        return SignatureTool.base64Decode(header, ENCODE);
     }
 }

@@ -3,8 +3,11 @@ package com.dqys.persistent.auth.dao.impl;
 import com.dqys.core.base.BaseDao;
 import com.dqys.persistent.auth.dao.TUserInfoMapper;
 import com.dqys.persistent.auth.pojo.TUserInfo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author by pan on 16-4-6.
@@ -30,5 +33,10 @@ public class TUserInfoMapperImpl extends BaseDao implements TUserInfoMapper {
     @Override
     public int updateByPrimaryKeySelective(TUserInfo record) {
         return super.getSqlSession().getMapper(TUserInfoMapper.class).updateByPrimaryKeySelective(record);
+    }
+
+    @Override
+    public List<TUserInfo> verifyUser(@Param("userName") String userName, @Param("mobile") String mobile, @Param("email") String email) {
+        return super.getSqlSession().getMapper(TUserInfoMapper.class).verifyUser(userName, mobile, email);
     }
 }

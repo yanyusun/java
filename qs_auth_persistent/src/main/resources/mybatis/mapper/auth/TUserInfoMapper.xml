@@ -152,4 +152,23 @@
     and version = #{version,jdbcType=INTEGER}
     and stateflag=0
   </update>
+
+  <select id="verifyUser" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from t_user_info
+    where
+    ( 1=2
+    <if test="userName != null">
+      or user_name = #{userName,jdbcType=VARCHAR}
+    </if>
+    <if test="mobile != null">
+      or mobile = #{mobile,jdbcType=VARCHAR}
+    </if>
+    <if test="email != null">
+      or email = #{email,jdbcType=VARCHAR}
+    </if>
+    )
+    and stateflag=0
+  </select>
 </mapper>

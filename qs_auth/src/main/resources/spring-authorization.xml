@@ -9,7 +9,13 @@
             <!--默认全部需要登录身份-->
             <mvc:mapping path="/**"/>
 
-            <mvc:exclude-mapping path="/auth/login*"/>
+            <mvc:exclude-mapping path="/auth/captcha"/>
+            <mvc:exclude-mapping path="/auth/sms_code"/>
+            <mvc:exclude-mapping path="/auth/login"/>
+            <mvc:exclude-mapping path="/auth/register"/>
+            <mvc:exclude-mapping path="/auth/reset_mobile"/>
+            <mvc:exclude-mapping path="/auth/reset_mail"/>
+
             <bean class="com.dqys.interceptor.AuthInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

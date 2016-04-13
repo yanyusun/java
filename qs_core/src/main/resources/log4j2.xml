@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Configuration status="WARN">
+<Configuration status="off">
     <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%m%n"/>
+        </Console>
+
         <RandomAccessFile name="sysRAF" fileName="/mnt/logs/sys.log">
             <PatternLayout>
                 <Pattern>%d %p %c{1.} [%t] %m %ex%n</Pattern>
@@ -12,11 +16,6 @@
                 <Pattern>%d %p %c{1.} [%t] %m %ex%n</Pattern>
             </PatternLayout>
         </RandomAccessFile>
-
-
-        <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%m%n"/>
-        </Console>
 
         <Async name="sysAsync">
             <AppenderRef ref="Console"/>
@@ -30,8 +29,8 @@
 
     <Loggers>
 
-        <Root level="debug" includeLocation="false">
-            <AppenderRef ref="sysAsync"/>
+        <Root level="debug">
+            <AppenderRef ref="Console"/>
         </Root>
         <Logger name="bizLog" level="debug" additivity="false">
             <AppenderRef ref="bizAsync"/>
@@ -40,10 +39,10 @@
             <AppenderRef ref="sysAsync"/>
         </Logger>
 
-        <Logger name="org.springframework.web.context.support.StandardServletEnvironment" level="info"
+        <!--<Logger name="org.springframework.web.context.support.StandardServletEnvironment" level="info"
                 additivity="false">
             <AppenderRef ref="Console"/>
-        </Logger>
+        </Logger>-->
 
 
 

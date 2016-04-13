@@ -1,6 +1,9 @@
 package com.dqys.persistent.auth.dao;
 
 import com.dqys.persistent.auth.pojo.TUserInfo;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TUserInfoMapper {
     int deleteByPrimaryKey(Integer id);
@@ -10,4 +13,6 @@ public interface TUserInfoMapper {
     TUserInfo selectByPrimaryKey(Integer id);
 
     int updateByPrimaryKeySelective(TUserInfo record);
+
+    List<TUserInfo> verifyUser(@Param("userName") String userName, @Param("mobile") String mobile, @Param("email") String email);
 }
