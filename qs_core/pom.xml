@@ -15,6 +15,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>4.2.5.RELEASE</spring.version>
+        <spring.amqp.version>1.5.5.RELEASE</spring.amqp.version>
         <commons-dbcp.version>2.1.1</commons-dbcp.version>
         <mysql-connector.version>5.1.38</mysql-connector.version>
         <mybatis.version>3.3.1</mybatis.version>
@@ -188,6 +189,13 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
+        </dependency>
+
+        <!-- rabbitmq -->
+        <dependency>
+            <groupId>org.springframework.amqp</groupId>
+            <artifactId>spring-rabbit</artifactId>
+            <version>${spring.amqp.version}</version>
         </dependency>
     </dependencies>
 

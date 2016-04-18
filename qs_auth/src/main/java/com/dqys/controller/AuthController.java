@@ -56,6 +56,9 @@ public class AuthController {
                 return null;
             }
 
+            // FIXME: 16-4-18 临时查看sessionid
+            LogManager.getRootLogger().debug(httpSession.getId());
+
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.IMAGE_PNG);
 

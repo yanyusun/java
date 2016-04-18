@@ -6,6 +6,8 @@ import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.logging.log4j.LogManager;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -14,6 +16,9 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  * @author by pan on 16-4-12.
  */
 public class EmailClientTool implements MessageListener {
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     private static final String SYS_MAIL_HOST = "sys_mail_host";
     private static final String SYS_MAIL_SMTP_PORT = "sys_mail_smtp_port";
@@ -29,6 +34,15 @@ public class EmailClientTool implements MessageListener {
         if(null == msgBody || msgBody.length != 2) {
             return;
         }
+
+        this.sendMail(msgBody[0], msgBody[1]);
+    }
+
+    public void sendMailFromMessage(String[] msg) throws Exception {
+        this.sendMail(msg[0], msg[1]);
+    }
+
+    private void sendMail(String to, String msg) {
         try {
             Email emailClient = new HtmlEmail();
             emailClient.setCharset("UTF-8");
@@ -42,13 +56,13 @@ public class EmailClientTool implements MessageListener {
                     SysPropertyTool.getProperty(SysPropertyTypeEnum.GLOBAL, SYS_MAIL_AUTH_PASSWORD).getPropertyValue()
             ));
 
-            emailClient.addTo(msgBody[0]);
+            emailClient.addTo(to);
             emailClient.setSubject("多清平台帐号验证邮件");
-            emailClient.setMsg(htmlMailBody(msgBody[1]));
+            emailClient.setMsg(htmlMailBody(msg));
             emailClient.send();
         } catch (EmailException e) {
             e.printStackTrace();
-            LogManager.getLogger("bizAsync").debug("发送邮件失败,目标:" + msgBody[0]);
+            LogManager.getLogger("bizAsync").debug("发送邮件失败,目标:" + to);
         } catch (Exception e) {
             e.printStackTrace();
         }

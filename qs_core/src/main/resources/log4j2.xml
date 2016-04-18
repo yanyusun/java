@@ -39,6 +39,11 @@
             <AppenderRef ref="sysAsync"/>
         </Logger>
 
+
+        <Logger name="org.springframework.amqp.rabbit.listener.BlockingQueueConsumer" level="info">
+            <AppenderRef ref="Console"/>
+        </Logger>
+
         <!--<Logger name="org.springframework.web.context.support.StandardServletEnvironment" level="info"
                 additivity="false">
             <AppenderRef ref="Console"/>

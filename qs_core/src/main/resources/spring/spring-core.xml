@@ -5,13 +5,13 @@
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns="http://www.springframework.org/schema/beans" xmlns:cache="http://www.springframework.org/schema/cache"
        xmlns:c="http://www.springframework.org/schema/c" xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:rabbit="http://www.springframework.org/schema/rabbit"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/task
-        http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+        http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
 
     <context:component-scan base-package="com.dqys"/>
     <context:annotation-config />
@@ -108,5 +108,115 @@
     </bean>
     <bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager"
           c:redisOperations-ref="cacheRedisTemplate"/>
+
+    <!-- rabbitmq -->
+    <bean id="rabbitConnectionFactory"
+          class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory">
+        <constructor-arg name="hostname" value="${rabbitmq.host}"/>
+        <constructor-arg name="port" value="${rabbitmq.port}" />
+        <property name="username" value="${rabbitmq.username}"/>
+        <property name="password" value="${rabbitmq.password}"/>
+        <property name="channelCacheSize" value="${rabbitmq.channel.size}" />
+        <property name="publisherConfirms" value="true" />
+        <property name="publisherReturns" value="true" />
+    </bean>
+    <bean id="rabbitRetryTemplate" class="org.springframework.retry.support.RetryTemplate">
+        <property name="backOffPolicy">
+            <bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
+                <property name="initialInterval" value="10"/>
+                <property name="maxInterval" value="1000"/>
+                <property name="multiplier" value="10.0" />
+            </bean>
+        </property>
+    </bean>
+    <bean id="rabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <property name="connectionFactory" ref="rabbitConnectionFactory" />
+        <property name="retryTemplate" ref="rabbitRetryTemplate" />
+        <property name="mandatory" value="true" />
+    </bean>
+    <!-- 邮件确认队列 -->
+    <rabbit:queue name="mail_send_queue" />
+    <rabbit:direct-exchange name="mailExchange">
+        <rabbit:bindings>
+            <rabbit:binding key="mail_route" queue="mail_send_queue" ></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+    <rabbit:listener-container connection-factory="rabbitConnectionFactory">
+        <rabbit:listener ref="mailClient" method="sendMailFromMessage" queue-names="mail_send_queue" />
+    </rabbit:listener-container>
+    <bean id="mailClient" class="com.dqys.core.utils.EmailClientTool" />
+
+
+
+    <!--<rabbit:connection-factory id="rabbitConnectionFactory"></rabbit:connection-factory>-->
+    <!--<rabbit:template id="rabbitTemplate" connection-factory="rabbitConnectionFactory"  />-->
+    <!--<rabbit:queue name="myQueue" />
+    <rabbit:topic-exchange name="myExchange">
+        <rabbit:bindings>
+            <rabbit:binding pattern="foo.*" queue="myQueue"></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
+
+    <rabbit:queue name="myQueue2" />
+    <rabbit:topic-exchange name="myExchange2">
+        <rabbit:bindings>
+            <rabbit:binding pattern="test.*" queue="myQueue2"></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>-->
+
+
+    <!--
+    <rabbit:listener-container connection-factory="rabbitConnectionFactory">
+        <rabbit:listener ref="rabbitClinet" method="listen" queue-names="myQueue" />
+    </rabbit:listener-container>
+    <bean id="rabbitClinet" class="com.dqys.core.utils.RabbitMQClientTool" />-->
+
+
+
+    <!--<rabbit:template id="amqpTemplate" connection-factory="rabbitConnectionFactory"/>
+
+    <rabbit:admin connection-factory="rabbitConnectionFactory"/>
+
+    <rabbit:queue name="myqueue"/>
+
+    <bean id="foo" class="com.dqys.core.utils.RabbitMQConsumerTool" />-->
+
+
+
+
+    <!--<rabbit:template id="rabbitTemplate" connection-factory="rabbitConnectionFactory" exchange="myExchange" routing-key="foo.bar" />
+    <rabbit:admin connection-factory="rabbitConnectionFactory" />
+    <rabbit:queue name="myQueue" />
+    <rabbit:direct-exchange name="myExchange">
+        <rabbit:bindings>
+            <rabbit:binding queue="myQueue"></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+    <rabbit:listener-container connection-factory="rabbitConnectionFactory">
+        <rabbit:listener ref="rabbitClinet" method="listen" queue-names="myQueue" />
+    </rabbit:listener-container>
+    <bean id="rabbitClinet" class="com.dqys.core.utils.RabbitMQConsumerTool" />-->
+
+    <!--<bean id="rabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <property name="connectionFactory" ref="rabbitConnectionFactory" />
+        <property name="exchange" value="myExchange" />
+        <property name="routingKey" value="myRoute" />
+        <property name="queue" value="myQueue" />
+    </bean>-->
+    <!--
+    <rabbit:template id="rabbitTemplate" mandatory="true" connection-factory="rabbitConnectionFactory" retry-template="rabbitRetryTemplate" />
+
+    <bean id="rabbitListenerContainerFactory"
+          class="org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory">
+        <property name="connectionFactory" ref="rabbitConnectionFactory"/>
+        <property name="concurrentConsumers" value="3"/>
+        <property name="maxConcurrentConsumers" value="10"/>
+    </bean>
+
+    <bean id="rabbitTxManager"
+          class="org.springframework.amqp.rabbit.transaction.RabbitTransactionManager">
+        <property name="connectionFactory" ref="rabbitConnectionFactory"/>
+    </bean>-->
+
 
 </beans>

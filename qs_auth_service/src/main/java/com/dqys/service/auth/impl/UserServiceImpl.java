@@ -3,6 +3,7 @@ package com.dqys.service.auth.impl;
 import com.dqys.constant.MailVerifyTypeEnum;
 import com.dqys.core.model.ServiceResult;
 import com.dqys.core.utils.NoSQLWithRedisTool;
+import com.dqys.core.utils.RabbitMQProducerTool;
 import com.dqys.core.utils.SignatureTool;
 import com.dqys.dto.UserDTO;
 import com.dqys.persistent.auth.dao.TUserInfoMapper;
@@ -117,7 +118,10 @@ public class UserServiceImpl implements UserService {
         TUserInfo tUserInfo = this.tUserInfoMapper.selectByPrimaryKey(uid);
         if(null != tUserInfo && StringUtils.isNotBlank(tUserInfo.getEmail())) {
             String code = RandomStringUtils.randomAlphanumeric(20) + e.getValue();
-            NoSQLWithRedisTool.sendMailToChannel(tUserInfo.getEmail(), code);
+            //NoSQLWithRedisTool.sendMailToChannel(tUserInfo.getEmail(), code);     //redis
+
+
+            RabbitMQProducerTool.addToMailSendQueue(tUserInfo.getEmail(), code);
             NoSQLWithRedisTool.setValueObject(MAIL_CONFIRM_KEY + tUserInfo.getEmail(), code, 1, TimeUnit.DAYS);
         }
     }
