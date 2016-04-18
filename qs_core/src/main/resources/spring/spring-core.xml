@@ -135,8 +135,8 @@
         <property name="mandatory" value="true" />
     </bean>
     <!-- 邮件确认队列 -->
-    <rabbit:queue name="mail_send_queue" />
-    <rabbit:direct-exchange name="mailExchange">
+    <rabbit:queue name="mail_send_queue" durable="true" />
+    <rabbit:direct-exchange name="mailExchange" durable="true">
         <rabbit:bindings>
             <rabbit:binding key="mail_route" queue="mail_send_queue" ></rabbit:binding>
         </rabbit:bindings>
