@@ -1,6 +1,6 @@
-package com.dqys.utils;
+package com.dqys.service.auth.utils;
 
-import com.dqys.dto.UserDTO;
+import com.dqys.service.auth.dto.UserDTO;
 import com.dqys.persistent.auth.pojo.TUserInfo;
 import com.dqys.persistent.auth.pojo.TUserTag;
 

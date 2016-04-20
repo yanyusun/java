@@ -1,4 +1,4 @@
-package com.dqys.interceptor;
+package com.dqys.wms.interceptor;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;

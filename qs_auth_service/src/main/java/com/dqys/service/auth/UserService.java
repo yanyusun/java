@@ -1,8 +1,8 @@
 package com.dqys.service.auth;
 
-import com.dqys.constant.MailVerifyTypeEnum;
+import com.dqys.service.auth.constant.MailVerifyTypeEnum;
 import com.dqys.core.model.ServiceResult;
-import com.dqys.dto.UserDTO;
+import com.dqys.service.auth.dto.UserDTO;
 import com.dqys.persistent.auth.pojo.TUserInfo;
 import org.springframework.web.multipart.MultipartFile;
 

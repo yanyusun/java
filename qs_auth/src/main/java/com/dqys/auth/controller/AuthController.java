@@ -1,13 +1,13 @@
-package com.dqys.controller;
+package com.dqys.auth.controller;
 
-import com.dqys.constant.MailVerifyTypeEnum;
+import com.dqys.service.auth.constant.MailVerifyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.ServiceResult;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.ProtocolTool;
-import com.dqys.dto.UserDTO;
+import com.dqys.service.auth.dto.UserDTO;
 import com.dqys.service.auth.UserService;
 import com.dqys.service.captcha.CaptchaService;
 import org.apache.commons.lang3.StringUtils;

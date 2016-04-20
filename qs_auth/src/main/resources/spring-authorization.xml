@@ -16,7 +16,7 @@
             <mvc:exclude-mapping path="/auth/reset_mobile"/>
             <mvc:exclude-mapping path="/auth/reset_mail"/>
 
-            <bean class="com.dqys.interceptor.AuthInterceptor"/>
+            <bean class="com.dqys.auth.interceptor.AuthInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 

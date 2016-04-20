@@ -1,4 +1,4 @@
-package com.dqys.controller;
+package com.dqys.wms.controller;
 
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;

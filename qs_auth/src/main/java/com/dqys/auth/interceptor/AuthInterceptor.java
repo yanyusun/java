@@ -1,4 +1,4 @@
-package com.dqys.interceptor;
+package com.dqys.auth.interceptor;
 
 import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.UserSession;

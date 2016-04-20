@@ -1,4 +1,4 @@
-package com.dqys.controller;
+package com.dqys.wms.controller;
 
 import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.SysPropertyTool;

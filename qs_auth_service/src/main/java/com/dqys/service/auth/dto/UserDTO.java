@@ -1,4 +1,4 @@
-package com.dqys.dto;
+package com.dqys.service.auth.dto;
 
 import com.dqys.core.base.BaseDTO;
 

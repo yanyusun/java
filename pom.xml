@@ -18,6 +18,7 @@
         <module>qs_common_service</module>
         <module>qs_wms</module>
         <module>qs_resource</module>
+        <module>qs_hadoop</module>
     </modules>
 
     <properties>

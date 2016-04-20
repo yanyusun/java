@@ -1,17 +1,17 @@
 package com.dqys.service.auth.impl;
 
-import com.dqys.constant.MailVerifyTypeEnum;
+import com.dqys.service.auth.constant.MailVerifyTypeEnum;
 import com.dqys.core.model.ServiceResult;
 import com.dqys.core.utils.NoSQLWithRedisTool;
 import com.dqys.core.utils.RabbitMQProducerTool;
 import com.dqys.core.utils.SignatureTool;
-import com.dqys.dto.UserDTO;
+import com.dqys.service.auth.dto.UserDTO;
 import com.dqys.persistent.auth.dao.TUserInfoMapper;
 import com.dqys.persistent.auth.dao.TUserTagMapper;
 import com.dqys.persistent.auth.pojo.TUserInfo;
 import com.dqys.persistent.auth.pojo.TUserTag;
 import com.dqys.service.auth.UserService;
-import com.dqys.utils.UserUtils;
+import com.dqys.service.auth.utils.UserUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
