@@ -10,21 +10,17 @@
     <version>1.0</version>
     <modules>
         <module>qs_core</module>
-        <module>qs_flow</module>
-        <module>qs_drool</module>
         <module>qs_auth</module>
-        <module>qs_auth_persistent</module>
+        <module>qs_auth_orm</module>
         <module>qs_auth_service</module>
-        <module>qs_common_service</module>
         <module>qs_wms</module>
         <module>qs_resource</module>
-        <module>qs_hadoop</module>
+        <module>qs_captcha</module>
     </modules>
 
     <properties>
         <jstl.version>1.2</jstl.version>
         <sevlet.version>3.0-alpha-1</sevlet.version>
-
     </properties>
 
     <dependencies>

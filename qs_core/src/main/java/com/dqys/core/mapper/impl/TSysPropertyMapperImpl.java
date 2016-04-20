@@ -2,7 +2,7 @@ package com.dqys.core.mapper.impl;
 
 
 import com.dqys.core.base.BaseDao;
-import com.dqys.core.mapper.TSysPropertyMapper;
+import com.dqys.core.mapper.facade.TSysPropertyMapper;
 import com.dqys.core.model.TSysProperty;
 import org.springframework.stereotype.Repository;
 

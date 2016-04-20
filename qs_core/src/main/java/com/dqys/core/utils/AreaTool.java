@@ -1,6 +1,6 @@
 package com.dqys.core.utils;
 
-import com.dqys.core.mapper.TAreaMapper;
+import com.dqys.core.mapper.facade.TAreaMapper;
 import com.dqys.core.model.TArea;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

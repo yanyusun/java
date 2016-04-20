@@ -1,7 +1,7 @@
 package com.dqys.core.utils;
 
 import com.dqys.core.constant.SysPropertyTypeEnum;
-import com.dqys.core.mapper.TSysPropertyMapper;
+import com.dqys.core.mapper.facade.TSysPropertyMapper;
 import com.dqys.core.model.TSysProperty;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

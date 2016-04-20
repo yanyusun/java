@@ -1,15 +1,15 @@
 package com.dqys.auth.controller;
 
-import com.dqys.service.auth.constant.MailVerifyTypeEnum;
+import com.dqys.auth.service.constant.MailVerifyTypeEnum;
+import com.dqys.captcha.service.facade.CaptchaService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.ServiceResult;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.ProtocolTool;
-import com.dqys.service.auth.dto.UserDTO;
-import com.dqys.service.auth.UserService;
-import com.dqys.service.captcha.CaptchaService;
+import com.dqys.auth.service.dto.UserDTO;
+import com.dqys.auth.service.facade.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -14,7 +14,7 @@
             <mvc:exclude-mapping path="/font/*"/>
             <mvc:exclude-mapping path="/css/*"/>
             <mvc:exclude-mapping path="/script/*"/>
-            <bean class="com.dqys.auth.interceptor.ResourceInterceptor"/>
+            <bean class="com.dqys.resource.interceptor.ResourceInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 

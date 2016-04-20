@@ -1,13 +1,10 @@
 package com.dqys.wms.controller;
 
-import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import javax.annotation.PostConstruct;
 
 /**
  * @author by pan on 16-4-7.

@@ -1,7 +1,7 @@
 package com.dqys.core.mapper.impl;
 
 import com.dqys.core.base.BaseDao;
-import com.dqys.core.mapper.TAreaMapper;
+import com.dqys.core.mapper.facade.TAreaMapper;
 import com.dqys.core.model.TArea;
 import org.springframework.stereotype.Repository;
 
