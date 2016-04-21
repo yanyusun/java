@@ -8,7 +8,7 @@ import com.sun.org.apache.bcel.internal.generic.JSR;
 /**
  * @author by pan on 9/10/15.
  */
-public class JsonResponseTool {
+public abstract class JsonResponseTool {
 
     /**
      * 通用成功返回消息

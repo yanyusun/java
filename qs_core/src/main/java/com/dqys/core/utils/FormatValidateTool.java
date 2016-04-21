@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 /**
  * @author by pan on 16-4-8.
  */
-public class FormatValidateTool {
+public abstract class FormatValidateTool {
 
     /***********************************身份证验证开始****************************************/
     /**

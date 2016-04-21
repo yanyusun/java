@@ -11,7 +11,7 @@ import java.security.MessageDigest;
  *
  * @author by pan on 9/21/15.
  */
-public class SignatureTool {
+public abstract class SignatureTool {
 
     /**
      * 对字符串按指定字符集进行编码

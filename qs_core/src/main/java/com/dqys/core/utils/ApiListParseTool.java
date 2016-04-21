@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * @author by pan on 16-4-8.
  */
-public class ApiListParseTool {
+public abstract class ApiListParseTool {
 
     /**
      * 从NoSQL获取API接口定义，并转换

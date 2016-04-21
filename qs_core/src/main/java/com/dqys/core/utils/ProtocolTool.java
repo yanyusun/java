@@ -3,6 +3,7 @@ package com.dqys.core.utils;
 
 import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
+import com.dqys.core.model.UserSession;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
@@ -13,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author by pan on 9/21/15.
  */
-public class ProtocolTool {
+public abstract class ProtocolTool {
 
     private static final String ENCODE = "UTF-8";
 
@@ -65,7 +66,17 @@ public class ProtocolTool {
 
 
         if(userHeader.equals(headerValue)) {
-            return Integer.decode(strs[1]);
+            Integer userId = Integer.decode(strs[1]);
+            UserSession userSession = new UserSession();
+            userSession.setUserId(userId);
+            userSession.setUserType(Integer.decode(userType));
+            userSession.setRoleId(null == roleId?null:Integer.decode(roleId));
+            userSession.setStatus(Boolean.parseBoolean(status));
+            userSession.setCertified(Boolean.parseBoolean(isCertified));
+            UserSession.setCurrent(userSession);
+            ProtocolTool.refreshUserHeader(userId);
+
+            return userId;
         }
 
         return 0;

@@ -189,7 +189,13 @@ public class AuthController {
                 userService.sendConfirmMail(MailVerifyTypeEnum.EMAIL_CONFIRM, userDTOServiceResult.getData().getUserId());
             }
 
-            return JsonResponseTool.success(this.createUserHeader(userDTOServiceResult.getData()));
+            return JsonResponseTool.success(ProtocolTool.createUserHeader(
+                    userDTOServiceResult.getData().getUserId(),
+                    userDTOServiceResult.getData().getUserType(),
+                    userDTOServiceResult.getData().getRoleId(),
+                    userDTOServiceResult.getData().getStatus(),
+                    userDTOServiceResult.getData().getCertified()
+            ));
         };
     }
 
@@ -255,7 +261,13 @@ public class AuthController {
                 return JsonResponseTool.authFailure(userServiceResult.getMessage());
             }
 
-            return JsonResponseTool.success(this.createUserHeader(userServiceResult.getData()));
+            return JsonResponseTool.success(ProtocolTool.createUserHeader(
+                    userServiceResult.getData().getUserId(),
+                    userServiceResult.getData().getUserType(),
+                    userServiceResult.getData().getRoleId(),
+                    userServiceResult.getData().getStatus(),
+                    userServiceResult.getData().getCertified())
+            );
         };
     }
 
@@ -280,7 +292,13 @@ public class AuthController {
                 return JsonResponseTool.authFailure(userServiceResult.getMessage());
             }
 
-            return JsonResponseTool.success(this.createUserHeader(userServiceResult.getData()));
+            return JsonResponseTool.success(ProtocolTool.createUserHeader(
+                    userServiceResult.getData().getUserId(),
+                    userServiceResult.getData().getUserType(),
+                    userServiceResult.getData().getRoleId(),
+                    userServiceResult.getData().getStatus(),
+                    userServiceResult.getData().getCertified()
+            ));
         };
     }
 
@@ -322,7 +340,13 @@ public class AuthController {
                 return JsonResponseTool.authFailure(userServiceResult.getMessage());
             }
 
-            return JsonResponseTool.success(this.createUserHeader(userServiceResult.getData()));
+            return JsonResponseTool.success(ProtocolTool.createUserHeader(
+                    userServiceResult.getData().getUserId(),
+                    userServiceResult.getData().getUserType(),
+                    userServiceResult.getData().getRoleId(),
+                    userServiceResult.getData().getStatus(),
+                    userServiceResult.getData().getCertified()
+            ));
         };
     }
 
@@ -345,7 +369,13 @@ public class AuthController {
                 return JsonResponseTool.authFailure(userServiceResult.getMessage());
             }
 
-            return JsonResponseTool.success(this.createUserHeader(userServiceResult.getData()));
+            return JsonResponseTool.success(ProtocolTool.createUserHeader(
+                    userServiceResult.getData().getUserId(),
+                    userServiceResult.getData().getUserType(),
+                    userServiceResult.getData().getRoleId(),
+                    userServiceResult.getData().getStatus(),
+                    userServiceResult.getData().getCertified()
+            ));
         };
     }
 
@@ -370,20 +400,5 @@ public class AuthController {
 
             return JsonResponseTool.success(null);
         };
-    }
-
-
-    /* 创建头信息 */
-    private Map<String, Object> createUserHeader(UserDTO userDTO) throws Exception {
-        //生成头信息并写入
-        Map<String, Object> userHeader = ProtocolTool.createUserHeader(
-                userDTO.getUserId(),
-                userDTO.getUserType(),
-                userDTO.getRoleId(),
-                userDTO.getStatus(),
-                userDTO.getCertified()
-        );
-
-        return userHeader;
     }
 }

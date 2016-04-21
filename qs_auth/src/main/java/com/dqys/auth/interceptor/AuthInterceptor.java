@@ -18,12 +18,14 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        String userHeader = httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue());
-        String userType = httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue());
-        String roleId = httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue());
-        String status = httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue());
-        String certified = httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue());
-        Integer  userId = ProtocolTool.validateUser(userHeader, userType, roleId, status, certified);
+        Integer userId =ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue())
+        );
+
         if(0 == userId) {
             httpServletResponse.setCharacterEncoding("utf-8");
             ObjectMapper objectMapper = new ObjectMapper();
@@ -31,15 +33,6 @@ public class AuthInterceptor implements HandlerInterceptor {
             httpServletResponse.getWriter().close();
             return false;
         }
-
-        UserSession userSession = new UserSession();
-        userSession.setUserId(userId);
-        userSession.setUserType(Integer.decode(userType));
-        userSession.setRoleId(null == roleId?null:Integer.decode(roleId));
-        userSession.setStatus(Boolean.parseBoolean(status));
-        userSession.setCertified(Boolean.parseBoolean(certified));
-        UserSession.setCurrent(userSession);
-        ProtocolTool.refreshUserHeader(userId);
 
         return true;
     }

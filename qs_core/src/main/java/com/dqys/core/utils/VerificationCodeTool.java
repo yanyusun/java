@@ -6,7 +6,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 /**
  * @author by pan on 16-3-18.
  */
-public class VerificationCodeTool {
+public abstract class VerificationCodeTool {
 
     /**
      * 生成验证码

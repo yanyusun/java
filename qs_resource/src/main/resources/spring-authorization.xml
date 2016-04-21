@@ -14,6 +14,8 @@
             <mvc:exclude-mapping path="/font/*"/>
             <mvc:exclude-mapping path="/css/*"/>
             <mvc:exclude-mapping path="/script/*"/>
+            <mvc:exclude-mapping path="/html/*"/>
+
             <bean class="com.dqys.resource.interceptor.ResourceInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
@@ -21,4 +23,5 @@
     <mvc:resources mapping="/font/**" location="/font/" />
     <mvc:resources mapping="/css/**" location="/css/" />
     <mvc:resources mapping="/script/**" location="/script/"/>
+    <mvc:resources mapping="/html/**" location="/html/"/>
 </beans>
