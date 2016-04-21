@@ -94,7 +94,7 @@ public class SysPropertyTool implements ApplicationContextAware {
      * @throws Exception
      */
     public static void loadSysProperty() throws Exception {
-        List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.GLOBAL.getValue());
+        List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.SYS.getValue());
         for (TSysProperty tSysProperty : sysPropertyList) {
             refreshPropery(tSysProperty);
         }

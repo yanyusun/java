@@ -6,10 +6,11 @@ package com.dqys.core.constant;
  *         系统配置类型枚举
  */
 public enum SysPropertyTypeEnum {
-    GLOBAL(1, "全局"),
+    SYS(1, "系统"),
     API(2, "接口"),
     USER_TYPE(3, "用户类型"),
-    ROLE(4, "角色")
+    ROLE(4, "角色"),
+    FILE_BUSINESS_TYPE(5, "文件业务类型"),
     ;
 
 

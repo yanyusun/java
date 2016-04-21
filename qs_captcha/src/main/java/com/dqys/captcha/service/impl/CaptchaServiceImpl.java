@@ -64,7 +64,7 @@ public class CaptchaServiceImpl implements CaptchaService {
         String code = this.captchaProducer.createText();
 
         Integer fre = NoSQLWithRedisTool.getHashObject(CAPTCHA_KEY + key, SUB_FRE);
-        if(null != fre && fre >= Integer.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.GLOBAL, SYS_CAPTCHA_FRE_LIMIT).getPropertyValue())) {
+        if(null != fre && fre >= Integer.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_CAPTCHA_FRE_LIMIT).getPropertyValue())) {
             return ServiceResult.failure("发送太频繁,请稍后再试", ObjectUtils.NULL);
         } else if(null == fre) {
             fre = 0;
@@ -80,7 +80,7 @@ public class CaptchaServiceImpl implements CaptchaService {
         String code = RandomStringUtils.randomNumeric(6);
 
         Integer fre = NoSQLWithRedisTool.getHashObject(CAPTCHA_KEY + mobile, SUB_FRE);
-        if(null != fre && fre >= Integer.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.GLOBAL, SYS_SMS_FRE_LIMIT).getPropertyValue())) {
+        if(null != fre && fre >= Integer.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_SMS_FRE_LIMIT).getPropertyValue())) {
             return ServiceResult.failure("发送太频繁,请稍后再试", ObjectUtils.NULL);
         } else if(null == fre) {
             fre = 0;

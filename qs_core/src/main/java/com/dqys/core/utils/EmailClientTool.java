@@ -46,14 +46,14 @@ public class EmailClientTool implements MessageListener {
         try {
             Email emailClient = new HtmlEmail();
             emailClient.setCharset("UTF-8");
-            emailClient.setHostName(SysPropertyTool.getProperty(SysPropertyTypeEnum.GLOBAL, SYS_MAIL_HOST).getPropertyValue());
-            emailClient.setSmtpPort(Integer.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.GLOBAL, SYS_MAIL_SMTP_PORT).getPropertyValue()));
-            emailClient.setSslSmtpPort(SysPropertyTool.getProperty(SysPropertyTypeEnum.GLOBAL, SYS_MAIL_SMTP_PORT).getPropertyValue());
-            emailClient.setSSLOnConnect(Boolean.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.GLOBAL, SYS_MAIL_SSL_ON).getPropertyValue()));
-            emailClient.setFrom(SysPropertyTool.getProperty(SysPropertyTypeEnum.GLOBAL, SYS_MAIL_FROM).getPropertyValue());
+            emailClient.setHostName(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_MAIL_HOST).getPropertyValue());
+            emailClient.setSmtpPort(Integer.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_MAIL_SMTP_PORT).getPropertyValue()));
+            emailClient.setSslSmtpPort(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_MAIL_SMTP_PORT).getPropertyValue());
+            emailClient.setSSLOnConnect(Boolean.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_MAIL_SSL_ON).getPropertyValue()));
+            emailClient.setFrom(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_MAIL_FROM).getPropertyValue());
             emailClient.setAuthenticator(new DefaultAuthenticator(
-                    SysPropertyTool.getProperty(SysPropertyTypeEnum.GLOBAL, SYS_MAIL_AUTH_USERNAME).getPropertyValue(),
-                    SysPropertyTool.getProperty(SysPropertyTypeEnum.GLOBAL, SYS_MAIL_AUTH_PASSWORD).getPropertyValue()
+                    SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_MAIL_AUTH_USERNAME).getPropertyValue(),
+                    SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_MAIL_AUTH_PASSWORD).getPropertyValue()
             ));
 
             emailClient.addTo(to);
