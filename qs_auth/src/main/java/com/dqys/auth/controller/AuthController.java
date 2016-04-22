@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -45,6 +46,15 @@ public class AuthController {
     @Autowired
     private ObjectMapper objectMapper;
 
+    //@Cacheable(cacheNames = "auth_m_session_id", key = "#httpSession.id")
+    @RequestMapping(value = "/session_id", produces = "text/plain;charset=utf-8")
+    public Callable<String> querySessionId(HttpSession httpSession, @RequestParam String jsonPCallable) {
+        return () -> {
+            StringBuffer result = new StringBuffer(jsonPCallable);
+            result.append("(").append(objectMapper.writeValueAsString(JsonResponseTool.success(httpSession.getId()))).append(");");
+            return result.toString();
+        };
+    }
 
     /**
      *  图片验证码
