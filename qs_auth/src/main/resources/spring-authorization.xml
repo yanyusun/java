@@ -12,9 +12,12 @@
             <mvc:exclude-mapping path="/auth/captcha"/>
             <mvc:exclude-mapping path="/auth/sms_code"/>
             <mvc:exclude-mapping path="/auth/login"/>
+            <mvc:exclude-mapping path="/auth/login_p"/>
             <mvc:exclude-mapping path="/auth/register"/>
             <mvc:exclude-mapping path="/auth/reset_mobile"/>
             <mvc:exclude-mapping path="/auth/reset_mail"/>
+
+            <mvc:exclude-mapping path="/err/err"/>
 
             <bean class="com.dqys.auth.interceptor.AuthInterceptor"/>
         </mvc:interceptor>

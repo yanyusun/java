@@ -1,6 +1,8 @@
 package com.dqys.auth.controller;
 
 import com.dqys.auth.service.constant.MailVerifyTypeEnum;
+import com.dqys.auth.service.dto.UserDTO;
+import com.dqys.auth.service.facade.UserService;
 import com.dqys.captcha.service.facade.CaptchaService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.ServiceResult;
@@ -8,8 +10,7 @@ import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.ProtocolTool;
-import com.dqys.auth.service.dto.UserDTO;
-import com.dqys.auth.service.facade.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,6 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
@@ -41,6 +41,9 @@ public class AuthController {
 
     @Autowired
     private CaptchaService captchaService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
 
     /**
@@ -269,6 +272,21 @@ public class AuthController {
                     userServiceResult.getData().getCertified())
             );
         };
+    }
+
+    @RequestMapping(value = "/login_p", method = RequestMethod.POST, produces = "text/plain;charset=utf-8")
+    public String userLogin(@RequestParam(required = false) String userName,
+                                            @RequestParam(required = false) String mobile,
+                                            @RequestParam(required = false) String email,
+                                            @RequestParam String pwd,
+                                            @RequestParam(required = false) String smsCode,
+                                            @RequestParam(required = false) String captcha,
+                                            @RequestParam(required = false) String captchaKey,
+                                            @RequestParam String  jsonPCallable) throws Exception {
+        JsonResponse jsonResponse = this.userLogin(userName, mobile, email, pwd, smsCode, captcha, captchaKey).call();
+        StringBuffer resutStr = new StringBuffer(jsonPCallable);
+        resutStr.append("(").append(objectMapper.writeValueAsString(jsonResponse)).append(");");
+        return resutStr.toString();
     }
 
     /**
