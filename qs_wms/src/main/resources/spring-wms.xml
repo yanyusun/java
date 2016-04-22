@@ -48,7 +48,7 @@
         <property name="contentType" value="text/html;charset=UTF-8"/>
         <property name="attributes">
             <props>
-                <prop key="httpUrl">http://localhost:9988</prop>
+                <prop key="httpUrl">http://114.215.239.181:9988</prop>
             </props>
         </property>
     </bean>
