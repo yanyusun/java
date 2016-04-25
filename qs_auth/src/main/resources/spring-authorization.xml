@@ -22,6 +22,10 @@
 
             <bean class="com.dqys.auth.interceptor.AuthInterceptor"/>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.dqys.auth.interceptor.CrossOriginIntercetpor" />
+        </mvc:interceptor>
     </mvc:interceptors>
 
 

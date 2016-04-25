@@ -47,13 +47,9 @@ public class AuthController {
     private ObjectMapper objectMapper;
 
     //@Cacheable(cacheNames = "auth_m_session_id", key = "#httpSession.id")
-    @RequestMapping(value = "/session_id", produces = "text/plain;charset=utf-8")
-    public Callable<String> querySessionId(HttpSession httpSession, @RequestParam String jsonPCallable) {
-        return () -> {
-            StringBuffer result = new StringBuffer(jsonPCallable);
-            result.append("(").append(objectMapper.writeValueAsString(JsonResponseTool.success(httpSession.getId()))).append(");");
-            return result.toString();
-        };
+    @RequestMapping("/session_id")
+    public Callable<JsonResponse> querySessionId(HttpSession httpSession) {
+        return () -> JsonResponseTool.success(httpSession.getId());
     }
 
     /**
@@ -282,21 +278,6 @@ public class AuthController {
                     userServiceResult.getData().getCertified())
             );
         };
-    }
-
-    @RequestMapping(value = "/login_p", method = RequestMethod.POST, produces = "text/plain;charset=utf-8")
-    public String userLogin(@RequestParam(required = false) String userName,
-                                            @RequestParam(required = false) String mobile,
-                                            @RequestParam(required = false) String email,
-                                            @RequestParam String pwd,
-                                            @RequestParam(required = false) String smsCode,
-                                            @RequestParam(required = false) String captcha,
-                                            @RequestParam(required = false) String captchaKey,
-                                            @RequestParam String  jsonPCallable) throws Exception {
-        JsonResponse jsonResponse = this.userLogin(userName, mobile, email, pwd, smsCode, captcha, captchaKey).call();
-        StringBuffer resutStr = new StringBuffer(jsonPCallable);
-        resutStr.append("(").append(objectMapper.writeValueAsString(jsonResponse)).append(");");
-        return resutStr.toString();
     }
 
     /**
