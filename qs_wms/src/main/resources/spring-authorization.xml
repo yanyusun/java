@@ -7,17 +7,16 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <!--默认全部需要登录身份-->
-            <mvc:mapping path="/aabb/**"/>
+            <mvc:mapping path="/**"/>
 
-            <mvc:exclude-mapping path="/"/>
-            <mvc:exclude-mapping path="/index"/>
-            <mvc:exclude-mapping path="/font/*"/>
-            <mvc:exclude-mapping path="/css/*"/>
-            <mvc:exclude-mapping path="/script/*"/>
+            <mvc:exclude-mapping path="/login"/>
+
             <mvc:exclude-mapping path="/html/*"/>
+            <mvc:exclude-mapping path="/script/*"/>
             <bean class="com.dqys.wms.interceptor.WMSInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 
     <mvc:resources mapping="/html/**" location="/html/"/>
+    <mvc:resources mapping="/script/**" location="/script/"/>
 </beans>

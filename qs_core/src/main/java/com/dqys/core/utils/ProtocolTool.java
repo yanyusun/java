@@ -70,7 +70,7 @@ public abstract class ProtocolTool {
             UserSession userSession = new UserSession();
             userSession.setUserId(userId);
             userSession.setUserType(Integer.decode(userType));
-            userSession.setRoleId(null == roleId?null:Integer.decode(roleId));
+            userSession.setRoleId(StringUtils.isNotBlank(roleId)?Integer.decode(roleId):null);
             userSession.setStatus(Boolean.parseBoolean(status));
             userSession.setCertified(Boolean.parseBoolean(isCertified));
             UserSession.setCurrent(userSession);

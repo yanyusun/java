@@ -8,8 +8,8 @@
 <h1>$!{errMsg}</h1>
 #else
 <div class="container-fluid">
-<form class="form-horizontal" action=#if($oper) "$!{request.contextPath}/property/add" #else "$!{request.contextPath}
-    /property/update" #end method="post" enctype="multipart/form-data">
+<form class="form-horizontal" action=#if($oper) "$!{request.contextPath}/property/add" #else "$!{request.contextPath}/property/update" #end
+    method="post" enctype="multipart/form-data">
     #if($oper)  #else
     <input type="hidden" name="version" value="$!{tSystemConf.version}" />
     <div class="form-group">

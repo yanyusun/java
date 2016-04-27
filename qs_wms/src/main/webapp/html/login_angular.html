@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <script src="http://114.215.239.181:9988/script/angular.min.js"></script>
+    <meta charset="UTF-8">
+    <title>登陆</title>
+</head>
+<body ng-app="loginApp">
+<div ng-controller="loginController">
+    <div>
+        <label>登陆邮箱：</label><input type="email" ng-model="email" />
+    </div>
+    <div><label>密码：</label><input ng-model="pwd" value="{{pwd}}" /></div>
+    <div><label>验证码：</label><input ng-model="captcha" value="{{captcha}}" /><img ng-click="getCaptcha()" ng-src="{{captchaUrl}}" ng-init="getCaptcha()" /></div>
+    <div><button ng-click="doLogin()">登陆</button></div>
+    <input type="hidden" ng-model="sessionId" value="{{sessionId}}" />
+</div>
+</body>
+</html>
+<script src="../script/login.js"></script>

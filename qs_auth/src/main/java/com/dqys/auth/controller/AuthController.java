@@ -43,30 +43,18 @@ public class AuthController {
     @Autowired
     private CaptchaService captchaService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    //@Cacheable(cacheNames = "auth_m_session_id", key = "#httpSession.id")
-    @RequestMapping("/session_id")
-    public Callable<JsonResponse> querySessionId(HttpSession httpSession) {
-        return () -> JsonResponseTool.success(httpSession.getId());
-    }
-
     /**
      *  图片验证码
-     * @param httpSession
+     * @param key
      * @return
      */
     @RequestMapping("/captcha")
-    public Callable<ResponseEntity<StreamingResponseBody>> genImgCaptcha(HttpSession httpSession) {
+    public Callable<ResponseEntity<StreamingResponseBody>> genImgCaptcha(@RequestParam String key) {
         return () -> {
-            ServiceResult<BufferedImage> biResult = this.captchaService.genImgCaptcha(httpSession.getId());
+            ServiceResult<BufferedImage> biResult = this.captchaService.genImgCaptcha(key);
             if(!biResult.getFlag()) {
                 return null;
             }
-
-            // FIXME: 16-4-18 临时查看sessionid
-            LogManager.getRootLogger().debug(httpSession.getId());
 
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setContentType(MediaType.IMAGE_PNG);

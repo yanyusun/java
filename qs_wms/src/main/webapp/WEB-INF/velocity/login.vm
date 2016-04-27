@@ -1,0 +1,27 @@
+#set($layout =  "layout/include.vm" )
+<!DOCTYPE html>
+<html lang="zh_CN">
+<head>
+    <meta charset="UTF-8">
+    <title>登陆</title>
+</head>
+<body>
+$!{errMsg}
+<div>
+    <form method="post" action="$!{request.contextPath}/index">
+        <div><label>用户名：</label><input name="email" /></div>
+        <div><label>密码：</label><input name="pwd" /></div>
+        <div><label>验证码：</label><input name="captcha" /><img /></div>
+        <input type="hidden" name="captchaKey" value="$!{sessionId}" />
+        <div><input type="submit"></input></div>
+    </form>
+</div>
+</body>
+<script>
+$(document).ready(function() {
+    $("img").on("click", function() {
+        this.src="$!{authUrl}/auth/captcha?key=$!{sessionId}&time=" + new Date();
+    });
+    $("img").click();
+});
+</script>

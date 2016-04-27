@@ -1,5 +1,7 @@
 package com.dqys.core.utils;
 
+import com.dqys.core.model.JsonResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -12,6 +14,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.http.MediaType;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -30,7 +33,7 @@ public abstract class HttpTool {
      * @param header
      * @param params
      */
-    public static void postHttp(String url, Map<String, String> header, List<NameValuePair> params) {
+    public static HttpEntity postHttp(String url, Map<String, String> header, List<NameValuePair> params) {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
         try {
@@ -44,10 +47,7 @@ public abstract class HttpTool {
             }
             CloseableHttpResponse response = httpclient.execute(httpPost);
             try {
-                HttpEntity entity = response.getEntity();
-                EntityUtils.consume(entity);
-            } catch (IOException e) {
-                e.printStackTrace();
+                return response.getEntity();
             } finally {
                 response.close();
             }
@@ -65,6 +65,8 @@ public abstract class HttpTool {
                 e.printStackTrace();
             }
         }
+
+        return null;
     }
 
     /**
@@ -89,5 +91,23 @@ public abstract class HttpTool {
         };
 
         return httpclient.execute(httpget, responseHandler);
+    }
+
+    /**
+     * 处理为JsonResponse
+     *
+     * @param httpEntity
+     */
+    public static JsonResponse parseToJsonResp(HttpEntity httpEntity) {
+        try {
+            if(httpEntity.getContentType().getValue().indexOf(MediaType.APPLICATION_JSON_VALUE) != -1) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                return objectMapper.readValue(httpEntity.getContent(), JsonResponse.class);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

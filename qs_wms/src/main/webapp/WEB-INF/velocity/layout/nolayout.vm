@@ -1,2 +1,1 @@
-#parse("/common/include.vm")
 $screen_content

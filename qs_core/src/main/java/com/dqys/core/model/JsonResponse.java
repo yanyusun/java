@@ -3,11 +3,11 @@ package com.dqys.core.model;
 /**
  * @author by pan on 9/10/15.
  */
-public class JsonResponse {
+public class JsonResponse<T> {
 
     private Integer code;
     private String msg;
-    private Object data;
+    private T data;
 
     public String getMsg() {
         return msg;
@@ -17,11 +17,11 @@ public class JsonResponse {
         this.msg = msg;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 
