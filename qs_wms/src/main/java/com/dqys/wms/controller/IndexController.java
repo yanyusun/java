@@ -25,9 +25,8 @@ public class IndexController implements ApplicationListener<ContextRefreshedEven
 
     @RequestMapping("/login")
     public String login(Model model, HttpSession httpSession) throws Exception {
-        //model.asMap().put("authUrl", SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_AUTH_URL_KEY).getPropertyValue());
+        model.asMap().put("authUrl", SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_AUTH_URL_KEY).getPropertyValue());
         model.asMap().put("sessionId", httpSession.getId());
-        model.asMap().put("authUrl", "http://localhost:9081");
         return "login";
     }
 
