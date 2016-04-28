@@ -36,7 +36,8 @@ public class IndexController implements ApplicationListener<ContextRefreshedEven
         if(contextRefreshedEvent.getApplicationContext().getParent() == null){
             try {
                 SysPropertyTool.loadAllProperty();
-                AreaTool.loadArea();
+                // FIXME: 16-4-28 暂时不加载
+                //AreaTool.loadArea();
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -62,10 +62,28 @@
     </bean>
 
     <!-- redis -->
-    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <constructor-arg name="clusterConfig">
+            <bean class="org.springframework.data.redis.connection.RedisClusterConfiguration">
+                <property name="clusterNodes">
+                    <set>
+                        <bean class="org.springframework.data.redis.connection.RedisNode" c:host="${redis.cluster.host}" c:port="${redis.cluster.port0}" />
+                        <bean class="org.springframework.data.redis.connection.RedisNode" c:host="${redis.cluster.host}" c:port="${redis.cluster.port1}" />
+                        <bean class="org.springframework.data.redis.connection.RedisNode" c:host="${redis.cluster.host}" c:port="${redis.cluster.port2}" />
+                        <bean class="org.springframework.data.redis.connection.RedisNode" c:host="${redis.cluster.host}" c:port="${redis.cluster.port3}" />
+                        <bean class="org.springframework.data.redis.connection.RedisNode" c:host="${redis.cluster.host}" c:port="${redis.cluster.port4}" />
+                        <bean class="org.springframework.data.redis.connection.RedisNode" c:host="${redis.cluster.host}" c:port="${redis.cluster.port5}" />
+                    </set>
+                </property>
+            </bean>
+        </constructor-arg>
+        <property name="timeout" value="${redis.cluster.timeout}"></property>
+        <property name="usePool" value="${redis.cluster.user_pool}"></property>
+    </bean>
+    <!--<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
           p:hostName="${redis.host}" p:port="${redis.port}" p:usePool="${redis.user_pool}"
           p:password="${redis.password}">
-    </bean>
+    </bean>-->
     <!--<bean id="stringRedisSerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer">
     </bean>-->
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
@@ -102,7 +120,7 @@
         </property>
     </bean>
 
-    <bean id="redisClusterConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+    <!--<bean id="redisClusterConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
         <constructor-arg name="clusterConfig">
             <bean class="org.springframework.data.redis.connection.RedisClusterConfiguration">
                 <property name="clusterNodes">
@@ -121,7 +139,7 @@
         <property name="usePool" value="${redis.cluster.user_pool}"></property>
     </bean>
     <bean id="redisClusterTemplate" class="org.springframework.data.redis.core.RedisTemplate"
-          p:connectionFactory-ref="redisClusterConnectionFactory" p:enableTransactionSupport="false" />
+          p:connectionFactory-ref="redisClusterConnectionFactory" p:enableTransactionSupport="false" />-->
 
     <!-- 缓存 -->
     <cache:annotation-driven/>
