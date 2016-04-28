@@ -1,6 +1,7 @@
 package com.dqys.wms.controller;
 
 import com.dqys.core.constant.SysPropertyTypeEnum;
+import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -35,8 +36,7 @@ public class IndexController implements ApplicationListener<ContextRefreshedEven
         if(contextRefreshedEvent.getApplicationContext().getParent() == null){
             try {
                 SysPropertyTool.loadAllProperty();
-                //fixme dev mode
-                //AreaTool.loadArea();
+                AreaTool.loadArea();
             } catch (Exception e) {
                 e.printStackTrace();
             }
