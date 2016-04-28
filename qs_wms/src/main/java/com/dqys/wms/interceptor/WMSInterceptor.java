@@ -29,6 +29,7 @@ import java.util.Map;
 public class WMSInterceptor implements HandlerInterceptor {
 
     private static final String SYS_AUTH_URL_KEY = "sys_auth_url";
+    private static final String ROLE_ADMINISTRATOR_KEY = "administrator";
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
@@ -55,6 +56,14 @@ public class WMSInterceptor implements HandlerInterceptor {
             HttpEntity result = HttpTool.postHttp(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_AUTH_URL_KEY).getPropertyValue() + "/auth/login", null, nameValuePairList);
             JsonResponse<Map> jsonResponse = HttpTool.parseToJsonResp(result);
             if(null != jsonResponse && jsonResponse.getCode().intValue() == ResponseCodeEnum.SUCCESS.getValue().intValue()) {
+                if(!String.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, ROLE_ADMINISTRATOR_KEY).getPropertyValue())
+                        .equals(String.valueOf(jsonResponse.getData().get(AuthHeaderEnum.X_QS_ROLE.getValue())))) {
+
+                    httpServletRequest.setAttribute("errMsg", "权限不够");
+                    httpServletRequest.getRequestDispatcher("/login").forward(httpServletRequest, httpServletResponse);
+                    return false;
+                }
+
                 try {
                     httpServletRequest.getSession().setAttribute(AuthHeaderEnum.X_QS_USER.getValue(), jsonResponse.getData().get(AuthHeaderEnum.X_QS_USER.getValue()));
                     httpServletRequest.getSession().setAttribute(AuthHeaderEnum.X_QS_TYPE.getValue(), jsonResponse.getData().get(AuthHeaderEnum.X_QS_TYPE.getValue()));
