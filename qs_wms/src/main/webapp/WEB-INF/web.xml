@@ -8,6 +8,8 @@
     <location>/html/err.html</location>
   </error-page>
 
+  <distributable/>
+
   <filter>
     <filter-name>characterEncodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
