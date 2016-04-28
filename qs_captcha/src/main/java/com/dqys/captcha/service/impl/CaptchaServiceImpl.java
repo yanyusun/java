@@ -116,7 +116,10 @@ public class CaptchaServiceImpl implements CaptchaService {
 
     /* 设置值 */
     private void setCaptcha(String key, String code, Integer fre) {
-        NoSQLWithRedisTool.setHashObjectInPipe(key, new String[] {SUB_CODE, SUB_FRE}, new Object[] {code, fre++}, KEY_EXPIRE, null);
+        //NoSQLWithRedisTool.setHashObjectInPipe(key, new String[] {SUB_CODE, SUB_FRE}, new Object[] {code, fre++}, KEY_EXPIRE, null);      //集群暂不支持piple
+        NoSQLWithRedisTool.setHashObject(key, SUB_CODE, code);
+        NoSQLWithRedisTool.setHashObject(key, SUB_FRE, fre);
+        NoSQLWithRedisTool.setExpire(key, KEY_EXPIRE);
     }
 
     /* 校验验证码 */
