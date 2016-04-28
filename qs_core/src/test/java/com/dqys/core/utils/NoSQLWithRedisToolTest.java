@@ -15,13 +15,13 @@ import org.springframework.data.redis.core.RedisTemplate;
  */
 public class NoSQLWithRedisToolTest extends BaseTest {
 
-    @Autowired
+    /*@Autowired
     @Qualifier(value = "redisClusterTemplate")
-    private RedisTemplate redisClusterTemplate;
+    private RedisTemplate redisClusterTemplate;*/
 
     @Test
     public void test() {
-        redisClusterTemplate.opsForValue().set("aaa", "bbb");
+        /*redisClusterTemplate.opsForValue().set("aaa", "bbb");*/
 
         /*try {
             emailClient.setSubject("测试");
