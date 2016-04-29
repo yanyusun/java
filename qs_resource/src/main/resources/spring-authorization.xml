@@ -16,7 +16,7 @@
             <mvc:exclude-mapping path="/script/*"/>
             <mvc:exclude-mapping path="/html/*"/>
 
-            <bean class="com.dqys.resource.interceptor.ResourceInterceptor"/>
+            <bean class="com.dqys.core.interceptor.HeaderInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 

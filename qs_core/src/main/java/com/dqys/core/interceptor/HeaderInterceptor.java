@@ -1,24 +1,22 @@
-package com.dqys.auth.interceptor;
+package com.dqys.core.interceptor;
 
+import com.dqys.core.base.BaseInterceptor;
 import com.dqys.core.constant.AuthHeaderEnum;
-import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.ProtocolTool;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author by pan on 16-4-5.
+ * @author by pan on 16-4-29.
  */
-public class AuthInterceptor implements HandlerInterceptor {
+public class HeaderInterceptor extends BaseInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        Integer userId =ProtocolTool.validateUser(
+        Integer userId = ProtocolTool.validateUser(
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
@@ -35,13 +33,5 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
 
         return true;
-    }
-
-    @Override
-    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
     }
 }

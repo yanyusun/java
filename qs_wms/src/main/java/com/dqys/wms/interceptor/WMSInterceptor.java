@@ -1,5 +1,6 @@
 package com.dqys.wms.interceptor;
 
+import com.dqys.core.base.BaseInterceptor;
 import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
@@ -8,13 +9,11 @@ import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.HttpTool;
 import com.dqys.core.utils.ProtocolTool;
 import com.dqys.core.utils.SysPropertyTool;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +25,7 @@ import java.util.Map;
 /**
  * @author by pan on 16-4-7.
  */
-public class WMSInterceptor implements HandlerInterceptor {
+public class WMSInterceptor extends BaseInterceptor {
 
     private static final String SYS_AUTH_URL_KEY = "sys_auth_url";
     private static final String ROLE_ADMINISTRATOR_KEY = "administrator";
@@ -85,15 +84,4 @@ public class WMSInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    @Override
-    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
-        //clean
-        if (UserSession.getCurrent() != null) {
-            UserSession.setCurrent(null);
-        }
-    }
 }

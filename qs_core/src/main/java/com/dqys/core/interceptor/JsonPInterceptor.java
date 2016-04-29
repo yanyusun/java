@@ -1,4 +1,4 @@
-package com.dqys.auth.interceptor;
+package com.dqys.core.interceptor;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
