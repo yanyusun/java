@@ -18,6 +18,10 @@
 
             <bean class="com.dqys.core.interceptor.HeaderInterceptor"/>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.dqys.core.interceptor.CrossOriginIntercetpor" />
+        </mvc:interceptor>
     </mvc:interceptors>
 
     <mvc:resources mapping="/font/**" location="/font/" />

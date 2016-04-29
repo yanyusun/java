@@ -1,5 +1,6 @@
 package com.dqys.core.utils;
 
+import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.PagingResult;
 
 import java.lang.reflect.Field;
@@ -11,7 +12,7 @@ import java.util.Map;
 /**
  * @author by pan on 16-4-8.
  */
-public abstract class ApiListParseTool {
+public abstract class ApiParseTool {
 
     /**
      * 从NoSQL获取API接口定义，并转换
@@ -25,7 +26,7 @@ public abstract class ApiListParseTool {
      */
     public static <T> Map<Object, Object> parseApiList(T t, String key) throws NoSuchFieldException, IllegalAccessException {
         Map<Object, Object> resultMap = new HashMap<Object, Object>();
-        for (String field : NoSQLWithRedisTool.getValueObject(key).toString().split(",")) {
+        for (String field : SysPropertyTool.getProperty(SysPropertyTypeEnum.API, key).getPropertyValue().split(",")) {
             Field fieldTmp = t.getClass().getDeclaredField(field.trim());
             fieldTmp.setAccessible(true);
             resultMap.put(field, fieldTmp.get(t));
