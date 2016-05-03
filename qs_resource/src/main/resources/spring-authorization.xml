@@ -14,6 +14,7 @@
             <mvc:exclude-mapping path="/font/*"/>
             <mvc:exclude-mapping path="/css/*"/>
             <mvc:exclude-mapping path="/script/*"/>
+            <mvc:exclude-mapping path="/script/locales/*"/>
             <mvc:exclude-mapping path="/html/*"/>
 
             <bean class="com.dqys.core.interceptor.HeaderInterceptor"/>

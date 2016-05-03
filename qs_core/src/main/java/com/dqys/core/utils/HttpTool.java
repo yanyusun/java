@@ -33,7 +33,7 @@ public abstract class HttpTool {
      * @param header
      * @param params
      */
-    public static HttpEntity postHttp(String url, Map<String, String> header, List<NameValuePair> params) {
+    public static JsonResponse postHttp(String url, Map<String, String> header, List<NameValuePair> params) {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpPost httpPost = new HttpPost(url);
         try {
@@ -47,7 +47,11 @@ public abstract class HttpTool {
             }
             CloseableHttpResponse response = httpclient.execute(httpPost);
             try {
-                return response.getEntity();
+                if(200  == response.getStatusLine().getStatusCode()) {
+                    return parseToJsonResp(response.getEntity());
+                } else {
+                    return JsonResponseTool.failure("远程请求失败");
+                }
             } finally {
                 response.close();
             }
@@ -98,7 +102,7 @@ public abstract class HttpTool {
      *
      * @param httpEntity
      */
-    public static JsonResponse parseToJsonResp(HttpEntity httpEntity) {
+    private static JsonResponse parseToJsonResp(HttpEntity httpEntity) {
         try {
             if(httpEntity.getContentType().getValue().indexOf(MediaType.APPLICATION_JSON_VALUE) != -1) {
                 ObjectMapper objectMapper = new ObjectMapper();

@@ -48,8 +48,8 @@ public class WMSInterceptor extends BaseInterceptor {
                     nameValuePairList.add(nameValuePair);
                 }
             }
-            HttpEntity result = HttpTool.postHttp(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_AUTH_URL_KEY).getPropertyValue() + "/auth/login", null, nameValuePairList);
-            JsonResponse<Map> jsonResponse = HttpTool.parseToJsonResp(result);
+            JsonResponse<Map> jsonResponse = HttpTool.postHttp(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_AUTH_URL_KEY).getPropertyValue() + "/auth/login", null, nameValuePairList);
+            //JsonResponse<Map> jsonResponse = HttpTool.postHttp("http://localhost:9081/auth/login", null, nameValuePairList);;
             if(null != jsonResponse && jsonResponse.getCode().intValue() == ResponseCodeEnum.SUCCESS.getValue().intValue()) {
                 if(!String.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_ADMINISTRATOR_KEY).getPropertyValue())
                         .equals(String.valueOf(jsonResponse.getData().get(AuthHeaderEnum.X_QS_ROLE.getValue())))) {

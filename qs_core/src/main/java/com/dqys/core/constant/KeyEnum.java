@@ -27,7 +27,7 @@ public class KeyEnum {
 
 
     /* 角色配置key */
-    public static final String ROLE_ADMINISTRATOR_KEY = "administrator";
+    public static final String ROLE_ADMINISTRATOR_KEY = "role_administrator";
 
 
 }
