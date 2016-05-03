@@ -2,8 +2,8 @@ package com.dqys.wms.interceptor;
 
 import com.dqys.core.base.BaseInterceptor;
 import com.dqys.core.constant.AuthHeaderEnum;
-import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.HttpTool;
@@ -11,7 +11,6 @@ import com.dqys.core.utils.ProtocolTool;
 import com.dqys.core.utils.SysPropertyTool;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
