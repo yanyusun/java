@@ -18,6 +18,7 @@ import java.util.List;
 public class AreaTool implements ApplicationContextAware {
 
 
+    private static final String AREA_KEY = "sys_area_";      //地区
     private static RedisTemplate<String, Object> redisTemplate;
     private static TAreaMapper tAreaMapper;
 
@@ -37,7 +38,7 @@ public class AreaTool implements ApplicationContextAware {
     private static void loadAreaByUpper(Integer upper) {
         List<TArea> tAreaList = tAreaMapper.selectByUpper(upper);
         if(null != tAreaList && !tAreaList.isEmpty()) {
-            redisTemplate.boundValueOps(KeyEnum.SYS_AREA_KEY + upper).set(tAreaList);
+            redisTemplate.boundValueOps(AREA_KEY + upper).set(tAreaList);
             for(TArea tArea : tAreaList) {
                 if(tArea.getIsLeaf()) {
                     return;
@@ -55,7 +56,7 @@ public class AreaTool implements ApplicationContextAware {
      * @throws Exception
      */
     public static List<TArea> listAreaByUpperId(Integer upperId) throws Exception {
-        List<TArea> tAreaList = NoSQLWithRedisTool.getValueObject(KeyEnum.SYS_AREA_KEY + upperId);
+        List<TArea> tAreaList = NoSQLWithRedisTool.getValueObject(AREA_KEY + upperId);
         return tAreaList;
     }
 
@@ -68,13 +69,13 @@ public class AreaTool implements ApplicationContextAware {
      * @return
      */
     public static String validateArea(Integer province, Integer city, Integer area) {
-        if(null == NoSQLWithRedisTool.getValueObject(KeyEnum.SYS_AREA_KEY + String.valueOf(province))) {
+        if(null == NoSQLWithRedisTool.getValueObject(AREA_KEY + String.valueOf(province))) {
             return "省份无效";
         }
-        if(null == NoSQLWithRedisTool.getValueObject(KeyEnum.SYS_AREA_KEY + String.valueOf(province) + String.valueOf(city))) {
+        if(null == NoSQLWithRedisTool.getValueObject(AREA_KEY + String.valueOf(province) + String.valueOf(city))) {
             return "地市无效";
         }
-        if(null == NoSQLWithRedisTool.getValueObject(KeyEnum.SYS_AREA_KEY + String.valueOf(province) + String.valueOf(city) + String.valueOf(area))) {
+        if(null == NoSQLWithRedisTool.getValueObject(AREA_KEY + String.valueOf(province) + String.valueOf(city) + String.valueOf(area))) {
             return "区县无效";
         }
 
