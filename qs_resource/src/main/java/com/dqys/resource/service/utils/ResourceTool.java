@@ -3,10 +3,10 @@ package com.dqys.resource.service.utils;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.TSysProperty;
 import com.dqys.core.utils.SysPropertyTool;
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
@@ -58,7 +58,7 @@ public class ResourceTool implements ApplicationContextAware {
         }
 
         //保存到临时目录
-        String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/" + type + "/" + userId;
+        String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/" + type + "/" + userId + "/";
         File dirTmp = new File(path);
         if(!dirTmp.exists()) {
             dirTmp.mkdirs();
@@ -68,6 +68,7 @@ public class ResourceTool implements ApplicationContextAware {
             fileTmp.delete();
         }
         fileTmp.createNewFile();
+        FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), fileTmp);
 
         //定时删除
         taskScheduler.schedule(() -> {
