@@ -15,11 +15,14 @@
 
     <context:component-scan base-package="com.dqys"/>
     <context:annotation-config />
-    <task:annotation-driven />
     <aop:aspectj-autoproxy/>
 
     <!-- 配置文件 -->
     <context:property-placeholder location="classpath:config.properties"/>
+
+    <!-- 定时任务调度 -->
+    <task:annotation-driven scheduler="taskScheduler" />
+    <task:scheduler id="taskScheduler" pool-size="${task.scheduler.pool}"/>
 
     <!-- 数据源 -->
     <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
@@ -54,11 +57,6 @@
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.dqys.persistent" />
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
-    </bean>
-
-    <!-- 任务调度 -->
-    <bean id="taskScheduler" class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
-        <property name="poolSize" value="10" />
     </bean>
 
     <!-- redis -->

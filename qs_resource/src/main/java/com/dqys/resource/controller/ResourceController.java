@@ -9,10 +9,12 @@ import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.SysPropertyTool;
 import com.dqys.resource.service.utils.ResourceTool;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -30,13 +32,18 @@ public class ResourceController {
         return () -> JsonResponseTool.success(ApiParseTool.parseApiList(SysPropertyTool.getProperty(SysPropertyTypeEnum.FILE_BUSINESS_TYPE), API_SYS_PROPERTY_KEY));
     }
 
-    @RequestMapping("/upload")
-    public Callable<JsonResponse<String>> upload(@RequestParam  String type, @RequestParam MultipartFile file) {
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public Callable<JsonResponse<String>> upload(@RequestParam  String type, MultipartFile file) {
         Integer userId = UserSession.getCurrent().getUserId();
         return () -> {
-            String fileName = ResourceTool.saveFileSyncTmp(type, userId, file);
-            if(null == fileName) {
-                return JsonResponseTool.failure("上传失败");
+            String fileName = null;
+            try {
+                fileName = ResourceTool.saveFileSyncTmp(type, userId, file);
+                if(null == fileName) {
+                    return JsonResponseTool.failure("上传失败");
+                }
+            } catch (IOException e) {
+                return JsonResponseTool.exception();
             }
 
             return JsonResponseTool.success(fileName);

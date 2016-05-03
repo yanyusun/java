@@ -27,7 +27,14 @@ public abstract class ApiParseTool {
     public static <T> Map<Object, Object> parseApiList(T t, String key) throws NoSuchFieldException, IllegalAccessException {
         Map<Object, Object> resultMap = new HashMap<Object, Object>();
         for (String field : SysPropertyTool.getProperty(SysPropertyTypeEnum.API, key).getPropertyValue().split(",")) {
-            Field fieldTmp = t.getClass().getDeclaredField(field.trim());
+            Field fieldTmp = null;
+            try {
+                fieldTmp = t.getClass().getDeclaredField(field.trim());
+            } catch (NoSuchFieldException e) {
+                fieldTmp = t.getClass().getSuperclass().getDeclaredField(field.trim());
+            } catch (SecurityException e) {
+                throw e;
+            }
             fieldTmp.setAccessible(true);
             resultMap.put(field, fieldTmp.get(t));
         }
