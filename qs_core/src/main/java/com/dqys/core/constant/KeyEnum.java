@@ -6,8 +6,8 @@ package com.dqys.core.constant;
 public class KeyEnum {
 
     /* 系统配置key */
-    public static final String SYS_PROTOCOL_SALT_KEY = "protocol_salt";     //加密密钥
-    public static final String SYS_USER_EXPIRE_DAYS_KEY = "user_login_expire";      //登陆状态保持时间
+    public static final String SYS_PROTOCOL_SALT_KEY = "sys_protocol_salt";     //加密密钥
+    public static final String SYS_USER_EXPIRE_DAYS_KEY = "sys_user_login_expire";      //登陆状态保持时间
     public static final String SYS_ACCESS_ORIGIN_KEY = "sys_access_origin";     //允许远程访问的主机
     public static final String SYS_AREA_KEY = "sys_area_";      //地区
     public static final String SYS_MAIL_HOST = "sys_mail_host";     //发送邮件smtp服务器地址
