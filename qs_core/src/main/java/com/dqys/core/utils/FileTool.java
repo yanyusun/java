@@ -72,7 +72,7 @@ public class FileTool implements ApplicationContextAware {
         //定时删除
         taskScheduler.schedule(() -> {
             fileTmp.delete();
-        }, new Date(curTime + Long.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_TMP_DEL_TIMER_KEY).getPropertyValue()) * 60 * 24));
+        }, new Date(curTime + Long.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_TMP_DEL_TIMER_KEY).getPropertyValue()) * 3600));
 
 
         return fileName;
