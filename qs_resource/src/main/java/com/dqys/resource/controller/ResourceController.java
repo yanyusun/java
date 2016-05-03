@@ -1,13 +1,13 @@
 package com.dqys.resource.controller;
 
+import com.dqys.core.constant.SysKeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
-import com.dqys.core.model.TSysProperty;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.ApiParseTool;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.SysPropertyTool;
-import com.dqys.resource.service.utils.ResourceTool;
+import com.dqys.core.utils.FileTool;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,11 +25,9 @@ import java.util.concurrent.Callable;
 @RequestMapping("/res")
 public class ResourceController {
 
-    private static final String API_SYS_PROPERTY_KEY = "api_sys_property";
-
     @RequestMapping("/res_types")
     public Callable<JsonResponse<List>> businessResTypes() {
-        return () -> JsonResponseTool.success(ApiParseTool.parseApiList(SysPropertyTool.getProperty(SysPropertyTypeEnum.FILE_BUSINESS_TYPE), API_SYS_PROPERTY_KEY));
+        return () -> JsonResponseTool.success(ApiParseTool.parseApiList(SysPropertyTool.getProperty(SysPropertyTypeEnum.FILE_BUSINESS_TYPE), SysKeyEnum.API_SYS_PROPERTY_KEY));
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
@@ -38,7 +36,7 @@ public class ResourceController {
         return () -> {
             String fileName = null;
             try {
-                fileName = ResourceTool.saveFileSyncTmp(type, userId, file);
+                fileName = FileTool.saveFileSyncTmp(type, userId, file);
                 if(null == fileName) {
                     return JsonResponseTool.failure("上传失败");
                 }

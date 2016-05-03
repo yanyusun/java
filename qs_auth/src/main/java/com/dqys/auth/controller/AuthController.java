@@ -1,20 +1,21 @@
 package com.dqys.auth.controller;
 
+import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.service.constant.MailVerifyTypeEnum;
 import com.dqys.auth.service.dto.UserDTO;
+import com.dqys.auth.service.facade.CompanyService;
 import com.dqys.auth.service.facade.UserService;
 import com.dqys.captcha.service.facade.CaptchaService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.ServiceResult;
 import com.dqys.core.model.UserSession;
+import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.ProtocolTool;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.Callable;
 
@@ -42,6 +42,9 @@ public class AuthController {
 
     @Autowired
     private CaptchaService captchaService;
+
+    @Autowired
+    private CompanyService companyService;
 
     /**
      *  图片验证码
@@ -396,6 +399,40 @@ public class AuthController {
             }
 
             return JsonResponseTool.success(null);
+        };
+    }
+
+    @RequestMapping(value = "/add_company", method = RequestMethod.POST)
+    public Callable<JsonResponse> addCompany(@RequestParam String companyName, @RequestParam String credential, @RequestParam String licence,
+                                             @RequestParam Integer province, @RequestParam Integer city, @RequestParam Integer area, @RequestParam String address) {
+        return () -> {
+            //验证区域有效性
+            String verifyArea = AreaTool.validateArea(province, city, area);
+            if(StringUtils.isNotBlank(verifyArea)) {
+                return JsonResponseTool.paramErr(verifyArea);
+            }
+
+            //验证公司有效性
+            ServiceResult<Integer> companyResult = companyService.validateCompany(credential);
+            if(companyResult.getFlag()) {
+                return JsonResponseTool.failure(String.valueOf(companyResult.getData()));
+            }
+
+            //增加公司信息
+            TCompanyInfo tCompanyInfo = new TCompanyInfo();
+            tCompanyInfo.setCompanyName(companyName);
+            tCompanyInfo.setCredential(credential);
+            tCompanyInfo.setLicence(licence);
+            tCompanyInfo.setProvince(province);
+            tCompanyInfo.setCity(city);
+            tCompanyInfo.setArea(area);
+            tCompanyInfo.setAddress(address);
+            companyResult = companyService.addCompany_tx(tCompanyInfo);
+            if(!companyResult.getFlag()) {
+                return JsonResponseTool.failure(companyResult.getMessage());
+            }
+
+            return JsonResponseTool.success(companyResult.getData());
         };
     }
 }

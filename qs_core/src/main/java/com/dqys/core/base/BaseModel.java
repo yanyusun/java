@@ -6,7 +6,7 @@ import java.util.Date;
 /**
  * @author by pan on 16-4-5.
  */
-public class BaseModel implements Serializable {
+public abstract class BaseModel implements Serializable {
 
     private Integer id;     //唯一ID
     private Integer version;        //数据版本号

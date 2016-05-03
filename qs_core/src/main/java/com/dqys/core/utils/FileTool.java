@@ -1,13 +1,12 @@
-package com.dqys.resource.service.utils;
+package com.dqys.core.utils;
 
+import com.dqys.core.constant.SysKeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.TSysProperty;
-import com.dqys.core.utils.SysPropertyTool;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,23 +19,23 @@ import java.util.Date;
  * @author by pan on 16-4-20.
  */
 @Component
-public class ResourceTool implements ApplicationContextAware {
+public class FileTool implements ApplicationContextAware {
 
-    //上传文件路径
-    private static final String SYS_FILE_UPLOAD_PATH_KEY = "sys_uploadPath";
-    //临时文件自动删除时间 hour
-    private static final String SYS_TMP_DEL_TIMER_KEY = "sys_file_tmp_del_timer";
-
-    private static RedisTemplate<String, Object> redisTemplate;
     private static TaskScheduler taskScheduler;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        redisTemplate = (RedisTemplate) applicationContext.getBean("redisTemplate");
         taskScheduler = applicationContext.getBean(TaskScheduler.class);
     }
 
-
+    /**
+     * 保存临时文件
+     * @param type
+     * @param userId
+     * @param multipartFile
+     * @return
+     * @throws IOException
+     */
     public static String saveFileSyncTmp(String type, Integer userId, MultipartFile multipartFile) throws IOException {
         TSysProperty tSysProperty = SysPropertyTool.getProperty(SysPropertyTypeEnum.FILE_BUSINESS_TYPE, type);
         //验证允许上传的业务类型 或者 文件是否为空
@@ -58,7 +57,7 @@ public class ResourceTool implements ApplicationContextAware {
         }
 
         //保存到临时目录
-        String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/" + type + "/" + userId + "/";
+        String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/" + type + "/" + userId + "/";
         File dirTmp = new File(path);
         if(!dirTmp.exists()) {
             dirTmp.mkdirs();
@@ -73,9 +72,29 @@ public class ResourceTool implements ApplicationContextAware {
         //定时删除
         taskScheduler.schedule(() -> {
             fileTmp.delete();
-        }, new Date(curTime + Long.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_TMP_DEL_TIMER_KEY).getPropertyValue()) * 60 * 24));
+        }, new Date(curTime + Long.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_TMP_DEL_TIMER_KEY).getPropertyValue()) * 60 * 24));
 
 
         return fileName;
+    }
+
+    /**
+     * 保存文件
+     * @param fileName
+     */
+    public static boolean saveFileSync(String fileName) throws IOException {
+        String[] strs = fileName.split("_");
+        if(strs.length != 3) {
+            return false;
+        }
+        File srcFile = new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/"
+                + strs[0] + "/" + strs[1] + "/" + fileName);
+        if(!srcFile.exists()) {
+            return false;
+        }
+        File destFile = new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/" + fileName);
+        FileUtils.moveFile(srcFile, destFile);
+
+        return true;
     }
 }

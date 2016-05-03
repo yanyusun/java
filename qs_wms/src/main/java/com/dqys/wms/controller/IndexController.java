@@ -1,5 +1,6 @@
 package com.dqys.wms.controller;
 
+import com.dqys.core.constant.SysKeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.SysPropertyTool;
@@ -17,8 +18,6 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class IndexController implements ApplicationListener<ContextRefreshedEvent> {
 
-    private static final String SYS_AUTH_URL_KEY = "sys_auth_url";
-
     @RequestMapping({"/", "/index"})
     public String index() throws Exception {
         return "index";
@@ -26,7 +25,7 @@ public class IndexController implements ApplicationListener<ContextRefreshedEven
 
     @RequestMapping("/login")
     public String login(Model model, HttpSession httpSession) throws Exception {
-        model.asMap().put("authUrl", SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_AUTH_URL_KEY).getPropertyValue());
+        model.asMap().put("authUrl", SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_AUTH_URL_KEY).getPropertyValue());
         model.asMap().put("sessionId", httpSession.getId());
         return "login";
     }

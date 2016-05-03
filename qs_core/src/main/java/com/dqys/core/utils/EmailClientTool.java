@@ -1,13 +1,12 @@
 package com.dqys.core.utils;
 
+import com.dqys.core.constant.SysKeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.logging.log4j.LogManager;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -17,15 +16,8 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  */
 public class EmailClientTool implements MessageListener {
 
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
-
-    private static final String SYS_MAIL_HOST = "sys_mail_host";
-    private static final String SYS_MAIL_SMTP_PORT = "sys_mail_smtp_port";
-    private static final String SYS_MAIL_SSL_ON = "sys_mail_ssl_on";
-    private static final String SYS_MAIL_FROM = "sys_mail_from";
-    private static final String SYS_MAIL_AUTH_USERNAME = "sys_mail_auth_username";
-    private static final String SYS_MAIL_AUTH_PASSWORD = "sys_mail_auth_password";
+    /*@Autowired
+    private RabbitTemplate rabbitTemplate;*/
 
     @Override
     public void onMessage(Message message, byte[] pattern) {
@@ -46,14 +38,14 @@ public class EmailClientTool implements MessageListener {
         try {
             Email emailClient = new HtmlEmail();
             emailClient.setCharset("UTF-8");
-            emailClient.setHostName(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_MAIL_HOST).getPropertyValue());
-            emailClient.setSmtpPort(Integer.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_MAIL_SMTP_PORT).getPropertyValue()));
-            emailClient.setSslSmtpPort(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_MAIL_SMTP_PORT).getPropertyValue());
-            emailClient.setSSLOnConnect(Boolean.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_MAIL_SSL_ON).getPropertyValue()));
-            emailClient.setFrom(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_MAIL_FROM).getPropertyValue());
+            emailClient.setHostName(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_MAIL_HOST).getPropertyValue());
+            emailClient.setSmtpPort(Integer.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_MAIL_SMTP_PORT).getPropertyValue()));
+            emailClient.setSslSmtpPort(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_MAIL_SMTP_PORT).getPropertyValue());
+            emailClient.setSSLOnConnect(Boolean.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_MAIL_SSL_ON).getPropertyValue()));
+            emailClient.setFrom(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_MAIL_FROM).getPropertyValue());
             emailClient.setAuthenticator(new DefaultAuthenticator(
-                    SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_MAIL_AUTH_USERNAME).getPropertyValue(),
-                    SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_MAIL_AUTH_PASSWORD).getPropertyValue()
+                    SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_MAIL_AUTH_USERNAME).getPropertyValue(),
+                    SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_MAIL_AUTH_PASSWORD).getPropertyValue()
             ));
 
             emailClient.addTo(to);

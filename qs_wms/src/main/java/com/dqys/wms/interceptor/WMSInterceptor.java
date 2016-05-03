@@ -3,6 +3,7 @@ package com.dqys.wms.interceptor;
 import com.dqys.core.base.BaseInterceptor;
 import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.constant.ResponseCodeEnum;
+import com.dqys.core.constant.SysKeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -27,9 +28,6 @@ import java.util.Map;
  */
 public class WMSInterceptor extends BaseInterceptor {
 
-    private static final String SYS_AUTH_URL_KEY = "sys_auth_url";
-    private static final String ROLE_ADMINISTRATOR_KEY = "administrator";
-
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         Integer userId =ProtocolTool.validateUser(
@@ -52,10 +50,10 @@ public class WMSInterceptor extends BaseInterceptor {
                     nameValuePairList.add(nameValuePair);
                 }
             }
-            HttpEntity result = HttpTool.postHttp(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SYS_AUTH_URL_KEY).getPropertyValue() + "/auth/login", null, nameValuePairList);
+            HttpEntity result = HttpTool.postHttp(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_AUTH_URL_KEY).getPropertyValue() + "/auth/login", null, nameValuePairList);
             JsonResponse<Map> jsonResponse = HttpTool.parseToJsonResp(result);
             if(null != jsonResponse && jsonResponse.getCode().intValue() == ResponseCodeEnum.SUCCESS.getValue().intValue()) {
-                if(!String.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, ROLE_ADMINISTRATOR_KEY).getPropertyValue())
+                if(!String.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, SysKeyEnum.ROLE_ADMINISTRATOR_KEY).getPropertyValue())
                         .equals(String.valueOf(jsonResponse.getData().get(AuthHeaderEnum.X_QS_ROLE.getValue())))) {
 
                     httpServletRequest.setAttribute("errMsg", "权限不够");

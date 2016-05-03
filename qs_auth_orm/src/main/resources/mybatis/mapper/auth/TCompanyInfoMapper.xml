@@ -142,4 +142,32 @@
     and version = #{version,jdbcType=INTEGER}
     and stateflag=0
   </update>
+
+  <select id="countByQuery" parameterType="com.dqys.auth.orm.query.CompanyQuery" resultType="int">
+    select
+    count(id)
+    from t_company_info
+    where stateflag=0
+    <if test="credential != null">
+      and credential = #{credential,jdbcType=VARCHAR }
+    </if>
+  </select>
+  <select id="selectByQuery" parameterType="com.dqys.auth.orm.query.CompanyQuery" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_company_info
+    where stateflag=0
+    <if test="credential != null">
+      and credential = #{credential,jdbcType=VARCHAR }
+    </if>
+
+    <if test="isOrder">
+      <foreach collection="orderBy" item="order" open=" order by " separator="," close="  ">
+        ${order} desc
+      </foreach>
+    </if>
+    <if test="isPaging">
+      limit #{startRecode,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </if>
+  </select>
 </mapper>
