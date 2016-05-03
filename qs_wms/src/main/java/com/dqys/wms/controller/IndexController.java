@@ -1,8 +1,7 @@
 package com.dqys.wms.controller;
 
-import com.dqys.core.constant.SysKeyEnum;
+import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
-import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -25,7 +24,7 @@ public class IndexController implements ApplicationListener<ContextRefreshedEven
 
     @RequestMapping("/login")
     public String login(Model model, HttpSession httpSession) throws Exception {
-        model.asMap().put("authUrl", SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_AUTH_URL_KEY).getPropertyValue());
+        model.asMap().put("authUrl", SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_AUTH_URL_KEY).getPropertyValue());
         model.asMap().put("sessionId", httpSession.getId());
         return "login";
     }

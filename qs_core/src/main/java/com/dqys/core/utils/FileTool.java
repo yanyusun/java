@@ -1,6 +1,6 @@
 package com.dqys.core.utils;
 
-import com.dqys.core.constant.SysKeyEnum;
+import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.TSysProperty;
 import org.apache.commons.io.FileUtils;
@@ -57,7 +57,7 @@ public class FileTool implements ApplicationContextAware {
         }
 
         //保存到临时目录
-        String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/" + type + "/" + userId + "/";
+        String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/" + type + "/" + userId + "/";
         File dirTmp = new File(path);
         if(!dirTmp.exists()) {
             dirTmp.mkdirs();
@@ -72,7 +72,7 @@ public class FileTool implements ApplicationContextAware {
         //定时删除
         taskScheduler.schedule(() -> {
             fileTmp.delete();
-        }, new Date(curTime + Long.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_TMP_DEL_TIMER_KEY).getPropertyValue()) * 60 * 24));
+        }, new Date(curTime + Long.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_TMP_DEL_TIMER_KEY).getPropertyValue()) * 60 * 24));
 
 
         return fileName;
@@ -87,12 +87,12 @@ public class FileTool implements ApplicationContextAware {
         if(strs.length != 3) {
             return false;
         }
-        File srcFile = new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/"
+        File srcFile = new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/"
                 + strs[0] + "/" + strs[1] + "/" + fileName);
         if(!srcFile.exists()) {
             return false;
         }
-        File destFile = new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/" + fileName);
+        File destFile = new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/" + fileName);
         FileUtils.moveFile(srcFile, destFile);
 
         return true;

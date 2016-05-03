@@ -1,6 +1,6 @@
 package com.dqys.core.utils;
 
-import com.dqys.core.constant.SysKeyEnum;
+import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.mapper.facade.TAreaMapper;
 import com.dqys.core.model.TArea;
 import org.springframework.beans.BeansException;
@@ -37,7 +37,7 @@ public class AreaTool implements ApplicationContextAware {
     private static void loadAreaByUpper(Integer upper) {
         List<TArea> tAreaList = tAreaMapper.selectByUpper(upper);
         if(null != tAreaList && !tAreaList.isEmpty()) {
-            redisTemplate.boundValueOps(SysKeyEnum.SYS_AREA_KEY + upper).set(tAreaList);
+            redisTemplate.boundValueOps(KeyEnum.SYS_AREA_KEY + upper).set(tAreaList);
             for(TArea tArea : tAreaList) {
                 if(tArea.getIsLeaf()) {
                     return;
@@ -55,7 +55,7 @@ public class AreaTool implements ApplicationContextAware {
      * @throws Exception
      */
     public static List<TArea> listAreaByUpperId(Integer upperId) throws Exception {
-        List<TArea> tAreaList = NoSQLWithRedisTool.getValueObject(SysKeyEnum.SYS_AREA_KEY + upperId);
+        List<TArea> tAreaList = NoSQLWithRedisTool.getValueObject(KeyEnum.SYS_AREA_KEY + upperId);
         return tAreaList;
     }
 
@@ -68,13 +68,13 @@ public class AreaTool implements ApplicationContextAware {
      * @return
      */
     public static String validateArea(Integer province, Integer city, Integer area) {
-        if(null == NoSQLWithRedisTool.getValueObject(SysKeyEnum.SYS_AREA_KEY + String.valueOf(province))) {
+        if(null == NoSQLWithRedisTool.getValueObject(KeyEnum.SYS_AREA_KEY + String.valueOf(province))) {
             return "省份无效";
         }
-        if(null == NoSQLWithRedisTool.getValueObject(SysKeyEnum.SYS_AREA_KEY + String.valueOf(province) + String.valueOf(city))) {
+        if(null == NoSQLWithRedisTool.getValueObject(KeyEnum.SYS_AREA_KEY + String.valueOf(province) + String.valueOf(city))) {
             return "地市无效";
         }
-        if(null == NoSQLWithRedisTool.getValueObject(SysKeyEnum.SYS_AREA_KEY + String.valueOf(province) + String.valueOf(city) + String.valueOf(area))) {
+        if(null == NoSQLWithRedisTool.getValueObject(KeyEnum.SYS_AREA_KEY + String.valueOf(province) + String.valueOf(city) + String.valueOf(area))) {
             return "区县无效";
         }
 

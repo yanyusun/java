@@ -2,7 +2,7 @@ package com.dqys.core.utils;
 
 
 import com.dqys.core.constant.AuthHeaderEnum;
-import com.dqys.core.constant.SysKeyEnum;
+import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.UserSession;
 import org.apache.commons.lang3.StringUtils;
@@ -87,7 +87,7 @@ public abstract class ProtocolTool {
     public static void refreshUserHeader(Integer uid) {
         NoSQLWithRedisTool.setHashObject(USER_LOGIN_KEY + uid, LOGIN_SUB_TIME, new Date());
         NoSQLWithRedisTool.setExpire(USER_LOGIN_KEY + uid,
-                Integer.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_USER_EXPIRE_DAYS_KEY).getPropertyValue()),
+                Integer.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_USER_EXPIRE_DAYS_KEY).getPropertyValue()),
                 TimeUnit.DAYS);
     }
 
@@ -97,7 +97,7 @@ public abstract class ProtocolTool {
                 SignatureTool.md5Encode(
                         "uid=" + uid +
                                 "&type=" + userType.trim() +
-                                "&salt=" + SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_PROTOCOL_SALT_KEY).getPropertyValue().trim() +
+                                "&salt=" + SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_PROTOCOL_SALT_KEY).getPropertyValue().trim() +
                                 "&roleId=" + roleId.trim() +
                                 "&isCertified=" + isCertified.trim(), ENCODE) +
                         "||||" + uid,

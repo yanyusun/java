@@ -3,7 +3,7 @@ package com.dqys.core.constant;
 /**
  * @author by pan on 16-5-3.
  */
-public class SysKeyEnum {
+public class KeyEnum {
 
     /* 系统配置key */
     public static final String SYS_PROTOCOL_SALT_KEY = "protocol_salt";     //加密密钥

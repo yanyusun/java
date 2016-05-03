@@ -1,6 +1,6 @@
 package com.dqys.resource.controller;
 
-import com.dqys.core.constant.SysKeyEnum;
+import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -27,7 +27,7 @@ public class ResourceController {
 
     @RequestMapping("/res_types")
     public Callable<JsonResponse<List>> businessResTypes() {
-        return () -> JsonResponseTool.success(ApiParseTool.parseApiList(SysPropertyTool.getProperty(SysPropertyTypeEnum.FILE_BUSINESS_TYPE), SysKeyEnum.API_SYS_PROPERTY_KEY));
+        return () -> JsonResponseTool.success(ApiParseTool.parseApiList(SysPropertyTool.getProperty(SysPropertyTypeEnum.FILE_BUSINESS_TYPE), KeyEnum.API_SYS_PROPERTY_KEY));
     }
 
     @RequestMapping(value = "/upload", method = RequestMethod.POST)

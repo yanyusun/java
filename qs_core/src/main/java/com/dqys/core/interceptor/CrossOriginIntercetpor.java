@@ -1,6 +1,6 @@
 package com.dqys.core.interceptor;
 
-import com.dqys.core.constant.SysKeyEnum;
+import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -16,7 +16,7 @@ public class CrossOriginIntercetpor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        httpServletResponse.setHeader("Access-Control-Allow-Origin", SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_ACCESS_ORIGIN_KEY).getPropertyValue());
+        httpServletResponse.setHeader("Access-Control-Allow-Origin", SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_ACCESS_ORIGIN_KEY).getPropertyValue());
         httpServletResponse.setHeader("Access-Control-Allow-Headers", "Content-Type");
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST");
         httpServletResponse.setHeader("Allow", "POST");

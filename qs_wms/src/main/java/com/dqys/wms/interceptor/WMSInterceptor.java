@@ -3,10 +3,9 @@ package com.dqys.wms.interceptor;
 import com.dqys.core.base.BaseInterceptor;
 import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.constant.ResponseCodeEnum;
-import com.dqys.core.constant.SysKeyEnum;
+import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
-import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.HttpTool;
 import com.dqys.core.utils.ProtocolTool;
 import com.dqys.core.utils.SysPropertyTool;
@@ -15,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,10 +48,10 @@ public class WMSInterceptor extends BaseInterceptor {
                     nameValuePairList.add(nameValuePair);
                 }
             }
-            HttpEntity result = HttpTool.postHttp(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, SysKeyEnum.SYS_AUTH_URL_KEY).getPropertyValue() + "/auth/login", null, nameValuePairList);
+            HttpEntity result = HttpTool.postHttp(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_AUTH_URL_KEY).getPropertyValue() + "/auth/login", null, nameValuePairList);
             JsonResponse<Map> jsonResponse = HttpTool.parseToJsonResp(result);
             if(null != jsonResponse && jsonResponse.getCode().intValue() == ResponseCodeEnum.SUCCESS.getValue().intValue()) {
-                if(!String.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, SysKeyEnum.ROLE_ADMINISTRATOR_KEY).getPropertyValue())
+                if(!String.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_ADMINISTRATOR_KEY).getPropertyValue())
                         .equals(String.valueOf(jsonResponse.getData().get(AuthHeaderEnum.X_QS_ROLE.getValue())))) {
 
                     httpServletRequest.setAttribute("errMsg", "权限不够");
