@@ -85,6 +85,7 @@ public class SysPropertyTool implements ApplicationContextAware {
         loadApiProperty();
         loadUserTypeProperty();
         loadRoleProperty();
+        loadFileBusinessTypeProperty();
     }
 
 
@@ -95,9 +96,7 @@ public class SysPropertyTool implements ApplicationContextAware {
      */
     public static void loadSysProperty() throws Exception {
         List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.SYS.getValue());
-        for (TSysProperty tSysProperty : sysPropertyList) {
-            refreshPropery(tSysProperty);
-        }
+        refreshPropery(sysPropertyList);
     }
 
     /**
@@ -107,9 +106,7 @@ public class SysPropertyTool implements ApplicationContextAware {
      */
     public static void loadApiProperty() throws Exception {
         List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.API.getValue());
-        for (TSysProperty tSysProperty : sysPropertyList) {
-            refreshPropery(tSysProperty);
-        }
+        refreshPropery(sysPropertyList);
     }
 
     /**
@@ -118,9 +115,7 @@ public class SysPropertyTool implements ApplicationContextAware {
      */
     public static void loadUserTypeProperty() throws Exception {
         List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.USER_TYPE.getValue());
-        for (TSysProperty tSysProperty : sysPropertyList) {
-            refreshPropery(tSysProperty);
-        }
+        refreshPropery(sysPropertyList);
     }
 
     /**
@@ -129,15 +124,28 @@ public class SysPropertyTool implements ApplicationContextAware {
      */
     public static void loadRoleProperty() throws Exception {
         List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.ROLE.getValue());
+        refreshPropery(sysPropertyList);
+    }
+
+    /**
+     * 加载文件业务类型配置
+     * @throws Exception
+     */
+    public static void loadFileBusinessTypeProperty() throws Exception {
+        List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.FILE_BUSINESS_TYPE.getValue());
+        refreshPropery(sysPropertyList);
+    }
+
+
+    /**
+     * 刷新配置缓存
+     * @param sysPropertyList
+     */
+    public static void refreshPropery(List<TSysProperty> sysPropertyList) {
         for (TSysProperty tSysProperty : sysPropertyList) {
             refreshPropery(tSysProperty);
         }
     }
-
-    /**
-     * 刷新配置缓存
-     * @param tSysProperty
-     */
     public static void refreshPropery(TSysProperty tSysProperty) {
         redisTemplate.boundHashOps(PROPERTY_KEY).put(tSysProperty.getType() + tSysProperty.getPropertyName(), tSysProperty);
     }
