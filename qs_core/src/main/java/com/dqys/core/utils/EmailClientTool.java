@@ -63,7 +63,7 @@ public class EmailClientTool implements MessageListener {
 
     private String htmlMailBody(String msg) {
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("<p>欢迎加入多清平台</p><p>以下是的验证链接，<a href=\"http://www.duoqing.com/api/confirm_email?key=")
+        stringBuffer.append("<p>欢迎加入多清平台</p><p>以下是的验证链接，<a href=\"http://www.duoqing.com/auth/confirm_mail?key=")
                 .append(msg)
                 .append("\" target=\"_blank\">请点击确认</a></p>");
         return stringBuffer.toString();

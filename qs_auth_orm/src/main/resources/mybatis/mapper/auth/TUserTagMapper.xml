@@ -98,5 +98,27 @@
     where
     user_id = #{userId,jdbcType=INTEGER}
     and stateflag=0
+    order by user_type,role_id
+  </select>
+  <select id="selectByQuery" parameterType="com.dqys.auth.orm.query.CompanyQuery" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user_tag
+    where stateflag=0
+    <if test="userId != null">
+      and user_id = #{userId,jdbcType=INTEGER }
+    </if>
+    <if test="userType != null">
+      and user_type = #{userType,jdbcType=TINYINT }
+    </if>
+
+    <if test="isOrder">
+      <foreach collection="orderBy" item="order" open=" order by " separator="," close="  ">
+        ${order} desc
+      </foreach>
+    </if>
+    <if test="isPaging">
+      limit #{startRecode,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </if>
   </select>
 </mapper>

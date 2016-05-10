@@ -44,7 +44,7 @@ public class FileTool implements ApplicationContextAware {
         }
 
         long curTime = System.currentTimeMillis();
-        String fileName = userId + "_" + type + "_" + curTime;
+        String fileName = type + "_" + userId + "_" + curTime;
 
         //验证业务类型对应的文件类型
         if(null != multipartFile && !multipartFile.isEmpty()) {
@@ -92,7 +92,8 @@ public class FileTool implements ApplicationContextAware {
         if(!srcFile.exists()) {
             return false;
         }
-        File destFile = new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/" + fileName);
+        File destFile = new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/" +
+                strs[0] + "/" + strs[1] + "/" + fileName);
         FileUtils.moveFile(srcFile, destFile);
 
         return true;

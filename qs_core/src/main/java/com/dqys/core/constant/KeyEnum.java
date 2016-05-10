@@ -22,12 +22,15 @@ public class KeyEnum {
     public static final String SYS_AUTH_URL_KEY = "sys_auth_url";       //权限URL
 
 
-    /* api配置key */
-    public static final String API_SYS_PROPERTY_KEY = "api_sys_property";
-
+    /* 用户类型key */
+    public static final String UTYPE_PLATFORM_KEY = "u_type_platform";
 
     /* 角色配置key */
     public static final String ROLE_ADMINISTRATOR_KEY = "role_administrator";
+    public static final String ROLE_MANAGER_KEY = "role_manager";
+
+    /* api配置key */
+    public static final String API_SYS_PROPERTY_KEY = "api_sys_property";
 
 
 }

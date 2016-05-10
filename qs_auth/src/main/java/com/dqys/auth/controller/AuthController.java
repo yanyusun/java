@@ -1,18 +1,17 @@
 package com.dqys.auth.controller;
 
 import com.dqys.auth.orm.pojo.TCompanyInfo;
+import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.service.constant.MailVerifyTypeEnum;
 import com.dqys.auth.service.dto.UserDTO;
 import com.dqys.auth.service.facade.CompanyService;
 import com.dqys.auth.service.facade.UserService;
 import com.dqys.captcha.service.facade.CaptchaService;
+import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.ServiceResult;
 import com.dqys.core.model.UserSession;
-import com.dqys.core.utils.AreaTool;
-import com.dqys.core.utils.FormatValidateTool;
-import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.core.utils.ProtocolTool;
+import com.dqys.core.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,10 +85,8 @@ public class AuthController {
                 return JsonResponseTool.failure(smsCodeResult.getMessage());
             }
 
-            // FIXME: 16-4-13  临时查看验证码
-            LogManager.getRootLogger().debug(smsCodeResult.getData());
-
             // TODO: 16-4-13  发送短信
+            LogManager.getRootLogger().debug(smsCodeResult.getData());
 
             return JsonResponseTool.success(null);
         };
@@ -180,21 +177,21 @@ public class AuthController {
             }
 
             //用户注册
-            ServiceResult<UserDTO> userDTOServiceResult = userService.userRegister_tx(userName, mobile, email, pwd);
-            if(!userDTOServiceResult.getFlag()) {
-                return JsonResponseTool.failure(userDTOServiceResult.getMessage());
+            ServiceResult<UserDTO> userServiceResult = userService.userRegister_tx(userName, mobile, email, pwd);
+            if(!userServiceResult.getFlag()) {
+                return JsonResponseTool.failure(userServiceResult.getMessage());
             }
 
             if(StringUtils.isNotBlank(email)) {
-                userService.sendConfirmMail(MailVerifyTypeEnum.EMAIL_CONFIRM, userDTOServiceResult.getData().getUserId());
+                userService.sendConfirmMail(MailVerifyTypeEnum.EMAIL_CONFIRM, userServiceResult.getData().getUserId());
             }
 
             return JsonResponseTool.success(ProtocolTool.createUserHeader(
-                    userDTOServiceResult.getData().getUserId(),
-                    userDTOServiceResult.getData().getUserType(),
-                    userDTOServiceResult.getData().getRoleId(),
-                    userDTOServiceResult.getData().getStatus(),
-                    userDTOServiceResult.getData().getCertified()
+                    userServiceResult.getData().getUserId(),
+                    userServiceResult.getData().getUserTypes(),
+                    userServiceResult.getData().getRoleIds(),
+                    userServiceResult.getData().getIsCertifieds(),
+                    userServiceResult.getData().getStatus()?1:0
             ));
         };
     }
@@ -263,10 +260,11 @@ public class AuthController {
 
             return JsonResponseTool.success(ProtocolTool.createUserHeader(
                     userServiceResult.getData().getUserId(),
-                    userServiceResult.getData().getUserType(),
-                    userServiceResult.getData().getRoleId(),
-                    userServiceResult.getData().getStatus(),
-                    userServiceResult.getData().getCertified())
+                    userServiceResult.getData().getUserTypes(),
+                    userServiceResult.getData().getRoleIds(),
+                    userServiceResult.getData().getIsCertifieds(),
+                    userServiceResult.getData().getStatus()?1:0
+                    )
             );
         };
     }
@@ -294,10 +292,10 @@ public class AuthController {
 
             return JsonResponseTool.success(ProtocolTool.createUserHeader(
                     userServiceResult.getData().getUserId(),
-                    userServiceResult.getData().getUserType(),
-                    userServiceResult.getData().getRoleId(),
-                    userServiceResult.getData().getStatus(),
-                    userServiceResult.getData().getCertified()
+                    userServiceResult.getData().getUserTypes(),
+                    userServiceResult.getData().getRoleIds(),
+                    userServiceResult.getData().getIsCertifieds(),
+                    userServiceResult.getData().getStatus()?1:0
             ));
         };
     }
@@ -342,14 +340,21 @@ public class AuthController {
 
             return JsonResponseTool.success(ProtocolTool.createUserHeader(
                     userServiceResult.getData().getUserId(),
-                    userServiceResult.getData().getUserType(),
-                    userServiceResult.getData().getRoleId(),
-                    userServiceResult.getData().getStatus(),
-                    userServiceResult.getData().getCertified()
+                    userServiceResult.getData().getUserTypes(),
+                    userServiceResult.getData().getRoleIds(),
+                    userServiceResult.getData().getIsCertifieds(),
+                    userServiceResult.getData().getStatus()?1:0
             ));
         };
     }
 
+    /**
+     * 从邮件重置密码
+     * @param uid
+     * @param confirmKey
+     * @param pwd
+     * @return
+     */
     @RequestMapping(value = "/reset_mail")
     public Callable<JsonResponse> userReset(@RequestParam Integer uid, @RequestParam String confirmKey, @RequestParam String pwd) {
         return () -> {
@@ -371,14 +376,18 @@ public class AuthController {
 
             return JsonResponseTool.success(ProtocolTool.createUserHeader(
                     userServiceResult.getData().getUserId(),
-                    userServiceResult.getData().getUserType(),
-                    userServiceResult.getData().getRoleId(),
-                    userServiceResult.getData().getStatus(),
-                    userServiceResult.getData().getCertified()
+                    userServiceResult.getData().getUserTypes(),
+                    userServiceResult.getData().getRoleIds(),
+                    userServiceResult.getData().getIsCertifieds(),
+                    userServiceResult.getData().getStatus()?1:0
             ));
         };
     }
 
+    /**
+     * 发送邮件
+     * @return
+     */
     @RequestMapping(value = "/send_mail", method = RequestMethod.POST)
     public Callable<JsonResponse> sendConfirmEmail() {
         Integer uid = UserSession.getCurrent().getUserId();
@@ -389,6 +398,11 @@ public class AuthController {
         };
     }
 
+    /**
+     * 发送确认邮件
+     * @param confirmKey
+     * @return
+     */
     @RequestMapping(value = "/confirm_mail")
     public Callable<JsonResponse> confirmEmail(@RequestParam String confirmKey) {
         Integer uid = UserSession.getCurrent().getUserId();
@@ -402,6 +416,17 @@ public class AuthController {
         };
     }
 
+    /**
+     * 添加公司信息
+     * @param companyName
+     * @param credential
+     * @param licence
+     * @param province
+     * @param city
+     * @param area
+     * @param address
+     * @return
+     */
     @RequestMapping(value = "/add_company", method = RequestMethod.POST)
     public Callable<JsonResponse> addCompany(@RequestParam String companyName, @RequestParam String credential, @RequestParam String licence,
                                              @RequestParam Integer province, @RequestParam Integer city, @RequestParam Integer area, @RequestParam String address) {
@@ -410,6 +435,16 @@ public class AuthController {
             String verifyArea = AreaTool.validateArea(province, city, area);
             if(StringUtils.isNotBlank(verifyArea)) {
                 return JsonResponseTool.paramErr(verifyArea);
+            }
+
+            if(StringUtils.isBlank(companyName)) {
+                return JsonResponseTool.paramErr("公司名不能为空");
+            }
+            if(StringUtils.isBlank(credential)) {
+                return JsonResponseTool.paramErr("统一信用代码不能为空");
+            }
+            if(StringUtils.isBlank(licence)) {
+                return JsonResponseTool.paramErr("营业执照未上传");
             }
 
             //验证公司有效性
@@ -435,4 +470,72 @@ public class AuthController {
             return JsonResponseTool.success(companyResult.getData());
         };
     }
+
+    /**
+     * 注册运营者(管理员)
+     * @param userId
+     * @param userType
+     * @param companyId
+     * @param realName
+     * @param identity
+     * @param mobile
+     * @param smsCode
+     * @return
+     */
+    @RequestMapping(value = "/register_admin", method = RequestMethod.POST)
+    public Callable<JsonResponse> registerAdmin(@RequestParam(defaultValue = "0") Integer userId, @RequestParam Integer userType,
+                                                @RequestParam(defaultValue = "0") Integer companyId, @RequestParam String realName,
+                                                @RequestParam String identity, @RequestParam String mobile, @RequestParam String smsCode) {
+        Integer uid = UserSession.getCurrent().getUserId();
+        //操作他人帐号 需要平台管理员权限
+        if(0 != userId) {
+            if(!ProtocolTool.validateSysManager(String.valueOf(UserSession.getCurrent().getUserType()),
+                    String.valueOf(UserSession.getCurrent().getRoleId()),
+                    String.valueOf(UserSession.getCurrent().getIsCertified()),
+                    String.valueOf(UserSession.getCurrent().getStatus()))) {
+                return () -> JsonResponseTool.authFailure("没有权限");
+            }
+        }
+        return () -> {
+            if(0 == uid && 0 == userId) {
+                return JsonResponseTool.paramErr("用户无效");
+            }
+            if(!FormatValidateTool.checkMobile(mobile)) {
+                return JsonResponseTool.paramErr("手机号无效");
+            }
+            if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, null, String.valueOf(userType)).isEmpty()) {
+                return JsonResponseTool.paramErr("用户类型无效");
+            }
+            if(StringUtils.isBlank(realName)) {
+                return JsonResponseTool.paramErr("姓名无效");
+            }
+            String identityMsg = FormatValidateTool.idCardValidate(identity);
+            if(!StringUtils.isBlank(identityMsg)) {
+                return JsonResponseTool.paramErr("身份证无效," + identityMsg);
+            }
+            ServiceResult codeValidResult = this.captchaService.validSmsCaptcha(mobile, smsCode);
+            if(!codeValidResult.getFlag()) {
+                return JsonResponseTool.paramErr(codeValidResult.getMessage());
+            }
+
+            ServiceResult<TUserInfo> userServiceResult = this.userService.queryUserById(0==userId?uid:userId);      //userId优先
+            if(!userServiceResult.getFlag()) {
+                return JsonResponseTool.failure(userServiceResult.getMessage());
+            }
+
+            if(0 != companyId) {
+                userServiceResult.getData().setCompanyId(companyId);
+            }
+            userServiceResult.getData().setRealName(realName);
+            userServiceResult.getData().setIdentity(identity);
+            userServiceResult.getData().setMobile(mobile);
+            userServiceResult = this.userService.registerAdmin_tx(userType, userServiceResult.getData());
+            if(!userServiceResult.getFlag()) {
+                return JsonResponseTool.failure(userServiceResult.getMessage());
+            }
+
+            return JsonResponseTool.success(null);
+        };
+    }
+
 }

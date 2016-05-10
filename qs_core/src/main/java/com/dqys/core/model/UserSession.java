@@ -10,10 +10,10 @@ public class UserSession {
     private static ThreadLocal<UserSession> sessionHolder = new ThreadLocal<UserSession>();
 
     private Integer userId;
-    private Integer userType;
-    private Integer roleId;
-    private Boolean status;
-    private Boolean isCertified;
+    private String userType;
+    private String roleId;
+    private String status;
+    private String isCertified;
 
     public static UserSession getCurrent() {
         return sessionHolder.get();
@@ -31,35 +31,35 @@ public class UserSession {
         this.userId = userId;
     }
 
-    public Integer getUserType() {
+    public String getUserType() {
         return userType;
     }
 
-    public void setUserType(Integer userType) {
+    public void setUserType(String userType) {
         this.userType = userType;
     }
 
-    public Integer getRoleId() {
+    public String getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(Integer roleId) {
+    public void setRoleId(String roleId) {
         this.roleId = roleId;
     }
 
-    public Boolean getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Boolean getCertified() {
+    public String getIsCertified() {
         return isCertified;
     }
 
-    public void setCertified(Boolean certified) {
-        isCertified = certified;
+    public void setIsCertified(String isCertified) {
+        this.isCertified = isCertified;
     }
 }

@@ -1,7 +1,10 @@
 package com.dqys.auth.orm.dao.facade;
 
 import com.dqys.auth.orm.pojo.TUserTag;
+import com.dqys.auth.orm.query.UserQuery;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TUserTagMapper {
     int deleteByPrimaryKey(Integer id);
@@ -12,5 +15,7 @@ public interface TUserTagMapper {
 
     int updateByPrimaryKeySelective(TUserTag record);
 
-    TUserTag selectByUserId(@Param("userId") Integer uid);
+    List<TUserTag> selectByUserId(@Param("userId") Integer uid);
+
+    List<TUserTag> selectByQuery(UserQuery query);
 }

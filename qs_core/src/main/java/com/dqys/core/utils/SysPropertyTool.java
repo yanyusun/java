@@ -3,6 +3,7 @@ package com.dqys.core.utils;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.mapper.facade.TSysPropertyMapper;
 import com.dqys.core.model.TSysProperty;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -223,6 +224,29 @@ public class SysPropertyTool implements ApplicationContextAware {
         while (iterator.hasNext()) {
             TSysProperty tmp = (TSysProperty) iterator.next();
             if (tmp.getPropertyName().indexOf(keyLike) == -1) {
+                iterator.remove();
+            }
+        }
+
+        return tSysPropertyList;
+    }
+
+    /**
+     * 根据类型/模糊主键/值
+     * @param type
+     * @param keyLike
+     * @param value
+     * @return
+     */
+    public static List<TSysProperty> getProperty(SysPropertyTypeEnum type, String keyLike, String value) {
+        List tSysPropertyList = getProperty(type);
+        Iterator iterator = tSysPropertyList.iterator();
+        while (iterator.hasNext()) {
+            TSysProperty tmp = (TSysProperty) iterator.next();
+            if(StringUtils.isNotBlank(keyLike) && tmp.getPropertyName().indexOf(keyLike) == -1) {
+                iterator.remove();
+            }
+            if (StringUtils.isNotBlank(value) && !tmp.getPropertyValue().equals(value)) {
                 iterator.remove();
             }
         }

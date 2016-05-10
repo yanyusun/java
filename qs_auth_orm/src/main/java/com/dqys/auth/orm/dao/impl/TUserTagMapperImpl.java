@@ -1,11 +1,14 @@
 package com.dqys.auth.orm.dao.impl;
 
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
+import com.dqys.auth.orm.query.UserQuery;
 import com.dqys.core.base.BaseDao;
 import com.dqys.auth.orm.pojo.TUserTag;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author by pan on 16-4-6.
@@ -34,7 +37,12 @@ public class TUserTagMapperImpl extends BaseDao implements TUserTagMapper {
     }
 
     @Override
-    public TUserTag selectByUserId(@Param("userId") Integer uid) {
+    public List<TUserTag> selectByUserId(@Param("userId") Integer uid) {
         return super.getSqlSession().getMapper(TUserTagMapper.class).selectByUserId(uid);
+    }
+
+    @Override
+    public List<TUserTag> selectByQuery(UserQuery query) {
+        return super.getSqlSession().getMapper(TUserTagMapper.class).selectByQuery(query);
     }
 }

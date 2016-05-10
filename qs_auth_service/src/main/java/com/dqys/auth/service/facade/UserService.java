@@ -80,33 +80,18 @@ public interface UserService {
      */
     ServiceResult confirmMail(MailVerifyTypeEnum e, Integer uid, String confirmKey, String pwd) throws Exception;
 
-
+    /**
+     * 根据用户ID查询用户
+     * @param uid
+     * @return
+     */
+    ServiceResult<TUserInfo> queryUserById(Integer uid);
 
     /**
-     * 注册公司信息
-     * @param companyName
-     * @param credential
-     * @param licence
-     * @param legalPerson
-     * @param province
-     * @param city
-     * @param area
-     * @param address
+     * 注册机构管理员
+     * @param userType
+     * @param tUserInfo
      * @return
-     * @throws Exception
      */
-    ServiceResult<TUserInfo> registerCompany(String companyName, String credential, MultipartFile licence, MultipartFile legalPerson,
-                                             Integer province, Integer city, Integer area, String address) throws Exception;
-
-    /**
-     * 完善个人信息
-     * @param userName
-     * @param mobile
-     * @param email
-     * @param realName
-     * @param isMan
-     * @return
-     * @throws Exception
-     */
-    ServiceResult<TUserInfo> perfectUserInfo(String userName, String mobile, String email, String realName, Boolean isMan) throws Exception;
+    ServiceResult<TUserInfo> registerAdmin_tx(Integer userType, TUserInfo tUserInfo);
 }

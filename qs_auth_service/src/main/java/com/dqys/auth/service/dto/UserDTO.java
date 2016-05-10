@@ -2,6 +2,8 @@ package com.dqys.auth.service.dto;
 
 import com.dqys.core.base.BaseDTO;
 
+import java.util.List;
+
 /**
  * @author by pan on 16-4-12.
  */
@@ -25,11 +27,13 @@ public class UserDTO extends BaseDTO {
 
     private int userId;
 
-    private Byte userType;
+    private List<UserTagDTO> userTagDTOList;
 
-    private Byte roleId;
+    private String userTypes = "";
 
-    private Boolean isCertified;
+    private String roleIds = "";
+
+    private String isCertifieds = "";
 
     public String getUserName() {
         return userName;
@@ -103,27 +107,32 @@ public class UserDTO extends BaseDTO {
         this.userId = userId;
     }
 
-    public Byte getUserType() {
-        return userType;
+    public List<UserTagDTO> getUserTagDTOList() {
+        return userTagDTOList;
     }
 
-    public void setUserType(Byte userType) {
-        this.userType = userType;
+    public void setUserTagDTOList(List<UserTagDTO> userTagDTOList) {
+        this.userTagDTOList = userTagDTOList;
     }
 
-    public Byte getRoleId() {
-        return roleId;
+    public String getUserTypes() {
+        for(UserTagDTO userTagDTO : userTagDTOList) {
+            userTypes += userTagDTO.getUserType() + ",";
+        }
+        return userTypes;
     }
 
-    public void setRoleId(Byte roleId) {
-        this.roleId = roleId;
+    public String getRoleIds() {
+        for(UserTagDTO userTagDTO : userTagDTOList) {
+            roleIds += userTagDTO.getRoleId() + ",";
+        }
+        return roleIds;
     }
 
-    public Boolean getCertified() {
-        return isCertified;
-    }
-
-    public void setCertified(Boolean certified) {
-        isCertified = certified;
+    public String getIsCertifieds() {
+        for(UserTagDTO userTagDTO : userTagDTOList) {
+            isCertifieds += userTagDTO.getCertified() + ",";
+        }
+        return isCertifieds;
     }
 }

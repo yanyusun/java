@@ -20,8 +20,8 @@ public class HeaderInterceptor extends BaseInterceptor {
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue())
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
         );
 
         if(0 == userId) {

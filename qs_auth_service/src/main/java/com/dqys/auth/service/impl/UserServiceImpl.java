@@ -1,7 +1,10 @@
 package com.dqys.auth.service.impl;
 
+import com.dqys.auth.orm.query.UserQuery;
 import com.dqys.auth.service.facade.UserService;
 import com.dqys.auth.service.constant.MailVerifyTypeEnum;
+import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.ServiceResult;
 import com.dqys.core.utils.NoSQLWithRedisTool;
 import com.dqys.core.utils.RabbitMQProducerTool;
@@ -12,9 +15,11 @@ import com.dqys.auth.orm.dao.facade.TUserTagMapper;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.auth.service.utils.UserUtils;
+import com.dqys.core.utils.SysPropertyTool;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -84,12 +89,12 @@ public class UserServiceImpl implements UserService {
             return ServiceResult.failure("密码错误", ObjectUtils.NULL);
         }
 
-        TUserTag tUserTag = this.tUserTagMapper.selectByUserId(tUserInfo.getId());
-        if(null == tUserTag) {
+        List<TUserTag> tUserTags = this.tUserTagMapper.selectByUserId(tUserInfo.getId());
+        if(null == tUserTags) {
             return ServiceResult.failure("用户数据异常", ObjectUtils.NULL);
         }
 
-        return ServiceResult.success(UserUtils.toUserDTO(tUserInfo, tUserTag));
+        return ServiceResult.success(UserUtils.toUserDTO(tUserInfo, tUserTags));
     }
 
     @Override
@@ -163,7 +168,41 @@ public class UserServiceImpl implements UserService {
         return ServiceResult.success(ObjectUtils.NULL);
     }
 
+    @Override
+    public ServiceResult<TUserInfo> queryUserById(Integer uid) {
+        TUserInfo tUserInfo = this.tUserInfoMapper.selectByPrimaryKey(uid);
+        if(null == tUserInfo) {
+            return ServiceResult.failure("用户不存在", ObjectUtils.NULL);
+        }
 
+        return ServiceResult.success(tUserInfo);
+    }
+
+    @Override
+    public ServiceResult<TUserInfo> registerAdmin_tx(Integer userType, TUserInfo tUserInfo) {
+        int count = this.tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo);
+        if(1 != count) {
+            return ServiceResult.failure("更新用户信息失败", ObjectUtils.NULL);
+        }
+
+        UserQuery query = new UserQuery();
+        query.setUserId(tUserInfo.getId());
+        query.setUserType((byte) 0);
+        List<TUserTag> tUserTags = this.tUserTagMapper.selectByQuery(query);
+        if(null == tUserTags || tUserTags.isEmpty()) {
+            throw new UnexpectedRollbackException("用户信息异常");
+        }
+        //fixme  权限设计
+        TUserTag tUserTag = tUserTags.get(0);
+        tUserTag.setRoleId(NumberUtils.toByte(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_ADMINISTRATOR_KEY).getPropertyValue()));
+        tUserTag.setUserType(userType.byteValue());
+        count = this.tUserTagMapper.updateByPrimaryKeySelective(tUserTag);
+        if(1 != count) {
+            return ServiceResult.failure("更新运营者信息失败", ObjectUtils.NULL);
+        }
+
+        return ServiceResult.success(tUserInfo);
+    }
 
     /* 验证用户存在性 */
     private TUserInfo queryUser(String userName, String mobile, String email) throws Exception {
@@ -186,6 +225,7 @@ public class UserServiceImpl implements UserService {
         tUserInfo.setEmail(email);
         tUserInfo.setSalt(RandomStringUtils.randomAlphabetic(6));
         tUserInfo.setPassword(this.encodePassword(pwd, tUserInfo.getSalt()));
+        tUserInfo.setStatus(false);
         int count = this.tUserInfoMapper.insertSelective(tUserInfo);
         if(1 == count) {
             return tUserInfo;
@@ -204,6 +244,7 @@ public class UserServiceImpl implements UserService {
         TUserTag tUserTag = new TUserTag();
         tUserTag.setUserId(userId);
         tUserTag.setUserType((byte) 0);
+        tUserTag.setRoleId((byte) 0);
         tUserTag.setIsCertified(false);
 
         int count =this.tUserTagMapper.insertSelective(tUserTag);
@@ -211,16 +252,6 @@ public class UserServiceImpl implements UserService {
             return tUserTag;
         }
 
-        return null;
-    }
-
-    @Override
-    public ServiceResult<TUserInfo> registerCompany(String companyName, String credential, MultipartFile licence, MultipartFile legalPerson, Integer province, Integer city, Integer area, String address) throws Exception {
-        return null;
-    }
-
-    @Override
-    public ServiceResult<TUserInfo> perfectUserInfo(String userName, String mobile, String email, String realName, Boolean isMan) throws Exception {
         return null;
     }
 }

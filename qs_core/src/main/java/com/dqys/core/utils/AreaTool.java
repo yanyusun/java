@@ -69,13 +69,14 @@ public class AreaTool implements ApplicationContextAware {
      * @return
      */
     public static String validateArea(Integer province, Integer city, Integer area) {
+
         if(null == NoSQLWithRedisTool.getValueObject(AREA_KEY + String.valueOf(province))) {
             return "省份无效";
         }
-        if(null == NoSQLWithRedisTool.getValueObject(AREA_KEY + String.valueOf(province) + String.valueOf(city))) {
+        if(null == NoSQLWithRedisTool.getValueObject(AREA_KEY + String.valueOf(city)) || !String.valueOf(city).startsWith(String.valueOf(province))) {
             return "地市无效";
         }
-        if(null == NoSQLWithRedisTool.getValueObject(AREA_KEY + String.valueOf(province) + String.valueOf(city) + String.valueOf(area))) {
+        if(null == NoSQLWithRedisTool.getValueObject(AREA_KEY + String.valueOf(area)) || !String.valueOf(area).startsWith(String.valueOf(city))) {
             return "区县无效";
         }
 

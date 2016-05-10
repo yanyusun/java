@@ -31,8 +31,7 @@ public class WMSInterceptor extends BaseInterceptor {
                 String.valueOf(httpServletRequest.getSession().getAttribute(AuthHeaderEnum.X_QS_USER.getValue())),
                 String.valueOf(httpServletRequest.getSession().getAttribute(AuthHeaderEnum.X_QS_TYPE.getValue())),
                 String.valueOf(httpServletRequest.getSession().getAttribute(AuthHeaderEnum.X_QS_ROLE.getValue())),
-                String.valueOf(httpServletRequest.getSession().getAttribute(AuthHeaderEnum.X_QS_STATUS.getValue())),
-                String.valueOf(httpServletRequest.getSession().getAttribute(AuthHeaderEnum.X_QS_CERTIFIED.getValue()))
+                String.valueOf(httpServletRequest.getSession().getAttribute(AuthHeaderEnum.X_QS_CERTIFIED.getValue())), String.valueOf(httpServletRequest.getSession().getAttribute(AuthHeaderEnum.X_QS_STATUS.getValue()))
         );
 
         if(0 == userId) {
@@ -50,8 +49,10 @@ public class WMSInterceptor extends BaseInterceptor {
             JsonResponse<Map> jsonResponse = HttpTool.postHttp(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_AUTH_URL_KEY).getPropertyValue() + "/auth/login", null, nameValuePairList);
             //JsonResponse<Map> jsonResponse = HttpTool.postHttp("http://localhost:9081/auth/login", null, nameValuePairList);;
             if(null != jsonResponse && jsonResponse.getCode().intValue() == ResponseCodeEnum.SUCCESS.getValue().intValue()) {
-                if(!String.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_ADMINISTRATOR_KEY).getPropertyValue())
-                        .equals(String.valueOf(jsonResponse.getData().get(AuthHeaderEnum.X_QS_ROLE.getValue())))) {
+                if(!ProtocolTool.validateSysAdmin(String.valueOf(jsonResponse.getData().get(AuthHeaderEnum.X_QS_TYPE.getValue())),
+                        String.valueOf(jsonResponse.getData().get(AuthHeaderEnum.X_QS_ROLE.getValue())),
+                        String.valueOf(jsonResponse.getData().get(AuthHeaderEnum.X_QS_CERTIFIED.getValue())),
+                        String.valueOf(jsonResponse.getData().get(AuthHeaderEnum.X_QS_STATUS.getValue())))) {
 
                     httpServletRequest.setAttribute("errMsg", "权限不够");
                     httpServletRequest.getRequestDispatcher("/login").forward(httpServletRequest, httpServletResponse);
