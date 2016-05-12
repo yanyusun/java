@@ -191,7 +191,7 @@ public class AuthController {
                     userServiceResult.getData().getUserTypes(),
                     userServiceResult.getData().getRoleIds(),
                     userServiceResult.getData().getIsCertifieds(),
-                    userServiceResult.getData().getStatus()?1:0
+                    userServiceResult.getData().getStatus()
             ));
         };
     }
@@ -263,7 +263,7 @@ public class AuthController {
                     userServiceResult.getData().getUserTypes(),
                     userServiceResult.getData().getRoleIds(),
                     userServiceResult.getData().getIsCertifieds(),
-                    userServiceResult.getData().getStatus()?1:0
+                    userServiceResult.getData().getStatus()
                     )
             );
         };
@@ -295,7 +295,7 @@ public class AuthController {
                     userServiceResult.getData().getUserTypes(),
                     userServiceResult.getData().getRoleIds(),
                     userServiceResult.getData().getIsCertifieds(),
-                    userServiceResult.getData().getStatus()?1:0
+                    userServiceResult.getData().getStatus()
             ));
         };
     }
@@ -343,7 +343,7 @@ public class AuthController {
                     userServiceResult.getData().getUserTypes(),
                     userServiceResult.getData().getRoleIds(),
                     userServiceResult.getData().getIsCertifieds(),
-                    userServiceResult.getData().getStatus()?1:0
+                    userServiceResult.getData().getStatus()
             ));
         };
     }
@@ -379,7 +379,7 @@ public class AuthController {
                     userServiceResult.getData().getUserTypes(),
                     userServiceResult.getData().getRoleIds(),
                     userServiceResult.getData().getIsCertifieds(),
-                    userServiceResult.getData().getStatus()?1:0
+                    userServiceResult.getData().getStatus()
             ));
         };
     }
@@ -492,7 +492,7 @@ public class AuthController {
             if(!ProtocolTool.validateSysManager(String.valueOf(UserSession.getCurrent().getUserType()),
                     String.valueOf(UserSession.getCurrent().getRoleId()),
                     String.valueOf(UserSession.getCurrent().getIsCertified()),
-                    String.valueOf(UserSession.getCurrent().getStatus()))) {
+                    UserSession.getCurrent().getStatus())) {
                 return () -> JsonResponseTool.authFailure("没有权限");
             }
         }

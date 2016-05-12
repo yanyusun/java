@@ -100,7 +100,7 @@
     and stateflag=0
     order by user_type,role_id
   </select>
-  <select id="selectByQuery" parameterType="com.dqys.auth.orm.query.CompanyQuery" resultMap="BaseResultMap">
+  <select id="selectByQuery" parameterType="com.dqys.auth.orm.query.UserQuery" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from t_user_tag

@@ -76,7 +76,7 @@ public abstract class ProtocolTool {
             userSession.setUserType(userTypes);
             userSession.setRoleId(roleIds);
             userSession.setIsCertified(isCertifieds);
-            userSession.setStatus(status);
+            userSession.setStatus(Integer.decode(status));
             UserSession.setCurrent(userSession);
             ProtocolTool.refreshUserHeader(userId);
 
@@ -115,11 +115,11 @@ public abstract class ProtocolTool {
      * @param status
      * @return
      */
-    public static boolean validateSysManager(String userTypes, String roles, String certifieds, String status) {
+    public static boolean validateSysManager(String userTypes, String roles, String certifieds, Integer status) {
         String[] typesTmp = userTypes.split(",");
         for(int i=0; i<typesTmp.length; i++) {
             if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.UTYPE_PLATFORM_KEY).getPropertyValue().equals(typesTmp[i])) {
-                if(Boolean.parseBoolean(status) && Boolean.parseBoolean(certifieds.split(",")[i]) &&
+                if(0!=status && Boolean.parseBoolean(certifieds.split(",")[i]) &&
                         Integer.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_MANAGER_KEY).getPropertyValue()).intValue() >=
                                 Integer.valueOf(roles.split(",")[i]).intValue() &&
                         Integer.valueOf(roles.split(",")[i]).intValue() > 0) {

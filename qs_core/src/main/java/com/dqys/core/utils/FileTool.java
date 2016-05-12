@@ -39,8 +39,11 @@ public class FileTool implements ApplicationContextAware {
     public static String saveFileSyncTmp(String type, Integer userId, MultipartFile multipartFile) throws IOException {
         TSysProperty tSysProperty = SysPropertyTool.getProperty(SysPropertyTypeEnum.FILE_BUSINESS_TYPE, type);
         //验证允许上传的业务类型 或者 文件是否为空
-        if(null == tSysProperty || null == multipartFile || multipartFile.isEmpty()) {
-            return null;
+        if(null == multipartFile || multipartFile.isEmpty()) {
+            return "err:上传的文件为空";
+        }
+        if(null == tSysProperty) {
+            return "err:不支持的业务类型";
         }
 
         long curTime = System.currentTimeMillis();
@@ -50,7 +53,7 @@ public class FileTool implements ApplicationContextAware {
         if(null != multipartFile && !multipartFile.isEmpty()) {
             String endfix = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().indexOf(".")+1, multipartFile.getOriginalFilename().length());
             if(0 > tSysProperty.getPropertyValue().indexOf(endfix)) {
-                return null;
+                return "err:不支持的文件类型";
             }
 
             fileName += "." + endfix;

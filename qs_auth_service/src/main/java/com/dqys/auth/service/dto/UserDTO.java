@@ -23,7 +23,7 @@ public class UserDTO extends BaseDTO {
 
     private Integer companyId;
 
-    private Boolean status;
+    private Integer status;
 
     private int userId;
 
@@ -91,11 +91,11 @@ public class UserDTO extends BaseDTO {
         this.companyId = companyId;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

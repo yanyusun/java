@@ -149,7 +149,7 @@ public class UserServiceImpl implements UserService {
 
         switch (e) {
             case EMAIL_CONFIRM:
-                tUserInfo.setStatus(true);
+                tUserInfo.setStatus(NumberUtils.INTEGER_ONE);
                 break;
 
             case USER_RESET:
@@ -187,18 +187,25 @@ public class UserServiceImpl implements UserService {
 
         UserQuery query = new UserQuery();
         query.setUserId(tUserInfo.getId());
-        query.setUserType((byte) 0);
+        query.setUserType(userType.byteValue());
         List<TUserTag> tUserTags = this.tUserTagMapper.selectByQuery(query);
         if(null == tUserTags || tUserTags.isEmpty()) {
-            throw new UnexpectedRollbackException("用户信息异常");
+            //add
+            TUserTag tUserTag = new TUserTag();
+            tUserTag.setUserId(tUserInfo.getId());
+            tUserTag.setRoleId(NumberUtils.toByte(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_ADMINISTRATOR_KEY).getPropertyValue()));
+            tUserTag.setUserType(userType.byteValue());
+            tUserTag.setIsCertified(Boolean.FALSE);
+            count = this.tUserTagMapper.insertSelective(tUserTag);
+        } else {
+            TUserTag tUserTag = tUserTags.get(0);
+            tUserTag.setRoleId(NumberUtils.toByte(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_ADMINISTRATOR_KEY).getPropertyValue()));
+            tUserTag.setUserType(userType.byteValue());
+            count = this.tUserTagMapper.updateByPrimaryKeySelective(tUserTag);
         }
-        //fixme  权限设计
-        TUserTag tUserTag = tUserTags.get(0);
-        tUserTag.setRoleId(NumberUtils.toByte(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_ADMINISTRATOR_KEY).getPropertyValue()));
-        tUserTag.setUserType(userType.byteValue());
-        count = this.tUserTagMapper.updateByPrimaryKeySelective(tUserTag);
+
         if(1 != count) {
-            return ServiceResult.failure("更新运营者信息失败", ObjectUtils.NULL);
+            return ServiceResult.failure("注册运营者信息失败", ObjectUtils.NULL);
         }
 
         return ServiceResult.success(tUserInfo);
@@ -225,7 +232,7 @@ public class UserServiceImpl implements UserService {
         tUserInfo.setEmail(email);
         tUserInfo.setSalt(RandomStringUtils.randomAlphabetic(6));
         tUserInfo.setPassword(this.encodePassword(pwd, tUserInfo.getSalt()));
-        tUserInfo.setStatus(false);
+        tUserInfo.setStatus(NumberUtils.INTEGER_ZERO);
         int count = this.tUserInfoMapper.insertSelective(tUserInfo);
         if(1 == count) {
             return tUserInfo;

@@ -33,12 +33,18 @@ public class ResourceController {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public Callable<JsonResponse<String>> upload(@RequestParam  String type, MultipartFile file) {
         Integer userId = UserSession.getCurrent().getUserId();
+        Integer status = UserSession.getCurrent().getStatus();
         return () -> {
+            //正常状态的用户才能上传
+            if(status.intValue() <= 0) {
+                return JsonResponseTool.authFailure("账户已禁用");
+            }
+
             String fileName = null;
             try {
                 fileName = FileTool.saveFileSyncTmp(type, userId, file);
-                if(null == fileName) {
-                    return JsonResponseTool.failure("上传失败");
+                if(fileName.startsWith("err:")) {
+                    return JsonResponseTool.failure(fileName);
                 }
             } catch (IOException e) {
                 return JsonResponseTool.exception();

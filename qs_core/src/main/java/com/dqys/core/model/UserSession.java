@@ -12,7 +12,7 @@ public class UserSession {
     private Integer userId;
     private String userType;
     private String roleId;
-    private String status;
+    private Integer status;
     private String isCertified;
 
     public static UserSession getCurrent() {
@@ -47,11 +47,11 @@ public class UserSession {
         this.roleId = roleId;
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

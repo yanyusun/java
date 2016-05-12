@@ -22,7 +22,7 @@ public class TUserInfo extends BaseModel implements Serializable {
 
     private Integer companyId;
 
-    private Boolean status;
+    private Integer status;
 
     private static final long serialVersionUID = 1L;
 
@@ -98,11 +98,11 @@ public class TUserInfo extends BaseModel implements Serializable {
         this.companyId = companyId;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 }
