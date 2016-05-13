@@ -9,13 +9,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
 
 /**
  * @author by pan on 16-4-7.
  */
 @Controller
-public class IndexController implements ApplicationListener<ContextRefreshedEvent> {
+public class IndexController {
 
     @RequestMapping({"/", "/index"})
     public String index() throws Exception {
@@ -27,18 +28,5 @@ public class IndexController implements ApplicationListener<ContextRefreshedEven
         model.asMap().put("authUrl", SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_AUTH_URL_KEY).getPropertyValue());
         model.asMap().put("sessionId", httpSession.getId());
         return "login";
-    }
-
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        if(contextRefreshedEvent.getApplicationContext().getParent() == null){
-            try {
-                SysPropertyTool.loadAllProperty();
-                // FIXME: 16-4-28 暂时不加载
-                //AreaTool.loadArea();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

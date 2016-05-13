@@ -12,11 +12,9 @@
             <mvc:exclude-mapping path="/login"/>
 
             <mvc:exclude-mapping path="/html/*"/>
-            <mvc:exclude-mapping path="/script/*"/>
             <bean class="com.dqys.wms.interceptor.WMSInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 
     <mvc:resources mapping="/html/**" location="/html/"/>
-    <mvc:resources mapping="/script/**" location="/script/"/>
 </beans>
