@@ -94,11 +94,11 @@ public abstract class ProtocolTool {
      * @param status
      * @return
      */
-    public static boolean validateSysAdmin(String userTypes, String roles, String certifieds, String status) {
+    public static boolean validateSysAdmin(String userTypes, String roles, String certifieds, Integer status) {
         String[] typesTmp = userTypes.split(",");
         for(int i=0; i<typesTmp.length; i++) {
             if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.UTYPE_PLATFORM_KEY).getPropertyValue().equals(typesTmp[i])) {
-                if(Boolean.parseBoolean(status) && Boolean.parseBoolean(certifieds.split(",")[i]) &&
+                if(status > 0 && Boolean.parseBoolean(certifieds.split(",")[i]) &&
                         SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_ADMINISTRATOR_KEY).getPropertyValue().endsWith(roles.split(",")[i])) {
                     return true;
                 }

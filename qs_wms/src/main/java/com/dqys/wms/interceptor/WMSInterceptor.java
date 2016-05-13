@@ -52,7 +52,7 @@ public class WMSInterceptor extends BaseInterceptor {
                 if(!ProtocolTool.validateSysAdmin(String.valueOf(jsonResponse.getData().get(AuthHeaderEnum.X_QS_TYPE.getValue())),
                         String.valueOf(jsonResponse.getData().get(AuthHeaderEnum.X_QS_ROLE.getValue())),
                         String.valueOf(jsonResponse.getData().get(AuthHeaderEnum.X_QS_CERTIFIED.getValue())),
-                        String.valueOf(jsonResponse.getData().get(AuthHeaderEnum.X_QS_STATUS.getValue())))) {
+                        (Integer) jsonResponse.getData().get(AuthHeaderEnum.X_QS_STATUS.getValue()))) {
 
                     httpServletRequest.setAttribute("errMsg", "权限不够");
                     httpServletRequest.getRequestDispatcher("/login").forward(httpServletRequest, httpServletResponse);
