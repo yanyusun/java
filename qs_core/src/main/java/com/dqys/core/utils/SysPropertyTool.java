@@ -79,67 +79,6 @@ public class SysPropertyTool implements ApplicationContextAware {
     }
 
     /**
-     * 加载全部配置项
-     * @throws Exception
-     */
-    public static void loadAllProperty() throws Exception {
-        loadSysProperty();
-        loadApiProperty();
-        loadUserTypeProperty();
-        loadRoleProperty();
-        loadFileBusinessTypeProperty();
-    }
-
-
-    /**
-     * 加载系统配置
-     *
-     * @throws Exception
-     */
-    public static void loadSysProperty() throws Exception {
-        List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.SYS.getValue());
-        refreshPropery(sysPropertyList);
-    }
-
-    /**
-     * 加载API配置
-     *
-     * @throws Exception
-     */
-    public static void loadApiProperty() throws Exception {
-        List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.API.getValue());
-        refreshPropery(sysPropertyList);
-    }
-
-    /**
-     * 加载用户类型配置
-     * @throws Exception
-     */
-    public static void loadUserTypeProperty() throws Exception {
-        List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.USER_TYPE.getValue());
-        refreshPropery(sysPropertyList);
-    }
-
-    /**
-     * 加载角色配置
-     * @throws Exception
-     */
-    public static void loadRoleProperty() throws Exception {
-        List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.ROLE.getValue());
-        refreshPropery(sysPropertyList);
-    }
-
-    /**
-     * 加载文件业务类型配置
-     * @throws Exception
-     */
-    public static void loadFileBusinessTypeProperty() throws Exception {
-        List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.FILE_BUSINESS_TYPE.getValue());
-        refreshPropery(sysPropertyList);
-    }
-
-
-    /**
      * 刷新配置缓存
      * @param sysPropertyList
      */
@@ -266,6 +205,8 @@ public class SysPropertyTool implements ApplicationContextAware {
         }
     }
 
+
+
     /* 初始化系统配置 */
     @PostConstruct
     public void initProperty() {
@@ -276,5 +217,65 @@ public class SysPropertyTool implements ApplicationContextAware {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 加载全部配置项
+     * @throws Exception
+     */
+    public static void loadAllProperty() throws Exception {
+        loadSysProperty();
+        loadApiProperty();
+        loadUserTypeProperty();
+        loadRoleProperty();
+        loadFileBusinessTypeProperty();
+    }
+
+
+    /**
+     * 加载系统配置
+     *
+     * @throws Exception
+     */
+    public static void loadSysProperty() throws Exception {
+        List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.SYS.getValue());
+        refreshPropery(sysPropertyList);
+    }
+
+    /**
+     * 加载API配置
+     *
+     * @throws Exception
+     */
+    public static void loadApiProperty() throws Exception {
+        List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.API.getValue());
+        refreshPropery(sysPropertyList);
+    }
+
+    /**
+     * 加载用户类型配置
+     * @throws Exception
+     */
+    public static void loadUserTypeProperty() throws Exception {
+        List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.USER_TYPE.getValue());
+        refreshPropery(sysPropertyList);
+    }
+
+    /**
+     * 加载角色配置
+     * @throws Exception
+     */
+    public static void loadRoleProperty() throws Exception {
+        List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.ROLE.getValue());
+        refreshPropery(sysPropertyList);
+    }
+
+    /**
+     * 加载文件业务类型配置
+     * @throws Exception
+     */
+    public static void loadFileBusinessTypeProperty() throws Exception {
+        List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.FILE_BUSINESS_TYPE.getValue());
+        refreshPropery(sysPropertyList);
     }
 }
