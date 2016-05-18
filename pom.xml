@@ -16,6 +16,7 @@
         <module>qs_wms</module>
         <module>qs_resource</module>
         <module>qs_captcha</module>
+        <module>qs_business_orm</module>
     </modules>
 
     <properties>

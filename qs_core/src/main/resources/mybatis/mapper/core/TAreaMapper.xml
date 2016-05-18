@@ -5,11 +5,11 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="upper" property="upper" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="level" property="level" jdbcType="BIT" />
+    <result column="evaluateLevel" property="evaluateLevel" jdbcType="BIT" />
     <result column="is_leaf" property="isLeaf" jdbcType="BIT" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, upper, name, level, is_leaf
+    id, upper, name, evaluateLevel, is_leaf
   </sql>
 
   <select id="selectByUpper" resultMap="BaseResultMap" parameterType="java.lang.Integer">

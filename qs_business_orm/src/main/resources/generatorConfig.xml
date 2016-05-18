@@ -29,7 +29,7 @@
         </javaTypeResolver>
 
         <!-- 要修改 -->
-        <javaModelGenerator targetPackage="com.dqys.auth.orm.pojo"
+        <javaModelGenerator targetPackage="com.dqys.business.orm.pojo"
                             targetProject="src/main/java">
             <property name="constructorBased" value="false"/>
             <property name="enableSubPackages" value="false"/>
@@ -37,14 +37,14 @@
         </javaModelGenerator>
 
         <!-- 要修改 -->
-        <sqlMapGenerator targetPackage="mybatis.mapper.auth"
+        <sqlMapGenerator targetPackage="mybatis.mapper.business"
                          targetProject="src/main/resources">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
         <!-- 要修改 -->
         <javaClientGenerator type="XMLMAPPER"
-                             targetPackage="com.dqys.auth.orm.dao" targetProject="src/main/java">
+                             targetPackage="com.dqys.business.orm.dao" targetProject="src/main/java">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 

@@ -29,22 +29,22 @@
 
     <Loggers>
 
-        <Root level="debug">
+        <Root evaluateLevel="debug">
             <AppenderRef ref="Console"/>
         </Root>
-        <Logger name="bizLog" level="debug" additivity="false">
+        <Logger name="bizLog" evaluateLevel="debug" additivity="false">
             <AppenderRef ref="bizAsync"/>
         </Logger>
-        <Logger name="sysLog" level="debug" additivity="false">
+        <Logger name="sysLog" evaluateLevel="debug" additivity="false">
             <AppenderRef ref="sysAsync"/>
         </Logger>
 
 
-        <Logger name="org.springframework.amqp.rabbit.listener.BlockingQueueConsumer" level="info">
+        <Logger name="org.springframework.amqp.rabbit.listener.BlockingQueueConsumer" evaluateLevel="info">
             <AppenderRef ref="Console"/>
         </Logger>
 
-        <!--<Logger name="org.springframework.web.context.support.StandardServletEnvironment" level="info"
+        <!--<Logger name="org.springframework.web.context.support.StandardServletEnvironment" evaluateLevel="info"
                 additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>-->
@@ -52,26 +52,26 @@
 
 
         <!--
-        <Logger name="java.sql.ResultSet" level="info">
+        <Logger name="java.sql.ResultSet" evaluateLevel="info">
           <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name="java.sql.Connection" level="info">
+        <Logger name="java.sql.Connection" evaluateLevel="info">
           <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name="java.sql.Statement" level="info">
+        <Logger name="java.sql.Statement" evaluateLevel="info">
           <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name="java.sql.PreparedStatement" level="info">
+        <Logger name="java.sql.PreparedStatement" evaluateLevel="info">
           <AppenderRef ref="Console"/>
         </Logger>
 
-        <Logger name="com.ibatis.common.jdbc.SimpleDataSource" level="info">
+        <Logger name="com.ibatis.common.jdbc.SimpleDataSource" evaluateLevel="info">
           <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name="com.ibatis.common.jdbc.ScriptRunner" level="info">
+        <Logger name="com.ibatis.common.jdbc.ScriptRunner" evaluateLevel="info">
           <AppenderRef ref="Console"/>
         </Logger>
-        <Logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" level="info">
+        <Logger name="com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate" evaluateLevel="info">
           <AppenderRef ref="Console"/>
         </Logger>
         -->
