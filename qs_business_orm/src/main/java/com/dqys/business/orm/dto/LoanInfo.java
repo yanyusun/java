@@ -1,4 +1,4 @@
-package com.dqys.business.orm.pojo;
+package com.dqys.business.orm.dto;
 
 /**
  * Created by pan on 16-5-18.

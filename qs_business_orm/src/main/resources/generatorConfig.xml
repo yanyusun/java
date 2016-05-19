@@ -29,7 +29,7 @@
         </javaTypeResolver>
 
         <!-- 要修改 -->
-        <javaModelGenerator targetPackage="com.dqys.business.orm.pojo"
+        <javaModelGenerator targetPackage="com.dqys.business.orm.dto"
                             targetProject="src/main/java">
             <property name="constructorBased" value="false"/>
             <property name="enableSubPackages" value="false"/>

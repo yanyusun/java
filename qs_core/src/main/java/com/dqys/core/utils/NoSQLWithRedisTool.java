@@ -166,4 +166,14 @@ public class NoSQLWithRedisTool implements ApplicationContextAware {
         msgRedisTemplate.convertAndSend("mail", new String[] {to, msg});
     }
 
+
+    /**
+     * 自增数
+     */
+    private static final String SEQ_KEY = "seq";
+
+    public static Long genSeq(String key) {
+        return redisTemplate.boundHashOps(key).increment(SEQ_KEY, 1);
+    }
+
 }

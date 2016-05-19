@@ -1,6 +1,6 @@
-package com.dqys.business.orm.pojo;
+package com.dqys.business.orm.dto;
 
-import com.dqys.core.base.BaseModel;
+import com.dqys.core.base.BaseDTO;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -11,7 +11,7 @@ import java.util.List;
  *
  * 借据
  */
-public class IOUInfo extends BaseModel {
+public class IOUInfo extends BaseDTO {
 
     private String iouNo;       //借据编号
     private String variety;     //品种

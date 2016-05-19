@@ -1,4 +1,4 @@
-package com.dqys.business.orm.pojo;
+package com.dqys.business.orm.dto;
 
 import java.math.BigDecimal;
 

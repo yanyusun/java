@@ -1,6 +1,6 @@
-package com.dqys.business.orm.pojo;
+package com.dqys.business.orm.dto;
 
-import com.dqys.core.base.BaseModel;
+import com.dqys.core.base.BaseDTO;
 import com.dqys.core.model.Address;
 import com.dqys.core.model.Contact;
 
@@ -11,7 +11,7 @@ import java.util.List;
  *
  * 联系人信息
  */
-public class ContactsInfo extends BaseModel {
+public class ContactsInfo extends BaseDTO {
 
     private Integer type;           //类型:借款人 共同借款人 担保方 银行客户经理
     private String realName;

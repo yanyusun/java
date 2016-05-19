@@ -1,13 +1,13 @@
-package com.dqys.business.orm.pojo;
+package com.dqys.business.orm.dto;
 
-import com.dqys.core.base.BaseModel;
+import com.dqys.core.base.BaseDTO;
 
 import java.math.BigDecimal;
 
 /**
  * Created by pan on 16-5-17.
  */
-public abstract class AbstractGuaranty extends BaseModel {
+public abstract class AbstractGuaranty extends BaseDTO {
 
     private String guarantyNo;      //编号
     private BigDecimal loanAmount;      //贷款金额 单位:元

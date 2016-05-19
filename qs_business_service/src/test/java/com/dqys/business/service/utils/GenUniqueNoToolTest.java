@@ -6,11 +6,11 @@ import org.junit.Test;
 /**
  * Created by pan on 16-5-19.
  */
-public class UniqueNoGenToolTest extends BaseTest {
+public class GenUniqueNoToolTest extends BaseTest {
 
     @Test
     public void test() {
-        UniqueNoGenTool.getJieKuanRenNo(3303);
+        /*GenUniqueNoTool.getContactsNo(3303);*/
     }
 
 }

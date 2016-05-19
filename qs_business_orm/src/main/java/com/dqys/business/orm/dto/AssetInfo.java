@@ -1,6 +1,6 @@
-package com.dqys.business.orm.pojo;
+package com.dqys.business.orm.dto;
 
-import com.dqys.core.base.BaseModel;
+import com.dqys.core.base.BaseDTO;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -11,7 +11,7 @@ import java.util.List;
  *
  * 资产包信息
  */
-public class AssetInfo extends BaseModel {
+public class AssetInfo extends BaseDTO {
 
     private String assertNo;
     private Integer type;       //资产类型
