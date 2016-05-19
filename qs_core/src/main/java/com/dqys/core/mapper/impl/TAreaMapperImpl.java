@@ -11,10 +11,15 @@ import java.util.List;
  * @author by pan on 16-4-7.
  */
 @Repository
-public class TAreaMapperImpl  extends BaseDao implements TAreaMapper {
+public class TAreaMapperImpl extends BaseDao implements TAreaMapper {
 
     @Override
     public List<TArea> selectByUpper(Integer upper) {
         return super.getSqlSession().getMapper(TAreaMapper.class).selectByUpper(upper);
+    }
+
+    @Override
+    public List<TArea> selectAll() {
+        return super.getSqlSession().getMapper(TAreaMapper.class).selectAll();
     }
 }

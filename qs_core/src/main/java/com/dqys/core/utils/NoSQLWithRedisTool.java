@@ -58,11 +58,11 @@ public class NoSQLWithRedisTool implements ApplicationContextAware {
      * @param hk
      * @param hv
      */
-    public static void setHashObject(String h, String hk, Object hv) {
+    public static void setHashObject(String h, Object hk, Object hv) {
         redisTemplate.opsForHash().put(h, hk, hv);
     }
 
-    public static void setHashObjectInPipe(String h, String[] hks, Object[] hvs, Integer expire, TimeUnit timeUnit) {
+    public static void setHashObjectInPipe(String h, Object[] hks, Object[] hvs, Integer expire, TimeUnit timeUnit) {
         if(null == h || null == hks || null == hvs) {
             return;
         }
@@ -78,7 +78,7 @@ public class NoSQLWithRedisTool implements ApplicationContextAware {
             for(int i=0; i<hks.length; i++) {
                 connection.hSet(
                         ((RedisSerializer<String>) NoSQLWithRedisTool.getRedisTemplate().getKeySerializer()).serialize(h),
-                        ((RedisSerializer<String>) NoSQLWithRedisTool.getRedisTemplate().getHashKeySerializer()).serialize(hks[i]),
+                        ((RedisSerializer<Object>) NoSQLWithRedisTool.getRedisTemplate().getHashKeySerializer()).serialize(hks[i]),
                         ((RedisSerializer<Object>) NoSQLWithRedisTool.getRedisTemplate().getHashValueSerializer()).serialize(hvs[i])
                 );
             }
@@ -129,7 +129,7 @@ public class NoSQLWithRedisTool implements ApplicationContextAware {
      * @param k
      * @return
      */
-    public static <T> T getHashObject(String hk, String k) {
+    public static <T> T getHashObject(String hk, Object k) {
         Object o = redisTemplate.opsForHash().get(hk, k);
         if(null == o) {
             return null;

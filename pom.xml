@@ -17,6 +17,7 @@
         <module>qs_resource</module>
         <module>qs_captcha</module>
         <module>qs_business_orm</module>
+        <module>qs_business_service</module>
     </modules>
 
     <properties>
@@ -39,19 +40,30 @@
         </dependency>
     </dependencies>
 
-
-
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.5.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
+            <!--<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <resources>
+                        <resource>
+                            <directory>src/test/resource/spring-test.xml</directory>
+                        </resource>
+                    </resources>
+                </configuration>
+            </plugin>-->
         </plugins>
     </build>
 

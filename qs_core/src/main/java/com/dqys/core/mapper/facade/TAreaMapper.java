@@ -8,4 +8,5 @@ public interface TAreaMapper {
 
     List<TArea> selectByUpper(Integer upper);
 
+    List<TArea> selectAll();
 }

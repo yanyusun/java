@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:c="http://www.springframework.org/schema/c" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/task
+        http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <context:component-scan base-package="com.dqys"/>
+    <context:annotation-config />
+    <aop:aspectj-autoproxy/>
+
+    <!-- 配置文件 -->
+    <context:property-placeholder location="classpath:config.properties"/>
+
+    <!-- 定时任务调度 -->
+    <task:annotation-driven scheduler="taskScheduler" />
+    <task:scheduler id="taskScheduler" pool-size="${task.scheduler.pool}"/>
+
+    <!-- 数据源 -->
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="mapperLocations" value="classpath*:mybatis/mapper/**/*.xml"/>
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+    </bean>
+
+    <!-- 配置事务管理器 -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+        <property name="nestedTransactionAllowed" value="true"/>
+    </bean>
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true" rollback-for="UnexpectedRollbackException"/>
+            <tx:method name="*_tx" rollback-for="Exception" propagation="REQUIRED"/>
+        </tx:attributes>
+    </tx:advice>
+    <aop:config>
+        <aop:pointcut id="txPointCut" expression="execution(* com.dqys.*..*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
+    </aop:config>
+
+    <!-- 映射扫描 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.dqys.persistent" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+    </bean>
+
+    <!-- redis -->
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <constructor-arg name="clusterConfig">
+            <bean class="org.springframework.data.redis.connection.RedisClusterConfiguration">
+                <property name="clusterNodes">
+                    <set>
+                        <bean class="org.springframework.data.redis.connection.RedisNode" c:host="${redis.cluster.host}" c:port="${redis.cluster.port0}" />
+                        <bean class="org.springframework.data.redis.connection.RedisNode" c:host="${redis.cluster.host}" c:port="${redis.cluster.port1}" />
+                        <bean class="org.springframework.data.redis.connection.RedisNode" c:host="${redis.cluster.host}" c:port="${redis.cluster.port2}" />
+                        <bean class="org.springframework.data.redis.connection.RedisNode" c:host="${redis.cluster.host}" c:port="${redis.cluster.port3}" />
+                        <bean class="org.springframework.data.redis.connection.RedisNode" c:host="${redis.cluster.host}" c:port="${redis.cluster.port4}" />
+                        <bean class="org.springframework.data.redis.connection.RedisNode" c:host="${redis.cluster.host}" c:port="${redis.cluster.port5}" />
+                    </set>
+                </property>
+            </bean>
+        </constructor-arg>
+        <property name="timeout" value="${redis.cluster.timeout}"></property>
+        <property name="usePool" value="${redis.cluster.user_pool}"></property>
+    </bean>
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+          p:connectionFactory-ref="jedisConnectionFactory">
+        <property name="enableTransactionSupport" value="false"/>
+        <!-- 键为字符串 -->
+        <!--<property name="keySerializer" ref="stringRedisSerializer" />-->
+    </bean>
+    <bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate"
+          p:connectionFactory-ref="jedisConnectionFactory">
+        <property name="enableTransactionSupport" value="false"/>
+    </bean>
+
+    <!-- message/pubsub -->
+    <bean id="msgConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+        <property name="hostName" value="${redis.msg.host}" />
+        <property name="port" value="${redis.msg.port}" />
+        <property name="usePool" value="${redis.msg.user_pool}" />
+        <property name="password" value="${redis.msg.password}" />
+    </bean>
+    <bean id="msgRedisListener" class="com.dqys.core.utils.EmailClientTool" />
+    <bean id="msgRedisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+          p:connectionFactory-ref="msgConnectionFactory" p:enableTransactionSupport="false" />
+    <bean id="msgRedisContainer" class="org.springframework.data.redis.listener.RedisMessageListenerContainer">
+        <property name="connectionFactory" ref="msgConnectionFactory" />
+        <property name="messageListeners">
+            <map>
+                <entry key-ref="msgRedisListener">
+                    <bean class="org.springframework.data.redis.listener.ChannelTopic">
+                        <constructor-arg value="mail" />
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+
+    <!-- 缓存 -->
+    <cache:annotation-driven/>
+    <bean id="cacheJedisConnectionFactory"
+          class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
+          p:hostName="${redis.cache.host}" p:port="${redis.cache.port}" p:usePool="${redis.cache.use_pool}"
+          p:password="${redis.cache.password}">
+    </bean>
+    <bean id="cacheRedisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
+          p:connectionFactory-ref="cacheJedisConnectionFactory">
+    </bean>
+    <bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager"
+          c:redisOperations-ref="cacheRedisTemplate"/>
+
+    <!-- rabbitmq -->
+    <bean id="rabbitConnectionFactory"
+          class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory">
+        <constructor-arg name="hostname" value="${rabbitmq.host}"/>
+        <constructor-arg name="port" value="${rabbitmq.port}" />
+        <property name="username" value="${rabbitmq.username}"/>
+        <property name="password" value="${rabbitmq.password}"/>
+        <property name="channelCacheSize" value="${rabbitmq.channel.size}" />
+        <property name="publisherConfirms" value="true" />
+        <property name="publisherReturns" value="true" />
+    </bean>
+    <bean id="rabbitRetryTemplate" class="org.springframework.retry.support.RetryTemplate">
+        <property name="backOffPolicy">
+            <bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
+                <property name="initialInterval" value="10"/>
+                <property name="maxInterval" value="1000"/>
+                <property name="multiplier" value="10.0" />
+            </bean>
+        </property>
+    </bean>
+    <bean id="rabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
+        <property name="connectionFactory" ref="rabbitConnectionFactory" />
+        <property name="retryTemplate" ref="rabbitRetryTemplate" />
+        <property name="mandatory" value="true" />
+    </bean>
+
+
+</beans>
