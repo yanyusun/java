@@ -1,5 +1,6 @@
 package com.dqys.business.controller;
 
+import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +16,7 @@ import java.util.concurrent.Callable;
  */
 @RestController
 @RequestMapping("/api")
-public class DataInController extends BaseContorller {
+public class DataInController extends BaseApiContorller {
 
     @RequestMapping(value = "/asset_input", method = RequestMethod.POST)
     public Callable<JsonResponse> inputAssetPackage(@RequestBody Map assetInfo) {

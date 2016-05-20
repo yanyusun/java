@@ -1,4 +1,4 @@
-package com.dqys.business.controller;
+package com.dqys.core.base;
 
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMeth
 /**
  * Created by pan on 16-5-20.
  */
-public abstract class BaseContorller {
+public abstract class BaseApiContorller {
 
     @ExceptionHandler({ConversionNotSupportedException.class, HttpMessageNotWritableException.class})
     public JsonResponse serverErrException(Exception e) {
