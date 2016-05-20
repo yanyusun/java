@@ -22,7 +22,7 @@ public class ErrorController {
 
     @RequestMapping(value = "/err", produces = "text/plain;charset=utf-8")
     public String err(@RequestParam(required = false) String jsonPCallable) throws JsonProcessingException {
-        JsonResponse jsonResponse = JsonResponseTool.exception();
+        JsonResponse jsonResponse = JsonResponseTool.serverErr();
         if(StringUtils.isNotBlank(jsonPCallable)) {
             StringBuffer resutStr = new StringBuffer(jsonPCallable);
             return resutStr.append("(").append(objectMapper.writeValueAsString(jsonResponse)).append(");").toString();

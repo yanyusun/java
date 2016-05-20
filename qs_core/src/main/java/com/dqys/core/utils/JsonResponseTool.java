@@ -3,7 +3,6 @@ package com.dqys.core.utils;
 
 import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
-import com.sun.org.apache.bcel.internal.generic.JSR;
 
 /**
  * @author by pan on 9/10/15.
@@ -68,10 +67,33 @@ public abstract class JsonResponseTool {
      *
      * @return
      */
-    public static JsonResponse exception() {
+    public static JsonResponse serverErr() {
         JsonResponse jsonResponse = new JsonResponse();
         jsonResponse.setCode(ResponseCodeEnum.SERVER_ERR.getValue());
         jsonResponse.setMsg(ResponseCodeEnum.SERVER_ERR.getText());
+        jsonResponse.setData(null);
+
+        return jsonResponse;
+    }
+
+    /**
+     * 服务器异常
+     *
+     * @return
+     */
+    public static JsonResponse illegalRequest() {
+        JsonResponse jsonResponse = new JsonResponse();
+        jsonResponse.setCode(ResponseCodeEnum.ILLEGAL_REQUEST.getValue());
+        jsonResponse.setMsg(ResponseCodeEnum.ILLEGAL_REQUEST.getText());
+        jsonResponse.setData(null);
+
+        return jsonResponse;
+    }
+
+    public static JsonResponse notFound() {
+        JsonResponse jsonResponse = new JsonResponse();
+        jsonResponse.setCode(ResponseCodeEnum.NOT_FOUND.getValue());
+        jsonResponse.setMsg(ResponseCodeEnum.NOT_FOUND.getText());
         jsonResponse.setData(null);
 
         return jsonResponse;

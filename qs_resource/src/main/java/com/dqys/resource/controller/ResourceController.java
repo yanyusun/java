@@ -5,9 +5,9 @@ import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.ApiParseTool;
+import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.SysPropertyTool;
-import com.dqys.core.utils.FileTool;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -47,7 +47,7 @@ public class ResourceController {
                     return JsonResponseTool.failure(fileName);
                 }
             } catch (IOException e) {
-                return JsonResponseTool.exception();
+                return JsonResponseTool.serverErr();
             }
 
             return JsonResponseTool.success(fileName);
