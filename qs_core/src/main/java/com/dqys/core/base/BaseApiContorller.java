@@ -40,4 +40,10 @@ public abstract class BaseApiContorller {
         e.printStackTrace();
         return JsonResponseTool.notFound();
     }
+
+    @ExceptionHandler({NullPointerException.class})
+    public JsonResponse nullPointerException(NullPointerException e) {
+        e.printStackTrace();
+        return JsonResponseTool.serverErr();
+    }
 }
