@@ -35,10 +35,6 @@ public class AreaTool implements ApplicationContextAware {
         List<TArea> tAreas = tAreaMapper.selectAll();
         for(TArea tArea : tAreas) {
             redisTemplate.boundHashOps(TArea.class.getName()).put(tArea.getId(), tArea);
-            if(tArea.getIsLeaf()) {
-                return;
-            }
-            loadAreaByUpper(tArea.getId());
         }
 
         //省份

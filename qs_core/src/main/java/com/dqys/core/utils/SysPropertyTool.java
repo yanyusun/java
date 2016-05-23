@@ -10,7 +10,6 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.Iterator;
 import java.util.List;
 
@@ -208,12 +207,12 @@ public class SysPropertyTool implements ApplicationContextAware {
 
 
     /* 初始化系统配置 */
-    @PostConstruct
+    // FIXME:暂时不加载
+    //@PostConstruct
     public void initProperty() {
         try {
             loadAllProperty();
-            // FIXME: 16-4-28 暂时不加载
-            //AreaTool.loadArea();
+            AreaTool.loadArea();
         } catch (Exception e) {
             e.printStackTrace();
         }

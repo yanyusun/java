@@ -79,24 +79,22 @@ public class PropertyController {
     @RequestMapping("/list")
     public Callable<JsonResponse> propertyList(@RequestParam(required = false) final Integer id, @RequestParam(required = false) final Integer type,
                                                @RequestParam(required = false) final String keyLike) {
-        return new Callable<JsonResponse>() {
-            public JsonResponse call() throws Exception {
-                List<TSysProperty> tSystemConfs = SysPropertyTool.getProperty();
-                if(null != type) {
-                    SysPropertyTypeEnum e = SysPropertyTypeEnum.findByValue(type);
-                    tSystemConfs = SysPropertyTool.getProperty(e);
-                }
-                if(null != id) {
-                    tSystemConfs.add(SysPropertyTool.getProperty(id));
-                }
-                if(StringUtils.isNotBlank(keyLike)) {
-                    tSystemConfs = SysPropertyTool.getProperty(keyLike);
-                }
-
-                Map resultMap = new HashMap();
-                resultMap.put("data", tSystemConfs);
-                return JsonResponseTool.success(resultMap);
+        return () -> {
+            List<TSysProperty> tSystemConfs = SysPropertyTool.getProperty();
+            if (null != type) {
+                SysPropertyTypeEnum e = SysPropertyTypeEnum.findByValue(type);
+                tSystemConfs = SysPropertyTool.getProperty(e);
             }
+            if (null != id) {
+                tSystemConfs.add(SysPropertyTool.getProperty(id));
+            }
+            if (StringUtils.isNotBlank(keyLike)) {
+                tSystemConfs = SysPropertyTool.getProperty(keyLike);
+            }
+
+            Map resultMap = new HashMap();
+            resultMap.put("data", tSystemConfs);
+            return JsonResponseTool.success(resultMap);
         };
     }
 }

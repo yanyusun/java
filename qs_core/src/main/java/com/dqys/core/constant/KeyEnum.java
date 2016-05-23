@@ -31,6 +31,7 @@ public class KeyEnum {
 
     /* api配置key */
     public static final String API_SYS_PROPERTY_KEY = "api_sys_property";
+    public static final String API_AREA_LIST = "api_area_list";
 
 
 }
