@@ -7,6 +7,7 @@ import com.dqys.auth.service.dto.UserDTO;
 import com.dqys.auth.service.facade.CompanyService;
 import com.dqys.auth.service.facade.UserService;
 import com.dqys.captcha.service.facade.CaptchaService;
+import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.ServiceResult;
@@ -34,7 +35,7 @@ import java.util.concurrent.Callable;
  */
 @RestController
 @RequestMapping("/auth")
-public class AuthController {
+public class AuthController extends BaseApiContorller {
 
     @Autowired
     private UserService userService;

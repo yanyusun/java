@@ -26,7 +26,6 @@
           p:simpleDateFormat="yyyy-MM-dd"
           p:modulesToInstall="com.fasterxml.jackson.module.paramnames.ParameterNamesModule">
     </bean>
-
     <bean id="xmlMapper" parent="objectMapper" p:createXmlMapper="true"/>
 
 

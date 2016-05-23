@@ -105,7 +105,12 @@ public class AreaTool implements ApplicationContextAware {
      * @throws Exception
      */
     public static List<TArea> listAreaByUpperId(Integer upperId) throws Exception {
-        List<TArea> tAreaList = NoSQLWithRedisTool.getValueObject(AREA_RELATION_KEY + upperId);
+        List<Integer> tAreaIds = NoSQLWithRedisTool.getValueObject(AREA_RELATION_KEY + upperId);
+        List<TArea> tAreaList = new ArrayList<>();
+        for (Integer aid : tAreaIds) {
+            tAreaList.add(getAreaById(aid));
+        }
+
         return tAreaList;
     }
 
