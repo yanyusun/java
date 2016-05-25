@@ -2,6 +2,11 @@ package com.dqys.core.utils;
 
 import com.dqys.core.mapper.facade.TAreaMapper;
 import com.dqys.core.model.TArea;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -9,6 +14,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -111,6 +118,59 @@ public class AreaTool implements ApplicationContextAware {
     }
 
 
+    /**
+     * 筛选列表
+     *
+     * @param tAreaList
+     * @param nameLike
+     * @return
+     */
+    public static List<TArea> filterAreaByName(List<TArea> tAreaList, String nameLike) {
+        if (null == tAreaList || tAreaList.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        Iterator<TArea> tAreas = tAreaList.iterator();
+        while (tAreas.hasNext()) {
+            TArea tArea = tAreas.next();
+            if (tArea.getName().contains(nameLike) || getFirstCharFromChinese(tArea.getName()).contains(nameLike)) {
+                continue;
+            }
+
+            tAreas.remove();
+        }
 
 
+        return null;
+    }
+
+
+    /**
+     * 获取中文字符串首字母
+     *
+     * @param chinese
+     * @return
+     */
+    public static String getFirstCharFromChinese(String chinese) {
+        StringBuffer pybf = new StringBuffer();
+        char[] arr = chinese.toCharArray();
+        HanyuPinyinOutputFormat defaultFormat = new HanyuPinyinOutputFormat();
+        defaultFormat.setCaseType(HanyuPinyinCaseType.UPPERCASE);
+        defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] > 128) {
+                try {
+                    String[] temp = PinyinHelper.toHanyuPinyinStringArray(arr[i], defaultFormat);
+                    if (temp != null) {
+                        pybf.append(temp[0].charAt(0));
+                    }
+                } catch (BadHanyuPinyinOutputFormatCombination e) {
+                    e.printStackTrace();
+                }
+            } else {
+                pybf.append(arr[i]);
+            }
+        }
+        return pybf.toString().replaceAll("\\W", "").trim();
+    }
 }

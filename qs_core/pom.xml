@@ -32,6 +32,7 @@
         <commons-email.version>1.4</commons-email.version>
         <junit.version>4.11</junit.version>
         <jackson.version>2.7.4</jackson.version>
+        <pinyin4j.version>2.5.1</pinyin4j.version>
     </properties>
 
     <dependencies>
@@ -207,6 +208,13 @@
             <groupId>org.springframework.amqp</groupId>
             <artifactId>spring-rabbit</artifactId>
             <version>${spring.amqp.version}</version>
+        </dependency>
+
+        <!-- 汉语拼音 -->
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>${pinyin4j.version}</version>
         </dependency>
     </dependencies>
 

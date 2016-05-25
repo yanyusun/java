@@ -4,10 +4,7 @@ import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.PagingResult;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author by pan on 16-4-8.
@@ -53,6 +50,9 @@ public abstract class ApiParseTool {
      * @throws IllegalAccessException
      */
     public static <T> List<Map<Object, Object>> parseApiList(List<T> datas, String key) throws NoSuchFieldException, IllegalAccessException {
+        if (null == datas || datas.isEmpty()) {
+            return Collections.emptyList();
+        }
         List<Map<Object, Object>> resultL = new ArrayList<Map<Object, Object>>();
         for (T t : datas) {
             Map<Object, Object> resultMap = parseApiList(t, key);
