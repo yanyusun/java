@@ -28,6 +28,13 @@
     </bean>
     <bean id="xmlMapper" parent="objectMapper" p:createXmlMapper="true"/>
 
+    <bean id="rabbitListenerContainerFactory"
+          class="org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory">
+        <property name="connectionFactory" ref="rabbitConnectionFactory"/>
+        <property name="concurrentConsumers" value="3"/>
+        <property name="maxConcurrentConsumers" value="10"/>
+    </bean>
+
     <!-- 上传文件必须 -->
     <bean id="multipartResolver"
           class="org.springframework.web.multipart.support.StandardServletMultipartResolver">

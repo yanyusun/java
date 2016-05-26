@@ -6,6 +6,10 @@
 
     <mvc:interceptors>
         <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="com.dqys.core.interceptor.CrossOriginIntercetpor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
             <!--默认全部需要登录身份-->
             <mvc:mapping path="/**"/>
 
@@ -21,10 +25,6 @@
             <mvc:exclude-mapping path="/err/err"/>
 
             <bean class="com.dqys.core.interceptor.HeaderInterceptor"/>
-        </mvc:interceptor>
-        <mvc:interceptor>
-            <mvc:mapping path="/**"/>
-            <bean class="com.dqys.core.interceptor.CrossOriginIntercetpor" />
         </mvc:interceptor>
     </mvc:interceptors>
 

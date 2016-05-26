@@ -21,20 +21,20 @@ public class NoSQLWithRedisTool implements ApplicationContextAware {
 
 
     private static RedisTemplate<String, Object> redisTemplate;
-    private static RedisTemplate<String, Object> msgRedisTemplate;
+    /*private static RedisTemplate<String, Object> msgRedisTemplate;*/
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         redisTemplate = (RedisTemplate) applicationContext.getBean("redisTemplate");
-        msgRedisTemplate = (RedisTemplate) applicationContext.getBean("msgRedisTemplate");
+        /*msgRedisTemplate = (RedisTemplate) applicationContext.getBean("msgRedisTemplate");*/
     }
 
     public static RedisTemplate<String, Object> getRedisTemplate() {
         return redisTemplate;
     }
-    public static RedisTemplate<String, Object> getMsgRedisTemplate() {
+    /*public static RedisTemplate<String, Object> getMsgRedisTemplate() {
         return msgRedisTemplate;
-    }
+    }*/
 
     /**
      * 设置字符串对象
@@ -162,9 +162,9 @@ public class NoSQLWithRedisTool implements ApplicationContextAware {
      * @param to
      * @param msg
      */
-    public static void sendMailToChannel(String to, String msg) {
+    /*public static void sendMailToChannel(String to, String msg) {
         msgRedisTemplate.convertAndSend("mail", new String[] {to, msg});
-    }
+    }*/
 
 
     /**
