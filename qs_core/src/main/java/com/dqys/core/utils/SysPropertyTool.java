@@ -207,12 +207,10 @@ public class SysPropertyTool implements ApplicationContextAware {
 
 
     /* 初始化系统配置 */
-    // FIXME:暂时不加载
-    //@PostConstruct
     public void initProperty() {
         try {
             loadAllProperty();
-            AreaTool.loadArea();
+            //AreaTool.loadArea();  // FIXME: 16-5-26 测试环境不加载
         } catch (Exception e) {
             e.printStackTrace();
         }

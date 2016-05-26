@@ -184,10 +184,10 @@
             <rabbit:binding key="mail_route" queue="mail_send_queue" ></rabbit:binding>
         </rabbit:bindings>
     </rabbit:direct-exchange>
-    <rabbit:listener-container connection-factory="rabbitConnectionFactory">
+    <!--<rabbit:listener-container connection-factory="rabbitConnectionFactory">
         <rabbit:listener ref="mailClient" method="sendMailFromMessage" queue-names="mail_send_queue" />
     </rabbit:listener-container>
-    <bean id="mailClient" class="com.dqys.core.utils.EmailClientTool" />
+    <bean id="mailClient" class="com.dqys.core.utils.EmailClientTool" />-->
 
 
 
