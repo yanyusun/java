@@ -28,13 +28,6 @@
 
 采用阿里的RDS服务,库名为:qs_plat
 
-## 各种账号汇集
-* 阿里ECS账号:root  Du0&qIng^ys@2016
-* 阿里RDS账号:进阿里控制台
-* git管理账号:root  dUo&q1ng@2016
-* jenkins管理账号:Pan   pan@Qs_2016
-* rabbitmq管理账号:qsrabbit     q_s4Rabbit@2016
-
 ## 特殊服务停启命令汇总
 * redis 用redis客户端连接实例,然后使用shutdown命令.
 * rabbitmq 命令:/sbin/service rabbitmq-server start|stop
