@@ -43,9 +43,13 @@
 
 ## 项目模块信息
 core.jar
+
 captcha.jar
+
 auth-orm.jar        business-orm.jar
+
 auth-service.jar    business-service.jar
+
 auth-web.war        business-web.war        resource-web.war    wms-web.war
 
 具体依赖见各模块的pom
