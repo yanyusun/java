@@ -5,7 +5,10 @@ import com.dqys.core.base.BaseModel;
 
 import java.io.Serializable;
 
-public class TATLInfo extends BaseModel implements Serializable {
+/**
+ * 部门信息&团队信息&职位信息对象
+ */
+public class TATOInfo extends BaseModel implements Serializable {
 
     private Integer type; // 信息类型(1.部门信息;2.团队信息;3.职位信息)
 

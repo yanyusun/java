@@ -3,7 +3,7 @@ package com.dqys.auth.service.constant;
 /**
  * Created by Yvan on 16/5/26.
  */
-public enum ATLInfoEnum {
+public enum ATOInfoEnum {
 
     apartment(1, "部门"),
     team(2, "团队"),
@@ -12,8 +12,7 @@ public enum ATLInfoEnum {
     private Integer type;
     private String name;
 
-
-    ATLInfoEnum (Integer typeValue, String typeName){
+    ATOInfoEnum(Integer typeValue, String typeName){
         this.type = typeValue;
         this.name = typeName;
     }
@@ -23,10 +22,13 @@ public enum ATLInfoEnum {
      * @param type
      * @return
      */
-    public ATLInfoEnum getATLInfoEnum(Integer type){
-        for(ATLInfoEnum atlInfoEnum : ATLInfoEnum.values()) {
-            if(atlInfoEnum.getType().equals(type)){
-                return atlInfoEnum;
+    public static ATOInfoEnum getATOInfoEnum(Integer type){
+        if(type == null || type.equals("")){
+            return null;
+        }
+        for(ATOInfoEnum atoInfoEnum : ATOInfoEnum.values()) {
+            if(atoInfoEnum.getType().equals(type)){
+                return atoInfoEnum;
             }
         }
         return null;

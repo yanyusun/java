@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.chebaiyong.biz.atl.dao.TATLInfoMapper" >
+<mapper namespace="com.dqys.auth.orm.dao.facade.TATOInfoMapper" >
 
 
-  <resultMap id="BaseResultMap" type="com.chebaiyong.biz.atl.domain.TATLInfo" >
+  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.TATOInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
@@ -20,50 +20,15 @@
     id, version, create_at, update_at, stateflag, remark, type, name, pid
   </sql>
 
-
-
-
-
-
-  <!-- 根据Id查询 -->
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from t_atl_info
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-
+  <!-- 逻辑删除(stateFlag设置为当前的时间戳) -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from t_atl_info
-    where id = #{id,jdbcType=INTEGER}
+    UPDATE t_ato_info set stateflag=CURRENT_TIMESTAMP where id = #{id,jdbcType=INTEGER}
   </delete>
 
   <!-- 新增 -->
-  <insert id="insert" parameterType="com.chebaiyong.biz.atl.domain.TATLInfo" >
-    insert into t_atl_info (version, create_at, update_at,
-      stateflag, remark, type,
-      name, pid)
-    values (#{version,jdbcType=INTEGER}, now(), now(),
-      #{stateflag,jdbcType=BIGINT}, #{remark,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT},
-      #{name,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER})
-  </insert>
-
-  <!-- 部分新增 -->
-  <insert id="insertSelective" parameterType="com.chebaiyong.biz.atl.domain.TATLInfo" >
-    insert into t_atl_info
+  <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.TATOInfo" >
+    insert into t_ato_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="version != null" >
-        version,
-      </if>
-      <if test="createAt != null" >
-        create_at,
-      </if>
-      <if test="updateAt != null" >
-        update_at,
-      </if>
-      <if test="stateflag != null" >
-        stateflag,
-      </if>
       <if test="remark != null" >
         remark,
       </if>
@@ -78,18 +43,6 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="version != null" >
-        #{version,jdbcType=INTEGER},
-      </if>
-      <if test="createAt != null" >
-        #{createAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateAt != null" >
-        #{updateAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="stateflag != null" >
-        #{stateflag,jdbcType=BIGINT},
-      </if>
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
@@ -105,22 +58,20 @@
     </trim>
   </insert>
 
+  <!-- 根据Id查询 -->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+      <include refid="Base_Column_List" />
+    from t_ato_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
 
-  <update id="updateByPrimaryKeySelective" parameterType="com.chebaiyong.biz.atl.domain.TATLInfo" >
-    update t_atl_info
+  <!-- 修改 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.TATOInfo" >
+    update t_ato_info
     <set >
-      <if test="version != null" >
-        version = #{version,jdbcType=INTEGER},
-      </if>
-      <if test="createAt != null" >
-        create_at = #{createAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateAt != null" >
-        update_at = #{updateAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="stateflag != null" >
-        stateflag = #{stateflag,jdbcType=BIGINT},
-      </if>
+      version = version+1,
+      update_at = CURRENT_TIMESTAMP ,
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
@@ -136,4 +87,12 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 条件查全 -->
+  <select id="selectListByType" parameterType="java.lang.Integer">
+    SELECT
+      <include refid="Base_Column_List" />
+    from t_ato_info
+    WHERE type = #{type,jdbcType=TNTEGER}
+  </select>
 </mapper>
