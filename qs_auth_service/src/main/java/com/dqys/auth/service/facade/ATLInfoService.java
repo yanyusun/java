@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Created by Yvan on 16/5/26.
  */
-public interface ALTInfoService {
+public interface ATLInfoService {
 
     /**
      * 新增一个项目组
