@@ -90,7 +90,7 @@
     </bean>
 
     <!-- message/pubsub -->
-    <bean id="msgConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+    <!--<bean id="msgConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
         <property name="hostName" value="${redis.msg.host}" />
         <property name="port" value="${redis.msg.port}" />
         <property name="usePool" value="${redis.msg.user_pool}" />
@@ -110,7 +110,7 @@
                 </entry>
             </map>
         </property>
-    </bean>
+    </bean>-->
 
 
     <!-- 缓存 -->
