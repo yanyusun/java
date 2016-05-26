@@ -63,3 +63,7 @@ auth-web.war        business-web.war        resource-web.war    wms-web.war
 * 系统配置项的初始化和消息的消费目前写再wms模块中,根据需要调整.
 * 跟前端交互统一使用json格式.部分新增操作(参数多的)也建议使用json数据格式.
 * 已经实现数据库二级缓存,根据需要开启
+
+## 目前已经完成接口,postman链接
+权限集合:https://www.getpostman.com/collections/77e4803f0787f1d4e7d1
+资源集合:https://www.getpostman.com/collections/8d48298e631701246d14
