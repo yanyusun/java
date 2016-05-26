@@ -15,7 +15,6 @@ public class InitComponent implements ApplicationListener<ApplicationEvent> {
     @Autowired
     private SysPropertyTool sysPropertyTool;
 
-
     @Override
     public void onApplicationEvent(ApplicationEvent applicationEvent) {
         sysPropertyTool.initProperty();

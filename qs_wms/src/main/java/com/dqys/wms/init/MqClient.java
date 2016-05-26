@@ -1,35 +1,29 @@
-package com.dqys.core.utils;
+package com.dqys.wms.init;
 
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
+import com.dqys.core.utils.SysPropertyTool;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.logging.log4j.LogManager;
-import org.springframework.data.redis.connection.Message;
-import org.springframework.data.redis.connection.MessageListener;
-import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.amqp.rabbit.annotation.Exchange;
+import org.springframework.amqp.rabbit.annotation.Queue;
+import org.springframework.amqp.rabbit.annotation.QueueBinding;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Component;
 
 /**
- * @author by pan on 16-4-12.
+ * Created by pan on 16-5-26.
  */
-public class EmailClientTool implements MessageListener {
+@Component
+public class MqClient {
 
-    /*@Autowired
-    private RabbitTemplate rabbitTemplate;*/
-
-    @Override
-    public void onMessage(Message message, byte[] pattern) {
-
-        String[] msgBody = ((RedisSerializer<String[]>) NoSQLWithRedisTool.getMsgRedisTemplate().getValueSerializer()).deserialize(message.getBody());        //0-目标; 1-消息体
-        if(null == msgBody || msgBody.length != 2) {
-            return;
-        }
-
-        this.sendMail(msgBody[0], msgBody[1]);
-    }
-
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = "mail_send_queue", durable = "true"),
+            exchange = @Exchange(value = "mailExchange"))
+    )
     public void sendMailFromMessage(String[] msg) throws Exception {
         this.sendMail(msg[0], msg[1]);
     }

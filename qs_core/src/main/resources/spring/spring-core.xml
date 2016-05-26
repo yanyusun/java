@@ -153,6 +153,7 @@
           c:redisOperations-ref="cacheRedisTemplate"/>
 
     <!-- rabbitmq -->
+    <rabbit:annotation-driven/>
     <bean id="rabbitConnectionFactory"
           class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory">
         <constructor-arg name="hostname" value="${rabbitmq.host}"/>
@@ -184,6 +185,7 @@
             <rabbit:binding key="mail_route" queue="mail_send_queue" ></rabbit:binding>
         </rabbit:bindings>
     </rabbit:direct-exchange>
+
     <!--<rabbit:listener-container connection-factory="rabbitConnectionFactory">
         <rabbit:listener ref="mailClient" method="sendMailFromMessage" queue-names="mail_send_queue" />
     </rabbit:listener-container>
