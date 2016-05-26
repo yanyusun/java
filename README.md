@@ -66,4 +66,5 @@ auth-web.war        business-web.war        resource-web.war    wms-web.war
 
 ## 目前已经完成接口,postman链接
 权限集合:https://www.getpostman.com/collections/77e4803f0787f1d4e7d1
+
 资源集合:https://www.getpostman.com/collections/8d48298e631701246d14
