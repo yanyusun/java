@@ -26,7 +26,7 @@
   </delete>
 
   <!-- 新增 -->
-  <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.TATOInfo" >
+  <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.TATOInfo" useGeneratedKeys="true" keyProperty="id">
     insert into t_ato_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -47,7 +47,7 @@
         #{remark,jdbcType=VARCHAR},
       </if>
       <if test="type != null" >
-        #{type,jdbcType=TINYINT},
+        #{type,jdbcType=INTEGER},
       </if>
       <if test="name != null" >
         #{name,jdbcType=VARCHAR},
@@ -67,7 +67,7 @@
   </select>
 
   <!-- 修改 -->
-  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.TATOInfo" >
+  <update id="updateByPrimaryKey" parameterType="com.dqys.auth.orm.pojo.TATOInfo" >
     update t_ato_info
     <set >
       version = version+1,
@@ -76,7 +76,7 @@
         remark = #{remark,jdbcType=VARCHAR},
       </if>
       <if test="type != null" >
-        type = #{type,jdbcType=TINYINT},
+        type = #{type,jdbcType=INTEGER},
       </if>
       <if test="name != null" >
         name = #{name,jdbcType=VARCHAR},
@@ -89,10 +89,12 @@
   </update>
 
   <!-- 条件查全 -->
-  <select id="selectListByType" parameterType="java.lang.Integer">
+  <select id="selectListByType" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
       <include refid="Base_Column_List" />
     from t_ato_info
-    WHERE type = #{type,jdbcType=TNTEGER}
+    WHERE type = #{type,jdbcType=INTEGER} AND stateflag = 0;
   </select>
+
+
 </mapper>
