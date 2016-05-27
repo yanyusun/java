@@ -5,6 +5,8 @@ import com.dqys.core.base.BaseDTO;
 import java.math.BigDecimal;
 
 /**
+ * 抵押物
+ *
  * Created by pan on 16-5-17.
  */
 public abstract class AbstractGuaranty extends BaseDTO {

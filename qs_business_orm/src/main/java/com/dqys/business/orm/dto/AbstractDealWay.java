@@ -1,6 +1,7 @@
 package com.dqys.business.orm.dto;
 
 /**
+ * 处置方式
  * Created by pan on 16-5-18.
  */
 public abstract class AbstractDealWay {
