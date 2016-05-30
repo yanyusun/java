@@ -1,5 +1,6 @@
 package com.dqys.wms.init;
 
+import com.dqys.core.constant.KeyEnum;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -17,20 +18,8 @@ import java.net.URLEncoder;
 @Component
 public class SmsClient {
 
-    private static CloseableHttpClient client;
-    private static String account;
-    private static String password;
-    private static final String SEND_URL="http://222.73.117.138:7891/mt";
-    private static final String QUERY_URL="http://222.73.117.138:7891/bi";
-    private static final String INTERNATIONAL_URL="http://222.73.117.140:8044/mt";
-
-    public SmsClient(String account, String password){
-        this.account = account;
-        this.password = password;
-        client = HttpClients.createDefault();
-    }
-
     public static CloseableHttpResponse sendMessage(String phone, String content) {
+        CloseableHttpClient client = HttpClients.createDefault();
         String encodedContent = null;
         try {
             encodedContent = URLEncoder.encode(content, "utf-8");
@@ -38,13 +27,12 @@ public class SmsClient {
             e.printStackTrace();
             return null;
         }
-        StringBuffer strBuf = new StringBuffer(SEND_URL);
-        strBuf.append("?un=").append(account);
-        strBuf.append("&pw=").append(password);
-        strBuf.append("&da=").append(phone);
-        strBuf.append("&sm=").append(encodedContent);
-        strBuf.append("&dc=15&rd=1&rf=2&tf=3");
-        System.out.println("测试接口请求数据:" + strBuf);
+        StringBuffer strBuf = new StringBuffer(KeyEnum.SMS_URL);
+        strBuf.append("?account=").append(KeyEnum.SMS_ACCOUNT);
+        strBuf.append("&pswd=").append(KeyEnum.SMS_PASSWORD);
+        strBuf.append("&mobile=").append(phone);
+        strBuf.append("&msg=").append(encodedContent);
+        strBuf.append("&needstatus=true");
         HttpGet get = new HttpGet( strBuf.toString() );
 
         try {
@@ -53,89 +41,20 @@ public class SmsClient {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-        return null;
-    }
-
-    public CloseableHttpResponse queryBalance() {
-        StringBuffer strBuf = new StringBuffer(QUERY_URL);
-        strBuf.append("?un=").append(account);
-        strBuf.append("&pw=").append(password);
-        strBuf.append("&rf=2");
-        HttpGet get = new HttpGet( strBuf.toString() );
-
-        try {
-            return client.execute(get);
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static CloseableHttpResponse sendInternationalMessage(String phone, String content) {
-        String encodedContent = null;
-        try {
-            encodedContent = URLEncoder.encode(content, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        }
-        StringBuffer strBuf = new StringBuffer(INTERNATIONAL_URL);
-        strBuf.append("?un=").append(account);
-        strBuf.append("&pw=").append(password);
-        strBuf.append("&da=").append(phone);
-        strBuf.append("&sm=").append(encodedContent);
-        strBuf.append("&dc=15&rd=1&rf=2&tf=3");
-        System.out.print("测试网络发送短信:" + strBuf);
-        HttpGet get = new HttpGet( strBuf.toString() );
-
-        try {
-            return client.execute(get);
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void close() {
-        if(client != null){
+        }finally {
             try {
                 client.close();
-            } catch (IOException e) {
+            }catch (IOException e){
                 e.printStackTrace();
             }
         }
+        return null;
     }
 
-    public String getAccount() {
-        return account;
-    }
-
-    public void setAccount(String account) {
-        this.account = account;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-
-    public static void main(String[] args){
-        SmsClient smsClient = new SmsClient("qingsou", "Tch123456");
-        smsClient.setAccount("qingsou");
-        smsClient.setPassword("Tch123456");
-        smsClient.sendMessage("18806536644", "这是测试短信发送");
-        smsClient.sendInternationalMessage("18806536644", "这是测试短信发送");
-        smsClient.close();
-
-    }
+//    public static void main(String[] args){
+//        SmsClient smsClient = new SmsClient();
+//        smsClient.sendMessage2("13067821621", "这只是一个测试短信发送");
+//
+//    }
 
 }
