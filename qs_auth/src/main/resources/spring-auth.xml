@@ -8,6 +8,7 @@
         http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <import resource="classpath*:spring/spring-*.xml"/>
+
     <import resource="spring-authorization.xml"/>
     <mvc:annotation-driven>
         <mvc:async-support default-timeout="30000"/>
