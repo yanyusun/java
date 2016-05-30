@@ -34,4 +34,11 @@ public class KeyEnum {
     public static final String API_AREA_LIST = "api_area_list";
 
 
+    /* 创蓝短信账号配置key */
+    public static final String SMS_URL = "http://222.73.117.156/msg/HttpBatchSendSM";
+    public static final String SMS_ACCOUNT = "qingsou";
+    public static final String SMS_PASSWORD = "Tch123456";
+
+
+
 }
