@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/ato")
-public class AtlInfoController extends BaseApiContorller {
+public class AtoInfoController extends BaseApiContorller {
 
     @Autowired
     private ATOInfoService atoInfoService;
@@ -31,6 +32,7 @@ public class AtlInfoController extends BaseApiContorller {
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.GET)
+    @ResponseBody
     public JsonResponse add(@Param("name")String name, @Param("type")Integer type){
         ATOInfoEnum atoInfoEnum = ATOInfoEnum.getATOInfoEnum(type);
         if(atoInfoEnum == null){
@@ -45,7 +47,7 @@ public class AtlInfoController extends BaseApiContorller {
         tatoInfo.setType(atoInfoEnum.getType());
         Integer id = atoInfoService.add(tatoInfo).intValue();
         if(id > 0){
-            return JsonResponseTool.success(id);
+            return JsonResponseTool.success(tatoInfo.getId());
         }else{
             return JsonResponseTool.failure("新增失败");
         }
@@ -54,21 +56,22 @@ public class AtlInfoController extends BaseApiContorller {
     /**
      * 修改项目信息
      * @param id
-     * @param typeName
+     * @param name
      * @return
      */
     @RequestMapping(value = "/update", method = RequestMethod.GET)
-    public JsonResponse update(@Param("id")Integer id, @Param("name")String typeName){
+    @ResponseBody
+    public JsonResponse update(@Param("id")Integer id, @Param("name")String name){
         if(id == null || id.equals("")){
             return JsonResponseTool.paramErr("id参数丢失");
         }
-        if(typeName == null || typeName.equals("")){
+        if(name == null || name.equals("")){
             return JsonResponseTool.paramErr("名称为空");
         }
 
         TATOInfo TATOInfo = new TATOInfo();
         TATOInfo.setId(id);
-        TATOInfo.setName(typeName);
+        TATOInfo.setName(name);
         Integer result = atoInfoService.updateById(TATOInfo);
         if(result.intValue() > 0){
             return JsonResponseTool.success(id);
@@ -83,6 +86,7 @@ public class AtlInfoController extends BaseApiContorller {
      * @return
      */
     @RequestMapping(value = "/get")
+    @ResponseBody
     public JsonResponse get(@Param("id")Integer id){
         if(id == null || id.equals("")){
             return JsonResponseTool.paramErr("id参数丢失");
@@ -101,6 +105,7 @@ public class AtlInfoController extends BaseApiContorller {
      * @return
      */
     @RequestMapping(value = "/listAll")
+    @ResponseBody
     public JsonResponse listAll(@Param("type")Integer type){
         ATOInfoEnum atoInfoEnum = ATOInfoEnum.getATOInfoEnum(type);
         if(atoInfoEnum == null){
