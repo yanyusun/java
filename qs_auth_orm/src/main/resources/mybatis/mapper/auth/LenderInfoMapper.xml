@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chebaiyong.biz.asset.dao.LenderInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.chebaiyong.biz.asset.domain.LenderInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="stateflag" property="stateflag" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="VARCHAR" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="home_tel" property="homeTel" jdbcType="VARCHAR" />
+    <result column="office_tel" property="officeTel" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="district" property="district" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="entrust_start_time" property="entrustStartTime" jdbcType="TIMESTAMP" />
+    <result column="entrust_end_time" property="entrustEndTime" jdbcType="TIMESTAMP" />
+    <result column="operator" property="operator" jdbcType="INTEGER" />
+    <result column="accrual" property="accrual" jdbcType="DOUBLE" />
+    <result column="loan" property="loan" jdbcType="DOUBLE" />
+    <result column="appraisal" property="appraisal" jdbcType="DOUBLE" />
+    <result column="loan_type" property="loanType" jdbcType="VARCHAR" />
+    <result column="loan_name" property="loanName" jdbcType="VARCHAR" />
+    <result column="quality" property="quality" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="dispose_types" property="disposeTypes" jdbcType="VARCHAR" />
+    <result column="tags" property="tags" jdbcType="VARCHAR" />
+    <result column="urge_time" property="urgeTime" jdbcType="VARCHAR" />
+    <result column="entrust_born" property="entrustBorn" jdbcType="VARCHAR" />
+    <result column="guarantee_type" property="guaranteeType" jdbcType="VARCHAR" />
+    <result column="guarantee_name" property="guaranteeName" jdbcType="VARCHAR" />
+    <result column="is_guarantee_connection" property="isGuaranteeConnection" jdbcType="BIT" />
+    <result column="guarentee_economic" property="guarenteeEconomic" jdbcType="VARCHAR" />
+    <result column="is_lawsuit" property="isLawsuit" jdbcType="BIT" />
+    <result column="is_decision" property="isDecision" jdbcType="BIT" />
+    <result column="real_urge_time" property="realUrgeTime" jdbcType="INTEGER" />
+    <result column="phone_urge_time" property="phoneUrgeTime" jdbcType="INTEGER" />
+    <result column="entrust_urge_time" property="entrustUrgeTime" jdbcType="INTEGER" />
+    <result column="is_connection" property="isConnection" jdbcType="INTEGER" />
+    <result column="can_pay" property="canPay" jdbcType="INTEGER" />
+    <result column="is_worth" property="isWorth" jdbcType="INTEGER" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, version, create_at, update_at, stateflag, remark, name, type, gender, idcard, 
+    company, mobile, home_tel, office_tel, email, province, city, district, address, 
+    entrust_start_time, entrust_end_time, operator, accrual, loan, appraisal, loan_type, 
+    loan_name, quality, level, dispose_types, tags, urge_time, entrust_born, guarantee_type, 
+    guarantee_name, is_guarantee_connection, guarentee_economic, is_lawsuit, is_decision, 
+    real_urge_time, phone_urge_time, entrust_urge_time, is_connection, can_pay, is_worth, 
+    memo
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_lender_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_lender_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chebaiyong.biz.asset.domain.LenderInfo" >
+    insert into t_lender_info (id, version, create_at, 
+      update_at, stateflag, remark, 
+      name, type, gender, 
+      idcard, company, mobile, 
+      home_tel, office_tel, email, 
+      province, city, district, 
+      address, entrust_start_time, entrust_end_time, 
+      operator, accrual, loan, 
+      appraisal, loan_type, loan_name, 
+      quality, level, dispose_types, 
+      tags, urge_time, entrust_born, 
+      guarantee_type, guarantee_name, is_guarantee_connection, 
+      guarentee_economic, is_lawsuit, is_decision, 
+      real_urge_time, phone_urge_time, entrust_urge_time, 
+      is_connection, can_pay, is_worth, 
+      memo)
+    values (#{id,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, 
+      #{updateAt,jdbcType=TIMESTAMP}, #{stateflag,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{gender,jdbcType=VARCHAR}, 
+      #{idcard,jdbcType=VARCHAR}, #{company,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{homeTel,jdbcType=VARCHAR}, #{officeTel,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, #{district,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{entrustStartTime,jdbcType=TIMESTAMP}, #{entrustEndTime,jdbcType=TIMESTAMP}, 
+      #{operator,jdbcType=INTEGER}, #{accrual,jdbcType=DOUBLE}, #{loan,jdbcType=DOUBLE}, 
+      #{appraisal,jdbcType=DOUBLE}, #{loanType,jdbcType=VARCHAR}, #{loanName,jdbcType=VARCHAR}, 
+      #{quality,jdbcType=VARCHAR}, #{level,jdbcType=VARCHAR}, #{disposeTypes,jdbcType=VARCHAR}, 
+      #{tags,jdbcType=VARCHAR}, #{urgeTime,jdbcType=VARCHAR}, #{entrustBorn,jdbcType=VARCHAR}, 
+      #{guaranteeType,jdbcType=VARCHAR}, #{guaranteeName,jdbcType=VARCHAR}, #{isGuaranteeConnection,jdbcType=BIT}, 
+      #{guarenteeEconomic,jdbcType=VARCHAR}, #{isLawsuit,jdbcType=BIT}, #{isDecision,jdbcType=BIT}, 
+      #{realUrgeTime,jdbcType=INTEGER}, #{phoneUrgeTime,jdbcType=INTEGER}, #{entrustUrgeTime,jdbcType=INTEGER}, 
+      #{isConnection,jdbcType=INTEGER}, #{canPay,jdbcType=INTEGER}, #{isWorth,jdbcType=INTEGER}, 
+      #{memo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chebaiyong.biz.asset.domain.LenderInfo" >
+    insert into t_lender_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
+      <if test="updateAt != null" >
+        update_at,
+      </if>
+      <if test="stateflag != null" >
+        stateflag,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="idcard != null" >
+        idcard,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="homeTel != null" >
+        home_tel,
+      </if>
+      <if test="officeTel != null" >
+        office_tel,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="district != null" >
+        district,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="entrustStartTime != null" >
+        entrust_start_time,
+      </if>
+      <if test="entrustEndTime != null" >
+        entrust_end_time,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="accrual != null" >
+        accrual,
+      </if>
+      <if test="loan != null" >
+        loan,
+      </if>
+      <if test="appraisal != null" >
+        appraisal,
+      </if>
+      <if test="loanType != null" >
+        loan_type,
+      </if>
+      <if test="loanName != null" >
+        loan_name,
+      </if>
+      <if test="quality != null" >
+        quality,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="disposeTypes != null" >
+        dispose_types,
+      </if>
+      <if test="tags != null" >
+        tags,
+      </if>
+      <if test="urgeTime != null" >
+        urge_time,
+      </if>
+      <if test="entrustBorn != null" >
+        entrust_born,
+      </if>
+      <if test="guaranteeType != null" >
+        guarantee_type,
+      </if>
+      <if test="guaranteeName != null" >
+        guarantee_name,
+      </if>
+      <if test="isGuaranteeConnection != null" >
+        is_guarantee_connection,
+      </if>
+      <if test="guarenteeEconomic != null" >
+        guarentee_economic,
+      </if>
+      <if test="isLawsuit != null" >
+        is_lawsuit,
+      </if>
+      <if test="isDecision != null" >
+        is_decision,
+      </if>
+      <if test="realUrgeTime != null" >
+        real_urge_time,
+      </if>
+      <if test="phoneUrgeTime != null" >
+        phone_urge_time,
+      </if>
+      <if test="entrustUrgeTime != null" >
+        entrust_urge_time,
+      </if>
+      <if test="isConnection != null" >
+        is_connection,
+      </if>
+      <if test="canPay != null" >
+        can_pay,
+      </if>
+      <if test="isWorth != null" >
+        is_worth,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stateflag != null" >
+        #{stateflag,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="homeTel != null" >
+        #{homeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="officeTel != null" >
+        #{officeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="entrustStartTime != null" >
+        #{entrustStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="entrustEndTime != null" >
+        #{entrustEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=INTEGER},
+      </if>
+      <if test="accrual != null" >
+        #{accrual,jdbcType=DOUBLE},
+      </if>
+      <if test="loan != null" >
+        #{loan,jdbcType=DOUBLE},
+      </if>
+      <if test="appraisal != null" >
+        #{appraisal,jdbcType=DOUBLE},
+      </if>
+      <if test="loanType != null" >
+        #{loanType,jdbcType=VARCHAR},
+      </if>
+      <if test="loanName != null" >
+        #{loanName,jdbcType=VARCHAR},
+      </if>
+      <if test="quality != null" >
+        #{quality,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="disposeTypes != null" >
+        #{disposeTypes,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null" >
+        #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeTime != null" >
+        #{urgeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="entrustBorn != null" >
+        #{entrustBorn,jdbcType=VARCHAR},
+      </if>
+      <if test="guaranteeType != null" >
+        #{guaranteeType,jdbcType=VARCHAR},
+      </if>
+      <if test="guaranteeName != null" >
+        #{guaranteeName,jdbcType=VARCHAR},
+      </if>
+      <if test="isGuaranteeConnection != null" >
+        #{isGuaranteeConnection,jdbcType=BIT},
+      </if>
+      <if test="guarenteeEconomic != null" >
+        #{guarenteeEconomic,jdbcType=VARCHAR},
+      </if>
+      <if test="isLawsuit != null" >
+        #{isLawsuit,jdbcType=BIT},
+      </if>
+      <if test="isDecision != null" >
+        #{isDecision,jdbcType=BIT},
+      </if>
+      <if test="realUrgeTime != null" >
+        #{realUrgeTime,jdbcType=INTEGER},
+      </if>
+      <if test="phoneUrgeTime != null" >
+        #{phoneUrgeTime,jdbcType=INTEGER},
+      </if>
+      <if test="entrustUrgeTime != null" >
+        #{entrustUrgeTime,jdbcType=INTEGER},
+      </if>
+      <if test="isConnection != null" >
+        #{isConnection,jdbcType=INTEGER},
+      </if>
+      <if test="canPay != null" >
+        #{canPay,jdbcType=INTEGER},
+      </if>
+      <if test="isWorth != null" >
+        #{isWorth,jdbcType=INTEGER},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chebaiyong.biz.asset.domain.LenderInfo" >
+    update t_lender_info
+    <set >
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stateflag != null" >
+        stateflag = #{stateflag,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        idcard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="homeTel != null" >
+        home_tel = #{homeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="officeTel != null" >
+        office_tel = #{officeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        district = #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="entrustStartTime != null" >
+        entrust_start_time = #{entrustStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="entrustEndTime != null" >
+        entrust_end_time = #{entrustEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=INTEGER},
+      </if>
+      <if test="accrual != null" >
+        accrual = #{accrual,jdbcType=DOUBLE},
+      </if>
+      <if test="loan != null" >
+        loan = #{loan,jdbcType=DOUBLE},
+      </if>
+      <if test="appraisal != null" >
+        appraisal = #{appraisal,jdbcType=DOUBLE},
+      </if>
+      <if test="loanType != null" >
+        loan_type = #{loanType,jdbcType=VARCHAR},
+      </if>
+      <if test="loanName != null" >
+        loan_name = #{loanName,jdbcType=VARCHAR},
+      </if>
+      <if test="quality != null" >
+        quality = #{quality,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="disposeTypes != null" >
+        dispose_types = #{disposeTypes,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null" >
+        tags = #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="urgeTime != null" >
+        urge_time = #{urgeTime,jdbcType=VARCHAR},
+      </if>
+      <if test="entrustBorn != null" >
+        entrust_born = #{entrustBorn,jdbcType=VARCHAR},
+      </if>
+      <if test="guaranteeType != null" >
+        guarantee_type = #{guaranteeType,jdbcType=VARCHAR},
+      </if>
+      <if test="guaranteeName != null" >
+        guarantee_name = #{guaranteeName,jdbcType=VARCHAR},
+      </if>
+      <if test="isGuaranteeConnection != null" >
+        is_guarantee_connection = #{isGuaranteeConnection,jdbcType=BIT},
+      </if>
+      <if test="guarenteeEconomic != null" >
+        guarentee_economic = #{guarenteeEconomic,jdbcType=VARCHAR},
+      </if>
+      <if test="isLawsuit != null" >
+        is_lawsuit = #{isLawsuit,jdbcType=BIT},
+      </if>
+      <if test="isDecision != null" >
+        is_decision = #{isDecision,jdbcType=BIT},
+      </if>
+      <if test="realUrgeTime != null" >
+        real_urge_time = #{realUrgeTime,jdbcType=INTEGER},
+      </if>
+      <if test="phoneUrgeTime != null" >
+        phone_urge_time = #{phoneUrgeTime,jdbcType=INTEGER},
+      </if>
+      <if test="entrustUrgeTime != null" >
+        entrust_urge_time = #{entrustUrgeTime,jdbcType=INTEGER},
+      </if>
+      <if test="isConnection != null" >
+        is_connection = #{isConnection,jdbcType=INTEGER},
+      </if>
+      <if test="canPay != null" >
+        can_pay = #{canPay,jdbcType=INTEGER},
+      </if>
+      <if test="isWorth != null" >
+        is_worth = #{isWorth,jdbcType=INTEGER},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chebaiyong.biz.asset.domain.LenderInfo" >
+    update t_lender_info
+    set version = #{version,jdbcType=INTEGER},
+      create_at = #{createAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      stateflag = #{stateflag,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=VARCHAR},
+      idcard = #{idcard,jdbcType=VARCHAR},
+      company = #{company,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      home_tel = #{homeTel,jdbcType=VARCHAR},
+      office_tel = #{officeTel,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      district = #{district,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      entrust_start_time = #{entrustStartTime,jdbcType=TIMESTAMP},
+      entrust_end_time = #{entrustEndTime,jdbcType=TIMESTAMP},
+      operator = #{operator,jdbcType=INTEGER},
+      accrual = #{accrual,jdbcType=DOUBLE},
+      loan = #{loan,jdbcType=DOUBLE},
+      appraisal = #{appraisal,jdbcType=DOUBLE},
+      loan_type = #{loanType,jdbcType=VARCHAR},
+      loan_name = #{loanName,jdbcType=VARCHAR},
+      quality = #{quality,jdbcType=VARCHAR},
+      level = #{level,jdbcType=VARCHAR},
+      dispose_types = #{disposeTypes,jdbcType=VARCHAR},
+      tags = #{tags,jdbcType=VARCHAR},
+      urge_time = #{urgeTime,jdbcType=VARCHAR},
+      entrust_born = #{entrustBorn,jdbcType=VARCHAR},
+      guarantee_type = #{guaranteeType,jdbcType=VARCHAR},
+      guarantee_name = #{guaranteeName,jdbcType=VARCHAR},
+      is_guarantee_connection = #{isGuaranteeConnection,jdbcType=BIT},
+      guarentee_economic = #{guarenteeEconomic,jdbcType=VARCHAR},
+      is_lawsuit = #{isLawsuit,jdbcType=BIT},
+      is_decision = #{isDecision,jdbcType=BIT},
+      real_urge_time = #{realUrgeTime,jdbcType=INTEGER},
+      phone_urge_time = #{phoneUrgeTime,jdbcType=INTEGER},
+      entrust_urge_time = #{entrustUrgeTime,jdbcType=INTEGER},
+      is_connection = #{isConnection,jdbcType=INTEGER},
+      can_pay = #{canPay,jdbcType=INTEGER},
+      is_worth = #{isWorth,jdbcType=INTEGER},
+      memo = #{memo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

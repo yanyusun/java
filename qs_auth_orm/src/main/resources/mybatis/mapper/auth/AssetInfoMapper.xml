@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chebaiyong.biz.asset.dao.AssetInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.chebaiyong.biz.asset.domain.AssetInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="stateflag" property="stateflag" jdbcType="TINYINT" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="area" property="area" jdbcType="VARCHAR" />
+    <result column="apart_type" property="apartType" jdbcType="VARCHAR" />
+    <result column="apart_name" property="apartName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="entrust_start_time" property="entrustStartTime" jdbcType="TIMESTAMP" />
+    <result column="entrust_end_time" property="entrustEndTime" jdbcType="TIMESTAMP" />
+    <result column="operator" property="operator" jdbcType="INTEGER" />
+    <result column="accrual" property="accrual" jdbcType="DOUBLE" />
+    <result column="loan" property="loan" jdbcType="DOUBLE" />
+    <result column="appraisal" property="appraisal" jdbcType="DOUBLE" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="quality" property="quality" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="district" property="district" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="loan_organization" property="loanOrganization" jdbcType="VARCHAR" />
+    <result column="loan_organization_district" property="loanOrganizationDistrict" jdbcType="VARCHAR" />
+    <result column="dispose_types" property="disposeTypes" jdbcType="VARCHAR" />
+    <result column="tags" property="tags" jdbcType="VARCHAR" />
+    <result column="isshow" property="isshow" jdbcType="BIT" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, version, create_at, update_at, stateflag, remark, code, area, apart_type, apart_name, 
+    type, entrust_start_time, entrust_end_time, operator, accrual, loan, appraisal, name, 
+    quality, level, province, city, district, address, loan_organization, loan_organization_district, 
+    dispose_types, tags, isshow, memo
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_asset_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_asset_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chebaiyong.biz.asset.domain.AssetInfo" >
+    insert into t_asset_info (id, version, create_at, 
+      update_at, stateflag, remark, 
+      code, area, apart_type, 
+      apart_name, type, entrust_start_time, 
+      entrust_end_time, operator, accrual, 
+      loan, appraisal, name, 
+      quality, level, province, 
+      city, district, address, 
+      loan_organization, loan_organization_district, 
+      dispose_types, tags, isshow, 
+      memo)
+    values (#{id,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, 
+      #{updateAt,jdbcType=TIMESTAMP}, #{stateflag,jdbcType=TINYINT}, #{remark,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{apartType,jdbcType=VARCHAR}, 
+      #{apartName,jdbcType=VARCHAR}, #{type,jdbcType=TINYINT}, #{entrustStartTime,jdbcType=TIMESTAMP}, 
+      #{entrustEndTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=INTEGER}, #{accrual,jdbcType=DOUBLE}, 
+      #{loan,jdbcType=DOUBLE}, #{appraisal,jdbcType=DOUBLE}, #{name,jdbcType=VARCHAR}, 
+      #{quality,jdbcType=VARCHAR}, #{level,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{district,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{loanOrganization,jdbcType=VARCHAR}, #{loanOrganizationDistrict,jdbcType=VARCHAR}, 
+      #{disposeTypes,jdbcType=VARCHAR}, #{tags,jdbcType=VARCHAR}, #{isshow,jdbcType=BIT}, 
+      #{memo,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chebaiyong.biz.asset.domain.AssetInfo" >
+    insert into t_asset_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
+      <if test="updateAt != null" >
+        update_at,
+      </if>
+      <if test="stateflag != null" >
+        stateflag,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="area != null" >
+        area,
+      </if>
+      <if test="apartType != null" >
+        apart_type,
+      </if>
+      <if test="apartName != null" >
+        apart_name,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="entrustStartTime != null" >
+        entrust_start_time,
+      </if>
+      <if test="entrustEndTime != null" >
+        entrust_end_time,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="accrual != null" >
+        accrual,
+      </if>
+      <if test="loan != null" >
+        loan,
+      </if>
+      <if test="appraisal != null" >
+        appraisal,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="quality != null" >
+        quality,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="district != null" >
+        district,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="loanOrganization != null" >
+        loan_organization,
+      </if>
+      <if test="loanOrganizationDistrict != null" >
+        loan_organization_district,
+      </if>
+      <if test="disposeTypes != null" >
+        dispose_types,
+      </if>
+      <if test="tags != null" >
+        tags,
+      </if>
+      <if test="isshow != null" >
+        isshow,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stateflag != null" >
+        #{stateflag,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="apartType != null" >
+        #{apartType,jdbcType=VARCHAR},
+      </if>
+      <if test="apartName != null" >
+        #{apartName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="entrustStartTime != null" >
+        #{entrustStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="entrustEndTime != null" >
+        #{entrustEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=INTEGER},
+      </if>
+      <if test="accrual != null" >
+        #{accrual,jdbcType=DOUBLE},
+      </if>
+      <if test="loan != null" >
+        #{loan,jdbcType=DOUBLE},
+      </if>
+      <if test="appraisal != null" >
+        #{appraisal,jdbcType=DOUBLE},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="quality != null" >
+        #{quality,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="loanOrganization != null" >
+        #{loanOrganization,jdbcType=VARCHAR},
+      </if>
+      <if test="loanOrganizationDistrict != null" >
+        #{loanOrganizationDistrict,jdbcType=VARCHAR},
+      </if>
+      <if test="disposeTypes != null" >
+        #{disposeTypes,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null" >
+        #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="isshow != null" >
+        #{isshow,jdbcType=BIT},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chebaiyong.biz.asset.domain.AssetInfo" >
+    update t_asset_info
+    <set >
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stateflag != null" >
+        stateflag = #{stateflag,jdbcType=TINYINT},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="area != null" >
+        area = #{area,jdbcType=VARCHAR},
+      </if>
+      <if test="apartType != null" >
+        apart_type = #{apartType,jdbcType=VARCHAR},
+      </if>
+      <if test="apartName != null" >
+        apart_name = #{apartName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="entrustStartTime != null" >
+        entrust_start_time = #{entrustStartTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="entrustEndTime != null" >
+        entrust_end_time = #{entrustEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=INTEGER},
+      </if>
+      <if test="accrual != null" >
+        accrual = #{accrual,jdbcType=DOUBLE},
+      </if>
+      <if test="loan != null" >
+        loan = #{loan,jdbcType=DOUBLE},
+      </if>
+      <if test="appraisal != null" >
+        appraisal = #{appraisal,jdbcType=DOUBLE},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="quality != null" >
+        quality = #{quality,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        district = #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="loanOrganization != null" >
+        loan_organization = #{loanOrganization,jdbcType=VARCHAR},
+      </if>
+      <if test="loanOrganizationDistrict != null" >
+        loan_organization_district = #{loanOrganizationDistrict,jdbcType=VARCHAR},
+      </if>
+      <if test="disposeTypes != null" >
+        dispose_types = #{disposeTypes,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null" >
+        tags = #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="isshow != null" >
+        isshow = #{isshow,jdbcType=BIT},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chebaiyong.biz.asset.domain.AssetInfo" >
+    update t_asset_info
+    set version = #{version,jdbcType=INTEGER},
+      create_at = #{createAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      stateflag = #{stateflag,jdbcType=TINYINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      apart_type = #{apartType,jdbcType=VARCHAR},
+      apart_name = #{apartName,jdbcType=VARCHAR},
+      type = #{type,jdbcType=TINYINT},
+      entrust_start_time = #{entrustStartTime,jdbcType=TIMESTAMP},
+      entrust_end_time = #{entrustEndTime,jdbcType=TIMESTAMP},
+      operator = #{operator,jdbcType=INTEGER},
+      accrual = #{accrual,jdbcType=DOUBLE},
+      loan = #{loan,jdbcType=DOUBLE},
+      appraisal = #{appraisal,jdbcType=DOUBLE},
+      name = #{name,jdbcType=VARCHAR},
+      quality = #{quality,jdbcType=VARCHAR},
+      level = #{level,jdbcType=VARCHAR},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      district = #{district,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      loan_organization = #{loanOrganization,jdbcType=VARCHAR},
+      loan_organization_district = #{loanOrganizationDistrict,jdbcType=VARCHAR},
+      dispose_types = #{disposeTypes,jdbcType=VARCHAR},
+      tags = #{tags,jdbcType=VARCHAR},
+      isshow = #{isshow,jdbcType=BIT},
+      memo = #{memo,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

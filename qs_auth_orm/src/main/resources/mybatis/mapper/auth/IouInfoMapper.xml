@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chebaiyong.biz.asset.dao.IouInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.chebaiyong.biz.asset.domain.IouInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="stateflag" property="stateflag" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="lender_id" property="lenderId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="agency" property="agency" jdbcType="VARCHAR" />
+    <result column="loan_time" property="loanTime" jdbcType="TIMESTAMP" />
+    <result column="loan_attime" property="loanAttime" jdbcType="TIMESTAMP" />
+    <result column="amount" property="amount" jdbcType="DOUBLE" />
+    <result column="pact_rate" property="pactRate" jdbcType="VARCHAR" />
+    <result column="outtime_multiple" property="outtimeMultiple" jdbcType="VARCHAR" />
+    <result column="appropriation_multiple" property="appropriationMultiple" jdbcType="VARCHAR" />
+    <result column="accrual_repay" property="accrualRepay" jdbcType="DOUBLE" />
+    <result column="loan_repay" property="loanRepay" jdbcType="DOUBLE" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="out_days" property="outDays" jdbcType="INTEGER" />
+    <result column="less_corpus" property="lessCorpus" jdbcType="DOUBLE" />
+    <result column="accrual_arrears" property="accrualArrears" jdbcType="DOUBLE" />
+    <result column="penalty" property="penalty" jdbcType="DOUBLE" />
+    <result column="arrears" property="arrears" jdbcType="DOUBLE" />
+    <result column="out_time" property="outTime" jdbcType="TIMESTAMP" />
+    <result column="worth" property="worth" jdbcType="DOUBLE" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, version, create_at, update_at, stateflag, remark, code, lender_id, type, agency, 
+    loan_time, loan_attime, amount, pact_rate, outtime_multiple, appropriation_multiple, 
+    accrual_repay, loan_repay, level, out_days, less_corpus, accrual_arrears, penalty, 
+    arrears, out_time, worth
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_iou_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_iou_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.chebaiyong.biz.asset.domain.IouInfo" >
+    insert into t_iou_info (id, version, create_at, 
+      update_at, stateflag, remark, 
+      code, lender_id, type, 
+      agency, loan_time, loan_attime, 
+      amount, pact_rate, outtime_multiple, 
+      appropriation_multiple, accrual_repay, loan_repay, 
+      level, out_days, less_corpus, 
+      accrual_arrears, penalty, arrears, 
+      out_time, worth)
+    values (#{id,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, 
+      #{updateAt,jdbcType=TIMESTAMP}, #{stateflag,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{code,jdbcType=VARCHAR}, #{lenderId,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, 
+      #{agency,jdbcType=VARCHAR}, #{loanTime,jdbcType=TIMESTAMP}, #{loanAttime,jdbcType=TIMESTAMP}, 
+      #{amount,jdbcType=DOUBLE}, #{pactRate,jdbcType=VARCHAR}, #{outtimeMultiple,jdbcType=VARCHAR}, 
+      #{appropriationMultiple,jdbcType=VARCHAR}, #{accrualRepay,jdbcType=DOUBLE}, #{loanRepay,jdbcType=DOUBLE}, 
+      #{level,jdbcType=VARCHAR}, #{outDays,jdbcType=INTEGER}, #{lessCorpus,jdbcType=DOUBLE}, 
+      #{accrualArrears,jdbcType=DOUBLE}, #{penalty,jdbcType=DOUBLE}, #{arrears,jdbcType=DOUBLE}, 
+      #{outTime,jdbcType=TIMESTAMP}, #{worth,jdbcType=DOUBLE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.chebaiyong.biz.asset.domain.IouInfo" >
+    insert into t_iou_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="version != null" >
+        version,
+      </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
+      <if test="updateAt != null" >
+        update_at,
+      </if>
+      <if test="stateflag != null" >
+        stateflag,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="lenderId != null" >
+        lender_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="agency != null" >
+        agency,
+      </if>
+      <if test="loanTime != null" >
+        loan_time,
+      </if>
+      <if test="loanAttime != null" >
+        loan_attime,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="pactRate != null" >
+        pact_rate,
+      </if>
+      <if test="outtimeMultiple != null" >
+        outtime_multiple,
+      </if>
+      <if test="appropriationMultiple != null" >
+        appropriation_multiple,
+      </if>
+      <if test="accrualRepay != null" >
+        accrual_repay,
+      </if>
+      <if test="loanRepay != null" >
+        loan_repay,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="outDays != null" >
+        out_days,
+      </if>
+      <if test="lessCorpus != null" >
+        less_corpus,
+      </if>
+      <if test="accrualArrears != null" >
+        accrual_arrears,
+      </if>
+      <if test="penalty != null" >
+        penalty,
+      </if>
+      <if test="arrears != null" >
+        arrears,
+      </if>
+      <if test="outTime != null" >
+        out_time,
+      </if>
+      <if test="worth != null" >
+        worth,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="version != null" >
+        #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stateflag != null" >
+        #{stateflag,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="lenderId != null" >
+        #{lenderId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="agency != null" >
+        #{agency,jdbcType=VARCHAR},
+      </if>
+      <if test="loanTime != null" >
+        #{loanTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loanAttime != null" >
+        #{loanAttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DOUBLE},
+      </if>
+      <if test="pactRate != null" >
+        #{pactRate,jdbcType=VARCHAR},
+      </if>
+      <if test="outtimeMultiple != null" >
+        #{outtimeMultiple,jdbcType=VARCHAR},
+      </if>
+      <if test="appropriationMultiple != null" >
+        #{appropriationMultiple,jdbcType=VARCHAR},
+      </if>
+      <if test="accrualRepay != null" >
+        #{accrualRepay,jdbcType=DOUBLE},
+      </if>
+      <if test="loanRepay != null" >
+        #{loanRepay,jdbcType=DOUBLE},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="outDays != null" >
+        #{outDays,jdbcType=INTEGER},
+      </if>
+      <if test="lessCorpus != null" >
+        #{lessCorpus,jdbcType=DOUBLE},
+      </if>
+      <if test="accrualArrears != null" >
+        #{accrualArrears,jdbcType=DOUBLE},
+      </if>
+      <if test="penalty != null" >
+        #{penalty,jdbcType=DOUBLE},
+      </if>
+      <if test="arrears != null" >
+        #{arrears,jdbcType=DOUBLE},
+      </if>
+      <if test="outTime != null" >
+        #{outTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="worth != null" >
+        #{worth,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.chebaiyong.biz.asset.domain.IouInfo" >
+    update t_iou_info
+    <set >
+      <if test="version != null" >
+        version = #{version,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stateflag != null" >
+        stateflag = #{stateflag,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="lenderId != null" >
+        lender_id = #{lenderId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="agency != null" >
+        agency = #{agency,jdbcType=VARCHAR},
+      </if>
+      <if test="loanTime != null" >
+        loan_time = #{loanTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loanAttime != null" >
+        loan_attime = #{loanAttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DOUBLE},
+      </if>
+      <if test="pactRate != null" >
+        pact_rate = #{pactRate,jdbcType=VARCHAR},
+      </if>
+      <if test="outtimeMultiple != null" >
+        outtime_multiple = #{outtimeMultiple,jdbcType=VARCHAR},
+      </if>
+      <if test="appropriationMultiple != null" >
+        appropriation_multiple = #{appropriationMultiple,jdbcType=VARCHAR},
+      </if>
+      <if test="accrualRepay != null" >
+        accrual_repay = #{accrualRepay,jdbcType=DOUBLE},
+      </if>
+      <if test="loanRepay != null" >
+        loan_repay = #{loanRepay,jdbcType=DOUBLE},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="outDays != null" >
+        out_days = #{outDays,jdbcType=INTEGER},
+      </if>
+      <if test="lessCorpus != null" >
+        less_corpus = #{lessCorpus,jdbcType=DOUBLE},
+      </if>
+      <if test="accrualArrears != null" >
+        accrual_arrears = #{accrualArrears,jdbcType=DOUBLE},
+      </if>
+      <if test="penalty != null" >
+        penalty = #{penalty,jdbcType=DOUBLE},
+      </if>
+      <if test="arrears != null" >
+        arrears = #{arrears,jdbcType=DOUBLE},
+      </if>
+      <if test="outTime != null" >
+        out_time = #{outTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="worth != null" >
+        worth = #{worth,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.chebaiyong.biz.asset.domain.IouInfo" >
+    update t_iou_info
+    set version = #{version,jdbcType=INTEGER},
+      create_at = #{createAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP},
+      stateflag = #{stateflag,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      code = #{code,jdbcType=VARCHAR},
+      lender_id = #{lenderId,jdbcType=INTEGER},
+      type = #{type,jdbcType=VARCHAR},
+      agency = #{agency,jdbcType=VARCHAR},
+      loan_time = #{loanTime,jdbcType=TIMESTAMP},
+      loan_attime = #{loanAttime,jdbcType=TIMESTAMP},
+      amount = #{amount,jdbcType=DOUBLE},
+      pact_rate = #{pactRate,jdbcType=VARCHAR},
+      outtime_multiple = #{outtimeMultiple,jdbcType=VARCHAR},
+      appropriation_multiple = #{appropriationMultiple,jdbcType=VARCHAR},
+      accrual_repay = #{accrualRepay,jdbcType=DOUBLE},
+      loan_repay = #{loanRepay,jdbcType=DOUBLE},
+      level = #{level,jdbcType=VARCHAR},
+      out_days = #{outDays,jdbcType=INTEGER},
+      less_corpus = #{lessCorpus,jdbcType=DOUBLE},
+      accrual_arrears = #{accrualArrears,jdbcType=DOUBLE},
+      penalty = #{penalty,jdbcType=DOUBLE},
+      arrears = #{arrears,jdbcType=DOUBLE},
+      out_time = #{outTime,jdbcType=TIMESTAMP},
+      worth = #{worth,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
