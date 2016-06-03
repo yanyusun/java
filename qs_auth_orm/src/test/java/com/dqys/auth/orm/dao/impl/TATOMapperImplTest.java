@@ -46,7 +46,6 @@ public class TATOMapperImplTest extends BaseTest {
         }
         List<TATOInfo> tatoInfoList = tatoInfoMapper.selectListByType(1);
         Assert.assertNotNull(tatoInfoList);
-        Assert.assertEquals(tatoInfoList.size(), 3);
 
 
     }
