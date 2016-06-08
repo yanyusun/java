@@ -1,115 +1,53 @@
-package com.dqys.auth.orm.pojo;
+package com.dqys.auth.orm.pojo.entering;
 
+import com.dqys.core.base.BaseModel;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class AssetInfo {
-    private Integer id;
+public class AssetInfo extends BaseModel implements Serializable{
 
-    private Integer version;
+    private String code; // 编号
 
-    private Date createAt;
+    private Integer type;  // 资产包类型
 
-    private Date updateAt;
+    private Date entrustStartTime; // 委托开始时间
 
-    private Byte stateflag;
+    private Date entrustEndTime; // 委托结束时间
 
-    private String remark;
+    private Integer operator; // 操作人ID
 
-    private String code;
+    private Double accrual; // 总利息
 
-    private String area;
+    private Double loan; // 总贷款
 
-    private String apartType;
+    private Double appraisal; // 总评估
 
-    private String apartName;
+    private String name; // 资源包名称
 
-    private Integer type;
+    private String quality; // 评优
 
-    private Date entrustStartTime;
+    private String level; // 评级
 
-    private Date entrustEndTime;
+    private String province;  // 省
 
-    private Integer operator;
+    private String city;  // 市
 
-    private Double accrual;
+    private String district;  // 区
 
-    private Double loan;
+    private String address;  // 详细地址
 
-    private Double appraisal;
+    private String loanOrganization;  // 贷款机构
 
-    private String name;
+    private String loanOrganizationDistrict;  // 贷款机构行政区域
 
-    private String quality;
+    private String disposeMode;  // 处置方式
 
-    private String level;
+    private String tags;  //  标签
 
-    private String province;
+    private Integer isshow;  // 是否展示外网
 
-    private String city;
-
-    private String district;
-
-    private String address;
-
-    private String loanOrganization;
-
-    private String loanOrganizationDistrict;
-
-    private String disposeTypes;
-
-    private String tags;
-
-    private Integer isshow;
-
-    private String memo;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public Date getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
-    }
-
-    public Date getUpdateAt() {
-        return updateAt;
-    }
-
-    public void setUpdateAt(Date updateAt) {
-        this.updateAt = updateAt;
-    }
-
-    public Byte getStateflag() {
-        return stateflag;
-    }
-
-    public void setStateflag(Byte stateflag) {
-        this.stateflag = stateflag;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
+    private String memo;  // 备注
 
     public String getCode() {
         return code;
@@ -117,30 +55,6 @@ public class AssetInfo {
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public String getApartType() {
-        return apartType;
-    }
-
-    public void setApartType(String apartType) {
-        this.apartType = apartType;
-    }
-
-    public String getApartName() {
-        return apartName;
-    }
-
-    public void setApartName(String apartName) {
-        this.apartName = apartName;
     }
 
     public Integer getType() {
@@ -271,12 +185,12 @@ public class AssetInfo {
         this.loanOrganizationDistrict = loanOrganizationDistrict;
     }
 
-    public String getDisposeTypes() {
-        return disposeTypes;
+    public String getDisposeMode() {
+        return disposeMode;
     }
 
-    public void setDisposeTypes(String disposeTypes) {
-        this.disposeTypes = disposeTypes;
+    public void setDisposeMode(String disposeMode) {
+        this.disposeMode = disposeMode;
     }
 
     public String getTags() {

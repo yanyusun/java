@@ -1,6 +1,7 @@
-package com.dqys.auth.service.facade;
+package com.dqys.auth.service.facade.asset;
 
-import com.dqys.auth.orm.pojo.AssetInfo;
+import com.dqys.auth.orm.pojo.entering.AssetInfo;
+import com.dqys.auth.orm.query.asset.AssetQuery;
 
 import java.util.List;
 
@@ -42,5 +43,24 @@ public interface AssetService {
      * @return
      */
     List<AssetInfo> listAll();
+
+    /**
+     * 统计资产包(*)
+     * @return
+     */
+    Integer count();
+
+    /**
+     * 条件查询总条数
+     * @param assetQuery
+     * @return
+     */
+    Integer queryCount(AssetQuery assetQuery);
+
+    /**
+     * 分页获取资产包
+     * @return
+     */
+    List<AssetInfo> pageList(AssetQuery assetQuery);
 
 }

@@ -1,107 +1,63 @@
-package com.dqys.auth.orm.pojo;
+package com.dqys.auth.orm.pojo.entering;
 
+import com.dqys.core.base.BaseModel;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class IouInfo {
-    private Integer id;
+public class IOUInfo extends BaseModel implements Serializable{
 
-    private Integer version;
+    private String code;  // 编号
 
-    private Date createAt;
+    private Integer lenderId;  // 借款人ID
 
-    private Date updateAt;
+    private String pawnids;  // 抵押物IDS
 
-    private Byte stateflag;
+    private String type;  // 借据类型
 
-    private String remark;
+    private String agency;  // 代理机构
 
-    private String code;
+    private String iouCode;  // 原始借据号
 
-    private Integer lenderId;
+    private Date loanTime;  // 放款时间
 
-    private Integer type;
+    private Date loanAttime;  // 到款时间
 
-    private String agency;
+    private Double amount;  // 金额
 
-    private Date loanTime;
+    private Double pactRate;  // 合同利率
 
-    private Date loanAttime;
+    private Double outtimeMultiple;  // 逾期倍数
 
-    private Double amount;
+    private String appropriationMultiple;  // 挪用倍数
 
-    private String pactRate;
+    private Double accrualRepay;  // 已还利息金额
 
-    private String outtimeMultiple;
+    private Double loanRepay;  // 已还贷款金额
 
-    private String appropriationMultiple;
+    private String levelType;  // 5级分类
 
-    private Double accrualRepay;
+    private Integer outDays;  // 逾期天数
 
-    private Double loanRepay;
+    private Double lessCorpus;  // 剩余本金
 
-    private String level;
+    private Double accrualArrears;  // 拖欠利息
 
-    private Integer outDays;
+    private Double penalty;  // 罚息
 
-    private Double lessCorpus;
+    private Double arrears;  // 欠款合计
 
-    private Double accrualArrears;
+    private Date outTime;  // 欠款截止日期
 
-    private Double penalty;
+    private Double worth;  // 价值
 
-    private Double arrears;
+    private Double advanceCorpus;  // 提前偿还本金
 
-    private Date outTime;
+    private String quality;  // 评优
 
-    private Double worth;
+    private String level;  // 评级
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public Date getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
-    }
-
-    public Date getUpdateAt() {
-        return updateAt;
-    }
-
-    public void setUpdateAt(Date updateAt) {
-        this.updateAt = updateAt;
-    }
-
-    public Byte getStateflag() {
-        return stateflag;
-    }
-
-    public void setStateflag(Byte stateflag) {
-        this.stateflag = stateflag;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
+    private String memo;  // 备注
 
     public String getCode() {
         return code;
@@ -119,11 +75,19 @@ public class IouInfo {
         this.lenderId = lenderId;
     }
 
-    public Integer getType() {
+    public String getPawnids() {
+        return pawnids;
+    }
+
+    public void setPawnids(String pawnids) {
+        this.pawnids = pawnids;
+    }
+
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -133,6 +97,14 @@ public class IouInfo {
 
     public void setAgency(String agency) {
         this.agency = agency;
+    }
+
+    public String getIouCode() {
+        return iouCode;
+    }
+
+    public void setIouCode(String iouCode) {
+        this.iouCode = iouCode;
     }
 
     public Date getLoanTime() {
@@ -159,19 +131,19 @@ public class IouInfo {
         this.amount = amount;
     }
 
-    public String getPactRate() {
+    public Double getPactRate() {
         return pactRate;
     }
 
-    public void setPactRate(String pactRate) {
+    public void setPactRate(Double pactRate) {
         this.pactRate = pactRate;
     }
 
-    public String getOuttimeMultiple() {
+    public Double getOuttimeMultiple() {
         return outtimeMultiple;
     }
 
-    public void setOuttimeMultiple(String outtimeMultiple) {
+    public void setOuttimeMultiple(Double outtimeMultiple) {
         this.outtimeMultiple = outtimeMultiple;
     }
 
@@ -199,12 +171,12 @@ public class IouInfo {
         this.loanRepay = loanRepay;
     }
 
-    public String getLevel() {
-        return level;
+    public String getLevelType() {
+        return levelType;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public void setLevelType(String levelType) {
+        this.levelType = levelType;
     }
 
     public Integer getOutDays() {
@@ -261,5 +233,37 @@ public class IouInfo {
 
     public void setWorth(Double worth) {
         this.worth = worth;
+    }
+
+    public Double getAdvanceCorpus() {
+        return advanceCorpus;
+    }
+
+    public void setAdvanceCorpus(Double advanceCorpus) {
+        this.advanceCorpus = advanceCorpus;
+    }
+
+    public String getQuality() {
+        return quality;
+    }
+
+    public void setQuality(String quality) {
+        this.quality = quality;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 }
