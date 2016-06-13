@@ -10,6 +10,10 @@
 * Git私服,统一管理所有代码,采用SSH协议接入,端口为:6080
 
 * Jenkins,持续化集成部署工具,采用账号/用户名接入,端口为:7070
+    * dqys_dev_complie: 编译master分支
+    * dqys_dev_deploy: 部署并重启tomcat9080(/mnt/tomcat8)
+    * dqys_dev_slave_deploy: 部署并重启tomcat9081(/mnt/tomcat8_slave)
+    * dqys_dev_res_deploy: 部署并重启tomcat8_res
 
 * 一个Nginx代理+2个tomcat运行应用服务,采用循环算法,每个tomcat内部署所有应用服务(除资源服务外),端口为:nginx-9090,tomcat-9080/9081
 
@@ -18,8 +22,10 @@
 * 一个tomcat运行现在的导航网站,端口为:80
 
 * 一个redis集群,端口:6301-6305
+    * 服务器路径:/etc/redis
 
 * 两个单独redis服务,端口:6379/6380
+    * 服务器路径:/etc/redis
 
 * 一个rabbitmq服务,端口:5672,管理端口:15672
 
@@ -35,15 +41,58 @@
 * jenkins 命令: sh /mnt/jenkins_start.sh
 
 ## 项目模块信息
-core.jar
+### core.jar
+封装系统通用功能,提供各中通用抽象
+* 基本数据对象:基本接口控制器抽象/基本Dao/基本DTO/基本拦截器/基本实体对象/基本查询
+* 数据库二级缓存的redis实现
+* 系统常量:自定义请求头部/响应状态码及消息/系统配置类型/验证类型
+* 拦截器:h5跨域拦截器/接口头部校验拦截器/JSONP拦截器
+* 系统配置和区域的数据实体映射
+* 通用工具类:
+    * API字段翻译工具
+    * 区域工具
+    * 格式校验工具
+    * Http请求工具
+    * 请求响应工具
+    * Redis操作工具
+    * 请求头工具
+    * 消息产生/消费工具
+    * 签名工具
+    * 请求流响应工具
+    * 系统配置工具
+    * 验证码生成工具
+* mybatis框架配置
+* 系统依赖配置
+* 日志配置
 
-captcha.jar
 
-auth-orm.jar        business-orm.jar
+### captcha.jar
+验证码模块,提供图片验证码/短信验证码的相关功能
 
-auth-service.jar    business-service.jar
+### auth-orm.jar
+人员/权限相关的实体数据映射模块
 
-auth-web.war        business-web.war        resource-web.war    wms-web.war
+### business-orm.jar
+功能业务相关的实体数据映射模块
+
+### auth-service.jar
+人员/权限相关的业务逻辑服务模块
+
+### business-service.jar
+功能业务相关的业务逻辑服务模块
+
+### auth-web.war
+提供人员/权限/组织架构/角色等相关数据处理的rest接口
+
+### business-web.war
+提供业务逻辑/功能需求相关的数据处理rest接口
+
+### resource-web.war
+提供资源文件相关操作,如上传/下载/查看/分组/移动等处理的rest接口
+
+### wms-web.war
+系统后台管理相关的web应用,数据来源等都采用远程跨域调用其他模块的rest接口
+
 
 具体依赖见各模块的pom
 
