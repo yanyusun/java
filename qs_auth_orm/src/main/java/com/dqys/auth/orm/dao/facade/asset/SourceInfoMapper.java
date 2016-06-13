@@ -1,6 +1,6 @@
 package com.dqys.auth.orm.dao.facade.asset;
 
-import com.dqys.auth.orm.pojo.entering.SourceInfo;
+import com.dqys.auth.orm.pojo.asset.SourceInfo;
 
 public interface SourceInfoMapper {
     /**

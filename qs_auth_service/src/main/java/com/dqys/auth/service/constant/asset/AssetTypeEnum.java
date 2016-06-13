@@ -1,4 +1,4 @@
-package com.dqys.auth.service.constant.entering;
+package com.dqys.auth.service.constant.asset;
 
 /**
  * 资产包类型枚举类

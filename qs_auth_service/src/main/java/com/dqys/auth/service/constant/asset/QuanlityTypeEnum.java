@@ -1,4 +1,4 @@
-package com.dqys.auth.service.constant.entering;
+package com.dqys.auth.service.constant.asset;
 
 /**
  * Created by Yvan on 16/6/6.

@@ -1,4 +1,4 @@
-package com.dqys.auth.orm.pojo.entering;
+package com.dqys.auth.orm.pojo.asset;
 
 import com.dqys.core.base.BaseModel;
 
@@ -76,6 +76,25 @@ public class LenderRelation extends BaseModel implements Serializable{
     private Integer isWorth;  // 抵押物是否能覆盖债务
 
     private String memo;  // 备注
+
+    @Override
+    public String toString(){
+        String string = "LenderRelation:[";
+        string += "lenderId:" + lenderId + ",slenderIds:" + slenderIds + ",guaranteeIds:" + guaranteeIds
+                + ",bankManagerIds:" + bankManagerIds + ",otherIds:" + otherIds + ",entrustStartTime:" + entrustStartTime
+                + ",entrustEndTime:" + entrustEndTime + ",operator:" + operator + ",accrual:" + accrual
+                + ",loan:" + loan + ",appraisal:" + appraisal + ",loanType:" + loanType
+                + ",loanMode:" + loanMode + ",loanName:" + loanName + ",quality:" + quality
+                + ",level:" + level + ",disposeMode:" + disposeMode + ",tags:" + tags
+                + ",urgeType:" + urgeType + ",entrustBornType:" + entrustBornType + ",entrustBorn:" + entrustBorn
+                + ",guaranteeType:" + guaranteeType + ",guaranteeMode:" + guaranteeMode + ",guaranteeSource:" + guaranteeSource
+                + ",isGuaranteeConnection:" + isGuaranteeConnection + ",guarenteeEconomic:" + guarenteeEconomic + ",isLawsuit:" + isLawsuit
+                + ",isDecision:" + isDecision + ",realUrgeTime:" + realUrgeTime + ",phoneUrgeTime:" + phoneUrgeTime
+                + ",entrustUrgeTime:" + entrustUrgeTime + ",isConnection:" + isConnection + ",canPay:" + canPay
+                + ",isWorth:" + isWorth + ",memo:" + memo;
+        string += "]";
+        return string;
+    }
 
     public Integer getLenderId() {
         return lenderId;

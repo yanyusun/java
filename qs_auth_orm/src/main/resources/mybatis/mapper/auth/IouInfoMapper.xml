@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.auth.orm.dao.facade.asset.IOUInfoMapper" >
 
-  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.entering.IOUInfo" >
+  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.asset.IOUInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
@@ -45,6 +45,15 @@
     arrears, out_time, worth, advance_corpus, quality, level, memo
   </sql>
 
+  <sql id="Query_Condition">
+    <where>
+      stateflag = 0
+      <if test="lenderId != null">
+        AND lender_id = #{lenderId,jdbcType=INTEGER}
+      </if>
+    </where>
+  </sql>
+
   <!-- 逻辑删除-->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     UPDATE t_iou_info SET stateflag = CURRENT_TIMESTAMP
@@ -52,7 +61,7 @@
   </delete>
 
   <!-- 新增 -->
-  <insert id="insert" parameterType="com.dqys.auth.orm.pojo.entering.IOUInfo" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.dqys.auth.orm.pojo.asset.IOUInfo" useGeneratedKeys="true" keyProperty="id">
     insert into t_iou_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -231,7 +240,7 @@
   </select>
 
   <!-- 修改 -->
-  <update id="update" parameterType="com.dqys.auth.orm.pojo.entering.IOUInfo" >
+  <update id="update" parameterType="com.dqys.auth.orm.pojo.asset.IOUInfo" >
     update t_iou_info
     <set >
       version = version+1,
@@ -320,5 +329,23 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 统计所有数量 -->
+  <select id="count" resultType="java.lang.Integer">
+    SELECT COUNT(id) from t_iou_info WHERE stateflag = 0
+  </select>
+
+  <!-- 查出借款人下的所有借据 -->
+  <select id="listByLenderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT * from t_iou_info where stateflag = 0 AND lender_id = #{lenderId,jdbcType=INTEGER} order by id desc
+  </select>
+
+  <!-- 多条件查出借据 -->
+  <select id="queryList" parameterType="com.dqys.auth.orm.query.asset.IOUQuery" resultMap="BaseResultMap">
+    SELECT * from t_iou_info
+    <include refid="Query_Condition" />
+    order by id desc
+  </select>
+
 
 </mapper>

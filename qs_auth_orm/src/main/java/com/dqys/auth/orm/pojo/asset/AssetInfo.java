@@ -1,4 +1,4 @@
-package com.dqys.auth.orm.pojo.entering;
+package com.dqys.auth.orm.pojo.asset;
 
 import com.dqys.core.base.BaseModel;
 
@@ -48,6 +48,20 @@ public class AssetInfo extends BaseModel implements Serializable{
     private Integer isshow;  // 是否展示外网
 
     private String memo;  // 备注
+
+    @Override
+    public String toString(){
+        String string = "Asset:[";
+        string += "code:" + code + "type:" + type + "entrustStartTime:" + entrustStartTime
+                + "entrustEndTime:" + entrustEndTime + "operator:" + operator + "accrual:" + accrual
+                + "loan:" + loan + "appraisal:" + appraisal + "name:" + name
+                + "quality:" + quality + "level:" + level + "province:" + province
+                + "city:" + city + "district:" + district + "address:" + address
+                + "loanOrganization:" + loanOrganization + "loanOrganizationDistrict:" + loanOrganizationDistrict + "disposeMode:" + disposeMode
+                + "tags:" + tags + "isshow:" + isshow + "memo:" + memo;
+        string += "]";
+        return string;
+    }
 
     public String getCode() {
         return code;

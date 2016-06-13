@@ -35,10 +35,11 @@ public class ResourceController {
         Integer userId = UserSession.getCurrent().getUserId();
         Integer status = UserSession.getCurrent().getStatus();
         return () -> {
-            //正常状态的用户才能上传
-            if(status.intValue() <= 0) {
-                return JsonResponseTool.authFailure("账户已禁用");
-            }
+//            //正常状态的用户才能上传
+//            if(status.intValue() <= 0) {
+//                return JsonResponseTool.authFailure("账户已禁用");
+//            }
+
 
             String fileName = null;
             try {

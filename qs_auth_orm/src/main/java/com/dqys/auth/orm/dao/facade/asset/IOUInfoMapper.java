@@ -1,6 +1,9 @@
 package com.dqys.auth.orm.dao.facade.asset;
 
-import com.dqys.auth.orm.pojo.entering.IOUInfo;
+import com.dqys.auth.orm.pojo.asset.IOUInfo;
+import com.dqys.auth.orm.query.asset.IOUQuery;
+
+import java.util.List;
 
 public interface IOUInfoMapper {
     /**
@@ -30,5 +33,25 @@ public interface IOUInfoMapper {
      * @return
      */
     Integer update(IOUInfo record);
+
+    /**
+     * 统计所有的借据
+     * @return
+     */
+    Integer count();
+
+    /**
+     * 查询借款人下的所有借据
+     * @param lenderId
+     * @return
+     */
+    List<IOUInfo> listByLenderId(Integer lenderId);
+
+    /**
+     * 多条件查询借据
+     * @param iouQuery
+     * @return
+     */
+    List<IOUInfo> queryList(IOUQuery iouQuery);
 
 }

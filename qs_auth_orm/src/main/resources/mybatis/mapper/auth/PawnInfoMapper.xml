@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.auth.orm.dao.facade.asset.PawnInfoMapper" >
 
-  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.entering.PawnInfo" >
+  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.asset.PawnInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
@@ -34,6 +34,15 @@
     worth, iou_ids, memo
   </sql>
 
+  <sql id="Query_Condition">
+    <where>
+      stateflag = 0
+      <if test="lenderId != null">
+        AND lender_id = #{lenderId,jdbcType=INTEGER}
+      </if>
+    </where>
+  </sql>
+
   <!-- 逻辑删除 -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     UPDATE t_pawn_info SET stateflag = CURRENT_TIMESTAMP
@@ -41,7 +50,7 @@
   </delete>
 
   <!-- 新增 -->
-  <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.entering.PawnInfo" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.dqys.auth.orm.pojo.asset.PawnInfo" useGeneratedKeys="true" keyProperty="id">
     insert into t_pawn_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -160,7 +169,7 @@
   </select>
 
   <!-- 修改 -->
-  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.entering.PawnInfo" >
+  <update id="update" parameterType="com.dqys.auth.orm.pojo.asset.PawnInfo" >
     update t_pawn_info
     <set >
       version = version+1,
@@ -219,5 +228,23 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 统计 -->
+  <select id="count" resultType="java.lang.Integer">
+    SELECT count(*) FROM t_pawn_info where stateflag = 0
+  </select>
+
+  <!-- 借款人下的所有抵押物 -->
+  <select id="listByLenderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT * FROM t_pawn_info where stateflag = 0 AND lender_id = #{lenderId,jdbcType=INTEGER}
+  </select>
+
+  <!-- 多条件查询抵押物 -->
+  <select id="queryList" parameterType="com.dqys.auth.orm.query.asset.PawnQuery" resultMap="BaseResultMap">
+    SELECT * from t_pawn_info
+    <include refid="Query_Condition" />
+    ORDER by id desc
+  </select>
+
 
 </mapper>

@@ -1,7 +1,10 @@
 package com.dqys.auth.orm.dao.facade.asset;
 
 
-import com.dqys.auth.orm.pojo.entering.LenderInfo;
+import com.dqys.auth.orm.pojo.asset.LenderInfo;
+import com.dqys.auth.orm.query.asset.LenderQuery;
+
+import java.util.List;
 
 public interface LenderInfoMapper {
     /**
@@ -32,4 +35,10 @@ public interface LenderInfoMapper {
      */
     Integer update(LenderInfo record);
 
+    /**
+     * 条件查询
+     * @param lenderQuery
+     * @return
+     */
+    List<LenderInfo> queryList(LenderQuery lenderQuery);
 }

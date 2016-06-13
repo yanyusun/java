@@ -1,9 +1,8 @@
-package com.dqys.auth.orm.pojo.entering;
+package com.dqys.auth.orm.pojo.asset;
 
 import com.dqys.core.base.BaseModel;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class PawnInfo extends BaseModel implements Serializable{
 

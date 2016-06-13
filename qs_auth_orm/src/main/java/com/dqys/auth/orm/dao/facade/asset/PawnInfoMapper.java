@@ -1,7 +1,10 @@
 package com.dqys.auth.orm.dao.facade.asset;
 
 
-import com.dqys.auth.orm.pojo.entering.PawnInfo;
+import com.dqys.auth.orm.pojo.asset.PawnInfo;
+import com.dqys.auth.orm.query.asset.PawnQuery;
+
+import java.util.List;
 
 public interface PawnInfoMapper {
     /**
@@ -32,4 +35,23 @@ public interface PawnInfoMapper {
      */
     Integer update(PawnInfo record);
 
+    /**
+     * 统计
+     * @return
+     */
+    Integer count();
+
+    /**
+     * 根据借款人查看抵押物
+     * @param lenderId
+     * @return
+     */
+    List<PawnInfo> listByLenderId(Integer lenderId);
+
+    /**
+     * 多条件查询抵押物
+     * @param pawnQuery
+     * @return
+     */
+    List<PawnInfo> queryList(PawnQuery pawnQuery);
 }

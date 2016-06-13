@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.auth.orm.dao.facade.asset.SourceInfoMapper" >
 
-  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.entering.SourceInfo" >
+  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.asset.SourceInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
@@ -33,7 +33,7 @@
   </delete>
 
   <!-- 新增 -->
-  <insert id="insert" parameterType="com.dqys.auth.orm.pojo.entering.SourceInfo" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.dqys.auth.orm.pojo.asset.SourceInfo" useGeneratedKeys="true" keyProperty="id">
     insert into t_source_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -110,7 +110,7 @@
   </select>
 
   <!-- 修改 -->
-  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.entering.SourceInfo" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.asset.SourceInfo" >
     update t_source_info
     <set >
       version = version +1,

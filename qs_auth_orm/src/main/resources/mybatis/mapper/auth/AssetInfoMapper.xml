@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.auth.orm.dao.facade.asset.AssetInfoMapper" >
 
-  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.entering.AssetInfo" >
+  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.asset.AssetInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
@@ -55,7 +55,7 @@
   </delete>
 
   <!-- 新增 -->
-  <insert id="insert" parameterType="com.dqys.auth.orm.pojo.entering.AssetInfo" useGeneratedKeys="true" keyProperty="id" >
+  <insert id="insert" parameterType="com.dqys.auth.orm.pojo.asset.AssetInfo" useGeneratedKeys="true" keyProperty="id" >
     insert into t_asset_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -204,7 +204,7 @@
   </select>
 
   <!-- 修改 -->
-  <update id="update" parameterType="com.dqys.auth.orm.pojo.entering.AssetInfo" >
+  <update id="update" parameterType="com.dqys.auth.orm.pojo.asset.AssetInfo" >
     update t_asset_info
     <set >
       version = version+1,
@@ -285,7 +285,7 @@
   </select>
 
   <!-- 条件统计-->
-  <select id="queryCount" parameterMap="com.dqys.auth.orm.query.asset.AssetQuery">
+  <select id="queryCount" parameterType="com.dqys.auth.orm.query.asset.AssetQuery" resultType="java.lang.Integer">
     SELECT COUNT(id) FROM t_asset_info
     <include refid="Query_Condition" />
     ORDER by id DESC
@@ -295,12 +295,12 @@
   </select>
 
   <!-- 查全 -->
-  <select id="selectAll" resultMap="BaseResultMap">
+  <select id="listAll" resultMap="BaseResultMap">
     SELECT * from t_asset_info where stateflag = 0
   </select>
 
   <!-- 分页 -->
-  <select id="pageList" resultMap="BaseResultMap" parameterMap="com.dqys.auth.orm.query.asset.AssetQuery">
+  <select id="pageList" parameterType="com.dqys.auth.orm.query.asset.AssetQuery" resultMap="BaseResultMap" >
     SELECT * from t_asset_info
     <include refid="Query_Condition" />
     ORDER BY id DESC

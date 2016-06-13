@@ -1,7 +1,7 @@
 package com.dqys.auth.orm.dao.impl.asset;
 
 import com.dqys.auth.orm.dao.facade.asset.AssetInfoMapper;
-import com.dqys.auth.orm.pojo.entering.AssetInfo;
+import com.dqys.auth.orm.pojo.asset.AssetInfo;
 import com.dqys.auth.orm.query.asset.AssetQuery;
 import com.dqys.core.base.BaseDao;
 import org.springframework.context.annotation.Primary;

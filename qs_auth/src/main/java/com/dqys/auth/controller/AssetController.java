@@ -1,16 +1,14 @@
 package com.dqys.auth.controller;
 
-import com.dqys.auth.orm.pojo.entering.AssetInfo;
+import com.dqys.auth.orm.pojo.asset.AssetInfo;
+import com.dqys.auth.orm.query.asset.AssetQuery;
 import com.dqys.auth.service.facade.asset.AssetService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
-import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -34,10 +32,6 @@ public class AssetController {
         if (assetInfo == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyMMdd");
-        assetInfo.setCode("QS"
-                + simpleDateFormat.format(Calendar.getInstance().getTime())
-                + RandomStringUtils.randomNumeric(4));
         Integer id = assetService.add(assetInfo);
         if (id == null || id.equals("0")) {
             return JsonResponseTool.failure("增加失败");
@@ -109,8 +103,15 @@ public class AssetController {
     @ResponseBody
     public JsonResponse pageList(@PathVariable Integer page,
                                  @PathVariable Integer count){
-
-        return JsonResponseTool.success("");
+        AssetQuery assetQuery = new AssetQuery();
+        assetQuery.setPage(page);
+        assetQuery.setPageCount(count);
+        List<AssetInfo> assetInfoList = assetService.pageList(assetQuery);
+        if (assetInfoList == null) {
+            return JsonResponseTool.failure("获取失败");
+        } else {
+            return JsonResponseTool.success(assetInfoList);
+        }
     }
 
     /**

@@ -1,28 +1,29 @@
-package com.dqys.auth.service.constant.entering;
+package com.dqys.auth.service.constant.asset;
 
 /**
  * Created by Yvan on 16/6/7.
  */
-public enum LenderTypeInfo {
+public enum LenderTypeEnum {
 
     LENDER(1, "借款人"),
     LENDER_WITH(2, "共同借款人"),
     GUALANTEE(3, "担保方"),
     BANK_MANAGER(4, "银行客户经理"),
-    OTHER(5, "其他");
+    OTHER(5, "其他"),
+    JUDGE(6, "法官");
 
     private Integer value;
     private String name;
 
-    LenderTypeInfo(Integer value, String name){
+    LenderTypeEnum(Integer value, String name){
         this.value = value;
         this.name = name;
     }
 
-    public LenderTypeInfo getLenderTypeInfo(Integer value){
-        for(LenderTypeInfo lenderTypeInfo : LenderTypeInfo.values()){
-            if(lenderTypeInfo.getValue().equals(value)){
-                return lenderTypeInfo;
+    public static LenderTypeEnum getLenderTypeInfo(Integer value){
+        for(LenderTypeEnum lenderTypeEnum : LenderTypeEnum.values()){
+            if(lenderTypeEnum.getValue().equals(value)){
+                return lenderTypeEnum;
             }
         }
         return null;

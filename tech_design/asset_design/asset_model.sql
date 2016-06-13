@@ -5,7 +5,7 @@ CREATE TABLE `t_asset_info`(
   `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
   `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
   `update_at` DATETIME DEFAULT current_timestamp COMMENT '最后操作时间',
-  `stateflag` TINYINT(2) NOT NULL DEFAULT 0 COMMENT '数据状态',
+  `stateflag` BIGINT NOT NULL DEFAULT 0 COMMENT '数据状态',
   `remark` VARCHAR(255) COMMENT '标签说明',
 
   `code` VARCHAR(20) COMMENT '编号',
@@ -40,11 +40,12 @@ CREATE TABLE `t_lender_info`(
   `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
   `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
   `update_at` DATETIME DEFAULT current_timestamp COMMENT '最后操作时间',
-  `stateflag` TINYINT(2) NOT NULL DEFAULT 0 COMMENT '数据状态',
+  `stateflag` BIGINT NOT NULL DEFAULT 0 COMMENT '数据状态',
   `remark` VARCHAR(255) COMMENT '标签说明',
 
   `name` VARCHAR(20) COMMENT '姓名',
-  `type` VARCHAR(20) COMMENT '借款人类型(借款人|共同借款人|担保方|银行客户经理|其他)',
+  `code` VARCHAR(20) COMMENT '工号',
+  `type` TINYINT(1) COMMENT '借款人类型(借款人|共同借款人|担保方|银行客户经理|其他)',
   `avg` VARCHAR(50) COMMENT '头像',
   `gender` VARCHAR(10) COMMENT '性别',
   `idcard` VARCHAR(18) COMMENT '身份证',
@@ -68,7 +69,7 @@ CREATE TABLE `t_lender_relation`(
   `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
   `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
   `update_at` DATETIME DEFAULT current_timestamp COMMENT '最后操作时间',
-  `stateflag` TINYINT(2) NOT NULL DEFAULT 0 COMMENT '数据状态',
+  `stateflag` BIGINT NOT NULL DEFAULT 0 COMMENT '数据状态',
   `remark` VARCHAR(255) COMMENT '标签说明',
 
   `lender_id` INT COMMENT '借款人ID',
@@ -116,10 +117,10 @@ CREATE TABLE `t_pawn_info`(
   `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
   `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
   `update_at` DATETIME DEFAULT current_timestamp COMMENT '最后操作时间',
-  `stateflag` TINYINT(2) NOT NULL DEFAULT 0 COMMENT '数据状态',
+  `stateflag` BIGINT NOT NULL DEFAULT 0 COMMENT '数据状态',
   `remark` VARCHAR(255) COMMENT '标签说明',
 
-  `lender_id` INT COMMENT '借款人ID',
+  `lender_id` INT NOT NULL COMMENT '借款人ID',
   `code` VARCHAR(20) COMMENT '编号',
   `amount` DOUBLE(10,2) COMMENT '贷款金额',
   `type` VARCHAR(20) COMMENT '抵押物类型',
@@ -145,11 +146,12 @@ CREATE TABLE `t_iou_info`(
   `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
   `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
   `update_at` DATETIME DEFAULT current_timestamp COMMENT '最后操作时间',
-  `stateflag` TINYINT(2) NOT NULL DEFAULT 0 COMMENT '数据状态',
+  `stateflag` BIGINT NOT NULL DEFAULT 0 COMMENT '数据状态',
   `remark` VARCHAR(255) COMMENT '标签说明',
 
   `code` VARCHAR(20) COMMENT '编号',
-  `lender_id` INT COMMENT '借款人ID',
+  `lender_name` VARCHAR(20) COMMENT '借款人姓名',
+  `lender_id` INT NOT NULL COMMENT '借款人ID',
   `pawnIDs` VARCHAR(255) COMMENT '借据中的抵押物IDs',
   `type` VARCHAR(20) COMMENT '品种',
   `agency` VARCHAR(20) COMMENT '代理机构',
@@ -183,7 +185,7 @@ CREATE TABLE `t_source_info`(
   `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
   `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
   `update_at` DATETIME DEFAULT current_timestamp COMMENT '最后操作时间',
-  `stateflag` TINYINT(2) NOT NULL DEFAULT 0 COMMENT '数据状态',
+  `stateflag` BIGINT NOT NULL DEFAULT 0 COMMENT '数据状态',
   `remark` VARCHAR(255) COMMENT '标签说明',
 
   `type` VARCHAR(20) COMMENT '文件类型',
@@ -196,3 +198,51 @@ CREATE TABLE `t_source_info`(
   `sort` INT DEFAULT 0 COMMENT '文件添加标签',
   `memo` VARCHAR(255) COMMENT '备注'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 案件信息
+DROP TABLE IF EXISTS `t_case_info`;
+CREATE TABLE `t_case_info`(
+  `id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+  `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
+  `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
+  `update_at` DATETIME DEFAULT current_timestamp COMMENT '最后操作时间',
+  `stateflag` BIGINT NOT NULL DEFAULT 0 COMMENT '数据状态',
+  `remark` VARCHAR(255) COMMENT '标签说明',
+
+  `code` VARCHAR(20) COMMENT '编码',
+  `lender_id` INT COMMENT '借款人ID',
+  `type` VARCHAR(20) DEFAULT 0 COMMENT '案件类型(母案件,子案件)',
+  `pid` INT DEFAULT 0 COMMENT '父级ID',
+  `pawn_id` INT COMMENT '抵押物ID',
+  `iou_ids` VARCHAR(255) COMMENT '借据ID',
+  `plaintiff` VARCHAR(20) COMMENT '原告',
+  `defendant` VARCHAR(20) COMMENT '被告',
+  `spouse` VARCHAR(20) COMMENT '配偶',
+  `guarantor_ids` VARCHAR(255) COMMENT '保证人',
+  `mortgagor` VARCHAR(255) COMMENT '抵押人',
+  `mortgage_time` VARCHAR(255) COMMENT '抵押次数',
+
+  `judge_ids` VARCHAR(255) COMMENT '法官IDs',
+
+  `lawsuit_amount` DOUBLE(10,2) COMMENT '诉讼标金额',
+  `lawsuit_corpus` DOUBLE(10,2) COMMENT '诉讼标本金',
+  `lawsuit_accrual` DOUBLE(10,2) COMMENT '诉讼标利息',
+  `lawsuit_memo` text COMMENT '诉讼备注',
+
+  `is_attachment` TINYINT(1) COMMENT '是否查封',
+  `attachment_time` TINYINT(1) COMMENT '查封次数',
+  `attachment_code` VARCHAR(50) COMMENT '查封案号',
+  `attachment_court` VARCHAR(50) COMMENT '查封法院',
+  `attachment_date` DATETIME COMMENT '查封法院',
+  `attachment_memo` TEXT COMMENT '查封备注',
+  `is_preservation` TINYINT(1) COMMENT '是否保全',
+  `preservation_start` DATETIME COMMENT '保全开始时间',
+  `preservation_end` DATETIME COMMENT '保全结束时间',
+  `preservation_memo` TEXT COMMENT '保全情况',
+
+  `memo` VARCHAR(255) COMMENT '备注'
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+

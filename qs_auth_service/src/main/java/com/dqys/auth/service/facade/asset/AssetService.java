@@ -1,6 +1,6 @@
 package com.dqys.auth.service.facade.asset;
 
-import com.dqys.auth.orm.pojo.entering.AssetInfo;
+import com.dqys.auth.orm.pojo.asset.AssetInfo;
 import com.dqys.auth.orm.query.asset.AssetQuery;
 
 import java.util.List;

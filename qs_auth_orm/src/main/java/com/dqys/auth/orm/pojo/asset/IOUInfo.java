@@ -1,4 +1,4 @@
-package com.dqys.auth.orm.pojo.entering;
+package com.dqys.auth.orm.pojo.asset;
 
 import com.dqys.core.base.BaseModel;
 
@@ -10,6 +10,8 @@ public class IOUInfo extends BaseModel implements Serializable{
     private String code;  // 编号
 
     private Integer lenderId;  // 借款人ID
+
+//    private Integer lenderName; // 借款人姓名
 
     private String pawnids;  // 抵押物IDS
 
@@ -266,4 +268,12 @@ public class IOUInfo extends BaseModel implements Serializable{
     public void setMemo(String memo) {
         this.memo = memo;
     }
+//
+//    public Integer getLenderName() {
+//        return lenderName;
+//    }
+//
+//    public void setLenderName(Integer lenderName) {
+//        this.lenderName = lenderName;
+//    }
 }

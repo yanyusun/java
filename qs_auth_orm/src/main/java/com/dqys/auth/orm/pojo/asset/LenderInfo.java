@@ -1,15 +1,14 @@
-package com.dqys.auth.orm.pojo.entering;
+package com.dqys.auth.orm.pojo.asset;
 
 import com.dqys.core.base.BaseModel;
 
 import java.io.Serializable;
-import java.util.Date;
 
 public class LenderInfo extends BaseModel implements Serializable{
 
     private String name;  // 姓名
 
-    private String type;  // 借款类型
+    private Integer type;  // 借款类型
 
     private String avg;  // 头像地址
 
@@ -37,6 +36,20 @@ public class LenderInfo extends BaseModel implements Serializable{
 
     private String memo;  // 备注
 
+    private String code; // 工号
+
+    public String toString(){
+        String string = "lenderInfo:[";
+        string += "id:" + super.getId() + ",name:" + name + ",type:" + type
+                + ",avg:" + avg + ",idcard:" + idcard + ",gender:" + gender
+                + ",company:" + company + ",mobile:" + mobile + ",homeTel:" + homeTel
+                + ",officeTel:" + officeTel + ",email:" + email + ",province:" + province
+                + ",city:" + city + ",district:" + district + ",address:" + address
+                + ",memo:" + memo + ",code:" + code;
+        string += "]";
+        return string;
+    }
+
 
     public String getName() {
         return name;
@@ -46,11 +59,11 @@ public class LenderInfo extends BaseModel implements Serializable{
         this.name = name;
     }
 
-    public String getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
@@ -156,5 +169,13 @@ public class LenderInfo extends BaseModel implements Serializable{
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

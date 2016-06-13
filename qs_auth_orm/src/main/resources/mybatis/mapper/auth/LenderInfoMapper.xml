@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.auth.orm.dao.facade.asset.LenderInfoMapper" >
 
-  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.entering.LenderInfo" >
+  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.asset.LenderInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
@@ -10,7 +10,7 @@
     <result column="stateflag" property="stateflag" jdbcType="INTEGER" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
     <result column="avg" property="avg" jdbcType="VARCHAR" />
     <result column="gender" property="gender" jdbcType="VARCHAR" />
     <result column="idcard" property="idcard" jdbcType="VARCHAR" />
@@ -24,13 +24,28 @@
     <result column="district" property="district" jdbcType="VARCHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
   </resultMap>
 
   <!-- 基础字段 -->
   <sql id="Base_Column_List" >
     id, version, create_at, update_at, stateflag, remark, name, type, avg, gender, idcard, 
-    company, mobile, home_tel, office_tel, email, province, city, district, address, 
-    memo
+    company, mobile, home_tel, office_tel, email, province, city, district, address,
+    memo, code
+  </sql>
+
+  <sql id="Query_condition">
+    <where>
+      <if test="id != null">
+       id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="idCardLike != null">
+       AND idcard like CONCAT('%',#{idCardLike,jdbcType=VARCHAR},'%')
+      </if>
+      <!--<if test="idCard != null">-->
+        <!--AND idcard = #{idCard,jdbcType=VARCHAR}-->
+      <!--</if>-->
+    </where>
   </sql>
 
   <!-- 逻辑删除-->
@@ -40,7 +55,7 @@
   </delete>
 
   <!-- 新增 -->
-  <insert id="insert" parameterType="com.dqys.auth.orm.pojo.entering.LenderInfo" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.dqys.auth.orm.pojo.asset.LenderInfo" useGeneratedKeys="true" keyProperty="id">
     insert into t_lender_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -91,6 +106,9 @@
       <if test="memo != null" >
         memo,
       </if>
+      <if test="code != null" >
+        code,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -100,7 +118,7 @@
         #{name,jdbcType=VARCHAR},
       </if>
       <if test="type != null" >
-        #{type,jdbcType=VARCHAR},
+        #{type,jdbcType=INTEGER},
       </if>
       <if test="avg != null" >
         #{avg,jdbcType=VARCHAR},
@@ -141,6 +159,9 @@
       <if test="memo != null" >
         #{memo,jdbcType=VARCHAR},
       </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
     </trim>
   </insert>
 
@@ -153,7 +174,7 @@
   </select>
 
   <!-- 修改 -->
-  <update id="update" parameterType="com.dqys.auth.orm.pojo.entering.LenderInfo" >
+  <update id="update" parameterType="com.dqys.auth.orm.pojo.asset.LenderInfo" >
     update t_lender_info
     <set >
       version = version+1,
@@ -165,7 +186,7 @@
         name = #{name,jdbcType=VARCHAR},
       </if>
       <if test="type != null" >
-        type = #{type,jdbcType=VARCHAR},
+        type = #{type,jdbcType=INTEGER},
       </if>
       <if test="avg != null" >
         avg = #{avg,jdbcType=VARCHAR},
@@ -206,8 +227,17 @@
       <if test="memo != null" >
         memo = #{memo,jdbcType=VARCHAR},
       </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="queryList" parameterType="com.dqys.auth.orm.query.asset.LenderQuery" resultMap="BaseResultMap">
+    SELECT * FROM t_lender_info
+    <include refid="Query_condition" />
+    ORDER by id DESC
+  </select>
   
 </mapper>
