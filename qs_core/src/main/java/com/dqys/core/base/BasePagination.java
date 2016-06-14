@@ -13,9 +13,9 @@ public class BasePagination {
     }
 
     public void setPage(Integer page) {
-        if(page != null && page > -1){
+        if (page != null && page > -1) {
             this.page = page;
-        }else{
+        } else {
             this.page = 0;
         }
     }
@@ -25,9 +25,9 @@ public class BasePagination {
     }
 
     public void setPageCount(Integer pageCount) {
-        if(pageCount != null && pageCount > 0){
+        if (pageCount != null && pageCount > 0) {
             this.pageCount = pageCount;
-        }else{
+        } else {
             this.pageCount = 20;
         }
     }

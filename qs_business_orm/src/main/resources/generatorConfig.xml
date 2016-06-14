@@ -44,7 +44,7 @@
 
         <!-- 要修改 -->
         <javaClientGenerator type="XMLMAPPER"
-                             targetPackage="com.dqys.business.orm.dao" targetProject="src/main/java">
+                             targetPackage="com.dqys.business.orm.pojo" targetProject="src/main/java">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
