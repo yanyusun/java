@@ -1,6 +1,13 @@
+
+
+-- 关系表删除
+DROP TABLE IF EXISTS `bt_pi_relation`;
+DROP TABLE IF EXISTS `bt_ci_relation`;
+
+
 -- 资产包信息
-DROP TABLE IF EXISTS `t_asset_info`;
-CREATE TABLE `t_asset_info`(
+DROP TABLE IF EXISTS `bt_asset`;
+CREATE TABLE `bt_asset`(
   `id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
   `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
   `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
@@ -8,17 +15,17 @@ CREATE TABLE `t_asset_info`(
   `stateflag` BIGINT NOT NULL DEFAULT 0 COMMENT '数据状态',
   `remark` VARCHAR(255) COMMENT '标签说明',
 
-  `code` VARCHAR(20) COMMENT '编号',
+  `asset_no` VARCHAR(20) COMMENT '编号',
   `type` TINYINT(2) COMMENT '资产包类型',
-  `entrust_start_time` DATETIME COMMENT '委托开始时间',
-  `entrust_end_time` DATETIME COMMENT '委托结束时间',
+  `start_at` DATETIME COMMENT '委托开始时间',
+  `end_at` DATETIME COMMENT '委托结束时间',
   `operator` INT DEFAULT 0 COMMENT '录入员',
   `accrual` DOUBLE(10,2) COMMENT '总利息',
   `loan` DOUBLE(10,2) COMMENT '总贷款',
   `appraisal` DOUBLE(10,2) COMMENT '总评估',
   `name` VARCHAR(50) COMMENT '资源包名称',
-  `quality` VARCHAR(10) COMMENT '评优',
-  `level` VARCHAR(10) COMMENT '评级',
+  `evaluate_excellent` VARCHAR(10) COMMENT '评优',
+  `evaluate_level` VARCHAR(10) COMMENT '评级',
   `province` VARCHAR(10) COMMENT '省份',
   `city` VARCHAR(10) COMMENT '城市',
   `district` VARCHAR(10) COMMENT '区域',
@@ -33,9 +40,9 @@ CREATE TABLE `t_asset_info`(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
--- 借款人信息
-DROP TABLE IF EXISTS `t_lender_info`;
-CREATE TABLE `t_lender_info`(
+-- 联系人信息
+DROP TABLE IF EXISTS `bt_contact`;
+CREATE TABLE `bt_contact`(
   `id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
   `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
   `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
@@ -43,8 +50,10 @@ CREATE TABLE `t_lender_info`(
   `stateflag` BIGINT NOT NULL DEFAULT 0 COMMENT '数据状态',
   `remark` VARCHAR(255) COMMENT '标签说明',
 
+  `mode` VARCHAR(20) COMMENT '联系人模块',
+  `mode_id` INT COMMENT '联系人模块ID',
   `name` VARCHAR(20) COMMENT '姓名',
-  `code` VARCHAR(20) COMMENT '工号',
+  `code` VARCHAR(20) COMMENT '编号',
   `type` TINYINT(1) COMMENT '借款人类型(借款人|共同借款人|担保方|银行客户经理|其他)',
   `avg` VARCHAR(50) COMMENT '头像',
   `gender` VARCHAR(10) COMMENT '性别',
@@ -58,13 +67,15 @@ CREATE TABLE `t_lender_info`(
   `city` VARCHAR(10) COMMENT '城市',
   `district` VARCHAR(10) COMMENT '区域',
   `address` VARCHAR(255) COMMENT '详细地址',
-  `memo` VARCHAR(255) COMMENT '备注'
+  `memo` VARCHAR(255) COMMENT '备注',
 
+  INDEX (`mode`, `mode_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- 借款人关系映射表
-DROP TABLE IF EXISTS `t_lender_relation`;
-CREATE TABLE `t_lender_relation`(
+
+-- 借款人基础信息表
+DROP TABLE IF EXISTS `bt_lender`;
+CREATE TABLE `bt_lender`(
   `id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
   `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
   `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
@@ -72,13 +83,9 @@ CREATE TABLE `t_lender_relation`(
   `stateflag` BIGINT NOT NULL DEFAULT 0 COMMENT '数据状态',
   `remark` VARCHAR(255) COMMENT '标签说明',
 
-  `lender_id` INT COMMENT '借款人ID',
-  `slender_ids` VARCHAR(255) COMMENT '共同借款人IDs',
-  `guarantee_ids` VARCHAR(255) COMMENT '担保人IDs',
-  `bank_manager_ids` VARCHAR(255) COMMENT '银行客户经理IDs',
-  `other_ids` VARCHAR(255) COMMENT '其他IDs',
-  `entrust_start_time` DATETIME COMMENT '委托开始时间',
-  `entrust_end_time` DATETIME COMMENT '委托结束时间',
+  `contact_id` INT COMMENT '借款人ID',
+  `start_at` DATETIME COMMENT '委托开始时间',
+  `end_at` DATETIME COMMENT '委托结束时间',
   `operator` INT DEFAULT 0 COMMENT '录入员',
   `accrual` DOUBLE(10,2) COMMENT '总利息',
   `loan` DOUBLE(10,2) COMMENT '总贷款',
@@ -86,8 +93,8 @@ CREATE TABLE `t_lender_relation`(
   `loan_type` VARCHAR(50) COMMENT '贷款类型',
   `loan_mode` VARCHAR(50) COMMENT '贷款方式',
   `loan_name` VARCHAR(50) COMMENT '贷款名称',
-  `quality` VARCHAR(10) COMMENT '评优',
-  `level` VARCHAR(10) COMMENT '评级',
+  `evaluate_excellent` VARCHAR(10) COMMENT '评优',
+  `evaluate_level` VARCHAR(10) COMMENT '评级',
   `dispose_mode` VARCHAR(20) COMMENT '处置方式',
   `tags` VARCHAR(255) COMMENT '添加标签',
 
@@ -104,15 +111,18 @@ CREATE TABLE `t_lender_relation`(
   `real_urge_time` INT(3) COMMENT '实地催收次数',
   `phone_urge_time` INT(3) COMMENT '电话催收次数',
   `entrust_urge_time` INT(3) COMMENT '委托催收次数',
-  `is_connection` INT(1) COMMENT '债务方是否能正常联系',
+  `can_contact` INT(1) COMMENT '债务方是否能正常联系',
   `can_pay` TINYINT(1) COMMENT '债务方是否能偿还',
   `is_worth` TINYINT(1) COMMENT '抵押物能否覆盖债务',
-  `memo` VARCHAR(255) COMMENT '备注'
+  `memo` VARCHAR(255) COMMENT '备注',
+
+  INDEX(`contact_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
 -- 借款抵押物信息表
-DROP TABLE IF EXISTS `t_pawn_info`;
-CREATE TABLE `t_pawn_info`(
+DROP TABLE IF EXISTS `bt_pawn`;
+CREATE TABLE `bt_pawn`(
   `id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
   `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
   `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
@@ -121,11 +131,11 @@ CREATE TABLE `t_pawn_info`(
   `remark` VARCHAR(255) COMMENT '标签说明',
 
   `lender_id` INT NOT NULL COMMENT '借款人ID',
-  `code` VARCHAR(20) COMMENT '编号',
+  `pawn_no` VARCHAR(20) COMMENT '编号',
   `amount` DOUBLE(10,2) COMMENT '贷款金额',
   `type` VARCHAR(20) COMMENT '抵押物类型',
-  `quality` VARCHAR(10) COMMENT '评优',
-  `level` VARCHAR(10) COMMENT '评级',
+  `evaluate_excellent` VARCHAR(10) COMMENT '评优',
+  `evaluate_level` VARCHAR(10) COMMENT '评级',
   `size` VARCHAR(50) COMMENT '规模大小',
   `province` VARCHAR(10) COMMENT '省份',
   `city` VARCHAR(10) COMMENT '城市',
@@ -134,14 +144,15 @@ CREATE TABLE `t_pawn_info`(
   `pawn_rate` DOUBLE(10,2) COMMENT '抵押率',
   `dispose_status` VARCHAR(20) COMMENT '处置状态',
   `worth` DOUBLE(10,2) COMMENT '价值',
-  `iou_ids` VARCHAR(255) COMMENT '借据IDs',
-  `memo` VARCHAR(255) COMMENT '备注'
+  `memo` VARCHAR(255) COMMENT '备注',
+
+  INDEX (`lender_id`)
 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- 借据信息
-DROP TABLE IF EXISTS `t_iou_info`;
-CREATE TABLE `t_iou_info`(
+DROP TABLE IF EXISTS `bt_iou`;
+CREATE TABLE `bt_iou`(
   `id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
   `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
   `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
@@ -149,10 +160,8 @@ CREATE TABLE `t_iou_info`(
   `stateflag` BIGINT NOT NULL DEFAULT 0 COMMENT '数据状态',
   `remark` VARCHAR(255) COMMENT '标签说明',
 
-  `code` VARCHAR(20) COMMENT '编号',
-  `lender_name` VARCHAR(20) COMMENT '借款人姓名',
+  `iou_no` VARCHAR(20) COMMENT '编号',
   `lender_id` INT NOT NULL COMMENT '借款人ID',
-  `pawnIDs` VARCHAR(255) COMMENT '借据中的抵押物IDs',
   `type` VARCHAR(20) COMMENT '品种',
   `agency` VARCHAR(20) COMMENT '代理机构',
   `iou_code` VARCHAR(20) COMMENT '原始借据号',
@@ -170,17 +179,19 @@ CREATE TABLE `t_iou_info`(
   `accrual_arrears` DOUBLE(10,2) COMMENT '拖欠利息',
   `penalty` DOUBLE(10,2) COMMENT '罚息',
   `arrears` DOUBLE(10,2) COMMENT '欠款合计',
-  `out_time` DATETIME COMMENT '欠款截止日期',
+  `end_at` DATETIME COMMENT '欠款截止日期',
   `worth` DOUBLE(10,2) COMMENT '抵押物银行估值',
   `advance_corpus` DOUBLE(10,2) COMMENT '提前偿还本金',
-  `quality` VARCHAR(10) COMMENT '评优',
-  `level` VARCHAR(10) COMMENT '评级',
-  `memo` VARCHAR(255) COMMENT '备注'
+  `evaluate_excellent` VARCHAR(10) COMMENT '评优',
+  `evaluate_level` VARCHAR(10) COMMENT '评级',
+  `memo` VARCHAR(255) COMMENT '备注',
+
+  INDEX (`lender_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- 资料实勘
-DROP TABLE IF EXISTS `t_source_info`;
-CREATE TABLE `t_source_info`(
+DROP TABLE IF EXISTS `bt_source`;
+CREATE TABLE `bt_source`(
   `id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
   `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
   `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
@@ -188,20 +199,23 @@ CREATE TABLE `t_source_info`(
   `stateflag` BIGINT NOT NULL DEFAULT 0 COMMENT '数据状态',
   `remark` VARCHAR(255) COMMENT '标签说明',
 
-  `type` VARCHAR(20) COMMENT '文件类型',
-  `pid` INT COMMENT '文件关联ID',
+  `mode` VARCHAR(20) COMMENT '资源模块',
+  `mode_id` INT COMMENT '资源模块Id',
+  `type` VARCHAR(20) COMMENT '资源类型',
   `code` VARCHAR(20) COMMENT '文件编号',
   `name` VARCHAR(50) COMMENT '文件名称',
   `file_type` VARCHAR(20) COMMENT '文件类型',
   `path` VARCHAR(255) COMMENT '文件保存路径',
   `tags` VARCHAR(255) COMMENT '文件添加标签',
   `sort` INT DEFAULT 0 COMMENT '文件添加标签',
-  `memo` VARCHAR(255) COMMENT '备注'
+  `memo` VARCHAR(255) COMMENT '备注',
+
+  INDEX(`mode`, `mode_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- 案件信息
-DROP TABLE IF EXISTS `t_case_info`;
-CREATE TABLE `t_case_info`(
+DROP TABLE IF EXISTS `bt_case`;
+CREATE TABLE `bt_case`(
   `id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
   `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
   `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
@@ -209,20 +223,16 @@ CREATE TABLE `t_case_info`(
   `stateflag` BIGINT NOT NULL DEFAULT 0 COMMENT '数据状态',
   `remark` VARCHAR(255) COMMENT '标签说明',
 
-  `code` VARCHAR(20) COMMENT '编码',
-  `lender_id` INT COMMENT '借款人ID',
+  `case_no` VARCHAR(20) COMMENT '编码',
   `type` VARCHAR(20) DEFAULT 0 COMMENT '案件类型(母案件,子案件)',
   `pid` INT DEFAULT 0 COMMENT '父级ID',
   `pawn_id` INT COMMENT '抵押物ID',
-  `iou_ids` VARCHAR(255) COMMENT '借据ID',
   `plaintiff` VARCHAR(20) COMMENT '原告',
   `defendant` VARCHAR(20) COMMENT '被告',
   `spouse` VARCHAR(20) COMMENT '配偶',
-  `guarantor_ids` VARCHAR(255) COMMENT '保证人',
+  `guarantor_id` VARCHAR(255) COMMENT '保证人',
   `mortgagor` VARCHAR(255) COMMENT '抵押人',
   `mortgage_time` VARCHAR(255) COMMENT '抵押次数',
-
-  `judge_ids` VARCHAR(255) COMMENT '法官IDs',
 
   `lawsuit_amount` DOUBLE(10,2) COMMENT '诉讼标金额',
   `lawsuit_corpus` DOUBLE(10,2) COMMENT '诉讼标本金',
@@ -241,8 +251,40 @@ CREATE TABLE `t_case_info`(
   `preservation_memo` TEXT COMMENT '保全情况',
 
   `memo` VARCHAR(255) COMMENT '备注'
-
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+-- 抵押物&借据关系表
+DROP TABLE IF EXISTS `bt_pi_relation`;
+CREATE TABLE `bt_pi_relation`(
+  `id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+  `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
+  `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
+  `update_at` DATETIME DEFAULT current_timestamp COMMENT '最后操作时间',
+  `stateflag` BIGINT NOT NULL DEFAULT 0 COMMENT '数据状态',
+  `remark` VARCHAR(255) COMMENT '标签说明',
+
+  `pawn_id` INT COMMENT '抵押物ID',
+  `iou_id` INT COMMENT '借据id',
+
+  FOREIGN KEY pi_pawn_key(`pawn_id`) REFERENCES bt_pawn(`id`),
+  FOREIGN KEY pi_iou_key(`iou_id`) REFERENCES bt_iou(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 借据&案件信息关系表
+DROP TABLE IF EXISTS `bt_ci_relation`;
+CREATE TABLE `bt_ci_relation`(
+  `id` INT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+  `version` INT NOT NULL DEFAULT 0 COMMENT '版本',
+  `create_at` DATETIME DEFAULT current_timestamp COMMENT '创建时间',
+  `update_at` DATETIME DEFAULT current_timestamp COMMENT '最后操作时间',
+  `stateflag` BIGINT NOT NULL DEFAULT 0 COMMENT '数据状态',
+  `remark` VARCHAR(255) COMMENT '标签说明',
+
+  `case_id` INT COMMENT '案件ID',
+  `iou_id` INT COMMENT '借据id',
+
+  FOREIGN KEY ic_case_key(`case_id`) REFERENCES bt_pawn(`id`),
+  FOREIGN KEY ic_iou_key(`iou_id`) REFERENCES bt_iou(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
