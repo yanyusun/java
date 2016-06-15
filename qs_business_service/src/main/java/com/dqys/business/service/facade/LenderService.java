@@ -1,8 +1,8 @@
 package com.dqys.business.service.facade;
 
 import com.dqys.business.orm.pojo.asset.IOUInfo;
+import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.pojo.asset.LenderRelation;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.query.asset.IOUQuery;
 import com.dqys.business.orm.query.asset.LenderQuery;
@@ -28,31 +28,31 @@ public interface LenderService {
 
     /**
      * 增加借款人基础信息
-     * @param lenderInfo
+     * @param contactInfo
      * @return
      */
-    Integer addLenderInfo(LenderInfo lenderInfo);
+    Integer addLenderInfo(ContactInfo contactInfo);
 
     /**
      * 修改借款人基础信息
-     * @param lenderInfo
+     * @param contactInfo
      * @return
      */
-    Integer updateLenderInfo(LenderInfo lenderInfo);
+    Integer updateLenderInfo(ContactInfo contactInfo);
 
     /**
      * 根据ID获取借款联系人基础信息
      * @param id
      * @return
      */
-    LenderInfo getLenderInfo(Integer id);
+    ContactInfo getLenderInfo(Integer id);
 
     /**
      * 条件获取借款联系人基础信息
      * @param lenderQuery
      * @return
      */
-    List<LenderInfo> queryListLender(LenderQuery lenderQuery);
+    List<ContactInfo> queryListLender(LenderQuery lenderQuery);
 
     /********************************************
      * 借款人关系
@@ -67,31 +67,24 @@ public interface LenderService {
 
     /**
      * 增加借款人关系
-     * @param lenderRelation
+     * @param lenderInfo
      * @return
      */
-    Integer addLenderRelation(LenderRelation lenderRelation);
+    Integer addLenderRelation(LenderInfo lenderInfo);
 
     /**
      * 修改借款人关系
-     * @param lenderRelation
+     * @param lenderInfo
      * @return
      */
-    Integer updateLenderRelation(LenderRelation lenderRelation);
+    Integer updateLenderRelation(LenderInfo lenderInfo);
 
     /**
      * 根据ID获取借款人关系
      * @param id
      * @return
      */
-    LenderRelation getLenderRelation(Integer id);
-
-    /**
-     * 根据联系人信息获取相应的借款人信息
-     * @param id
-     * @return
-     */
-    List<LenderRelation> listLenderRelationByLenderId(Integer id);
+    LenderInfo getLenderRelation(Integer id);
 
     /********************************************
      * 借据信息
@@ -106,17 +99,17 @@ public interface LenderService {
 
     /**
      * 增加
-     * @param iouInfo
+     * @param IOUInfo
      * @return
      */
-    Integer addIOUInfo(IOUInfo iouInfo, String name);
+    Integer addIOUInfo(IOUInfo IOUInfo, String name);
 
     /**
      * 修改
-     * @param iouInfo
+     * @param IOUInfo
      * @return
      */
-    Integer updateIOUInfo(IOUInfo iouInfo);
+    Integer updateIOUInfo(IOUInfo IOUInfo);
 
     /**
      * 根据ID获取借款人基础信息
@@ -140,10 +133,10 @@ public interface LenderService {
 
     /**
      * 多条件查询借据
-     * @param iouQuery
+     * @param IOUQuery
      * @return
      */
-    List<IOUInfo> queryListIOU(IOUQuery iouQuery);
+    List<IOUInfo> queryListIOU(IOUQuery IOUQuery);
 
 
     /********************************************

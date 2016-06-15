@@ -7,37 +7,20 @@ import java.io.Serializable;
 public class PawnInfo extends BaseModel implements Serializable {
 
     private Integer lenderId;  // 借款人ID
-
-    private String code;  // 编号
-
+    private String pawnNo;  // 编号
     private Double amount;  // 贷款金额
-
     private String type;  // 抵押物雷系
-
-    private String quality;  // 评优
-
-    private String level;  // 评级
-
+    private String evaluateExcellent;  // 评优
+    private String evaluateLevel;  // 评级
     private String size;  // 规模大小
-
     private String province;  //省
-
     private String city;  // 市
-
     private String district;  // 区
-
     private String address;  // 详细地址
-
     private Double pawnRate;  // 抵押率
-
     private String disposeStatus;  // 处置状态
-
     private Double worth;  // 价值
-
-    private String iouIds;  // 借据IDS
-
     private String memo;  // 备注
-
 
     public Integer getLenderId() {
         return lenderId;
@@ -47,12 +30,12 @@ public class PawnInfo extends BaseModel implements Serializable {
         this.lenderId = lenderId;
     }
 
-    public String getCode() {
-        return code;
+    public String getPawnNo() {
+        return pawnNo;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setPawnNo(String pawnNo) {
+        this.pawnNo = pawnNo;
     }
 
     public Double getAmount() {
@@ -71,20 +54,20 @@ public class PawnInfo extends BaseModel implements Serializable {
         this.type = type;
     }
 
-    public String getQuality() {
-        return quality;
+    public String getEvaluateExcellent() {
+        return evaluateExcellent;
     }
 
-    public void setQuality(String quality) {
-        this.quality = quality;
+    public void setEvaluateExcellent(String evaluateExcellent) {
+        this.evaluateExcellent = evaluateExcellent;
     }
 
-    public String getLevel() {
-        return level;
+    public String getEvaluateLevel() {
+        return evaluateLevel;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public void setEvaluateLevel(String evaluateLevel) {
+        this.evaluateLevel = evaluateLevel;
     }
 
     public String getSize() {
@@ -149,14 +132,6 @@ public class PawnInfo extends BaseModel implements Serializable {
 
     public void setWorth(Double worth) {
         this.worth = worth;
-    }
-
-    public String getIouIds() {
-        return iouIds;
-    }
-
-    public void setIouIds(String iouIds) {
-        this.iouIds = iouIds;
     }
 
     public String getMemo() {

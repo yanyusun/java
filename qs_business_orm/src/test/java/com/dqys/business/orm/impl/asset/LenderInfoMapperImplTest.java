@@ -3,7 +3,6 @@ package com.dqys.business.orm.impl.asset;
 import com.dqys.business.orm.base.BaseTest;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.query.asset.LenderQuery;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ public class LenderInfoMapperImplTest extends BaseTest {
 
     @Test
     public void test(){
-        LenderInfo lenderInfo = newOne(999);
+        LenderInfo lenderInfo = newOne(1);
         Integer result = lenderInfoMapper.insert(lenderInfo);
         Assert.assertNotNull(result);
         Assert.assertNotEquals(result, "0");
@@ -29,24 +28,22 @@ public class LenderInfoMapperImplTest extends BaseTest {
 
         LenderInfo lenderInfo1 = lenderInfoMapper.get(id);
         Assert.assertNotNull(lenderInfo1);
-        Assert.assertEquals(lenderInfo.getName(), lenderInfo1.getName());
+        Assert.assertEquals(lenderInfo.getLoan(), lenderInfo1.getLoan());
 
-        lenderInfo1.setName("QStest");
+        lenderInfo1.setLoan(22000.12);
         Integer update = lenderInfoMapper.update(lenderInfo1);
         Assert.assertNotNull(update);
         Assert.assertNotEquals(update, "0");
 
-        LenderInfo lenderInfo2 = lenderInfoMapper.get(id);
-        Assert.assertEquals(lenderInfo2.getName(), "QStest");
+        LenderInfo assetInfo2 = lenderInfoMapper.get(id);
+        Assert.assertEquals(String.valueOf(assetInfo2.getLoan()), "22000.12");
 
-        for(int i = 0;i<4;i++){
-            lenderInfoMapper.insert(newOne(i));
+        /*for(int i=1;i<5;i++){
+            lenderInfoMapper.insert(newOne(Integer.valueOf(i)));
         }
-        LenderQuery lenderQuery = new LenderQuery();
-        lenderQuery.setIdCardLike("4444");
-        List<LenderInfo> lenderInfos = lenderInfoMapper.queryList(lenderQuery);
+        List<LenderInfo> lenderInfos = lenderInfoMapper.listByLenderId(1);
         Assert.assertNotNull(lenderInfos);
-
+*/
         Integer delete = lenderInfoMapper.deleteByPrimaryKey(id);
         Assert.assertEquals("1", String.valueOf(delete));
     }
@@ -54,12 +51,12 @@ public class LenderInfoMapperImplTest extends BaseTest {
     private LenderInfo newOne(Integer index){
         LenderInfo lenderInfo = new LenderInfo();
 
-        lenderInfo.setName("name" + index);
-        lenderInfo.setGender("mail");
-        lenderInfo.setMobile("1339999000" + index);
-        lenderInfo.setMemo("memo" + index);
-        lenderInfo.setIdcard("666666444422223"+index);
+        lenderInfo.setContactId(index);
+        lenderInfo.setCanPay(1);
+        lenderInfo.setEntrustBorn("担保公司"+index);
+        lenderInfo.setLoan(200.22);
 
         return lenderInfo;
     }
+
 }

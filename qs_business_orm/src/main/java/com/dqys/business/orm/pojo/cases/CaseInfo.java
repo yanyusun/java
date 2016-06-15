@@ -5,78 +5,43 @@ import com.dqys.core.base.BaseModel;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 案件基础信息
+ */
 public class CaseInfo extends BaseModel implements Serializable {
 
-    private String code; // 编号
-
-    private Integer lenderId; // 借款人ID
-
+    private String caseNo; // 编号
     private String type; // 案件类型(0母案件,1子案件)
-
     private Integer pid; // 父级ID
-
     private Integer pawnId; // 抵押物ID
-
-    private String iouIds; // 借据IDs
-
     private String plaintiff; // 原告
-
     private String defendant; // 被告
-
     private String spouse; // 配偶
-
-    private String guarantorIds; // 保证人Ids
-
+    private String guarantorId; // 保证人Id
     private String mortgagor; // 抵押人
-
     private String mortgageTime; //抵押次数
-
-    private String judgeIds; // 法官Ids
-
     private Double lawsuitAmount; // 诉讼金额
-
     private Double lawsuitCorpus; // 诉讼本金
-
     private Double lawsuitAccrual; // 诉讼利息
-
     private Integer isAttachment; // 是否查封(0否1是)
-
     private Integer attachmentTime; // 查封次数
-
     private String attachmentCode; // 法院案号
-
     private String attachmentCourt; // 法院
-
     private Date attachmentDate; // 查封时间
-
     private Boolean isPreservation; // 是否保全
-
     private Date preservationStart; // 保全开始时间
-
     private Date preservationEnd; // 保全结束时间
-
     private String memo; // 案件备注
-
     private String lawsuitMemo; // 诉讼备注
-
     private String attachmentMemo; // 查封情况
-
     private String preservationMemo; // 续保情况
 
-    public String getCode() {
-        return code;
+    public String getCaseNo() {
+        return caseNo;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public Integer getLenderId() {
-        return lenderId;
-    }
-
-    public void setLenderId(Integer lenderId) {
-        this.lenderId = lenderId;
+    public void setCaseNo(String caseNo) {
+        this.caseNo = caseNo;
     }
 
     public String getType() {
@@ -103,14 +68,6 @@ public class CaseInfo extends BaseModel implements Serializable {
         this.pawnId = pawnId;
     }
 
-    public String getIouIds() {
-        return iouIds;
-    }
-
-    public void setIouIds(String iouIds) {
-        this.iouIds = iouIds;
-    }
-
     public String getPlaintiff() {
         return plaintiff;
     }
@@ -127,12 +84,20 @@ public class CaseInfo extends BaseModel implements Serializable {
         this.defendant = defendant;
     }
 
-    public String getGuarantorIds() {
-        return guarantorIds;
+    public String getSpouse() {
+        return spouse;
     }
 
-    public void setGuarantorIds(String guarantorIds) {
-        this.guarantorIds = guarantorIds;
+    public void setSpouse(String spouse) {
+        this.spouse = spouse;
+    }
+
+    public String getGuarantorId() {
+        return guarantorId;
+    }
+
+    public void setGuarantorId(String guarantorId) {
+        this.guarantorId = guarantorId;
     }
 
     public String getMortgagor() {
@@ -149,14 +114,6 @@ public class CaseInfo extends BaseModel implements Serializable {
 
     public void setMortgageTime(String mortgageTime) {
         this.mortgageTime = mortgageTime;
-    }
-
-    public String getJudgeIds() {
-        return judgeIds;
-    }
-
-    public void setJudgeIds(String judgeIds) {
-        this.judgeIds = judgeIds;
     }
 
     public Double getLawsuitAmount() {
@@ -253,14 +210,6 @@ public class CaseInfo extends BaseModel implements Serializable {
 
     public void setMemo(String memo) {
         this.memo = memo;
-    }
-
-    public String getSpouse() {
-        return spouse;
-    }
-
-    public void setSpouse(String spouse) {
-        this.spouse = spouse;
     }
 
     public String getLawsuitMemo() {

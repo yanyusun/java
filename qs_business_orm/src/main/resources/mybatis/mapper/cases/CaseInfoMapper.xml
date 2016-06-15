@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dqys.auth.orm.dao.facade.CaseInfoMapper" >
-  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.CaseInfo" >
+<mapper namespace="com.dqys.business.orm.mapper.cases.CaseInfoMapper" >
+
+  <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.cases.CaseInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
     <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
     <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="code" property="code" jdbcType="VARCHAR" />
-    <result column="lender_id" property="lenderId" jdbcType="INTEGER" />
+    <result column="case_no" property="caseNo" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="VARCHAR" />
     <result column="pid" property="pid" jdbcType="INTEGER" />
     <result column="pawn_id" property="pawnId" jdbcType="INTEGER" />
-    <result column="iou_ids" property="iouIds" jdbcType="VARCHAR" />
     <result column="plaintiff" property="plaintiff" jdbcType="VARCHAR" />
     <result column="defendant" property="defendant" jdbcType="VARCHAR" />
-    <result column="guarantor_ids" property="guarantorIds" jdbcType="VARCHAR" />
+    <result column="guarantor_id" property="guarantorId" jdbcType="INTEGER" />
     <result column="mortgagor" property="mortgagor" jdbcType="VARCHAR" />
     <result column="mortgage_time" property="mortgageTime" jdbcType="VARCHAR" />
-    <result column="judge_ids" property="judgeIds" jdbcType="VARCHAR" />
     <result column="lawsuit_amount" property="lawsuitAmount" jdbcType="DOUBLE" />
     <result column="lawsuit_corpus" property="lawsuitCorpus" jdbcType="DOUBLE" />
     <result column="lawsuit_accrual" property="lawsuitAccrual" jdbcType="DOUBLE" />
@@ -39,31 +37,28 @@
 
   <!-- 基础字段 -->
   <sql id="Base_Column_List" >
-    id, version, create_at, update_at, stateflag, remark, code, lender_id, type, pid, 
-    pawn_id, iou_ids, plaintiff, defendant, guarantor_ids, mortgagor, mortgage_time, 
-    judge_ids, lawsuit_amount, lawsuit_corpus, lawsuit_accrual, is_attachment, attachment_time, 
-    attachment_code, attachment_court, attachment_date, is_preservation, preservation_start, 
-    preservation_end, memo, lawsuit_memo, attachment_memo, preservation_memo
+    id, version, create_at, update_at, stateflag, remark, case_no, lender_id, type, pid,
+    pawn_id, plaintiff, defendant, guarantor_id, mortgagor, mortgage_time, lawsuit_amount,
+    lawsuit_corpus, lawsuit_accrual, is_attachment, attachment_time, attachment_code,
+    attachment_court, attachment_date, is_preservation, preservation_start, preservation_end,
+    memo, lawsuit_memo, attachment_memo, preservation_memo
   </sql>
 
   <!-- 逻辑删除-->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    UPDATE t_case_info SET stateflag = CURRENT_TIMESTAMP
+    UPDATE bt_case SET stateflag = CURRENT_TIMESTAMP
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
   <!-- 新增-->
-  <insert id="insert" parameterType="com.dqys.auth.orm.pojo.CaseInfo" useGeneratedKeys="true" keyProperty="id">
-    insert into t_case_info
+  <insert id="insert" parameterType="com.dqys.business.orm.pojo.asset.LenderInfo" useGeneratedKeys="true" keyProperty="id">
+    insert into bt_case
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
         remark,
       </if>
-      <if test="code != null" >
-        code,
-      </if>
-      <if test="lenderId != null" >
-        lender_id,
+      <if test="caseNo != null" >
+        case_no,
       </if>
       <if test="type != null" >
         type,
@@ -74,26 +69,20 @@
       <if test="pawnId != null" >
         pawn_id,
       </if>
-      <if test="iouIds != null" >
-        iou_ids,
-      </if>
       <if test="plaintiff != null" >
         plaintiff,
       </if>
       <if test="defendant != null" >
         defendant,
       </if>
-      <if test="guarantorIds != null" >
-        guarantor_ids,
+      <if test="guarantorId != null" >
+        guarantor_id,
       </if>
       <if test="mortgagor != null" >
         mortgagor,
       </if>
       <if test="mortgageTime != null" >
         mortgage_time,
-      </if>
-      <if test="judgeIds != null" >
-        judge_ids,
       </if>
       <if test="lawsuitAmount != null" >
         lawsuit_amount,
@@ -145,11 +134,8 @@
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="code != null" >
-        #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="lenderId != null" >
-        #{lenderId,jdbcType=INTEGER},
+      <if test="caseNo != null" >
+        #{caseNo,jdbcType=VARCHAR},
       </if>
       <if test="type != null" >
         #{type,jdbcType=VARCHAR},
@@ -160,26 +146,20 @@
       <if test="pawnId != null" >
         #{pawnId,jdbcType=INTEGER},
       </if>
-      <if test="iouIds != null" >
-        #{iouIds,jdbcType=VARCHAR},
-      </if>
       <if test="plaintiff != null" >
         #{plaintiff,jdbcType=VARCHAR},
       </if>
       <if test="defendant != null" >
         #{defendant,jdbcType=VARCHAR},
       </if>
-      <if test="guarantorIds != null" >
-        #{guarantorIds,jdbcType=VARCHAR},
+      <if test="guarantorId != null" >
+        #{guarantorId,jdbcType=VARCHAR},
       </if>
       <if test="mortgagor != null" >
         #{mortgagor,jdbcType=VARCHAR},
       </if>
       <if test="mortgageTime != null" >
         #{mortgageTime,jdbcType=VARCHAR},
-      </if>
-      <if test="judgeIds != null" >
-        #{judgeIds,jdbcType=VARCHAR},
       </if>
       <if test="lawsuitAmount != null" >
         #{lawsuitAmount,jdbcType=DOUBLE},
@@ -230,19 +210,16 @@
   </insert>
 
   <!-- 修改 -->
-  <update id="update" parameterType="com.dqys.auth.orm.pojo.CaseInfo" >
-    update t_case_info
+  <update id="update" parameterType="com.dqys.business.orm.pojo.cases.CaseInfo" >
+    update bt_case
     <set >
       version = version+1,
       update_at = CURRENT_TIMESTAMP ,
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="code != null" >
-        code = #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="lenderId != null" >
-        lender_id = #{lenderId,jdbcType=INTEGER},
+      <if test="caseNo != null" >
+        case_no = #{caseNo,jdbcType=VARCHAR},
       </if>
       <if test="type != null" >
         type = #{type,jdbcType=VARCHAR},
@@ -253,26 +230,20 @@
       <if test="pawnId != null" >
         pawn_id = #{pawnId,jdbcType=INTEGER},
       </if>
-      <if test="iouIds != null" >
-        iou_ids = #{iouIds,jdbcType=VARCHAR},
-      </if>
       <if test="plaintiff != null" >
         plaintiff = #{plaintiff,jdbcType=VARCHAR},
       </if>
       <if test="defendant != null" >
         defendant = #{defendant,jdbcType=VARCHAR},
       </if>
-      <if test="guarantorIds != null" >
-        guarantor_ids = #{guarantorIds,jdbcType=VARCHAR},
+      <if test="guarantorId != null" >
+        guarantor_id = #{guarantorId,jdbcType=INTEGER},
       </if>
       <if test="mortgagor != null" >
         mortgagor = #{mortgagor,jdbcType=VARCHAR},
       </if>
       <if test="mortgageTime != null" >
         mortgage_time = #{mortgageTime,jdbcType=VARCHAR},
-      </if>
-      <if test="judgeIds != null" >
-        judge_ids = #{judgeIds,jdbcType=VARCHAR},
       </if>
       <if test="lawsuitAmount != null" >
         lawsuit_amount = #{lawsuitAmount,jdbcType=DOUBLE},
@@ -325,7 +296,7 @@
 
   <!-- 根据Id获取-->
   <select id="get" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    SELECT * from t_case_info where id = #{id,jdbcType=INTEGER}
+    SELECT * from bt_case where id = #{id,jdbcType=INTEGER}
   </select>
 
 </mapper>

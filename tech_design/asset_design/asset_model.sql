@@ -230,7 +230,7 @@ CREATE TABLE `bt_case`(
   `plaintiff` VARCHAR(20) COMMENT '原告',
   `defendant` VARCHAR(20) COMMENT '被告',
   `spouse` VARCHAR(20) COMMENT '配偶',
-  `guarantor_id` VARCHAR(255) COMMENT '保证人',
+  `guarantor_id` INT COMMENT '保证人',
   `mortgagor` VARCHAR(255) COMMENT '抵押人',
   `mortgage_time` VARCHAR(255) COMMENT '抵押次数',
 

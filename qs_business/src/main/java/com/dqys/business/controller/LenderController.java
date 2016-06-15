@@ -2,8 +2,8 @@ package com.dqys.business.controller;
 
 import com.dqys.business.controller.util.CommonUtil;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
+import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.pojo.asset.LenderRelation;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.service.cons.ContactTypeEnum;
 import com.dqys.business.service.facade.LenderService;
@@ -47,27 +47,27 @@ public class LenderController {
     /**
      * 新增借款人
      *
-     * @param lenderInfos
-     * @param lenderRelation
+     * @param contactInfos
+     * @param lenderInfo
      * @return
      */
     @RequestMapping(value = "/add")
     @ResponseBody
     public JsonResponse addLenderRelation(
-            @ModelAttribute List<LenderInfo> lenderInfos,
-            @ModelAttribute LenderRelation lenderRelation) {
-        if (CommonUtil.checkParam(lenderInfos, lenderRelation)) {
+            @ModelAttribute List<ContactInfo> contactInfos,
+            @ModelAttribute LenderInfo lenderInfo) {
+        if (CommonUtil.checkParam(contactInfos, lenderInfo)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         // 增加借款人以及相关联系人的身份信息
         Integer lenderId = null;
         HashMap<Integer, String> relation = new HashMap<>();
-        for (LenderInfo lenderInfo : lenderInfos) {
-            ContactTypeEnum contactTypeEnum = ContactTypeEnum.getContactTypeEnum(lenderInfo.getType());
+        for (ContactInfo contactInfo : contactInfos) {
+            ContactTypeEnum contactTypeEnum = ContactTypeEnum.getContactTypeEnum(contactInfo.getType());
             if (contactTypeEnum == null) {
                 return JsonResponseTool.paramErr("联系人类型参数错误");
             }
-            Integer id = lenderService.addLenderInfo(lenderInfo);
+            Integer id = lenderService.addLenderInfo(contactInfo);
             if (id > 0) {
                 if (contactTypeEnum.getValue().equals(contactTypeEnum.LENDER.getValue())) {
                     lenderId = id;
@@ -84,52 +84,52 @@ public class LenderController {
         }
 
         // 增加关系映射
-        lenderRelation.setLenderId(lenderId);
-        lenderRelation.setSlenderIds(relation.get(ContactTypeEnum.LENDER_WITH.getValue())); // 共同合伙人
-        lenderRelation.setOtherIds(relation.get(ContactTypeEnum.OTHER.getValue())); // 其他
-        lenderRelation.setGuaranteeIds(relation.get(ContactTypeEnum.GUARANTEE.getValue())); // 借贷方
-        lenderRelation.setBankManagerIds(relation.get(ContactTypeEnum.BANK_MANAGER.getValue())); // 银行经理
+        lenderInfo.setLenderId(lenderId);
+        lenderInfo.setSlenderIds(relation.get(ContactTypeEnum.LENDER_WITH.getValue())); // 共同合伙人
+        lenderInfo.setOtherIds(relation.get(ContactTypeEnum.OTHER.getValue())); // 其他
+        lenderInfo.setGuaranteeIds(relation.get(ContactTypeEnum.GUARANTEE.getValue())); // 借贷方
+        lenderInfo.setBankManagerIds(relation.get(ContactTypeEnum.BANK_MANAGER.getValue())); // 银行经理
 
-        return CommonUtil.responseBack(lenderService.addLenderRelation(lenderRelation));
+        return CommonUtil.responseBack(lenderService.addLenderRelation(lenderInfo));
     }
 
     /**
      * 修改借款人
      *
-     * @param lenderInfos
-     * @param lenderRelation
+     * @param contactInfos
+     * @param lenderInfo
      * @return
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public JsonResponse updateLenderRelation(@ModelAttribute List<LenderInfo> lenderInfos,
-                                             @ModelAttribute LenderRelation lenderRelation) {
+    public JsonResponse updateLenderRelation(@ModelAttribute List<ContactInfo> contactInfos,
+                                             @ModelAttribute LenderInfo lenderInfo) {
         if (CommonUtil.checkParam(
-                lenderInfos, lenderRelation, lenderRelation.getId(),
-                lenderRelation.getLenderId())) {
+                contactInfos, lenderInfo, lenderInfo.getId(),
+                lenderInfo.getLenderId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
 
-        LenderRelation lenderRelation1 = lenderService.getLenderRelation(lenderRelation.getId());
-        if (lenderRelation1 == null) {
+        LenderInfo lenderInfo1 = lenderService.getLenderRelation(lenderInfo.getId());
+        if (lenderInfo1 == null) {
             return JsonResponseTool.paramErr("参数错误,不存在该借款人信息");
         }
 
         HashMap<Integer, String> relation = new HashMap<>();
-        for (LenderInfo lenderInfo : lenderInfos) {
-            ContactTypeEnum contactTypeEnum = ContactTypeEnum.getContactTypeEnum(lenderInfo.getType());
+        for (ContactInfo contactInfo : contactInfos) {
+            ContactTypeEnum contactTypeEnum = ContactTypeEnum.getContactTypeEnum(contactInfo.getType());
             if (contactTypeEnum == null) {
                 return JsonResponseTool.paramErr("联系人类型参数错误");
             }
-            Integer id = lenderInfo.getId();
+            Integer id = contactInfo.getId();
             if (id == null) {
                 // 新增联系人
-                id = lenderService.addLenderInfo(lenderInfo);
+                id = lenderService.addLenderInfo(contactInfo);
             } else {
                 // 修改联系人
-                LenderInfo lenderInfo1 = lenderService.getLenderInfo(id);
-                if (!lenderInfo1.toString().equals(lenderInfo.toString())) {
-                    lenderService.updateLenderInfo(lenderInfo);
+                ContactInfo contactInfo1 = lenderService.getLenderInfo(id);
+                if (!contactInfo1.toString().equals(contactInfo.toString())) {
+                    lenderService.updateLenderInfo(contactInfo);
                 }
             }
             if (id > 0) {
@@ -141,21 +141,21 @@ public class LenderController {
             }
         }
 
-        if (lenderRelation1.toString().equals(lenderRelation.toString())
-                && lenderRelation.getLenderId().equals(relation.get(ContactTypeEnum.LENDER.getValue()))
-                && lenderRelation.getSlenderIds().equals(relation.get(ContactTypeEnum.LENDER_WITH.getValue()))
-                && lenderRelation.getGuaranteeIds().equals(relation.get(ContactTypeEnum.GUARANTEE.getValue()))
-                && lenderRelation.getOtherIds().equals(relation.get(ContactTypeEnum.OTHER.getValue()))
-                && lenderRelation.getBankManagerIds().equals(relation.get(ContactTypeEnum.BANK_MANAGER.getValue()))) {
-            return JsonResponseTool.success(lenderRelation.getId());
+        if (lenderInfo1.toString().equals(lenderInfo.toString())
+                && lenderInfo.getLenderId().equals(relation.get(ContactTypeEnum.LENDER.getValue()))
+                && lenderInfo.getSlenderIds().equals(relation.get(ContactTypeEnum.LENDER_WITH.getValue()))
+                && lenderInfo.getGuaranteeIds().equals(relation.get(ContactTypeEnum.GUARANTEE.getValue()))
+                && lenderInfo.getOtherIds().equals(relation.get(ContactTypeEnum.OTHER.getValue()))
+                && lenderInfo.getBankManagerIds().equals(relation.get(ContactTypeEnum.BANK_MANAGER.getValue()))) {
+            return JsonResponseTool.success(lenderInfo.getId());
         } else {
-            lenderRelation.setLenderId(Integer.valueOf(relation.get(ContactTypeEnum.LENDER.getValue())));
-            lenderRelation.setSlenderIds(relation.get(ContactTypeEnum.LENDER_WITH.getValue())); // 共同合伙人
-            lenderRelation.setOtherIds(relation.get(ContactTypeEnum.OTHER.getValue())); // 其他
-            lenderRelation.setGuaranteeIds(relation.get(ContactTypeEnum.GUARANTEE.getValue())); // 借贷方
-            lenderRelation.setBankManagerIds(relation.get(ContactTypeEnum.BANK_MANAGER.getValue())); // 银行经理
+            lenderInfo.setLenderId(Integer.valueOf(relation.get(ContactTypeEnum.LENDER.getValue())));
+            lenderInfo.setSlenderIds(relation.get(ContactTypeEnum.LENDER_WITH.getValue())); // 共同合伙人
+            lenderInfo.setOtherIds(relation.get(ContactTypeEnum.OTHER.getValue())); // 其他
+            lenderInfo.setGuaranteeIds(relation.get(ContactTypeEnum.GUARANTEE.getValue())); // 借贷方
+            lenderInfo.setBankManagerIds(relation.get(ContactTypeEnum.BANK_MANAGER.getValue())); // 银行经理
 
-            Integer id = lenderService.addLenderRelation(lenderRelation);
+            Integer id = lenderService.addLenderRelation(lenderInfo);
             if (id > 0) {
                 return JsonResponseTool.success(id);
             } else {
@@ -206,8 +206,8 @@ public class LenderController {
         if (CommonUtil.checkParam(pawnInfo, id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        LenderInfo lenderInfo = lenderService.getLenderInfo(id);
-        if (lenderInfo == null) {
+        ContactInfo contactInfo = lenderService.getLenderInfo(id);
+        if (contactInfo == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
         pawnInfo.setLenderId(id);
@@ -267,37 +267,37 @@ public class LenderController {
     /**
      * 增加借据信息
      *
-     * @param iouInfo
+     * @param IOUInfo
      * @param id
      * @return
      */
     @RequestMapping(value = "/addPawn")
     @ResponseBody
-    public JsonResponse addIou(@ModelAttribute IOUInfo iouInfo, @PathVariable Integer id) {
-        if (CommonUtil.checkParam(iouInfo, id)) {
+    public JsonResponse addIou(@ModelAttribute IOUInfo IOUInfo, @PathVariable Integer id) {
+        if (CommonUtil.checkParam(IOUInfo, id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        LenderInfo lenderInfo = lenderService.getLenderInfo(id);
-        if (lenderInfo == null) {
+        ContactInfo contactInfo = lenderService.getLenderInfo(id);
+        if (contactInfo == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        iouInfo.setLenderId(id);
-        return CommonUtil.responseBack(lenderService.addIOUInfo(iouInfo,lenderInfo.getName()));
+        IOUInfo.setLenderId(id);
+        return CommonUtil.responseBack(lenderService.addIOUInfo(IOUInfo, contactInfo.getName()));
     }
 
     /**
      * 修改借据信息
      *
-     * @param iouInfo
+     * @param IOUInfo
      * @return
      */
     @RequestMapping(value = "/updateIou")
     @ResponseBody
-    public JsonResponse updateIou(@ModelAttribute IOUInfo iouInfo) {
-        if (CommonUtil.checkParam(iouInfo)) {
+    public JsonResponse updateIou(@ModelAttribute IOUInfo IOUInfo) {
+        if (CommonUtil.checkParam(IOUInfo)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer id = lenderService.updateIOUInfo(iouInfo);
+        Integer id = lenderService.updateIOUInfo(IOUInfo);
         if (id == null) {
             return JsonResponseTool.failure("修改失败");
         } else {

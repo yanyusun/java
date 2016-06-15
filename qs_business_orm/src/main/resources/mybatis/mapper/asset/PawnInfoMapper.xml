@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dqys.auth.orm.dao.facade.asset.PawnInfoMapper" >
+<mapper namespace="com.dqys.business.orm.mapper.asset.PawnInfoMapper" >
 
-  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.asset.PawnInfo" >
+  <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.asset.PawnInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
@@ -10,11 +10,11 @@
     <result column="stateflag" property="stateflag" jdbcType="INTEGER" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="lender_id" property="lenderId" jdbcType="INTEGER" />
-    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="pawn_no" property="pawnNo" jdbcType="VARCHAR" />
     <result column="amount" property="amount" jdbcType="DOUBLE" />
     <result column="type" property="type" jdbcType="VARCHAR" />
-    <result column="quality" property="quality" jdbcType="VARCHAR" />
-    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="evaluate_excellent" property="evaluateExcellent" jdbcType="VARCHAR" />
+    <result column="evaluate_level" property="evaluateLevel" jdbcType="VARCHAR" />
     <result column="size" property="size" jdbcType="VARCHAR" />
     <result column="province" property="province" jdbcType="VARCHAR" />
     <result column="city" property="city" jdbcType="VARCHAR" />
@@ -23,15 +23,14 @@
     <result column="pawn_rate" property="pawnRate" jdbcType="DOUBLE" />
     <result column="dispose_status" property="disposeStatus" jdbcType="VARCHAR" />
     <result column="worth" property="worth" jdbcType="DOUBLE" />
-    <result column="iou_ids" property="iouIds" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
   </resultMap>
 
   <!-- 基础字段 -->
   <sql id="Base_Column_List" >
-    id, version, create_at, update_at, stateflag, remark, lender_id, code, amount, type, 
-    quality, level, size, province, city, district, address, pawn_rate, dispose_status, 
-    worth, iou_ids, memo
+    id, version, create_at, update_at, stateflag, remark, lender_id, pawn_no, amount, type,
+    evaluate_excellent, evaluate_level, size, province, city, district, address, pawn_rate,
+    dispose_status, worth, memo
   </sql>
 
   <sql id="Query_Condition">
@@ -45,13 +44,13 @@
 
   <!-- 逻辑删除 -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    UPDATE t_pawn_info SET stateflag = CURRENT_TIMESTAMP
+    UPDATE bt_pawn SET stateflag = CURRENT_TIMESTAMP
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
   <!-- 新增 -->
-  <insert id="insert" parameterType="com.dqys.auth.orm.pojo.asset.PawnInfo" useGeneratedKeys="true" keyProperty="id">
-    insert into t_pawn_info
+  <insert id="insert" parameterType="com.dqys.business.orm.pojo.asset.PawnInfo" useGeneratedKeys="true" keyProperty="id">
+    insert into bt_pawn
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
         remark,
@@ -59,8 +58,8 @@
       <if test="lenderId != null" >
         lender_id,
       </if>
-      <if test="code != null" >
-        code,
+      <if test="pawnNo != null" >
+        pawn_no,
       </if>
       <if test="amount != null" >
         amount,
@@ -68,11 +67,11 @@
       <if test="type != null" >
         type,
       </if>
-      <if test="quality != null" >
-        quality,
+      <if test="evaluateExcellent != null" >
+        evaluate_excellent,
       </if>
-      <if test="level != null" >
-        level,
+      <if test="evaluateLevel != null" >
+        evaluate_level,
       </if>
       <if test="size != null" >
         size,
@@ -98,9 +97,6 @@
       <if test="worth != null" >
         worth,
       </if>
-      <if test="iouIds != null" >
-        iou_ids,
-      </if>
       <if test="memo != null" >
         memo,
       </if>
@@ -112,8 +108,8 @@
       <if test="lenderId != null" >
         #{lenderId,jdbcType=INTEGER},
       </if>
-      <if test="code != null" >
-        #{code,jdbcType=VARCHAR},
+      <if test="pawnNo != null" >
+        #{pawnNo,jdbcType=VARCHAR},
       </if>
       <if test="amount != null" >
         #{amount,jdbcType=DOUBLE},
@@ -121,11 +117,11 @@
       <if test="type != null" >
         #{type,jdbcType=VARCHAR},
       </if>
-      <if test="quality != null" >
-        #{quality,jdbcType=VARCHAR},
+      <if test="evaluateExcellent != null" >
+        #{evaluateExcellent,jdbcType=VARCHAR},
       </if>
-      <if test="level != null" >
-        #{level,jdbcType=VARCHAR},
+      <if test="evaluateLevel != null" >
+        #{evaluateLevel,jdbcType=VARCHAR},
       </if>
       <if test="size != null" >
         #{size,jdbcType=VARCHAR},
@@ -151,9 +147,6 @@
       <if test="worth != null" >
         #{worth,jdbcType=DOUBLE},
       </if>
-      <if test="iouIds != null" >
-        #{iouIds,jdbcType=VARCHAR},
-      </if>
       <if test="memo != null" >
         #{memo,jdbcType=VARCHAR},
       </if>
@@ -164,13 +157,13 @@
   <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />
-    from t_pawn_info
+    from bt_pawn
     where id = #{id,jdbcType=INTEGER}
   </select>
 
   <!-- 修改 -->
-  <update id="update" parameterType="com.dqys.auth.orm.pojo.asset.PawnInfo" >
-    update t_pawn_info
+  <update id="update" parameterType="com.dqys.business.orm.pojo.asset.PawnInfo" >
+    update bt_pawn
     <set >
       version = version+1,
       update_at = CURRENT_TIMESTAMP ,
@@ -180,8 +173,8 @@
       <if test="lenderId != null" >
         lender_id = #{lenderId,jdbcType=INTEGER},
       </if>
-      <if test="code != null" >
-        code = #{code,jdbcType=VARCHAR},
+      <if test="pawnNo != null" >
+        pawn_no = #{pawnNo,jdbcType=VARCHAR},
       </if>
       <if test="amount != null" >
         amount = #{amount,jdbcType=DOUBLE},
@@ -189,11 +182,11 @@
       <if test="type != null" >
         type = #{type,jdbcType=VARCHAR},
       </if>
-      <if test="quality != null" >
-        quality = #{quality,jdbcType=VARCHAR},
+      <if test="evaluateExcellent != null" >
+        evaluate_excellent = #{evaluateExcellent,jdbcType=VARCHAR},
       </if>
-      <if test="level != null" >
-        level = #{level,jdbcType=VARCHAR},
+      <if test="evaluateLevel != null" >
+        evaluate_level = #{evaluateLevel,jdbcType=VARCHAR},
       </if>
       <if test="size != null" >
         size = #{size,jdbcType=VARCHAR},
@@ -219,9 +212,6 @@
       <if test="worth != null" >
         worth = #{worth,jdbcType=DOUBLE},
       </if>
-      <if test="iouIds != null" >
-        iou_ids = #{iouIds,jdbcType=VARCHAR},
-      </if>
       <if test="memo != null" >
         memo = #{memo,jdbcType=VARCHAR},
       </if>
@@ -231,17 +221,17 @@
 
   <!-- 统计 -->
   <select id="count" resultType="java.lang.Integer">
-    SELECT count(*) FROM t_pawn_info where stateflag = 0
+    SELECT count(*) FROM bt_pawn where stateflag = 0
   </select>
 
   <!-- 借款人下的所有抵押物 -->
   <select id="listByLenderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    SELECT * FROM t_pawn_info where stateflag = 0 AND lender_id = #{lenderId,jdbcType=INTEGER}
+    SELECT * FROM bt_pawn where stateflag = 0 AND lender_id = #{lenderId,jdbcType=INTEGER}
   </select>
 
   <!-- 多条件查询抵押物 -->
-  <select id="queryList" parameterType="com.dqys.auth.orm.query.asset.PawnQuery" resultMap="BaseResultMap">
-    SELECT * from t_pawn_info
+  <select id="queryList" parameterType="com.dqys.business.orm.query.asset.PawnQuery" resultMap="BaseResultMap">
+    SELECT * from bt_pawn
     <include refid="Query_Condition" />
     ORDER by id desc
   </select>

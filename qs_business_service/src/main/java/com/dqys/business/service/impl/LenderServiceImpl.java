@@ -1,13 +1,13 @@
 package com.dqys.business.service.impl;
 
 
+import com.dqys.business.orm.mapper.asset.ContactInfoMapper;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
-import com.dqys.business.orm.mapper.asset.LenderRelationMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
+import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.pojo.asset.LenderRelation;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.query.asset.IOUQuery;
 import com.dqys.business.orm.query.asset.LenderQuery;
@@ -28,110 +28,105 @@ import java.util.List;
 public class LenderServiceImpl implements LenderService {
 
     @Autowired
-    private LenderInfoMapper lenderInfoMapper;
+    private ContactInfoMapper contactInfoMapper;
     @Autowired
-    private LenderRelationMapper lenderRelationMapper;
+    private LenderInfoMapper lenderInfoMapper;
     @Autowired
     private PawnInfoMapper pawnInfoMapper;
     @Autowired
-    private IOUInfoMapper iouInfoMapper;
+    private IOUInfoMapper IOUInfoMapper;
 
     @Override
     public Integer deleteLenderInfo(Integer id) {
+        return contactInfoMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public Integer addLenderInfo(ContactInfo contactInfo) {
+        Integer addResult = contactInfoMapper.insert(contactInfo);
+        if (addResult.equals(1)) {
+            return contactInfo.getId();
+        }
+        return addResult;
+    }
+
+    @Override
+    public Integer updateLenderInfo(ContactInfo contactInfo) {
+        return contactInfoMapper.update(contactInfo);
+    }
+
+    @Override
+    public ContactInfo getLenderInfo(Integer id) {
+        return contactInfoMapper.get(id);
+    }
+
+    @Override
+    public List<ContactInfo> queryListLender(LenderQuery lenderQuery) {
+        return contactInfoMapper.queryList(lenderQuery);
+    }
+
+    @Override
+    public Integer deleteLenderRelation(Integer id) {
         return lenderInfoMapper.deleteByPrimaryKey(id);
     }
 
     @Override
-    public Integer addLenderInfo(LenderInfo lenderInfo) {
+    public Integer addLenderRelation(LenderInfo lenderInfo) {
         Integer addResult = lenderInfoMapper.insert(lenderInfo);
-        if(addResult.equals(1)){
+        if (addResult.equals(1)) {
             return lenderInfo.getId();
         }
         return addResult;
     }
 
     @Override
-    public Integer updateLenderInfo(LenderInfo lenderInfo) {
+    public Integer updateLenderRelation(LenderInfo lenderInfo) {
         return lenderInfoMapper.update(lenderInfo);
     }
 
     @Override
-    public LenderInfo getLenderInfo(Integer id) {
+    public LenderInfo getLenderRelation(Integer id) {
         return lenderInfoMapper.get(id);
     }
 
     @Override
-    public List<LenderInfo> queryListLender(LenderQuery lenderQuery) {
-        return lenderInfoMapper.queryList(lenderQuery);
-    }
-
-    @Override
-    public Integer deleteLenderRelation(Integer id) {
-        return lenderRelationMapper.deleteByPrimaryKey(id);
-    }
-
-    @Override
-    public Integer addLenderRelation(LenderRelation lenderRelation) {
-        Integer addResult = lenderRelationMapper.insert(lenderRelation);
-        if(addResult.equals(1)){
-            return lenderRelation.getId();
-        }
-        return addResult;
-    }
-
-    @Override
-    public Integer updateLenderRelation(LenderRelation lenderRelation) {
-        return lenderRelationMapper.update(lenderRelation);
-    }
-
-    @Override
-    public LenderRelation getLenderRelation(Integer id) {
-        return lenderRelationMapper.get(id);
-    }
-
-    @Override
-    public List<LenderRelation> listLenderRelationByLenderId(Integer id) {
-        return lenderRelationMapper.listByLenderId(id);
-    }
-
-    @Override
     public Integer deleteIOUInfo(Integer id) {
-        return iouInfoMapper.deleteByPrimaryKey(id);
+        return IOUInfoMapper.deleteByPrimaryKey(id);
     }
 
     @Override
-    public Integer addIOUInfo(IOUInfo iouInfo, String name) {
-        iouInfo.setCode(AssetUtil.createIouCode(name));
-        Integer addResult = iouInfoMapper.insert(iouInfo);
-        if(addResult.equals(1)){
-            return iouInfo.getId();
+    public Integer addIOUInfo(IOUInfo IOUInfo, String name) {
+        IOUInfo.setIouNo(AssetUtil.createIouCode(name));
+        Integer addResult = IOUInfoMapper.insert(IOUInfo);
+        if (addResult.equals(1)) {
+            return IOUInfo.getId();
         }
         return addResult;
     }
 
     @Override
-    public Integer updateIOUInfo(IOUInfo iouInfo) {
-        return iouInfoMapper.update(iouInfo);
+    public Integer updateIOUInfo(IOUInfo IOUInfo) {
+        return IOUInfoMapper.update(IOUInfo);
     }
 
     @Override
     public IOUInfo getIOUInfo(Integer id) {
-        return iouInfoMapper.get(id);
+        return IOUInfoMapper.get(id);
     }
 
     @Override
     public Integer countIOU() {
-        return iouInfoMapper.count();
+        return IOUInfoMapper.count();
     }
 
     @Override
     public List<IOUInfo> listIOUByLenderId(Integer lenderId) {
-        return iouInfoMapper.listByLenderId(lenderId);
+        return IOUInfoMapper.listByLenderId(lenderId);
     }
 
     @Override
-    public List<IOUInfo> queryListIOU(IOUQuery iouQuery) {
-        return iouInfoMapper.queryList(iouQuery);
+    public List<IOUInfo> queryListIOU(IOUQuery IOUQuery) {
+        return IOUInfoMapper.queryList(IOUQuery);
     }
 
     @Override
@@ -141,9 +136,9 @@ public class LenderServiceImpl implements LenderService {
 
     @Override
     public Integer addPawn(PawnInfo pawnInfo) {
-        pawnInfo.setCode(AssetUtil.createPawnCode());
+        pawnInfo.setPawnNo(AssetUtil.createPawnCode());
         Integer addResult = pawnInfoMapper.insert(pawnInfo);
-        if(addResult.equals(1)){
+        if (addResult.equals(1)) {
             return pawnInfo.getId();
         }
         return addResult;

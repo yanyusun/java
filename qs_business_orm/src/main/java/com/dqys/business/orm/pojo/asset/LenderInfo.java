@@ -3,164 +3,301 @@ package com.dqys.business.orm.pojo.asset;
 import com.dqys.core.base.BaseModel;
 
 import java.io.Serializable;
+import java.util.Date;
 
-public class LenderInfo extends BaseModel implements Serializable{
+/**
+ * 借款人基础信息
+ */
+public class LenderInfo extends BaseModel implements Serializable {
 
-    private String name;  // 姓名
-
-    private Integer type;  // 借款类型
-
-    private String avg;  // 头像地址
-
-    private String gender;  // 性别
-
-    private String idcard;  // 身份证
-
-    private String company;  // 公司
-
-    private String mobile;  // 手机号
-
-    private String homeTel;  // 家庭电话
-
-    private String officeTel;  // 办公电话
-
-    private String email;  // 电子邮件
-
-    private String province;  // 省
-
-    private String city;  // 市
-
-    private String district;  // 区
-
-    private String address;  // 详细地址
-
+    private Integer contactId;  // 联系人ID
+    private Date startAt;  // 委托开始时间
+    private Date endAt;  //委托结束时间
+    private Integer operator;  // 操作人ID
+    private Double accrual;  // 总利息
+    private Double loan;  // 总贷款
+    private Double appraisal;  // 总评估
+    private String loanType;  // 贷款类型
+    private String loanMode;  // 贷款方式
+    private String loanName;  // 贷款名称
+    private String evaluateExcellent;  // 评优
+    private String evaluateLevel;  // 评级
+    private String disposeMode;  //  处置方式
+    private String tags;  // 标签
+    private String urgeType;  // 催收阶段
+    private String entrustBornType;  // 委托来源类型
+    private String entrustBorn;  // 委托来源
+    private String guaranteeType;  // 担保类型(个人|公司)
+    private String guaranteeMode;  // 担保方式(抵押|质押)
+    private String guaranteeSource;  // 担保源
+    private Integer isGuaranteeConnection;  // 担保人是否能联系
+    private String guarenteeEconomic;  // 担保人经济状况
+    private Integer isLawsuit;  // 诉讼与否
+    private Integer isDecision;  // 判决与否
+    private Integer realUrgeTime;  // 实地催收次数
+    private Integer phoneUrgeTime;  // 电话催收次数
+    private Integer entrustUrgeTime;  // 委托催收次数
+    private Integer canContact;  // 债务方是否能正常联系
+    private Integer canPay;  // 债务方是否能偿还
+    private Integer isWorth;  // 抵押物是否能覆盖债务
     private String memo;  // 备注
 
-    private String code; // 工号
-
-    public String toString(){
-        String string = "lenderInfo:[";
-        string += "id:" + super.getId() + ",name:" + name + ",type:" + type
-                + ",avg:" + avg + ",idcard:" + idcard + ",gender:" + gender
-                + ",company:" + company + ",mobile:" + mobile + ",homeTel:" + homeTel
-                + ",officeTel:" + officeTel + ",email:" + email + ",province:" + province
-                + ",city:" + city + ",district:" + district + ",address:" + address
-                + ",memo:" + memo + ",code:" + code;
+    @Override
+    public String toString() {
+        String string = "LenderInfo:[";
+        string += "contactId:" + contactId + ",startAt:" + startAt + ",endAt:" + endAt
+                + ",operator:" + operator + ",accrual:" + accrual
+                + ",loan:" + loan + ",appraisal:" + appraisal + ",loanType:" + loanType
+                + ",loanMode:" + loanMode + ",loanName:" + loanName + ",evaluateExcellent:" + evaluateExcellent
+                + ",evaluateLevel:" + evaluateLevel + ",disposeMode:" + disposeMode + ",tags:" + tags
+                + ",urgeType:" + urgeType + ",entrustBornType:" + entrustBornType + ",entrustBorn:" + entrustBorn
+                + ",guaranteeType:" + guaranteeType + ",guaranteeMode:" + guaranteeMode + ",guaranteeSource:" + guaranteeSource
+                + ",isGuaranteeConnection:" + isGuaranteeConnection + ",guarenteeEconomic:" + guarenteeEconomic + ",isLawsuit:" + isLawsuit
+                + ",isDecision:" + isDecision + ",realUrgeTime:" + realUrgeTime + ",phoneUrgeTime:" + phoneUrgeTime
+                + ",entrustUrgeTime:" + entrustUrgeTime + ",canContact:" + canContact + ",canPay:" + canPay
+                + ",isWorth:" + isWorth + ",memo:" + memo;
         string += "]";
         return string;
     }
 
-
-    public String getName() {
-        return name;
+    public Integer getContactId() {
+        return contactId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setContactId(Integer contactId) {
+        this.contactId = contactId;
     }
 
-    public Integer getType() {
-        return type;
+    public Date getStartAt() {
+        return startAt;
     }
 
-    public void setType(Integer type) {
-        this.type = type;
+    public void setStartAt(Date startAt) {
+        this.startAt = startAt;
     }
 
-    public String getAvg() {
-        return avg;
+    public Date getEndAt() {
+        return endAt;
     }
 
-    public void setAvg(String avg) {
-        this.avg = avg;
+    public void setEndAt(Date endAt) {
+        this.endAt = endAt;
     }
 
-    public String getGender() {
-        return gender;
+    public Integer getOperator() {
+        return operator;
     }
 
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setOperator(Integer operator) {
+        this.operator = operator;
     }
 
-    public String getIdcard() {
-        return idcard;
+    public Double getAccrual() {
+        return accrual;
     }
 
-    public void setIdcard(String idcard) {
-        this.idcard = idcard;
+    public void setAccrual(Double accrual) {
+        this.accrual = accrual;
     }
 
-    public String getCompany() {
-        return company;
+    public Double getLoan() {
+        return loan;
     }
 
-    public void setCompany(String company) {
-        this.company = company;
+    public void setLoan(Double loan) {
+        this.loan = loan;
     }
 
-    public String getMobile() {
-        return mobile;
+    public Double getAppraisal() {
+        return appraisal;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setAppraisal(Double appraisal) {
+        this.appraisal = appraisal;
     }
 
-    public String getHomeTel() {
-        return homeTel;
+    public String getLoanType() {
+        return loanType;
     }
 
-    public void setHomeTel(String homeTel) {
-        this.homeTel = homeTel;
+    public void setLoanType(String loanType) {
+        this.loanType = loanType;
     }
 
-    public String getOfficeTel() {
-        return officeTel;
+    public String getLoanMode() {
+        return loanMode;
     }
 
-    public void setOfficeTel(String officeTel) {
-        this.officeTel = officeTel;
+    public void setLoanMode(String loanMode) {
+        this.loanMode = loanMode;
     }
 
-    public String getEmail() {
-        return email;
+    public String getLoanName() {
+        return loanName;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setLoanName(String loanName) {
+        this.loanName = loanName;
     }
 
-    public String getProvince() {
-        return province;
+    public String getEvaluateExcellent() {
+        return evaluateExcellent;
     }
 
-    public void setProvince(String province) {
-        this.province = province;
+    public void setEvaluateExcellent(String evaluateExcellent) {
+        this.evaluateExcellent = evaluateExcellent;
     }
 
-    public String getCity() {
-        return city;
+    public String getEvaluateLevel() {
+        return evaluateLevel;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setEvaluateLevel(String evaluateLevel) {
+        this.evaluateLevel = evaluateLevel;
     }
 
-    public String getDistrict() {
-        return district;
+    public String getDisposeMode() {
+        return disposeMode;
     }
 
-    public void setDistrict(String district) {
-        this.district = district;
+    public void setDisposeMode(String disposeMode) {
+        this.disposeMode = disposeMode;
     }
 
-    public String getAddress() {
-        return address;
+    public String getTags() {
+        return tags;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public String getUrgeType() {
+        return urgeType;
+    }
+
+    public void setUrgeType(String urgeType) {
+        this.urgeType = urgeType;
+    }
+
+    public String getEntrustBornType() {
+        return entrustBornType;
+    }
+
+    public void setEntrustBornType(String entrustBornType) {
+        this.entrustBornType = entrustBornType;
+    }
+
+    public String getEntrustBorn() {
+        return entrustBorn;
+    }
+
+    public void setEntrustBorn(String entrustBorn) {
+        this.entrustBorn = entrustBorn;
+    }
+
+    public String getGuaranteeType() {
+        return guaranteeType;
+    }
+
+    public void setGuaranteeType(String guaranteeType) {
+        this.guaranteeType = guaranteeType;
+    }
+
+    public String getGuaranteeMode() {
+        return guaranteeMode;
+    }
+
+    public void setGuaranteeMode(String guaranteeMode) {
+        this.guaranteeMode = guaranteeMode;
+    }
+
+    public String getGuaranteeSource() {
+        return guaranteeSource;
+    }
+
+    public void setGuaranteeSource(String guaranteeSource) {
+        this.guaranteeSource = guaranteeSource;
+    }
+
+    public Integer getIsGuaranteeConnection() {
+        return isGuaranteeConnection;
+    }
+
+    public void setIsGuaranteeConnection(Integer isGuaranteeConnection) {
+        this.isGuaranteeConnection = isGuaranteeConnection;
+    }
+
+    public String getGuarenteeEconomic() {
+        return guarenteeEconomic;
+    }
+
+    public void setGuarenteeEconomic(String guarenteeEconomic) {
+        this.guarenteeEconomic = guarenteeEconomic;
+    }
+
+    public Integer getIsLawsuit() {
+        return isLawsuit;
+    }
+
+    public void setIsLawsuit(Integer isLawsuit) {
+        this.isLawsuit = isLawsuit;
+    }
+
+    public Integer getIsDecision() {
+        return isDecision;
+    }
+
+    public void setIsDecision(Integer isDecision) {
+        this.isDecision = isDecision;
+    }
+
+    public Integer getRealUrgeTime() {
+        return realUrgeTime;
+    }
+
+    public void setRealUrgeTime(Integer realUrgeTime) {
+        this.realUrgeTime = realUrgeTime;
+    }
+
+    public Integer getPhoneUrgeTime() {
+        return phoneUrgeTime;
+    }
+
+    public void setPhoneUrgeTime(Integer phoneUrgeTime) {
+        this.phoneUrgeTime = phoneUrgeTime;
+    }
+
+    public Integer getEntrustUrgeTime() {
+        return entrustUrgeTime;
+    }
+
+    public void setEntrustUrgeTime(Integer entrustUrgeTime) {
+        this.entrustUrgeTime = entrustUrgeTime;
+    }
+
+    public Integer getCanContact() {
+        return canContact;
+    }
+
+    public void setCanContact(Integer canContact) {
+        this.canContact = canContact;
+    }
+
+    public Integer getCanPay() {
+        return canPay;
+    }
+
+    public void setCanPay(Integer canPay) {
+        this.canPay = canPay;
+    }
+
+    public Integer getIsWorth() {
+        return isWorth;
+    }
+
+    public void setIsWorth(Integer isWorth) {
+        this.isWorth = isWorth;
     }
 
     public String getMemo() {
@@ -169,13 +306,5 @@ public class LenderInfo extends BaseModel implements Serializable{
 
     public void setMemo(String memo) {
         this.memo = memo;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
 }

@@ -49,9 +49,9 @@ public interface IOUInfoMapper {
 
     /**
      * 多条件查询借据
-     * @param iouQuery
+     * @param IOUQuery
      * @return
      */
-    List<IOUInfo> queryList(IOUQuery iouQuery);
+    List<IOUInfo> queryList(IOUQuery IOUQuery);
 
 }
