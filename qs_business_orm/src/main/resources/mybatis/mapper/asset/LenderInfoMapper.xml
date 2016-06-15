@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.auth.orm.dao.facade.asset.LenderInfoMapper" >
+
+  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.asset.LenderInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="stateflag" property="stateflag" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="avg" property="avg" jdbcType="VARCHAR" />
+    <result column="gender" property="gender" jdbcType="VARCHAR" />
+    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="company" property="company" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="home_tel" property="homeTel" jdbcType="VARCHAR" />
+    <result column="office_tel" property="officeTel" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="district" property="district" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!-- 基础字段 -->
+  <sql id="Base_Column_List" >
+    id, version, create_at, update_at, stateflag, remark, name, type, avg, gender, idcard, 
+    company, mobile, home_tel, office_tel, email, province, city, district, address,
+    memo, code
+  </sql>
+
+  <sql id="Query_condition">
+    <where>
+      <if test="id != null">
+       id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="idCardLike != null">
+       AND idcard like CONCAT('%',#{idCardLike,jdbcType=VARCHAR},'%')
+      </if>
+      <!--<if test="idCard != null">-->
+        <!--AND idcard = #{idCard,jdbcType=VARCHAR}-->
+      <!--</if>-->
+    </where>
+  </sql>
+
+  <!-- 逻辑删除-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    UPDATE t_lender_info SET stateflag = CURRENT_TIMESTAMP
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <!-- 新增 -->
+  <insert id="insert" parameterType="com.dqys.auth.orm.pojo.asset.LenderInfo" useGeneratedKeys="true" keyProperty="id">
+    insert into t_lender_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="avg != null" >
+        avg,
+      </if>
+      <if test="gender != null" >
+        gender,
+      </if>
+      <if test="idcard != null" >
+        idcard,
+      </if>
+      <if test="company != null" >
+        company,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="homeTel != null" >
+        home_tel,
+      </if>
+      <if test="officeTel != null" >
+        office_tel,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="district != null" >
+        district,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="avg != null" >
+        #{avg,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="homeTel != null" >
+        #{homeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="officeTel != null" >
+        #{officeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <!-- 获取单个实例 -->
+  <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from t_lender_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!-- 修改 -->
+  <update id="update" parameterType="com.dqys.auth.orm.pojo.asset.LenderInfo" >
+    update t_lender_info
+    <set >
+      version = version+1,
+      update_at = CURRENT_TIMESTAMP ,
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="avg != null" >
+        avg = #{avg,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null" >
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        idcard = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="company != null" >
+        company = #{company,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="homeTel != null" >
+        home_tel = #{homeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="officeTel != null" >
+        office_tel = #{officeTel,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        district = #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="queryList" parameterType="com.dqys.auth.orm.query.asset.LenderQuery" resultMap="BaseResultMap">
+    SELECT * FROM t_lender_info
+    <include refid="Query_condition" />
+    ORDER by id DESC
+  </select>
+  
+</mapper>

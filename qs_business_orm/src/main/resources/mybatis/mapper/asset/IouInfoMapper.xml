@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.auth.orm.dao.facade.asset.IOUInfoMapper" >
+
+  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.asset.IOUInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="stateflag" property="stateflag" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="code" property="code" jdbcType="VARCHAR" />
+    <result column="lender_id" property="lenderId" jdbcType="INTEGER" />
+    <result column="pawnIDs" property="pawnids" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="agency" property="agency" jdbcType="VARCHAR" />
+    <result column="iou_code" property="iouCode" jdbcType="VARCHAR" />
+    <result column="loan_time" property="loanTime" jdbcType="TIMESTAMP" />
+    <result column="loan_attime" property="loanAttime" jdbcType="TIMESTAMP" />
+    <result column="amount" property="amount" jdbcType="DOUBLE" />
+    <result column="pact_rate" property="pactRate" jdbcType="DOUBLE" />
+    <result column="outtime_multiple" property="outtimeMultiple" jdbcType="DOUBLE" />
+    <result column="appropriation_multiple" property="appropriationMultiple" jdbcType="VARCHAR" />
+    <result column="accrual_repay" property="accrualRepay" jdbcType="DOUBLE" />
+    <result column="loan_repay" property="loanRepay" jdbcType="DOUBLE" />
+    <result column="level_type" property="levelType" jdbcType="VARCHAR" />
+    <result column="out_days" property="outDays" jdbcType="INTEGER" />
+    <result column="less_corpus" property="lessCorpus" jdbcType="DOUBLE" />
+    <result column="accrual_arrears" property="accrualArrears" jdbcType="DOUBLE" />
+    <result column="penalty" property="penalty" jdbcType="DOUBLE" />
+    <result column="arrears" property="arrears" jdbcType="DOUBLE" />
+    <result column="out_time" property="outTime" jdbcType="TIMESTAMP" />
+    <result column="worth" property="worth" jdbcType="DOUBLE" />
+    <result column="advance_corpus" property="advanceCorpus" jdbcType="DOUBLE" />
+    <result column="quality" property="quality" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <!-- 基础字段 -->
+  <sql id="Base_Column_List" >
+    id, version, create_at, update_at, stateflag, remark, code, lender_id, pawnIDs, type, 
+    agency, iou_code, loan_time, loan_attime, amount, pact_rate, outtime_multiple, appropriation_multiple, 
+    accrual_repay, loan_repay, level_type, out_days, less_corpus, accrual_arrears, penalty, 
+    arrears, out_time, worth, advance_corpus, quality, level, memo
+  </sql>
+
+  <sql id="Query_Condition">
+    <where>
+      stateflag = 0
+      <if test="lenderId != null">
+        AND lender_id = #{lenderId,jdbcType=INTEGER}
+      </if>
+    </where>
+  </sql>
+
+  <!-- 逻辑删除-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    UPDATE t_iou_info SET stateflag = CURRENT_TIMESTAMP
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <!-- 新增 -->
+  <insert id="insert" parameterType="com.dqys.auth.orm.pojo.asset.IOUInfo" useGeneratedKeys="true" keyProperty="id">
+    insert into t_iou_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="lenderId != null" >
+        lender_id,
+      </if>
+      <if test="pawnids != null" >
+        pawnIDs,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="agency != null" >
+        agency,
+      </if>
+      <if test="iouCode != null" >
+        iou_code,
+      </if>
+      <if test="loanTime != null" >
+        loan_time,
+      </if>
+      <if test="loanAttime != null" >
+        loan_attime,
+      </if>
+      <if test="amount != null" >
+        amount,
+      </if>
+      <if test="pactRate != null" >
+        pact_rate,
+      </if>
+      <if test="outtimeMultiple != null" >
+        outtime_multiple,
+      </if>
+      <if test="appropriationMultiple != null" >
+        appropriation_multiple,
+      </if>
+      <if test="accrualRepay != null" >
+        accrual_repay,
+      </if>
+      <if test="loanRepay != null" >
+        loan_repay,
+      </if>
+      <if test="levelType != null" >
+        level_type,
+      </if>
+      <if test="outDays != null" >
+        out_days,
+      </if>
+      <if test="lessCorpus != null" >
+        less_corpus,
+      </if>
+      <if test="accrualArrears != null" >
+        accrual_arrears,
+      </if>
+      <if test="penalty != null" >
+        penalty,
+      </if>
+      <if test="arrears != null" >
+        arrears,
+      </if>
+      <if test="outTime != null" >
+        out_time,
+      </if>
+      <if test="worth != null" >
+        worth,
+      </if>
+      <if test="advanceCorpus != null" >
+        advance_corpus,
+      </if>
+      <if test="quality != null" >
+        quality,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="lenderId != null" >
+        #{lenderId,jdbcType=INTEGER},
+      </if>
+      <if test="pawnids != null" >
+        #{pawnids,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="agency != null" >
+        #{agency,jdbcType=VARCHAR},
+      </if>
+      <if test="iouCode != null" >
+        #{iouCode,jdbcType=VARCHAR},
+      </if>
+      <if test="loanTime != null" >
+        #{loanTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loanAttime != null" >
+        #{loanAttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="amount != null" >
+        #{amount,jdbcType=DOUBLE},
+      </if>
+      <if test="pactRate != null" >
+        #{pactRate,jdbcType=DOUBLE},
+      </if>
+      <if test="outtimeMultiple != null" >
+        #{outtimeMultiple,jdbcType=DOUBLE},
+      </if>
+      <if test="appropriationMultiple != null" >
+        #{appropriationMultiple,jdbcType=VARCHAR},
+      </if>
+      <if test="accrualRepay != null" >
+        #{accrualRepay,jdbcType=DOUBLE},
+      </if>
+      <if test="loanRepay != null" >
+        #{loanRepay,jdbcType=DOUBLE},
+      </if>
+      <if test="levelType != null" >
+        #{levelType,jdbcType=VARCHAR},
+      </if>
+      <if test="outDays != null" >
+        #{outDays,jdbcType=INTEGER},
+      </if>
+      <if test="lessCorpus != null" >
+        #{lessCorpus,jdbcType=DOUBLE},
+      </if>
+      <if test="accrualArrears != null" >
+        #{accrualArrears,jdbcType=DOUBLE},
+      </if>
+      <if test="penalty != null" >
+        #{penalty,jdbcType=DOUBLE},
+      </if>
+      <if test="arrears != null" >
+        #{arrears,jdbcType=DOUBLE},
+      </if>
+      <if test="outTime != null" >
+        #{outTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="worth != null" >
+        #{worth,jdbcType=DOUBLE},
+      </if>
+      <if test="advanceCorpus != null" >
+        #{advanceCorpus,jdbcType=DOUBLE},
+      </if>
+      <if test="quality != null" >
+        #{quality,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <!-- 获取单个实例 -->
+  <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from t_iou_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!-- 修改 -->
+  <update id="update" parameterType="com.dqys.auth.orm.pojo.asset.IOUInfo" >
+    update t_iou_info
+    <set >
+      version = version+1,
+      update_at = CURRENT_TIMESTAMP ,
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null" >
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="lenderId != null" >
+        lender_id = #{lenderId,jdbcType=INTEGER},
+      </if>
+      <if test="pawnids != null" >
+        pawnIDs = #{pawnids,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="agency != null" >
+        agency = #{agency,jdbcType=VARCHAR},
+      </if>
+      <if test="iouCode != null" >
+        iou_code = #{iouCode,jdbcType=VARCHAR},
+      </if>
+      <if test="loanTime != null" >
+        loan_time = #{loanTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loanAttime != null" >
+        loan_attime = #{loanAttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="amount != null" >
+        amount = #{amount,jdbcType=DOUBLE},
+      </if>
+      <if test="pactRate != null" >
+        pact_rate = #{pactRate,jdbcType=DOUBLE},
+      </if>
+      <if test="outtimeMultiple != null" >
+        outtime_multiple = #{outtimeMultiple,jdbcType=DOUBLE},
+      </if>
+      <if test="appropriationMultiple != null" >
+        appropriation_multiple = #{appropriationMultiple,jdbcType=VARCHAR},
+      </if>
+      <if test="accrualRepay != null" >
+        accrual_repay = #{accrualRepay,jdbcType=DOUBLE},
+      </if>
+      <if test="loanRepay != null" >
+        loan_repay = #{loanRepay,jdbcType=DOUBLE},
+      </if>
+      <if test="levelType != null" >
+        level_type = #{levelType,jdbcType=VARCHAR},
+      </if>
+      <if test="outDays != null" >
+        out_days = #{outDays,jdbcType=INTEGER},
+      </if>
+      <if test="lessCorpus != null" >
+        less_corpus = #{lessCorpus,jdbcType=DOUBLE},
+      </if>
+      <if test="accrualArrears != null" >
+        accrual_arrears = #{accrualArrears,jdbcType=DOUBLE},
+      </if>
+      <if test="penalty != null" >
+        penalty = #{penalty,jdbcType=DOUBLE},
+      </if>
+      <if test="arrears != null" >
+        arrears = #{arrears,jdbcType=DOUBLE},
+      </if>
+      <if test="outTime != null" >
+        out_time = #{outTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="worth != null" >
+        worth = #{worth,jdbcType=DOUBLE},
+      </if>
+      <if test="advanceCorpus != null" >
+        advance_corpus = #{advanceCorpus,jdbcType=DOUBLE},
+      </if>
+      <if test="quality != null" >
+        quality = #{quality,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!-- 统计所有数量 -->
+  <select id="count" resultType="java.lang.Integer">
+    SELECT COUNT(id) from t_iou_info WHERE stateflag = 0
+  </select>
+
+  <!-- 查出借款人下的所有借据 -->
+  <select id="listByLenderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT * from t_iou_info where stateflag = 0 AND lender_id = #{lenderId,jdbcType=INTEGER} order by id desc
+  </select>
+
+  <!-- 多条件查出借据 -->
+  <select id="queryList" parameterType="com.dqys.auth.orm.query.asset.IOUQuery" resultMap="BaseResultMap">
+    SELECT * from t_iou_info
+    <include refid="Query_Condition" />
+    order by id desc
+  </select>
+
+
+</mapper>

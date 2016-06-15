@@ -26,7 +26,7 @@
 
 
             <!-- 调试接口(调试之后请注释起来) -->
-            <mvc:exclude-mapping path="/ato/*" />
+            <!--<mvc:exclude-mapping path="/ato/*" />-->
 
 
             <bean class="com.dqys.core.interceptor.HeaderInterceptor"/>

@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.asset" >
+
+  <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.asset.AssetInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="version" property="version" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="stateflag" property="stateflag" jdbcType="INTEGER" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="asset_no" property="assetNo" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="start_at" property="startAt" jdbcType="TIMESTAMP" />
+    <result column="end_at" property="endAt" jdbcType="TIMESTAMP" />
+    <result column="operator" property="operator" jdbcType="INTEGER" />
+    <result column="accrual" property="accrual" jdbcType="DOUBLE" />
+    <result column="loan" property="loan" jdbcType="DOUBLE" />
+    <result column="appraisal" property="appraisal" jdbcType="DOUBLE" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="evaluate_excellent" property="evaluateExcellent" jdbcType="VARCHAR" />
+    <result column="evaluate_level" property="evaluateLevel" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
+    <result column="district" property="district" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="loan_organization" property="loanOrganization" jdbcType="VARCHAR" />
+    <result column="loan_organization_district" property="loanOrganizationDistrict" jdbcType="VARCHAR" />
+    <result column="dispose_mode" property="disposeMode" jdbcType="VARCHAR" />
+    <result column="tags" property="tags" jdbcType="VARCHAR" />
+    <result column="isshow" property="isshow" jdbcType="INTEGER" />
+    <result column="memo" property="memo" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, version, create_at, update_at, stateflag, remark, asset_no, type, startAt,
+    endAt, operator, accrual, loan, appraisal, name, evaluate_excellent, evaluate_level, province,
+    city, district, address, loan_organization, loan_organization_district, dispose_mode,
+    tags, isshow, memo
+  </sql>
+
+  <sql id="Query_Condition">
+    <where>
+      stateflag = 0
+      <if test="id != null">
+        AND id = #{id,jdbcType=INTEGER}
+      </if>
+    </where>
+  </sql>
+
+  <!-- 逻辑删除 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    UPDATE t_asset_info SET stateflag = CURRENT_TIMESTAMP
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <!-- 新增 -->
+  <insert id="insert" parameterType="com.dqys.auth.orm.pojo.asset.AssetInfo" useGeneratedKeys="true" keyProperty="id" >
+    insert into t_asset_info
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="code != null" >
+        asset_no,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="entrustStartTime != null" >
+        start_at,
+      </if>
+      <if test="entrustEndTime != null" >
+        end_at,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="accrual != null" >
+        accrual,
+      </if>
+      <if test="loan != null" >
+        loan,
+      </if>
+      <if test="appraisal != null" >
+        appraisal,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="quality != null" >
+        evaluate_excellent,
+      </if>
+      <if test="level != null" >
+        evaluate_level,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="district != null" >
+        district,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="loanOrganization != null" >
+        loan_organization,
+      </if>
+      <if test="loanOrganizationDistrict != null" >
+        loan_organization_district,
+      </if>
+      <if test="disposeMode != null" >
+        dispose_mode,
+      </if>
+      <if test="tags != null" >
+        tags,
+      </if>
+      <if test="isshow != null" >
+        isshow,
+      </if>
+      <if test="memo != null" >
+        memo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="assetNo != null" >
+        #{assetNo,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="startAt != null" >
+        #{startAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endAt != null" >
+        #{endAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=INTEGER},
+      </if>
+      <if test="accrual != null" >
+        #{accrual,jdbcType=DOUBLE},
+      </if>
+      <if test="loan != null" >
+        #{loan,jdbcType=DOUBLE},
+      </if>
+      <if test="appraisal != null" >
+        #{appraisal,jdbcType=DOUBLE},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateExcellent != null" >
+        #{evaluateExcellent,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateLevel != null" >
+        #{evaluateLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="loanOrganization != null" >
+        #{loanOrganization,jdbcType=VARCHAR},
+      </if>
+      <if test="loanOrganizationDistrict != null" >
+        #{loanOrganizationDistrict,jdbcType=VARCHAR},
+      </if>
+      <if test="disposeMode != null" >
+        #{disposeMode,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null" >
+        #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="isshow != null" >
+        #{isshow,jdbcType=INTEGER},
+      </if>
+      <if test="memo != null" >
+        #{memo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <!-- 根据ID获取单个实例 -->
+  <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from t_asset_info
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <!-- 修改 -->
+  <update id="update" parameterType="com.dqys.auth.orm.pojo.asset.AssetInfo" >
+    update t_asset_info
+    <set >
+      version = version+1,
+      update_at = CURRENT_TIMESTAMP ,
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="assetNo != null" >
+        asset_no = #{assetNo,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="startAt != null" >
+        start_at = #{startAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endAt != null" >
+        end_at = #{endAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=INTEGER},
+      </if>
+      <if test="accrual != null" >
+        accrual = #{accrual,jdbcType=DOUBLE},
+      </if>
+      <if test="loan != null" >
+        loan = #{loan,jdbcType=DOUBLE},
+      </if>
+      <if test="appraisal != null" >
+        appraisal = #{appraisal,jdbcType=DOUBLE},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateExcellent != null" >
+        evaluate_excellent = #{evaluateExcellent,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateLevel != null" >
+        evaluate_level = #{evaluateLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="province != null" >
+        province = #{province,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
+      </if>
+      <if test="district != null" >
+        district = #{district,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="loanOrganization != null" >
+        loan_organization = #{loanOrganization,jdbcType=VARCHAR},
+      </if>
+      <if test="loanOrganizationDistrict != null" >
+        loan_organization_district = #{loanOrganizationDistrict,jdbcType=VARCHAR},
+      </if>
+      <if test="disposeMode != null" >
+        dispose_mode = #{disposeMode,jdbcType=VARCHAR},
+      </if>
+      <if test="tags != null" >
+        tags = #{tags,jdbcType=VARCHAR},
+      </if>
+      <if test="isshow != null" >
+        isshow = #{isshow,jdbcType=INTEGER},
+      </if>
+      <if test="memo != null" >
+        memo = #{memo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <!-- 统计数量 -->
+  <select id="count" resultType="java.lang.Integer">
+    SELECT count(id) FROM t_asset_info where stateflag = 0
+  </select>
+
+  <!-- 条件统计-->
+  <select id="queryCount" parameterType="com.dqys.auth.orm.query.asset.AssetQuery" resultType="java.lang.Integer">
+    SELECT COUNT(id) FROM t_asset_info
+    <include refid="Query_Condition" />
+    ORDER by id DESC
+    <if test="page != null">
+      limit #{page,jdbcType=INTEGER},#{pageCount,jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <!-- 查全 -->
+  <select id="listAll" resultMap="BaseResultMap">
+    SELECT * from t_asset_info where stateflag = 0
+  </select>
+
+  <!-- 分页 -->
+  <select id="pageList" parameterType="com.dqys.auth.orm.query.asset.AssetQuery" resultMap="BaseResultMap" >
+    SELECT * from t_asset_info
+    <include refid="Query_Condition" />
+    ORDER BY id DESC
+    <if test="page != null">
+      limit #{page,jdbcType=INTEGER},#{pageCount,jdbcType=INTEGER}
+    </if>
+  </select>
+
+</mapper>
