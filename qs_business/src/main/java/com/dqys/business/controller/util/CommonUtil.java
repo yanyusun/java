@@ -7,6 +7,7 @@ import com.dqys.core.utils.JsonResponseTool;
  * Created by Yvan on 16/6/12.
  */
 public class CommonUtil {
+
     /**
      * 检验参数是否为空
      * @param datas
@@ -35,4 +36,8 @@ public class CommonUtil {
             return JsonResponseTool.success(data);
         }
     }
+
+
+
+
 }

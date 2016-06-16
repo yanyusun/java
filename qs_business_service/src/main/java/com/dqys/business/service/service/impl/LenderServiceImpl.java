@@ -1,4 +1,4 @@
-package com.dqys.business.service.impl;
+package com.dqys.business.service.service.impl;
 
 
 import com.dqys.business.orm.mapper.asset.ContactInfoMapper;
@@ -12,7 +12,7 @@ import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.query.asset.IOUQuery;
 import com.dqys.business.orm.query.asset.LenderQuery;
 import com.dqys.business.orm.query.asset.PawnQuery;
-import com.dqys.business.service.facade.LenderService;
+import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.utils.AssetUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;

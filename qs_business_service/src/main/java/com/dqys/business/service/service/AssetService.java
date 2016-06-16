@@ -1,4 +1,4 @@
-package com.dqys.business.service.facade;
+package com.dqys.business.service.service;
 
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.query.asset.AssetQuery;
