@@ -9,7 +9,6 @@ import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.NumberToTextConverter;
-import sun.applet.Main;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,7 +20,7 @@ import java.util.Map;
 /**
  * Created by Administrator on 2016/6/16.
  */
-public class ExeclTool {
+public class ExcelTool {
     /**
      * filepath 文件路径
      * filename 文件名称
