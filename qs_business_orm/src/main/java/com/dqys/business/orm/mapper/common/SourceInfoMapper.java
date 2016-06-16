@@ -1,6 +1,6 @@
-package com.dqys.business.orm.mapper.asset;
+package com.dqys.business.orm.mapper.common;
 
-import com.dqys.auth.orm.pojo.asset.SourceInfo;
+import com.dqys.business.orm.pojo.common.SourceInfo;
 
 public interface SourceInfoMapper {
     /**

@@ -1,28 +1,41 @@
-package com.dqys.business.orm.pojo.asset;
+package com.dqys.business.orm.pojo.common;
 
 import com.dqys.core.base.BaseModel;
 
 import java.io.Serializable;
 
+/**
+ * 资源信息
+ */
 public class SourceInfo extends BaseModel implements Serializable{
 
+    private String mode;  // 资源模块
+    private Integer modeId;  //资源模块Id
     private String type;  // 资源类型
-
     private Integer pid;  // 资源关联id
-
     private String code;  // 资源编号
-
     private String name;  // 资源名称
-
     private String fileType;  // 资源类型
-
     private String path;  // 保存路径
-
     private String tags;  // 标签
-
     private Integer sort;  // 排序
-
     private String memo; // 备注
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    public Integer getModeId() {
+        return modeId;
+    }
+
+    public void setModeId(Integer modeId) {
+        this.modeId = modeId;
+    }
 
     public String getType() {
         return type;

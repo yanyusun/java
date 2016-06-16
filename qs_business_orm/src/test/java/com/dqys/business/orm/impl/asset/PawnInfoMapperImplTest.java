@@ -29,15 +29,15 @@ public class PawnInfoMapperImplTest extends BaseTest {
 
         PawnInfo pawnInfo1 = pawnInfoMapper.get(id);
         Assert.assertNotNull(pawnInfo1);
-        Assert.assertEquals(pawnInfo.getCode(), pawnInfo1.getCode());
+        Assert.assertEquals(pawnInfo.getPawnNo(), pawnInfo1.getPawnNo());
 
-        pawnInfo1.setCode("QS151212");
+        pawnInfo1.setPawnNo("QS151212");
         Integer update = pawnInfoMapper.update(pawnInfo1);
         Assert.assertNotNull(update);
         Assert.assertNotEquals(update, "0");
 
         PawnInfo assetInfo2 = pawnInfoMapper.get(id);
-        Assert.assertEquals(assetInfo2.getCode(), "QS151212");
+        Assert.assertEquals(assetInfo2.getPawnNo(), "QS151212");
 
         for(int i=1;i<5;i++){
             pawnInfoMapper.insert(newOne(Integer.valueOf(i)));
@@ -57,7 +57,7 @@ public class PawnInfoMapperImplTest extends BaseTest {
     private PawnInfo newOne(Integer index){
         PawnInfo pawnInfo = new PawnInfo();
 
-        pawnInfo.setCode("code"+index);
+        pawnInfo.setPawnNo("code"+index);
         pawnInfo.setLenderId(index);
         pawnInfo.setAmount(1000.21+index);
 

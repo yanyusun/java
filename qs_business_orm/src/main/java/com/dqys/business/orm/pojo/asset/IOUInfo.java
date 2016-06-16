@@ -10,9 +10,8 @@ import java.util.Date;
  */
 public class IOUInfo extends BaseModel implements Serializable {
 
-    private String code;  // 编号
+    private String iouNo;  // 编号
     private Integer lenderId;  // 借款人ID
-    private String pawnids;  // 抵押物IDS
     private String type;  // 借据类型
     private String agency;  // 代理机构
     private String iouCode;  // 原始借据号
@@ -26,33 +25,31 @@ public class IOUInfo extends BaseModel implements Serializable {
     private Double loanRepay;  // 已还贷款金额
     private String levelType;  // 5级分类
     private Integer outDays;  // 逾期天数
-
     private Double lessCorpus;  // 剩余本金
-
     private Double accrualArrears;  // 拖欠利息
-
     private Double penalty;  // 罚息
-
     private Double arrears;  // 欠款合计
-
-    private Date outTime;  // 欠款截止日期
-
+    private Date endAt;  // 欠款截止日期
     private Double worth;  // 价值
-
     private Double advanceCorpus;  // 提前偿还本金
-
-    private String quality;  // 评优
-
-    private String level;  // 评级
-
+    private String evaluateExcellent;  // 评优
+    private String evaluateLevel;  // 评级
     private String memo;  // 备注
 
-    public String getCode() {
-        return code;
+    public String toString(){
+        String string = "iouInfo:[";
+        string += "iouNo:" + iouNo + ",type:" + type + ",lenderId:" + lenderId;
+        string += "]";
+        return string;
+
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public String getIouNo() {
+        return iouNo;
+    }
+
+    public void setIouNo(String iouNo) {
+        this.iouNo = iouNo;
     }
 
     public Integer getLenderId() {
@@ -61,14 +58,6 @@ public class IOUInfo extends BaseModel implements Serializable {
 
     public void setLenderId(Integer lenderId) {
         this.lenderId = lenderId;
-    }
-
-    public String getPawnids() {
-        return pawnids;
-    }
-
-    public void setPawnids(String pawnids) {
-        this.pawnids = pawnids;
     }
 
     public String getType() {
@@ -207,12 +196,12 @@ public class IOUInfo extends BaseModel implements Serializable {
         this.arrears = arrears;
     }
 
-    public Date getOutTime() {
-        return outTime;
+    public Date getEndAt() {
+        return endAt;
     }
 
-    public void setOutTime(Date outTime) {
-        this.outTime = outTime;
+    public void setEndAt(Date endAt) {
+        this.endAt = endAt;
     }
 
     public Double getWorth() {
@@ -231,20 +220,20 @@ public class IOUInfo extends BaseModel implements Serializable {
         this.advanceCorpus = advanceCorpus;
     }
 
-    public String getQuality() {
-        return quality;
+    public String getEvaluateExcellent() {
+        return evaluateExcellent;
     }
 
-    public void setQuality(String quality) {
-        this.quality = quality;
+    public void setEvaluateExcellent(String evaluateExcellent) {
+        this.evaluateExcellent = evaluateExcellent;
     }
 
-    public String getLevel() {
-        return level;
+    public String getEvaluateLevel() {
+        return evaluateLevel;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public void setEvaluateLevel(String evaluateLevel) {
+        this.evaluateLevel = evaluateLevel;
     }
 
     public String getMemo() {

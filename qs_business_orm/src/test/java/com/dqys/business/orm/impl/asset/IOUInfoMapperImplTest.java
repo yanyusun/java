@@ -16,51 +16,52 @@ import java.util.List;
 public class IOUInfoMapperImplTest extends BaseTest {
 
     @Autowired
-    private IOUInfoMapper iouInfoMapper;
+    private IOUInfoMapper IOUInfoMapper;
 
     @Test
     public void test(){
-        IOUInfo iouInfo = newOne(1);
-        Integer result = iouInfoMapper.insert(iouInfo);
+        IOUInfo IOUInfo = newOne(1);
+        Integer result = IOUInfoMapper.insert(IOUInfo);
         Assert.assertNotNull(result);
         Assert.assertNotEquals(result, "0");
-        Integer id = iouInfo.getId();
+        Integer id = IOUInfo.getId();
         Assert.assertNotNull(id);
 
-        IOUInfo iouInfo1 = iouInfoMapper.get(id);
-        Assert.assertNotNull(iouInfo1);
-        Assert.assertEquals(iouInfo.getCode(), iouInfo1.getCode());
+        IOUInfo IOUInfo1 = IOUInfoMapper.get(id);
+        Assert.assertNotNull(IOUInfo1);
+        Assert.assertEquals(IOUInfo.getIouNo(), IOUInfo1.getIouNo());
 
-        iouInfo1.setCode("QS151212");
-        Integer update = iouInfoMapper.update(iouInfo1);
+        IOUInfo1.setIouNo("QS151212");
+        Integer update = IOUInfoMapper.update(IOUInfo1);
         Assert.assertNotNull(update);
         Assert.assertNotEquals(update, "0");
 
-        IOUInfo assetInfo2 = iouInfoMapper.get(id);
-        Assert.assertEquals(assetInfo2.getCode(), "QS151212");
+        IOUInfo assetInfo2 = IOUInfoMapper.get(id);
+        Assert.assertEquals(assetInfo2.getIouNo(), "QS151212");
 
         for(int i=1;i<5;i++){
-            iouInfoMapper.insert(newOne(Integer.valueOf(i)));
+            IOUInfoMapper.insert(newOne(Integer.valueOf(i)));
         }
-        List<IOUInfo> iouInfoList = iouInfoMapper.listByLenderId(1);
-        Assert.assertNotNull(iouInfoList);
+        List<IOUInfo> IOUInfoList = IOUInfoMapper.listByLenderId(1);
+        Assert.assertNotNull(IOUInfoList);
 
-        IOUQuery iouQuery = new IOUQuery();
-        iouQuery.setLenderId(1);
-        List<IOUInfo> iouInfos = iouInfoMapper.queryList(iouQuery);
-        Assert.assertNotNull(iouInfos);
+        IOUQuery IOUQuery = new IOUQuery();
+        IOUQuery.setLenderId(1);
+        List<IOUInfo> IOUInfos = IOUInfoMapper.queryList(IOUQuery);
+        Assert.assertNotNull(IOUInfos);
 
-        Integer delete = iouInfoMapper.deleteByPrimaryKey(id);
+        Integer delete = IOUInfoMapper.deleteByPrimaryKey(id);
         Assert.assertEquals("1", String.valueOf(delete));
     }
 
     private IOUInfo newOne(Integer index){
-        IOUInfo iouInfo = new IOUInfo();
+        IOUInfo IOUInfo = new IOUInfo();
 
-        iouInfo.setCode("code" + index);
-        iouInfo.setLenderId(index);
-        iouInfo.setAmount(10000.2 + index);
+        IOUInfo.setIouNo("code" + index);
+        IOUInfo.setType("type" + index);
+        IOUInfo.setLenderId(index);
+        IOUInfo.setAmount(10000.2 + index);
 
-        return iouInfo;
+        return IOUInfo;
     }
 }

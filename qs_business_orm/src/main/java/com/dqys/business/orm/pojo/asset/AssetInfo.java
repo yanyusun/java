@@ -5,6 +5,9 @@ import com.dqys.core.base.BaseModel;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 资产包基础信息
+ */
 public class AssetInfo extends BaseModel implements Serializable {
 
     private String assetNo; // 编号
