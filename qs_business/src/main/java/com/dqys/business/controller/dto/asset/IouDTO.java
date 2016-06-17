@@ -10,6 +10,8 @@ import java.util.List;
  */
 public class IouDTO {
 
+    private Integer id;
+
     private String iouNo;  // 编号
     private String type;  // 借据类型
     private String agency;  // 代理机构
@@ -38,10 +40,18 @@ public class IouDTO {
     private String evaluateLevel;  // 评级
     private String memo;  // 备注
 
-    private Integer lender_id;  // 借款基础信息ID
+    private Integer lenderId;  // 借款基础信息ID
     private ContactDTO lender;  //借款人信息
 
     private List<String> pawnIds; // 抵押物IDs
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public List<String> getPawnIds() {
         return pawnIds;
@@ -51,12 +61,12 @@ public class IouDTO {
         this.pawnIds = pawnIds;
     }
 
-    public Integer getLender_id() {
-        return lender_id;
+    public Integer getLenderId() {
+        return lenderId;
     }
 
-    public void setLender_id(Integer lender_id) {
-        this.lender_id = lender_id;
+    public void setLenderId(Integer lenderId) {
+        this.lenderId = lenderId;
     }
 
     public String getIouNo() {

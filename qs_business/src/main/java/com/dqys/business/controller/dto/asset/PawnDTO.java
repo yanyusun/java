@@ -7,6 +7,8 @@ import java.util.List;
  */
 public class PawnDTO {
 
+    private Integer id;
+
     private String pawnNo;  // 编号
     private Double amount;  // 贷款金额
     private String type;  // 抵押物雷系
@@ -28,6 +30,14 @@ public class PawnDTO {
 
     private List<Integer> iouIds;
 
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public List<Integer> getIouIds() {
         return iouIds;

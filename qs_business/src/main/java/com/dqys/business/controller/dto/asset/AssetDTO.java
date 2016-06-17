@@ -18,6 +18,7 @@ public class AssetDTO {
     private Date startAt; // 委托开始时间
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date endAt; // 委托结束时间
+    private String assetNo;  // 资产包编号
     private Double accrual; // 总利息
     private Double loan; // 总贷款
     private Double appraisal; // 总评估
@@ -37,6 +38,15 @@ public class AssetDTO {
 
     private Integer operatorId; // 操作人ID
     private UserDTO operator; // 操作人
+
+
+    public String getAssetNo() {
+        return assetNo;
+    }
+
+    public void setAssetNo(String assetNo) {
+        this.assetNo = assetNo;
+    }
 
     public Integer getOperatorId() {
         return operatorId;
