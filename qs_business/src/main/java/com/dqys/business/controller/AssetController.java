@@ -1,14 +1,24 @@
 package com.dqys.business.controller;
 
+import com.dqys.business.controller.dto.asset.AssetDTO;
+import com.dqys.business.controller.dto.asset.ContactDTO;
+import com.dqys.business.controller.dto.asset.IouDTO;
+import com.dqys.business.controller.dto.asset.PawnDTO;
+import com.dqys.business.controller.util.CommonUtil;
+import com.dqys.business.controller.util.asset.AssetControllerUtils;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.query.asset.AssetQuery;
-import com.dqys.business.service.facade.AssetService;
+import com.dqys.business.service.constant.AssetModelTypeEnum;
+import com.dqys.business.service.service.AssetService;
+import com.dqys.business.service.service.LenderService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -20,19 +30,21 @@ public class AssetController {
 
     @Autowired
     private AssetService assetService;
+    @Autowired
+    private LenderService lenderService;
 
     /**
      * 添加一个资产包信息
-     * @param assetInfo
+     * @param assetDTO
      * @return
      */
     @RequestMapping(value = "add")
     @ResponseBody
-    public JsonResponse add(@ModelAttribute AssetInfo assetInfo) {
-        if (assetInfo == null) {
+    public JsonResponse add(@ModelAttribute AssetDTO assetDTO) {
+        if (CommonUtil.checkParam(assetDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer id = assetService.add(assetInfo);
+        Integer id = assetService.add(AssetControllerUtils.toAssetInfo(assetDTO));
         if (id == null || id.equals("0")) {
             return JsonResponseTool.failure("增加失败");
         } else {
@@ -48,7 +60,7 @@ public class AssetController {
     @RequestMapping(value = "update")
     @ResponseBody
     public JsonResponse update(@ModelAttribute AssetInfo assetInfo) {
-        if (assetInfo == null || assetInfo.getId() == null) {
+        if (CommonUtil.checkParam(assetInfo, assetInfo.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         Integer id = assetService.updateById(assetInfo);
@@ -72,6 +84,13 @@ public class AssetController {
         }
         AssetInfo assetInfo = assetService.getById(id);
         if (assetInfo == null) {
+            //
+
+
+
+
+
+
             return JsonResponseTool.failure("获取失败");
         } else {
             return JsonResponseTool.success(assetInfo);
@@ -122,9 +141,42 @@ public class AssetController {
      */
     @RequestMapping(value = "/addLenders")
     @ResponseBody
-    public Integer addLenders(@RequestParam Integer id, MultipartFile file){
+    public JsonResponse addLenders(@RequestParam Integer id, MultipartFile file){
+        List<AssetDTO> assetDTOList = new ArrayList<>();
+        List<ContactDTO> contactDTOList = new ArrayList<>();
+        List<PawnDTO> pawnDTOList = new ArrayList<>();
+        List<IouDTO> iouDTOList = new ArrayList<>();
+
+        // 添加借款人基础信息
+        HashMap<Integer, Integer> lenderMap = new HashMap<>();
+        for(AssetDTO assetDTO : assetDTOList){
+            Integer index = assetDTO.getId();
+            assetDTO.setId(null);
+            Integer assetId = assetService.add(AssetControllerUtils.toAssetInfo(assetDTO));
+            if(assetId > 0){
+                lenderMap.put(index, assetId);
+            }else{
+                // 新增借款人失败处理
+
+            }
+        }
+
+        // 添加联系人信息
+        contactDTOList.forEach(contactDTO -> {
+            Integer index = contactDTO.getId();
+            contactDTO.setMode(AssetModelTypeEnum.LENDER);
+            contactDTO.setModeId(lenderMap.get(index));
+            contactDTO.setId(null);
+            Integer contactId = lenderService.addLenderInfo(AssetControllerUtils.toContactInfo(contactDTO));
+            if(contactId == null || contactId.equals("0")){
+                // 添加联系人失败处理
+
+            }
+        });
+
+        // 添加抵押物
 
 
-        return 1;
+        return JsonResponseTool.success("");
     }
 }

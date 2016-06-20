@@ -1,10 +1,10 @@
-package com.dqys.business.service.impl;
+package com.dqys.business.service.service.impl;
 
-import com.dqys.auth.orm.dao.facade.asset.AssetInfoMapper;
-import com.dqys.auth.orm.pojo.asset.AssetInfo;
-import com.dqys.auth.orm.query.asset.AssetQuery;
-import com.dqys.auth.service.facade.asset.AssetService;
-import com.dqys.auth.service.utils.AssetUtil;
+import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
+import com.dqys.business.orm.pojo.asset.AssetInfo;
+import com.dqys.business.orm.query.asset.AssetQuery;
+import com.dqys.business.service.service.AssetService;
+import com.dqys.business.service.utils.AssetUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public Integer add(AssetInfo assetInfo) {
-        assetInfo.setCode(AssetUtil.createAssetCode());
+        assetInfo.setAssetNo(AssetUtil.createAssetCode());
         Integer addResult = assetInfoMapper.insert(assetInfo);
         if(addResult.equals(1)) {
             return assetInfo.getId();

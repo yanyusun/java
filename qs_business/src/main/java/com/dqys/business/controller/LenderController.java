@@ -5,8 +5,8 @@ import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
-import com.dqys.business.service.cons.ContactTypeEnum;
-import com.dqys.business.service.facade.LenderService;
+import com.dqys.business.service.constant.ContactTypeEnum;
+import com.dqys.business.service.service.LenderService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,13 +83,6 @@ public class LenderController {
             JsonResponseTool.failure("增加借款人基础信息失败");
         }
 
-        // 增加关系映射
-        lenderInfo.setLenderId(lenderId);
-        lenderInfo.setSlenderIds(relation.get(ContactTypeEnum.LENDER_WITH.getValue())); // 共同合伙人
-        lenderInfo.setOtherIds(relation.get(ContactTypeEnum.OTHER.getValue())); // 其他
-        lenderInfo.setGuaranteeIds(relation.get(ContactTypeEnum.GUARANTEE.getValue())); // 借贷方
-        lenderInfo.setBankManagerIds(relation.get(ContactTypeEnum.BANK_MANAGER.getValue())); // 银行经理
-
         return CommonUtil.responseBack(lenderService.addLenderRelation(lenderInfo));
     }
 
@@ -105,8 +98,7 @@ public class LenderController {
     public JsonResponse updateLenderRelation(@ModelAttribute List<ContactInfo> contactInfos,
                                              @ModelAttribute LenderInfo lenderInfo) {
         if (CommonUtil.checkParam(
-                contactInfos, lenderInfo, lenderInfo.getId(),
-                lenderInfo.getLenderId())) {
+                contactInfos, lenderInfo, lenderInfo.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
 
@@ -141,19 +133,9 @@ public class LenderController {
             }
         }
 
-        if (lenderInfo1.toString().equals(lenderInfo.toString())
-                && lenderInfo.getLenderId().equals(relation.get(ContactTypeEnum.LENDER.getValue()))
-                && lenderInfo.getSlenderIds().equals(relation.get(ContactTypeEnum.LENDER_WITH.getValue()))
-                && lenderInfo.getGuaranteeIds().equals(relation.get(ContactTypeEnum.GUARANTEE.getValue()))
-                && lenderInfo.getOtherIds().equals(relation.get(ContactTypeEnum.OTHER.getValue()))
-                && lenderInfo.getBankManagerIds().equals(relation.get(ContactTypeEnum.BANK_MANAGER.getValue()))) {
+        if (lenderInfo1.toString().equals(lenderInfo.toString())) {
             return JsonResponseTool.success(lenderInfo.getId());
         } else {
-            lenderInfo.setLenderId(Integer.valueOf(relation.get(ContactTypeEnum.LENDER.getValue())));
-            lenderInfo.setSlenderIds(relation.get(ContactTypeEnum.LENDER_WITH.getValue())); // 共同合伙人
-            lenderInfo.setOtherIds(relation.get(ContactTypeEnum.OTHER.getValue())); // 其他
-            lenderInfo.setGuaranteeIds(relation.get(ContactTypeEnum.GUARANTEE.getValue())); // 借贷方
-            lenderInfo.setBankManagerIds(relation.get(ContactTypeEnum.BANK_MANAGER.getValue())); // 银行经理
 
             Integer id = lenderService.addLenderRelation(lenderInfo);
             if (id > 0) {

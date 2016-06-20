@@ -1,5 +1,6 @@
 package com.dqys.business.service.utils;
 
+import com.dqys.core.utils.DateFormatTool;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.text.SimpleDateFormat;
@@ -16,16 +17,7 @@ public class AssetUtil {
     public static final String MIDDLE_IOU_CODE = "-借"; // 格式:XXX-借01
 //    public static final String _CODE = "-借";
 
-    public static final String DATE_FORMAT_6 = "yyMMdd";
-    public static final String DATE_FORMAT_8 = "yyyyMMdd";
-    public static final String DATE_FORMAT_10 = "yyyy-MM-dd";
-    public static final String DATE_FORMAT_101 = "yyyy/MM/dd";
-    public static final String DATE_FORMAT_19 = "yyyy-MM-dd HH:mm:ss";
 
-    public static final String format(String format){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
-        return simpleDateFormat.format(Calendar.getInstance().getTime());
-    }
 
     public static final String[] UPLETTER = {"A","B","C","D","E","F","G",
             "H","I","J","K","L","M","N",
@@ -42,7 +34,7 @@ public class AssetUtil {
      */
     public static String createAssetCode(){
         return PRE_ASSET_CODE
-                + format(DATE_FORMAT_6)
+                + DateFormatTool.format(DateFormatTool.DATE_FORMAT_6)
                 + RandomStringUtils.randomNumeric(4);
     }
 
@@ -64,4 +56,6 @@ public class AssetUtil {
                 + UPLETTER[Integer.valueOf(RandomStringUtils.randomNumeric(3))%24]
                 + RandomStringUtils.randomNumeric(6);
     }
+
+
 }
