@@ -216,6 +216,13 @@
             <artifactId>pinyin4j</artifactId>
             <version>${pinyin4j.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.10-FINAL</version>
+        </dependency>
+
     </dependencies>
 
     <repositories>
@@ -226,6 +233,10 @@
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>http://repo1.maven.org/maven2/</url>
         </repository>
     </repositories>
 
