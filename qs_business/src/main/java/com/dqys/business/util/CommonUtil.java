@@ -1,4 +1,4 @@
-package com.dqys.business.controller.util;
+package com.dqys.business.util;
 
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;

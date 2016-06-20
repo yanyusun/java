@@ -1,11 +1,11 @@
 package com.dqys.business.controller;
 
-import com.dqys.business.controller.dto.asset.AssetDTO;
-import com.dqys.business.controller.dto.asset.ContactDTO;
-import com.dqys.business.controller.dto.asset.IouDTO;
-import com.dqys.business.controller.dto.asset.PawnDTO;
-import com.dqys.business.controller.util.CommonUtil;
-import com.dqys.business.controller.util.asset.AssetControllerUtils;
+import com.dqys.business.dto.asset.AssetDTO;
+import com.dqys.business.dto.asset.ContactDTO;
+import com.dqys.business.dto.asset.IouDTO;
+import com.dqys.business.dto.asset.PawnDTO;
+import com.dqys.business.util.CommonUtil;
+import com.dqys.business.util.asset.AssetControllerUtils;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.service.constant.AssetModelTypeEnum;

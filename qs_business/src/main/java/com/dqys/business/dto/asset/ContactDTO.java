@@ -1,4 +1,4 @@
-package com.dqys.business.controller.dto.asset;
+package com.dqys.business.dto.asset;
 
 /**
  * Created by Yvan on 16/6/16.

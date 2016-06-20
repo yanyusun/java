@@ -1,7 +1,7 @@
-package com.dqys.business.controller.util.asset;
+package com.dqys.business.util.asset;
 
-import com.dqys.business.controller.dto.asset.*;
-import com.dqys.business.controller.util.CommonUtil;
+import com.dqys.business.util.CommonUtil;
+import com.dqys.business.dto.asset.*;
 import com.dqys.business.orm.pojo.asset.*;
 
 import java.util.ArrayList;

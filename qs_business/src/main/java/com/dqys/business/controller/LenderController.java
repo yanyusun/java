@@ -1,6 +1,6 @@
 package com.dqys.business.controller;
 
-import com.dqys.business.controller.util.CommonUtil;
+import com.dqys.business.util.CommonUtil;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
