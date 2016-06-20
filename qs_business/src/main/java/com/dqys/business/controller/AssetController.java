@@ -98,21 +98,6 @@ public class AssetController {
     }
 
     /**
-     * 获取所有的资产包信息
-     * @return
-     */
-    @RequestMapping(value = "list")
-    @ResponseBody
-    public JsonResponse list() {
-        List<AssetInfo> assetInfoList = assetService.listAll();
-        if (assetInfoList == null) {
-            return JsonResponseTool.failure("获取失败");
-        } else {
-            return JsonResponseTool.success(assetInfoList);
-        }
-    }
-
-    /**
      * 分页获取资产包
      * @param page
      * @param count
@@ -139,7 +124,7 @@ public class AssetController {
      * @param file
      * @return
      */
-    @RequestMapping(value = "/addLenders")
+    @RequestMapping(value = "/excelIn")
     @ResponseBody
     public JsonResponse addLenders(@RequestParam Integer id, MultipartFile file){
         List<AssetDTO> assetDTOList = new ArrayList<>();
@@ -168,13 +153,52 @@ public class AssetController {
             contactDTO.setModeId(lenderMap.get(index));
             contactDTO.setId(null);
             Integer contactId = lenderService.addLenderInfo(AssetControllerUtils.toContactInfo(contactDTO));
-            if(contactId == null || contactId.equals("0")){
+            if (contactId == null || contactId.equals("0")) {
                 // 添加联系人失败处理
 
             }
         });
 
         // 添加抵押物
+        pawnDTOList.forEach(pawnDTO -> {
+            Integer index = pawnDTO.getId();
+            pawnDTO.setId(null);
+            pawnDTO.setLenderId(lenderMap.get(index));
+            Integer pawnId = lenderService.addPawn(AssetControllerUtils.toPawnInfo(pawnDTO));
+            if(CommonUtil.checkResult(pawnId)){
+                // 添加抵押物失败处理
+
+            }
+        });
+
+        // 添加借据
+        iouDTOList.forEach(iouDTO -> {
+            Integer index = iouDTO.getId();
+            iouDTO.setLenderId(index);
+            iouDTO.setId(null);
+            Integer iouId = lenderService.addIOUInfo(AssetControllerUtils.toIouInfo(iouDTO), null);
+            if(CommonUtil.checkResult(iouId)){
+                // 添加借据失败处理
+                
+            }
+        });
+
+        return JsonResponseTool.success("");
+    }
+
+    /**
+     * 批量分配
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "/assignedBatch")
+    @ResponseBody
+    public JsonResponse assignedBatch(@PathVariable Integer[] ids){
+        if(CommonUtil.checkParam(ids)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+
+
 
 
 

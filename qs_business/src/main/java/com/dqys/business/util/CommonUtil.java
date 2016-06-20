@@ -37,7 +37,17 @@ public class CommonUtil {
         }
     }
 
-
+    /**
+     * 通用检查返回结果<非空|非空字符串|非0返回值>
+     * @param id
+     * @return
+     */
+    public static boolean checkResult(Integer id){
+        if(id == null || id.equals("") || id.equals("0")){
+            return true;
+        }
+        return false;
+    }
 
 
 }
