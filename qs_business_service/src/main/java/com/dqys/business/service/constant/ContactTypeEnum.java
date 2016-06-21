@@ -31,6 +31,14 @@ public enum ContactTypeEnum {
         return null;
     }
 
+    public static Integer getContactTypeEnumValue(String name) {
+        for (ContactTypeEnum c : ContactTypeEnum.values()) {
+            if (c.getName().equals(name)) {
+                return c.value;
+            }
+        }
+        return null;
+    }
 
     public Integer getValue() {
         return value;
