@@ -248,13 +248,5 @@ public class ExcelUtil {
         return ret; // 有必要自行trim
     }
 
-    @Test
-    public void ss(){
-      Map<String,Object> map= disposeExcele(null);
-        List<PawnDTO> list=( List<PawnDTO>)map.get("pawnDTOs");
-        for (PawnDTO l:list){
-            System.out.println(l.getId());
-        }
-    }
 
 }
