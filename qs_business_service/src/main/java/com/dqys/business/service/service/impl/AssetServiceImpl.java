@@ -66,4 +66,9 @@ public class AssetServiceImpl implements AssetService {
     public List<AssetInfo> pageList(AssetQuery assetQuery) {
         return assetInfoMapper.pageList(assetQuery);
     }
+
+    @Override
+    public Integer assignedBatch(Integer[] ids, Integer id) {
+        return assetInfoMapper.count();
+    }
 }

@@ -54,16 +54,16 @@ public class AssetController {
 
     /**
      * 修改资产包信息
-     * @param assetInfo
+     * @param assetDTO
      * @return
      */
     @RequestMapping(value = "update")
     @ResponseBody
-    public JsonResponse update(@ModelAttribute AssetInfo assetInfo) {
-        if (CommonUtil.checkParam(assetInfo, assetInfo.getId())) {
+    public JsonResponse update(@ModelAttribute AssetDTO assetDTO) {
+        if (CommonUtil.checkParam(assetDTO, assetDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer id = assetService.updateById(assetInfo);
+        Integer id = assetService.updateById(AssetControllerUtils.toAssetInfo(assetDTO));
         if (id == null || id.equals("0")) {
             return JsonResponseTool.failure("增加失败");
         } else {
@@ -84,32 +84,29 @@ public class AssetController {
         }
         AssetInfo assetInfo = assetService.getById(id);
         if (assetInfo == null) {
-            //
-
-
-
-
-
+            // 查询失败
 
             return JsonResponseTool.failure("获取失败");
         } else {
-            return JsonResponseTool.success(assetInfo);
+            // 成功
+
+            return JsonResponseTool.success(AssetControllerUtils.toAssetDTO(assetInfo));
         }
     }
 
     /**
      * 分页获取资产包
      * @param page
-     * @param count
+     * @param pageCount
      * @return
      */
     @RequestMapping(value = "/pageList")
     @ResponseBody
     public JsonResponse pageList(@PathVariable Integer page,
-                                 @PathVariable Integer count){
-        AssetQuery assetQuery = new AssetQuery();
+                                 @PathVariable Integer pageCount,
+                                 @ModelAttribute AssetQuery assetQuery){
         assetQuery.setPage(page);
-        assetQuery.setPageCount(count);
+        assetQuery.setPageCount(pageCount);
         List<AssetInfo> assetInfoList = assetService.pageList(assetQuery);
         if (assetInfoList == null) {
             return JsonResponseTool.failure("获取失败");
@@ -165,7 +162,7 @@ public class AssetController {
             pawnDTO.setId(null);
             pawnDTO.setLenderId(lenderMap.get(index));
             Integer pawnId = lenderService.addPawn(AssetControllerUtils.toPawnInfo(pawnDTO));
-            if(CommonUtil.checkResult(pawnId)){
+            if (CommonUtil.checkResult(pawnId)) {
                 // 添加抵押物失败处理
 
             }
@@ -177,31 +174,48 @@ public class AssetController {
             iouDTO.setLenderId(index);
             iouDTO.setId(null);
             Integer iouId = lenderService.addIOUInfo(AssetControllerUtils.toIouInfo(iouDTO), null);
-            if(CommonUtil.checkResult(iouId)){
+            if (CommonUtil.checkResult(iouId)) {
                 // 添加借据失败处理
-                
+
             }
         });
-
-        return JsonResponseTool.success("");
+        return JsonResponseTool.success("导入成功");
     }
 
     /**
      * 批量分配
-     * @param ids
+     * @param ids 批量分配对象ID集合
+     * @param id 被分配者ID
      * @return
      */
     @RequestMapping(value = "/assignedBatch")
     @ResponseBody
-    public JsonResponse assignedBatch(@PathVariable Integer[] ids){
-        if(CommonUtil.checkParam(ids)){
+    public JsonResponse assignedBatch(@PathVariable Integer[] ids, @PathVariable Integer id){
+        if(CommonUtil.checkParam(ids, id)){
             return JsonResponseTool.paramErr("参数错误");
         }
-
-
-
-
-
-        return JsonResponseTool.success("");
+        // auto 校验id是否存在
+        if(id == null){
+            return JsonResponseTool.paramErr("用户ID参数错误");
+        }
+        // 分配
+        Integer result = assetService.delete(id);
+        return CommonUtil.responseBack(result);
     }
+
+    /**
+     * 逻辑删除资产包
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/delete")
+    @ResponseBody
+    public JsonResponse delete(Integer id){
+        if(CommonUtil.checkParam(id)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        Integer result = assetService.delete(id);
+        return CommonUtil.responseBack(result);
+    }
+
 }

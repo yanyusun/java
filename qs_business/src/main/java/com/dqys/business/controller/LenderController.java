@@ -1,5 +1,7 @@
 package com.dqys.business.controller;
 
+import com.dqys.business.dto.asset.ContactDTO;
+import com.dqys.business.dto.asset.LenderDTO;
 import com.dqys.business.util.CommonUtil;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
@@ -7,6 +9,7 @@ import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.service.constant.ContactTypeEnum;
 import com.dqys.business.service.service.LenderService;
+import com.dqys.business.util.asset.AssetControllerUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,27 +50,27 @@ public class LenderController {
     /**
      * 新增借款人
      *
-     * @param contactInfos
-     * @param lenderInfo
+     * @param contactDTOs
+     * @param lenderDTO
      * @return
      */
     @RequestMapping(value = "/add")
     @ResponseBody
     public JsonResponse addLenderRelation(
-            @ModelAttribute List<ContactInfo> contactInfos,
-            @ModelAttribute LenderInfo lenderInfo) {
-        if (CommonUtil.checkParam(contactInfos, lenderInfo)) {
+            @ModelAttribute List<ContactDTO> contactDTOs,
+            @ModelAttribute LenderDTO lenderDTO) {
+        if (CommonUtil.checkParam(contactDTOs, lenderDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         // 增加借款人以及相关联系人的身份信息
         Integer lenderId = null;
         HashMap<Integer, String> relation = new HashMap<>();
-        for (ContactInfo contactInfo : contactInfos) {
-            ContactTypeEnum contactTypeEnum = ContactTypeEnum.getContactTypeEnum(contactInfo.getType());
+        for (ContactDTO contactDTO : contactDTOs) {
+            ContactTypeEnum contactTypeEnum = ContactTypeEnum.getContactTypeEnum(contactDTO.getType());
             if (contactTypeEnum == null) {
                 return JsonResponseTool.paramErr("联系人类型参数错误");
             }
-            Integer id = lenderService.addLenderInfo(contactInfo);
+            Integer id = lenderService.addLenderInfo(AssetControllerUtils.toContactInfo(contactDTO));
             if (id > 0) {
                 if (contactTypeEnum.getValue().equals(contactTypeEnum.LENDER.getValue())) {
                     lenderId = id;
@@ -83,45 +86,45 @@ public class LenderController {
             JsonResponseTool.failure("增加借款人基础信息失败");
         }
 
-        return CommonUtil.responseBack(lenderService.addLenderRelation(lenderInfo));
+        return CommonUtil.responseBack(lenderService.addLenderRelation(AssetControllerUtils.toLenderInfo(lenderDTO)));
     }
 
     /**
      * 修改借款人
      *
-     * @param contactInfos
-     * @param lenderInfo
+     * @param contactDTOs
+     * @param lenderDTO
      * @return
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public JsonResponse updateLenderRelation(@ModelAttribute List<ContactInfo> contactInfos,
-                                             @ModelAttribute LenderInfo lenderInfo) {
+    public JsonResponse updateLenderRelation(@ModelAttribute List<ContactDTO> contactDTOs,
+                                             @ModelAttribute LenderDTO lenderDTO) {
         if (CommonUtil.checkParam(
-                contactInfos, lenderInfo, lenderInfo.getId())) {
+                contactDTOs, lenderDTO, lenderDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
 
-        LenderInfo lenderInfo1 = lenderService.getLenderRelation(lenderInfo.getId());
+        LenderInfo lenderInfo1 = lenderService.getLenderRelation(lenderDTO.getId());
         if (lenderInfo1 == null) {
             return JsonResponseTool.paramErr("参数错误,不存在该借款人信息");
         }
 
         HashMap<Integer, String> relation = new HashMap<>();
-        for (ContactInfo contactInfo : contactInfos) {
-            ContactTypeEnum contactTypeEnum = ContactTypeEnum.getContactTypeEnum(contactInfo.getType());
+        for (ContactDTO contactDTO : contactDTOs) {
+            ContactTypeEnum contactTypeEnum = ContactTypeEnum.getContactTypeEnum(contactDTO.getType());
             if (contactTypeEnum == null) {
                 return JsonResponseTool.paramErr("联系人类型参数错误");
             }
-            Integer id = contactInfo.getId();
+            Integer id = contactDTO.getId();
             if (id == null) {
                 // 新增联系人
-                id = lenderService.addLenderInfo(contactInfo);
+                id = lenderService.addLenderInfo(AssetControllerUtils.toContactInfo(contactDTO));
             } else {
                 // 修改联系人
                 ContactInfo contactInfo1 = lenderService.getLenderInfo(id);
-                if (!contactInfo1.toString().equals(contactInfo.toString())) {
-                    lenderService.updateLenderInfo(contactInfo);
+                if (!contactInfo1.toString().equals(contactDTO.toString())) {
+                    lenderService.updateLenderInfo(AssetControllerUtils.toContactInfo(contactDTO));
                 }
             }
             if (id > 0) {
@@ -133,11 +136,10 @@ public class LenderController {
             }
         }
 
-        if (lenderInfo1.toString().equals(lenderInfo.toString())) {
-            return JsonResponseTool.success(lenderInfo.getId());
+        if (lenderInfo1.toString().equals(lenderDTO.toString())) {
+            return JsonResponseTool.success(lenderDTO.getId());
         } else {
-
-            Integer id = lenderService.addLenderRelation(lenderInfo);
+            Integer id = lenderService.addLenderRelation(AssetControllerUtils.toLenderInfo(lenderDTO));
             if (id > 0) {
                 return JsonResponseTool.success(id);
             } else {
@@ -155,9 +157,11 @@ public class LenderController {
     @RequestMapping(value = "/get")
     @ResponseBody
     public JsonResponse getLenderRelation(@PathVariable Integer id) {
-
-
-        return JsonResponseTool.success("");
+        if(CommonUtil.checkParam(id)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        LenderDTO lenderDTO = AssetControllerUtils.toLenderDTO(lenderService.getLenderRelation(id));
+        return JsonResponseTool.success(lenderDTO);
     }
 
     /**
