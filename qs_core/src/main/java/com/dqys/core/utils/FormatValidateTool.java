@@ -1,8 +1,5 @@
 package com.dqys.core.utils;
 
-import org.junit.Test;
-import sun.applet.Main;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -180,6 +177,7 @@ public abstract class FormatValidateTool {
             return false;
         }
     }
+
     /**
      * 功能：判断字符串是否为小数
      *
@@ -187,14 +185,14 @@ public abstract class FormatValidateTool {
      * @param num 小数后面的位数
      * @return
      */
-    public static boolean isDecimals(String str,Integer num) {
-        String msg="";
-        if(num==null){
-            msg="[-]?[0-9]*([.]?[0-9]*)";
-        }else if(num==0){
-            msg="[-]?[0-9]*";
-        }else{
-            msg="[-]?[0-9]*([.][0-9]{"+num+"})";
+    public static boolean isDecimals(String str, Integer num) {
+        String msg = "";
+        if (num == null) {
+            msg = "[-]?[0-9]*([.]?[0-9]*)";
+        } else if (num == 0) {
+            msg = "[-]?[0-9]*";
+        } else {
+            msg = "[-]?[0-9]*([.][0-9]{" + num + "})";
         }
         Pattern pattern = Pattern.compile(msg);
         Matcher isNum = pattern.matcher(str);
@@ -204,7 +202,6 @@ public abstract class FormatValidateTool {
             return false;
         }
     }
-
 
 
     /**
@@ -229,17 +226,18 @@ public abstract class FormatValidateTool {
 
     /**
      * 验证邮箱
+     *
      * @param email
      * @return
      */
-    public static boolean checkEmail(String email){
+    public static boolean checkEmail(String email) {
         boolean flag = false;
-        try{
+        try {
             String check = "^([a-z0-9A-Z]+[-|_|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$";
             Pattern regex = Pattern.compile(check);
             Matcher matcher = regex.matcher(email);
             flag = matcher.matches();
-        }catch(Exception e){
+        } catch (Exception e) {
             flag = false;
         }
         return flag;
@@ -247,16 +245,17 @@ public abstract class FormatValidateTool {
 
     /**
      * 验证手机号码
+     *
      * @param mobile
      * @return
      */
-    public static boolean checkMobile(String mobile){
+    public static boolean checkMobile(String mobile) {
         boolean flag = false;
-        try{
+        try {
             Pattern regex = Pattern.compile("^(((13[0-9])|(15([0-3]|[5-9]))|(17[0,5-9])|(18[0-9]))\\d{8})|(0\\d{2}-\\d{8})|(0\\d{3}-\\d{7})$");
             Matcher matcher = regex.matcher(mobile);
             flag = matcher.matches();
-        }catch(Exception e){
+        } catch (Exception e) {
             flag = false;
         }
         return flag;
@@ -264,16 +263,17 @@ public abstract class FormatValidateTool {
 
     /**
      * 验证电话
+     *
      * @param mobile
      * @return
      */
-    public static boolean checkPhone(String mobile){
+    public static boolean checkPhone(String mobile) {
         boolean flag = false;
-        try{
+        try {
             Pattern regex = Pattern.compile("^(0[0-9]{2,3}\\-)?([2-9][0-9]{6,7})+(\\-[0-9]{1,4})?$|(^(13[0-9]|15[0|3|6|7|8|9]|18[8|9])\\d{8}$)");
             Matcher matcher = regex.matcher(mobile);
             flag = matcher.matches();
-        }catch(Exception e){
+        } catch (Exception e) {
             flag = false;
         }
         return flag;
