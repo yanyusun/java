@@ -1,5 +1,8 @@
 package com.dqys.core.utils;
 
+import org.junit.Test;
+import sun.applet.Main;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -163,12 +166,12 @@ public abstract class FormatValidateTool {
     }
 
     /**
-     * 功能：判断字符串是否为数字
+     * 功能：判断字符串是否为整数字
      *
      * @param str
      * @return
      */
-    private static boolean isNumeric(String str) {
+    public static boolean isNumeric(String str) {
         Pattern pattern = Pattern.compile("[0-9]*");
         Matcher isNum = pattern.matcher(str);
         if (isNum.matches()) {
@@ -177,6 +180,32 @@ public abstract class FormatValidateTool {
             return false;
         }
     }
+    /**
+     * 功能：判断字符串是否为小数
+     *
+     * @param str
+     * @param num 小数后面的位数
+     * @return
+     */
+    public static boolean isDecimals(String str,Integer num) {
+        String msg="";
+        if(num==null){
+            msg="[-]?[0-9]*([.]?[0-9]*)";
+        }else if(num==0){
+            msg="[-]?[0-9]*";
+        }else{
+            msg="[-]?[0-9]*([.][0-9]{"+num+"})";
+        }
+        Pattern pattern = Pattern.compile(msg);
+        Matcher isNum = pattern.matcher(str);
+        if (isNum.matches()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
 
     /**
      * 功能：判断字符串是否为日期格式
@@ -232,4 +261,22 @@ public abstract class FormatValidateTool {
         }
         return flag;
     }
+
+    /**
+     * 验证电话
+     * @param mobile
+     * @return
+     */
+    public static boolean checkPhone(String mobile){
+        boolean flag = false;
+        try{
+            Pattern regex = Pattern.compile("^(0[0-9]{2,3}\\-)?([2-9][0-9]{6,7})+(\\-[0-9]{1,4})?$|(^(13[0-9]|15[0|3|6|7|8|9]|18[8|9])\\d{8}$)");
+            Matcher matcher = regex.matcher(mobile);
+            flag = matcher.matches();
+        }catch(Exception e){
+            flag = false;
+        }
+        return flag;
+    }
+
 }
