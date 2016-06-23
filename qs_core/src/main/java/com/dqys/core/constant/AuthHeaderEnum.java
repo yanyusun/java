@@ -10,8 +10,8 @@ public enum AuthHeaderEnum {
     X_QS_USER("x-qs-user"),       //会员头名称
     X_QS_TYPE("x-qs-type"),       //会员身份
     X_QS_ROLE("x-qs-role"),
-    X_QS_STATUS("x-qs-status"),
-    X_QS_CERTIFIED("x-qs-certified")
+    X_QS_STATUS("x-qs-status"),     //
+    X_QS_CERTIFIED("x-qs-certified") //会员认证
     ;
 
     private String value;

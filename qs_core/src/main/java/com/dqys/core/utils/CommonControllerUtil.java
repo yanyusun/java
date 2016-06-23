@@ -1,4 +1,4 @@
-package com.dqys.business.util;
+package com.dqys.core.utils;
 
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
@@ -6,7 +6,7 @@ import com.dqys.core.utils.JsonResponseTool;
 /**
  * Created by Yvan on 16/6/12.
  */
-public class CommonUtil {
+public class CommonControllerUtil {
 
     /**
      * 检验参数是否为空

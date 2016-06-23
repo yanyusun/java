@@ -1,6 +1,6 @@
 package com.dqys.business.util.asset;
 
-import com.dqys.business.util.CommonUtil;
+import com.dqys.core.utils.CommonControllerUtil;
 import com.dqys.business.dto.asset.*;
 import com.dqys.business.orm.pojo.asset.*;
 
@@ -17,7 +17,7 @@ public class AssetControllerUtils {
      * @return
      */
     public List<AssetInfo> toAssetInfo(List<AssetDTO> assetDTOList){
-        if(CommonUtil.checkParam(assetDTOList)){
+        if(CommonControllerUtil.checkParam(assetDTOList)){
             return null;
         }
         List<AssetInfo> assetInfoList = new ArrayList<>();
@@ -67,7 +67,7 @@ public class AssetControllerUtils {
      * @return
      */
     public static List<AssetDTO> toAssetDTO(List<AssetInfo> assetInfoList){
-        if(CommonUtil.checkParam(assetInfoList)){
+        if(CommonControllerUtil.checkParam(assetInfoList)){
             return null;
         }
         List<AssetDTO> assetDTOList = new ArrayList<>();
@@ -117,7 +117,7 @@ public class AssetControllerUtils {
      * @return
      */
     public static List<ContactInfo> toContactInfo(List<ContactDTO> contactDTOList){
-        if(CommonUtil.checkParam(contactDTOList)){
+        if(CommonControllerUtil.checkParam(contactDTOList)){
             return null;
         }
         List<ContactInfo> contactInfoList = new ArrayList<>();
@@ -163,7 +163,7 @@ public class AssetControllerUtils {
      * @return
      */
     public static List<ContactDTO> toContactDTO(List<ContactInfo> contactInfoList){
-        if(CommonUtil.checkParam(contactInfoList)){
+        if(CommonControllerUtil.checkParam(contactInfoList)){
             return null;
         }
         List<ContactDTO> contactDTOList = new ArrayList<>();
@@ -209,7 +209,7 @@ public class AssetControllerUtils {
      * @return
      */
     public static List<LenderInfo> toLenderInfo(List<LenderDTO> lenderDTOList){
-        if(CommonUtil.checkParam(lenderDTOList)){
+        if(CommonControllerUtil.checkParam(lenderDTOList)){
             return null;
         }
         List<LenderInfo> lenderInfoList = new ArrayList<>();
@@ -269,7 +269,7 @@ public class AssetControllerUtils {
      * @return
      */
     public static List<LenderDTO> toLenderDTO(List<LenderInfo> lenderInfoList){
-        if(CommonUtil.checkParam(lenderInfoList)){
+        if(CommonControllerUtil.checkParam(lenderInfoList)){
             return null;
         }
         List<LenderDTO> lenderDTOList = new ArrayList<>();
@@ -329,7 +329,7 @@ public class AssetControllerUtils {
      * @return
      */
     public static List<PawnInfo> toPawnInfo(List<PawnDTO> pawnDTOList){
-        if(CommonUtil.checkParam(pawnDTOList)){
+        if(CommonControllerUtil.checkParam(pawnDTOList)){
             return null;
         }
         List<PawnInfo> pawnInfoList = new ArrayList<>();
@@ -368,7 +368,7 @@ public class AssetControllerUtils {
     }
 
     public static List<PawnDTO> toPawnDTO(List<PawnInfo> pawnInfoList){
-        if(CommonUtil.checkParam(pawnInfoList)){
+        if(CommonControllerUtil.checkParam(pawnInfoList)){
             return null;
         }
         List<PawnDTO> pawnDTOList = new ArrayList<>();
@@ -412,7 +412,7 @@ public class AssetControllerUtils {
      * @return
      */
     public static List<IOUInfo> toIouInfo(List<IouDTO> iouDTOList){
-        if(CommonUtil.checkParam(iouDTOList)){
+        if(CommonControllerUtil.checkParam(iouDTOList)){
             return null;
         }
         List<IOUInfo> iouInfoList = new ArrayList<>();
@@ -461,7 +461,7 @@ public class AssetControllerUtils {
     }
 
     public static List<IouDTO> toIouDTO(List<IOUInfo> iouInfoList){
-        if(CommonUtil.checkParam(iouInfoList)){
+        if(CommonControllerUtil.checkParam(iouInfoList)){
             return null;
         }
         List<IouDTO> iouDTOList = new ArrayList<>();

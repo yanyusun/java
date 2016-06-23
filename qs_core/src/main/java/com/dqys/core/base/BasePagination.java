@@ -2,22 +2,20 @@ package com.dqys.core.base;
 
 /**
  * Created by Yvan on 16/6/8.
+ *
+ * 分页查询继承类,
  */
-public class BasePagination {
+public abstract class BasePagination {
 
-    private Integer page;
-    private Integer pageCount;
+    private Integer page = 0;
+    private Integer pageCount = 20;
 
     public Integer getPage() {
         return page;
     }
 
     public void setPage(Integer page) {
-        if (page != null && page > -1) {
-            this.page = page;
-        } else {
-            this.page = 0;
-        }
+        this.page = page;
     }
 
     public Integer getPageCount() {
@@ -25,10 +23,6 @@ public class BasePagination {
     }
 
     public void setPageCount(Integer pageCount) {
-        if (pageCount != null && pageCount > 0) {
-            this.pageCount = pageCount;
-        } else {
-            this.pageCount = 20;
-        }
+        this.pageCount = pageCount;
     }
 }

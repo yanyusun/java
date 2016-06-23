@@ -259,6 +259,8 @@ public class AuthController extends BaseApiContorller {
                 return JsonResponseTool.authFailure(userServiceResult.getMessage());
             }
 
+
+
             return JsonResponseTool.success(ProtocolTool.createUserHeader(
                     userServiceResult.getData().getUserId(),
                     userServiceResult.getData().getUserTypes(),
