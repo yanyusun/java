@@ -1,7 +1,7 @@
-package com.dqys.business.dto.cases;
+package com.dqys.business.service.dto.cases;
 
-import com.dqys.business.dto.asset.ContactDTO;
-import com.dqys.business.dto.asset.PawnDTO;
+import com.dqys.business.service.dto.asset.ContactDTO;
+import com.dqys.business.service.dto.asset.PawnDTO;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;

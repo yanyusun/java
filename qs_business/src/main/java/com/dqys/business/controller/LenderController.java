@@ -1,7 +1,7 @@
 package com.dqys.business.controller;
 
-import com.dqys.business.dto.asset.ContactDTO;
-import com.dqys.business.dto.asset.LenderDTO;
+import com.dqys.business.service.dto.asset.ContactDTO;
+import com.dqys.business.service.dto.asset.LenderDTO;
 import com.dqys.core.utils.CommonControllerUtil;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
@@ -9,7 +9,7 @@ import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.service.constant.ContactTypeEnum;
 import com.dqys.business.service.service.LenderService;
-import com.dqys.business.util.asset.AssetControllerUtils;
+import com.dqys.business.service.utils.asset.AssetControllerUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;

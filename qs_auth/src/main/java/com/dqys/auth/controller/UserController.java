@@ -78,10 +78,6 @@ public class UserController extends BaseApiContorller {
     public JsonResponse list(@ModelAttribute UserListQuery userListQuery) {
 
 
-
-
-
-
         // 伪造的数据
         Integer total = RandomUtils.nextInt(3, 50);
         List<UserListDTO> userListDTOList = newUserList(total);
