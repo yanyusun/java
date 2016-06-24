@@ -45,8 +45,8 @@ public class UserServiceImpl implements UserService {
     private TUserTagMapper tUserTagMapper;
 
     @Override
-    public ServiceResult<Integer> validateUser(String userName, String mobile, String email) throws Exception {
-        TUserInfo tUserInfo = this.queryUser(userName, mobile, email);
+    public ServiceResult<Integer> validateUser(String account, String mobile, String email) throws Exception {
+        TUserInfo tUserInfo = this.queryUser(account, mobile, email);
         if(null == tUserInfo) {
             return ServiceResult.failure("用户不存在", ObjectUtils.NULL);
         }
@@ -55,12 +55,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ServiceResult<UserDTO> userRegister_tx(String userName, String mobile, String email, String pwd) throws Exception {
-        TUserInfo tUserInfo = this.queryUser(userName, mobile, email);
+    public ServiceResult<UserDTO> userRegister_tx(String account, String mobile, String email, String pwd) throws Exception {
+        TUserInfo tUserInfo = this.queryUser(account, mobile, email);
         if(null != tUserInfo) {
             return ServiceResult.failure("用户已注册", ObjectUtils.NULL);
         }
-        tUserInfo = this.addUser(userName, mobile, email, pwd);
+        tUserInfo = this.addUser(account, mobile, email, pwd);
         if(null == tUserInfo) {
             return ServiceResult.failure("新增用户失败", ObjectUtils.NULL);
         }
@@ -212,8 +212,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /* 验证用户存在性 */
-    private TUserInfo queryUser(String userName, String mobile, String email) throws Exception {
-        List<TUserInfo> tUserInfos = this.tUserInfoMapper.verifyUser(userName, mobile, email);
+    private TUserInfo queryUser(String account, String mobile, String email) throws Exception {
+        List<TUserInfo> tUserInfos = this.tUserInfoMapper.verifyUser(account, mobile, email);
         if(null == tUserInfos || tUserInfos.isEmpty()) {
             return null;
         }
@@ -225,9 +225,10 @@ public class UserServiceImpl implements UserService {
     }
 
     /* 添加用户 */
-    private TUserInfo addUser(String userName, String mobile, String email, String pwd) throws Exception {
+    private TUserInfo addUser(String account, String mobile, String email, String pwd) throws Exception {
         TUserInfo tUserInfo = new TUserInfo();
-        tUserInfo.setUserName(userName);
+        tUserInfo.setAccount(account);
+        tUserInfo.setUserName(account);
         tUserInfo.setMobile(mobile);
         tUserInfo.setEmail(email);
         tUserInfo.setSalt(RandomStringUtils.randomAlphabetic(6));

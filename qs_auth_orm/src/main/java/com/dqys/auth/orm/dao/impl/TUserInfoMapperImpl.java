@@ -36,7 +36,7 @@ public class TUserInfoMapperImpl extends BaseDao implements TUserInfoMapper {
     }
 
     @Override
-    public List<TUserInfo> verifyUser(@Param("userName") String userName, @Param("mobile") String mobile, @Param("email") String email) {
-        return super.getSqlSession().getMapper(TUserInfoMapper.class).verifyUser(userName, mobile, email);
+    public List<TUserInfo> verifyUser(@Param("account") String account, @Param("mobile") String mobile, @Param("email") String email) {
+        return super.getSqlSession().getMapper(TUserInfoMapper.class).verifyUser(account, mobile, email);
     }
 }

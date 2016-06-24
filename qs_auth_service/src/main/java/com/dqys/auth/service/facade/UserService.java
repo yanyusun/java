@@ -14,25 +14,25 @@ public interface UserService {
     /**
      * 验证账户有效性
      *
-     * @param userName
+     * @param account
      * @param mobile
      * @param email
      * @return
      * @throws Exception
      */
-    ServiceResult<Integer> validateUser(String userName, String mobile, String email) throws Exception;
+    ServiceResult<Integer> validateUser(String account, String mobile, String email) throws Exception;
 
     /**
      * 注册用户信息
      *
-     * @param userName
+     * @param account
      * @param mobile
      * @param email
      * @param pwd
      * @return
      * @throws Exception
      */
-    ServiceResult<UserDTO> userRegister_tx(String userName, String mobile, String email, String pwd) throws Exception;
+    ServiceResult<UserDTO> userRegister_tx(String account, String mobile, String email, String pwd) throws Exception;
 
     /**
      * 用户登录

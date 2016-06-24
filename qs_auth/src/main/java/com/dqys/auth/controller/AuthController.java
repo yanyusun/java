@@ -98,22 +98,22 @@ public class AuthController extends BaseApiContorller {
     /**
      * 验证用户有效性
      *
-     * @param userName
+     * @param account
      * @param mobile
      * @param email
      * @return
      */
     @RequestMapping(value = "/validate_user")
-    public Callable<JsonResponse> velidateUser(@RequestParam(required = false) String userName,
+    public Callable<JsonResponse> velidateUser(@RequestParam(required = false) String account,
                                                @RequestParam(required = false) String mobile,
                                                @RequestParam(required = false) String email) {
 
         return () -> {
-            if (StringUtils.isBlank(userName) && StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
+            if (StringUtils.isBlank(account) && StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
                 return JsonResponseTool.paramErr("参数无效");
             }
 
-            ServiceResult<Integer> serviceResult = this.userService.validateUser(userName, mobile, email);
+            ServiceResult<Integer> serviceResult = this.userService.validateUser(account, mobile, email);
             if (!serviceResult.getFlag()) {
                 return JsonResponseTool.success(0);
             }
@@ -126,7 +126,7 @@ public class AuthController extends BaseApiContorller {
     /**
      * 用户注册
      *
-     * @param userName
+     * @param account
      * @param mobile
      * @param email
      * @param pwd
@@ -136,7 +136,7 @@ public class AuthController extends BaseApiContorller {
      * @return
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public Callable<JsonResponse> userRegister(@RequestParam(required = false) String userName,
+    public Callable<JsonResponse> userRegister(@RequestParam(required = false) String account,
                                                @RequestParam(required = false) String mobile,
                                                @RequestParam(required = false) String email,
                                                @RequestParam String pwd,
@@ -144,7 +144,7 @@ public class AuthController extends BaseApiContorller {
                                                @RequestParam(required = false) String captcha,
                                                @RequestParam(required = false) String captchaKey) {
         return () -> {
-            if (StringUtils.isBlank(userName) && StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
+            if (StringUtils.isBlank(account) && StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
                 return JsonResponseTool.paramErr("参数无效");
             }
             if (StringUtils.isBlank(captcha) && StringUtils.isBlank(smsCode)) {
@@ -181,7 +181,7 @@ public class AuthController extends BaseApiContorller {
             }
 
             //用户注册
-            ServiceResult<UserDTO> userServiceResult = userService.userRegister_tx(userName, mobile, email, pwd);
+            ServiceResult<UserDTO> userServiceResult = userService.userRegister_tx(account, mobile, email, pwd);
             if (!userServiceResult.getFlag()) {
                 return JsonResponseTool.failure(userServiceResult.getMessage());
             }

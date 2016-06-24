@@ -8,6 +8,8 @@ public class TUserInfo extends BaseModel implements Serializable {
 
     private String realName;
 
+    private String account;
+
     private Boolean sex;
 
     private String mobile;
@@ -40,6 +42,18 @@ public class TUserInfo extends BaseModel implements Serializable {
 
     public void setRealName(String realName) {
         this.realName = realName;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public Boolean getSex() {

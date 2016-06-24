@@ -14,5 +14,5 @@ public interface TUserInfoMapper {
 
     int updateByPrimaryKeySelective(TUserInfo record);
 
-    List<TUserInfo> verifyUser(@Param("userName") String userName, @Param("mobile") String mobile, @Param("email") String email);
+    List<TUserInfo> verifyUser(@Param("account") String account, @Param("mobile") String mobile, @Param("email") String email);
 }
