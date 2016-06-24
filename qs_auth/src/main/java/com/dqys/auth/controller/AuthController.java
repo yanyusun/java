@@ -265,12 +265,13 @@ public class AuthController extends BaseApiContorller {
 
             // auto 验证注册信息是否完善<这里后期完善>
             String step = "false"; // false:无效账户,active:激活邮箱,adminCompany:未完善信息,authentication:未认证,true,信息完善
-            if (userServiceResult.getData().getStatus().equals("0")) {
+            Integer status = userServiceResult.getData().getStatus();
+            Integer companyId = userServiceResult.getData().getCompanyId();
+            if (status.equals(0)) {
                 step = "active";
-            } else if (userServiceResult.getData().getCompanyId() == null
-                    || userServiceResult.getData().getCompanyId().equals("")) {
+            } else if (companyId == null || companyId.equals("")) {
                 step = "adminCompany";
-            } else if (companyService.get(userServiceResult.getData().getCompanyId()).getIsAuth().equals(0)) {
+            } else if (companyService.get(companyId).getIsAuth().equals(0)) {
                 step = "authentication";
             } else {
                 step = "true";
