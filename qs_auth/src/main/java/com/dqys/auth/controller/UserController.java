@@ -2,22 +2,23 @@ package com.dqys.auth.controller;
 
 
 import com.dqys.auth.orm.query.UserListQuery;
+import com.dqys.auth.service.constant.UserStatusTypeEnum;
 import com.dqys.auth.service.dto.UserInsertDTO;
 import com.dqys.auth.service.dto.UserListDTO;
 import com.dqys.auth.service.facade.UserService;
 import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.base.BasePageDTO;
+import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonControllerUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.NoSQLWithRedisTool;
+import com.dqys.core.utils.SysPropertyTool;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,6 +67,22 @@ public class UserController extends BaseApiContorller {
         return JsonResponseTool.success(resultMap);
     }
 
+    /**
+     * 获取用户页面选择配置
+     * @return
+     */
+    @RequestMapping(value = "/getInit")
+    @ResponseBody
+    public JsonResponse getInit() {
+        Map resultMap = new HashMap<>();
+
+        resultMap.put("userStatuss", UserStatusTypeEnum.values());
+        resultMap.put("accountType", SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE));
+        resultMap.put("roleType", SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE));
+
+        return JsonResponseTool.success(resultMap);
+    }
+
 
     /**
      * 用户列表
@@ -97,7 +114,7 @@ public class UserController extends BaseApiContorller {
      * @param userInsertDTO
      * @return
      */
-    @RequestMapping(value = "/add")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse add(@ModelAttribute UserInsertDTO userInsertDTO) {
         if (CommonControllerUtil.checkParam(userInsertDTO, userInsertDTO.getUserName(),
@@ -111,6 +128,30 @@ public class UserController extends BaseApiContorller {
         return JsonResponseTool.success(11);
     }
 
+    /**
+     * 修改用户
+     * @param userInsertDTO
+     * @return
+     */
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse update(@ModelAttribute UserInsertDTO userInsertDTO) {
+        if (CommonControllerUtil.checkParam(userInsertDTO, userInsertDTO.getUserName(),
+                userInsertDTO.getRealName(), userInsertDTO.getSex(), userInsertDTO.getApartmentId(),
+                userInsertDTO.getOccupationId())
+                || (userInsertDTO.getMobile() == null && userInsertDTO.getEmail() == null)
+                ) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+
+        return JsonResponseTool.success(11);
+    }
+
+    /**
+     * 删除用户
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/delete")
     @ResponseBody
     public JsonResponse delete(@RequestParam(required = true) Integer id) {
@@ -119,6 +160,61 @@ public class UserController extends BaseApiContorller {
         }
         return JsonResponseTool.success("");
     }
+
+    /**
+     * 查看用户信息
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/get")
+    @ResponseBody
+    public JsonResponse get(@RequestParam(required = true) Integer id) {
+        if(CommonControllerUtil.checkParam(id)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return JsonResponseTool.success(newUser(id));
+    }
+
+    /**
+     * 批量分配
+     * @param ids
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/assignedBatch")
+    @ResponseBody
+    public JsonResponse assignedBatch(@RequestParam(required = true) Integer[] ids,
+                                      @RequestParam(required = true) Integer id) {
+        if(CommonControllerUtil.checkParam(ids, id)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+
+
+
+        return JsonResponseTool.success("");
+    }
+
+    /**
+     * 批量设置状态
+     * @param ids
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/statusBatch")
+    @ResponseBody
+    public JsonResponse statusBatch(@RequestParam(required = true) Integer[] ids,
+                                      @RequestParam(required = true) Integer id) {
+        if(CommonControllerUtil.checkParam(ids, id)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+
+
+
+        return JsonResponseTool.success("");
+    }
+
+
+
 
 
 
