@@ -45,6 +45,35 @@ public abstract class ProtocolTool {
     }
 
     /**
+     * 创建带注册步骤的会员信息
+     * @param uid
+     * @param userTypes
+     * @param roleIds
+     * @param isCertifieds
+     * @param status
+     * @param step
+     * @return
+     * @throws Exception
+     */
+    public static Map<String, Object> createUserHeader(Integer uid, String userTypes, String roleIds,
+                                                       String isCertifieds, Integer status, String step) throws Exception {
+        String headerValue = encodeHeader(uid, userTypes, roleIds, isCertifieds, status);
+        Map<String, Object> userHeader = new HashMap();
+        userHeader.put(AuthHeaderEnum.X_QS_USER.getValue(), headerValue);
+        userHeader.put(AuthHeaderEnum.X_QS_TYPE.getValue(), userTypes);
+        userHeader.put(AuthHeaderEnum.X_QS_ROLE.getValue(),  roleIds);
+        userHeader.put(AuthHeaderEnum.X_QS_STATUS.getValue(), status);
+        userHeader.put(AuthHeaderEnum.X_QS_CERTIFIED.getValue(), isCertifieds);
+
+        // 这里添加一条属性
+        userHeader.put("x-qs-step", step);
+
+        refreshUserHeader(uid);
+
+        return userHeader;
+    }
+
+    /**
      * 验证用户
      * @param userHeader
      * @param userTypes

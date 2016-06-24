@@ -22,4 +22,11 @@ public interface CompanyService {
      */
     ServiceResult<Integer> addCompany_tx(TCompanyInfo tCompanyInfo);
 
+    /**
+     * 根据Id获取公司信息
+     * @param id
+     * @return
+     */
+    TCompanyInfo get(Integer id);
+
 }

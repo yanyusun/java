@@ -60,4 +60,9 @@ public class CompanyServiceImpl implements CompanyService {
     private List<TCompanyInfo> queryCompany(CompanyQuery query) {
         return this.tCompanyInfoMapper.selectByQuery(query);
     }
+
+    @Override
+    public TCompanyInfo get(Integer id) {
+        return this.tCompanyInfoMapper.selectByPrimaryKey(id);
+    }
 }

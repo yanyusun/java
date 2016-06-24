@@ -47,7 +47,8 @@ public class AuthController extends BaseApiContorller {
     private CompanyService companyService;
 
     /**
-     *  图片验证码
+     * 图片验证码
+     *
      * @param key
      * @return
      */
@@ -55,7 +56,7 @@ public class AuthController extends BaseApiContorller {
     public Callable<ResponseEntity<StreamingResponseBody>> genImgCaptcha(@RequestParam String key) {
         return () -> {
             ServiceResult<BufferedImage> biResult = this.captchaService.genImgCaptcha(key);
-            if(!biResult.getFlag()) {
+            if (!biResult.getFlag()) {
                 return null;
             }
 
@@ -68,6 +69,7 @@ public class AuthController extends BaseApiContorller {
 
     /**
      * 短信验证码
+     *
      * @param mobile
      * @return
      */
@@ -75,14 +77,14 @@ public class AuthController extends BaseApiContorller {
     public Callable<JsonResponse> sendSmsCode(@RequestParam String mobile) {
         return () -> {
             //验证手机
-            if(StringUtils.isNotBlank(mobile)) {
-                if(!FormatValidateTool.checkMobile(mobile)) {
+            if (StringUtils.isNotBlank(mobile)) {
+                if (!FormatValidateTool.checkMobile(mobile)) {
                     return JsonResponseTool.paramErr("手机号无效");
                 }
             }
 
             ServiceResult<String> smsCodeResult = this.captchaService.genSmsCaptcha(mobile);
-            if(!smsCodeResult.getFlag()) {
+            if (!smsCodeResult.getFlag()) {
                 return JsonResponseTool.failure(smsCodeResult.getMessage());
             }
 
@@ -107,12 +109,12 @@ public class AuthController extends BaseApiContorller {
                                                @RequestParam(required = false) String email) {
 
         return () -> {
-            if(StringUtils.isBlank(userName) && StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
+            if (StringUtils.isBlank(userName) && StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
                 return JsonResponseTool.paramErr("参数无效");
             }
 
             ServiceResult<Integer> serviceResult = this.userService.validateUser(userName, mobile, email);
-            if(!serviceResult.getFlag()) {
+            if (!serviceResult.getFlag()) {
                 return JsonResponseTool.success(0);
             }
 
@@ -123,6 +125,7 @@ public class AuthController extends BaseApiContorller {
 
     /**
      * 用户注册
+     *
      * @param userName
      * @param mobile
      * @param email
@@ -141,49 +144,49 @@ public class AuthController extends BaseApiContorller {
                                                @RequestParam(required = false) String captcha,
                                                @RequestParam(required = false) String captchaKey) {
         return () -> {
-            if(StringUtils.isBlank(userName) && StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
+            if (StringUtils.isBlank(userName) && StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
                 return JsonResponseTool.paramErr("参数无效");
             }
-            if(StringUtils.isBlank(captcha) && StringUtils.isBlank(smsCode)) {
+            if (StringUtils.isBlank(captcha) && StringUtils.isBlank(smsCode)) {
                 return JsonResponseTool.paramErr("验证码无效");
             }
 
             //验证手机
-            if(StringUtils.isNotBlank(mobile)) {
-                if(!FormatValidateTool.checkMobile(mobile)) {
+            if (StringUtils.isNotBlank(mobile)) {
+                if (!FormatValidateTool.checkMobile(mobile)) {
                     return JsonResponseTool.paramErr("手机号无效");
                 }
             }
             //验证邮箱
-            if(StringUtils.isNotBlank(email)) {
-                if(!FormatValidateTool.checkEmail(email)) {
+            if (StringUtils.isNotBlank(email)) {
+                if (!FormatValidateTool.checkEmail(email)) {
                     return JsonResponseTool.paramErr("邮箱格式无效");
                 }
             }
 
             //验证图文验证码
-            if(StringUtils.isNotBlank(captcha)) {
+            if (StringUtils.isNotBlank(captcha)) {
                 ServiceResult validServiceResult = this.captchaService.validImgCaptcha(captchaKey, captcha);
-                if(!validServiceResult.getFlag()) {
+                if (!validServiceResult.getFlag()) {
                     return JsonResponseTool.paramErr(validServiceResult.getMessage());
                 }
             }
 
             //验证短信验证码
-            if(StringUtils.isNotBlank(smsCode)) {
+            if (StringUtils.isNotBlank(smsCode)) {
                 ServiceResult validServiceResult = this.captchaService.validSmsCaptcha(mobile, smsCode);
-                if(!validServiceResult.getFlag()) {
+                if (!validServiceResult.getFlag()) {
                     return JsonResponseTool.paramErr(validServiceResult.getMessage());
                 }
             }
 
             //用户注册
             ServiceResult<UserDTO> userServiceResult = userService.userRegister_tx(userName, mobile, email, pwd);
-            if(!userServiceResult.getFlag()) {
+            if (!userServiceResult.getFlag()) {
                 return JsonResponseTool.failure(userServiceResult.getMessage());
             }
 
-            if(StringUtils.isNotBlank(email)) {
+            if (StringUtils.isNotBlank(email)) {
                 userService.sendConfirmMail(MailVerifyTypeEnum.EMAIL_CONFIRM, userServiceResult.getData().getUserId());
             }
 
@@ -199,6 +202,7 @@ public class AuthController extends BaseApiContorller {
 
     /**
      * 用户登录
+     *
      * @param userName
      * @param mobile
      * @param email
@@ -218,53 +222,67 @@ public class AuthController extends BaseApiContorller {
                                             @RequestParam(required = false) String captchaKey) {
 
         return () -> {
-            if(StringUtils.isBlank(userName) && StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
+            if (StringUtils.isBlank(userName) && StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
                 return JsonResponseTool.paramErr("参数无效");
             }
-            if(StringUtils.isBlank(captcha) && StringUtils.isBlank(smsCode)) {
+            if (StringUtils.isBlank(captcha) && StringUtils.isBlank(smsCode)) {
                 return JsonResponseTool.paramErr("验证码无效");
             }
 
             //验证手机
-            if(StringUtils.isNotBlank(mobile)) {
-                if(!FormatValidateTool.checkMobile(mobile)) {
+            if (StringUtils.isNotBlank(mobile)) {
+                if (!FormatValidateTool.checkMobile(mobile)) {
                     return JsonResponseTool.paramErr("手机号无效");
                 }
             }
             //验证邮箱
-            if(StringUtils.isNotBlank(email)) {
-                if(!FormatValidateTool.checkEmail(email)) {
+            if (StringUtils.isNotBlank(email)) {
+                if (!FormatValidateTool.checkEmail(email)) {
                     return JsonResponseTool.paramErr("邮箱格式无效");
                 }
             }
 
             //验证图文验证码
-            if(StringUtils.isNotBlank(captcha)) {
+            if (StringUtils.isNotBlank(captcha)) {
                 ServiceResult validServiceResult = this.captchaService.validImgCaptcha(captchaKey, captcha);
-                if(!validServiceResult.getFlag()) {
+                if (!validServiceResult.getFlag()) {
                     return JsonResponseTool.paramErr(validServiceResult.getMessage());
                 }
             }
 
             //验证短信验证码
-            if(StringUtils.isNotBlank(smsCode)) {
+            if (StringUtils.isNotBlank(smsCode)) {
                 ServiceResult validServiceResult = this.captchaService.validSmsCaptcha(mobile, smsCode);
-                if(!validServiceResult.getFlag()) {
+                if (!validServiceResult.getFlag()) {
                     return JsonResponseTool.paramErr(validServiceResult.getMessage());
                 }
             }
 
             ServiceResult<UserDTO> userServiceResult = this.userService.userLogin(null, userName, mobile, email, pwd);
-            if(!userServiceResult.getFlag()) {
+            if (!userServiceResult.getFlag()) {
                 return JsonResponseTool.authFailure(userServiceResult.getMessage());
             }
 
+            // auto 验证注册信息是否完善<这里后期完善>
+            String step = "false"; // false:无效账户,active:激活邮箱,adminCompany:未完善信息,authentication:未认证,true,信息完善
+            if (userServiceResult.getData().getIsCertifieds().equals("0")) {
+                step = "active";
+            } else if (userServiceResult.getData().getCompanyId() == null
+                    || userServiceResult.getData().getCompanyId().equals("")) {
+                step = "adminCompany";
+            } else if (companyService.get(userServiceResult.getData().getCompanyId()).getIsAuth().equals(0)) {
+                step = "authentication";
+            } else {
+                step = "true";
+            }
+
             return JsonResponseTool.success(ProtocolTool.createUserHeader(
-                    userServiceResult.getData().getUserId(),
-                    userServiceResult.getData().getUserTypes(),
-                    userServiceResult.getData().getRoleIds(),
-                    userServiceResult.getData().getIsCertifieds(),
-                    userServiceResult.getData().getStatus()
+                            userServiceResult.getData().getUserId(),
+                            userServiceResult.getData().getUserTypes(),
+                            userServiceResult.getData().getRoleIds(),
+                            userServiceResult.getData().getIsCertifieds(),
+                            userServiceResult.getData().getStatus(),
+                            step
                     )
             );
         };
@@ -281,13 +299,13 @@ public class AuthController extends BaseApiContorller {
         Integer uid = UserSession.getCurrent().getUserId();
         return () -> {
             ServiceResult serviceResult = userService.userReset(uid, null, null, null, pwd);
-            if(!serviceResult.getFlag()) {
+            if (!serviceResult.getFlag()) {
                 return JsonResponseTool.failure(serviceResult.getMessage());
             }
 
             //登录
             ServiceResult<UserDTO> userServiceResult = this.userService.userLogin(uid, null, null, null, pwd);
-            if(!userServiceResult.getFlag()) {
+            if (!userServiceResult.getFlag()) {
                 return JsonResponseTool.authFailure(userServiceResult.getMessage());
             }
 
@@ -303,39 +321,40 @@ public class AuthController extends BaseApiContorller {
 
     /**
      * 通过手机重置密码
+     *
      * @param mobile
      * @param smsCode
      * @param pwd
      * @return
      */
     @RequestMapping(value = "/reset_mobile", method = RequestMethod.POST)
-    public Callable<JsonResponse>  userReset(@RequestParam String mobile, @RequestParam String smsCode,  @RequestParam String pwd) {
+    public Callable<JsonResponse> userReset(@RequestParam String mobile, @RequestParam String smsCode, @RequestParam String pwd) {
 
         return () -> {
             //新密码
-            if(StringUtils.isBlank(pwd)) {
+            if (StringUtils.isBlank(pwd)) {
                 return JsonResponseTool.paramErr("新密码无效");
             }
             //通过手机
-            if(!FormatValidateTool.checkMobile(mobile)) {
+            if (!FormatValidateTool.checkMobile(mobile)) {
                 return JsonResponseTool.paramErr("手机号无效");
             }
 
             //校验验证码
             ServiceResult validServiceResult = this.captchaService.validSmsCaptcha(mobile, smsCode);
-            if(!validServiceResult.getFlag()) {
+            if (!validServiceResult.getFlag()) {
                 return JsonResponseTool.paramErr(validServiceResult.getMessage());
             }
 
             //重置密码
             ServiceResult serviceResult = this.userService.userReset(null, null, null, mobile, pwd);
-            if(!serviceResult.getFlag()) {
+            if (!serviceResult.getFlag()) {
                 return JsonResponseTool.failure(serviceResult.getMessage());
             }
 
             //登录
             ServiceResult<UserDTO> userServiceResult = this.userService.userLogin(null, null, mobile, null, pwd);
-            if(!userServiceResult.getFlag()) {
+            if (!userServiceResult.getFlag()) {
                 return JsonResponseTool.authFailure(userServiceResult.getMessage());
             }
 
@@ -351,6 +370,7 @@ public class AuthController extends BaseApiContorller {
 
     /**
      * 从邮件重置密码
+     *
      * @param uid
      * @param confirmKey
      * @param pwd
@@ -360,18 +380,18 @@ public class AuthController extends BaseApiContorller {
     public Callable<JsonResponse> userReset(@RequestParam Integer uid, @RequestParam String confirmKey, @RequestParam String pwd) {
         return () -> {
             //新密码
-            if(StringUtils.isBlank(pwd)) {
+            if (StringUtils.isBlank(pwd)) {
                 return JsonResponseTool.paramErr("新密码无效");
             }
 
             ServiceResult serviceResult = this.userService.confirmMail(MailVerifyTypeEnum.USER_RESET, uid, confirmKey, pwd);
-            if(!serviceResult.getFlag()) {
+            if (!serviceResult.getFlag()) {
                 return JsonResponseTool.failure(serviceResult.getMessage());
             }
 
             //登录
             ServiceResult<UserDTO> userServiceResult = this.userService.userLogin(uid, null, null, null, pwd);
-            if(!userServiceResult.getFlag()) {
+            if (!userServiceResult.getFlag()) {
                 return JsonResponseTool.authFailure(userServiceResult.getMessage());
             }
 
@@ -387,6 +407,7 @@ public class AuthController extends BaseApiContorller {
 
     /**
      * 发送邮件
+     *
      * @return
      */
     @RequestMapping(value = "/send_mail", method = RequestMethod.POST)
@@ -401,6 +422,7 @@ public class AuthController extends BaseApiContorller {
 
     /**
      * 发送确认邮件
+     *
      * @param confirmKey
      * @return
      */
@@ -409,7 +431,7 @@ public class AuthController extends BaseApiContorller {
         Integer uid = UserSession.getCurrent().getUserId();
         return () -> {
             ServiceResult serviceResult = userService.confirmMail(MailVerifyTypeEnum.EMAIL_CONFIRM, uid, confirmKey, null);
-            if(!serviceResult.getFlag()) {
+            if (!serviceResult.getFlag()) {
                 return JsonResponseTool.failure(serviceResult.getMessage());
             }
 
@@ -419,6 +441,7 @@ public class AuthController extends BaseApiContorller {
 
     /**
      * 添加公司信息
+     *
      * @param companyName
      * @param credential
      * @param licence
@@ -434,23 +457,23 @@ public class AuthController extends BaseApiContorller {
         return () -> {
             //验证区域有效性
             String verifyArea = AreaTool.validateArea(province, city, area);
-            if(StringUtils.isNotBlank(verifyArea)) {
+            if (StringUtils.isNotBlank(verifyArea)) {
                 return JsonResponseTool.paramErr(verifyArea);
             }
 
-            if(StringUtils.isBlank(companyName)) {
+            if (StringUtils.isBlank(companyName)) {
                 return JsonResponseTool.paramErr("公司名不能为空");
             }
-            if(StringUtils.isBlank(credential)) {
+            if (StringUtils.isBlank(credential)) {
                 return JsonResponseTool.paramErr("统一信用代码不能为空");
             }
-            if(StringUtils.isBlank(licence)) {
+            if (StringUtils.isBlank(licence)) {
                 return JsonResponseTool.paramErr("营业执照未上传");
             }
 
             //验证公司有效性
             ServiceResult<Integer> companyResult = companyService.validateCompany(credential);
-            if(companyResult.getFlag()) {
+            if (companyResult.getFlag()) {
                 return JsonResponseTool.failure(String.valueOf(companyResult.getData()));
             }
 
@@ -464,7 +487,7 @@ public class AuthController extends BaseApiContorller {
             tCompanyInfo.setArea(area);
             tCompanyInfo.setAddress(address);
             companyResult = companyService.addCompany_tx(tCompanyInfo);
-            if(!companyResult.getFlag()) {
+            if (!companyResult.getFlag()) {
                 return JsonResponseTool.failure(companyResult.getMessage());
             }
 
@@ -474,6 +497,7 @@ public class AuthController extends BaseApiContorller {
 
     /**
      * 注册运营者(管理员)
+     *
      * @param userId
      * @param userType
      * @param companyId
@@ -489,8 +513,8 @@ public class AuthController extends BaseApiContorller {
                                                 @RequestParam String identity, @RequestParam String mobile, @RequestParam String smsCode) {
         Integer uid = UserSession.getCurrent().getUserId();
         //操作他人帐号 需要平台管理员权限
-        if(0 != userId) {
-            if(!ProtocolTool.validateSysManager(String.valueOf(UserSession.getCurrent().getUserType()),
+        if (0 != userId) {
+            if (!ProtocolTool.validateSysManager(String.valueOf(UserSession.getCurrent().getUserType()),
                     String.valueOf(UserSession.getCurrent().getRoleId()),
                     String.valueOf(UserSession.getCurrent().getIsCertified()),
                     UserSession.getCurrent().getStatus())) {
@@ -498,40 +522,40 @@ public class AuthController extends BaseApiContorller {
             }
         }
         return () -> {
-            if(0 == uid && 0 == userId) {
+            if (0 == uid && 0 == userId) {
                 return JsonResponseTool.paramErr("用户无效");
             }
-            if(!FormatValidateTool.checkMobile(mobile)) {
+            if (!FormatValidateTool.checkMobile(mobile)) {
                 return JsonResponseTool.paramErr("手机号无效");
             }
-            if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, null, String.valueOf(userType)).isEmpty()) {
+            if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, null, String.valueOf(userType)).isEmpty()) {
                 return JsonResponseTool.paramErr("用户类型无效");
             }
-            if(StringUtils.isBlank(realName)) {
+            if (StringUtils.isBlank(realName)) {
                 return JsonResponseTool.paramErr("姓名无效");
             }
             String identityMsg = FormatValidateTool.idCardValidate(identity);
-            if(!StringUtils.isBlank(identityMsg)) {
+            if (!StringUtils.isBlank(identityMsg)) {
                 return JsonResponseTool.paramErr("身份证无效," + identityMsg);
             }
             ServiceResult codeValidResult = this.captchaService.validSmsCaptcha(mobile, smsCode);
-            if(!codeValidResult.getFlag()) {
+            if (!codeValidResult.getFlag()) {
                 return JsonResponseTool.paramErr(codeValidResult.getMessage());
             }
 
-            ServiceResult<TUserInfo> userServiceResult = this.userService.queryUserById(0==userId?uid:userId);      //userId优先
-            if(!userServiceResult.getFlag()) {
+            ServiceResult<TUserInfo> userServiceResult = this.userService.queryUserById(0 == userId ? uid : userId);      //userId优先
+            if (!userServiceResult.getFlag()) {
                 return JsonResponseTool.failure(userServiceResult.getMessage());
             }
 
-            if(0 != companyId) {
+            if (0 != companyId) {
                 userServiceResult.getData().setCompanyId(companyId);
             }
             userServiceResult.getData().setRealName(realName);
             userServiceResult.getData().setIdentity(identity);
             userServiceResult.getData().setMobile(mobile);
             userServiceResult = this.userService.registerAdmin_tx(userType, userServiceResult.getData());
-            if(!userServiceResult.getFlag()) {
+            if (!userServiceResult.getFlag()) {
                 return JsonResponseTool.failure(userServiceResult.getMessage());
             }
 
