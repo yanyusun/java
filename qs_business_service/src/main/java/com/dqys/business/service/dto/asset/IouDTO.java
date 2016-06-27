@@ -1,4 +1,4 @@
-package com.dqys.business.controller.dto.asset;
+package com.dqys.business.service.dto.asset;
 
 import org.springframework.format.annotation.DateTimeFormat;
 

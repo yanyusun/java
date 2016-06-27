@@ -63,4 +63,11 @@ public interface AssetService {
      */
     List<AssetInfo> pageList(AssetQuery assetQuery);
 
+    /**
+     * 批量分配
+     * @param ids
+     * @return
+     */
+    Integer assignedBatch(Integer[] ids, Integer id);
+
 }

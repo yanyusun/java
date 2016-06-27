@@ -1,4 +1,4 @@
-package com.dqys.business.controller.util;
+package com.dqys.core.utils;
 
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
@@ -6,7 +6,7 @@ import com.dqys.core.utils.JsonResponseTool;
 /**
  * Created by Yvan on 16/6/12.
  */
-public class CommonUtil {
+public class CommonControllerUtil {
 
     /**
      * 检验参数是否为空
@@ -37,7 +37,17 @@ public class CommonUtil {
         }
     }
 
-
+    /**
+     * 通用检查返回结果<非空|非空字符串|非0返回值>
+     * @param id
+     * @return
+     */
+    public static boolean checkResult(Integer id){
+        if(id == null || id.equals("") || id.equals("0")){
+            return true;
+        }
+        return false;
+    }
 
 
 }

@@ -1,7 +1,6 @@
-package com.dqys.business.controller.dto.asset;
+package com.dqys.business.service.dto.asset;
 
-import com.dqys.business.controller.dto.common.UserDTO;
-import com.rabbitmq.http.client.domain.UserInfo;
+import com.dqys.business.service.dto.common.UserDTO;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;

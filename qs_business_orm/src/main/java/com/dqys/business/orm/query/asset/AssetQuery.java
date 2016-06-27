@@ -7,7 +7,8 @@ import com.dqys.core.base.BasePagination;
  */
 public class AssetQuery extends BasePagination{
 
-    private Integer id;
+    private Integer id; // 主键
+
 
     public Integer getId() {
         return id;

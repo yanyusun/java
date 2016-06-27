@@ -100,6 +100,7 @@ public interface LenderService {
     /**
      * 增加
      * @param IOUInfo
+     * @param name
      * @return
      */
     Integer addIOUInfo(IOUInfo IOUInfo, String name);
