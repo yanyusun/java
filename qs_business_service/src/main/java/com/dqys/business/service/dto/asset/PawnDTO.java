@@ -1,4 +1,4 @@
-package com.dqys.business.dto.asset;
+package com.dqys.business.service.dto.asset;
 
 import java.util.List;
 

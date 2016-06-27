@@ -1,4 +1,4 @@
-package com.dqys.business.dto.common;
+package com.dqys.business.service.dto.common;
 
 /**
  * Created by Yvan on 16/6/16.

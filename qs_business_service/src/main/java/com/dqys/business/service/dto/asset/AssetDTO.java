@@ -1,6 +1,6 @@
-package com.dqys.business.dto.asset;
+package com.dqys.business.service.dto.asset;
 
-import com.dqys.business.dto.common.UserDTO;
+import com.dqys.business.service.dto.common.UserDTO;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
