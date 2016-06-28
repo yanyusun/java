@@ -38,6 +38,11 @@
             <artifactId>velocity-tools</artifactId>
             <version>${version.tools.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.13-beta1</version>
+        </dependency>
     </dependencies>
 
 
