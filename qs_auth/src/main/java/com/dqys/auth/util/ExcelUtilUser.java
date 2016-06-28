@@ -1,10 +1,11 @@
 package com.dqys.auth.util;
 
 import com.dqys.auth.service.dto.UserFileDTO;
-import com.dqys.core.utils.DateFormatTool;
-import com.dqys.core.utils.ExcelTool;
-import com.dqys.core.utils.FormatValidateTool;
+import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.SysPropertyTypeEnum;
+import com.dqys.core.utils.*;
 import org.junit.Test;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,25 +16,21 @@ import java.util.Map;
  * Created by mkefeng on 2016/6/27.
  */
 public class ExcelUtilUser {
-@Test
- public void bb(){
-    Map<String, Object> map = upLoadUserExcel();
-    System.out.print(map.get("result").toString());
- }
+
     /**
      * 用户信息表格上传
      *
      * @return
      */
-    public Map<String, Object> upLoadUserExcel() {
+    public Map<String, Object> upLoadUserExcel(MultipartFile file) {
         Map<String, Object> map = new HashMap<String, Object>();
         String type = "文件业务类型";
         Integer userId = 0;
         try {
-//            String fileName = FileTool.saveFileSyncTmp(type, userId, file);//上传保存文件
-//            String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/" + type + "/" + userId + "/";
-            String path="E://";
-            String fileName="11.xlsx";
+            String fileName = FileTool.saveFileSyncTmp(type, userId, file);//上传保存文件
+            String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/" + type + "/" + userId + "/";
+//            String path="E://";
+//            String fileName="11.xlsx";
             List<Map<String, Object>> list = ExcelTool.readExcelForList(path, fileName, 1, 0, 0);//借款人
             //判断文件的字段格式
             List<String[]> error = new ArrayList<String[]>();//错误信息

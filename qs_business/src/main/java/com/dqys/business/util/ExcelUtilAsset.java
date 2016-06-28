@@ -5,6 +5,8 @@ import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
 import com.dqys.business.service.dto.asset.PawnDTO;
 import com.dqys.business.service.constant.ContactTypeEnum;
+import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.utils.*;
 import org.junit.Test;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,24 +19,19 @@ import java.util.*;
  * Created by mkefeng on 2016/6/27.
  */
 public class ExcelUtilAsset {
-@Test
- public void ss( ){
-    Map<String, Object> map = uploadExcel( );
-    System.out.print(map.get("result").toString());
- }
 
     /**
      * 资产包表格文件的上传
      */
-    public Map<String, Object> uploadExcel( ) {
+    public Map<String, Object> uploadExcel(MultipartFile file ) {
         Map<String, Object> map = new HashMap<String, Object>();
         String type = "文件业务类型";
         Integer userId = 0;
         try {
-//            String fileName = FileTool.saveFileSyncTmp(type, userId, file);//上传保存文件
-//            String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/" + type + "/" + userId + "/";
-            String path="E://";
-            String fileName="2.xls";
+            String fileName = FileTool.saveFileSyncTmp(type, userId, file);//上传保存文件
+            String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/" + type + "/" + userId + "/";
+//            String path="E://";
+//            String fileName="2.xls";
             List<Map<String, Object>> list0 = ExcelTool.readExcelForList(path, fileName, 0, 0, 0);//借款人
             List<Map<String, Object>> list1 = ExcelTool.readExcelForList(path, fileName, 0, 0, 1);//抵押物
             List<Map<String, Object>> list2 = ExcelTool.readExcelForList(path, fileName, 0, 0, 2);//借据
