@@ -1,7 +1,7 @@
 package com.dqys.auth.orm.dao.facade;
 
 import com.dqys.auth.orm.pojo.TUserTag;
-import com.dqys.auth.orm.query.UserQuery;
+import com.dqys.auth.orm.query.TUserQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -17,5 +17,5 @@ public interface TUserTagMapper {
 
     List<TUserTag> selectByUserId(@Param("userId") Integer uid);
 
-    List<TUserTag> selectByQuery(UserQuery query);
+    List<TUserTag> selectByQuery(TUserQuery query);
 }

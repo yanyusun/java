@@ -21,20 +21,51 @@
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="is_auth" property="isAuth" jdbcType="BIT" />
   </resultMap>
+
+  <!-- 基础字段 -->
   <sql id="Base_Column_List" >
     id, version, create_at, update_at, stateflag, remark, company_name, credential, licence, 
     legal_person, province, city, area, address, is_auth
   </sql>
+
+  <!-- 条件查询 -->
+  <sql id="Query_Condition">
+    <where>
+      stateflag = 0
+      <if test="credential != null">
+        AND credential = #{credential,jdbcType=VARCHAR}
+      </if>
+      <if test="province != null">
+        AND province = #{province,jdbcType=VARCHAR}
+      </if>
+      <if test="city != null">
+        AND city = #{city,jdbcType=VARCHAR}
+      </if>
+      <if test="district != null">
+        AND district = #{district,jdbcType=VARCHAR}
+      </if>
+
+      <if test="nameLike != null">
+        AND company_name LIKE CONCAT('%', #{nameLike,jdbcType=VARCHAR}, '%')
+      </if>
+    </where>
+  </sql>
+
+  <!-- 根据ID获取 -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from t_company_info
     where id = #{id,jdbcType=INTEGER}
   </select>
+
+  <!-- 逻辑删除 -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     update t_company_info set stateflag=CURRENT_TIMESTAMP
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
+  <!-- 新增 -->
   <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.TCompanyInfo" useGeneratedKeys="true" keyProperty="id" >
     insert into t_company_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -102,6 +133,8 @@
       </if>
     </trim>
   </insert>
+
+  <!-- 修改 -->
   <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.TCompanyInfo" >
     update t_company_info
     <set >
@@ -143,31 +176,24 @@
     and stateflag=0
   </update>
 
+  <!-- 条件统计 -->
   <select id="countByQuery" parameterType="com.dqys.auth.orm.query.CompanyQuery" resultType="int">
     select
     count(id)
     from t_company_info
-    where stateflag=0
-    <if test="credential != null">
-      and credential = #{credential,jdbcType=VARCHAR }
-    </if>
+    <include refid="Query_Condition" />
   </select>
-  <select id="selectByQuery" parameterType="com.dqys.auth.orm.query.CompanyQuery" resultMap="BaseResultMap">
+
+  <!-- 条件查询 -->
+  <select id="queryList" parameterType="com.dqys.auth.orm.query.CompanyQuery" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from t_company_info
-    where stateflag=0
-    <if test="credential != null">
-      and credential = #{credential,jdbcType=VARCHAR }
-    </if>
-
-    <if test="isOrder">
-      <foreach collection="orderBy" item="order" open=" order by " separator="," close="  ">
-        ${order} desc
-      </foreach>
-    </if>
+    <include refid="Query_Condition" />
+    ORDER by id DESC
     <if test="isPaging">
-      limit #{startRecode,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+      limit #{startPageNum,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
     </if>
   </select>
+
 </mapper>

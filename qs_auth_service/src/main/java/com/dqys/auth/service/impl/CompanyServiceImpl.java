@@ -40,7 +40,7 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public ServiceResult<Integer> addCompany_tx(TCompanyInfo tCompanyInfo) {
         //新增数据
-        int result = this.tCompanyInfoMapper.insertSelective(tCompanyInfo);
+        Integer result = this.tCompanyInfoMapper.insertSelective(tCompanyInfo);
         if(result <= 0) {
             return ServiceResult.failure("新增失败", ObjectUtils.NULL);
         }
@@ -58,7 +58,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 
     private List<TCompanyInfo> queryCompany(CompanyQuery query) {
-        return this.tCompanyInfoMapper.selectByQuery(query);
+        return this.tCompanyInfoMapper.queryList(query);
     }
 
     @Override

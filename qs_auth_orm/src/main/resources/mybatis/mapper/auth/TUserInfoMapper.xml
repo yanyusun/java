@@ -23,20 +23,54 @@
     <result column="company_id" property="companyId" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="BIT" />
   </resultMap>
+
+  <!-- 基础字段 -->
   <sql id="Base_Column_List" >
     id, version, create_at, update_at, stateflag, remark, user_name, real_name, sex, 
     mobile, email, password, salt, identity, company_id, status, account
   </sql>
+
+  <!-- 搜索条件 -->
+  <sql id="Query_Condition">
+    <where>
+      stateflag = 0
+      <if test="userName != null">
+        AND user_name = #{userName,jdbcType=VARCHAR}
+      </if>
+      <if test="status != null">
+        AND status = #{status,jdbcType=INTEGER}
+      </if>
+
+
+      <if test="userNameLike != null">
+        AND user_name LIKE CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
+      </if>
+
+      <if test="statuss != null">
+        AND status IN
+        <foreach collection="statuss" open="(" close=")" separator="," item="s">
+          #{s}
+        </foreach>
+      </if>
+
+    </where>
+  </sql>
+
+  <!-- 根据ID获取 -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from t_user_info
     where id = #{id,jdbcType=INTEGER}
   </select>
+
+  <!-- 根据ID删除 -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     update t_user_info set stateflag=CURRENT_TIMESTAMP
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
+  <!-- 新增 -->
   <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.TUserInfo" useGeneratedKeys="true" keyProperty="id" >
     insert into t_user_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -116,6 +150,8 @@
       </if>
     </trim>
   </insert>
+
+  <!-- 根据ID修改 -->
   <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.TUserInfo" >
     update t_user_info
     <set >
@@ -163,6 +199,7 @@
     and stateflag=0
   </update>
 
+  <!-- 检验账号是否存在 -->
   <select id="verifyUser" resultMap="BaseResultMap" parameterType="java.lang.String">
     select
     <include refid="Base_Column_List" />
@@ -181,4 +218,23 @@
     )
     and stateflag=0
   </select>
+
+  <!-- 多条件统计 -->
+  <select id="queryCount" parameterType="com.dqys.auth.orm.query.TUserQuery" resultType="java.lang.Integer">
+    SELECT COUNT(id) FROM t_user_info
+    <include refid="Query_Condition" />
+  </select>
+
+  <!-- 多条件遍历用户 -->
+  <select id="queryList" parameterType="com.dqys.auth.orm.query.TUserQuery" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user_info
+    <include refid="Query_Condition" />
+    ORDER BY id DESC
+    <if test="isPaging">
+      limit #{startPageNum,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+    </if>
+  </select>
+
 </mapper>

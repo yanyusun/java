@@ -6,15 +6,15 @@ import com.dqys.auth.orm.query.CompanyQuery;
 import java.util.List;
 
 public interface TCompanyInfoMapper {
-    int deleteByPrimaryKey(Integer id);
+    Integer deleteByPrimaryKey(Integer id);
 
-    int insertSelective(TCompanyInfo record);
+    Integer insertSelective(TCompanyInfo record);
 
     TCompanyInfo selectByPrimaryKey(Integer id);
 
-    int updateByPrimaryKeySelective(TCompanyInfo record);
+    Integer updateByPrimaryKeySelective(TCompanyInfo record);
 
-    int countByQuery(CompanyQuery query);
+    Integer countByQuery(CompanyQuery query);
 
-    List<TCompanyInfo> selectByQuery(CompanyQuery query);
+    List<TCompanyInfo> queryList(CompanyQuery query);
 }

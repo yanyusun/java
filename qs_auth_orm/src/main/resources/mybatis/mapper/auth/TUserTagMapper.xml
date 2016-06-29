@@ -16,19 +16,53 @@
     <result column="role_id" property="roleId" jdbcType="TINYINT" />
     <result column="is_certified" property="isCertified" jdbcType="BIT" />
   </resultMap>
+
+  <!-- 基础字段 -->
   <sql id="Base_Column_List" >
     id, version, create_at, update_at, stateflag, remark, user_id, user_type, role_id, is_certified
   </sql>
+
+  <!-- 条件查询字段 -->
+  <sql id="Query_Condition">
+    <where>
+      stateflag = 0
+      <if test="userId != null">
+        AND user_id = #{userId,jdbcType=INTEGER}
+      </if>
+      <if test="userType != null">
+        AND user_type = #{userType,jdbcType=INTEGER}
+      </if>
+      <if test="role != null">
+        AND role_id = #{roleId,jdbcType=INTEGER}
+      </if>
+      <if test="certified != null">
+        AND is_certified = #{certified,jdbcType=INTEGER}
+      </if>
+
+      <if test="userTypes != null">
+        AND user_id IN
+        <foreach collection="userTypes" item="ut" separator="," open="(" close=")">
+          #{ut}
+        </foreach>
+      </if>
+    </where>
+  </sql>
+
+  <!-- 根据ID查询 -->
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from t_user_tag
     where id = #{id,jdbcType=INTEGER}
   </select>
+
+  <!-- 根据ID删除 -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     update t_user_tag set stateflag=CURRENT_TIMESTAMP
     where id = #{id,jdbcType=INTEGER}
   </delete>
+
+  <!-- 新增 -->
   <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.TUserTag" useGeneratedKeys="true" keyProperty="id" >
     insert into t_user_tag
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -66,6 +100,8 @@
       </if>
     </trim>
   </insert>
+
+  <!-- 修改 -->
   <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.TUserTag" >
     update t_user_tag
     <set >
@@ -91,6 +127,8 @@
     and version = #{version,jdbcType=INTEGER}
     and stateflag=0
   </update>
+
+  <!-- 根据userID获取 -->
   <select id="selectByUserId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
     select
     <include refid="Base_Column_List" />
@@ -100,25 +138,17 @@
     and stateflag=0
     order by user_type,role_id
   </select>
-  <select id="selectByQuery" parameterType="com.dqys.auth.orm.query.UserQuery" resultMap="BaseResultMap">
+
+  <!-- 多条件查询 -->
+  <select id="selectByQuery" parameterType="com.dqys.auth.orm.query.TUserQuery" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from t_user_tag
-    where stateflag=0
-    <if test="userId != null">
-      and user_id = #{userId,jdbcType=INTEGER }
-    </if>
-    <if test="userType != null">
-      and user_type = #{userType,jdbcType=TINYINT }
-    </if>
-
-    <if test="isOrder">
-      <foreach collection="orderBy" item="order" open=" order by " separator="," close="  ">
-        ${order} desc
-      </foreach>
-    </if>
+    <include refid="Query_Condition" />
+    ORDER BY id DESC
     <if test="isPaging">
       limit #{startRecode,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
     </if>
   </select>
+
 </mapper>

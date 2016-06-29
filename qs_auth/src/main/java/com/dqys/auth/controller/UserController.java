@@ -1,7 +1,7 @@
 package com.dqys.auth.controller;
 
 
-import com.dqys.auth.orm.query.UserListQuery;
+import com.dqys.auth.service.query.UserListQuery;
 import com.dqys.auth.service.constant.UserStatusTypeEnum;
 import com.dqys.auth.service.dto.UserInsertDTO;
 import com.dqys.auth.service.dto.UserListDTO;
@@ -13,7 +13,6 @@ import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonControllerUtil;
 import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.core.utils.NoSQLWithRedisTool;
 import com.dqys.core.utils.SysPropertyTool;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;

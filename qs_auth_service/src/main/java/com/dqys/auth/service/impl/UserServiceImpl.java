@@ -1,6 +1,6 @@
 package com.dqys.auth.service.impl;
 
-import com.dqys.auth.orm.query.UserQuery;
+import com.dqys.auth.orm.query.TUserQuery;
 import com.dqys.auth.service.facade.UserService;
 import com.dqys.auth.service.constant.MailVerifyTypeEnum;
 import com.dqys.core.constant.KeyEnum;
@@ -109,8 +109,8 @@ public class UserServiceImpl implements UserService {
         }
 
         tUserInfo.setPassword(encodePassword(pwd, tUserInfo.getSalt()));
-        int count = this.tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo);
-        if(0 == count) {
+        Integer count = this.tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo);
+        if(count.equals(0)) {
             return ServiceResult.failure("重置失败", ObjectUtils.NULL);
         }
 
@@ -157,8 +157,8 @@ public class UserServiceImpl implements UserService {
         }
 
         //更新用户信息
-        int count = this.tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo);
-        if(1 != count) {
+        Integer count = this.tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo);
+        if(!count.equals(1)) {
             return ServiceResult.failure("验证失败", ObjectUtils.NULL);
         }
 
@@ -179,12 +179,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ServiceResult<TUserInfo> registerAdmin_tx(Integer userType, TUserInfo tUserInfo) {
-        int count = this.tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo);
-        if(1 != count) {
+        Integer count = this.tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo);
+        if(!count.equals(1)) {
             return ServiceResult.failure("更新用户信息失败", ObjectUtils.NULL);
         }
 
-        UserQuery query = new UserQuery();
+        TUserQuery query = new TUserQuery();
         query.setUserId(tUserInfo.getId());
         query.setUserType(userType.byteValue());
         List<TUserTag> tUserTags = this.tUserTagMapper.selectByQuery(query);
@@ -233,8 +233,8 @@ public class UserServiceImpl implements UserService {
         tUserInfo.setSalt(RandomStringUtils.randomAlphabetic(6));
         tUserInfo.setPassword(this.encodePassword(pwd, tUserInfo.getSalt()));
         tUserInfo.setStatus(NumberUtils.INTEGER_ZERO);
-        int count = this.tUserInfoMapper.insertSelective(tUserInfo);
-        if(1 == count) {
+        Integer count = this.tUserInfoMapper.insertSelective(tUserInfo);
+        if(count.equals(1)) {
             return tUserInfo;
         }
 

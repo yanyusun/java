@@ -16,12 +16,12 @@ import java.util.List;
 @Primary
 public class TCompanyInfoMapperImpl extends BaseDao implements TCompanyInfoMapper {
     @Override
-    public int deleteByPrimaryKey(Integer id) {
+    public Integer deleteByPrimaryKey(Integer id) {
         return super.getSqlSession().getMapper(TCompanyInfoMapper.class).deleteByPrimaryKey(id);
     }
 
     @Override
-    public int insertSelective(TCompanyInfo record) {
+    public Integer insertSelective(TCompanyInfo record) {
         return super.getSqlSession().getMapper(TCompanyInfoMapper.class).insertSelective(record);
     }
 
@@ -31,17 +31,17 @@ public class TCompanyInfoMapperImpl extends BaseDao implements TCompanyInfoMappe
     }
 
     @Override
-    public int updateByPrimaryKeySelective(TCompanyInfo record) {
+    public Integer updateByPrimaryKeySelective(TCompanyInfo record) {
         return super.getSqlSession().getMapper(TCompanyInfoMapper.class).updateByPrimaryKeySelective(record);
     }
 
     @Override
-    public int countByQuery(CompanyQuery query) {
+    public Integer countByQuery(CompanyQuery query) {
         return super.getSqlSession().getMapper(TCompanyInfoMapper.class).countByQuery(query);
     }
 
     @Override
-    public List<TCompanyInfo> selectByQuery(CompanyQuery query) {
-        return super.getSqlSession().getMapper(TCompanyInfoMapper.class).selectByQuery(query);
+    public List<TCompanyInfo> queryList(CompanyQuery query) {
+        return super.getSqlSession().getMapper(TCompanyInfoMapper.class).queryList(query);
     }
 }

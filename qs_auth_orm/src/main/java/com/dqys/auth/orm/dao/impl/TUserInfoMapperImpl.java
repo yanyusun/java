@@ -1,8 +1,9 @@
 package com.dqys.auth.orm.dao.impl;
 
-import com.dqys.core.base.BaseDao;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.auth.orm.query.TUserQuery;
+import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -16,12 +17,12 @@ import java.util.List;
 @Primary
 public class TUserInfoMapperImpl extends BaseDao implements TUserInfoMapper {
     @Override
-    public int deleteByPrimaryKey(Integer id) {
+    public Integer deleteByPrimaryKey(Integer id) {
         return super.getSqlSession().getMapper(TUserInfoMapper.class).deleteByPrimaryKey(id);
     }
 
     @Override
-    public int insertSelective(TUserInfo record) {
+    public Integer insertSelective(TUserInfo record) {
         return super.getSqlSession().getMapper(TUserInfoMapper.class).insertSelective(record);
     }
 
@@ -31,12 +32,22 @@ public class TUserInfoMapperImpl extends BaseDao implements TUserInfoMapper {
     }
 
     @Override
-    public int updateByPrimaryKeySelective(TUserInfo record) {
+    public Integer updateByPrimaryKeySelective(TUserInfo record) {
         return super.getSqlSession().getMapper(TUserInfoMapper.class).updateByPrimaryKeySelective(record);
     }
 
     @Override
     public List<TUserInfo> verifyUser(@Param("account") String account, @Param("mobile") String mobile, @Param("email") String email) {
         return super.getSqlSession().getMapper(TUserInfoMapper.class).verifyUser(account, mobile, email);
+    }
+
+    @Override
+    public Integer queryCount(TUserQuery tUserQuery) {
+        return super.getSqlSession().getMapper(TUserInfoMapper.class).queryCount(tUserQuery);
+    }
+
+    @Override
+    public List<TUserInfo> queryList(TUserQuery tUserQuery) {
+        return super.getSqlSession().getMapper(TUserInfoMapper.class).queryList(tUserQuery);
     }
 }
