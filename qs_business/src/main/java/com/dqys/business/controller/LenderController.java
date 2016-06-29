@@ -2,7 +2,7 @@ package com.dqys.business.controller;
 
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
-import com.dqys.core.utils.CommonControllerUtil;
+import com.dqys.core.utils.CommonUtil;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
@@ -41,10 +41,10 @@ public class LenderController {
     @RequestMapping(value = "/delete")
     @ResponseBody
     public JsonResponse deleteLenderRelation(@PathVariable Integer id) {
-        if (CommonControllerUtil.checkParam(id)) {
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return CommonControllerUtil.responseBack(lenderService.deleteLenderRelation(id));
+        return CommonUtil.responseBack(lenderService.deleteLenderRelation(id));
     }
 
     /**
@@ -59,7 +59,7 @@ public class LenderController {
     public JsonResponse addLenderRelation(
             @ModelAttribute List<ContactDTO> contactDTOs,
             @ModelAttribute LenderDTO lenderDTO) {
-        if (CommonControllerUtil.checkParam(contactDTOs, lenderDTO)) {
+        if (CommonUtil.checkParam(contactDTOs, lenderDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         // 增加借款人以及相关联系人的身份信息
@@ -86,7 +86,7 @@ public class LenderController {
             JsonResponseTool.failure("增加借款人基础信息失败");
         }
 
-        return CommonControllerUtil.responseBack(lenderService.addLenderRelation(AssetControllerUtils.toLenderInfo(lenderDTO)));
+        return CommonUtil.responseBack(lenderService.addLenderRelation(AssetControllerUtils.toLenderInfo(lenderDTO)));
     }
 
     /**
@@ -100,7 +100,7 @@ public class LenderController {
     @ResponseBody
     public JsonResponse updateLenderRelation(@ModelAttribute List<ContactDTO> contactDTOs,
                                              @ModelAttribute LenderDTO lenderDTO) {
-        if (CommonControllerUtil.checkParam(
+        if (CommonUtil.checkParam(
                 contactDTOs, lenderDTO, lenderDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -157,7 +157,7 @@ public class LenderController {
     @RequestMapping(value = "/get")
     @ResponseBody
     public JsonResponse getLenderRelation(@PathVariable Integer id) {
-        if(CommonControllerUtil.checkParam(id)){
+        if(CommonUtil.checkParam(id)){
             return JsonResponseTool.paramErr("参数错误");
         }
         LenderDTO lenderDTO = AssetControllerUtils.toLenderDTO(lenderService.getLenderRelation(id));
@@ -173,7 +173,7 @@ public class LenderController {
     @RequestMapping(value = "/deletePawn")
     @ResponseBody
     public JsonResponse deletePawn(@PathVariable Integer id) {
-        if (CommonControllerUtil.checkParam(id)) {
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return JsonResponseTool.success(lenderService.deletePawn(id));
@@ -189,7 +189,7 @@ public class LenderController {
     @RequestMapping(value = "/addPawn")
     @ResponseBody
     public JsonResponse addPawn(@ModelAttribute PawnInfo pawnInfo, @PathVariable Integer id) {
-        if (CommonControllerUtil.checkParam(pawnInfo, id)) {
+        if (CommonUtil.checkParam(pawnInfo, id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         ContactInfo contactInfo = lenderService.getLenderInfo(id);
@@ -197,7 +197,7 @@ public class LenderController {
             return JsonResponseTool.paramErr("参数错误");
         }
         pawnInfo.setLenderId(id);
-        return CommonControllerUtil.responseBack(lenderService.addPawn(pawnInfo));
+        return CommonUtil.responseBack(lenderService.addPawn(pawnInfo));
     }
 
     /**
@@ -209,7 +209,7 @@ public class LenderController {
     @RequestMapping(value = "/updatePawn")
     @ResponseBody
     public JsonResponse updatePawn(@ModelAttribute PawnInfo pawnInfo) {
-        if (CommonControllerUtil.checkParam(pawnInfo)) {
+        if (CommonUtil.checkParam(pawnInfo)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         Integer id = lenderService.updatePawn(pawnInfo);
@@ -229,10 +229,10 @@ public class LenderController {
     @RequestMapping(value = "/getPawn")
     @ResponseBody
     public JsonResponse updatePawn(@PathVariable Integer id) {
-        if (CommonControllerUtil.checkParam(id)) {
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return CommonControllerUtil.responseBack(lenderService.getPawn(id));
+        return CommonUtil.responseBack(lenderService.getPawn(id));
     }
 
     /**
@@ -244,7 +244,7 @@ public class LenderController {
     @RequestMapping(value = "/deleteIou")
     @ResponseBody
     public JsonResponse deleteIou(@PathVariable Integer id) {
-        if (CommonControllerUtil.checkParam(id)) {
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return JsonResponseTool.success(lenderService.deleteIOUInfo(id));
@@ -257,10 +257,10 @@ public class LenderController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/addPawn")
+    @RequestMapping(value = "/addIou")
     @ResponseBody
     public JsonResponse addIou(@ModelAttribute IOUInfo IOUInfo, @PathVariable Integer id) {
-        if (CommonControllerUtil.checkParam(IOUInfo, id)) {
+        if (CommonUtil.checkParam(IOUInfo, id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         ContactInfo contactInfo = lenderService.getLenderInfo(id);
@@ -268,7 +268,7 @@ public class LenderController {
             return JsonResponseTool.paramErr("参数错误");
         }
         IOUInfo.setLenderId(id);
-        return CommonControllerUtil.responseBack(lenderService.addIOUInfo(IOUInfo, contactInfo.getName()));
+        return CommonUtil.responseBack(lenderService.addIOUInfo(IOUInfo, contactInfo.getName()));
     }
 
     /**
@@ -280,7 +280,7 @@ public class LenderController {
     @RequestMapping(value = "/updateIou")
     @ResponseBody
     public JsonResponse updateIou(@ModelAttribute IOUInfo IOUInfo) {
-        if (CommonControllerUtil.checkParam(IOUInfo)) {
+        if (CommonUtil.checkParam(IOUInfo)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         Integer id = lenderService.updateIOUInfo(IOUInfo);
@@ -297,13 +297,13 @@ public class LenderController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/getIOUInfo")
+    @RequestMapping(value = "/getIouInfo")
     @ResponseBody
     public JsonResponse getIou(@PathVariable Integer id) {
-        if (CommonControllerUtil.checkParam(id)) {
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return CommonControllerUtil.responseBack(lenderService.getIOUInfo(id));
+        return CommonUtil.responseBack(lenderService.getIOUInfo(id));
     }
 
 }

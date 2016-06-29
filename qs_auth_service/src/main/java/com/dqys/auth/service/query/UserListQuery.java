@@ -20,7 +20,6 @@ public class UserListQuery extends BasePagination {
     private Integer status; // 状态<启用|禁用|未激活>
     private Integer[] statuss; // 多种状态集合
 
-
     private String name;  // 多种数据搜索
 
     public Integer getProvince() {

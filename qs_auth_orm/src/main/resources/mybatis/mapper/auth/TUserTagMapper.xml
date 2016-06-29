@@ -40,7 +40,7 @@
       </if>
 
       <if test="userTypes != null">
-        AND user_id IN
+        AND user_type IN
         <foreach collection="userTypes" item="ut" separator="," open="(" close=")">
           #{ut}
         </foreach>
@@ -140,7 +140,7 @@
   </select>
 
   <!-- 多条件查询 -->
-  <select id="selectByQuery" parameterType="com.dqys.auth.orm.query.TUserQuery" resultMap="BaseResultMap">
+  <select id="selectByQuery" parameterType="com.dqys.auth.orm.query.TUserTagQuery" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from t_user_tag

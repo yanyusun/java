@@ -1,21 +1,24 @@
 package com.dqys.auth.service.impl;
 
+import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
+import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.dao.facade.TUserTagMapper;
+import com.dqys.auth.orm.pojo.TCompanyInfo;
+import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.auth.orm.pojo.TUserTag;
+import com.dqys.auth.orm.query.CompanyQuery;
 import com.dqys.auth.orm.query.TUserQuery;
-import com.dqys.auth.service.facade.UserService;
+import com.dqys.auth.orm.query.TUserTagQuery;
 import com.dqys.auth.service.constant.MailVerifyTypeEnum;
+import com.dqys.auth.service.dto.UserDTO;
+import com.dqys.auth.service.dto.UserListDTO;
+import com.dqys.auth.service.facade.UserService;
+import com.dqys.auth.service.query.UserListQuery;
+import com.dqys.auth.service.utils.UserUtils;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.ServiceResult;
-import com.dqys.core.utils.NoSQLWithRedisTool;
-import com.dqys.core.utils.RabbitMQProducerTool;
-import com.dqys.core.utils.SignatureTool;
-import com.dqys.auth.service.dto.UserDTO;
-import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
-import com.dqys.auth.orm.dao.facade.TUserTagMapper;
-import com.dqys.auth.orm.pojo.TUserInfo;
-import com.dqys.auth.orm.pojo.TUserTag;
-import com.dqys.auth.service.utils.UserUtils;
-import com.dqys.core.utils.SysPropertyTool;
+import com.dqys.core.utils.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +28,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.UnexpectedRollbackException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -43,10 +47,13 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private TUserTagMapper tUserTagMapper;
 
+    @Autowired
+    private TCompanyInfoMapper tCompanyInfoMapper;
+
     @Override
     public ServiceResult<Integer> validateUser(String account, String mobile, String email) throws Exception {
         TUserInfo tUserInfo = this.queryUser(account, mobile, email);
-        if(null == tUserInfo) {
+        if (null == tUserInfo) {
             return ServiceResult.failure("用户不存在", ObjectUtils.NULL);
         }
 
@@ -56,16 +63,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public ServiceResult<UserDTO> userRegister_tx(String account, String mobile, String email, String pwd) throws Exception {
         TUserInfo tUserInfo = this.queryUser(account, mobile, email);
-        if(null != tUserInfo) {
+        if (null != tUserInfo) {
             return ServiceResult.failure("用户已注册", ObjectUtils.NULL);
         }
         tUserInfo = this.addUser(account, mobile, email, pwd);
-        if(null == tUserInfo) {
+        if (null == tUserInfo) {
             return ServiceResult.failure("新增用户失败", ObjectUtils.NULL);
         }
 
         TUserTag tUserTag = this.addTag(tUserInfo.getId());
-        if(null == tUserTag) {
+        if (null == tUserTag) {
             throw new UnexpectedRollbackException("新增用户失败");
         }
 
@@ -75,21 +82,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public ServiceResult<UserDTO> userLogin(Integer uid, String userName, String mobile, String email, String pwd) throws Exception {
         TUserInfo tUserInfo;
-        if(null != uid) {
+        if (null != uid) {
             tUserInfo = this.queryUser(uid);
         } else {
             tUserInfo = this.queryUser(userName, mobile, email);
         }
-        if(null == tUserInfo) {
+        if (null == tUserInfo) {
             return ServiceResult.failure("用户不存在", ObjectUtils.NULL);
         }
 
-        if(!tUserInfo.getPassword().equals(this.encodePassword(pwd, tUserInfo.getSalt()))) {
+        if (!tUserInfo.getPassword().equals(this.encodePassword(pwd, tUserInfo.getSalt()))) {
             return ServiceResult.failure("密码错误", ObjectUtils.NULL);
         }
 
         List<TUserTag> tUserTags = this.tUserTagMapper.selectByUserId(tUserInfo.getId());
-        if(null == tUserTags) {
+        if (null == tUserTags) {
             return ServiceResult.failure("用户数据异常", ObjectUtils.NULL);
         }
 
@@ -99,18 +106,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public ServiceResult userReset(Integer uid, String userName, String email, String mobile, String pwd) throws Exception {
         TUserInfo tUserInfo;
-        if(null != uid) {
+        if (null != uid) {
             tUserInfo = this.queryUser(uid);
         } else {
             tUserInfo = this.queryUser(userName, email, mobile);
         }
-        if(null == tUserInfo) {
+        if (null == tUserInfo) {
             return ServiceResult.failure("用户不存在", ObjectUtils.NULL);
         }
 
         tUserInfo.setPassword(encodePassword(pwd, tUserInfo.getSalt()));
         Integer count = this.tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo);
-        if(count.equals(0)) {
+        if (count.equals(0)) {
             return ServiceResult.failure("重置失败", ObjectUtils.NULL);
         }
 
@@ -120,7 +127,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void sendConfirmMail(MailVerifyTypeEnum e, Integer uid) {
         TUserInfo tUserInfo = this.tUserInfoMapper.selectByPrimaryKey(uid);
-        if(null != tUserInfo && StringUtils.isNotBlank(tUserInfo.getEmail())) {
+        if (null != tUserInfo && StringUtils.isNotBlank(tUserInfo.getEmail())) {
             String code = RandomStringUtils.randomAlphanumeric(20) + e.getValue();
             //NoSQLWithRedisTool.sendMailToChannel(tUserInfo.getEmail(), code);     //redis
 
@@ -133,16 +140,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public ServiceResult confirmMail(MailVerifyTypeEnum e, Integer uid, String confirmKey, String pwd) throws Exception {
         TUserInfo tUserInfo = this.queryUser(uid);
-        if(null == tUserInfo || StringUtils.isBlank(tUserInfo.getEmail())) {
+        if (null == tUserInfo || StringUtils.isBlank(tUserInfo.getEmail())) {
             return ServiceResult.failure("无效验证", ObjectUtils.NULL);
         }
 
         String code = NoSQLWithRedisTool.getValueObject(MAIL_CONFIRM_KEY + tUserInfo.getEmail());
-        if(!confirmKey.equals(code)) {
+        if (!confirmKey.equals(code)) {
             return ServiceResult.failure("验证码无效", ObjectUtils.NULL);
         }
         //最后一位操作类型校验码
-        if(!code.endsWith(e.getValue().toString())) {
+        if (!code.endsWith(e.getValue().toString())) {
             return ServiceResult.failure("验证码无效", ObjectUtils.NULL);
         }
 
@@ -158,7 +165,7 @@ public class UserServiceImpl implements UserService {
 
         //更新用户信息
         Integer count = this.tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo);
-        if(!count.equals(1)) {
+        if (!count.equals(1)) {
             return ServiceResult.failure("验证失败", ObjectUtils.NULL);
         }
 
@@ -170,7 +177,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ServiceResult<TUserInfo> queryUserById(Integer uid) {
         TUserInfo tUserInfo = this.tUserInfoMapper.selectByPrimaryKey(uid);
-        if(null == tUserInfo) {
+        if (null == tUserInfo) {
             return ServiceResult.failure("用户不存在", ObjectUtils.NULL);
         }
 
@@ -180,15 +187,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public ServiceResult<TUserInfo> registerAdmin_tx(Integer userType, TUserInfo tUserInfo) {
         Integer count = this.tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo);
-        if(!count.equals(1)) {
+        if (!count.equals(1)) {
             return ServiceResult.failure("更新用户信息失败", ObjectUtils.NULL);
         }
 
-        TUserQuery query = new TUserQuery();
+        TUserTagQuery query = new TUserTagQuery();
         query.setUserId(tUserInfo.getId());
-        query.setUserType(userType.byteValue());
+        query.setUserType(userType);
         List<TUserTag> tUserTags = this.tUserTagMapper.selectByQuery(query);
-        if(null == tUserTags || tUserTags.isEmpty()) {
+        if (null == tUserTags || tUserTags.isEmpty()) {
             //add
             TUserTag tUserTag = new TUserTag();
             tUserTag.setUserId(tUserInfo.getId());
@@ -203,22 +210,74 @@ public class UserServiceImpl implements UserService {
             count = this.tUserTagMapper.updateByPrimaryKeySelective(tUserTag);
         }
 
-        if(1 != count) {
+        if (1 != count) {
             return ServiceResult.failure("注册运营者信息失败", ObjectUtils.NULL);
         }
 
         return ServiceResult.success(tUserInfo);
     }
 
+
+    @Override
+    public List<UserListDTO> listUsers(UserListQuery userListQuery) {
+        // 查询公司信息
+        List<TCompanyInfo> tCompanyInfoList = new ArrayList<>();
+        if (CommonUtil.checkNullParam(userListQuery.getProvince(), userListQuery.getCity(),
+                userListQuery.getDistrict(), userListQuery.getName())) {
+            CompanyQuery companyQuery = new CompanyQuery();
+            companyQuery.setProvince(userListQuery.getProvince());
+            companyQuery.setCity(userListQuery.getCity());
+            companyQuery.setDistrict(userListQuery.getDistrict());
+            companyQuery.setNameLike(userListQuery.getName());
+            tCompanyInfoList = tCompanyInfoMapper.queryList(companyQuery);
+        }
+        // 查询身份信息
+        List<TUserTag> tUserTagList = new ArrayList<>();
+        if (CommonUtil.checkNullParam(userListQuery.getAccountType(), userListQuery.getType(),
+                userListQuery.getAuth())) {
+            TUserTagQuery tUserTagQuery = new TUserTagQuery();
+            tUserTagQuery.setUserType(userListQuery.getAccountType());
+            tUserTagQuery.setRole(userListQuery.getAuth());
+            if (userListQuery.getType() != null) {
+                List<Integer> types = new ArrayList<>();
+                if (userListQuery.getType().equals(0)) {
+                    // 机构
+                    types.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY));
+                    types.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST));
+                    types.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE));
+                    types.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW));
+                } else {
+                    // 个人
+                    types.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_COMMON));
+                    types.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST));
+                }
+                tUserTagQuery.setUserTypes(types);
+                tUserTagList = tUserTagMapper.selectByQuery(tUserTagQuery);
+            }
+        }
+        TUserQuery tUserQuery = new TUserQuery();
+        // 查询角色信息
+        if (tCompanyInfoList.size() > 0) {
+            List<Integer> companyIds = new ArrayList<>();
+            tCompanyInfoList.forEach(tCompanyInfo -> {
+                companyIds.add(tCompanyInfo.getId());
+            });
+        }
+
+
+        return null;
+    }
+
     /* 验证用户存在性 */
     private TUserInfo queryUser(String account, String mobile, String email) throws Exception {
         List<TUserInfo> tUserInfos = this.tUserInfoMapper.verifyUser(account, mobile, email);
-        if(null == tUserInfos || tUserInfos.isEmpty()) {
+        if (null == tUserInfos || tUserInfos.isEmpty()) {
             return null;
         }
 
         return tUserInfos.get(0);
     }
+
     private TUserInfo queryUser(Integer uid) {
         return this.tUserInfoMapper.selectByPrimaryKey(uid);
     }
@@ -234,7 +293,7 @@ public class UserServiceImpl implements UserService {
         tUserInfo.setPassword(this.encodePassword(pwd, tUserInfo.getSalt()));
         tUserInfo.setStatus(NumberUtils.INTEGER_ZERO);
         Integer count = this.tUserInfoMapper.insertSelective(tUserInfo);
-        if(count.equals(1)) {
+        if (count.equals(1)) {
             return tUserInfo;
         }
 
@@ -254,8 +313,8 @@ public class UserServiceImpl implements UserService {
         tUserTag.setRoleId((byte) 0);
         tUserTag.setIsCertified(false);
 
-        int count =this.tUserTagMapper.insertSelective(tUserTag);
-        if(1 == count) {
+        int count = this.tUserTagMapper.insertSelective(tUserTag);
+        if (1 == count) {
             return tUserTag;
         }
 

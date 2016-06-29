@@ -10,8 +10,9 @@ import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.base.BasePageDTO;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.ServiceResult;
 import com.dqys.core.model.UserSession;
-import com.dqys.core.utils.CommonControllerUtil;
+import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.SysPropertyTool;
 import org.apache.commons.lang3.RandomUtils;
@@ -47,7 +48,6 @@ public class UserController extends BaseApiContorller {
         Map resultMap = new HashMap<>();
         // 读取当前用户的权限
         String roleStr = UserSession.getCurrent().getRoleId();
-
         // 根据当前用户不同的权限展示不同的统计
 
         // 伪造数据
@@ -116,7 +116,7 @@ public class UserController extends BaseApiContorller {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse add(@ModelAttribute UserInsertDTO userInsertDTO) {
-        if (CommonControllerUtil.checkParam(userInsertDTO, userInsertDTO.getUserName(),
+        if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getUserName(),
                 userInsertDTO.getRealName(), userInsertDTO.getSex(), userInsertDTO.getApartmentId(),
                 userInsertDTO.getOccupationId())
                 || (userInsertDTO.getMobile() == null && userInsertDTO.getEmail() == null)
@@ -135,7 +135,7 @@ public class UserController extends BaseApiContorller {
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse update(@ModelAttribute UserInsertDTO userInsertDTO) {
-        if (CommonControllerUtil.checkParam(userInsertDTO, userInsertDTO.getUserName(),
+        if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getUserName(),
                 userInsertDTO.getRealName(), userInsertDTO.getSex(), userInsertDTO.getApartmentId(),
                 userInsertDTO.getOccupationId())
                 || (userInsertDTO.getMobile() == null && userInsertDTO.getEmail() == null)
@@ -154,7 +154,7 @@ public class UserController extends BaseApiContorller {
     @RequestMapping(value = "/delete")
     @ResponseBody
     public JsonResponse delete(@RequestParam(required = true) Integer id) {
-        if(CommonControllerUtil.checkParam(id)){
+        if(CommonUtil.checkParam(id)){
             return JsonResponseTool.paramErr("参数错误");
         }
         return JsonResponseTool.success("");
@@ -168,7 +168,7 @@ public class UserController extends BaseApiContorller {
     @RequestMapping(value = "/get")
     @ResponseBody
     public JsonResponse get(@RequestParam(required = true) Integer id) {
-        if(CommonControllerUtil.checkParam(id)){
+        if(CommonUtil.checkParam(id)){
             return JsonResponseTool.paramErr("参数错误");
         }
         return JsonResponseTool.success(newUser(id));
@@ -184,7 +184,7 @@ public class UserController extends BaseApiContorller {
     @ResponseBody
     public JsonResponse assignedBatch(@RequestParam(required = true) Integer[] ids,
                                       @RequestParam(required = true) Integer id) {
-        if(CommonControllerUtil.checkParam(ids, id)){
+        if(CommonUtil.checkParam(ids, id)){
             return JsonResponseTool.paramErr("参数错误");
         }
 
@@ -203,7 +203,7 @@ public class UserController extends BaseApiContorller {
     @ResponseBody
     public JsonResponse statusBatch(@RequestParam(required = true) Integer[] ids,
                                       @RequestParam(required = true) Integer id) {
-        if(CommonControllerUtil.checkParam(ids, id)){
+        if(CommonUtil.checkParam(ids, id)){
             return JsonResponseTool.paramErr("参数错误");
         }
 

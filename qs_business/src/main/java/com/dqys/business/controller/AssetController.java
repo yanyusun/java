@@ -4,7 +4,7 @@ import com.dqys.business.service.dto.asset.AssetDTO;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.dto.asset.PawnDTO;
-import com.dqys.core.utils.CommonControllerUtil;
+import com.dqys.core.utils.CommonUtil;
 import com.dqys.business.service.utils.asset.AssetControllerUtils;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.query.asset.AssetQuery;
@@ -41,7 +41,7 @@ public class AssetController {
     @RequestMapping(value = "add")
     @ResponseBody
     public JsonResponse add(@ModelAttribute AssetDTO assetDTO) {
-        if (CommonControllerUtil.checkParam(assetDTO)) {
+        if (CommonUtil.checkParam(assetDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         Integer id = assetService.add(AssetControllerUtils.toAssetInfo(assetDTO));
@@ -60,7 +60,7 @@ public class AssetController {
     @RequestMapping(value = "update")
     @ResponseBody
     public JsonResponse update(@ModelAttribute AssetDTO assetDTO) {
-        if (CommonControllerUtil.checkParam(assetDTO, assetDTO.getId())) {
+        if (CommonUtil.checkParam(assetDTO, assetDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         Integer id = assetService.updateById(AssetControllerUtils.toAssetInfo(assetDTO));
@@ -102,8 +102,8 @@ public class AssetController {
      */
     @RequestMapping(value = "/pageList")
     @ResponseBody
-    public JsonResponse pageList(@PathVariable Integer page,
-                                 @PathVariable Integer pageCount,
+    public JsonResponse pageList(@RequestParam(required = false) Integer page,
+                                 @RequestParam(required = false) Integer pageCount,
                                  @ModelAttribute AssetQuery assetQuery){
         assetQuery.setPage(page);
         assetQuery.setPageCount(pageCount);
@@ -162,7 +162,7 @@ public class AssetController {
             pawnDTO.setId(null);
             pawnDTO.setLenderId(lenderMap.get(index));
             Integer pawnId = lenderService.addPawn(AssetControllerUtils.toPawnInfo(pawnDTO));
-            if (CommonControllerUtil.checkResult(pawnId)) {
+            if (CommonUtil.checkResult(pawnId)) {
                 // 添加抵押物失败处理
 
             }
@@ -174,7 +174,7 @@ public class AssetController {
             iouDTO.setLenderId(index);
             iouDTO.setId(null);
             Integer iouId = lenderService.addIOUInfo(AssetControllerUtils.toIouInfo(iouDTO), null);
-            if (CommonControllerUtil.checkResult(iouId)) {
+            if (CommonUtil.checkResult(iouId)) {
                 // 添加借据失败处理
 
             }
@@ -191,7 +191,7 @@ public class AssetController {
     @RequestMapping(value = "/assignedBatch")
     @ResponseBody
     public JsonResponse assignedBatch(@PathVariable Integer[] ids, @PathVariable Integer id){
-        if(CommonControllerUtil.checkParam(ids, id)){
+        if(CommonUtil.checkParam(ids, id)){
             return JsonResponseTool.paramErr("参数错误");
         }
         // auto 校验id是否存在
@@ -200,7 +200,7 @@ public class AssetController {
         }
         // 分配
         Integer result = assetService.delete(id);
-        return CommonControllerUtil.responseBack(result);
+        return CommonUtil.responseBack(result);
     }
 
     /**
@@ -211,11 +211,11 @@ public class AssetController {
     @RequestMapping(value = "/delete")
     @ResponseBody
     public JsonResponse delete(Integer id){
-        if(CommonControllerUtil.checkParam(id)){
+        if(CommonUtil.checkParam(id)){
             return JsonResponseTool.paramErr("参数错误");
         }
         Integer result = assetService.delete(id);
-        return CommonControllerUtil.responseBack(result);
+        return CommonUtil.responseBack(result);
     }
 
 }

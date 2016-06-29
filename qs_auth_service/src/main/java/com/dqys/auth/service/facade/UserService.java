@@ -1,10 +1,13 @@
 package com.dqys.auth.service.facade;
 
-import com.dqys.auth.service.constant.MailVerifyTypeEnum;
-import com.dqys.core.model.ServiceResult;
-import com.dqys.auth.service.dto.UserDTO;
 import com.dqys.auth.orm.pojo.TUserInfo;
-import org.springframework.web.multipart.MultipartFile;
+import com.dqys.auth.service.constant.MailVerifyTypeEnum;
+import com.dqys.auth.service.dto.UserDTO;
+import com.dqys.auth.service.dto.UserListDTO;
+import com.dqys.auth.service.query.UserListQuery;
+import com.dqys.core.model.ServiceResult;
+
+import java.util.List;
 
 /**
  * @author by pan on 16-4-6.
@@ -37,7 +40,6 @@ public interface UserService {
     /**
      * 用户登录
      *
-     *
      * @param uid
      * @param userName
      * @param mobile
@@ -49,8 +51,7 @@ public interface UserService {
     ServiceResult<UserDTO> userLogin(Integer uid, String userName, String mobile, String email, String pwd) throws Exception;
 
     /**
-     *  用户重置
-     *
+     * 用户重置
      *
      * @param uid
      * @param userName
@@ -64,13 +65,14 @@ public interface UserService {
 
     /**
      * 发送确认邮件
+     *
      * @param e
      * @param uid
      */
     void sendConfirmMail(MailVerifyTypeEnum e, Integer uid);
 
     /**
-     *  确认邮箱验证
+     * 确认邮箱验证
      *
      * @param e
      * @param uid
@@ -82,6 +84,7 @@ public interface UserService {
 
     /**
      * 根据用户ID查询用户
+     *
      * @param uid
      * @return
      */
@@ -89,9 +92,18 @@ public interface UserService {
 
     /**
      * 注册机构管理员
+     *
      * @param userType
      * @param tUserInfo
      * @return
      */
     ServiceResult<TUserInfo> registerAdmin_tx(Integer userType, TUserInfo tUserInfo);
+
+    /**
+     * 查询用户列表
+     *
+     * @param userListQuery
+     * @return
+     */
+    List<UserListDTO> listUsers(UserListQuery userListQuery);
 }

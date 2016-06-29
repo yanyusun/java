@@ -14,7 +14,7 @@ public class TUserTagQuery extends BaseQuery{
     private Integer role; // 角色<管理员|负责人|参与人>
     private Integer certified; // 认证
 
-    private List<Integer> userTypes; // 用户类型集合<机构|个人>
+    private List<Integer> userTypes; // 用户类型集合<机构0|个人1>
 
     public Integer getUserId() {
         return userId;

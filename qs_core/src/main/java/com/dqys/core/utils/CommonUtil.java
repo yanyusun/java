@@ -6,7 +6,7 @@ import com.dqys.core.utils.JsonResponseTool;
 /**
  * Created by Yvan on 16/6/12.
  */
-public class CommonControllerUtil {
+public class CommonUtil {
 
     /**
      * 检验参数是否为空
@@ -17,6 +17,22 @@ public class CommonControllerUtil {
         if(datas.length > 0){
             for(Object o : datas){
                 if(o == null){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 检验参数是否全为空
+     * @param datas
+     * @return true 存在不为空数据
+     */
+    public static boolean checkNullParam(Object... datas){
+        if(datas.length > 0){
+            for(Object o : datas){
+                if(o != null){
                     return true;
                 }
             }
