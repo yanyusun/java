@@ -27,10 +27,10 @@ public interface OperLogService {
 
     /**
      * 查询操作日志
-     * @param page
+     * @param operLog
      * @return
      */
-    public List<OperLog> selectByOperLog(BasePageDTO<OperLog> page);
+    public List<OperLog> selectByOperLog(OperLog operLog);
 
     /**
      * 查询记录数量

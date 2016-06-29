@@ -1,6 +1,7 @@
 package com.dqys.business.orm.pojo.operLog;
 
 import com.dqys.core.base.BaseDTO;
+import com.dqys.core.base.BasePageDTO;
 import com.dqys.core.base.BasePagination;
 import sun.plugin2.message.Serializer;
 
@@ -9,7 +10,7 @@ import java.io.Serializable;
 /**
  * Created by mkfeng on 2016/6/28.
  */
-public class OperLog extends BaseDTO implements Serializable {
+public class OperLog extends BasePagination implements Serializable {
     private Integer id;
     private String realName;//真实姓名
     private String time;//操作时间

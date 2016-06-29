@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
@@ -29,52 +30,36 @@ public class OperLogController {
 
     /**
      * 查询操作记录信息
-     * @param page
-     * @param pageSize
+     *
      * @param operLog
      * @return
      */
     @RequestMapping("/pageList")
     @ResponseBody
-    public JsonResponse operLogList(Integer page,Integer pageSize,OperLog operLog){
-        Map<String,Object> map=new HashMap<String,Object>();
-        BasePageDTO<OperLog> basePageDTO=new BasePageDTO<OperLog>();
-//        basePageDTO.setPageSize(pageSize);
-        basePageDTO.setData(operLog);
-        basePageDTO.setTotal(operLogService.selectByCount(operLog));
-        List<OperLog> operLogs=operLogService.selectByOperLog(basePageDTO);
+    public JsonResponse operLogList(OperLog operLog) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        List<OperLog> operLogs = operLogService.selectByOperLog(operLog);
         return JsonResponseTool.success(operLogs);
     }
 
     /**
      * 修改备注
+     *
      * @param remark 备注
      * @param id
      * @return
      */
     @RequestMapping("/update")
     @ResponseBody
-    public void editByOperLog(String remark,Integer id,HttpServletResponse response){
-        Map<String,Object> map=new HashMap<String,Object>();
-        if(id!=null){
-        OperLog operLog=new OperLog();
-        operLog.setId(id);
-        operLog.setRemark(remark);
-        Integer result=operLogService.editByOperLog(operLog);
-        map.put("result",result);
+    public JsonResponse editByOperLog(String remark, Integer id) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        Integer result = 0;
+        if (id != null) {
+            OperLog operLog = new OperLog();
+            operLog.setId(id);
+            operLog.setRemark(remark);
+            result = operLogService.editByOperLog(operLog);
         }
-        try {
-            response.getWriter().print("nihao");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if(response!=null){
-                try {
-                    response.getWriter().close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        return JsonResponseTool.success(result);
     }
 }

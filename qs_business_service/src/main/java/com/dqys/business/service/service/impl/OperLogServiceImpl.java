@@ -29,8 +29,8 @@ public class OperLogServiceImpl implements OperLogService {
     }
 
     @Override
-    public List<OperLog> selectByOperLog(BasePageDTO<OperLog> page) {
-        return operLogMapper.selectByOperLog(page);
+    public List<OperLog> selectByOperLog(OperLog operLog) {
+        return operLogMapper.selectByOperLog(operLog);
     }
 
     @Override

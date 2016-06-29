@@ -24,8 +24,8 @@ public class OperLogMapperImpl extends BaseDao implements OperLogMapper {
     }
 
     @Override
-    public List<OperLog> selectByOperLog(BasePageDTO<OperLog> page) {
-        return super.getSqlSession().getMapper(OperLogMapper.class).selectByOperLog(page);
+    public List<OperLog> selectByOperLog(OperLog operLog) {
+        return super.getSqlSession().getMapper(OperLogMapper.class).selectByOperLog(operLog);
     }
 
     @Override
