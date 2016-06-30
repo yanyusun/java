@@ -25,8 +25,8 @@ public class UserInsertDTO {
     private Integer areaId; //职责区域(必填)
     private Integer teamId; //团队
     private String remark; // 备注
+    private Integer userType; //用户类型
 
-    // todo 总管理员才有的权限
     private Integer companyId; // 公司Id
 
     public String getAvg() {
@@ -188,5 +188,13 @@ public class UserInsertDTO {
 
     public void setCompanyId(Integer companyId) {
         this.companyId = companyId;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
     }
 }

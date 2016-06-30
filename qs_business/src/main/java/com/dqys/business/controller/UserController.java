@@ -71,33 +71,17 @@ public class UserController {
     }
 
     /**
-     * 获取列表时
+     * 获取初始化列表
      * @return
      */
-    @RequestMapping(value = "/getListInit")
+    @RequestMapping(value = "/getInit")
     @ResponseBody
     public JsonResponse getListInit() {
         Map resultMap = new HashMap<>();
 
-        resultMap.put("userStatus", UserStatusTypeEnum.values());
-        resultMap.put("accountType", SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE)); //账号类型
-        resultMap.put("roleType", SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE)); // 角色类型
-
-        return JsonResponseTool.success(resultMap);
-    }
-
-
-
-    /**
-     * 获取用户页面选择配置
-     * @return
-     */
-    @RequestMapping(value = "/getaAddInit")
-    @ResponseBody
-    public JsonResponse getaAddInit() {
-        Map resultMap = new HashMap<>();
-
-        resultMap.put("companyInfo", companyService.get(UserSession.getCurrent().getUserId()));
+        resultMap.put("companyInfo", companyService.get(UserSession.getCurrent().getUserId())); // 公司信息
+        resultMap.put("userStatus", UserStatusTypeEnum.values()); // 用户状态
+        resultMap.put("userType", SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE)); //账号类型
         resultMap.put("roleType", SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE)); // 角色类型
 
         return JsonResponseTool.success(resultMap);
@@ -153,7 +137,7 @@ public class UserController {
         if(CommonUtil.checkParam(id)){
             return JsonResponseTool.paramErr("参数错误");
         }
-        return JsonResponseTool.success("1");
+        return CommonUtil.responseBack(userService.get(id));
     }
 
     /**

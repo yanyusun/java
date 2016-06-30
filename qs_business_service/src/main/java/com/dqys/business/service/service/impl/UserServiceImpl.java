@@ -15,7 +15,7 @@ import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;
 import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.business.service.service.UserService;
-import com.dqys.business.service.utils.user.UserUtils;
+import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
@@ -40,8 +40,6 @@ public class UserServiceImpl implements UserService {
     private TUserTagMapper tUserTagMapper;
     @Autowired
     private TCompanyInfoMapper tCompanyInfoMapper;
-    @Autowired
-    private OrganizationMapper organizationMapper;
 
 
     @Override
@@ -79,12 +77,7 @@ public class UserServiceImpl implements UserService {
             if (tUserTagList.size() > 0) {
                 tUserTag = tUserTagList.get(0);
             }
-            TCompanyInfo tCompanyInfo = new TCompanyInfo();
-            if (tUserInfo.getCompanyId() != null) {
-                tCompanyInfo = tCompanyInfoMapper.selectByPrimaryKey(tUserInfo.getCompanyId());
-            }
-            Organization organization = new Organization();
-            return UserUtils.toUserInsertDTO(tUserInfo, tUserTag, tCompanyInfo, organization);
+            return UserServiceUtils.toUserInsertDTO(tUserInfo, tUserTag);
         }
     }
 
@@ -93,7 +86,16 @@ public class UserServiceImpl implements UserService {
         if (data == null) {
             return null;
         }
-
+        TUserInfo userInfo = UserServiceUtils.toTUserInfo(data);
+        Integer result = tUserInfoMapper.insertSelective(userInfo);
+        if(result != null && result > 0){
+            Integer userInfoId = userInfo.getId();
+            TUserTag userTag = UserServiceUtils.toTUserTag(data, userInfoId);
+            result = tUserTagMapper.insertSelective(userTag);
+            if(result != null && result > 0){
+                return userInfoId;
+            }
+        }
         return null;
     }
 
@@ -108,7 +110,7 @@ public class UserServiceImpl implements UserService {
         if (tUserInfo.getCompanyId() != null) {
             tCompanyInfo = tCompanyInfoMapper.selectByPrimaryKey(tUserInfo.getCompanyId());
         }
-        return UserUtils.toUserListDTO(tUserInfo, tCompanyInfo);
+        return UserServiceUtils.toUserListDTO(tUserInfo, tCompanyInfo);
     }
 
     /**
