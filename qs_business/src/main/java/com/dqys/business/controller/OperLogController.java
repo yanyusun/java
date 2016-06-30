@@ -1,12 +1,14 @@
 package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.operLog.OperLog;
+import com.dqys.business.orm.pojo.operLog.OperLogDTO;
 import com.dqys.business.service.service.OperLogService;
 import com.dqys.core.base.BasePageDTO;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonControllerUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.fasterxml.jackson.databind.util.JSONPObject;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,15 +33,18 @@ public class OperLogController {
     /**
      * 查询操作记录信息
      *
-     * @param operLog
+     * @param operLog(page:分页,pageCount:每页展示数量,time:操作时间（时间段的就用“,”分隔）,realName:操作人)
      * @return
      */
     @RequestMapping("/pageList")
     @ResponseBody
     public JsonResponse operLogList(OperLog operLog) {
         Map<String, Object> map = new HashMap<String, Object>();
-        List<OperLog> operLogs = operLogService.selectByOperLog(operLog);
-        return JsonResponseTool.success(operLogs);
+        List<OperLogDTO> operLogs = operLogService.selectByOperLog(operLog);
+        List<Map<String,Object>> operators= operLogService.operator();
+        map.put("operators",operators);
+        map.put("operLogs",operLogs);
+        return JsonResponseTool.success(map);
     }
 
     /**
@@ -62,4 +67,5 @@ public class OperLogController {
         }
         return JsonResponseTool.success(result);
     }
+
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.business.orm.mapper.operLog.OperLogMapper">
 
-    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.operLog.OperLog">
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.operLog.OperLogDTO">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="real_name" property="realName" jdbcType="VARCHAR"/>
         <result column="oper_name" property="operName" jdbcType="VARCHAR"/>
@@ -13,7 +13,15 @@
 
     </resultMap>
     <sql id="Where_Query">
-
+        <where>
+            1=1
+            <if test="time !=null">
+              and  (ol.time &gt;=#{startTime} and ol.time &lt;= #{endTime})
+            </if>
+            <if test="realName !=null">
+                and ui.real_name LIKE  concat('%',#{realName},'%')
+            </if>
+        </where>
     </sql>
 
     <!--添加操作日志表-->
@@ -88,7 +96,7 @@
         WHERE id=#{id,jdbcType=INTEGER}
     </update>
 
-    <select id="selectByOperLog" parameterType="com.dqys.core.base.BasePageDTO" resultMap="BaseResultMap">
+    <select id="selectByOperLog" parameterType="com.dqys.business.orm.pojo.operLog.OperLog" resultMap="BaseResultMap">
         select ol.id,ui.real_name,ot.oper_name,DATE_FORMAT(ol.time,'%Y-%m-%d') time,obt.object_name,ol.remark,ol.text
         from oper_log ol LEFT JOIN oper_type ot
         ON ot.oper_type=ol.object_type LEFT JOIN object_type obt
@@ -106,6 +114,11 @@
         ON obt.object_type=ol.object_type LEFT JOIN t_user_info ui
         ON ui.id=ol.user_id
         <include refid="Where_Query"></include>
+    </select>
+
+    <select id="operator" resultType="map">
+       SELECT u.id,u.real_name realName FROM oper_log o,t_user_info u
+        where o.user_id=u.id GROUP BY o.user_id ORDER BY o.time DESC
     </select>
 
 </mapper>

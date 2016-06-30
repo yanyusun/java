@@ -22,6 +22,24 @@ public class OperLog extends BasePagination implements Serializable {
     private Integer operType;//操作类型
     private String operName;//操作类型名称
     private Integer userId;//操作人员id
+    private String startTime;//开始时间
+    private String endTime;//结束时间
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
 
     public Integer getId() {
         return id;
