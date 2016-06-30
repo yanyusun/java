@@ -31,12 +31,12 @@ public abstract class BaseQuery {
         this.createAt = createAt;
     }
 
-    public Boolean getPaging() {
+    public Boolean getIsPaging() {
         return isPaging;
     }
 
-    public void setPaging(Boolean paging) {
-        isPaging = paging;
+    public void setIsPaging(Boolean isPaging) {
+        this.isPaging = isPaging;
     }
 
     public Integer getStartPageNum() {
@@ -54,5 +54,4 @@ public abstract class BaseQuery {
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
-
 }

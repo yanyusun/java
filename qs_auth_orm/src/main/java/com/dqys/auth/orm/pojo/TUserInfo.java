@@ -10,6 +10,10 @@ public class TUserInfo extends BaseModel implements Serializable {
 
     private String account;
 
+    private String wechat;
+    private String QQ;
+    private String avg;
+
     private Boolean sex;
 
     private String mobile;
@@ -118,5 +122,29 @@ public class TUserInfo extends BaseModel implements Serializable {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getWechat() {
+        return wechat;
+    }
+
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
+    }
+
+    public String getQQ() {
+        return QQ;
+    }
+
+    public void setQQ(String QQ) {
+        this.QQ = QQ;
+    }
+
+    public String getAvg() {
+        return avg;
+    }
+
+    public void setAvg(String avg) {
+        this.avg = avg;
     }
 }

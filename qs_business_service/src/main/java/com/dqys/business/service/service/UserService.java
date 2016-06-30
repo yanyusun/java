@@ -1,9 +1,8 @@
 package com.dqys.business.service.service;
 
-import com.dqys.business.service.dto.company.UserInsertDTO;
-import com.dqys.business.service.dto.company.UserListDTO;
+import com.dqys.business.service.dto.user.UserInsertDTO;
+import com.dqys.business.service.dto.user.UserListDTO;
 import com.dqys.business.service.query.user.UserListQuery;
-import com.dqys.core.model.JsonResponse;
 
 import java.util.List;
 
@@ -12,15 +11,24 @@ import java.util.List;
  */
 public interface UserService {
     /**
-     * 带条件遍历公司旗下所有成员
-     * @param query
-     * @param companyId
+     * 条件统计数据
+     *
+     * @param userListQuery
      * @return
      */
-    List<UserListDTO> queryList(UserListQuery query, Integer companyId);
+    Integer count(UserListQuery userListQuery);
+
+    /**
+     * 带条件遍历公司旗下所有成员
+     *
+     * @param query
+     * @return
+     */
+    List<UserListDTO> queryList(UserListQuery query);
 
     /**
      * 获取单条用户信息
+     *
      * @param id
      * @return
      */
@@ -28,6 +36,7 @@ public interface UserService {
 
     /**
      * 增加用户
+     *
      * @param data
      * @return
      */

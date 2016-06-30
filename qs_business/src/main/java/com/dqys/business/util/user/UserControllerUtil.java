@@ -10,14 +10,5 @@ import java.util.Map;
  */
 public class UserControllerUtil {
 
-    /**
-     * 获取账号类型<平台方|委托方|处置方|个体用户|c用户>
-     * @return
-     */
-    public static Map<Integer, String> getAccountType(){
-        Map<Integer, String> map = new HashMap<>();
 
-
-        return map;
-    }
 }

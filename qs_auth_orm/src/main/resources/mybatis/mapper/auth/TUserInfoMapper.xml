@@ -22,12 +22,16 @@
     <result column="identity" property="identity" jdbcType="VARCHAR" />
     <result column="company_id" property="companyId" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="BIT" />
+    <result column="avg" property="avg" jdbcType="VARCHAR" />
+    <result column="QQ" property="QQ" jdbcType="VARCHAR" />
+    <result column="wechat" property="wechat" jdbcType="VARCHAR" />
   </resultMap>
 
   <!-- 基础字段 -->
   <sql id="Base_Column_List" >
     id, version, create_at, update_at, stateflag, remark, user_name, real_name, sex, 
-    mobile, email, password, salt, identity, company_id, status, account
+    mobile, email, password, salt, identity, company_id, status, account, wechat, QQ,
+    avg
   </sql>
 
   <!-- 搜索条件 -->
@@ -125,6 +129,15 @@
       <if test="status != null" >
         status,
       </if>
+      <if test="avg != null" >
+        avg,
+      </if>
+      <if test="wechat != null" >
+        wechat,
+      </if>
+      <if test="QQ != null" >
+        QQ,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -162,6 +175,15 @@
       </if>
       <if test="status != null" >
         #{status,jdbcType=BIT},
+      </if>
+      <if test="avg != null" >
+        #{avg,jdbcType=VARCHAR},
+      </if>
+      <if test="wechat != null" >
+        #{wechat,jdbcType=VARCHAR},
+      </if>
+      <if test="QQ != null" >
+        #{QQ,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -207,6 +229,15 @@
       </if>
       <if test="status != null" >
         status = #{status,jdbcType=BIT},
+      </if>
+      <if test="avg != null" >
+        avg = #{avg,jdbcType=VARCHAR},
+      </if>
+      <if test="wechat != null" >
+        wechat = #{wechat,jdbcType=VARCHAR},
+      </if>
+      <if test="QQ != null" >
+        QQ = #{QQ,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

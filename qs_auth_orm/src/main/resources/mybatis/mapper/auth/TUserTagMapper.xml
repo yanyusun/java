@@ -15,11 +15,19 @@
     <result column="user_type" property="userType" jdbcType="TINYINT" />
     <result column="role_id" property="roleId" jdbcType="TINYINT" />
     <result column="is_certified" property="isCertified" jdbcType="BIT" />
+    <result column="occupation" property="occupation" jdbcType="VARCHAR" />
+    <result column="occupation_tel" property="occupationTel" jdbcType="VARCHAR" />
+    <result column="apartment_id" property="apartmentId" jdbcType="INTEGER" />
+    <result column="duty" property="duty" jdbcType="VARCHAR" />
+    <result column="duty_mark" property="dutyMark" jdbcType="LONGVARCHAR" />
+    <result column="duty_area" property="dutyArea" jdbcType="INTEGER" />
+    <result column="team_id" property="teamId" jdbcType="INTEGER" />
   </resultMap>
 
   <!-- 基础字段 -->
   <sql id="Base_Column_List" >
-    id, version, create_at, update_at, stateflag, remark, user_id, user_type, role_id, is_certified
+    id, version, create_at, update_at, stateflag, remark, user_id, user_type, role_id, is_certified,
+    occupation, occupation_tel, apartment_id, duty, duty_mark, duty_area, team_id
   </sql>
 
   <!-- 条件查询字段 -->
@@ -81,6 +89,27 @@
       <if test="isCertified != null" >
         is_certified,
       </if>
+      <if test="occupation != null" >
+        occupation,
+      </if>
+      <if test="occupationTel != null" >
+        occupation_tel,
+      </if>
+      <if test="apartmentId != null" >
+        apartment_id,
+      </if>
+      <if test="duty != null" >
+        duty,
+      </if>
+      <if test="dutyMark != null" >
+        duty_mark,
+      </if>
+      <if test="dutyArea != null" >
+        duty_area,
+      </if>
+      <if test="teamId != null" >
+        team_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -97,6 +126,27 @@
       </if>
       <if test="isCertified != null" >
         #{isCertified,jdbcType=BIT},
+      </if>
+      <if test="occupation != null" >
+        #{occupation,jdbcType=VARCHAR},
+      </if>
+      <if test="occupationTel != null" >
+        #{occupationTel,jdbcType=VARCHAR},
+      </if>
+      <if test="apartmentId != null" >
+        #{apartmentId,jdbcType=INTEGER},
+      </if>
+      <if test="duty != null" >
+        #{duty,jdbcType=VARCHAR},
+      </if>
+      <if test="dutyMark != null" >
+        #{dutyMark,jdbcType=VARCHAR},
+      </if>
+      <if test="dutyArea != null" >
+        #{dutyArea,jdbcType=INTEGER},
+      </if>
+      <if test="teamId != null" >
+        #{teamId,jdbcType=INETGER},
       </if>
     </trim>
   </insert>
@@ -121,6 +171,27 @@
       </if>
       <if test="isCertified != null" >
         is_certified = #{isCertified,jdbcType=BIT},
+      </if>
+      <if test="occupation != null" >
+        occupation = #{occupation,jdbcType=VARCHAR},
+      </if>
+      <if test="occupationTel != null" >
+        occupation_tel = #{occupationTel,jdbcType=VARCHAR},
+      </if>
+      <if test="duty != null" >
+        duty = #{duty,jdbcType=VARCHAR},
+      </if>
+      <if test="dutyMark != null" >
+        duty_mark = #{dutyMark,jdbcType=VARCHAR},
+      </if>
+      <if test="dutyArea != null" >
+        duty_area = #{dutyArea,jdbcType=INTEGER},
+      </if>
+      <if test="teamId != null" >
+        team_id = #{teamId,jdbcType=INTEGER},
+      </if>
+      <if test="apartmentId != null" >
+        apartment_id = #{apartmentId,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

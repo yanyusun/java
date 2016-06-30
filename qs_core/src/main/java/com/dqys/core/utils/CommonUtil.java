@@ -1,6 +1,8 @@
 package com.dqys.core.utils;
 
+import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.JsonResponseTool;
 
 /**
@@ -46,7 +48,7 @@ public class CommonUtil {
      * @return
      */
     public static JsonResponse responseBack(Object data){
-        if(data == null){
+        if(data == null || data.equals(0)){
             return JsonResponseTool.failure("操作失败!");
         }else{
             return JsonResponseTool.success(data);
@@ -65,5 +67,21 @@ public class CommonUtil {
         return false;
     }
 
+
+    /**
+     * 判断当前登录用户是否是总管理员
+     *
+     * @return true 是总管理员
+     */
+    public static boolean isManage() {
+        String roleStr = UserSession.getCurrent().getRoleId();
+        String typeStr = UserSession.getCurrent().getUserType();
+
+        if (roleStr.indexOf(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM)) > 0
+                && typeStr.indexOf(NoSQLWithRedisTool.getValueObject(KeyEnum.ROLE_ADMINISTRATOR_KEY)) > 0) {
+            return true;
+        }
+        return false;
+    }
 
 }

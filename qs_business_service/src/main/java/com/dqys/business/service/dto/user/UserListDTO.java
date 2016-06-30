@@ -1,4 +1,4 @@
-package com.dqys.business.service.dto.company;
+package com.dqys.business.service.dto.user;
 
 /**
  * Created by Yvan on 16/6/22.
@@ -7,14 +7,15 @@ package com.dqys.business.service.dto.company;
 public class UserListDTO {
 
     private Integer id; //主键
+
+    private Integer status; // 状态<正常1|禁用2|未激活0|停用3>
+    private String avg; // 头像
+    private Integer sex; // 性别
     private String userName; // 昵称
     private String realName; // 姓名
-    private Integer sex; // 性别
+    private String account; // 账号
     private String mobile; // 手机号
-    private String email; // 性别
-    private String identity; // 身份证
-    private Integer status; // 状态<启用1|禁用-1|未激活0>
-    private Integer userStatus; // 人员状态(0就职状态中,1已离职)
+    private String email; // 邮箱
     private String area; // 行政区域
     private String company; // 公司信息
     private Integer taskNum; // 当前任务数量
@@ -70,28 +71,12 @@ public class UserListDTO {
         this.email = email;
     }
 
-    public String getIdentity() {
-        return identity;
-    }
-
-    public void setIdentity(String identity) {
-        this.identity = identity;
-    }
-
     public Integer getStatus() {
         return status;
     }
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public Integer getUserStatus() {
-        return userStatus;
-    }
-
-    public void setUserStatus(Integer userStatus) {
-        this.userStatus = userStatus;
     }
 
     public String getArea() {
@@ -116,5 +101,21 @@ public class UserListDTO {
 
     public void setTaskNum(Integer taskNum) {
         this.taskNum = taskNum;
+    }
+
+    public String getAvg() {
+        return avg;
+    }
+
+    public void setAvg(String avg) {
+        this.avg = avg;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
     }
 }

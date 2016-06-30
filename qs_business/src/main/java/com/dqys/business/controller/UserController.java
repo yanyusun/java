@@ -1,16 +1,24 @@
 package com.dqys.business.controller;
 
-import com.dqys.business.service.dto.company.UserInsertDTO;
+import com.dqys.business.service.constant.UserStatusTypeEnum;
+import com.dqys.business.service.dto.user.UserInsertDTO;
+import com.dqys.business.service.dto.user.UserListDTO;
 import com.dqys.business.service.query.user.UserListQuery;
+import com.dqys.business.service.service.CompanyService;
 import com.dqys.business.service.service.UserService;
+import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.NoSQLWithRedisTool;
+import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +34,8 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private CompanyService companyService;
 
     /**
      * 二级导航数据统计
@@ -37,13 +47,17 @@ public class UserController {
     public JsonResponse listData() {
         Map resultMap = new HashMap<>();
         // 读取当前用户的权限
-        String roleStr = UserSession.getCurrent().getRoleId();
-        // 根据当前用户不同的权限展示不同的统计
-
-        // 伪造数据
+        if(CommonUtil.isManage()){
+            // 总管理用户
+            resultMap.put("plateform", 1);
+            resultMap.put("plateformCompany", 3);
+        }else{
+            String typeStr = UserSession.getCurrent().getUserType();
+            String[] values = typeStr.split(",");
+        }
         //平台号
-        resultMap.put("plateform", 1);
-        resultMap.put("plateformCompany", 3);
+
+
         //委托号
         resultMap.put("entrustTotal", 6);
         resultMap.put("entrustAgency", 7);
@@ -65,9 +79,9 @@ public class UserController {
     public JsonResponse getListInit() {
         Map resultMap = new HashMap<>();
 
-//        resultMap.put("userStatuss", UserStatusTypeEnum.values());
-//        resultMap.put("accountType", SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE));
-//        resultMap.put("roleType", SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE));
+        resultMap.put("userStatus", UserStatusTypeEnum.values());
+        resultMap.put("accountType", SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE)); //账号类型
+        resultMap.put("roleType", SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE)); // 角色类型
 
         return JsonResponseTool.success(resultMap);
     }
@@ -78,14 +92,13 @@ public class UserController {
      * 获取用户页面选择配置
      * @return
      */
-    @RequestMapping(value = "/getInit")
+    @RequestMapping(value = "/getaAddInit")
     @ResponseBody
-    public JsonResponse getInit() {
+    public JsonResponse getaAddInit() {
         Map resultMap = new HashMap<>();
 
-//        resultMap.put("userStatuss", UserStatusTypeEnum.values());
-//        resultMap.put("accountType", SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE));
-//        resultMap.put("roleType", SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE));
+        resultMap.put("companyInfo", companyService.get(UserSession.getCurrent().getUserId()));
+        resultMap.put("roleType", SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE)); // 角色类型
 
         return JsonResponseTool.success(resultMap);
     }
@@ -99,10 +112,14 @@ public class UserController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public JsonResponse list(@ModelAttribute UserListQuery userListQuery) {
+        Map<String, Object> map = new HashMap<>();
 
+        List<UserListDTO> userListDTOList = userService.queryList(userListQuery);
+        Integer count = userService.count(userListQuery);
 
-
-        return JsonResponseTool.success("");
+        map.put("data", userListDTOList);
+        map.put("total", count);
+        return JsonResponseTool.success(map);
     }
 
     /**
@@ -115,14 +132,28 @@ public class UserController {
     @ResponseBody
     public JsonResponse add(@ModelAttribute UserInsertDTO userInsertDTO) {
         if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getUserName(),
-                userInsertDTO.getRealName(), userInsertDTO.getSex(), userInsertDTO.getApartmentId(),
-                userInsertDTO.getOccupationId())
-                || (userInsertDTO.getMobile() == null && userInsertDTO.getEmail() == null)
-                ) {
+                userInsertDTO.getRealName(), userInsertDTO.getSex(), userInsertDTO.getAccount(),
+                userInsertDTO.getDuty(), userInsertDTO.getWechat(), userInsertDTO.getMobile(),
+                userInsertDTO.getEmail(), userInsertDTO.getApartmentId(), userInsertDTO.getOccupation(),
+                userInsertDTO.getAreaId(), userInsertDTO.getRoleId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
+        Integer id = userService.add(userInsertDTO);
+        return CommonUtil.responseBack(id);
+    }
 
-        return JsonResponseTool.success(11);
+    /**
+     * 查看用户信息
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/get")
+    @ResponseBody
+    public JsonResponse get(@RequestParam(required = true) Integer id) {
+        if(CommonUtil.checkParam(id)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return JsonResponseTool.success("1");
     }
 
     /**
@@ -135,7 +166,7 @@ public class UserController {
     public JsonResponse update(@ModelAttribute UserInsertDTO userInsertDTO) {
         if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getUserName(),
                 userInsertDTO.getRealName(), userInsertDTO.getSex(), userInsertDTO.getApartmentId(),
-                userInsertDTO.getOccupationId())
+                userInsertDTO.getOccupation())
                 || (userInsertDTO.getMobile() == null && userInsertDTO.getEmail() == null)
                 ) {
             return JsonResponseTool.paramErr("参数错误");
@@ -158,19 +189,6 @@ public class UserController {
         return JsonResponseTool.success("");
     }
 
-    /**
-     * 查看用户信息
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/get")
-    @ResponseBody
-    public JsonResponse get(@RequestParam(required = true) Integer id) {
-        if(CommonUtil.checkParam(id)){
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        return JsonResponseTool.success("1");
-    }
 
     /**
      * 批量分配

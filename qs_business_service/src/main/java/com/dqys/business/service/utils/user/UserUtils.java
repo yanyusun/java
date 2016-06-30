@@ -4,8 +4,8 @@ import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.business.orm.pojo.company.Organization;
-import com.dqys.business.service.dto.company.UserInsertDTO;
-import com.dqys.business.service.dto.company.UserListDTO;
+import com.dqys.business.service.dto.user.UserInsertDTO;
+import com.dqys.business.service.dto.user.UserListDTO;
 import com.dqys.core.utils.AreaTool;
 
 /**
@@ -13,33 +13,35 @@ import com.dqys.core.utils.AreaTool;
  */
 public class UserUtils {
 
-    public static UserListDTO toUserListDTO(TUserInfo userInfo, TUserTag userTag, TCompanyInfo companyInfo){
+    public static UserListDTO toUserListDTO(TUserInfo userInfo, TCompanyInfo companyInfo) {
         UserListDTO userListDTO = new UserListDTO();
 
         userListDTO.setId(userInfo.getId());
+        userListDTO.setStatus(userInfo.getStatus());
+        userListDTO.setAvg(userInfo.getAvg());
         userListDTO.setUserName(userInfo.getUserName());
         userListDTO.setRealName(userInfo.getRealName());
         userListDTO.setSex(userInfo.getSex() ? 1 : 0);
+        userListDTO.setAccount(userInfo.getAccount());
         userListDTO.setMobile(userInfo.getMobile());
         userListDTO.setEmail(userInfo.getEmail());
-        userListDTO.setIdentity(userInfo.getIdentity());
-        userListDTO.setStatus(userInfo.getStatus());
-        if(companyInfo != null){
+        if (companyInfo != null) {
             userListDTO.setCompany(companyInfo.getCompanyName());
             userListDTO.setArea(AreaTool.getAreaById(companyInfo.getProvince()).getName()
                             + AreaTool.getAreaById(companyInfo.getCity()).getName()
                             + AreaTool.getAreaById(companyInfo.getArea()).getName()
             );
         }
-        // todo 这里需要重新设定一下
-        userListDTO.setUserStatus(userInfo.getStatus());
+
+        // todo 暂时没有添加数据
+        userListDTO.setTaskNum(null);
 
         return userListDTO;
     }
 
 
     public static UserInsertDTO toUserInsertDTO(TUserInfo userInfo, TUserTag userTag, TCompanyInfo companyInfo,
-                                                Organization organization){
+                                                Organization organization) {
         UserInsertDTO userInsertDTO = new UserInsertDTO();
 
         // todo 这里需要添加头像地址|微信
@@ -52,12 +54,12 @@ public class UserUtils {
         userInsertDTO.setMobile(userInfo.getMobile());
         userInsertDTO.setEmail(userInfo.getEmail());
         userInsertDTO.setAccount(userInfo.getAccount());
-        if(userTag != null){
+        if (userTag != null) {
             userInsertDTO.setRoleId(userTag.getRoleId().intValue());
         }
-        if(organization != null){
+        if (organization != null) {
             // todo 这里需要补足
-            userInsertDTO.setOccupationId(null);
+            userInsertDTO.setOccupation(null);
             userInsertDTO.setOccupationTel(null);
             userInsertDTO.setApartmentId(null);
             userInsertDTO.setTeamId(null);
@@ -71,7 +73,7 @@ public class UserUtils {
         return userInsertDTO;
     }
 
-    public static TUserInfo toTUserInfo(UserInsertDTO userInsertDTO){
+    public static TUserInfo toTUserInfo(UserInsertDTO userInsertDTO) {
         TUserInfo tUserInfo = new TUserInfo();
 
         return tUserInfo;
