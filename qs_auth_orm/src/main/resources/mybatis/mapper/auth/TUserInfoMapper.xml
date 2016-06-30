@@ -40,6 +40,9 @@
       <if test="status != null">
         AND status = #{status,jdbcType=INTEGER}
       </if>
+      <if test="companyId != null">
+        AND company_id = #{companyId,jdbcType=INTEGER}
+      </if>
 
 
       <if test="userNameLike != null">
@@ -50,6 +53,18 @@
         AND status IN
         <foreach collection="statuss" open="(" close=")" separator="," item="s">
           #{s}
+        </foreach>
+      </if>
+      <if test="ids != null">
+        AND id IN
+        <foreach collection="ids" open="(" close=")" separator="," item="id">
+          #{id}
+        </foreach>
+      </if>
+      <if test="companyIds != null">
+        AND company_id IN
+        <foreach collection="companyIds" open="(" close=")" separator="," item="cId">
+          #{cId}
         </foreach>
       </if>
 

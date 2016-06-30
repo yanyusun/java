@@ -28,6 +28,7 @@ public class KeyEnum {
     public static final String U_TYPE_URGE = "u_type_arrears_caller"; // 催收
     public static final String U_TYPE_LAW = "u_type_law_office"; // 律所
     public static final String U_TYPE_INTERMEDIARY = "u_type_intermediary"; // 中介
+    public static final String U_TYPE_PLATFORM = "u_type_platform"; // 平台
 
     public static final String UTYPE_PLATFORM_KEY = "u_type_platform";
 
