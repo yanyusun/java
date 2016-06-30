@@ -17,15 +17,19 @@ import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.business.service.service.UserService;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
+import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.NoSQLWithRedisTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yvan on 16/6/29.
@@ -41,28 +45,99 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private TCompanyInfoMapper tCompanyInfoMapper;
 
-
     @Override
-    public Integer count(UserListQuery userListQuery) {
-        TUserQuery tUserQuery = toTUserQuery(userListQuery);
-        return tUserInfoMapper.queryCount(tUserQuery);
-    }
+    public JsonResponse queryList(UserListQuery query) {
+        Map<String, Object> resultMap = new HashMap<>();
 
-    @Override
-    public List<UserListDTO> queryList(UserListQuery query) {
-        TUserQuery tUserQuery = toTUserQuery(query);
+        TUserQuery tUserQuery = new TUserQuery();
+        if (CommonUtil.checkNullParam(query.getAccountType(), query.getType(), query.getRole())) {
+            TUserTagQuery tUserTagQuery = new TUserTagQuery();
+
+            tUserTagQuery.setUserType(query.getAccountType());
+            tUserTagQuery.setRole(query.getRole());
+            if (query.getType() != null) {
+                List<Integer> userTypes = new ArrayList<>();
+                if (query.getType().equals(1)) {
+                    // 企业
+                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY)); // 中介
+                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST)); // 委托方
+                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE)); // 催收方
+                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW)); // 律所
+                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM)); // 平台
+                } else {
+                    // 个人
+                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST)); // 委托方
+                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_COMMON)); // 用户
+                }
+                tUserTagQuery.setUserTypes(userTypes);
+            }
+
+            List<TUserTag> tUserTagList = tUserTagMapper.selectByQuery(tUserTagQuery);
+            List<Integer> ids = new ArrayList<>();
+            tUserTagList.forEach(tUserTag -> {
+                ids.add(tUserTag.getUserId());
+            });
+            if (ids.isEmpty()) {
+                // 没有符合条件的数据
+                resultMap.put("data", null);
+                resultMap.put("total", 0);
+                return JsonResponseTool.success(resultMap);
+            }
+            tUserQuery.setIds(ids);
+        }
+
+        if (CommonUtil.isManage()) {
+            // 总管理员
+            if (CommonUtil.checkNullParam(query.getProvince(), query.getCity(), query.getDistrict())) {
+                List<Integer> companyIds = new ArrayList<>();
+
+                CompanyQuery companyQuery = new CompanyQuery();
+                companyQuery.setProvince(query.getProvince());
+                companyQuery.setCity(query.getCity());
+                companyQuery.setDistrict(query.getDistrict());
+
+                List<TCompanyInfo> tCompanyInfoList = tCompanyInfoMapper.queryList(companyQuery);
+                if (tCompanyInfoList != null) {
+                    tCompanyInfoList.forEach(tCompanyInfo -> {
+                        companyIds.add(tCompanyInfo.getId());
+                    });
+                }
+                if (companyIds.isEmpty()) {
+                    // 没有符合条件的数据
+                    resultMap.put("data", null);
+                    resultMap.put("total", 0);
+                    return JsonResponseTool.success(resultMap);
+                }
+                tUserQuery.setCompanyIds(companyIds);
+            }
+        }else{
+            TUserInfo tUserInfo = getCurrentUser();
+            if(tUserInfo != null){
+                tUserQuery.setCompanyId(tUserInfo.getCompanyId());
+            }
+        }
+        tUserQuery.setStatus(query.getStatus());
+        tUserQuery.setStatuss(query.getStatuss());
+        tUserQuery.setNameLike(query.getName());
+
         tUserQuery.setIsPaging(true); // 开启分页
         List<TUserInfo> tUserInfoList = tUserInfoMapper.queryList(tUserQuery);
+        List<UserListDTO> userListDTOList = new ArrayList<>();
         if (tUserInfoList == null) {
             // 没有符合条件的数据
-            return null;
+            resultMap.put("data", null);
+            resultMap.put("total", 0);
+            return JsonResponseTool.success(resultMap);
         } else {
-            List<UserListDTO> userListDTOList = new ArrayList<>();
             tUserInfoList.forEach(tUserInfo -> {
                 userListDTOList.add(_get(tUserInfo));
             });
-            return userListDTOList;
         }
+        Integer count = tUserInfoMapper.queryCount(tUserQuery);
+
+        resultMap.put("data", userListDTOList);
+        resultMap.put("total", count);
+        return JsonResponseTool.success(resultMap);
     }
 
     @Override
@@ -111,83 +186,6 @@ public class UserServiceImpl implements UserService {
             tCompanyInfo = tCompanyInfoMapper.selectByPrimaryKey(tUserInfo.getCompanyId());
         }
         return UserServiceUtils.toUserListDTO(tUserInfo, tCompanyInfo);
-    }
-
-    /**
-     * 转化列表查询搜索条件
-     *
-     * @param query
-     * @return
-     */
-    private TUserQuery toTUserQuery(UserListQuery query) {
-        TUserQuery tUserQuery = new TUserQuery();
-        if (CommonUtil.checkNullParam(query.getAccountType(), query.getType(), query.getRole())) {
-            TUserTagQuery tUserTagQuery = new TUserTagQuery();
-
-            tUserTagQuery.setUserType(query.getAccountType());
-            tUserTagQuery.setRole(query.getRole());
-            if (query.getType() != null) {
-                List<Integer> userTypes = new ArrayList<>();
-                if (query.getType().equals(1)) {
-                    // 企业
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY)); // 中介
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST)); // 委托方
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE)); // 催收方
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW)); // 律所
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM)); // 平台
-                } else {
-                    // 个人
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST)); // 委托方
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_COMMON)); // 用户
-                }
-                tUserTagQuery.setUserTypes(userTypes);
-            }
-
-            List<TUserTag> tUserTagList = tUserTagMapper.selectByQuery(tUserTagQuery);
-            List<Integer> ids = new ArrayList<>();
-            tUserTagList.forEach(tUserTag -> {
-                ids.add(tUserTag.getUserId());
-            });
-            if (ids.isEmpty()) {
-                // 没有符合条件的数据
-                return null;
-            }
-            tUserQuery.setIds(ids);
-        }
-
-        if (CommonUtil.isManage()) {
-            // 总管理员
-            if (CommonUtil.checkNullParam(query.getProvince(), query.getCity(), query.getDistrict())) {
-                List<Integer> companyIds = new ArrayList<>();
-
-                CompanyQuery companyQuery = new CompanyQuery();
-                companyQuery.setProvince(query.getProvince());
-                companyQuery.setCity(query.getCity());
-                companyQuery.setDistrict(query.getDistrict());
-
-                List<TCompanyInfo> tCompanyInfoList = tCompanyInfoMapper.queryList(companyQuery);
-                if (tCompanyInfoList != null) {
-                    tCompanyInfoList.forEach(tCompanyInfo -> {
-                        companyIds.add(tCompanyInfo.getId());
-                    });
-                }
-                if (companyIds.isEmpty()) {
-                    // 没有符合条件的数据
-                    return null;
-                }
-                tUserQuery.setCompanyIds(companyIds);
-            }
-        }else{
-            TUserInfo tUserInfo = getCurrentUser();
-            if(tUserInfo != null){
-                tUserQuery.setCompanyId(tUserInfo.getCompanyId());
-            }
-        }
-        tUserQuery.setStatus(query.getStatus());
-        tUserQuery.setStatuss(query.getStatuss());
-        tUserQuery.setNameLike(query.getName());
-
-        return tUserQuery;
     }
 
     /**

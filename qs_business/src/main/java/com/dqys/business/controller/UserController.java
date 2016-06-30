@@ -96,14 +96,7 @@ public class UserController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public JsonResponse list(@ModelAttribute UserListQuery userListQuery) {
-        Map<String, Object> map = new HashMap<>();
-
-        List<UserListDTO> userListDTOList = userService.queryList(userListQuery);
-        Integer count = userService.count(userListQuery);
-
-        map.put("data", userListDTOList);
-        map.put("total", count);
-        return JsonResponseTool.success(map);
+        return userService.queryList(userListQuery);
     }
 
     /**
