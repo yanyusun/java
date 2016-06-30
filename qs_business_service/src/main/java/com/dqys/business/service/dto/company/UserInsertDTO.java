@@ -5,6 +5,8 @@ package com.dqys.business.service.dto.company;
  */
 public class UserInsertDTO {
 
+    private Integer id;
+
     private String avg; //头像地址
     private String userName; //用户昵称
     private String realName; //真实姓名

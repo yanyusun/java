@@ -1,5 +1,6 @@
 package com.dqys.business.service.service;
 
+import com.dqys.business.service.dto.company.UserInsertDTO;
 import com.dqys.business.service.dto.company.UserListDTO;
 import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.core.model.JsonResponse;
@@ -23,5 +24,12 @@ public interface UserService {
      * @param id
      * @return
      */
-    UserListDTO get(Integer id);
+    UserInsertDTO get(Integer id);
+
+    /**
+     * 增加用户
+     * @param data
+     * @return
+     */
+    Integer add(UserInsertDTO data);
 }

@@ -1,41 +1,31 @@
-package com.dqys.auth.controller;
+package com.dqys.business.controller;
 
-
-import com.dqys.auth.service.query.UserListQuery;
-import com.dqys.auth.service.constant.UserStatusTypeEnum;
-import com.dqys.auth.service.dto.UserInsertDTO;
-import com.dqys.auth.service.dto.UserListDTO;
-import com.dqys.auth.service.facade.UserService;
-import com.dqys.core.base.BaseApiContorller;
-import com.dqys.core.base.BasePageDTO;
-import com.dqys.core.constant.SysPropertyTypeEnum;
+import com.dqys.business.service.dto.company.UserInsertDTO;
+import com.dqys.business.service.query.user.UserListQuery;
+import com.dqys.business.service.service.UserService;
 import com.dqys.core.model.JsonResponse;
-import com.dqys.core.model.ServiceResult;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.core.utils.SysPropertyTool;
-import org.apache.commons.lang3.RandomUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Yvan on 16/6/22.
- * 用户管理模块
+ * Created by Yvan on 16/6/30.
+ *
+ * 成员管理
  */
 @Controller
 @RequestMapping(value = "/api/user")
-public class UserController extends BaseApiContorller {
+public class UserController {
 
     @Autowired
     private UserService userService;
-
 
     /**
      * 二级导航数据统计
@@ -67,6 +57,24 @@ public class UserController extends BaseApiContorller {
     }
 
     /**
+     * 获取列表时
+     * @return
+     */
+    @RequestMapping(value = "/getListInit")
+    @ResponseBody
+    public JsonResponse getListInit() {
+        Map resultMap = new HashMap<>();
+
+//        resultMap.put("userStatuss", UserStatusTypeEnum.values());
+//        resultMap.put("accountType", SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE));
+//        resultMap.put("roleType", SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE));
+
+        return JsonResponseTool.success(resultMap);
+    }
+
+
+
+    /**
      * 获取用户页面选择配置
      * @return
      */
@@ -75,13 +83,12 @@ public class UserController extends BaseApiContorller {
     public JsonResponse getInit() {
         Map resultMap = new HashMap<>();
 
-        resultMap.put("userStatuss", UserStatusTypeEnum.values());
-        resultMap.put("accountType", SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE));
-        resultMap.put("roleType", SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE));
+//        resultMap.put("userStatuss", UserStatusTypeEnum.values());
+//        resultMap.put("accountType", SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE));
+//        resultMap.put("roleType", SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE));
 
         return JsonResponseTool.success(resultMap);
     }
-
 
     /**
      * 用户列表
@@ -94,17 +101,8 @@ public class UserController extends BaseApiContorller {
     public JsonResponse list(@ModelAttribute UserListQuery userListQuery) {
 
 
-        // 伪造的数据
-        Integer total = RandomUtils.nextInt(3, 50);
-        List<UserListDTO> userListDTOList = newUserList(total);
 
-
-        BasePageDTO<List<UserListDTO>> basePageDTO = new BasePageDTO<>();
-        basePageDTO.setPage(userListQuery.getPage());
-        basePageDTO.setPageCount(userListQuery.getPageCount());
-        basePageDTO.setData(userListDTOList);
-        basePageDTO.setTotal(total);
-        return JsonResponseTool.success(basePageDTO);
+        return JsonResponseTool.success("");
     }
 
     /**
@@ -171,7 +169,7 @@ public class UserController extends BaseApiContorller {
         if(CommonUtil.checkParam(id)){
             return JsonResponseTool.paramErr("参数错误");
         }
-        return JsonResponseTool.success(newUser(id));
+        return JsonResponseTool.success("1");
     }
 
     /**
@@ -202,7 +200,7 @@ public class UserController extends BaseApiContorller {
     @RequestMapping(value = "/statusBatch")
     @ResponseBody
     public JsonResponse statusBatch(@RequestParam(required = true) Integer[] ids,
-                                      @RequestParam(required = true) Integer id) {
+                                    @RequestParam(required = true) Integer id) {
         if(CommonUtil.checkParam(ids, id)){
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -215,31 +213,4 @@ public class UserController extends BaseApiContorller {
 
 
 
-
-
-
-    private List<UserListDTO> newUserList(Integer num) {
-        List<UserListDTO> userListDTOList = new ArrayList<>();
-        for (int i = 0; i < num; i++) {
-            userListDTOList.add(newUser(i));
-        }
-        return userListDTOList;
-    }
-
-    private UserListDTO newUser(Integer index) {
-        UserListDTO userListDTO = new UserListDTO();
-
-        userListDTO.setId(index);
-        userListDTO.setStatus(index % 2);
-        userListDTO.setUserName("昵称" + index);
-        userListDTO.setRealName("姓名" + index);
-        userListDTO.setMobile("12312341234");
-        userListDTO.setEmail(index + "@email");
-        userListDTO.setArea("行政规划" + index);
-        userListDTO.setCompany("分公司" + index);
-        userListDTO.setTaskNum(index);
-        userListDTO.setUserStatus(index % 3 == 0 ? 1 : 0);
-
-        return userListDTO;
-    }
 }

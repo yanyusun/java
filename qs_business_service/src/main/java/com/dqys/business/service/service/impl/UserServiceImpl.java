@@ -9,6 +9,8 @@ import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.auth.orm.query.CompanyQuery;
 import com.dqys.auth.orm.query.TUserQuery;
 import com.dqys.auth.orm.query.TUserTagQuery;
+import com.dqys.business.orm.pojo.company.Organization;
+import com.dqys.business.service.dto.company.UserInsertDTO;
 import com.dqys.business.service.dto.company.UserListDTO;
 import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.business.service.service.UserService;
@@ -109,14 +111,16 @@ public class UserServiceImpl implements UserService {
             // 没有符合条件的数据
             return null;
         } else {
-
+            List<UserListDTO> userListDTOList = new ArrayList<>();
+            tUserInfoList.forEach(tUserInfo -> {
+                userListDTOList.add(_get(tUserInfo));
+            });
+            return userListDTOList;
         }
-
-        return null;
     }
 
     @Override
-    public UserListDTO get(Integer id) {
+    public UserInsertDTO get(Integer id) {
         TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(id);
         if (tUserInfo == null) {
             return null;
@@ -131,16 +135,32 @@ public class UserServiceImpl implements UserService {
             if (tUserInfo.getCompanyId() != null) {
                 tCompanyInfo = tCompanyInfoMapper.selectByPrimaryKey(tUserInfo.getCompanyId());
             }
-            UserListDTO userListDTO = UserUtils.toUserListDTO(tUserInfo, tUserTag, tCompanyInfo);
+            Organization organization = new Organization();
+            return UserUtils.toUserInsertDTO(tUserInfo, tUserTag, tCompanyInfo, organization);
         }
-
-
-        UserListDTO userListDTO = new UserListDTO();
-
-        userListDTO.setId(tUserInfo.getId());
-
-        return userListDTO;
     }
 
+    @Override
+    public Integer add(UserInsertDTO data) {
+        if(data == null){
+            return null;
+        }
+
+        return null;
+    }
+
+    private UserListDTO _get(TUserInfo tUserInfo) {
+        // todo 理论上当前只有一条
+        TUserTag tUserTag = new TUserTag();
+        List<TUserTag> tUserTagList = tUserTagMapper.selectByUserId(tUserInfo.getId());
+        if (tUserTagList.size() > 0) {
+            tUserTag = tUserTagList.get(0);
+        }
+        TCompanyInfo tCompanyInfo = new TCompanyInfo();
+        if (tUserInfo.getCompanyId() != null) {
+            tCompanyInfo = tCompanyInfoMapper.selectByPrimaryKey(tUserInfo.getCompanyId());
+        }
+        return UserUtils.toUserListDTO(tUserInfo, tUserTag, tCompanyInfo);
+    }
 
 }
