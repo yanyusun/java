@@ -283,7 +283,7 @@
     </if>
   </select>
 
-  <update id="queryUpdateStatus" parameterType="com.dqys.auth.orm.query.TUserQuery">
+  <update id="queryUpdateStatus">
     UPDATE t_user_info set status = #{status,jdbcType=INTEGER} where id IN ( #{ids,jdbcType=VARCHAR} )
   </update>
 
