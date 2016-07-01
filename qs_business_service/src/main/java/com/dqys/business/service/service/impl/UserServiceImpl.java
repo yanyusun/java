@@ -141,10 +141,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInsertDTO get(Integer id) {
+    public JsonResponse get(Integer id) {
         TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(id);
         if (tUserInfo == null) {
-            return null;
+            return JsonResponseTool.paramErr("参数错误");
         } else {
             // todo 理论上当前只有一条
             TUserTag tUserTag = new TUserTag();
@@ -152,14 +152,14 @@ public class UserServiceImpl implements UserService {
             if (tUserTagList.size() > 0) {
                 tUserTag = tUserTagList.get(0);
             }
-            return UserServiceUtils.toUserInsertDTO(tUserInfo, tUserTag);
+            return JsonResponseTool.success(UserServiceUtils.toUserInsertDTO(tUserInfo, tUserTag));
         }
     }
 
     @Override
-    public Integer add(UserInsertDTO data) {
+    public JsonResponse add(UserInsertDTO data) {
         if (data == null) {
-            return null;
+            return JsonResponseTool.paramErr("参数错误");
         }
         TUserInfo userInfo = UserServiceUtils.toTUserInfo(data);
         Integer result = tUserInfoMapper.insertSelective(userInfo);
@@ -168,10 +168,84 @@ public class UserServiceImpl implements UserService {
             TUserTag userTag = UserServiceUtils.toTUserTag(data, userInfoId);
             result = tUserTagMapper.insertSelective(userTag);
             if(result != null && result > 0){
-                return userInfoId;
+                return JsonResponseTool.success(userInfoId);
             }
         }
-        return null;
+        return JsonResponseTool.failure("添加失败");
+    }
+
+    @Override
+    public JsonResponse update(UserInsertDTO userInsertDTO) {
+        if(CommonUtil.checkParam(userInsertDTO, userInsertDTO.getId(), userInsertDTO.getCompanyId())){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        TUserTag tUserTag = new TUserTag();
+        List<TUserTag> tUserTagList = tUserTagMapper.selectByUserId(userInsertDTO.getId());
+        if (tUserTagList.size() > 0) {
+            tUserTag = tUserTagList.get(0);
+        }
+        if(tUserTag == null){
+            return JsonResponseTool.failure("修改失败");
+        }
+
+        boolean flag = false;
+
+        TUserInfo userInfo = UserServiceUtils.toTUserInfo(userInsertDTO);
+        Integer result = tUserInfoMapper.insertSelective(userInfo);
+        if(result != null && result.equals(1)){
+            flag = true;
+        }
+
+        TUserTag userTag = UserServiceUtils.toTUserTag(userInsertDTO, userInsertDTO.getId());
+        userTag.setId(tUserTag.getId());
+        Integer tagResult = tUserTagMapper.updateByPrimaryKeySelective(userTag);
+        if(tagResult != null && tagResult.equals(1)){
+            flag = true;
+        }
+
+        if(flag){
+            return JsonResponseTool.success(userInsertDTO.getId());
+        }else{
+            return JsonResponseTool.failure("修改失败");
+        }
+    }
+
+    @Override
+    public JsonResponse delete(Integer uId) {
+        if(CommonUtil.checkParam(uId) || tUserInfoMapper.selectByPrimaryKey(uId) == null){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        TUserTag tUserTag = new TUserTag();
+        List<TUserTag> tUserTagList = tUserTagMapper.selectByUserId(uId);
+        if (tUserTagList.size() > 0) {
+            tUserTag = tUserTagList.get(0);
+        }
+        if(tUserTag == null){
+            return JsonResponseTool.failure("参数错误");
+        }
+
+        Integer userResult = tUserInfoMapper.deleteByPrimaryKey(uId);
+        if(userResult > 0){
+            tUserTagMapper.deleteByPrimaryKey(tUserTag.getId());
+            return JsonResponseTool.success(null);
+        }else{
+            return JsonResponseTool.failure("删除失败");
+        }
+    }
+
+    @Override
+    public JsonResponse assignedBatch(String ids, Integer id) {
+        return JsonResponseTool.success(null);
+    }
+
+    @Override
+    public JsonResponse statusBatch(String ids, Integer id) {
+        Integer result = tUserInfoMapper.queryUpdateStatus(ids, id);
+        if(result > 0){
+            return JsonResponseTool.success(null);
+        }else{
+            return JsonResponseTool.failure("修改失败");
+        }
     }
 
     /**

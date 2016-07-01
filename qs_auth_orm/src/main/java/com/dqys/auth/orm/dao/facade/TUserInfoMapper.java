@@ -22,4 +22,6 @@ public interface TUserInfoMapper {
     Integer queryCount(TUserQuery tUserQuery);
 
     List<TUserInfo> queryList(TUserQuery tUserQuery);
+
+    Integer queryUpdateStatus(@Param("ids")String ids, @Param("status")Integer status);
 }

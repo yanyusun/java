@@ -61,13 +61,13 @@
     select
     <include refid="Base_Column_List" />
     from t_user_tag
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </select>
 
   <!-- 根据ID删除 -->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     update t_user_tag set stateflag=CURRENT_TIMESTAMP
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </delete>
 
   <!-- 新增 -->

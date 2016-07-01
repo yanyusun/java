@@ -115,8 +115,11 @@ public class UserController {
                 userInsertDTO.getAreaId(), userInsertDTO.getRoleId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer id = userService.add(userInsertDTO);
-        return CommonUtil.responseBack(id);
+        // 其他校验
+
+
+
+        return userService.add(userInsertDTO);
     }
 
     /**
@@ -130,7 +133,7 @@ public class UserController {
         if(CommonUtil.checkParam(id)){
             return JsonResponseTool.paramErr("参数错误");
         }
-        return CommonUtil.responseBack(userService.get(id));
+        return userService.get(id);
     }
 
     /**
@@ -142,14 +145,13 @@ public class UserController {
     @ResponseBody
     public JsonResponse update(@ModelAttribute UserInsertDTO userInsertDTO) {
         if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getUserName(),
-                userInsertDTO.getRealName(), userInsertDTO.getSex(), userInsertDTO.getApartmentId(),
-                userInsertDTO.getOccupation())
-                || (userInsertDTO.getMobile() == null && userInsertDTO.getEmail() == null)
-                ) {
+                userInsertDTO.getRealName(), userInsertDTO.getSex(), userInsertDTO.getAccount(),
+                userInsertDTO.getDuty(), userInsertDTO.getWechat(), userInsertDTO.getMobile(),
+                userInsertDTO.getEmail(), userInsertDTO.getApartmentId(), userInsertDTO.getOccupation(),
+                userInsertDTO.getAreaId(), userInsertDTO.getRoleId(), userInsertDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-
-        return JsonResponseTool.success(11);
+        return userService.update(userInsertDTO);
     }
 
     /**
@@ -163,26 +165,23 @@ public class UserController {
         if(CommonUtil.checkParam(id)){
             return JsonResponseTool.paramErr("参数错误");
         }
-        return JsonResponseTool.success("");
+        return userService.delete(id);
     }
 
 
     /**
-     * 批量分配
+     * 批量分配<暂时不处理>
      * @param ids
      * @param id
      * @return
      */
     @RequestMapping(value = "/assignedBatch")
     @ResponseBody
-    public JsonResponse assignedBatch(@RequestParam(required = true) Integer[] ids,
+    public JsonResponse assignedBatch(@RequestParam(required = true) String ids,
                                       @RequestParam(required = true) Integer id) {
         if(CommonUtil.checkParam(ids, id)){
             return JsonResponseTool.paramErr("参数错误");
         }
-
-
-
         return JsonResponseTool.success("");
     }
 
@@ -194,15 +193,12 @@ public class UserController {
      */
     @RequestMapping(value = "/statusBatch")
     @ResponseBody
-    public JsonResponse statusBatch(@RequestParam(required = true) Integer[] ids,
+    public JsonResponse statusBatch(@RequestParam(required = true) String ids,
                                     @RequestParam(required = true) Integer id) {
         if(CommonUtil.checkParam(ids, id)){
             return JsonResponseTool.paramErr("参数错误");
         }
-
-
-
-        return JsonResponseTool.success("");
+        return userService.statusBatch(ids, id);
     }
 
 

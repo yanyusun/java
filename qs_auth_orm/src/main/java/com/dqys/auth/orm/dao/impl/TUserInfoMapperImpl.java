@@ -50,4 +50,9 @@ public class TUserInfoMapperImpl extends BaseDao implements TUserInfoMapper {
     public List<TUserInfo> queryList(TUserQuery tUserQuery) {
         return super.getSqlSession().getMapper(TUserInfoMapper.class).queryList(tUserQuery);
     }
+
+    @Override
+    public Integer queryUpdateStatus(@Param("ids") String ids, @Param("status") Integer status) {
+        return super.getSqlSession().getMapper(TUserInfoMapper.class).queryUpdateStatus(ids, status);
+    }
 }
