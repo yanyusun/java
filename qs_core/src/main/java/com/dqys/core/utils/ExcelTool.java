@@ -1,9 +1,15 @@
 package com.dqys.core.utils;
 
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.ss.util.*;
-import org.apache.poi.xssf.usermodel.*;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.NumberToTextConverter;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +22,7 @@ import java.util.*;
  * Created by mkfeng on 2016/6/27.
  */
 public class ExcelTool {
+
 
     /**
      * HSSF读取表格文件
@@ -53,6 +60,7 @@ public class ExcelTool {
         }
         return varList;
     }
+
     /**
      * XSSF读取表格文件
      */
@@ -60,7 +68,7 @@ public class ExcelTool {
         List<Map<String, Object>> varList = new ArrayList<Map<String, Object>>();
         try {
             File target = new File(filepath, filename);
-            FileInputStream fi = new FileInputStream(filepath+filename);
+            FileInputStream fi = new FileInputStream(filepath + filename);
             XSSFWorkbook wb = new XSSFWorkbook(fi);
             XSSFSheet sheet = wb.getSheetAt(sheetnum); // sheet 从0开始
             if (sheet != null) {

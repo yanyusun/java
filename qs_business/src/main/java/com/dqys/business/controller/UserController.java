@@ -2,30 +2,25 @@ package com.dqys.business.controller;
 
 import com.dqys.business.service.constant.UserStatusTypeEnum;
 import com.dqys.business.service.dto.user.UserInsertDTO;
-import com.dqys.business.service.dto.user.UserListDTO;
 import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.business.service.service.CompanyService;
 import com.dqys.business.service.service.UserService;
-import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.core.utils.NoSQLWithRedisTool;
 import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Yvan on 16/6/30.
- *
+ * <p/>
  * 成员管理
  */
 @Controller
@@ -47,11 +42,11 @@ public class UserController {
     public JsonResponse listData() {
         Map resultMap = new HashMap<>();
         // 读取当前用户的权限
-        if(CommonUtil.isManage()){
+        if (CommonUtil.isManage()) {
             // 总管理用户
             resultMap.put("plateform", 1);
             resultMap.put("plateformCompany", 3);
-        }else{
+        } else {
             String typeStr = UserSession.getCurrent().getUserType();
             String[] values = typeStr.split(",");
         }
@@ -72,6 +67,7 @@ public class UserController {
 
     /**
      * 获取初始化列表
+     *
      * @return
      */
     @RequestMapping(value = "/getInit")
@@ -118,19 +114,19 @@ public class UserController {
         // 其他校验
 
 
-
         return userService.add(userInsertDTO);
     }
 
     /**
      * 查看用户信息
+     *
      * @param id
      * @return
      */
     @RequestMapping(value = "/get")
     @ResponseBody
     public JsonResponse get(@RequestParam(required = true) Integer id) {
-        if(CommonUtil.checkParam(id)){
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return userService.get(id);
@@ -138,6 +134,7 @@ public class UserController {
 
     /**
      * 修改用户
+     *
      * @param userInsertDTO
      * @return
      */
@@ -156,13 +153,14 @@ public class UserController {
 
     /**
      * 删除用户
+     *
      * @param id
      * @return
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
     public JsonResponse delete(@RequestParam(required = true) Integer id) {
-        if(CommonUtil.checkParam(id)){
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return userService.delete(id);
@@ -171,6 +169,7 @@ public class UserController {
 
     /**
      * 批量分配<暂时不处理>
+     *
      * @param ids
      * @param id
      * @return
@@ -179,7 +178,7 @@ public class UserController {
     @ResponseBody
     public JsonResponse assignedBatch(@RequestParam(required = true) String ids,
                                       @RequestParam(required = true) Integer id) {
-        if(CommonUtil.checkParam(ids, id)){
+        if (CommonUtil.checkParam(ids, id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return JsonResponseTool.success("");
@@ -187,6 +186,7 @@ public class UserController {
 
     /**
      * 批量设置状态
+     *
      * @param ids
      * @param id
      * @return
@@ -195,13 +195,11 @@ public class UserController {
     @ResponseBody
     public JsonResponse statusBatch(@RequestParam(required = true) String ids,
                                     @RequestParam(required = true) Integer id) {
-        if(CommonUtil.checkParam(ids, id)){
+        if (CommonUtil.checkParam(ids, id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return userService.statusBatch(ids, id);
     }
-
-
 
 
 }
