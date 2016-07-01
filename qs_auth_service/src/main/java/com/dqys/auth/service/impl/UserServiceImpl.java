@@ -3,22 +3,20 @@ package com.dqys.auth.service.impl;
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
-import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
-import com.dqys.auth.orm.query.CompanyQuery;
-import com.dqys.auth.orm.query.TUserQuery;
 import com.dqys.auth.orm.query.TUserTagQuery;
 import com.dqys.auth.service.constant.MailVerifyTypeEnum;
 import com.dqys.auth.service.dto.UserDTO;
-import com.dqys.auth.service.dto.UserListDTO;
 import com.dqys.auth.service.facade.UserService;
-import com.dqys.auth.service.query.UserListQuery;
 import com.dqys.auth.service.utils.UserUtils;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.ServiceResult;
-import com.dqys.core.utils.*;
+import com.dqys.core.utils.NoSQLWithRedisTool;
+import com.dqys.core.utils.RabbitMQProducerTool;
+import com.dqys.core.utils.SignatureTool;
+import com.dqys.core.utils.SysPropertyTool;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +26,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.UnexpectedRollbackException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -215,57 +212,6 @@ public class UserServiceImpl implements UserService {
         }
 
         return ServiceResult.success(tUserInfo);
-    }
-
-
-    @Override
-    public List<UserListDTO> listUsers(UserListQuery userListQuery) {
-        // 查询公司信息
-        List<TCompanyInfo> tCompanyInfoList = new ArrayList<>();
-        if (CommonUtil.checkNullParam(userListQuery.getProvince(), userListQuery.getCity(),
-                userListQuery.getDistrict(), userListQuery.getName())) {
-            CompanyQuery companyQuery = new CompanyQuery();
-            companyQuery.setProvince(userListQuery.getProvince());
-            companyQuery.setCity(userListQuery.getCity());
-            companyQuery.setDistrict(userListQuery.getDistrict());
-            companyQuery.setNameLike(userListQuery.getName());
-            tCompanyInfoList = tCompanyInfoMapper.queryList(companyQuery);
-        }
-        // 查询身份信息
-        List<TUserTag> tUserTagList = new ArrayList<>();
-        if (CommonUtil.checkNullParam(userListQuery.getAccountType(), userListQuery.getType(),
-                userListQuery.getAuth())) {
-            TUserTagQuery tUserTagQuery = new TUserTagQuery();
-            tUserTagQuery.setUserType(userListQuery.getAccountType());
-            tUserTagQuery.setRole(userListQuery.getAuth());
-            if (userListQuery.getType() != null) {
-                List<Integer> types = new ArrayList<>();
-                if (userListQuery.getType().equals(0)) {
-                    // 机构
-                    types.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY));
-                    types.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST));
-                    types.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE));
-                    types.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW));
-                } else {
-                    // 个人
-                    types.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_COMMON));
-                    types.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST));
-                }
-                tUserTagQuery.setUserTypes(types);
-                tUserTagList = tUserTagMapper.selectByQuery(tUserTagQuery);
-            }
-        }
-        TUserQuery tUserQuery = new TUserQuery();
-        // 查询角色信息
-        if (tCompanyInfoList.size() > 0) {
-            List<Integer> companyIds = new ArrayList<>();
-            tCompanyInfoList.forEach(tCompanyInfo -> {
-                companyIds.add(tCompanyInfo.getId());
-            });
-        }
-
-
-        return null;
     }
 
     /* 验证用户存在性 */

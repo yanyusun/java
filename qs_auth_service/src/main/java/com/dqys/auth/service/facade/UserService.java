@@ -3,11 +3,7 @@ package com.dqys.auth.service.facade;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.service.constant.MailVerifyTypeEnum;
 import com.dqys.auth.service.dto.UserDTO;
-import com.dqys.auth.service.dto.UserListDTO;
-import com.dqys.auth.service.query.UserListQuery;
 import com.dqys.core.model.ServiceResult;
-
-import java.util.List;
 
 /**
  * @author by pan on 16-4-6.
@@ -99,11 +95,4 @@ public interface UserService {
      */
     ServiceResult<TUserInfo> registerAdmin_tx(Integer userType, TUserInfo tUserInfo);
 
-    /**
-     * 查询用户列表
-     *
-     * @param userListQuery
-     * @return
-     */
-    List<UserListDTO> listUsers(UserListQuery userListQuery);
 }
