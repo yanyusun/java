@@ -5,14 +5,22 @@
     <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.operType.OperType">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="oper_type" property="operType" jdbcType="INTEGER"/>
-        <result column="oper_name" property="operName" jdbcType="VARCGAR"/>
+        <result column="oper_name" property="operName" jdbcType="VARCHAR"/>
 
     </resultMap>
-
+    <!--查询对应用户类型的角色权限-->
     <select id="selectByRoleToOperType" resultType="BaseResultMap" parameterType="string">
         SELECT ot.* from t_role_oper_re ror LEFT JOIN oper_type ot
         ON ot.id=ror.oper_id
         WHERE ror.role_id=#{roleId} and ror.user_type=#{userType}
+    </select>
+    <!--查询用户类型-->
+    <select id="selectByUserIds" resultType="int">
+        SELECT ror.user_type userIds FROM t_role_oper_re ror GROUP BY ror.user_type
+    </select>
+    <!--查询用户角色id-->
+    <select id="selectByRoleIds" resultType="int">
+        SELECT ror.role_id roleIds FROM t_role_oper_re ror GROUP BY ror.role_id
     </select>
 
 </mapper>

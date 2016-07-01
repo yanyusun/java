@@ -21,4 +21,14 @@ public class OperTypeServiceImpl implements OperTypeService{
     public List<OperType> selectByRoleToOperType(Integer roleId, Integer userType) {
         return operTypeMapper.selectByRoleToOperType(roleId,userType);
     }
+
+    @Override
+    public List<Integer> selectByUserIds() {
+        return operTypeMapper.selectByUserIds();
+    }
+
+    @Override
+    public List<Integer> selectByRoleIds() {
+        return operTypeMapper.selectByRoleIds();
+    }
 }

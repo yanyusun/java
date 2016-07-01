@@ -16,4 +16,16 @@ public interface OperTypeService {
      */
     public List<OperType> selectByRoleToOperType(Integer roleId,Integer userType );
 
+    /**
+     * 查询用户类型
+     * @return
+     */
+    public List<Integer> selectByUserIds();
+
+    /**
+     * 查询用户角色id
+     * @return
+     */
+    public List<Integer> selectByRoleIds();
+
 }

@@ -16,4 +16,14 @@ public class OperTypeMapperImpl extends BaseDao implements OperTypeMapper {
     public List<OperType> selectByRoleToOperType(Integer roleId, Integer userType) {
         return super.getSqlSession().getMapper(OperTypeMapper.class).selectByRoleToOperType(roleId,userType);
     }
+
+    @Override
+    public List<Integer> selectByUserIds() {
+        return super.getSqlSession().getMapper(OperTypeMapper.class).selectByUserIds();
+    }
+
+    @Override
+    public List<Integer> selectByRoleIds() {
+        return super.getSqlSession().getMapper(OperTypeMapper.class).selectByRoleIds();
+    }
 }
