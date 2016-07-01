@@ -1,228 +1,29 @@
 package com.dqys.business.util;
 
-import com.dqys.business.service.constant.ContactTypeEnum;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
 import com.dqys.business.service.dto.asset.PawnDTO;
+import com.dqys.business.service.constant.ContactTypeEnum;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
-import com.dqys.core.utils.DateFormatTool;
-import com.dqys.core.utils.FileTool;
-import com.dqys.core.utils.FormatValidateTool;
-import com.dqys.core.utils.SysPropertyTool;
-import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.NumberToTextConverter;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import com.dqys.core.utils.*;
+import org.junit.Test;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by mkefeng on 2016/6/21.
+ * Created by mkefeng on 2016/6/27.
  */
-public class ExcelUtil {
-
-//
-//    /**
-//     * 用户信息表格上传
-//     *
-//     * @return
-//     */
-//    public Map<String, Object> upLoadUserExcel(MultipartFile file) {
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        String type = "文件业务类型";
-//        Integer userId = 0;
-//        try {
-//            String fileName = FileTool.saveFileSyncTmp(type, userId, file);//上传保存文件
-//            String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/" + type + "/" + userId + "/";
-////            String path="E://";
-////            String fileName="11.xlsx";
-//            List<Map<String, Object>> list = readExcelForList(path, fileName, 1, 0, 0);//借款人
-//            //判断文件的字段格式
-//            List<String[]> error = new ArrayList<String[]>();//错误信息
-//            fileName = "error.xls";
-//            if (!checkUserExcel(list, error)) {
-//                //文件的写出成表格文件
-//                String[] str = {"序号", "表名称", "位置", "字段名称", "问题内容"};
-//                exportExcel(error, str, path, fileName);
-//                map.put("result", "error");
-//                map.put("filePath", path + fileName);
-//            } else {
-//                //文件格式都正确的就处理表格
-//                map.put("result", "ok");
-//                List<UserFileDTO> userFileDTOs = new ArrayList<UserFileDTO>();
-//                disposeUserExcele(list, userFileDTOs);
-//                map.put("userFileDTOs", userFileDTOs);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return map;
-//    }
-//
-//    /**
-//     * 处理用户信息表格
-//     *
-//     * @param list
-//     * @param userFileDTOs
-//     * @return map(包含key：userFileDTOs)
-//     */
-//    private void disposeUserExcele(List<Map<String, Object>> list, List<UserFileDTO> userFileDTOs) {
-//        for (int i = 1; i < list.size(); i++) {
-//            Map<String, Object> map0 = list.get(i);
-//            if (transStringToInteger(transMapToString(map0, "var0")) == null) {
-//                continue;
-//            }
-//            UserFileDTO userFileDTO = new UserFileDTO();
-//            userFileDTO.setRealName(transMapToString(map0, "var1"));
-//            userFileDTO.setUserName(transMapToString(map0, "var2"));
-//            userFileDTO.setSex(transMapToString(map0, "var3").equals("男") == true ? 1 : 0);
-//            userFileDTO.setAccount(transMapToString(map0, "var4"));
-//            userFileDTO.setWechat(transMapToString(map0, "var5"));
-//            userFileDTO.setQq(transMapToString(map0, "var6"));
-//            userFileDTO.setOfficeTel(transMapToString(map0, "var7"));
-//            userFileDTO.setMobile(transMapToString(map0, "var8"));
-//            userFileDTO.setEmail(transMapToString(map0, "var9"));
-//            userFileDTO.setApartment(transMapToString(map0, "var10"));
-//            userFileDTO.setOccupation(transMapToString(map0, "var11"));
-//            userFileDTO.setDuty(transMapToString(map0, "var12"));
-//            userFileDTO.setDutyMark(transMapToString(map0, "var13"));
-//            userFileDTO.setDutyArea(transMapToString(map0, "var14"));
-//            userFileDTO.setRole(transMapToString(map0, "var15").equals("管理员") == true ? 1 : transMapToString(map0, "var15").equals("管理者") == true ? 2 : 3);
-//            userFileDTO.setYear(transStringToInteger(transMapToString(map0, "var16")));
-//            if (!transMapToString(map0, "var17").equals("")) {
-//                userFileDTO.setJoinAt(DateFormatTool.parse(transMapToString(map0, "var17"), DateFormatTool.DATE_FORMAT_10_REG2));
-//            }
-//            userFileDTO.setRemark(transMapToString(map0, "var19"));
-//            userFileDTOs.add(userFileDTO);
-//        }
-//    }
-
-    /**
-     * 验证用户信息表格信息
-     *
-     * @param list
-     * @param error
-     * @return
-     */
-    private boolean checkUserExcel(List<Map<String, Object>> list, List<String[]> error) {
-        String[] str = {"序号", "*姓名", "*昵称", "*性别", "*自定义账号", "*微信号", "QQ号", "办公电话", "*手机号", "*工作邮箱", "*部门", "*职位名称",
-                "*职责名称", "职责描述", "*职责区域", "*系统角色", "从业年限(年）", "入职时间", "历史业绩（总数量）", "备注"};
-        String msg = "";
-        msg += templateFormat(str, list.get(0), "用户信息表问题");
-        boolean flag = true;
-        if (msg.equals("")) {
-            //判断每个表格的数据类型
-            checkUser(error, list);
-            if (error.size() > 0) {
-                flag = false;
-            }
-        } else {
-            //导出错误信息到文件
-            String[] string = {"1", "", "", "", msg};
-            error.add(string);//模板有问题
-            flag = false;
-        }
-        return flag;
-    }
-
-    private void checkUser(List<String[]> error, List<Map<String, Object>> list) {
-        String name = "用户信息表";
-        Map<String, Object> map = list.get(0);
-        for (int i = 1; i < list.size(); i++) {
-            Map<String, Object> l = list.get(i);
-            if (transStringToInteger(transMapToString(l, "var0")) == null) {
-                continue;
-            }
-            if (!FormatValidateTool.isDecimals(transMapToString(l, "var0"), 0)) {
-                placeByExcel(error, name, i, 0, transMapToString(map, "var0"), "格式错误");
-            }
-            if (transMapToString(l, "var1").equals("")) {//*姓名
-                placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "不能为空");
-                ;
-            }
-            if (transMapToString(l, "var2").equals("")) {//*昵称
-                placeByExcel(error, name, i, 2, transMapToString(map, "var2"), "不能为空");
-                ;
-            }
-            if (transMapToString(l, "var3").equals("")) {//*性别
-                placeByExcel(error, name, i, 3, transMapToString(map, "var3"), "不能为空");
-                ;
-            }
-            if (transMapToString(l, "var4").equals("")) {//*自定义账号
-                placeByExcel(error, name, i, 4, transMapToString(map, "var4"), "不能为空");
-                ;
-            }
-            if (transMapToString(l, "var5").equals("")) {//*微信号
-                placeByExcel(error, name, i, 5, transMapToString(map, "var5"), "不能为空");
-                ;
-            }
-            if (!transMapToString(l, "var6").equals("") && !FormatValidateTool.isNumeric(transMapToString(l, "var6"))) {//QQ号
-                placeByExcel(error, name, i, 6, transMapToString(map, "var6"), "格式错误");
-                ;
-            }
-            if (!transMapToString(l, "var7").equals("") && !FormatValidateTool.checkPhone(transMapToString(l, "var7"))) {//办公电话
-                placeByExcel(error, name, i, 7, transMapToString(map, "var7"), "格式错误");
-                ;
-            }
-            if (!FormatValidateTool.checkMobile(transMapToString(l, "var8"))) {//*手机号
-                placeByExcel(error, name, i, 8, transMapToString(map, "var8"), "不能为空");
-                ;
-            }
-            if (!FormatValidateTool.checkEmail(transMapToString(l, "var9"))) {//*工作邮箱
-                placeByExcel(error, name, i, 9, transMapToString(map, "var9"), "格式错误");
-                ;
-            }
-            if (transMapToString(l, "var10").equals("")) {//*部门
-                placeByExcel(error, name, i, 10, transMapToString(map, "var10"), "不能为空");
-                ;
-            }
-            if (transMapToString(l, "var11").equals("")) {//*职位名称
-                placeByExcel(error, name, i, 11, transMapToString(map, "var11"), "不能为空");
-                ;
-            }
-            if (transMapToString(l, "var12").equals("")) {//*职责名称
-                placeByExcel(error, name, i, 12, transMapToString(map, "var12"), "不能为空");
-                ;
-            }
-            if (transMapToString(l, "var14").equals("")) {//*职责区域
-                placeByExcel(error, name, i, 14, transMapToString(map, "var14"), "不能为空");
-                ;
-            }
-            if (transMapToString(l, "var15").equals("")) {//*系统角色
-                placeByExcel(error, name, i, 15, transMapToString(map, "var15"), "不能为空");
-                ;
-            }
-            if (!transMapToString(l, "var16").equals("") && !FormatValidateTool.isNumeric(transMapToString(l, "var16"))) {//从业年限(年）
-                placeByExcel(error, name, i, 16, transMapToString(map, "var16"), "格式错误");
-                ;
-            }
-            if (!transMapToString(l, "var17").equals("") && !FormatValidateTool.isDate(transMapToString(l, "var17"))) {//入职时间
-                placeByExcel(error, name, i, 17, transMapToString(map, "var16"), "格式错误");
-                ;
-            }
-        }
-    }
-
+public class ExcelUtilAsset {
 
     /**
      * 资产包表格文件的上传
      */
-    public Map<String, Object> uploadExcel(MultipartFile file) {
+    public Map<String, Object> uploadExcel(MultipartFile file ) {
         Map<String, Object> map = new HashMap<String, Object>();
         String type = "文件业务类型";
         Integer userId = 0;
@@ -231,17 +32,17 @@ public class ExcelUtil {
             String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/" + type + "/" + userId + "/";
 //            String path="E://";
 //            String fileName="2.xls";
-            List<Map<String, Object>> list0 = readExcelForList(path, fileName, 0, 0, 0);//借款人
-            List<Map<String, Object>> list1 = readExcelForList(path, fileName, 0, 0, 1);//抵押物
-            List<Map<String, Object>> list2 = readExcelForList(path, fileName, 0, 0, 2);//借据
-            List<Map<String, Object>> list3 = readExcelForList(path, fileName, 0, 0, 3);//联系人
+            List<Map<String, Object>> list0 = ExcelTool.readExcelForList(path, fileName, 0, 0, 0);//借款人
+            List<Map<String, Object>> list1 = ExcelTool.readExcelForList(path, fileName, 0, 0, 1);//抵押物
+            List<Map<String, Object>> list2 = ExcelTool.readExcelForList(path, fileName, 0, 0, 2);//借据
+            List<Map<String, Object>> list3 = ExcelTool.readExcelForList(path, fileName, 0, 0, 3);//联系人
             //判断文件的字段格式
             List<String[]> error = new ArrayList<String[]>();//错误信息
-            fileName = "error.xls";
+            fileName = "errorAsset.xls";
             if (!checkExcel(list0, list1, list2, list3, error)) {
                 //文件的写出成表格文件
                 String[] str = {"序号", "表名称", "位置", "字段名称", "问题内容"};
-                exportExcel(error, str, path, fileName);
+                ExcelTool.exportExcel(error, str, path, fileName);
                 map.put("result", "error");
                 map.put("filePath", path + fileName);
             } else {
@@ -411,6 +212,9 @@ public class ExcelUtil {
             if (transMapToString(l, "var1").equals("")) {//*关系
                 placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "不能为空");
             }
+            if (!transMapToString(l, "var1").equals("")&&FormatValidateTool.isNumeric(transMapToString(l, "var1").split("-")[0])) {//*关系
+                placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "格式错误");
+            }
             if (transMapToString(l, "var2").equals("")) {//*所属原始借据（号）
                 placeByExcel(error, name, i, 2, transMapToString(map, "var2"), "不能为空");
             }
@@ -459,6 +263,9 @@ public class ExcelUtil {
             }
             if (transMapToString(l, "var1").equals("")) {//*关系
                 placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "不能为空");
+            }
+            if (!transMapToString(l, "var1").equals("")&&FormatValidateTool.isNumeric(transMapToString(l, "var1").split("-")[0])) {//*关系
+                placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "格式错误");
             }
             if (transMapToString(l, "var2").equals("")) {//*原始借据（号）
                 placeByExcel(error, name, i, 2, transMapToString(map, "var2"), "不能为空");
@@ -663,7 +470,7 @@ public class ExcelUtil {
                 continue;
             }
             IouDTO iouDTO = new IouDTO();
-            iouDTO.setId(transStringToInteger(transMapToString(map2, "var0")));
+            iouDTO.setId(transStringToInteger(transMapToString(map2, "var1").split("-")[0]));
             iouDTO.setIouCode(transMapToString(map2, "var2"));
             iouDTO.setType(transMapToString(map2, "var3"));
             iouDTO.setAgency(transMapToString(map2, "var4"));
@@ -701,7 +508,7 @@ public class ExcelUtil {
                 continue;
             }
             PawnDTO pawnDTO = new PawnDTO();
-            pawnDTO.setId(transStringToInteger(transMapToString(map1, "var0")));
+            pawnDTO.setId(transStringToInteger(transMapToString(map1, "var1").split("-")[0]));
             pawnDTO.setAmount(transStringToDouble(transMapToString(map1, "var3")));
             pawnDTO.setType(transMapToString(map1, "var4"));
             pawnDTO.setSize(transMapToString(map1, "var5"));
@@ -748,7 +555,6 @@ public class ExcelUtil {
             lenderDTOs.add(lenderDTO);
         }
     }
-/*表格通用*/
 
     /**
      * 从map中获取字符
@@ -776,165 +582,6 @@ public class ExcelUtil {
             return Double.parseDouble(str);
         } else {
             return null;
-        }
-    }
-
-    /**
-     * HSSF读取表格文件
-     */
-    public static List<Map<String, Object>> readExcelForList(String filepath, String filename, int startrow, int startcol, int sheetnum) {
-        List<Map<String, Object>> varList = new ArrayList<Map<String, Object>>();
-        try {
-            File target = new File(filepath, filename);
-            FileInputStream fi = new FileInputStream(target);
-            HSSFWorkbook wb = new HSSFWorkbook(fi);
-            HSSFSheet sheet = wb.getSheetAt(sheetnum); // sheet 从0开始
-            if (sheet != null) {
-                int rowNum = sheet.getLastRowNum() + 1; // 取得最后一行的行号
-                for (int i = startrow; i < rowNum; i++) { // 行循环开始
-                    Map<String, Object> varpd = new HashMap<String, Object>();
-                    HSSFRow row = sheet.getRow(i); // 行
-                    if (row != null) {
-                        int cellNum = row.getLastCellNum(); // 每行的最后一个单元格位置
-                        for (int j = startcol; j < cellNum; j++) { // 列循环开始
-                            HSSFCell cell = row.getCell(j);
-                            String cellValue = null;
-                            if (null != cell) {
-                                cellValue = getCellValue(cell);
-                            } else {
-                                cellValue = "";
-                            }
-                            varpd.put("var" + j, cellValue);
-                        }
-                        varList.add(varpd);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            return readExcelXSSFForList(filepath, filename, startrow, startcol, sheetnum);
-        }
-        return varList;
-    }
-
-    /**
-     * XSSF读取表格文件
-     */
-    public static List<Map<String, Object>> readExcelXSSFForList(String filepath, String filename, int startrow, int startcol, int sheetnum) {
-        List<Map<String, Object>> varList = new ArrayList<Map<String, Object>>();
-        try {
-            File target = new File(filepath, filename);
-            FileInputStream fi = new FileInputStream(target);
-            XSSFWorkbook wb = new XSSFWorkbook(fi);
-            XSSFSheet sheet = wb.getSheetAt(sheetnum); // sheet 从0开始
-            if (sheet != null) {
-                int rowNum = sheet.getLastRowNum() + 1; // 取得最后一行的行号
-                for (int i = startrow; i < rowNum; i++) { // 行循环开始
-                    Map<String, Object> varpd = new HashMap<String, Object>();
-                    XSSFRow row = sheet.getRow(i); // 行
-                    if (row != null) {
-                        int cellNum = row.getLastCellNum(); // 每行的最后一个单元格位置
-                        for (int j = startcol; j < cellNum; j++) { // 列循环开始
-                            XSSFCell cell = row.getCell(j);
-                            String cellValue = null;
-                            if (null != cell) {
-                                cellValue = getCellValue(cell);
-                            } else {
-                                cellValue = "";
-                            }
-                            varpd.put("var" + j, cellValue);
-                        }
-                        varList.add(varpd);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return varList;
-    }
-
-    private static String getCellValue(Cell cell) {
-        String ret;
-        switch (cell.getCellType()) {
-            case Cell.CELL_TYPE_BLANK:
-                ret = "";
-                break;
-            case Cell.CELL_TYPE_BOOLEAN:
-                ret = String.valueOf(cell.getBooleanCellValue());
-                break;
-            case Cell.CELL_TYPE_ERROR:
-                ret = null;
-                break;
-            case Cell.CELL_TYPE_FORMULA:
-                Workbook wb = cell.getSheet().getWorkbook();
-                CreationHelper crateHelper = wb.getCreationHelper();
-                FormulaEvaluator evaluator = crateHelper.createFormulaEvaluator();
-                ret = getCellValue(evaluator.evaluateInCell(cell));
-                break;
-            case Cell.CELL_TYPE_NUMERIC:
-                if (HSSFDateUtil.isCellDateFormatted(cell)) {
-                    Date d = cell.getDateCellValue();
-                    SimpleDateFormat formater = new SimpleDateFormat("yyyy/MM/dd");
-                    ret = formater.format(d);
-                } else {
-                    ret = NumberToTextConverter.toText(cell.getNumericCellValue());
-                }
-                break;
-            case Cell.CELL_TYPE_STRING:
-                ret = cell.getRichStringCellValue().getString();
-                break;
-            default:
-                ret = null;
-        }
-        return ret; // 有必要自行trim
-    }
-
-    /**
-     * @param dataList 数据集合
-     * @param headers  //数据字段
-     * @param path     //保存文件的路径
-     * @return
-     */
-    public void exportExcel(List<String[]> dataList, String[] headers, String path, String fileName) {
-        OutputStream out = null;
-        File file = new File(path);
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        try {
-            out = new FileOutputStream(new File(path + "/" + fileName));
-            // 声明一个工作薄
-            HSSFWorkbook workbook = new HSSFWorkbook();
-            // 生成一个表格
-            HSSFSheet sheet = workbook.createSheet("导入失败");
-            // 产生表格标题行
-            HSSFRow row = sheet.createRow(0);
-            for (short i = 0; i < headers.length; i++) {
-                HSSFCell cell = row.createCell(i);
-                HSSFRichTextString text = new HSSFRichTextString(headers[i]);
-                cell.setCellValue(text);
-            }
-            int index = 1;
-            for (String[] body : dataList) {
-                row = sheet.createRow(index++);
-                for (int i = 0; i < body.length; i++) {
-                    HSSFCell cell = row.createCell(i);
-                    cell.setCellValue(body[i]);
-                }
-            }
-            workbook.write(out);
-            out.close();
-            out = null;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
