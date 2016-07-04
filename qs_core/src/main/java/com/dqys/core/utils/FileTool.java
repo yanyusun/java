@@ -82,7 +82,7 @@ public class FileTool implements ApplicationContextAware {
     }
 
     /**
-     * 保存文件
+     * 保存文件(对外封闭)
      * @param fileName
      */
     public static boolean saveFileSync(String fileName) throws IOException {
@@ -101,4 +101,39 @@ public class FileTool implements ApplicationContextAware {
 
         return true;
     }
+
+    /**
+     * 保存文件(对外开放)
+     * @param fileName
+     * @return
+     * @throws IOException
+     */
+    public static boolean saveOpenSource(String fileName) throws IOException{
+        String[] strs = fileName.split("_");
+        if(strs.length != 3) {
+            return false;
+        }
+        File srcFile = new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/"
+                + strs[0] + "/" + strs[1] + "/" + fileName);
+        if(!srcFile.exists()) {
+            return false;
+        }
+        File destFile = new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_OPEN_PATH_KEY).getPropertyValue() + "/" +
+                strs[0] + "/" + strs[1] + "/" + fileName);
+        FileUtils.moveFile(srcFile, destFile);
+
+        return true;
+    }
+
+    /**
+     * 文件定时删除
+     * @param file 删除的源文件
+     * @param date 删除的时间
+     */
+    public static void addDeleteScheduler(File file, Date date){
+        taskScheduler.schedule(() -> {
+            file.delete();
+        }, date);
+    }
+
 }
