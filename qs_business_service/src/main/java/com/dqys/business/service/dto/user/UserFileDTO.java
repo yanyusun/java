@@ -1,4 +1,4 @@
-package com.dqys.auth.service.dto;
+package com.dqys.business.service.dto.user;
 
 import java.util.Date;
 

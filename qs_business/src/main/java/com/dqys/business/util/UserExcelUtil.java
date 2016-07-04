@@ -1,10 +1,9 @@
-package com.dqys.auth.util;
+package com.dqys.business.util;
 
-import com.dqys.auth.service.dto.UserFileDTO;
+import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.utils.*;
-import org.junit.Test;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -13,9 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by mkefeng on 2016/6/27.
+ * Created by Yvan on 16/7/1.
+ *
+ * 成员信息导入模块
  */
-public class ExcelUtilUser {
+public class UserExcelUtil {
 
     /**
      * 用户信息表格上传
@@ -257,6 +258,4 @@ public class ExcelUtilUser {
             return null;
         }
     }
-
-
 }
