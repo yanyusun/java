@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Year;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -215,7 +216,12 @@ public class UserController {
             return JsonResponseTool.paramErr("未上传文件");
         }
         Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file);
-        
+        if(map.get("error") == null || map.get("").equals("")){
+            return JsonResponseTool.failure("");
+        }else{
+            // 返回CODE
+
+        }
         return null;
     }
 
