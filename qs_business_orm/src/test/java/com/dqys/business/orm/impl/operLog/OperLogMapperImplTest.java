@@ -2,7 +2,6 @@ package com.dqys.business.orm.impl.operLog;
 
 import com.dqys.business.orm.base.BaseTest;
 import com.dqys.business.orm.mapper.operLog.OperLogMapper;
-import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.operLog.OperLog;
 import org.junit.Assert;
 import org.junit.Test;
@@ -17,15 +16,15 @@ public class OperLogMapperImplTest extends BaseTest {
     private OperLogMapper operLogMapper;
 
     @Test
-    public void test(){
-        OperLog operLog=new OperLog();
-        operLog.setText("你啊");
+    public void test() {
+        OperLog operLog = new OperLog();
         operLog.setUserId(1);
         operLog.setOperType(99);
         operLog.setObjectId(1);
         operLog.setObjectType(99);
-        Integer result= operLogMapper.addByOperLog(operLog);
+        Integer result = operLogMapper.addByOperLog(operLog);
+        System.out.println(result);
         Assert.assertNotNull(result);
-        Assert.assertNotEquals(result,"1");
+        Assert.assertNotEquals(result, "1");
     }
 }

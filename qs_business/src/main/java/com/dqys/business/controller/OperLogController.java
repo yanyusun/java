@@ -3,6 +3,7 @@ package com.dqys.business.controller;
 import com.dqys.business.orm.pojo.operLog.OperLog;
 import com.dqys.business.orm.pojo.operLog.OperLogDTO;
 import com.dqys.business.service.service.OperLogService;
+import com.dqys.business.service.service.OperTypeService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,21 @@ public class OperLogController {
     @Autowired
     private OperLogService operLogService;
 
+    @Autowired
+    OperTypeService operTypeService;
+
     /**
-     * 查询操作记录信息
-     *
-     * @param operLog(page:分页,pageCount:每页展示数量,time:操作时间（时间段的就用“,”分隔）,realName:操作人)
+     * @param operLog(page:分页,pageCount:每页展示数量,time:操作时间（时间段的就用“,”分隔）,userId:操作人)
      * @return
+     * @api {post} operLog 操作记录
+     * @apiParam {int} page 分页数
+     * @apiParam {int} pageCount 显示数目
+     * @apiParam {string} time 操作时间
+     * @apiParam {int} userId 用户id
+     * @apiDescription 查询操作记录信息
+     * @apiSampleRequest operLog/pageList
+     * @apiGroup USER
+     * @apiName operLog/pageList
      */
     @RequestMapping("/pageList")
     @ResponseBody

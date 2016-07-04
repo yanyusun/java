@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dqys.business.orm.mapper.operLog.OperTypeMapper">
+<mapper namespace="com.dqys.business.orm.mapper.operType.OperTypeMapper">
 
-    <resultMap id="BaseResultMapByOperType" type="com.dqys.business.orm.pojo.operType.OperType">
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.operType.OperType">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="oper_type" property="operType" jdbcType="INTEGER"/>
         <result column="oper_name" property="operName" jdbcType="VARCHAR"/>
-
     </resultMap>
     <!--查询对应用户类型的角色权限-->
-    <select id="selectByRoleToOperType" resultType="BaseResultMapByOperType" parameterType="string">
+    <select id="selectByRoleToOperType" resultMap="BaseResultMap">
        SELECT ot.*,oj.object_type,ror.user_type,ror.role_id  from t_role_oper_re ror LEFT JOIN oper_type ot
       ON ot.id=ror.oper_id LEFT JOIN  oper_obj_realtion oor
       ON oor.oper_id=ot.id LEFT JOIN object_type oj
       ON oj.id=oor.obj_id
+      where ror.user_type=#{userType,jdbcType=INTEGER}
+       and ror.role_id=#{roleId,jdbcType=INTEGER}
+       and oj.object_type=#{objectType,jdbcType=INTEGER}
     </select>
     <!--查询用户类型-->
     <select id="selectByUserIds" resultType="int">
@@ -22,6 +24,10 @@
     <!--查询用户角色id-->
     <select id="selectByRoleIds" resultType="int">
         SELECT ror.role_id roleIds FROM t_role_oper_re ror GROUP BY ror.role_id
+    </select>
+    <!--查询操作类型-->
+    <select id="selectByObjectIds" resultType="int">
+        SELECT ot.object_type objectIds FROM object_type ot GROUP BY ot.object_type
     </select>
 
 </mapper>
