@@ -38,4 +38,28 @@ public class OperType implements Serializable {
     public void setOperName(String operName) {
         this.operName = operName;
     }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public String getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
+    public String getObjectTpey() {
+        return ObjectTpey;
+    }
+
+    public void setObjectTpey(String objectTpey) {
+        ObjectTpey = objectTpey;
+    }
 }
