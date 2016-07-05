@@ -1,10 +1,10 @@
 package com.dqys.business.service.utils.excel;
 
+import com.dqys.business.service.dto.excel.ExcelMessage;
 import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.utils.*;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 /**
  * Created by Yvan on 16/7/1.
- *
+ * <p/>
  * 成员信息导入模块
  */
 public class UserExcelUtil {
@@ -34,19 +34,21 @@ public class UserExcelUtil {
                     + "/temp/" + type + "/" + userId + "/";
 
 //            String path="E://";
-//            String fileName="11.xlsx";
+//            String fileName="1.xlsx";
 
             List<Map<String, Object>> list = ExcelTool.readExcelForList(path, fileName, 1, 0, 0);//借款人
             //判断文件的字段格式
-            List<String[]> error = new ArrayList<String[]>();//错误信息
-            fileName = "error" + DateFormatTool.format(DateFormatTool.DATE_FORMAT_10_REG1)
-                    + RandomStringUtils.randomNumeric(4) + ".xls";
+            List<ExcelMessage> error = new ArrayList<ExcelMessage>();//错误信息
+
             if (!checkUserExcel(list, error)) {
                 //文件的写出成表格文件
-                String[] str = {"序号", "表名称", "位置", "字段名称", "问题内容"};
-                ExcelTool.exportExcel(error, str, path, fileName);
+//                fileName = "error" + DateFormatTool.format(DateFormatTool.DATE_FORMAT_10_REG1)
+//                        + RandomStringUtils.randomNumeric(4) + ".xls";
+//                String[] str = {"序号", "表名称", "位置", "字段名称", "问题内容"};
+//                ExcelTool.exportExcel(error, str, path, fileName);
+//                map.put("filePath", path + fileName);
                 map.put("result", "error");
-                map.put("filePath", path + fileName);
+                map.put("data", error);
             } else {
                 //文件格式都正确的就处理表格
                 map.put("result", "ok");
@@ -105,7 +107,7 @@ public class UserExcelUtil {
      * @param error
      * @return
      */
-    private static boolean checkUserExcel(List<Map<String, Object>> list, List<String[]> error) {
+    private static boolean checkUserExcel(List<Map<String, Object>> list, List<ExcelMessage> error) {
         String[] str = {"序号", "*姓名", "*昵称", "*性别", "*自定义账号", "*微信号", "QQ号", "办公电话", "*手机号", "*工作邮箱", "*部门", "*职位名称",
                 "*职责名称", "职责描述", "*职责区域", "*系统角色", "从业年限(年）", "入职时间", "历史业绩（总数量）", "备注"};
         String msg = "";
@@ -119,14 +121,15 @@ public class UserExcelUtil {
             }
         } else {
             //导出错误信息到文件
-            String[] string = {"1", "", "", "", msg};
-            error.add(string);//模板有问题
+//            String[] string = {"1", "", "", "", msg};
+            ExcelMessage excelMessage=new ExcelMessage(1, "", "", "", msg);
+            error.add(excelMessage);//模板有问题
             flag = false;
         }
         return flag;
     }
 
-    private static void checkUser(List<String[]> error, List<Map<String, Object>> list) {
+    private static void checkUser(List<ExcelMessage> error, List<Map<String, Object>> list) {
         String name = "用户信息表";
         Map<String, Object> map = list.get(0);
         for (int i = 1; i < list.size(); i++) {
@@ -212,9 +215,10 @@ public class UserExcelUtil {
      * @param fieldsName 字段名称
      * @param msg        错误内容
      */
-    private static void placeByExcel(List<String[]> error, String name, Integer row, Integer col, String fieldsName, String msg) {
-        String[] str = {(error.size() + 1) + "", name, (row) + "行" + (col + 1) + "列", fieldsName, msg};
-        error.add(str);
+    private static void placeByExcel(List<ExcelMessage> error, String name, Integer row, Integer col, String fieldsName, String msg) {
+//        String[] str = {(error.size() + 1) + "", name, (row) + "行" + (col + 1) + "列", fieldsName, msg};
+        ExcelMessage excelMessage = new ExcelMessage((error.size() + 1), name, (row) + "行" + (col + 1) + "列", fieldsName, msg);
+        error.add(excelMessage);
     }
 
     /**
@@ -263,7 +267,6 @@ public class UserExcelUtil {
             return null;
         }
     }
-
 
 
 }
