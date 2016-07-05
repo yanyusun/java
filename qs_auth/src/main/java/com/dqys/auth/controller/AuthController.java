@@ -47,9 +47,11 @@ public class AuthController extends BaseApiContorller {
     private CompanyService companyService;
 
     /**
-     *  图片验证码
-     * @param key
-     * @return
+     * @api {GET} http://{url}/auth/captcha 获取验证码
+     * @apiName name 获取验证码
+     *
+     * @apiParam {String} key the key required to create captcha
+     *
      */
     @RequestMapping("/captcha")
     public Callable<ResponseEntity<StreamingResponseBody>> genImgCaptcha(@RequestParam String key) {
