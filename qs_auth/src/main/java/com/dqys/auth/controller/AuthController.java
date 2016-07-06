@@ -52,7 +52,7 @@ public class AuthController extends BaseApiContorller {
      * @apiGroup Auth
      * @apiDescription This is the Description.
      *
-     * @apiParam {String} key 验证码生成标签key
+     * @apiParam {String} key 验证码标签key
      *
      * @apiSuccess {Object} data png图片
      */
@@ -110,12 +110,12 @@ public class AuthController extends BaseApiContorller {
      * @apiGroup Auth
      * @apiDescription 验证当前账号是否有效
      *
-     * @apiParam [String] userName 账号
-     * @apiParam [String] mobile 手机号
-     * @apiParam [String] email 邮箱
+     * @apiParam {String} [userName] 账号<三选一必选>
+     * @apiParam {String} [mobile] 手机号三选一必选>
+     * @apiParam {String} [email] 邮箱三选一必选>
      *
      * @apiUse JsonResponse
-     * @apiSuccess {Object} data 返回数据
+     * @apiSuccess {json} data 返回数据(0,用户可用;Object,已存在且读取出数据)
      *
      * @apiErrorExample {json} Error-Response:
      * HTTP/1.1 2000 ok
@@ -157,18 +157,17 @@ public class AuthController extends BaseApiContorller {
 
     /**
      * @apiDefine ResponseHeader
-     * @apiSuccess {String} userid 账号ID
+     * @apiSuccess {json} data 返回头信息内容
+     *
+     * @apiSuccessExample {json} Data-Success-Response:
+     * {
+     *     'x-qs-user':'SDFBSKDFNSDFNSKJFSDFNLSDFNLSDFNK=',
+     *     'x-qs-type':'0,',
+     *     'x-qs-role':'0,',
+     *     'x-qs-certified':'true,',
+     *     'x-qs-status':'0,'
+     * }
      */
-
-    /**
-     * @apiDefined CommonHeader
-     * @apiHeader {String} x-qs-user 账号加密字符串
-     * @apiHeader {String} x-qs-type 账号类型集
-     * @apiHeader {String} x-qs-role 账号角色权限集
-     * @apiHeader {String} x-qs-certified 账号认证情况集合
-     * @apiHeader {String} x-qs-status 账号状态
-     */
-
 
     /**
      * @api {POST} http://{url}/auth/register 注册
@@ -250,11 +249,23 @@ public class AuthController extends BaseApiContorller {
      * @api {POST} http://{url}/auth/login 用户登陆
      * @apiName login
      * @apiGroup Auth
+     * @apiDecription 用户登录模块返回信息包含独有信息,具体参考Login-Success-Response
      *
      * @apiUse RequestAccount
-     *
      * @apiUse JsonResponse
      * @apiUse ResponseHeader
+     *
+     * @apiSuccess {json} data
+     * @apiSuccessExample {json} Login-Success-Response:
+     * {
+     *     'x-qs-user':'SDFBSKDFNSDFNSKJFSDFNLSDFNLSDFNK=',
+     *     'x-qs-type':'0,',
+     *     'x-qs-role':'0,',
+     *     'x-qs-certified':'true,',
+     *     'x-qs-status':'0,',
+     *     'x-qs-step':'true'
+     * }
+     * 参数step说明:false:无效账户,active:激活邮箱,adminCompany:未完善信息,authentication:企业未认证,true:信息完善
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Callable<JsonResponse> userLogin(@RequestParam(required = false) String userName,
@@ -308,7 +319,7 @@ public class AuthController extends BaseApiContorller {
             }
 
             // auto 验证注册信息是否完善<这里后期完善>
-            String step = "false"; // false:无效账户,active:激活邮箱,adminCompany:未完善信息,authentication:未认证,true,信息完善
+            String step = "false"; // false:无效账户,active:激活邮箱,adminCompany:未完善信息,authentication:未认证,true:信息完善
             Integer status = userServiceResult.getData().getStatus();
             Integer companyId = userServiceResult.getData().getCompanyId();
             if (status.equals(0)) {
@@ -334,12 +345,22 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
-     * @api {GET} http://{url}/auth/reset 重置密码
+     * @apiDefine CommonHeader
+     * @apiHeader {String} x-qs-user 账号加密字符串
+     * @apiHeader {String} x-qs-type 账号类型集
+     * @apiHeader {String} x-qs-role 账号角色权限集
+     * @apiHeader {String} x-qs-certified 账号认证情况集合
+     * @apiHeader {String} x-qs-status 账号状态
+     */
+
+    /**
+     * @api {POST} http://{url}/auth/reset 重置密码
      * @apiName reset
      * @apiGroup Auth
      *
      * @apiParam {String} pwd 新密码
      *
+     * @apiUse CommonHeader
      * @apiUse JsonResponse
      * @apiUse ResponseHeader
      */
@@ -369,7 +390,7 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
-     * @api {GET} http://{url}/auth/reset_mobile 手机重置密码
+     * @api {POST} http://{url}/auth/reset_mobile 手机重置密码
      * @apiName reset_mobile
      * @apiGroup Auth
      *
@@ -463,11 +484,12 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
-     * @api {GET} http://{url}/auth/send_mail 发送邮件
+     * @api {POST} http://{url}/auth/send_mail 发送邮件
      * @apiName send_mail
      * @apiGroup Auth
      * @apiDescription 发送至当前用户绑定的邮箱
      *
+     * @apiUse CommonHeader
      * @apiUse JsonResponse
      */
     @RequestMapping(value = "/send_mail", method = RequestMethod.POST)
@@ -481,7 +503,7 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
-     * @api {GET} http://{url}/auth/confirm_mail 邮箱激活账号
+     * @api {GET} http://{url}/auth/confirm_mail 邮箱激活
      * @apiName confirm_mail
      * @apiGroup Auth
      *
@@ -504,7 +526,7 @@ public class AuthController extends BaseApiContorller {
 
 
     /**
-     * @api {GET} http://{url}/auth/addCompany 完善公司信息
+     * @api {POST} http://{url}/auth/addCompany 完善公司信息
      * @apiName addCompany
      * @apiGroup Auth
      *
@@ -516,6 +538,7 @@ public class AuthController extends BaseApiContorller {
      * @apiParam {number} area 区域Id
      * @apiParam {String} address 详细地址
      *
+     * @apiUse CommonHeader
      * @apiUse JsonResponse
      */
     @RequestMapping(value = "/add_company", method = RequestMethod.POST)
@@ -563,7 +586,7 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
-     * @api {GET} http://{url}/auth/register_admin 完善管理员信息
+     * @api {POST} http://{url}/auth/register_admin 完善管理员信息
      * @apiName register_admin
      * @apiGroup Auth
      *
@@ -576,6 +599,7 @@ public class AuthController extends BaseApiContorller {
      * @apiParam {String} mobile 手机号
      * @apiParam {String} smsCode 验证码
      *
+     * @apiUse CommonHeader
      * @apiUse JsonResponse
      */
     @RequestMapping(value = "/register_admin", method = RequestMethod.POST)
