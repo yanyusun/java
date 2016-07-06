@@ -1,6 +1,18 @@
 package com.dqys.core.model;
 
 /**
+ * @apiDefine JsonResponse
+ * @apiSuccess {number} code 错误码
+ * @apiSuccess {String} msg 错误消息
+ *
+ * @apiSuccessExample Success-Response:
+ *  HTTP/1.1 2000 ok
+ *  {
+ *      code:2000,
+ *      msg:'成功',
+ *      data:Object
+ *  }
+ *
  * @author by pan on 9/10/15.
  */
 public class JsonResponse<T> {

@@ -47,11 +47,14 @@ public class AuthController extends BaseApiContorller {
     private CompanyService companyService;
 
     /**
-     * @api {GET} http://{url}/auth/captcha 获取验证码
-     * @apiName name 获取验证码
+     * @api {GET} http://{url}/auth/captcha 图片验证码
+     * @apiName captcha
+     * @apiGroup Auth
+     * @apiDescription This is the Description.
      *
-     * @apiParam {String} key the key required to create captcha
+     * @apiParam {String} key 验证码生成标签key
      *
+     * @apiSuccess {Object} data png图片
      */
     @RequestMapping("/captcha")
     public Callable<ResponseEntity<StreamingResponseBody>> genImgCaptcha(@RequestParam String key) {
@@ -69,9 +72,15 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
-     * 短信验证码
-     * @param mobile
-     * @return
+     * @api {GET} http://{url}/auth/sms_code 短信验证码
+     * @apiName smsCode
+     * @apiGroup Auth
+     * @apiDescription 手机校验短信
+     *
+     * @apiParam {String} mobile 手机号
+     *
+     * @apiUse JsonResponse
+     * @apiSuccess {Object} data 返回数据
      */
     @RequestMapping("/sms_code")
     public Callable<JsonResponse> sendSmsCode(@RequestParam String mobile) {
@@ -96,12 +105,25 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
-     * 验证用户有效性
+     * @api {GET} http://{url}/auth/validate_user 验证用户有效性
+     * @apiName validateUser
+     * @apiGroup Auth
+     * @apiDescription 验证当前账号是否有效
      *
-     * @param userName
-     * @param mobile
-     * @param email
-     * @return
+     * @apiParam [String] userName 账号
+     * @apiParam [String] mobile 手机号
+     * @apiParam [String] email 邮箱
+     *
+     * @apiUse JsonResponse
+     * @apiSuccess {Object} data 返回数据
+     *
+     * @apiErrorExample {json} Error-Response:
+     * HTTP/1.1 2000 ok
+     *  {
+     *      code:2000,
+     *      msg:'成功',
+     *      data:0
+     *  }
      */
     @RequestMapping(value = "/validate_user")
     public Callable<JsonResponse> velidateUser(@RequestParam(required = false) String userName,
@@ -122,17 +144,42 @@ public class AuthController extends BaseApiContorller {
         };
     }
 
+    /**
+     * @apiDefine RequestAccount
+     * @apiParam {String} [userName] 账号<三选一必选>
+     * @apiParam {String} [mobile] 手机号<三选一必选>
+     * @apiParam {String} [email] 邮箱<三选一必选>
+     * @apiParam {String} pwd 密码
+     * @apiParam {String} [smsCode] 手机短信验证码<三选一必选>
+     * @apiParam {String} [captcha] 图片验证码<三选一必选>
+     * @apiParam {String} [captchaKey] 图片验证码Key<三选一必选>
+     */
 
     /**
-     * 用户注册
-     * @param userName
-     * @param mobile
-     * @param email
-     * @param pwd
-     * @param smsCode
-     * @param captcha
-     * @param captchaKey
-     * @return
+     * @apiDefine ResponseHeader
+     * @apiSuccess {String} userid 账号ID
+     */
+
+    /**
+     * @apiDefined CommonHeader
+     * @apiHeader {String} x-qs-user 账号加密字符串
+     * @apiHeader {String} x-qs-type 账号类型集
+     * @apiHeader {String} x-qs-role 账号角色权限集
+     * @apiHeader {String} x-qs-certified 账号认证情况集合
+     * @apiHeader {String} x-qs-status 账号状态
+     */
+
+
+    /**
+     * @api {POST} http://{url}/auth/register 注册
+     * @apiName register
+     * @apiGroup Auth
+     * @apiDescription 用户注册
+     *
+     * @apiUse RequestAccount
+     *
+     * @apiUse JsonResponse
+     * @apiSuccess ResponseHeader
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public Callable<JsonResponse> userRegister(@RequestParam(required = false) String userName,
@@ -200,15 +247,14 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
-     * 用户登录
-     * @param userName
-     * @param mobile
-     * @param email
-     * @param pwd
-     * @param smsCode
-     * @param captcha
-     * @param captchaKey
-     * @return
+     * @api {POST} http://{url}/auth/login 用户登陆
+     * @apiName login
+     * @apiGroup Auth
+     *
+     * @apiUse RequestAccount
+     *
+     * @apiUse JsonResponse
+     * @apiUse ResponseHeader
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Callable<JsonResponse> userLogin(@RequestParam(required = false) String userName,
@@ -288,10 +334,14 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
-     * 根据旧密码重置新密码
+     * @api {GET} http://{url}/auth/reset 重置密码
+     * @apiName reset
+     * @apiGroup Auth
      *
-     * @param pwd
-     * @return
+     * @apiParam {String} pwd 新密码
+     *
+     * @apiUse JsonResponse
+     * @apiUse ResponseHeader
      */
     @RequestMapping(value = "/reset", method = RequestMethod.POST)
     public Callable<JsonResponse> userReset(@RequestParam String pwd) {
@@ -319,11 +369,16 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
-     * 通过手机重置密码
-     * @param mobile
-     * @param smsCode
-     * @param pwd
-     * @return
+     * @api {GET} http://{url}/auth/reset_mobile 手机重置密码
+     * @apiName reset_mobile
+     * @apiGroup Auth
+     *
+     * @apiParam {String} mobile 手机号
+     * @apiParam {String} smsCode 验证码
+     * @apiParam {String} pwd 新密码
+     *
+     * @apiUse JsonResponse
+     * @apiUse ResponseHeader
      */
     @RequestMapping(value = "/reset_mobile", method = RequestMethod.POST)
     public Callable<JsonResponse>  userReset(@RequestParam String mobile, @RequestParam String smsCode,  @RequestParam String pwd) {
@@ -367,11 +422,16 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
-     * 从邮件重置密码
-     * @param uid
-     * @param confirmKey
-     * @param pwd
-     * @return
+     * @api {GET} http://{url}/auth/reset_mail 邮件重置密码
+     * @apiName reset_mail
+     * @apiGroup Auth
+     *
+     * @apiParam {number} uid 用户Id
+     * @apiParam {String} confirmKey 验证key
+     * @apiParam {String} pwd 新密码
+     *
+     * @apiUse JsonResponse
+     * @apiUse ResponseHeader
      */
     @RequestMapping(value = "/reset_mail")
     public Callable<JsonResponse> userReset(@RequestParam Integer uid, @RequestParam String confirmKey, @RequestParam String pwd) {
@@ -403,8 +463,12 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
-     * 发送邮件
-     * @return
+     * @api {GET} http://{url}/auth/send_mail 发送邮件
+     * @apiName send_mail
+     * @apiGroup Auth
+     * @apiDescription 发送至当前用户绑定的邮箱
+     *
+     * @apiUse JsonResponse
      */
     @RequestMapping(value = "/send_mail", method = RequestMethod.POST)
     public Callable<JsonResponse> sendConfirmEmail() {
@@ -417,9 +481,13 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
-     * 发送确认邮件
-     * @param confirmKey
-     * @return
+     * @api {GET} http://{url}/auth/confirm_mail 邮箱激活账号
+     * @apiName confirm_mail
+     * @apiGroup Auth
+     *
+     * @apiParam {String} confirmKey 加密Key
+     *
+     * @apiUse JsonResponse
      */
     @RequestMapping(value = "/confirm_mail")
     public Callable<JsonResponse> confirmEmail(@RequestParam String confirmKey) {
@@ -434,16 +502,21 @@ public class AuthController extends BaseApiContorller {
         };
     }
 
+
     /**
-     * 添加公司信息
-     * @param companyName
-     * @param credential
-     * @param licence
-     * @param province
-     * @param city
-     * @param area
-     * @param address
-     * @return
+     * @api {GET} http://{url}/auth/addCompany 完善公司信息
+     * @apiName addCompany
+     * @apiGroup Auth
+     *
+     * @apiParam {String} companyName 公司名称
+     * @apiParam {String} credential 加密Key
+     * @apiParam {String} licence 加密Key
+     * @apiParam {number} province 省份Id
+     * @apiParam {number} city 城市Id
+     * @apiParam {number} area 区域Id
+     * @apiParam {String} address 详细地址
+     *
+     * @apiUse JsonResponse
      */
     @RequestMapping(value = "/add_company", method = RequestMethod.POST)
     public Callable<JsonResponse> addCompany(@RequestParam String companyName, @RequestParam String credential, @RequestParam String licence,
@@ -490,15 +563,20 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
-     * 注册运营者(管理员)
-     * @param userId
-     * @param userType
-     * @param companyId
-     * @param realName
-     * @param identity
-     * @param mobile
-     * @param smsCode
-     * @return
+     * @api {GET} http://{url}/auth/register_admin 完善管理员信息
+     * @apiName register_admin
+     * @apiGroup Auth
+     *
+     * @apiParam {number} [userId] 用户ID
+     * @apiParam {number} userType 用户类型
+     * @apiParam {number} [companyId] 公司ID
+     * @apiParam {number} confirmKey 加密Key
+     * @apiParam {String} realName 真实姓名
+     * @apiParam {String} identity 身份证
+     * @apiParam {String} mobile 手机号
+     * @apiParam {String} smsCode 验证码
+     *
+     * @apiUse JsonResponse
      */
     @RequestMapping(value = "/register_admin", method = RequestMethod.POST)
     public Callable<JsonResponse> registerAdmin(@RequestParam(defaultValue = "0") Integer userId, @RequestParam Integer userType,
