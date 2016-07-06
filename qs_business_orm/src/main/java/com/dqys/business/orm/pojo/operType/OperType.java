@@ -1,7 +1,5 @@
 package com.dqys.business.orm.pojo.operType;
 
-import sun.plugin2.message.Serializer;
-
 import java.io.Serializable;
 
 /**

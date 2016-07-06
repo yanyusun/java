@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 public class OperTypeMapperImpl extends BaseDao implements OperTypeMapper {
     @Override
-    public List<OperType> selectByRoleToOperType(Integer roleId, Integer userType) {
-        return super.getSqlSession().getMapper(OperTypeMapper.class).selectByRoleToOperType(roleId,userType);
+    public List<OperType> selectByRoleToOperType(Integer roleId, Integer userType, Integer objectType) {
+        return super.getSqlSession().getMapper(OperTypeMapper.class).selectByRoleToOperType(roleId, userType, objectType);
     }
 
     @Override
@@ -25,5 +25,10 @@ public class OperTypeMapperImpl extends BaseDao implements OperTypeMapper {
     @Override
     public List<Integer> selectByRoleIds() {
         return super.getSqlSession().getMapper(OperTypeMapper.class).selectByRoleIds();
+    }
+
+    @Override
+    public List<Integer> selectByObjectIds() {
+        return super.getSqlSession().getMapper(OperTypeMapper.class).selectByObjectIds();
     }
 }

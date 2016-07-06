@@ -1,13 +1,13 @@
 package com.dqys.business.service.constant;
 
-/**'
- *  操作类型
+/**
+ * '
+ * 操作类型
  * Created by mkfeng on 2016/7/4.
  */
 public enum OperTypeEnum {
 
-    USER_INFO(99,"用户信息"),
-    ;
+    USER_INFO(99, "用户信息"),;
 
     private Integer value;
     private String name;

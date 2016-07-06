@@ -10,22 +10,39 @@ import java.util.List;
 public interface OperTypeService {
     /**
      * 初始化权限
+     *
      * @param roleId
      * @param userType
      * @return
      */
-    public List<OperType> selectByRoleToOperType(Integer roleId,Integer userType );
+    public List<OperType> selectByRoleToOperType(Integer roleId, Integer userType, Integer objectType);
 
     /**
      * 查询用户类型
+     *
      * @return
      */
     public List<Integer> selectByUserIds();
 
     /**
      * 查询用户角色id
+     *
      * @return
      */
     public List<Integer> selectByRoleIds();
 
+    /**
+     * 查询对象类型
+     *
+     * @return
+     */
+    List<Integer> selectByObjectIds();
+
+    /**
+     * 根据用户类型，角色id，操作类型获取对应权限
+     *
+     * @param userId_roleId_objectId 用户类型_角色id_操作类型
+     * @return
+     */
+    public List<OperType> getOperType(String userId_roleId_objectId);
 }
