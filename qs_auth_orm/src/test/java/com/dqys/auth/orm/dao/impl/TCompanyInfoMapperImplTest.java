@@ -20,9 +20,9 @@ public class TCompanyInfoMapperImplTest extends BaseTest {
     public void test() throws Exception {
         TCompanyInfo tCompanyInfo = new TCompanyInfo();
         tCompanyInfo.setAddress("详细地址");
-        tCompanyInfo.setArea(1);
-        tCompanyInfo.setCity(2);
-        tCompanyInfo.setProvince(1);
+        tCompanyInfo.setArea(11);
+        tCompanyInfo.setCity(1102);
+        tCompanyInfo.setProvince(110228);
         tCompanyInfo.setCompanyName("测试公司名");
         tCompanyInfo.setCredential("统一组织代码");
         tCompanyInfo.setIsAuth(true);
