@@ -35,10 +35,15 @@ public class UserController {
     @Autowired
     private CompanyService companyService;
 
+
     /**
-     * 二级导航数据统计
+     * @api {GET} http://{url}//api/user/listData 二级导航统计
+     * @apiName listData
+     * @apiGroup User
+     * @apiDescription 二级导航数据统计
      *
-     * @return
+     * @apiUse JsonResponse
+     * @apiSuccess {json} data 返回数据
      */
     @RequestMapping(value = "/listData")
     @ResponseBody
