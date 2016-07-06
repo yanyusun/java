@@ -1,9 +1,6 @@
 package com.dqys.business.orm.pojo.operLog;
 
-import com.dqys.core.base.BaseDTO;
-import com.dqys.core.base.BasePageDTO;
 import com.dqys.core.base.BasePagination;
-import sun.plugin2.message.Serializer;
 
 import java.io.Serializable;
 
