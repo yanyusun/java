@@ -116,7 +116,7 @@ public class UserController {
                 userInsertDTO.getRealName(), userInsertDTO.getSex(), userInsertDTO.getAccount(),
                 userInsertDTO.getDuty(), userInsertDTO.getWechat(), userInsertDTO.getMobile(),
                 userInsertDTO.getEmail(), userInsertDTO.getApartmentId(), userInsertDTO.getOccupation(),
-                userInsertDTO.getAreaId(), userInsertDTO.getRoleId())) {
+                userInsertDTO.getAreaId(), userInsertDTO.getRoleId(), userInsertDTO.getUserType())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         // 其他校验
@@ -153,7 +153,8 @@ public class UserController {
                 userInsertDTO.getRealName(), userInsertDTO.getSex(), userInsertDTO.getAccount(),
                 userInsertDTO.getDuty(), userInsertDTO.getWechat(), userInsertDTO.getMobile(),
                 userInsertDTO.getEmail(), userInsertDTO.getApartmentId(), userInsertDTO.getOccupation(),
-                userInsertDTO.getAreaId(), userInsertDTO.getRoleId(), userInsertDTO.getId())) {
+                userInsertDTO.getAreaId(), userInsertDTO.getRoleId(), userInsertDTO.getId(),
+                userInsertDTO.getUserType())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return userService.update(userInsertDTO);
@@ -196,17 +197,17 @@ public class UserController {
      * 批量设置状态
      *
      * @param ids
-     * @param id
+     * @param status
      * @return
      */
     @RequestMapping(value = "/statusBatch")
     @ResponseBody
     public JsonResponse statusBatch(@RequestParam(required = true) String ids,
-                                    @RequestParam(required = true) Integer id) {
-        if (CommonUtil.checkParam(ids, id)) {
+                                    @RequestParam(required = true) Integer status) {
+        if (CommonUtil.checkParam(ids, status)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return userService.statusBatch(ids, id);
+        return userService.statusBatch(ids, status);
     }
 
     /**

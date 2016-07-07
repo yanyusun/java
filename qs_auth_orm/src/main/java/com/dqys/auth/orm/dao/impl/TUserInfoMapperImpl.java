@@ -52,7 +52,7 @@ public class TUserInfoMapperImpl extends BaseDao implements TUserInfoMapper {
     }
 
     @Override
-    public Integer queryUpdateStatus(@Param("ids") String ids, @Param("status") Integer status) {
+    public Integer queryUpdateStatus(@Param("ids") List<Integer> ids, @Param("status") Integer status) {
         return super.getSqlSession().getMapper(TUserInfoMapper.class).queryUpdateStatus(ids, status);
     }
 }
