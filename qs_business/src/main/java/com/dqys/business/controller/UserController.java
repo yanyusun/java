@@ -35,15 +35,32 @@ public class UserController {
     @Autowired
     private CompanyService companyService;
 
+    /**
+     * @api {GET} ../ listDataCount
+     * @apiName listData
+     * @apiGroup User-Object
+     * @apiDescription 二级导航数据返回结果对象
+     *
+     * @apiSuccess {number} [plateform] 平台总公司用户
+     * @apiSuccess {number} [plateformCompany] 平台分公司用户
+     * @apiSuccess {number} [entrustTotal] 委托用户总数
+     * @apiSuccess {number} [entrustAgency] 机构用户
+     * @apiSuccess {number} [entrustSingle] 个人用户
+     * @apiSuccess {number} [disposeTotal] 处置方全部用户
+     * @apiSuccess {number} [urge] 催收方用户
+     * @apiSuccess {number} [Judicial] 律所用户
+     * @apiSuccess {number} [dispose] 中介用户
+     */
+
 
     /**
-     * @api {GET} http://{url}//api/user/listData 二级导航统计
+     * @api {GET} http://{url}/api/user/listData 二级导航统计
      * @apiName listData
      * @apiGroup User
      * @apiDescription 二级导航数据统计
      *
      * @apiUse JsonResponse
-     * @apiSuccess {json} data 返回数据
+     * @apiSuccess {listDataCount} data 返回数据
      */
     @RequestMapping(value = "/listData")
     @ResponseBody
@@ -77,6 +94,17 @@ public class UserController {
      * 获取初始化列表
      *
      * @return
+     */
+    /**
+     * @api {GET} http://{url}/api/user/getInit 二级导航统计
+     * @apiName getInit
+     * @apiGroup User
+     * @apiDescription 增改页面初始化可选数据
+     *
+     * @apiUse JsonResponse
+     * @apiSuccess {json} data 返回数据(以下为json返回内容)
+     *
+     * @apiSuccess {Object} [companyInfo] 平台总公司用户
      */
     @RequestMapping(value = "/getInit")
     @ResponseBody
