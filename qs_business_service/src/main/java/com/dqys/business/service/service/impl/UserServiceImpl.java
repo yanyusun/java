@@ -9,8 +9,6 @@ import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.auth.orm.query.CompanyQuery;
 import com.dqys.auth.orm.query.TUserQuery;
 import com.dqys.auth.orm.query.TUserTagQuery;
-import com.dqys.business.orm.mapper.company.OrganizationMapper;
-import com.dqys.business.orm.pojo.company.Organization;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;
 import com.dqys.business.service.query.user.UserListQuery;
@@ -110,9 +108,9 @@ public class UserServiceImpl implements UserService {
                 }
                 tUserQuery.setCompanyIds(companyIds);
             }
-        }else{
+        } else {
             TUserInfo tUserInfo = getCurrentUser();
-            if(tUserInfo != null){
+            if (tUserInfo != null) {
                 tUserQuery.setCompanyId(tUserInfo.getCompanyId());
             }
         }
@@ -129,9 +127,9 @@ public class UserServiceImpl implements UserService {
             resultMap.put("total", 0);
             return JsonResponseTool.success(resultMap);
         } else {
-            tUserInfoList.forEach(tUserInfo -> {
+            for(TUserInfo tUserInfo : tUserInfoList){
                 userListDTOList.add(_get(tUserInfo));
-            });
+            }
         }
         Integer count = tUserInfoMapper.queryCount(tUserQuery);
 
@@ -163,11 +161,11 @@ public class UserServiceImpl implements UserService {
         }
         TUserInfo userInfo = UserServiceUtils.toTUserInfo(data);
         Integer result = tUserInfoMapper.insertSelective(userInfo);
-        if(result != null && result > 0){
+        if (result != null && result > 0) {
             Integer userInfoId = userInfo.getId();
             TUserTag userTag = UserServiceUtils.toTUserTag(data, userInfoId);
             result = tUserTagMapper.insertSelective(userTag);
-            if(result != null && result > 0){
+            if (result != null && result > 0) {
                 return JsonResponseTool.success(userInfoId);
             }
         }
@@ -176,7 +174,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JsonResponse update(UserInsertDTO userInsertDTO) {
-        if(CommonUtil.checkParam(userInsertDTO, userInsertDTO.getId(), userInsertDTO.getCompanyId())){
+        if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getId(), userInsertDTO.getCompanyId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         TUserTag tUserTag = new TUserTag();
@@ -184,7 +182,7 @@ public class UserServiceImpl implements UserService {
         if (tUserTagList.size() > 0) {
             tUserTag = tUserTagList.get(0);
         }
-        if(tUserTag == null){
+        if (tUserTag == null) {
             return JsonResponseTool.failure("修改失败");
         }
 
@@ -192,27 +190,27 @@ public class UserServiceImpl implements UserService {
 
         TUserInfo userInfo = UserServiceUtils.toTUserInfo(userInsertDTO);
         Integer result = tUserInfoMapper.insertSelective(userInfo);
-        if(result != null && result.equals(1)){
+        if (result != null && result.equals(1)) {
             flag = true;
         }
 
         TUserTag userTag = UserServiceUtils.toTUserTag(userInsertDTO, userInsertDTO.getId());
         userTag.setId(tUserTag.getId());
         Integer tagResult = tUserTagMapper.updateByPrimaryKeySelective(userTag);
-        if(tagResult != null && tagResult.equals(1)){
+        if (tagResult != null && tagResult.equals(1)) {
             flag = true;
         }
 
-        if(flag){
+        if (flag) {
             return JsonResponseTool.success(userInsertDTO.getId());
-        }else{
+        } else {
             return JsonResponseTool.failure("修改失败");
         }
     }
 
     @Override
     public JsonResponse delete(Integer uId) {
-        if(CommonUtil.checkParam(uId) || tUserInfoMapper.selectByPrimaryKey(uId) == null){
+        if (CommonUtil.checkParam(uId) || tUserInfoMapper.selectByPrimaryKey(uId) == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
         TUserTag tUserTag = new TUserTag();
@@ -220,15 +218,15 @@ public class UserServiceImpl implements UserService {
         if (tUserTagList.size() > 0) {
             tUserTag = tUserTagList.get(0);
         }
-        if(tUserTag == null){
+        if (tUserTag == null) {
             return JsonResponseTool.failure("参数错误");
         }
 
         Integer userResult = tUserInfoMapper.deleteByPrimaryKey(uId);
-        if(userResult > 0){
+        if (userResult > 0) {
             tUserTagMapper.deleteByPrimaryKey(tUserTag.getId());
             return JsonResponseTool.success(null);
-        }else{
+        } else {
             return JsonResponseTool.failure("删除失败");
         }
     }
@@ -241,9 +239,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public JsonResponse statusBatch(String ids, Integer id) {
         Integer result = tUserInfoMapper.queryUpdateStatus(ids, id);
-        if(result > 0){
+        if (result > 0) {
             return JsonResponseTool.success(null);
-        }else{
+        } else {
             return JsonResponseTool.failure("修改失败");
         }
     }

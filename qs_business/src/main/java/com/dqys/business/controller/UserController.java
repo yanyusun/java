@@ -90,16 +90,12 @@ public class UserController {
         return JsonResponseTool.success(resultMap);
     }
 
+
     /**
-     * 获取初始化列表
-     *
-     * @return
-     */
-    /**
-     * @api {GET} http://{url}/api/user/getInit 二级导航统计
+     * @api {GET} http://{url}/api/user/getInit 获取初始化配置
      * @apiName getInit
      * @apiGroup User
-     * @apiDescription 增改页面初始化可选数据
+     * @apiDescription 增改页面初始化配置
      *
      * @apiUse JsonResponse
      * @apiSuccess {json} data 返回数据(以下为json返回内容)
