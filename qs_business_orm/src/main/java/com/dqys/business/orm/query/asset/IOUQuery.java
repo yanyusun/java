@@ -1,11 +1,11 @@
 package com.dqys.business.orm.query.asset;
 
-import com.dqys.core.base.BasePagination;
+import com.dqys.core.base.BaseQuery;
 
 /**
  * Created by Yvan on 16/6/8.
  */
-public class IOUQuery extends BasePagination {
+public class IOUQuery extends BaseQuery {
 
     private Integer lenderId; // 借款人ID
 

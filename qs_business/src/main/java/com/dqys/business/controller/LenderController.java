@@ -9,7 +9,7 @@ import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.service.constant.ContactTypeEnum;
 import com.dqys.business.service.service.LenderService;
-import com.dqys.business.service.utils.asset.AssetControllerUtils;
+import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +70,7 @@ public class LenderController {
             if (contactTypeEnum == null) {
                 return JsonResponseTool.paramErr("联系人类型参数错误");
             }
-            Integer id = lenderService.addLenderInfo(AssetControllerUtils.toContactInfo(contactDTO));
+            Integer id = lenderService.addLenderInfo(AssetServiceUtils.toContactInfo(contactDTO));
             if (id > 0) {
                 if (contactTypeEnum.getValue().equals(contactTypeEnum.LENDER.getValue())) {
                     lenderId = id;
@@ -86,7 +86,7 @@ public class LenderController {
             JsonResponseTool.failure("增加借款人基础信息失败");
         }
 
-        return CommonUtil.responseBack(lenderService.addLenderRelation(AssetControllerUtils.toLenderInfo(lenderDTO)));
+        return CommonUtil.responseBack(lenderService.addLenderRelation(AssetServiceUtils.toLenderInfo(lenderDTO)));
     }
 
     /**
@@ -119,12 +119,12 @@ public class LenderController {
             Integer id = contactDTO.getId();
             if (id == null) {
                 // 新增联系人
-                id = lenderService.addLenderInfo(AssetControllerUtils.toContactInfo(contactDTO));
+                id = lenderService.addLenderInfo(AssetServiceUtils.toContactInfo(contactDTO));
             } else {
                 // 修改联系人
                 ContactInfo contactInfo1 = lenderService.getLenderInfo(id);
                 if (!contactInfo1.toString().equals(contactDTO.toString())) {
-                    lenderService.updateLenderInfo(AssetControllerUtils.toContactInfo(contactDTO));
+                    lenderService.updateLenderInfo(AssetServiceUtils.toContactInfo(contactDTO));
                 }
             }
             if (id > 0) {
@@ -139,7 +139,7 @@ public class LenderController {
         if (lenderInfo1.toString().equals(lenderDTO.toString())) {
             return JsonResponseTool.success(lenderDTO.getId());
         } else {
-            Integer id = lenderService.addLenderRelation(AssetControllerUtils.toLenderInfo(lenderDTO));
+            Integer id = lenderService.addLenderRelation(AssetServiceUtils.toLenderInfo(lenderDTO));
             if (id > 0) {
                 return JsonResponseTool.success(id);
             } else {
@@ -160,7 +160,7 @@ public class LenderController {
         if(CommonUtil.checkParam(id)){
             return JsonResponseTool.paramErr("参数错误");
         }
-        LenderDTO lenderDTO = AssetControllerUtils.toLenderDTO(lenderService.getLenderRelation(id));
+        LenderDTO lenderDTO = AssetServiceUtils.toLenderDTO(lenderService.getLenderRelation(id));
         return JsonResponseTool.success(lenderDTO);
     }
 

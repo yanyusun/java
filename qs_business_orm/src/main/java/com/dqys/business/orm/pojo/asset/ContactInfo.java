@@ -25,7 +25,6 @@ public class ContactInfo extends BaseModel implements Serializable{
     private String city;  // 市
     private String district;  // 区
     private String address;  // 详细地址
-    private String memo;  // 备注
     private String code; // 工号
 
     public String toString(){
@@ -35,8 +34,7 @@ public class ContactInfo extends BaseModel implements Serializable{
                 + ",company:" + company + ",mobile:" + mobile + ",homeTel:" + homeTel
                 + ",officeTel:" + officeTel + ",email:" + email + ",province:" + province
                 + ",city:" + city + ",district:" + district + ",address:" + address
-                + ",memo:" + memo + ",code:" + code + ",mode:" + mode
-                + ",modeId:" + modeId;
+                + ",code:" + code + ",mode:" + mode + ",modeId:" + modeId;
         string += "]";
         return string;
     }
@@ -168,14 +166,6 @@ public class ContactInfo extends BaseModel implements Serializable{
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public String getMemo() {
-        return memo;
-    }
-
-    public void setMemo(String memo) {
-        this.memo = memo;
     }
 
     public String getCode() {

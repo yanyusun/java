@@ -1,21 +1,21 @@
 package com.dqys.business.orm.query.asset;
 
-import com.dqys.core.base.BasePagination;
+import com.dqys.core.base.BaseQuery;
+
+import java.util.List;
 
 /**
  * Created by Yvan on 16/6/8.
  */
-public class AssetQuery extends BasePagination{
+public class AssetQuery extends BaseQuery {
 
-    private Integer id; // 主键
+    private List<Integer> ids;
 
-
-    public Integer getId() {
-        return id;
+    public List<Integer> getIds() {
+        return ids;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setIds(List<Integer> ids) {
+        this.ids = ids;
     }
-
 }

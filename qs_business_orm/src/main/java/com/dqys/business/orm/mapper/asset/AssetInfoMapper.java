@@ -69,4 +69,12 @@ public interface AssetInfoMapper {
      * @return
      */
     List<AssetInfo> pageList(AssetQuery assetQuery);
+
+    /**
+     * 批量分配
+     * @param ids
+     * @param id
+     * @return
+     */
+    Integer assignedBatch(List<Integer> ids, Integer id);
 }

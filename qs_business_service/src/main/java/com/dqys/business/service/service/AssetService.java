@@ -2,6 +2,8 @@ package com.dqys.business.service.service;
 
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.query.asset.AssetQuery;
+import com.dqys.business.service.dto.asset.AssetDTO;
+import com.dqys.core.model.JsonResponse;
 
 import java.util.List;
 
@@ -12,50 +14,38 @@ public interface AssetService {
 
     /**
      * 增加一个资产包
-     * @param assetInfo
+     * @param assetDTO
      * @return
      */
-    Integer add(AssetInfo assetInfo);
+    JsonResponse add(AssetDTO assetDTO);
 
     /**
      * 修改资产包
-     * @param assetInfo
+     * @param assetDTO
      * @return
      */
-    Integer updateById(AssetInfo assetInfo);
+    JsonResponse updateById(AssetDTO assetDTO);
 
     /**
      * 逻辑删除资产包
      * @param id
      * @return
      */
-    Integer delete(Integer id);
+    JsonResponse delete(Integer id);
 
     /**
      * 根据ID获取单个资产包
      * @param id
      * @return
      */
-    AssetInfo getById(Integer id);
-
-    /**
-     * 获取所有的资产包
-     * @return
-     */
-    List<AssetInfo> listAll();
-
-    /**
-     * 统计资产包(*)
-     * @return
-     */
-    Integer count();
+    JsonResponse getById(Integer id);
 
     /**
      * 条件查询总条数
      * @param assetQuery
      * @return
      */
-    Integer queryCount(AssetQuery assetQuery);
+    JsonResponse queryCount(AssetQuery assetQuery);
 
     /**
      * 分页获取资产包
@@ -68,6 +58,6 @@ public interface AssetService {
      * @param ids
      * @return
      */
-    Integer assignedBatch(Integer[] ids, Integer id);
+    JsonResponse assignedBatch(String ids, Integer id);
 
 }

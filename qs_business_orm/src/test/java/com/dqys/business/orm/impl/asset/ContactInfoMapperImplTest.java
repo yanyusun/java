@@ -57,7 +57,6 @@ public class ContactInfoMapperImplTest extends BaseTest {
         contactInfo.setName("name" + index);
         contactInfo.setGender("mail");
         contactInfo.setMobile("1339999000" + index);
-        contactInfo.setMemo("memo" + index);
         contactInfo.setIdcard("666666444422223"+index);
 
         return contactInfo;

@@ -25,7 +25,6 @@
     <result column="city" property="city" jdbcType="VARCHAR" />
     <result column="district" property="district" jdbcType="VARCHAR" />
     <result column="address" property="address" jdbcType="VARCHAR" />
-    <result column="memo" property="memo" jdbcType="VARCHAR" />
     <result column="code" property="code" jdbcType="VARCHAR" />
   </resultMap>
 
@@ -33,7 +32,7 @@
   <sql id="Base_Column_List" >
     id, version, create_at, update_at, stateflag, remark, name, type, avg, gender, idcard, 
     company, mobile, home_tel, office_tel, email, province, city, district, address,
-    memo, code, mode, mode_id
+    code, mode, mode_id
   </sql>
 
   <sql id="Query_condition">
@@ -112,9 +111,6 @@
       <if test="address != null" >
         address,
       </if>
-      <if test="memo != null" >
-        memo,
-      </if>
       <if test="code != null" >
         code,
       </if>
@@ -170,9 +166,6 @@
       </if>
       <if test="address != null" >
         #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="memo != null" >
-        #{memo,jdbcType=VARCHAR},
       </if>
       <if test="code != null" >
         #{code,jdbcType=VARCHAR},
@@ -244,9 +237,6 @@
       </if>
       <if test="address != null" >
         address = #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="memo != null" >
-        memo = #{memo,jdbcType=VARCHAR},
       </if>
       <if test="code != null" >
         code = #{code,jdbcType=VARCHAR},
