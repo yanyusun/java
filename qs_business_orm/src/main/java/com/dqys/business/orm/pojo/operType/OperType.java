@@ -9,9 +9,6 @@ public class OperType implements Serializable {
     private Integer id;
     private Integer operType;//操作类型
     private String operName;//操作名称
-    private String userid;//操作名称
-    private String roleId;//操作名称
-    private String ObjectTpey;//操作名称
 
     public Integer getId() {
         return id;
@@ -37,27 +34,4 @@ public class OperType implements Serializable {
         this.operName = operName;
     }
 
-    public String getUserid() {
-        return userid;
-    }
-
-    public void setUserid(String userid) {
-        this.userid = userid;
-    }
-
-    public String getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
-    }
-
-    public String getObjectTpey() {
-        return ObjectTpey;
-    }
-
-    public void setObjectTpey(String objectTpey) {
-        ObjectTpey = objectTpey;
-    }
 }

@@ -9,7 +9,8 @@
     </resultMap>
     <!--查询对应用户类型的角色权限-->
     <select id="selectByRoleToOperType" resultMap="BaseResultMap">
-       SELECT ot.*,oj.object_type,ror.user_type,ror.role_id  from t_role_oper_re ror LEFT JOIN oper_type ot
+       SELECT ot.*
+      from t_role_oper_re ror LEFT JOIN oper_type ot
       ON ot.id=ror.oper_id LEFT JOIN  oper_obj_realtion oor
       ON oor.oper_id=ot.id LEFT JOIN object_type oj
       ON oj.id=oor.obj_id
