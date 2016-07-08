@@ -17,7 +17,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -228,6 +230,62 @@ public class UserController {
 
         }
         return null;
+    }
+
+    /**
+     * 消息提醒
+     *
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "/sendMsg")
+    @ResponseBody
+    public JsonResponse sendMsg(@RequestParam(required = true) String ids) {
+        if (CommonUtil.checkParam(ids)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        String[] idsArr = ids.split(",");
+        List idList = new ArrayList<>();
+        for (String id : idsArr) {
+            idList.add(Integer.valueOf(id));
+        }
+        return userService.sendMsg(idList);
+    }
+
+    /**
+     * 批量重置密码
+     *
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "/setPwdBatch")
+    @ResponseBody
+    public JsonResponse setPwdBatch(@RequestParam(required = true) String ids) {
+        if (CommonUtil.checkParam(ids)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        String[] idsArr = ids.split(",");
+        List idList = new ArrayList<>();
+        for (String id : idsArr) {
+            idList.add(Integer.valueOf(id));
+        }
+        return userService.setPwdBatch(idList);
+    }
+
+    /**
+     * 重置密码
+     *
+     * @param id
+     * @param pwd
+     * @return
+     */
+    @RequestMapping(value = "/setPwd")
+    @ResponseBody
+    public JsonResponse setPwd(@RequestParam(required = true) Integer id, @RequestParam(required = true) String pwd) {
+        if (CommonUtil.checkParam(id, pwd)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return userService.setPwd(id, pwd);
     }
 
 }

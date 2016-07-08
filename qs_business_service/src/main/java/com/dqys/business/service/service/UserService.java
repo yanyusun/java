@@ -4,6 +4,8 @@ import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.core.model.JsonResponse;
 
+import java.util.List;
+
 /**
  * Created by Yvan on 16/6/29.
  */
@@ -51,6 +53,7 @@ public interface UserService {
 
     /**
      * 批量分配
+     *
      * @param ids
      * @param id
      * @return
@@ -59,10 +62,35 @@ public interface UserService {
 
     /**
      * 批量修改状态
+     *
      * @param ids
      * @param id
      * @return
      */
     JsonResponse statusBatch(String ids, Integer id);
 
+    /**
+     * 发送激活提醒信息
+     *
+     * @param ids
+     * @return
+     */
+    JsonResponse sendMsg(List<Integer> ids);
+
+    /**
+     * 批量重置密码(需要管理员权限)
+     *
+     * @param ids
+     * @return
+     */
+    JsonResponse setPwdBatch(List<Integer> ids);
+
+    /**
+     * 重置密码(需要管理员权限)
+     *
+     * @param id
+     * @param pwd
+     * @return
+     */
+    JsonResponse setPwd(Integer id, String pwd);
 }

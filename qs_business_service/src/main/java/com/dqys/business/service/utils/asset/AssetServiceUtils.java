@@ -1,5 +1,7 @@
 package com.dqys.business.service.utils.asset;
 
+import com.dqys.business.orm.query.asset.AssetQuery;
+import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.business.service.dto.asset.*;
 import com.dqys.business.orm.pojo.asset.*;
@@ -514,6 +516,25 @@ public class AssetServiceUtils {
         return iouDTO;
     }
 
+    public static AssetQuery toAssetQuery(AssetListQuery assetListQuery){
+        AssetQuery assetQuery = new AssetQuery();
+
+        if(assetListQuery.getPage() != null || assetListQuery.getPageCount() != null){
+            assetQuery.setIsPaging(true);
+            if(assetListQuery.getPage() != null && assetListQuery.getPage() > 0){
+                if(assetListQuery.getPageCount() != null){
+                    assetQuery.setStartPageNum(
+                            (assetListQuery.getPage() - 1) * assetListQuery.getPageCount());
+                }
+            }else{
+                assetQuery.setStartPageNum(0);
+            }
+        }
+        assetQuery.setPageSize(assetListQuery.getPageCount());
+
+        return assetQuery;
+    }
+
     /**
      * 生成资产包号
      * @return
@@ -523,10 +544,6 @@ public class AssetServiceUtils {
                 + DateFormatTool.format(DateFormatTool.DATE_FORMAT_6)
                 + RandomStringUtils.randomNumeric(4);
     }
-
-
-
-
 
     /**
      * 生成借据号

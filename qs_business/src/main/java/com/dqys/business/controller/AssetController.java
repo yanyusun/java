@@ -6,6 +6,7 @@ import com.dqys.business.service.dto.asset.AssetDTO;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.dto.asset.PawnDTO;
+import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.business.service.service.AssetService;
 import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
@@ -73,47 +74,22 @@ public class AssetController {
      */
     @RequestMapping(value = "get")
     @ResponseBody
-    public JsonResponse get(@PathVariable Integer id) {
+    public JsonResponse get(@RequestParam("id") Integer id) {
         if (id == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
-
         return assetService.getById(id);
-
-//        AssetInfo assetInfo = assetService.getById(id);
-//        if (assetInfo == null) {
-//            // 查询失败
-//
-//            return JsonResponseTool.failure("获取失败");
-//        } else {
-//            // 成功
-//
-//            return JsonResponseTool.success(AssetServiceUtils.toAssetDTO(assetInfo));
-//        }
     }
 
     /**
      * 分页获取资产包
      *
-     * @param page
-     * @param pageCount
      * @return
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public JsonResponse list(@RequestParam(required = false) Integer page,
-                             @RequestParam(required = false) Integer pageCount,
-                             @ModelAttribute AssetQuery assetQuery) {
-//        assetQuery.setPage(page);
-//        assetQuery.setPageCount(pageCount);
-////        assetQuery.set
-//        List<AssetInfo> assetInfoList = assetService.pageList(assetQuery);
-//        if (assetInfoList == null) {
-//            return JsonResponseTool.failure("获取失败");
-//        } else {
-//            return JsonResponseTool.success(assetInfoList);
-//        }
-        return null;
+    public JsonResponse list(@ModelAttribute AssetListQuery assetListQuery) {
+        return assetService.pageList(assetListQuery);
     }
 
     /**

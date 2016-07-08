@@ -4,6 +4,7 @@ import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.service.dto.asset.AssetDTO;
+import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.business.service.service.AssetService;
 import com.dqys.business.service.utils.AssetUtil;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
@@ -77,8 +78,17 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public List<AssetInfo> pageList(AssetQuery assetQuery) {
-        return assetInfoMapper.pageList(assetQuery);
+    public JsonResponse pageList(AssetListQuery assetListQuery) {
+        AssetQuery assetQuery = new AssetQuery();
+        if(assetListQuery != null){
+            assetQuery = AssetServiceUtils.toAssetQuery(assetListQuery);
+        }
+        List<AssetInfo> assetInfoList = assetInfoMapper.pageList(assetQuery);
+        if(assetInfoList == null || assetInfoList.size() == 0){
+            return JsonResponseTool.success(null);
+        }else{
+            return JsonResponseTool.success(AssetServiceUtils.toAssetDTO(assetInfoList));
+        }
     }
 
     @Override

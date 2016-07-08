@@ -10,6 +10,7 @@ public class OrganizationDTO {
     private Integer id; // 主键
     private String name; // 名称
     private String user; // 负责人
+    private Integer userId; // 负责人ID
 
     public Integer getId() {
         return id;
@@ -33,5 +34,13 @@ public class OrganizationDTO {
 
     public void setUser(String user) {
         this.user = user;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

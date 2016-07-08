@@ -197,4 +197,5 @@ public class UserInsertDTO {
     public void setUserType(Integer userType) {
         this.userType = userType;
     }
+
 }

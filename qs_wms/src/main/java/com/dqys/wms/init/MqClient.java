@@ -62,4 +62,20 @@ public class MqClient {
                 .append("\" target=\"_blank\">请点击确认</a></p>");
         return stringBuffer.toString();
     }
+
+    /**
+     * 发送邮箱
+     * @param email 发送目的地
+     * @param html 发送内容
+     * @param title 邮件名称
+     */
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = "mail_send_queue", durable = "true"),
+            exchange = @Exchange(value = "mailExchange"))
+    )
+    public void sendMail(String email, String title, String html){
+
+
+    }
+
 }
