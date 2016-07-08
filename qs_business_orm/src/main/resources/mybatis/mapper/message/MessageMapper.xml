@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.business.orm.mapper.message.MessageMapper">
 
+    <select id="selectByMessage" parameterType="com.dqys.business.orm.pojo.message.Message"
+            resultType="com.dqys.business.orm.pojo.message.Message">
+         SELECT t.id,t.content,t.label,t.receive_id receiveId ,t.sender_id senderId
+          ,t.status ,t.title,t.type,DATE_FORMAT( t.send_time,'%Y-%m-%d') sendTime
+        from t_message t LIMIT #{page},#{pageCount}
+    </select>
 
     <update id="readMessage">
         UPDATE t_message SET status=1
@@ -54,7 +60,7 @@
                 #{content},
             </if>
             <if test="senderId !=null">
-                #{sender_id},
+                #{senderId},
             </if>
             <if test="receiveId !=null">
                 #{receiveId},

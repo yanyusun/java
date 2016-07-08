@@ -15,7 +15,7 @@ public class Message extends BasePagination implements Serializable {
     private Integer senderId;//int(11) NOT NULL COMMENT '发送者id',
     private Integer receiveId;//int(11) NOT NULL COMMENT '接受者id\n',
     private String label;//varchar(256) DEFAULT NULL COMMENT '标签',
-    private String sendIime;//datetime NOT NULL COMMENT '发送时间',
+    private String sendTime;//datetime NOT NULL COMMENT '发送时间',
     private Integer type;//int(2) NOT NULL COMMENT '消息类型(0任务1产品2安全3服务)',
     private Integer status;//int(2) NOT NULL COMMENT '消息状态(0未读1已读2删除)',
 
@@ -67,12 +67,12 @@ public class Message extends BasePagination implements Serializable {
         this.label = label;
     }
 
-    public String getSendIime() {
-        return sendIime;
+    public String getSendTime() {
+        return sendTime;
     }
 
-    public void setSendIime(String sendIime) {
-        this.sendIime = sendIime;
+    public void setSendTime(String sendTime) {
+        this.sendTime = sendTime;
     }
 
     public Integer getType() {
