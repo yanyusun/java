@@ -10,6 +10,8 @@ import java.util.List;
  */
 public class AssetQuery extends BaseQuery {
 
+    private Integer stateflag; // 状态码(0正常,否则为无效)
+
     private Integer type; //资产包种类
     private Integer areaId; // 区域ID
     private Integer operator; // 操作人
@@ -74,5 +76,13 @@ public class AssetQuery extends BaseQuery {
 
     public void setEndAt(Date endAt) {
         this.endAt = endAt;
+    }
+
+    public Integer getStateflag() {
+        return stateflag;
+    }
+
+    public void setStateflag(Integer stateflag) {
+        this.stateflag = stateflag;
     }
 }

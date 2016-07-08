@@ -17,11 +17,12 @@ public class AssetListDTO {
     private String name; // 资产包名称
     private String company; // 贷款机构
     private String city; // 行政区划
-    private Integer lessDay; // 剩余天数
+    private Long lessDay; // 剩余天数
     private String rate; // 完成率
     private String operator; // 录入人员
     private Date createAt; // 创建时间
     private String remark; // 备注
+    private Integer flag; // 状态(有效|无效)
 
     public Integer getId() {
         return id;
@@ -95,11 +96,11 @@ public class AssetListDTO {
         this.city = city;
     }
 
-    public Integer getLessDay() {
+    public Long getLessDay() {
         return lessDay;
     }
 
-    public void setLessDay(Integer lessDay) {
+    public void setLessDay(Long lessDay) {
         this.lessDay = lessDay;
     }
 
@@ -133,5 +134,13 @@ public class AssetListDTO {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public Integer getFlag() {
+        return flag;
+    }
+
+    public void setFlag(Integer flag) {
+        this.flag = flag;
     }
 }

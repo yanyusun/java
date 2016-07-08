@@ -86,7 +86,7 @@ public class AssetServiceImpl implements AssetService {
         if(assetInfoList == null || assetInfoList.size() == 0){
             return JsonResponseTool.success(null);
         }else{
-            return JsonResponseTool.success(AssetServiceUtils.toAssetDTO(assetInfoList));
+            return JsonResponseTool.success(AssetServiceUtils.toAssetListDTO(assetInfoList));
         }
     }
 
