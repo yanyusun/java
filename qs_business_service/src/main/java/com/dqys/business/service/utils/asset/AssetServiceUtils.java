@@ -9,6 +9,7 @@ import com.dqys.core.utils.DateFormatTool;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -531,6 +532,13 @@ public class AssetServiceUtils {
             }
         }
         assetQuery.setPageSize(assetListQuery.getPageCount());
+
+        assetQuery.setAreaId(assetListQuery.getAreaId());
+        assetQuery.setType(assetListQuery.getType());
+        assetQuery.setStartAt(assetListQuery.getStartAt());
+        assetQuery.setEndAt(assetListQuery.getEndAt());
+        assetQuery.setCode(assetListQuery.getCode());
+        assetQuery.setOperator(assetListQuery.getOperator());
 
         return assetQuery;
     }

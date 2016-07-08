@@ -294,6 +294,9 @@ public class UserServiceImpl implements UserService {
         if(CommonUtil.checkParam(ids)){
             return JsonResponseTool.paramErr("参数错误");
         }
+        if(!CommonUtil.isManage()){
+            return JsonResponseTool.failure("没有权限操作");
+        }
         List<String> errList = new ArrayList<>();
         for(Integer id : ids){
             TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(id);
@@ -310,6 +313,13 @@ public class UserServiceImpl implements UserService {
                 if(result < 1){
                     String errStr = "用户: " + tUserInfo.getUserName() + " 重设密码失败";
                     errList.add(errStr);
+                }else{
+                    if(tUserInfo.getMobile() != null){
+                        sendMsg(tUserInfo.getMobile());
+                    }
+                    if(tUserInfo.getEmail() != null){
+                        sendMsg(tUserInfo.getEmail());
+                    }
                 }
             }
         }
@@ -328,8 +338,8 @@ public class UserServiceImpl implements UserService {
         TUserInfo tUserInfo1 = new TUserInfo();
         tUserInfo1.setId(tUserInfo.getId());
         try {
-            // 密码初始化
-            tUserInfo1.setPassword(SignatureTool.md5Encode(INIT_PASSSWORD, null));
+            // 密码加密
+            tUserInfo1.setPassword(SignatureTool.md5Encode(pwd, null));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -379,7 +389,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 发送激活邮箱
-     *
+     * todo 需要做
      * @param email
      */
     private void sendMail(String email) {
@@ -394,6 +404,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 发送短信
+     * TODO 需要实现
      */
     private void sendMsg(String mobile){
 //        String msg = "";

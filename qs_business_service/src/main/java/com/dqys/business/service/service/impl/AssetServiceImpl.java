@@ -6,7 +6,6 @@ import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.service.dto.asset.AssetDTO;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.business.service.service.AssetService;
-import com.dqys.business.service.utils.AssetUtil;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;

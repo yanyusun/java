@@ -39,7 +39,7 @@ public class AssetController {
      * @param assetDTO
      * @return
      */
-    @RequestMapping(value = "add")
+    @RequestMapping(value = "/add")
     @ResponseBody
     public JsonResponse add(@ModelAttribute AssetDTO assetDTO) {
         if (CommonUtil.checkParam(assetDTO, assetDTO.getType(), assetDTO.getStartAt(),
@@ -56,7 +56,7 @@ public class AssetController {
      * @param assetDTO
      * @return
      */
-    @RequestMapping(value = "update")
+    @RequestMapping(value = "/update")
     @ResponseBody
     public JsonResponse update(@ModelAttribute AssetDTO assetDTO) {
         if (CommonUtil.checkParam(assetDTO, assetDTO.getId())) {
@@ -72,7 +72,7 @@ public class AssetController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "get")
+    @RequestMapping(value = "/get")
     @ResponseBody
     public JsonResponse get(@RequestParam("id") Integer id) {
         if (id == null) {
@@ -80,6 +80,20 @@ public class AssetController {
         }
         return assetService.getById(id);
     }
+
+    /**
+     * 获取初始化数据
+     * @return
+     */
+    @RequestMapping(value = "/getInit")
+    @ResponseBody
+    public JsonResponse getInit() {
+
+
+        return null;
+    }
+
+
 
     /**
      * 分页获取资产包
@@ -164,6 +178,7 @@ public class AssetController {
 
     /**
      * 批量分配
+     * todo 未完成
      *
      * @param ids 批量分配对象ID集合
      * @param id  被分配者ID
@@ -171,7 +186,7 @@ public class AssetController {
      */
     @RequestMapping(value = "/assignedBatch")
     @ResponseBody
-    public JsonResponse assignedBatch(@PathVariable Integer[] ids, @PathVariable Integer id) {
+    public JsonResponse assignedBatch(@PathVariable String ids, @PathVariable Integer id) {
         if (CommonUtil.checkParam(ids, id)) {
             return JsonResponseTool.paramErr("参数错误");
         }

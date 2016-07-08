@@ -1,5 +1,11 @@
 package com.dqys.business.service.constant;
 
+import com.dqys.core.base.BaseSelectonDTO;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by Yvan on 16/6/30.
  *
@@ -31,6 +37,16 @@ public enum UserStatusTypeEnum {
         return null;
     }
 
+    public static List<BaseSelectonDTO> listUserStatusTypeEnum(){
+        List<BaseSelectonDTO> selectonDTOList = new ArrayList<>();
+        for(UserStatusTypeEnum userStatusTypeEnum : UserStatusTypeEnum.values()){
+            BaseSelectonDTO baseSelectonDTO = new BaseSelectonDTO();
+            baseSelectonDTO.setKey(userStatusTypeEnum.getValue().toString());
+            baseSelectonDTO.setKey(userStatusTypeEnum.getName());
+            selectonDTOList.add(baseSelectonDTO);
+        }
+        return selectonDTOList;
+    }
 
     public Integer getValue() {
         return value;

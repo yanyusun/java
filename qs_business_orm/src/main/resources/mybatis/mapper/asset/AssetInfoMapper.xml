@@ -44,8 +44,25 @@
       <if test="id != null">
         AND id = #{id,jdbcType=INTEGER}
       </if>
+      <if test="type != null">
+        AND type = #{type,jdbcType=TINYINT}
+      </if>
+      <if test="areaId != null">
+        AND city = #{areaId,jdbcType=INTEGER}
+      </if>
+      <if test="operator != null">
+        AND operator = #{operator,jdbcType=INTEGER}
+      </if>
+      <if test="code != null">
+        AND asset_no = #{code,jdbcType=VARCHAR}
+      </if>
 
-
+      <if test="startAt != null">
+        <![CDATA[ AND create_at >= #{startAt} ]]>
+      </if>
+      <if test="endAt != null">
+        <![CDATA[ AND create_at <= #{endAt} ]]>
+      </if>
 
       <if test="ids != null">
         AND id in

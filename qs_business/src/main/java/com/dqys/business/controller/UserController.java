@@ -84,7 +84,7 @@ public class UserController {
         Map resultMap = new HashMap<>();
 
         resultMap.put("companyInfo", companyService.get(UserSession.getCurrent().getUserId())); // 公司信息
-        resultMap.put("userStatus", UserStatusTypeEnum.values()); // 用户状态
+        resultMap.put("userStatus", UserStatusTypeEnum.listUserStatusTypeEnum()); // 用户状态
         resultMap.put("userType", SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE)); //账号类型
         resultMap.put("roleType", SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE)); // 角色类型
 

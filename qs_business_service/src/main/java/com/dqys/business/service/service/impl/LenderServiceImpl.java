@@ -13,7 +13,7 @@ import com.dqys.business.orm.query.asset.IOUQuery;
 import com.dqys.business.orm.query.asset.LenderQuery;
 import com.dqys.business.orm.query.asset.PawnQuery;
 import com.dqys.business.service.service.LenderService;
-import com.dqys.business.service.utils.AssetUtil;
+import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -96,7 +96,7 @@ public class LenderServiceImpl implements LenderService {
 
     @Override
     public Integer addIOUInfo(IOUInfo IOUInfo, String name) {
-        IOUInfo.setIouNo(AssetUtil.createIouCode(name));
+        IOUInfo.setIouNo(AssetServiceUtils.createIouCode(name));
         Integer addResult = IOUInfoMapper.insert(IOUInfo);
         if (addResult.equals(1)) {
             return IOUInfo.getId();
@@ -136,7 +136,7 @@ public class LenderServiceImpl implements LenderService {
 
     @Override
     public Integer addPawn(PawnInfo pawnInfo) {
-        pawnInfo.setPawnNo(AssetUtil.createPawnCode());
+        pawnInfo.setPawnNo(AssetServiceUtils.createPawnCode());
         Integer addResult = pawnInfoMapper.insert(pawnInfo);
         if (addResult.equals(1)) {
             return pawnInfo.getId();
