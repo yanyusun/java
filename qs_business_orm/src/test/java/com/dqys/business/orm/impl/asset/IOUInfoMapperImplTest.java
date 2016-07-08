@@ -59,7 +59,7 @@ public class IOUInfoMapperImplTest extends BaseTest {
 
         IOUInfo.setIouNo("code" + index);
         IOUInfo.setType("type" + index);
-        IOUInfo.setLenderId(index);
+        IOUInfo.setLenderId(1);
         IOUInfo.setAmount(10000.2 + index);
 
         return IOUInfo;

@@ -21,7 +21,7 @@ public class TTeamInfoMapperImplTest extends BaseTest {
     public void test() {
         TTeamInfo tTeamInfo = new TTeamInfo();
         tTeamInfo.setCompanyId(1);
-        tTeamInfo.setManagerUserId(1);
+        tTeamInfo.setManagerUserId(11);
         tTeamInfo.setTeamMemberUserIds("1,2,3,4");
         tTeamInfo.setTeamName("测试组");
         int count = this.tTeamInfoMapper.insertSelective(tTeamInfo);
@@ -33,7 +33,6 @@ public class TTeamInfoMapperImplTest extends BaseTest {
         tTeamInfoSel.setTeamName(tTeamInfoSel.getTeamName() + 1);
         tTeamInfoSel.setTeamMemberUserIds(tTeamInfoSel.getTeamMemberUserIds() + 1);
         tTeamInfoSel.setManagerUserId(tTeamInfoSel.getManagerUserId() + 1);
-        tTeamInfoSel.setCompanyId(tTeamInfoSel.getCompanyId() + 1);
         count = this.tTeamInfoMapper.updateByPrimaryKeySelective(tTeamInfoSel);
         Assert.assertEquals(1, count);
 

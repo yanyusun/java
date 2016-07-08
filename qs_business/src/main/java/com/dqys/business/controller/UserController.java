@@ -5,6 +5,7 @@ import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.business.service.service.CompanyService;
 import com.dqys.business.service.service.UserService;
+import com.dqys.business.service.utils.excel.UserExcelUtil;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -14,7 +15,9 @@ import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Year;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,10 +35,15 @@ public class UserController {
     @Autowired
     private CompanyService companyService;
 
+
     /**
-     * 二级导航数据统计
+     * @api {GET} http://{url}//api/user/listData 二级导航统计
+     * @apiName listData
+     * @apiGroup User
+     * @apiDescription 二级导航数据统计
      *
-     * @return
+     * @apiUse JsonResponse
+     * @apiSuccess {json} data 返回数据
      */
     @RequestMapping(value = "/listData")
     @ResponseBody
@@ -201,5 +209,25 @@ public class UserController {
         return userService.statusBatch(ids, id);
     }
 
+    /**
+     * 成员信息导入
+     * @param file
+     * @return
+     */
+    @RequestMapping(value = "/userExcel")
+    @ResponseBody
+    public JsonResponse userExcel(@RequestParam MultipartFile file){
+        if(CommonUtil.checkParam(file)){
+            return JsonResponseTool.paramErr("未上传文件");
+        }
+        Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file);
+        if(map.get("error") == null || map.get("").equals("")){
+            return JsonResponseTool.failure("");
+        }else{
+            // 返回CODE
+
+        }
+        return null;
+    }
 
 }

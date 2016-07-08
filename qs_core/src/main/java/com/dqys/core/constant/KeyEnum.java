@@ -6,6 +6,9 @@ package com.dqys.core.constant;
 public class KeyEnum {
 
     /* 系统配置key */
+    public static final String SYS_WEB_DOMAIN = "sys_web_domain"; // 官方网站域名
+    public static final String SYS_SOURCE_WEB = "sys_source_domain"; // 资源网站域名
+
     public static final String SYS_PROTOCOL_SALT_KEY = "sys_protocol_salt";     //加密密钥
     public static final String SYS_USER_EXPIRE_DAYS_KEY = "sys_user_login_expire";      //登陆状态保持时间
     public static final String SYS_ACCESS_ORIGIN_KEY = "sys_access_origin";     //允许远程访问的主机
@@ -18,6 +21,7 @@ public class KeyEnum {
     public static final String SYS_CAPTCHA_FRE_LIMIT = "sys_captcha_fre_limit";     //图片验证码生成频率
     public static final String SYS_SMS_FRE_LIMIT = "sys_sms_fre_limit";     //短信验证码发送频率
     public static final String SYS_FILE_UPLOAD_PATH_KEY = "sys_uploadPath";     //上传文件路径
+    public static final String SYS_FILE_OPEN_PATH_KEY = "sys_file_open_Path";     //上传文件路径(对外开放)
     public static final String SYS_TMP_DEL_TIMER_KEY = "sys_file_tmp_del_timer";        //临时文件自动删除时间 hour
     public static final String SYS_AUTH_URL_KEY = "sys_auth_url";       //权限URL
 

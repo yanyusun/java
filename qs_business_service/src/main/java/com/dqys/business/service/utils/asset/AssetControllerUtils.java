@@ -228,7 +228,6 @@ public class AssetControllerUtils {
         LenderInfo lenderInfo = new LenderInfo();
 
         lenderInfo.setId(lenderDTO.getId());
-        lenderInfo.setContactId(lenderDTO.getLenderId());
         lenderInfo.setStartAt(lenderDTO.getStartAt());
         lenderInfo.setEndAt(lenderDTO.getEndAt());
         lenderInfo.setOperator(lenderDTO.getOperatorId());
@@ -288,7 +287,6 @@ public class AssetControllerUtils {
         LenderDTO lenderDTO = new LenderDTO();
 
         lenderDTO.setId(lenderInfo.getId());
-        lenderDTO.setLenderId(lenderInfo.getContactId());
         lenderDTO.setStartAt(lenderInfo.getStartAt());
         lenderDTO.setEndAt(lenderInfo.getEndAt());
         lenderDTO.setOperatorId(lenderInfo.getOperator());
