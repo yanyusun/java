@@ -1,17 +1,16 @@
 package com.dqys.business.controller;
 
+import com.dqys.business.orm.query.asset.AssetQuery;
+import com.dqys.business.service.constant.AssetModelTypeEnum;
 import com.dqys.business.service.dto.asset.AssetDTO;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.dto.asset.PawnDTO;
-import com.dqys.core.utils.CommonUtil;
-import com.dqys.business.service.utils.asset.AssetControllerUtils;
-import com.dqys.business.orm.pojo.asset.AssetInfo;
-import com.dqys.business.orm.query.asset.AssetQuery;
-import com.dqys.business.service.constant.AssetModelTypeEnum;
 import com.dqys.business.service.service.AssetService;
 import com.dqys.business.service.service.LenderService;
+import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,25 +34,24 @@ public class AssetController {
 
     /**
      * 添加一个资产包信息
+     *
      * @param assetDTO
      * @return
      */
     @RequestMapping(value = "add")
     @ResponseBody
     public JsonResponse add(@ModelAttribute AssetDTO assetDTO) {
-        if (CommonUtil.checkParam(assetDTO)) {
+        if (CommonUtil.checkParam(assetDTO, assetDTO.getType(), assetDTO.getStartAt(),
+                assetDTO.getEndAt(), assetDTO.getAccrual(), assetDTO.getLoan(),
+                assetDTO.getAppraisal())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer id = assetService.add(AssetControllerUtils.toAssetInfo(assetDTO));
-        if (id == null || id.equals("0")) {
-            return JsonResponseTool.failure("增加失败");
-        } else {
-            return JsonResponseTool.success(id);
-        }
+        return assetService.add(assetDTO);
     }
 
     /**
      * 修改资产包信息
+     *
      * @param assetDTO
      * @return
      */
@@ -63,16 +61,13 @@ public class AssetController {
         if (CommonUtil.checkParam(assetDTO, assetDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer id = assetService.updateById(AssetControllerUtils.toAssetInfo(assetDTO));
-        if (id == null || id.equals("0")) {
-            return JsonResponseTool.failure("增加失败");
-        } else {
-            return JsonResponseTool.success(id);
-        }
+
+        return assetService.updateById(assetDTO);
     }
 
     /**
      * 获取资产包信息
+     *
      * @param id
      * @return
      */
@@ -82,48 +77,55 @@ public class AssetController {
         if (id == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        AssetInfo assetInfo = assetService.getById(id);
-        if (assetInfo == null) {
-            // 查询失败
 
-            return JsonResponseTool.failure("获取失败");
-        } else {
-            // 成功
+        return assetService.getById(id);
 
-            return JsonResponseTool.success(AssetControllerUtils.toAssetDTO(assetInfo));
-        }
+//        AssetInfo assetInfo = assetService.getById(id);
+//        if (assetInfo == null) {
+//            // 查询失败
+//
+//            return JsonResponseTool.failure("获取失败");
+//        } else {
+//            // 成功
+//
+//            return JsonResponseTool.success(AssetServiceUtils.toAssetDTO(assetInfo));
+//        }
     }
 
     /**
      * 分页获取资产包
+     *
      * @param page
      * @param pageCount
      * @return
      */
-    @RequestMapping(value = "/pageList")
+    @RequestMapping(value = "/list")
     @ResponseBody
-    public JsonResponse pageList(@RequestParam(required = false) Integer page,
-                                 @RequestParam(required = false) Integer pageCount,
-                                 @ModelAttribute AssetQuery assetQuery){
-        assetQuery.setPage(page);
-        assetQuery.setPageCount(pageCount);
-        List<AssetInfo> assetInfoList = assetService.pageList(assetQuery);
-        if (assetInfoList == null) {
-            return JsonResponseTool.failure("获取失败");
-        } else {
-            return JsonResponseTool.success(assetInfoList);
-        }
+    public JsonResponse list(@RequestParam(required = false) Integer page,
+                             @RequestParam(required = false) Integer pageCount,
+                             @ModelAttribute AssetQuery assetQuery) {
+//        assetQuery.setPage(page);
+//        assetQuery.setPageCount(pageCount);
+////        assetQuery.set
+//        List<AssetInfo> assetInfoList = assetService.pageList(assetQuery);
+//        if (assetInfoList == null) {
+//            return JsonResponseTool.failure("获取失败");
+//        } else {
+//            return JsonResponseTool.success(assetInfoList);
+//        }
+        return null;
     }
 
     /**
      * excel导入资产包的借款人
+     *
      * @param id
      * @param file
      * @return
      */
     @RequestMapping(value = "/excelIn")
     @ResponseBody
-    public JsonResponse addLenders(@RequestParam Integer id, MultipartFile file){
+    public JsonResponse addLenders(@RequestParam Integer id, MultipartFile file) {
         List<AssetDTO> assetDTOList = new ArrayList<>();
         List<ContactDTO> contactDTOList = new ArrayList<>();
         List<PawnDTO> pawnDTOList = new ArrayList<>();
@@ -131,16 +133,18 @@ public class AssetController {
 
         // 添加借款人基础信息
         HashMap<Integer, Integer> lenderMap = new HashMap<>();
-        for(AssetDTO assetDTO : assetDTOList){
+        for (AssetDTO assetDTO : assetDTOList) {
             Integer index = assetDTO.getId();
             assetDTO.setId(null);
-            Integer assetId = assetService.add(AssetControllerUtils.toAssetInfo(assetDTO));
-            if(assetId > 0){
-                lenderMap.put(index, assetId);
-            }else{
-                // 新增借款人失败处理
-
-            }
+            return null;
+//
+//            Integer assetId = assetService.add(AssetServiceUtils.toAssetInfo(assetDTO));
+//            if(assetId > 0){
+//                lenderMap.put(index, assetId);
+//            }else{
+//                // 新增借款人失败处理
+//
+//            }
         }
 
         // 添加联系人信息
@@ -149,7 +153,7 @@ public class AssetController {
             contactDTO.setMode(AssetModelTypeEnum.LENDER);
             contactDTO.setModeId(lenderMap.get(index));
             contactDTO.setId(null);
-            Integer contactId = lenderService.addLenderInfo(AssetControllerUtils.toContactInfo(contactDTO));
+            Integer contactId = lenderService.addLenderInfo(AssetServiceUtils.toContactInfo(contactDTO));
             if (contactId == null || contactId.equals("0")) {
                 // 添加联系人失败处理
 
@@ -161,7 +165,7 @@ public class AssetController {
             Integer index = pawnDTO.getId();
             pawnDTO.setId(null);
             pawnDTO.setLenderId(lenderMap.get(index));
-            Integer pawnId = lenderService.addPawn(AssetControllerUtils.toPawnInfo(pawnDTO));
+            Integer pawnId = lenderService.addPawn(AssetServiceUtils.toPawnInfo(pawnDTO));
             if (CommonUtil.checkResult(pawnId)) {
                 // 添加抵押物失败处理
 
@@ -173,7 +177,7 @@ public class AssetController {
             Integer index = iouDTO.getId();
             iouDTO.setLenderId(index);
             iouDTO.setId(null);
-            Integer iouId = lenderService.addIOUInfo(AssetControllerUtils.toIouInfo(iouDTO), null);
+            Integer iouId = lenderService.addIOUInfo(AssetServiceUtils.toIouInfo(iouDTO), null);
             if (CommonUtil.checkResult(iouId)) {
                 // 添加借据失败处理
 
@@ -184,38 +188,38 @@ public class AssetController {
 
     /**
      * 批量分配
+     *
      * @param ids 批量分配对象ID集合
-     * @param id 被分配者ID
+     * @param id  被分配者ID
      * @return
      */
     @RequestMapping(value = "/assignedBatch")
     @ResponseBody
-    public JsonResponse assignedBatch(@PathVariable Integer[] ids, @PathVariable Integer id){
-        if(CommonUtil.checkParam(ids, id)){
+    public JsonResponse assignedBatch(@PathVariable Integer[] ids, @PathVariable Integer id) {
+        if (CommonUtil.checkParam(ids, id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         // auto 校验id是否存在
-        if(id == null){
+        if (id == null) {
             return JsonResponseTool.paramErr("用户ID参数错误");
         }
         // 分配
-        Integer result = assetService.delete(id);
-        return CommonUtil.responseBack(result);
+        return assetService.delete(id);
     }
 
     /**
      * 逻辑删除资产包
+     *
      * @param id
      * @return
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public JsonResponse delete(Integer id){
-        if(CommonUtil.checkParam(id)){
+    public JsonResponse delete(Integer id) {
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer result = assetService.delete(id);
-        return CommonUtil.responseBack(result);
+        return assetService.delete(id);
     }
 
 }

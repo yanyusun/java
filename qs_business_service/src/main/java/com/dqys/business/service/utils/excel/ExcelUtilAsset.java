@@ -1,50 +1,56 @@
-package com.dqys.business.util;
+package com.dqys.business.service.utils.excel;
 
+import com.dqys.business.service.constant.ContactTypeEnum;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
 import com.dqys.business.service.dto.asset.PawnDTO;
-import com.dqys.business.service.constant.ContactTypeEnum;
+import com.dqys.business.service.dto.excel.ExcelMessage;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.utils.*;
-import org.junit.Test;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.text.ParseException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mkefeng on 2016/6/27.
  */
 public class ExcelUtilAsset {
 
+
     /**
      * 资产包表格文件的上传
      */
-    public Map<String, Object> uploadExcel(MultipartFile file ) {
+    public static Map<String, Object> uploadExcel(MultipartFile file) {
         Map<String, Object> map = new HashMap<String, Object>();
-        String type = "文件业务类型";
+        String type = SysPropertyTypeEnum.FILE_BUSINESS_TYPE.getValue().toString();
         Integer userId = 0;
         try {
             String fileName = FileTool.saveFileSyncTmp(type, userId, file);//上传保存文件
             String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/" + type + "/" + userId + "/";
-//            String path="E://";
-//            String fileName="2.xls";
+//            String path = "E://";
+//            String fileName = "1.xls";
             List<Map<String, Object>> list0 = ExcelTool.readExcelForList(path, fileName, 0, 0, 0);//借款人
             List<Map<String, Object>> list1 = ExcelTool.readExcelForList(path, fileName, 0, 0, 1);//抵押物
             List<Map<String, Object>> list2 = ExcelTool.readExcelForList(path, fileName, 0, 0, 2);//借据
             List<Map<String, Object>> list3 = ExcelTool.readExcelForList(path, fileName, 0, 0, 3);//联系人
             //判断文件的字段格式
-            List<String[]> error = new ArrayList<String[]>();//错误信息
-            fileName = "errorAsset.xls";
+            List<ExcelMessage> error = new ArrayList<ExcelMessage>();//错误信息
+
             if (!checkExcel(list0, list1, list2, list3, error)) {
                 //文件的写出成表格文件
-                String[] str = {"序号", "表名称", "位置", "字段名称", "问题内容"};
-                ExcelTool.exportExcel(error, str, path, fileName);
+//                fileName = "errorAsset" + DateFormatTool.format(DateFormatTool.DATE_FORMAT_10_REG1)
+//                        + RandomStringUtils.randomNumeric(4) + ".xls";
+//                String[] str = {"序号", "表名称", "位置", "字段名称", "问题内容"};
+//                ExcelTool.exportExcel(error, str, path, fileName);
+//                map.put("filePath", path + fileName);
                 map.put("result", "error");
-                map.put("filePath", path + fileName);
+                map.put("data", error);
             } else {
                 //文件格式都正确的就处理表格
                 map.put("result", "ok");
@@ -65,7 +71,7 @@ public class ExcelUtilAsset {
      * @param list3 联系人信息
      * @return
      */
-    private boolean checkExcel(List<Map<String, Object>> list0, List<Map<String, Object>> list1, List<Map<String, Object>> list2, List<Map<String, Object>> list3, List<String[]> error) {
+    private static boolean checkExcel(List<Map<String, Object>> list0, List<Map<String, Object>> list1, List<Map<String, Object>> list2, List<Map<String, Object>> list3, List<ExcelMessage> error) {
         String[] str0 = {"序号", "*借款人", "*类型", "*来源", "*所属资产包", "*评优", "*评级", "个性处置方式", "标签", "*担保方式", "*公司担保", "*抵押",
                 "*质押", "*担保人是否能联系", "*担保人经济状况", "*抵押物估价能否覆盖债务", "*诉讼与否", "*判决与否", "*实地催收次数",
                 "*电话催收次数", "*委托催收次数", "*债务方是否能正常联系", "*债务方是否有能力偿还"};
@@ -94,13 +100,14 @@ public class ExcelUtilAsset {
         } else {
             //导出错误信息到文件
             String[] str = {"1", "", "", "", msg};
-            error.add(str);//模板有问题
+            ExcelMessage excelMessage = new ExcelMessage(1, "", "", "", msg);
+            error.add(excelMessage);//模板有问题
             flag = false;
         }
         return flag;
     }
 
-    private void checkLender(List<String[]> error, List<Map<String, Object>> list) {
+    private static void checkLender(List<ExcelMessage> error, List<Map<String, Object>> list) {
         String name = "借款人信息表";
         Map<String, Object> map = list.get(0);
         for (int i = 1; i < list.size(); i++) {
@@ -198,7 +205,7 @@ public class ExcelUtilAsset {
         }
     }
 
-    private void checkPawn(List<String[]> error, List<Map<String, Object>> list) {
+    private static void checkPawn(List<ExcelMessage> error, List<Map<String, Object>> list) {
         String name = "抵押物信息表";
         Map<String, Object> map = list.get(0);
         for (int i = 1; i < list.size(); i++) {
@@ -212,7 +219,7 @@ public class ExcelUtilAsset {
             if (transMapToString(l, "var1").equals("")) {//*关系
                 placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "不能为空");
             }
-            if (!transMapToString(l, "var1").equals("")&&FormatValidateTool.isNumeric(transMapToString(l, "var1").split("-")[0])) {//*关系
+            if (!transMapToString(l, "var1").equals("") && FormatValidateTool.isNumeric(transMapToString(l, "var1").split("-")[0])) {//*关系
                 placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "格式错误");
             }
             if (transMapToString(l, "var2").equals("")) {//*所属原始借据（号）
@@ -250,7 +257,7 @@ public class ExcelUtilAsset {
         }
     }
 
-    private void checkIou(List<String[]> error, List<Map<String, Object>> list) {
+    private static void checkIou(List<ExcelMessage> error, List<Map<String, Object>> list) {
         String name = "借据信息表";
         Map<String, Object> map = list.get(0);
         for (int i = 1; i < list.size(); i++) {
@@ -264,7 +271,7 @@ public class ExcelUtilAsset {
             if (transMapToString(l, "var1").equals("")) {//*关系
                 placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "不能为空");
             }
-            if (!transMapToString(l, "var1").equals("")&&FormatValidateTool.isNumeric(transMapToString(l, "var1").split("-")[0])) {//*关系
+            if (!transMapToString(l, "var1").equals("") && FormatValidateTool.isNumeric(transMapToString(l, "var1").split("-")[0])) {//*关系
                 placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "格式错误");
             }
             if (transMapToString(l, "var2").equals("")) {//*原始借据（号）
@@ -337,7 +344,7 @@ public class ExcelUtilAsset {
         }
     }
 
-    private void checkContact(List<String[]> error, List<Map<String, Object>> list) {
+    private static void checkContact(List<ExcelMessage> error, List<Map<String, Object>> list) {
         String name = "联系人信息表";
         Map<String, Object> map = list.get(0);
         for (int i = 1; i < list.size(); i++) {
@@ -384,9 +391,10 @@ public class ExcelUtilAsset {
      * @param fieldsName 字段名称
      * @param msg        错误内容
      */
-    private void placeByExcel(List<String[]> error, String name, Integer row, Integer col, String fieldsName, String msg) {
-        String[] str = {(error.size() + 1) + "", name, (row) + "行" + (col + 1) + "列", fieldsName, msg};
-        error.add(str);
+    private static void placeByExcel(List<ExcelMessage> error, String name, Integer row, Integer col, String fieldsName, String msg) {
+//        String[] str = {(error.size() + 1) + "", name, (row) + "行" + (col + 1) + "列", fieldsName, msg};
+        ExcelMessage excelMessage = new ExcelMessage((error.size() + 1), name, (row) + "行" + (col + 1) + "列", fieldsName, msg);
+        error.add(excelMessage);
     }
 
     /**
@@ -396,7 +404,7 @@ public class ExcelUtilAsset {
      * @param map  模板第一行对应的属性名称
      * @param str  说明
      */
-    public String templateFormat(String[] strs, Map<String, Object> map, String str) {
+    public static String templateFormat(String[] strs, Map<String, Object> map, String str) {
         String msg = "";
         for (int i = 0; i < strs.length; i++) {
             if (!transMapToString(map, "var" + i).equals(strs[i])) {

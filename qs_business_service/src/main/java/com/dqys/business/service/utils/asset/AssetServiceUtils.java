@@ -3,6 +3,8 @@ package com.dqys.business.service.utils.asset;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.business.service.dto.asset.*;
 import com.dqys.business.orm.pojo.asset.*;
+import com.dqys.core.utils.DateFormatTool;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +12,21 @@ import java.util.List;
 /**
  * Created by Yvan on 16/6/16.
  */
-public class AssetControllerUtils {
+public class AssetServiceUtils {
+
+    public static final String PRE_ASSET_CODE = "QS"; // 格式:QS160612XXXX
+    public static final String PRE_PAWN_CODE = "抵"; // 格式:抵AXXXXXX
+    public static final String PRE_LENDER_CODE = "JKR"; // 格式:JKR160612XXXX
+    public static final String MIDDLE_IOU_CODE = "-借"; // 格式:XXX-借01
+    public static final String[] UPLETTER = {"A","B","C","D","E","F","G",
+            "H","I","J","K","L","M","N",
+            "O","P","Q","R","S","T",
+            "U","V","W","X","Y","Z"};
+    public static final String[] LOWERLETTER = {"a","b","c","d","e","f","g",
+            "h","i","j","k","l","m","n",
+            "o","p","q","r","s","t",
+            "u","v","w","x","y","z"};
+
     /**
      * 批量资产包DTO转换DAO
      * @param assetDTOList
@@ -56,7 +72,6 @@ public class AssetControllerUtils {
         assetInfo.setLoanOrganizationDistrict(assetDTO.getLoanOrganizationDistrict());
         assetInfo.setTags(assetDTO.getTags());
         assetInfo.setIsshow(assetDTO.getIsshow());
-        assetInfo.setMemo(assetDTO.getMemo());
 
         return assetInfo;
     }
@@ -106,7 +121,6 @@ public class AssetControllerUtils {
         assetDTO.setLoanOrganizationDistrict(assetInfo.getLoanOrganizationDistrict());
         assetDTO.setTags(assetInfo.getTags());
         assetDTO.setIsshow(assetInfo.getIsshow());
-        assetDTO.setMemo(assetInfo.getMemo());
 
         return assetDTO;
     }
@@ -152,7 +166,6 @@ public class AssetControllerUtils {
         contactInfo.setCity(contactDTO.getCity());
         contactInfo.setDistrict(contactDTO.getDistrict());
         contactInfo.setAddress(contactDTO.getAddress());
-        contactInfo.setMemo(contactDTO.getMemo());
 
         return contactInfo;
     }
@@ -198,7 +211,6 @@ public class AssetControllerUtils {
         contactDTO.setCity(contactInfo.getCity());
         contactDTO.setDistrict(contactInfo.getDistrict());
         contactDTO.setAddress(contactInfo.getAddress());
-        contactDTO.setMemo(contactInfo.getMemo());
 
         return contactDTO;
     }
@@ -228,7 +240,6 @@ public class AssetControllerUtils {
         LenderInfo lenderInfo = new LenderInfo();
 
         lenderInfo.setId(lenderDTO.getId());
-        lenderInfo.setContactId(lenderDTO.getLenderId());
         lenderInfo.setStartAt(lenderDTO.getStartAt());
         lenderInfo.setEndAt(lenderDTO.getEndAt());
         lenderInfo.setOperator(lenderDTO.getOperatorId());
@@ -288,7 +299,6 @@ public class AssetControllerUtils {
         LenderDTO lenderDTO = new LenderDTO();
 
         lenderDTO.setId(lenderInfo.getId());
-        lenderDTO.setLenderId(lenderInfo.getContactId());
         lenderDTO.setStartAt(lenderInfo.getStartAt());
         lenderDTO.setEndAt(lenderInfo.getEndAt());
         lenderDTO.setOperatorId(lenderInfo.getOperator());
@@ -502,6 +512,39 @@ public class AssetControllerUtils {
         iouDTO.setMemo(iouInfo.getMemo());
 
         return iouDTO;
+    }
+
+    /**
+     * 生成资产包号
+     * @return
+     */
+    public static String createAssetCode(){
+        return PRE_ASSET_CODE
+                + DateFormatTool.format(DateFormatTool.DATE_FORMAT_6)
+                + RandomStringUtils.randomNumeric(4);
+    }
+
+
+
+
+
+    /**
+     * 生成借据号
+     * @param name
+     * @return
+     */
+    public static String createIouCode(String name){
+        return name + MIDDLE_IOU_CODE + RandomStringUtils.randomNumeric(6);
+    }
+
+    /**
+     * 生成抵押物号
+     * @return
+     */
+    public static String createPawnCode(){
+        return PRE_PAWN_CODE
+                + UPLETTER[Integer.valueOf(RandomStringUtils.randomNumeric(3))%24]
+                + RandomStringUtils.randomNumeric(6);
     }
 
 }

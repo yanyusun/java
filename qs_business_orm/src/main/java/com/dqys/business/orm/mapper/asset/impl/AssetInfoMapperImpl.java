@@ -55,4 +55,9 @@ public class AssetInfoMapperImpl extends BaseDao implements AssetInfoMapper {
     public Integer update(AssetInfo record) {
         return super.getSqlSession().getMapper(AssetInfoMapper.class).update(record);
     }
+
+    @Override
+    public Integer assignedBatch(List<Integer> ids, Integer id) {
+        return null;
+    }
 }

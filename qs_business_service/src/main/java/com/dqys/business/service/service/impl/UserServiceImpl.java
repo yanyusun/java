@@ -22,10 +22,13 @@ import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.NoSQLWithRedisTool;
+import com.dqys.core.utils.SignatureTool;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +47,8 @@ public class UserServiceImpl implements UserService {
     private TUserTagMapper tUserTagMapper;
     @Autowired
     private TCompanyInfoMapper tCompanyInfoMapper;
+
+    public static final String INIT_PASSSWORD = "123456";
 
     @Override
     public JsonResponse queryList(UserListQuery query) {
@@ -129,9 +134,9 @@ public class UserServiceImpl implements UserService {
             resultMap.put("total", 0);
             return JsonResponseTool.success(resultMap);
         } else {
-            tUserInfoList.forEach(tUserInfo -> {
+            for(TUserInfo tUserInfo : tUserInfoList){
                 userListDTOList.add(_get(tUserInfo));
-            });
+            }
         }
         Integer count = tUserInfoMapper.queryCount(tUserQuery);
 
@@ -157,11 +162,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JsonResponse add(UserInsertDTO data) {
+    public JsonResponse add(UserInsertDTO data){
         if (data == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
         TUserInfo userInfo = UserServiceUtils.toTUserInfo(data);
+        // 掩码初始化
+        userInfo.setSalt(RandomStringUtils.randomAlphabetic(6));
+        try{
+            // 密码初始化
+            userInfo.setPassword(SignatureTool.md5Encode(INIT_PASSSWORD, null));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         Integer result = tUserInfoMapper.insertSelective(userInfo);
         if(result != null && result > 0){
             Integer userInfoId = userInfo.getId();
@@ -169,6 +182,9 @@ public class UserServiceImpl implements UserService {
             result = tUserTagMapper.insertSelective(userTag);
             if(result != null && result > 0){
                 return JsonResponseTool.success(userInfoId);
+            }else{
+                // todo 标签增加失败,删除用户信息数据 -- 目前逻辑删除,需修复
+                tUserInfoMapper.deleteByPrimaryKey(userInfoId);
             }
         }
         return JsonResponseTool.failure("添加失败");
@@ -176,7 +192,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JsonResponse update(UserInsertDTO userInsertDTO) {
-        if(CommonUtil.checkParam(userInsertDTO, userInsertDTO.getId(), userInsertDTO.getCompanyId())){
+        if(CommonUtil.checkParam(userInsertDTO, userInsertDTO.getId())){
             return JsonResponseTool.paramErr("参数错误");
         }
         TUserTag tUserTag = new TUserTag();
@@ -191,7 +207,7 @@ public class UserServiceImpl implements UserService {
         boolean flag = false;
 
         TUserInfo userInfo = UserServiceUtils.toTUserInfo(userInsertDTO);
-        Integer result = tUserInfoMapper.insertSelective(userInfo);
+        Integer result = tUserInfoMapper.updateByPrimaryKeySelective(userInfo);
         if(result != null && result.equals(1)){
             flag = true;
         }
@@ -239,8 +255,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JsonResponse statusBatch(String ids, Integer id) {
-        Integer result = tUserInfoMapper.queryUpdateStatus(ids, id);
+    public JsonResponse statusBatch(String ids, Integer status) {
+        if(ids == null || ids.length() == 0){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        String[] idArr = ids.split(",");
+        ArrayList idList = new ArrayList();
+        for(String s : idArr){
+            idList.add(Integer.valueOf(s));
+        }
+        Integer result = tUserInfoMapper.queryUpdateStatus(idList, status);
         if(result > 0){
             return JsonResponseTool.success(null);
         }else{
@@ -255,7 +279,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     private UserListDTO _get(TUserInfo tUserInfo) {
-        TCompanyInfo tCompanyInfo = new TCompanyInfo();
+        TCompanyInfo tCompanyInfo = null;
         if (tUserInfo.getCompanyId() != null) {
             tCompanyInfo = tCompanyInfoMapper.selectByPrimaryKey(tUserInfo.getCompanyId());
         }

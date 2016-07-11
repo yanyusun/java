@@ -21,16 +21,15 @@ public class AssetInfo extends BaseModel implements Serializable {
     private String name; // 资源包名称
     private String evaluateExcellent; // 评优
     private String evaluateLevel; // 评级
-    private String province;  // 省
-    private String city;  // 市
-    private String district;  // 区
+    private Integer province;  // 省
+    private Integer city;  // 市
+    private Integer district;  // 区
     private String address;  // 详细地址
     private String loanOrganization;  // 贷款机构
     private String loanOrganizationDistrict;  // 贷款机构行政区域
     private String disposeMode;  // 处置方式
     private String tags;  //  标签
     private Integer isshow;  // 是否展示外网
-    private String memo;  // 备注
 
     @Override
     public String toString() {
@@ -41,7 +40,7 @@ public class AssetInfo extends BaseModel implements Serializable {
                 + ",evaluateExcellent:" + evaluateExcellent + ",evaluateLevel:" + evaluateLevel + ",province:" + province
                 + ",city:" + city + ",district:" + district + ",address:" + address
                 + ",loanOrganization:" + loanOrganization + ",loanOrganizationDistrict:" + loanOrganizationDistrict + ",disposeMode:" + disposeMode
-                + ",tags:" + tags + ",isshow:" + isshow + ",memo:" + memo;
+                + ",tags:" + tags + ",isshow:" + isshow;
         string += "]";
         return string;
     }
@@ -134,27 +133,27 @@ public class AssetInfo extends BaseModel implements Serializable {
         this.evaluateLevel = evaluateLevel;
     }
 
-    public String getProvince() {
+    public Integer getProvince() {
         return province;
     }
 
-    public void setProvince(String province) {
+    public void setProvince(Integer province) {
         this.province = province;
     }
 
-    public String getCity() {
+    public Integer getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(Integer city) {
         this.city = city;
     }
 
-    public String getDistrict() {
+    public Integer getDistrict() {
         return district;
     }
 
-    public void setDistrict(String district) {
+    public void setDistrict(Integer district) {
         this.district = district;
     }
 
@@ -204,13 +203,5 @@ public class AssetInfo extends BaseModel implements Serializable {
 
     public void setIsshow(Integer isshow) {
         this.isshow = isshow;
-    }
-
-    public String getMemo() {
-        return memo;
-    }
-
-    public void setMemo(String memo) {
-        this.memo = memo;
     }
 }

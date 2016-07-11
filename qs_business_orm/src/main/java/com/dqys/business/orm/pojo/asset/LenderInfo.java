@@ -10,7 +10,6 @@ import java.util.Date;
  */
 public class LenderInfo extends BaseModel implements Serializable {
 
-    private Integer contactId;  // 联系人ID
     private Date startAt;  // 委托开始时间
     private Date endAt;  //委托结束时间
     private Integer operator;  // 操作人ID
@@ -45,7 +44,7 @@ public class LenderInfo extends BaseModel implements Serializable {
     @Override
     public String toString() {
         String string = "LenderInfo:[";
-        string += "contactId:" + contactId + ",startAt:" + startAt + ",endAt:" + endAt
+        string += ",startAt:" + startAt + ",endAt:" + endAt
                 + ",operator:" + operator + ",accrual:" + accrual
                 + ",loan:" + loan + ",appraisal:" + appraisal + ",loanType:" + loanType
                 + ",loanMode:" + loanMode + ",loanName:" + loanName + ",evaluateExcellent:" + evaluateExcellent
@@ -58,14 +57,6 @@ public class LenderInfo extends BaseModel implements Serializable {
                 + ",isWorth:" + isWorth + ",memo:" + memo;
         string += "]";
         return string;
-    }
-
-    public Integer getContactId() {
-        return contactId;
-    }
-
-    public void setContactId(Integer contactId) {
-        this.contactId = contactId;
     }
 
     public Date getStartAt() {

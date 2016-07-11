@@ -25,7 +25,7 @@ public class UserInsertDTO {
     private Integer areaId; //职责区域(必填)
     private Integer teamId; //团队
     private String remark; // 备注
-    private Integer userType; //用户类型
+    private Integer userType; //用户类型(必填)
 
     private Integer companyId; // 公司Id
 

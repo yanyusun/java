@@ -5,6 +5,7 @@ import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.business.service.service.CompanyService;
 import com.dqys.business.service.service.UserService;
+import com.dqys.business.service.utils.excel.UserExcelUtil;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -14,6 +15,7 @@ import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,10 +34,14 @@ public class UserController {
     @Autowired
     private CompanyService companyService;
 
+
     /**
-     * 二级导航数据统计
-     *
-     * @return
+     * @api {GET} http://{url}//api/user/listData 二级导航统计
+     * @apiName listData
+     * @apiGroup User
+     * @apiDescription 二级导航数据统计
+     * @apiUse JsonResponse
+     * @apiSuccess {json} data 返回数据
      */
     @RequestMapping(value = "/listData")
     @ResponseBody
@@ -108,7 +114,7 @@ public class UserController {
                 userInsertDTO.getRealName(), userInsertDTO.getSex(), userInsertDTO.getAccount(),
                 userInsertDTO.getDuty(), userInsertDTO.getWechat(), userInsertDTO.getMobile(),
                 userInsertDTO.getEmail(), userInsertDTO.getApartmentId(), userInsertDTO.getOccupation(),
-                userInsertDTO.getAreaId(), userInsertDTO.getRoleId())) {
+                userInsertDTO.getAreaId(), userInsertDTO.getRoleId(), userInsertDTO.getUserType())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         // 其他校验
@@ -145,7 +151,8 @@ public class UserController {
                 userInsertDTO.getRealName(), userInsertDTO.getSex(), userInsertDTO.getAccount(),
                 userInsertDTO.getDuty(), userInsertDTO.getWechat(), userInsertDTO.getMobile(),
                 userInsertDTO.getEmail(), userInsertDTO.getApartmentId(), userInsertDTO.getOccupation(),
-                userInsertDTO.getAreaId(), userInsertDTO.getRoleId(), userInsertDTO.getId())) {
+                userInsertDTO.getAreaId(), userInsertDTO.getRoleId(), userInsertDTO.getId(),
+                userInsertDTO.getUserType())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return userService.update(userInsertDTO);
@@ -188,18 +195,39 @@ public class UserController {
      * 批量设置状态
      *
      * @param ids
-     * @param id
+     * @param status
      * @return
      */
     @RequestMapping(value = "/statusBatch")
     @ResponseBody
     public JsonResponse statusBatch(@RequestParam(required = true) String ids,
-                                    @RequestParam(required = true) Integer id) {
-        if (CommonUtil.checkParam(ids, id)) {
+                                    @RequestParam(required = true) Integer status) {
+        if (CommonUtil.checkParam(ids, status)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return userService.statusBatch(ids, id);
+        return userService.statusBatch(ids, status);
     }
 
+    /**
+     * 成员信息导入
+     *
+     * @param file
+     * @return
+     */
+    @RequestMapping(value = "/userExcel")
+    @ResponseBody
+    public JsonResponse userExcel(@RequestParam MultipartFile file) {
+        if (CommonUtil.checkParam(file)) {
+            return JsonResponseTool.paramErr("未上传文件");
+        }
+        Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file);
+        if (map.get("error") == null || map.get("").equals("")) {
+            return JsonResponseTool.failure("");
+        } else {
+            // 返回CODE
+
+        }
+        return null;
+    }
 
 }

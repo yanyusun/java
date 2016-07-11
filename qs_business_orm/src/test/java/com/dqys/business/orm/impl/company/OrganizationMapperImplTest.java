@@ -45,7 +45,7 @@ public class OrganizationMapperImplTest extends BaseTest {
     private Organization newOne(Integer index) {
         Organization organization = new Organization();
 
-        organization.setUserId(index);
+        organization.setUserId(11);
         organization.setName("name" + index);
         organization.setCompanyId(index);
         organization.setType("flag");

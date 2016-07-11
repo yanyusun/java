@@ -9,7 +9,6 @@
     <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
     <result column="stateflag" property="stateflag" jdbcType="INTEGER" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="contact_id" property="contactId" jdbcType="INTEGER" />
     <result column="start_at" property="startAt" jdbcType="TIMESTAMP" />
     <result column="end_at" property="endAt" jdbcType="TIMESTAMP" />
     <result column="operator" property="operator" jdbcType="INTEGER" />
@@ -44,7 +43,7 @@
 
   <!-- 基础字段 -->
   <sql id="Base_Column_List" >
-    id, version, create_at, update_at, stateflag, remark, contact_id, start_at, end_at, operator,
+    id, version, create_at, update_at, stateflag, remark, start_at, end_at, operator,
     accrual, loan, appraisal, loan_type, loan_mode, loan_name, evaluate_excellent, evaluate_level,
     dispose_mode, tags, urge_type, entrust_born_type, entrust_born, guarantee_type, guarantee_mode,
     guarantee_source, is_guarantee_connection, guarentee_economic, is_lawsuit, is_decision, real_urge_time,
@@ -63,9 +62,6 @@
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
         remark,
-      </if>
-      <if test="contactId != null" >
-        contact_id,
       </if>
       <if test="startAt != null" >
         start_at,
@@ -161,9 +157,6 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="contactId != null" >
-        #{contactId,jdbcType=INTEGER},
       </if>
       <if test="startAt != null" >
         #{startAt,jdbcType=TIMESTAMP},
@@ -281,9 +274,6 @@
       update_at = CURRENT_TIMESTAMP ,
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="contactId != null" >
-        contact_id = #{contactId,jdbcType=INTEGER},
       </if>
       <if test="startAt != null" >
         start_at = #{startAt,jdbcType=TIMESTAMP},
