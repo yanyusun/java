@@ -2,6 +2,7 @@ package com.dqys.business.service.utils.asset;
 
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.service.query.asset.AssetListQuery;
+import com.dqys.core.model.TArea;
 import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.business.service.dto.asset.*;
@@ -9,6 +10,7 @@ import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.core.utils.DateFormatTool;
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -566,7 +568,12 @@ public class AssetServiceUtils {
         assetListDTO.setCreateAt(assetInfo.getCreateAt());
         assetListDTO.setRemark(assetInfo.getRemark());
         assetListDTO.setFlag(assetInfo.getStateflag().equals(0) ? 1 : 0);
-        assetListDTO.setCity(AreaTool.getAreaById(assetInfo.getCity()).getName());
+        if(assetInfo.getCity() != null){
+            TArea area = AreaTool.getAreaById(assetInfo.getCity());
+            if(area != null){
+                assetListDTO.setCity(area.getName());
+            }
+        }
 
         long dayTime = assetInfo.getEndAt().getTime()- Calendar.getInstance().getTime().getTime();
         assetListDTO.setLessDay(dayTime > 0 ? dayTime / 1000 / 3600 / 24 : 0);

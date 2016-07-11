@@ -1,15 +1,14 @@
 package com.dqys.core.base;
 
 /**
+ * Created by Yvan on 16/7/8.
+ * 基础键值对
  * @apiDefine SelectonDTO
  * @apiSuccessExample {json} SelectDTO-Success-Response:
  * {
  *     key:key,
  *     value:"value"
  * }
- * Created by Yvan on 16/7/8.
- *
- * 基础键值对
  */
 public class BaseSelectonDTO {
 

@@ -122,6 +122,21 @@ public class UserServiceImpl implements UserService {
         tUserQuery.setNameLike(query.getName());
 
         tUserQuery.setIsPaging(true); // 开启分页
+        if(query.getPageCount() != null){
+            tUserQuery.setPageSize(query.getPageCount());
+            if(query.getPage() != null && query.getPage() > 1){
+                tUserQuery.setStartPageNum((query.getPage()-1)*query.getPageCount());
+            }else{
+                tUserQuery.setStartPageNum(0);
+            }
+        }else {
+            tUserQuery.setPageSize(20);
+            if(query.getPage() != null && query.getPage() > 1){
+                tUserQuery.setStartPageNum((query.getPage()-1)*20);
+            }else{
+                tUserQuery.setStartPageNum(0);
+            }
+        }
         List<TUserInfo> tUserInfoList = tUserInfoMapper.queryList(tUserQuery);
         List<UserListDTO> userListDTOList = new ArrayList<>();
         if (tUserInfoList == null) {

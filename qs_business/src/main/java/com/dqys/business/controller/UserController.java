@@ -88,8 +88,8 @@ public class UserController {
      * @apiGroup User
      * @apiSuccess {CompanyDTO} companyInfo 公司信息
      * @apiUse CompanyDTO
-     * @apiSuccess {UserStatusTypeEnum} userStatus 用户状态集
-     * @apiUse UserStatusTypeEnum
+     * @apiSuccess {SelectonDTO} userStatus 用户状态集
+     * @apiUse SelectonDTO
      * @apiSuccess {Property} userType 用户账号类型
      * @apiSuccess {Property} roleType 用户角色类型
      * @apiUse PropertyDTO

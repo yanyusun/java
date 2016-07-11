@@ -1,6 +1,7 @@
 package com.dqys.business.controller;
 
 import com.dqys.business.service.constant.AssetModelTypeEnum;
+import com.dqys.business.service.constant.AssetTypeEnum;
 import com.dqys.business.service.dto.asset.AssetDTO;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.IouDTO;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yvan on 16/6/1.
@@ -68,10 +70,11 @@ public class AssetController {
     }
 
     /**
-     * @api {POST} http://{url}/asset/update 获取资产包
-     * @apiName update
+     * @api {get} http://{url}/asset/get 获取资产包
+     * @apiName get
      * @apiGroup asset
      * @apiParam {number} id 资产包ID
+     * @apiSuccess {AssetDTO} data 资产包信息
      * @apiUse AssetDTO
      */
     @RequestMapping(value = "/get")
@@ -84,27 +87,30 @@ public class AssetController {
     }
 
     /**
-     *
-     * @api {POST} http://{url}/asset/update 获取资产包
-     * @apiName update
+     * @api {get} http://{url}/asset/getInit 获取初始化数据
+     * @apiName getInit
      * @apiGroup asset
-     * @apiParam {number} id 资产包ID获取初始化数据
-     *
-     * @return
+     * @apiSuccess {SelectonDTO} assetType 资产包类型
+     * @apiUse SelectonDTO
      */
     @RequestMapping(value = "/getInit")
     @ResponseBody
     public JsonResponse getInit() {
+        Map<String, Object> resultMap = new HashMap<>();
 
+        resultMap.put("assetType", AssetTypeEnum.list()); // 资产包种类
 
-        return null;
+        return JsonResponseTool.success(resultMap);
     }
 
 
     /**
-     * 分页获取资产包
-     *
-     * @return
+     * @api {get} http://{url}/asset/list 获取资产包列表
+     * @apiName list
+     * @apiGroup asset
+     * @apiUse AssetListQuery
+     * @apiSuccess {AssetDTO} data 资产包信息
+     * @apiUse AssetDTO
      */
     @RequestMapping(value = "/list")
     @ResponseBody
@@ -113,15 +119,15 @@ public class AssetController {
     }
 
     /**
-     * excel导入资产包的借款人
-     *
-     * @param id
-     * @param file
-     * @return
+     * @api {get} http://{url}/asset/excelIn excel导入资产包的借款人
+     * @apiName excelIn
+     * @apiGroup asset
+     * @apiParam {number} id 公司ID
+     * @apiParam {file} file excel文件
      */
     @RequestMapping(value = "/excelIn")
     @ResponseBody
-    public JsonResponse addLenders(@RequestParam Integer id, MultipartFile file) {
+    public JsonResponse addLenders(@RequestParam(required = true) Integer id,@RequestParam(required = true) MultipartFile file) {
         List<AssetDTO> assetDTOList = new ArrayList<>();
         List<ContactDTO> contactDTOList = new ArrayList<>();
         List<PawnDTO> pawnDTOList = new ArrayList<>();

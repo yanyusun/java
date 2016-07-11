@@ -19,8 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * Created by Yvan on 16/6/30.
  */
@@ -48,11 +46,11 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyDTO get(Integer companyId) {
-        if(companyId == null){
+        if (companyId == null) {
             return null;
         }
         TCompanyInfo companyInfo = companyInfoMapper.selectByPrimaryKey(companyId);
-        if(companyInfo != null){
+        if (companyInfo != null) {
             return CompanyServiceUtils.toCompanyDTO(companyInfo);
         }
         return null;
@@ -60,11 +58,11 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyDTO getByUserId(Integer userId) {
-        if(CommonUtil.checkParam(userId)){
+        if (CommonUtil.checkParam(userId)) {
             return null;
         }
         TUserInfo tUserInfo = userInfoMapper.selectByPrimaryKey(userId);
-        if(tUserInfo != null && tUserInfo.getCompanyId() != null){
+        if (tUserInfo != null && tUserInfo.getCompanyId() != null) {
             return CompanyServiceUtils.toCompanyDTO(
                     companyInfoMapper.selectByPrimaryKey(tUserInfo.getCompanyId()));
         }
@@ -73,7 +71,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public JsonResponse addOrganization(OrganizationInsertDTO organizationInsertDTO) {
-        if(CommonUtil.checkParam(organizationInsertDTO)){
+        if (CommonUtil.checkParam(organizationInsertDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         Organization organization = CompanyServiceUtils.toOrganization(organizationInsertDTO);
@@ -82,7 +80,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public JsonResponse deleteOrganization(Integer id) {
-        if(CommonUtil.checkParam(id)){
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
 
@@ -91,7 +89,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public JsonResponse updateOrganization(OrganizationInsertDTO organizationInsertDTO) {
-        if(CommonUtil.checkParam(organizationInsertDTO)){
+        if (CommonUtil.checkParam(organizationInsertDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         Organization organization = CompanyServiceUtils.toOrganization(organizationInsertDTO);
@@ -100,7 +98,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public JsonResponse getOrganization(Integer id) {
-        if(CommonUtil.checkParam(id)){
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return CommonUtil.responseBack(CompanyServiceUtils.toOrganizationDTO(organizationMapper.get(id)));
