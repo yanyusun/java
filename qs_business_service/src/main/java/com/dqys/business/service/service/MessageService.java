@@ -43,4 +43,11 @@ public interface MessageService {
      * @return
      */
     Integer add(String title, String content, Integer sender_id, Integer receive_id, String label, Integer type);
+
+    /**
+     *查询消息记录数
+     * @param message
+     * @return
+     */
+    Integer selectCount(Message message);
 }

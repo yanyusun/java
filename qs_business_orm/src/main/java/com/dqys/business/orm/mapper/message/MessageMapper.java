@@ -32,5 +32,16 @@ public interface MessageMapper {
      */
     Integer del(Integer[] ids);
 
+    /**
+     * 添加消息信息
+     * @param message
+     * @return
+     */
     Integer add(Message message);
+    /**
+     *查询消息记录数
+     * @param message
+     * @return
+     */
+    Integer selectCount(Message message);
 }

@@ -57,4 +57,9 @@ public class MessageServiceImpl implements MessageService {
         }
 
     }
+
+    @Override
+    public Integer selectCount(Message message) {
+        return messageMapper.selectCount(message);
+    }
 }

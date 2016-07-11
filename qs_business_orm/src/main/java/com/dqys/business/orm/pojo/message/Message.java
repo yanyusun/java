@@ -1,6 +1,8 @@
 package com.dqys.business.orm.pojo.message;
 
+import com.dqys.core.base.BasePageDTO;
 import com.dqys.core.base.BasePagination;
+import com.dqys.core.base.BaseQuery;
 
 import java.io.Serializable;
 
@@ -8,7 +10,7 @@ import java.io.Serializable;
  * 消息
  * Created by mkfeng on 2016/7/8.
  */
-public class Message extends BasePagination implements Serializable {
+public class Message extends BaseQuery implements Serializable {
     private Integer id;//int(11) NOT NULL AUTO_INCREMENT,
     private String title;//varchar(255) DEFAULT NULL COMMENT '标题',
     private String content;//varchar(1024) NOT NULL COMMENT '内容',

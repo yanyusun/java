@@ -12,7 +12,7 @@ public enum MessageEnum {
     private Integer value;
     private String name;
 
-    public String getEnumByValue(Integer value) {
+    public static String getEnumByValue(Integer value) {
         for (MessageEnum e : MessageEnum.values()) {
             if (e.getValue().equals(value)) {
                 return e.getName();

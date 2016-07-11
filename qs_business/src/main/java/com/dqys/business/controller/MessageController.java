@@ -1,7 +1,10 @@
 package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.message.Message;
+import com.dqys.business.orm.pojo.message.MessageQuery;
+import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.service.MessageService;
+import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 消息管理
@@ -27,6 +32,8 @@ public class MessageController {
      * @api {post} message/pageList 消息列表
      * @apiParam {int} page 分页数
      * @apiParam {int} pageCount 显示数目
+     * @apiParam {int} type 类型 (0, "任务消息"),(1, "产品消息"), (2, "安全消息"),(3, "服务消息"),
+     * @apiParam {int} status 状态（0未读，1已读）
      * @apiDescription 查询消息列表信息
      * @apiSampleRequest message/pageList
      * @apiGroup Message
@@ -34,12 +41,27 @@ public class MessageController {
      */
     @RequestMapping("/pageList")
     @ResponseBody
-    public JsonResponse messageList(Message message) {
+    public JsonResponse messageList(MessageQuery messageQuery) {
+        Message message = MessageUtils.transToMessage(messageQuery);
         List<Message> list = messageService.selectByMessage(message);
         if (list == null) {
             return JsonResponseTool.noData();
         } else {
-            return JsonResponseTool.success(list);
+            Map<String, Object> map = new HashMap<>();
+            map.put("list", MessageUtils.transToMessageDTO(list));
+            Message sage = new Message();
+            map.put("total",messageService.selectCount(sage));//总共的记录数目
+            sage.setStatus(0);//标记的未读消息
+            map.put("totalMes", messageService.selectCount(sage));//全部未读消息数
+            sage.setType(MessageEnum.PRODUCT.getValue());
+            map.put("productMes", messageService.selectCount(sage));//"产品消息数
+            sage.setType(MessageEnum.SAFETY.getValue());
+            map.put("safetyMes", messageService.selectCount(sage));//"安全消息数"
+            sage.setType(MessageEnum.SERVE.getValue());
+            map.put("serveMes", messageService.selectCount(sage));//"服务消息数"
+            sage.setType(MessageEnum.TASK.getValue());
+            map.put("taskMes", messageService.selectCount(sage));//"任务消息数"
+            return JsonResponseTool.success(map);
         }
     }
 
