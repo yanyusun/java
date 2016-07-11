@@ -15,7 +15,7 @@
     <sql id="Where_Query">
         <where>
             1=1
-            <if test="time !=null">
+            <if test="time !=null and time !='' ">
                 and (ol.time &gt;=#{startTime} and ol.time &lt;= #{endTime})
             </if>
             <if test=" userId !=null">
@@ -102,7 +102,7 @@
     <select id="selectByOperLog" parameterType="com.dqys.business.orm.pojo.operLog.OperLog" resultMap="BaseResultMap">
         select ol.id,ui.real_name,ot.oper_name,DATE_FORMAT(ol.time,'%Y-%m-%d') time,obt.object_name,ol.remark,ol.text
         from oper_log ol LEFT JOIN oper_type ot
-        ON ot.oper_type=ol.object_type LEFT JOIN object_type obt
+        ON ot.oper_type=ol.oper_type LEFT JOIN object_type obt
         ON obt.object_type=ol.object_type LEFT JOIN t_user_info ui
         ON ui.id=ol.user_id
         <include refid="Where_Query"></include>
