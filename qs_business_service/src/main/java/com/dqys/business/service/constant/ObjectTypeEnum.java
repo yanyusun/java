@@ -5,8 +5,14 @@ package com.dqys.business.service.constant;
  * Created by mkfeng on 2016/7/4.
  */
 public enum ObjectTypeEnum {
-    USER_INFO(99,"用户信息"),
-    ;
+    PAWN(12, "抵押物"),
+    ASSETPACKAGE(10, "资产包"),
+    LENDER(11, "借款人"),
+    IOU(13, "借据"),
+    INFORMATION(14, "资料实勘"),
+    CASE(15, "案件"),
+    ASSETSOURCE(16, "资产源"),
+    USER_INFO(99, "用户信息"),;
 
     private Integer value;
     private String name;
