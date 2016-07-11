@@ -9,8 +9,6 @@ import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.auth.orm.query.CompanyQuery;
 import com.dqys.auth.orm.query.TUserQuery;
 import com.dqys.auth.orm.query.TUserTagQuery;
-import com.dqys.business.orm.mapper.company.OrganizationMapper;
-import com.dqys.business.orm.pojo.company.Organization;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;
 import com.dqys.business.service.query.user.UserListQuery;
@@ -19,9 +17,9 @@ import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
-import com.dqys.core.utils.CommonUtil;
-import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.core.utils.NoSQLWithRedisTool;
+import com.dqys.core.utils.*;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -30,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Yvan on 16/6/29.
@@ -44,6 +43,8 @@ public class UserServiceImpl implements UserService {
     private TUserTagMapper tUserTagMapper;
     @Autowired
     private TCompanyInfoMapper tCompanyInfoMapper;
+
+    public static final String INIT_PASSSWORD = "123456";
 
     @Override
     public JsonResponse queryList(UserListQuery query) {
@@ -110,9 +111,9 @@ public class UserServiceImpl implements UserService {
                 }
                 tUserQuery.setCompanyIds(companyIds);
             }
-        }else{
+        } else {
             TUserInfo tUserInfo = getCurrentUser();
-            if(tUserInfo != null){
+            if (tUserInfo != null) {
                 tUserQuery.setCompanyId(tUserInfo.getCompanyId());
             }
         }
@@ -121,6 +122,21 @@ public class UserServiceImpl implements UserService {
         tUserQuery.setNameLike(query.getName());
 
         tUserQuery.setIsPaging(true); // 开启分页
+        if(query.getPageCount() != null){
+            tUserQuery.setPageSize(query.getPageCount());
+            if(query.getPage() != null && query.getPage() > 1){
+                tUserQuery.setStartPageNum((query.getPage()-1)*query.getPageCount());
+            }else{
+                tUserQuery.setStartPageNum(0);
+            }
+        }else {
+            tUserQuery.setPageSize(20);
+            if(query.getPage() != null && query.getPage() > 1){
+                tUserQuery.setStartPageNum((query.getPage()-1)*20);
+            }else{
+                tUserQuery.setStartPageNum(0);
+            }
+        }
         List<TUserInfo> tUserInfoList = tUserInfoMapper.queryList(tUserQuery);
         List<UserListDTO> userListDTOList = new ArrayList<>();
         if (tUserInfoList == null) {
@@ -129,9 +145,9 @@ public class UserServiceImpl implements UserService {
             resultMap.put("total", 0);
             return JsonResponseTool.success(resultMap);
         } else {
-            tUserInfoList.forEach(tUserInfo -> {
+            for (TUserInfo tUserInfo : tUserInfoList) {
                 userListDTOList.add(_get(tUserInfo));
-            });
+            }
         }
         Integer count = tUserInfoMapper.queryCount(tUserQuery);
 
@@ -162,13 +178,24 @@ public class UserServiceImpl implements UserService {
             return JsonResponseTool.paramErr("参数错误");
         }
         TUserInfo userInfo = UserServiceUtils.toTUserInfo(data);
+        // 掩码初始化
+        userInfo.setSalt(RandomStringUtils.randomAlphabetic(6));
+        try {
+            // 密码初始化
+            userInfo.setPassword(SignatureTool.md5Encode(INIT_PASSSWORD, null));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Integer result = tUserInfoMapper.insertSelective(userInfo);
-        if(result != null && result > 0){
+        if (result != null && result > 0) {
             Integer userInfoId = userInfo.getId();
             TUserTag userTag = UserServiceUtils.toTUserTag(data, userInfoId);
             result = tUserTagMapper.insertSelective(userTag);
-            if(result != null && result > 0){
+            if (result != null && result > 0) {
                 return JsonResponseTool.success(userInfoId);
+            } else {
+                // todo 标签增加失败,删除用户信息数据 -- 目前逻辑删除,需修复
+                tUserInfoMapper.deleteByPrimaryKey(userInfoId);
             }
         }
         return JsonResponseTool.failure("添加失败");
@@ -176,7 +203,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JsonResponse update(UserInsertDTO userInsertDTO) {
-        if(CommonUtil.checkParam(userInsertDTO, userInsertDTO.getId(), userInsertDTO.getCompanyId())){
+        if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         TUserTag tUserTag = new TUserTag();
@@ -184,35 +211,35 @@ public class UserServiceImpl implements UserService {
         if (tUserTagList.size() > 0) {
             tUserTag = tUserTagList.get(0);
         }
-        if(tUserTag == null){
+        if (tUserTag == null) {
             return JsonResponseTool.failure("修改失败");
         }
 
         boolean flag = false;
 
         TUserInfo userInfo = UserServiceUtils.toTUserInfo(userInsertDTO);
-        Integer result = tUserInfoMapper.insertSelective(userInfo);
-        if(result != null && result.equals(1)){
+        Integer result = tUserInfoMapper.updateByPrimaryKeySelective(userInfo);
+        if (result != null && result.equals(1)) {
             flag = true;
         }
 
         TUserTag userTag = UserServiceUtils.toTUserTag(userInsertDTO, userInsertDTO.getId());
         userTag.setId(tUserTag.getId());
         Integer tagResult = tUserTagMapper.updateByPrimaryKeySelective(userTag);
-        if(tagResult != null && tagResult.equals(1)){
+        if (tagResult != null && tagResult.equals(1)) {
             flag = true;
         }
 
-        if(flag){
+        if (flag) {
             return JsonResponseTool.success(userInsertDTO.getId());
-        }else{
+        } else {
             return JsonResponseTool.failure("修改失败");
         }
     }
 
     @Override
     public JsonResponse delete(Integer uId) {
-        if(CommonUtil.checkParam(uId) || tUserInfoMapper.selectByPrimaryKey(uId) == null){
+        if (CommonUtil.checkParam(uId) || tUserInfoMapper.selectByPrimaryKey(uId) == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
         TUserTag tUserTag = new TUserTag();
@@ -220,15 +247,15 @@ public class UserServiceImpl implements UserService {
         if (tUserTagList.size() > 0) {
             tUserTag = tUserTagList.get(0);
         }
-        if(tUserTag == null){
+        if (tUserTag == null) {
             return JsonResponseTool.failure("参数错误");
         }
 
         Integer userResult = tUserInfoMapper.deleteByPrimaryKey(uId);
-        if(userResult > 0){
+        if (userResult > 0) {
             tUserTagMapper.deleteByPrimaryKey(tUserTag.getId());
             return JsonResponseTool.success(null);
-        }else{
+        } else {
             return JsonResponseTool.failure("删除失败");
         }
     }
@@ -239,12 +266,109 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JsonResponse statusBatch(String ids, Integer id) {
-        Integer result = tUserInfoMapper.queryUpdateStatus(ids, id);
-        if(result > 0){
+    public JsonResponse statusBatch(String ids, Integer status) {
+        if (ids == null || ids.length() == 0) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        String[] idArr = ids.split(",");
+        ArrayList idList = new ArrayList();
+        for (String s : idArr) {
+            idList.add(Integer.valueOf(s));
+        }
+        Integer result = tUserInfoMapper.queryUpdateStatus(idList, status);
+        if (result > 0) {
             return JsonResponseTool.success(null);
-        }else{
+        } else {
             return JsonResponseTool.failure("修改失败");
+        }
+    }
+
+    @Override
+    public JsonResponse sendMsg(List<Integer> ids) {
+        if (CommonUtil.checkParam(ids)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        for (Integer id : ids) {
+            TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(id);
+            if (tUserInfo != null) {
+                // 邮件提醒
+                if (tUserInfo.getEmail() != null) {
+                    sendMail(tUserInfo.getEmail());
+                }
+                // 手机号提醒
+                if (tUserInfo.getMobile() != null) {
+                    sendMsg(tUserInfo.getMobile());
+                }
+            }
+        }
+        return JsonResponseTool.success(null);
+    }
+
+    @Override
+    public JsonResponse setPwdBatch(List<Integer> ids) {
+        if(CommonUtil.checkParam(ids)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if(!CommonUtil.isManage()){
+            return JsonResponseTool.failure("没有权限操作");
+        }
+        List<String> errList = new ArrayList<>();
+        for(Integer id : ids){
+            TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(id);
+            if (tUserInfo != null) {
+                TUserInfo tUserInfo1 = new TUserInfo();
+                tUserInfo1.setId(tUserInfo.getId());
+                try {
+                    // 密码初始化
+                    tUserInfo1.setPassword(SignatureTool.md5Encode(INIT_PASSSWORD, null));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Integer result = tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo1);
+                if(result < 1){
+                    String errStr = "用户: " + tUserInfo.getUserName() + " 重设密码失败";
+                    errList.add(errStr);
+                }else{
+                    if(tUserInfo.getMobile() != null){
+                        sendMsg(tUserInfo.getMobile());
+                    }
+                    if(tUserInfo.getEmail() != null){
+                        sendMsg(tUserInfo.getEmail());
+                    }
+                }
+            }
+        }
+        return JsonResponseTool.success(errList);
+    }
+
+    @Override
+    public JsonResponse setPwd(Integer id, String pwd) {
+        if(CommonUtil.checkParam(id, pwd)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(id);
+        if(tUserInfo == null){
+            return JsonResponseTool.failure("参数错误");
+        }
+        TUserInfo tUserInfo1 = new TUserInfo();
+        tUserInfo1.setId(tUserInfo.getId());
+        try {
+            // 密码加密
+            tUserInfo1.setPassword(SignatureTool.md5Encode(pwd, null));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Integer result = tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo1);
+        if(result < 1){
+            return JsonResponseTool.failure("设置失败");
+        }else{
+            if(tUserInfo.getMobile() != null){
+                sendMsg(tUserInfo.getMobile());
+            }
+            if(tUserInfo.getEmail() != null){
+                sendMsg(tUserInfo.getEmail());
+            }
+            return JsonResponseTool.success(id);
         }
     }
 
@@ -255,7 +379,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     private UserListDTO _get(TUserInfo tUserInfo) {
-        TCompanyInfo tCompanyInfo = new TCompanyInfo();
+        TCompanyInfo tCompanyInfo = null;
         if (tUserInfo.getCompanyId() != null) {
             tCompanyInfo = tCompanyInfoMapper.selectByPrimaryKey(tUserInfo.getCompanyId());
         }
@@ -278,4 +402,28 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    /**
+     * 发送激活邮箱
+     * todo 需要做
+     * @param email
+     */
+    private void sendMail(String email) {
+//        if (email != null) {
+//            String code = RandomStringUtils.randomAlphanumeric(20) + "2";
+//            //NoSQLWithRedisTool.sendMailToChannel(tUserInfo.getEmail(), code);     //redis
+//
+//            RabbitMQProducerTool.addToMailSendQueue(email, code);
+//            NoSQLWithRedisTool.setValueObject("asd" + email, code, 1, TimeUnit.DAYS);
+//        }
+    }
+
+    /**
+     * 发送短信
+     * TODO 需要实现
+     */
+    private void sendMsg(String mobile){
+//        String msg = "";
+//        // todo 生成发送日志报告
+//        LogManager.getRootLogger().debug(msg);
+    }
 }

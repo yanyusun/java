@@ -1,16 +1,39 @@
 package com.dqys.business.service.utils.asset;
 
+import com.dqys.business.orm.query.asset.AssetQuery;
+import com.dqys.business.service.query.asset.AssetListQuery;
+import com.dqys.core.model.TArea;
+import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.business.service.dto.asset.*;
 import com.dqys.business.orm.pojo.asset.*;
+import com.dqys.core.utils.DateFormatTool;
+import org.apache.commons.lang3.RandomStringUtils;
 
+import java.awt.geom.Area;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
  * Created by Yvan on 16/6/16.
  */
-public class AssetControllerUtils {
+public class AssetServiceUtils {
+
+    public static final String PRE_ASSET_CODE = "QS"; // 格式:QS160612XXXX
+    public static final String PRE_PAWN_CODE = "抵"; // 格式:抵AXXXXXX
+    public static final String PRE_LENDER_CODE = "JKR"; // 格式:JKR160612XXXX
+    public static final String MIDDLE_IOU_CODE = "-借"; // 格式:XXX-借01
+    public static final String[] UPLETTER = {"A","B","C","D","E","F","G",
+            "H","I","J","K","L","M","N",
+            "O","P","Q","R","S","T",
+            "U","V","W","X","Y","Z"};
+    public static final String[] LOWERLETTER = {"a","b","c","d","e","f","g",
+            "h","i","j","k","l","m","n",
+            "o","p","q","r","s","t",
+            "u","v","w","x","y","z"};
+
     /**
      * 批量资产包DTO转换DAO
      * @param assetDTOList
@@ -56,7 +79,6 @@ public class AssetControllerUtils {
         assetInfo.setLoanOrganizationDistrict(assetDTO.getLoanOrganizationDistrict());
         assetInfo.setTags(assetDTO.getTags());
         assetInfo.setIsshow(assetDTO.getIsshow());
-        assetInfo.setMemo(assetDTO.getMemo());
 
         return assetInfo;
     }
@@ -106,7 +128,6 @@ public class AssetControllerUtils {
         assetDTO.setLoanOrganizationDistrict(assetInfo.getLoanOrganizationDistrict());
         assetDTO.setTags(assetInfo.getTags());
         assetDTO.setIsshow(assetInfo.getIsshow());
-        assetDTO.setMemo(assetInfo.getMemo());
 
         return assetDTO;
     }
@@ -152,7 +173,6 @@ public class AssetControllerUtils {
         contactInfo.setCity(contactDTO.getCity());
         contactInfo.setDistrict(contactDTO.getDistrict());
         contactInfo.setAddress(contactDTO.getAddress());
-        contactInfo.setMemo(contactDTO.getMemo());
 
         return contactInfo;
     }
@@ -198,7 +218,6 @@ public class AssetControllerUtils {
         contactDTO.setCity(contactInfo.getCity());
         contactDTO.setDistrict(contactInfo.getDistrict());
         contactDTO.setAddress(contactInfo.getAddress());
-        contactDTO.setMemo(contactInfo.getMemo());
 
         return contactDTO;
     }
@@ -500,6 +519,99 @@ public class AssetControllerUtils {
         iouDTO.setMemo(iouInfo.getMemo());
 
         return iouDTO;
+    }
+
+    public static AssetQuery toAssetQuery(AssetListQuery assetListQuery){
+        AssetQuery assetQuery = new AssetQuery();
+
+        if(assetListQuery.getPage() != null || assetListQuery.getPageCount() != null){
+            assetQuery.setIsPaging(true);
+            if(assetListQuery.getPage() != null && assetListQuery.getPage() > 0){
+                if(assetListQuery.getPageCount() != null){
+                    assetQuery.setStartPageNum(
+                            (assetListQuery.getPage() - 1) * assetListQuery.getPageCount());
+                }
+            }else{
+                assetQuery.setStartPageNum(0);
+            }
+        }
+        assetQuery.setPageSize(assetListQuery.getPageCount());
+
+        assetQuery.setAreaId(assetListQuery.getAreaId());
+        assetQuery.setType(assetListQuery.getType());
+        assetQuery.setStartAt(assetListQuery.getStartAt());
+        assetQuery.setEndAt(assetListQuery.getEndAt());
+        assetQuery.setCode(assetListQuery.getCode());
+        assetQuery.setOperator(assetListQuery.getOperator());
+
+        return assetQuery;
+    }
+
+    public static List<AssetListDTO> toAssetListDTO(List<AssetInfo> assetInfoList){
+        List<AssetListDTO> assetListDTOList = new ArrayList<>();
+        assetInfoList.forEach(assetInfo -> {
+            assetListDTOList.add(toAssetListDTO(assetInfo));
+        });
+        return assetListDTOList;
+    }
+
+    public static AssetListDTO toAssetListDTO(AssetInfo assetInfo){
+        AssetListDTO assetListDTO = new AssetListDTO();
+
+        assetListDTO.setId(assetInfo.getId());
+        assetListDTO.setCode(assetInfo.getAssetNo());
+        assetListDTO.setType(assetInfo.getType());
+        assetListDTO.setAccrual(assetInfo.getAccrual());
+        assetListDTO.setLoan(assetInfo.getLoan());
+        assetListDTO.setAppraisal(assetInfo.getAppraisal());
+        assetListDTO.setName(assetInfo.getName());
+        assetListDTO.setCreateAt(assetInfo.getCreateAt());
+        assetListDTO.setRemark(assetInfo.getRemark());
+        assetListDTO.setFlag(assetInfo.getStateflag().equals(0) ? 1 : 0);
+        if(assetInfo.getCity() != null){
+            TArea area = AreaTool.getAreaById(assetInfo.getCity());
+            if(area != null){
+                assetListDTO.setCity(area.getName());
+            }
+        }
+
+        long dayTime = assetInfo.getEndAt().getTime()- Calendar.getInstance().getTime().getTime();
+        assetListDTO.setLessDay(dayTime > 0 ? dayTime / 1000 / 3600 / 24 : 0);
+
+        // TODO 需要补充
+        assetListDTO.setRate(null);
+        assetListDTO.setOperator(null);
+
+        return assetListDTO;
+    }
+
+    /**
+     * 生成资产包号
+     * @return
+     */
+    public static String createAssetCode(){
+        return PRE_ASSET_CODE
+                + DateFormatTool.format(DateFormatTool.DATE_FORMAT_6)
+                + RandomStringUtils.randomNumeric(4);
+    }
+
+    /**
+     * 生成借据号
+     * @param name
+     * @return
+     */
+    public static String createIouCode(String name){
+        return name + MIDDLE_IOU_CODE + RandomStringUtils.randomNumeric(6);
+    }
+
+    /**
+     * 生成抵押物号
+     * @return
+     */
+    public static String createPawnCode(){
+        return PRE_PAWN_CODE
+                + UPLETTER[Integer.valueOf(RandomStringUtils.randomNumeric(3))%24]
+                + RandomStringUtils.randomNumeric(6);
     }
 
 }

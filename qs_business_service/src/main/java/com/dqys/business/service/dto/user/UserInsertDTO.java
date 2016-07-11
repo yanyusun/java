@@ -1,9 +1,58 @@
 package com.dqys.business.service.dto.user;
-
 /**
+ * @apiDefine UserInsert
+ * @apiParam {number} [id] 主键
+ * @apiParam {string} [avg] 头像地址
+ * @apiParam {string} userName 昵称
+ * @apiParam {string} realName 真实姓名
+ * @apiParam {number} sex 性别
+ * @apiParam {number} roleId 角色ID
+ * @apiParam {String} account 账号
+ * @apiParam {String} mobile 手机号
+ * @apiParam {String} wechat 微信号
+ * @apiParam {String} email 邮箱
+ * @apiParam {String} [qq] QQ账号
+ * @apiParam {String} occupation 职位
+ * @apiParam {String} [occupationTel] 座机
+ * @apiParam {String} duty 职责
+ * @apiParam {String} dutyMark 职责介绍
+ * @apiParam {number} apartmentId 部门ID
+ * @apiParam {number} areaId 职责区域
+ * @apiParam {number} [teamId] 团队
+ * @apiParam {string} [remark] 备注
+ * @apiParam {number} userType 用户类型
+ * @apiParam {number} [companyId] 公司Id
+ *
  * Created by Yvan on 16/6/23.
  */
 public class UserInsertDTO {
+    /**
+     * @apiDefine UserInsertDTO
+     * @apiSuccessExample {json} UserInsert:
+     * {
+     * "id": 30,
+     * "avg": null,
+     * "userName": "name1",
+     * "realName": "real11111",
+     * "sex": 0,
+     * "roleId": 13,
+     * "account": "asd",
+     * "mobile": "13302021212",
+     * "wechat": "wechar",
+     * "email": "email",
+     * "qq": null,
+     * "occupation": "职位",
+     * "occupationTel": null,
+     * "apartmentId": 1,
+     * "duty": "经理助理",
+     * "dutyMark": null,
+     * "areaId": 1128,
+     * "teamId": null,
+     * "remark": null,
+     * "userType": 1,
+     * "companyId": 120
+     * }
+     */
 
     private Integer id;
 
@@ -25,7 +74,7 @@ public class UserInsertDTO {
     private Integer areaId; //职责区域(必填)
     private Integer teamId; //团队
     private String remark; // 备注
-    private Integer userType; //用户类型
+    private Integer userType; //用户类型(必填)
 
     private Integer companyId; // 公司Id
 
@@ -197,4 +246,5 @@ public class UserInsertDTO {
     public void setUserType(Integer userType) {
         this.userType = userType;
     }
+
 }

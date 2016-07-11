@@ -20,31 +20,59 @@
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="evaluate_excellent" property="evaluateExcellent" jdbcType="VARCHAR" />
     <result column="evaluate_level" property="evaluateLevel" jdbcType="VARCHAR" />
-    <result column="province" property="province" jdbcType="VARCHAR" />
-    <result column="city" property="city" jdbcType="VARCHAR" />
-    <result column="district" property="district" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="INTEGER" />
+    <result column="district" property="district" jdbcType="INTEGER" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="loan_organization" property="loanOrganization" jdbcType="VARCHAR" />
     <result column="loan_organization_district" property="loanOrganizationDistrict" jdbcType="VARCHAR" />
     <result column="dispose_mode" property="disposeMode" jdbcType="VARCHAR" />
     <result column="tags" property="tags" jdbcType="VARCHAR" />
     <result column="isshow" property="isshow" jdbcType="INTEGER" />
-    <result column="memo" property="memo" jdbcType="VARCHAR" />
   </resultMap>
 
   <sql id="Base_Column_List" >
     id, version, create_at, update_at, stateflag, remark, asset_no, type, start_at,
     end_at, operator, accrual, loan, appraisal, name, evaluate_excellent, evaluate_level, province,
     city, district, address, loan_organization, loan_organization_district, dispose_mode,
-    tags, isshow, memo
+    tags, isshow
   </sql>
 
   <sql id="Query_Condition">
     <where>
-      stateflag = 0
       <if test="id != null">
-        AND id = #{id,jdbcType=INTEGER}
+        id = #{id,jdbcType=INTEGER}
       </if>
+      <if test="stateflag != null">
+        AND stateflag = #{stateflagid,jdbcType=INTEGER}
+      </if>
+      <if test="type != null">
+        AND type = #{type,jdbcType=TINYINT}
+      </if>
+      <if test="areaId != null">
+        AND city = #{areaId,jdbcType=INTEGER}
+      </if>
+      <if test="operator != null">
+        AND operator = #{operator,jdbcType=INTEGER}
+      </if>
+      <if test="code != null">
+        AND asset_no = #{code,jdbcType=VARCHAR}
+      </if>
+
+      <if test="startAt != null">
+        <![CDATA[ AND create_at >= #{startAt} ]]>
+      </if>
+      <if test="endAt != null">
+        <![CDATA[ AND create_at <= #{endAt} ]]>
+      </if>
+
+      <if test="ids != null">
+        AND id in
+          <foreach collection="ids" item="i" open="(" close=")" separator=",">
+            #{i}
+          </foreach>
+      </if>
+
     </where>
   </sql>
 
@@ -121,9 +149,6 @@
       <if test="isshow != null" >
         isshow,
       </if>
-      <if test="memo != null" >
-        memo,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -163,13 +188,13 @@
         #{evaluateLevel,jdbcType=VARCHAR},
       </if>
       <if test="province != null" >
-        #{province,jdbcType=VARCHAR},
+        #{province,jdbcType=INTEGER},
       </if>
       <if test="city != null" >
-        #{city,jdbcType=VARCHAR},
+        #{city,jdbcType=INTEGER},
       </if>
       <if test="district != null" >
-        #{district,jdbcType=VARCHAR},
+        #{district,jdbcType=INTEGER},
       </if>
       <if test="address != null" >
         #{address,jdbcType=VARCHAR},
@@ -189,9 +214,6 @@
       <if test="isshow != null" >
         #{isshow,jdbcType=INTEGER},
       </if>
-      <if test="memo != null" >
-        #{memo,jdbcType=VARCHAR},
-      </if>
     </trim>
   </insert>
 
@@ -200,7 +222,7 @@
     select
     <include refid="Base_Column_List" />
     from bt_asset
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </select>
 
   <!-- 修改 -->
@@ -246,13 +268,13 @@
         evaluate_level = #{evaluateLevel,jdbcType=VARCHAR},
       </if>
       <if test="province != null" >
-        province = #{province,jdbcType=VARCHAR},
+        province = #{province,jdbcType=INTEGER},
       </if>
       <if test="city != null" >
-        city = #{city,jdbcType=VARCHAR},
+        city = #{city,jdbcType=INTEGER},
       </if>
       <if test="district != null" >
-        district = #{district,jdbcType=VARCHAR},
+        district = #{district,jdbcType=INTEGER},
       </if>
       <if test="address != null" >
         address = #{address,jdbcType=VARCHAR},
@@ -272,31 +294,24 @@
       <if test="isshow != null" >
         isshow = #{isshow,jdbcType=INTEGER},
       </if>
-      <if test="memo != null" >
-        memo = #{memo,jdbcType=VARCHAR},
-      </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </update>
 
   <!-- 统计数量 -->
   <select id="count" resultType="java.lang.Integer">
-    SELECT count(id) FROM bt_asset where stateflag = 0
+    SELECT count(id) FROM bt_asset
   </select>
 
   <!-- 条件统计-->
   <select id="queryCount" parameterType="com.dqys.business.orm.query.asset.AssetQuery" resultType="java.lang.Integer">
     SELECT COUNT(id) FROM bt_asset
     <include refid="Query_Condition" />
-    ORDER by id DESC
-    <if test="page != null">
-      limit #{page,jdbcType=INTEGER},#{pageCount,jdbcType=INTEGER}
-    </if>
   </select>
 
   <!-- 查全 -->
   <select id="listAll" resultMap="BaseResultMap">
-    SELECT * from bt_asset where stateflag = 0
+    SELECT * from bt_asset
   </select>
 
   <!-- 分页 -->
@@ -304,8 +319,8 @@
     SELECT * from bt_asset
     <include refid="Query_Condition" />
     ORDER BY id DESC
-    <if test="page != null">
-      limit #{page,jdbcType=INTEGER},#{pageCount,jdbcType=INTEGER}
+    <if test="isPaging">
+      limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
     </if>
   </select>
 

@@ -4,8 +4,61 @@ import com.dqys.business.service.dto.common.UserDTO;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+/**
+ * @apiDefine AssetDTO
+ * @apiSuccessExample {json} AssetDTO:
+ * {
+ * "id": 54,
+ * "type": null,
+ * "startAt": null,
+ * "endAt": null,
+ * "assetNo": "QS1607072449",
+ * "accrual": null,
+ * "loan": null,
+ * "appraisal": null,
+ * "name": null,
+ * "evaluateExcellent": null,
+ * "evaluateLevel": null,
+ * "province": null,
+ * "city": null,
+ * "district": null,
+ * "address": null,
+ * "loanOrganization": null,
+ * "loanOrganizationDistrict": null,
+ * "disposeMode": null,
+ * "tags": null,
+ * "isshow": 0,
+ * "memo": null,
+ * "operatorId": 0,
+ * "operator": null
+ * }
+ */
 
 /**
+ * @apiDefine Asset
+ * @apiParam {number} id 主键
+ * @apiParam {number} type 资产包类型
+ * @apiParam {date} startAt 委托开始时间
+ * @apiParam {date} endAt 委托结束时间
+ * @apiParam {string} assetNo 资产包编号
+ * @apiParam {number} accrual 总利息
+ * @apiParam {number} loan 总贷款
+ * @apiParam {number} appraisal 总评估
+ * @apiParam {string} name 名臣
+ * @apiParam {string} evaluateExcellent 评优
+ * @apiParam {string} evaluateLevel 评级
+ * @apiParam {number} province 省份
+ * @apiParam {number} city 城市
+ * @apiParam {number} district 区域
+ * @apiParam {string} address 详细地址
+ * @apiParam {string} loanOrganization 贷款机构
+ * @apiParam {string} loanOrganizationDistrict 贷款机构行政区域
+ * @apiParam {string} disposeMode 处置方式
+ * @apiParam {string} tags 标签
+ * @apiParam {number} isshow 是否展示
+ * @apiParam {string} memo 备注
+ * @apiParam {number} operatorId 操作人ID
+ * @apiParam {string} operator 操作人
  * Created by Yvan on 16/6/16.
  */
 public class AssetDTO {
@@ -13,9 +66,9 @@ public class AssetDTO {
     private Integer id; // 主键ID
 
     private Integer type;  // 资产包类型
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startAt; // 委托开始时间
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endAt; // 委托结束时间
     private String assetNo;  // 资产包编号
     private Double accrual; // 总利息
@@ -24,9 +77,9 @@ public class AssetDTO {
     private String name; // 资源包名称
     private String evaluateExcellent; // 评优
     private String evaluateLevel; // 评级
-    private String province;  // 省
-    private String city;  // 市
-    private String district;  // 区
+    private Integer province;  // 省
+    private Integer city;  // 市
+    private Integer district;  // 区
     private String address;  // 详细地址
     private String loanOrganization;  // 贷款机构
     private String loanOrganizationDistrict;  // 贷款机构行政区域
@@ -143,27 +196,27 @@ public class AssetDTO {
         this.evaluateLevel = evaluateLevel;
     }
 
-    public String getProvince() {
+    public Integer getProvince() {
         return province;
     }
 
-    public void setProvince(String province) {
+    public void setProvince(Integer province) {
         this.province = province;
     }
 
-    public String getCity() {
+    public Integer getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(Integer city) {
         this.city = city;
     }
 
-    public String getDistrict() {
+    public Integer getDistrict() {
         return district;
     }
 
-    public void setDistrict(String district) {
+    public void setDistrict(Integer district) {
         this.district = district;
     }
 

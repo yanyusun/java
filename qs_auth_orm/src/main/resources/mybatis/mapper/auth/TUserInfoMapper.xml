@@ -241,7 +241,6 @@
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
-    and version = #{version,jdbcType=INTEGER}
     and stateflag=0
   </update>
 
@@ -284,7 +283,11 @@
   </select>
 
   <update id="queryUpdateStatus">
-    UPDATE t_user_info set status = #{status,jdbcType=INTEGER} where id IN ( #{ids,jdbcType=VARCHAR} )
+    UPDATE t_user_info set status = #{status,jdbcType=INTEGER} where id IN (
+      <foreach collection="ids" item="i" separator=",">
+        #{i}
+      </foreach>
+    )
   </update>
 
 </mapper>

@@ -1,5 +1,6 @@
 package com.dqys.core.utils;
 
+import com.dqys.core.base.BasePropertyDTO;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.mapper.facade.TSysPropertyMapper;
 import com.dqys.core.model.TSysProperty;
@@ -10,6 +11,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -275,5 +277,25 @@ public class SysPropertyTool implements ApplicationContextAware {
     public static void loadFileBusinessTypeProperty() throws Exception {
         List<TSysProperty> sysPropertyList = tSysPropertyMapper.selectByType(SysPropertyTypeEnum.FILE_BUSINESS_TYPE.getValue());
         refreshPropery(sysPropertyList);
+    }
+
+    public static List<BasePropertyDTO> toPropertyDTO(List<TSysProperty> sysPropertieList){
+        List<BasePropertyDTO> propertyDTOList = new ArrayList<>();
+        sysPropertieList.forEach(sysProperty -> {
+            propertyDTOList.add(toPropertyDTO(sysProperty));
+        });
+        return propertyDTOList;
+    }
+
+    public static BasePropertyDTO toPropertyDTO(TSysProperty sysProperty){
+        BasePropertyDTO propertyDTO = new BasePropertyDTO();
+
+        propertyDTO.setId(sysProperty.getId());
+        propertyDTO.setCreateAt(sysProperty.getCreateAt());
+        propertyDTO.setStatus(sysProperty.getStateflag().intValue());
+        propertyDTO.setName(sysProperty.getRemark());
+        propertyDTO.setValue(sysProperty.getPropertyValue());
+
+        return propertyDTO;
     }
 }
