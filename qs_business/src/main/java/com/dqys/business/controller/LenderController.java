@@ -14,10 +14,7 @@ import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,10 +30,25 @@ public class LenderController {
     private LenderService lenderService;
 
     /**
-     * 删除借款人
+     * @api {get} http://{url}/lender/getInit 获取初始化数据
+     * @apiName getInit
+     * @apiGroup lender
      *
-     * @param id
-     * @return
+     *
+     */
+    @RequestMapping(value = "/getInit")
+    @ResponseBody
+    public JsonResponse getInit(){
+
+
+        return null;
+    }
+
+    /**
+     * @api {get} http://{url}/lender/delete 删除借款人
+     * @apiName delete
+     * @apiGroup lender
+     * @apiParam {number} id 借款人Id
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
@@ -48,10 +60,12 @@ public class LenderController {
     }
 
     /**
-     * 新增借款人
+     * @api {get} http://{url}/lender/add 新增借款人
+     * @apiName add
+     * @apiGroup lender
      *
-     * @param contactDTOs
-     * @param lenderDTO
+     * @apiParam {LenderDTO} lenderDTO 借款人基础信息
+     * @apiParam {} lenderDTO
      * @return
      */
     @RequestMapping(value = "/add")
@@ -149,14 +163,16 @@ public class LenderController {
     }
 
     /**
-     * 获取借款人
-     *
-     * @param id
-     * @return
+     * @api {get} http://{url}/lender/get 获取借款人信息
+     * @apiName get
+     * @apiGroup lender
+     * @apiParam {numbder} id 借款人ID
+     * @apiSuccess {LenderDTO} data 联系人信息
+     * @apiUse lenderDTO
      */
     @RequestMapping(value = "/get")
     @ResponseBody
-    public JsonResponse getLenderRelation(@PathVariable Integer id) {
+    public JsonResponse getLenderRelation(@RequestParam(required = true) Integer id) {
         if(CommonUtil.checkParam(id)){
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -235,75 +251,6 @@ public class LenderController {
         return CommonUtil.responseBack(lenderService.getPawn(id));
     }
 
-    /**
-     * 删除借据
-     *
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/deleteIou")
-    @ResponseBody
-    public JsonResponse deleteIou(@PathVariable Integer id) {
-        if (CommonUtil.checkParam(id)) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        return JsonResponseTool.success(lenderService.deleteIOUInfo(id));
-    }
 
-    /**
-     * 增加借据信息
-     *
-     * @param IOUInfo
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/addIou")
-    @ResponseBody
-    public JsonResponse addIou(@ModelAttribute IOUInfo IOUInfo, @PathVariable Integer id) {
-        if (CommonUtil.checkParam(IOUInfo, id)) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        ContactInfo contactInfo = lenderService.getLenderInfo(id);
-        if (contactInfo == null) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        IOUInfo.setLenderId(id);
-        return CommonUtil.responseBack(lenderService.addIOUInfo(IOUInfo, contactInfo.getName()));
-    }
-
-    /**
-     * 修改借据信息
-     *
-     * @param IOUInfo
-     * @return
-     */
-    @RequestMapping(value = "/updateIou")
-    @ResponseBody
-    public JsonResponse updateIou(@ModelAttribute IOUInfo IOUInfo) {
-        if (CommonUtil.checkParam(IOUInfo)) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        Integer id = lenderService.updateIOUInfo(IOUInfo);
-        if (id == null) {
-            return JsonResponseTool.failure("修改失败");
-        } else {
-            return JsonResponseTool.success(id);
-        }
-    }
-
-    /**
-     * 获取借据信息
-     *
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/getIouInfo")
-    @ResponseBody
-    public JsonResponse getIou(@PathVariable Integer id) {
-        if (CommonUtil.checkParam(id)) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        return CommonUtil.responseBack(lenderService.getIOUInfo(id));
-    }
 
 }

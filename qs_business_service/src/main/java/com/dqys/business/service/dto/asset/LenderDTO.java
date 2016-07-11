@@ -6,8 +6,86 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
+ * @apiDefine lender
+ * @apiParam {number} id 主键
+ * @apiParam {date} startAt 委托开始时间
+ * @apiParam {date} endAt 委托结束时间
+ * @apiParam {number} accrual 总利息
+ * @apiParam {number} loan 总贷款
+ * @apiParam {number} appraisal 总评估
+ * @apiParam {string} loanType 贷款类型
+ * @apiParam {string} loanMode 贷款方式
+ * @apiParam {string} loanName 贷款名称
+ * @apiParam {string} evaluateExcellent 评优
+ * @apiParam {string} evaluateLevel 评级
+ * @apiParam {string} disposeMode 处置方式
+ * @apiParam {string} tags 标签
+ * @apiParam {string} urgeType 催收阶段
+ * @apiParam {string} entrustBornType 委托来源类型
+ * @apiParam {string} entrustBorn 委托来源
+ * @apiParam {string} guaranteeType 担保类型
+ * @apiParam {string} guaranteeMode 担保方式
+ * @apiParam {string} guaranteeSource 担保资源
+ * @apiParam {number} isGuaranteeConnection 担保方是否能联系
+ * @apiParam {string} guaranteeEconomic 担保方经济情况
+ * @apiParam {number} isLawsuit 是否诉讼
+ * @apiParam {number} isDecision 是否判决
+ * @apiParam {number} realUrgeTime 实地催收次数
+ * @apiParam {number} phoneUrgeTime 电话催收次数
+ * @apiParam {number} entrustUrgeTime 委托催收次数
+ * @apiParam {number} canContact 债务方是否能联系
+ * @apiParam {number} canPay 债务方是否能偿还
+ * @apiParam {number} isWorth 抵押物是否覆盖债务
+ * @apiParam {string} memo 备注
+ * @apiParam {number} lenderId 借款人基础信息ID
+ * @apiParam {string} lender 借款人名称
+ * @apiParam {number} operatorId 操作人ID
+ * @apiParam {string} operator 操作人名称
+ *
+ */
+
+/**
  * Created by Yvan on 16/6/16.
  * 借款人基础信息
+ *
+ * @apiDefine lenderDTO
+ * @apiSuccessExample {json} lenderDTO:
+ * {
+ * "id": 1,
+ * "startAt": "2016-07-06",
+ * "endAt": "2016-09-06",
+ * "accrual": null,
+ * "loan": null,
+ * "appraisal": null,
+ * "loanType": null,
+ * "loanMode": null,
+ * "loanName": null,
+ * "evaluateExcellent": null,
+ * "evaluateLevel": null,
+ * "disposeMode": null,
+ * "tags": null,
+ * "urgeType": null,
+ * "entrustBornType": null,
+ * "entrustBorn": null,
+ * "guaranteeType": null,
+ * "guaranteeMode": null,
+ * "guaranteeSource": null,
+ * "isGuaranteeConnection": null,
+ * "guarenteeEconomic": null,
+ * "isLawsuit": null,
+ * "isDecision": null,
+ * "realUrgeTime": null,
+ * "phoneUrgeTime": null,
+ * "entrustUrgeTime": null,
+ * "canContact": null,
+ * "canPay": null,
+ * "isWorth": null,
+ * "memo": null,
+ * "lenderId": null,
+ * "lender": null,
+ * "operatorId": 0,
+ * "operator": null
+ * }
  */
 public class LenderDTO {
 

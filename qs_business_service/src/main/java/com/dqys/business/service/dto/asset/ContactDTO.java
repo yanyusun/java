@@ -3,6 +3,11 @@ package com.dqys.business.service.dto.asset;
 /**
  * Created by Yvan on 16/6/16.
  * 联系人DTO
+ * @apiDefine ContactDTO
+ * @apiSuccessExample {json} ContactDTO:
+ * {
+ *
+ * }
  */
 public class ContactDTO {
 

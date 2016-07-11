@@ -65,7 +65,6 @@ public class AssetController {
         if (CommonUtil.checkParam(assetDTO, assetDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-
         return assetService.updateById(assetDTO);
     }
 
@@ -127,7 +126,7 @@ public class AssetController {
      */
     @RequestMapping(value = "/excelIn")
     @ResponseBody
-    public JsonResponse addLenders(@RequestParam(required = true) Integer id,@RequestParam(required = true) MultipartFile file) {
+    public JsonResponse addLenders(@RequestParam(required = true) Integer id, @RequestParam(required = true) MultipartFile file) {
         List<AssetDTO> assetDTOList = new ArrayList<>();
         List<ContactDTO> contactDTOList = new ArrayList<>();
         List<PawnDTO> pawnDTOList = new ArrayList<>();
@@ -189,12 +188,13 @@ public class AssetController {
     }
 
     /**
-     * 批量分配
+     * @api {get} http://{url}/asset/assignedBatch 批量分配
+     * @apiName assignedBatch
+     * @apiGroup asset
+     * @apiDescription 协作器时补充
      * todo 未完成
-     *
-     * @param ids 批量分配对象ID集合
-     * @param id  被分配者ID
-     * @return
+     * @apiParam {string} ids 批量分配对象ID集合
+     * @apiParam {number} id  被分配者ID
      */
     @RequestMapping(value = "/assignedBatch")
     @ResponseBody
@@ -207,14 +207,14 @@ public class AssetController {
             return JsonResponseTool.paramErr("用户ID参数错误");
         }
         // 分配
-        return assetService.delete(id);
+        return JsonResponseTool.success(null);
     }
 
     /**
-     * 逻辑删除资产包
-     *
-     * @param id
-     * @return
+     * @api {get} http://{url}/asset/delete 逻辑删除资产包
+     * @apiName delete
+     * @apiGroup asset
+     * @apiParam {number} id 资产包ID
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
