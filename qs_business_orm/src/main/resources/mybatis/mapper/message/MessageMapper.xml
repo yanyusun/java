@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.message.MessageMapper">
+
+    <sql id="WHERE_QUERY">
+        <where>
+            t.status!=2
+            <if test="type !=null">
+                and t.type=#{type}
+            </if>
+            <if test="status !=null">
+                and t.status=#{status}
+            </if>
+        </where>
+    </sql>
+<!--查询记录数量-->
+    <select id="selectCount" parameterType="com.dqys.business.orm.pojo.message.Message"
+            resultType="int">
+        SELECT count(*) amount
+        from t_message t
+        <include refid="WHERE_QUERY"/>
+    </select>
+<!--分页查询列表-->
+    <select id="selectByMessage" parameterType="com.dqys.business.orm.pojo.message.Message"
+            resultType="com.dqys.business.orm.pojo.message.Message">
+        SELECT t.id,t.content,t.label,t.receive_id receiveId ,t.sender_id senderId
+        ,t.status ,t.title,t.type,DATE_FORMAT( t.send_time,'%Y-%m-%d') sendTime
+        from t_message t
+        <include refid="WHERE_QUERY"/>
+        LIMIT #{startPageNum},#{pageSize}
+    </select>
+<!--标记为已读-->
+    <update id="readMessage">
+        UPDATE t_message SET status=1
+        <where>
+            id IN
+            <foreach collection="array" item="ids" index="index" open="(" close=")" separator=",">
+                #{ids}
+            </foreach>
+        </where>
+    </update>
+<!--删除消息-->
+    <update id="del">
+        UPDATE t_message SET status=2
+        <where>
+            id IN
+            <foreach collection="array" item="ids" index="index" open="(" close=")" separator=",">
+                #{ids}
+            </foreach>
+        </where>
+    </update>
+<!--添加消息-->
+    <insert id="add" parameterType="com.dqys.business.orm.pojo.message.Message">
+        INSERT INTO t_message
+        <trim prefix="(" suffix=")">
+            <if test="title !=null">
+                title,
+            </if>
+            <if test="content !=null">
+                content,
+            </if>
+            <if test="senderId !=null">
+                sender_id,
+            </if>
+            <if test="receiveId !=null">
+                receive_id,
+            </if>
+            <if test="label !=null">
+                label,
+            </if>
+            <if test="type !=null">
+                type,
+            </if>
+            status,send_time
+        </trim>
+        <trim prefix=" values(" suffix=")">
+            <if test="title !=null">
+                #{title},
+            </if>
+            <if test="content !=null">
+                #{content},
+            </if>
+            <if test="senderId !=null">
+                #{senderId},
+            </if>
+            <if test="receiveId !=null">
+                #{receiveId},
+            </if>
+            <if test="label !=null">
+                #{label},
+            </if>
+            <if test="type !=null">
+                #{type},
+            </if>
+            0,now()
+        </trim>
+    </insert>
+
+
+</mapper>
