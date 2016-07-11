@@ -36,14 +36,23 @@ public class UserController {
     @Autowired
     private CompanyService companyService;
 
-
     /**
-     * @api {GET} http://{url}//api/user/listData 二级导航统计
+     * @api {GET} http://{url}/api/user/listData 二级导航统计
      * @apiName listData
      * @apiGroup User
      * @apiDescription 二级导航数据统计
-     * @apiUse JsonResponse
-     * @apiSuccess {json} data 返回数据
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * plateform:1,
+     * plateformCompany:1,
+     * entrustTotal:1,
+     * entrustAgency:1,
+     * entrustSingle:1,
+     * disposeTotal:1,
+     * urge:1,
+     * judicial:1,
+     * dispose:1,
+     * }
      */
     @RequestMapping(value = "/listData")
     @ResponseBody
@@ -74,9 +83,16 @@ public class UserController {
     }
 
     /**
-     * 获取初始化列表
-     *
-     * @return
+     * @api {GET} http://{url}/api/user/getInit 获取初始化列表
+     * @apiName getInit
+     * @apiGroup User
+     * @apiSuccess {CompanyDTO} companyInfo 公司信息
+     * @apiUse CompanyDTO
+     * @apiSuccess {UserStatusTypeEnum} userStatus 用户状态集
+     * @apiUse UserStatusTypeEnum
+     * @apiSuccess {Property} userType 用户账号类型
+     * @apiSuccess {Property} roleType 用户角色类型
+     * @apiUse PropertyDTO
      */
     @RequestMapping(value = "/getInit")
     @ResponseBody
@@ -85,17 +101,21 @@ public class UserController {
 
         resultMap.put("companyInfo", companyService.get(UserSession.getCurrent().getUserId())); // 公司信息
         resultMap.put("userStatus", UserStatusTypeEnum.listUserStatusTypeEnum()); // 用户状态
-        resultMap.put("userType", SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE)); //账号类型
-        resultMap.put("roleType", SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE)); // 角色类型
+        resultMap.put("userType", SysPropertyTool.toPropertyDTO(
+                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE))); //账号类型
+        resultMap.put("roleType", SysPropertyTool.toPropertyDTO(
+                SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE))); // 角色类型
 
         return JsonResponseTool.success(resultMap);
     }
 
     /**
-     * 用户列表
-     *
-     * @param userListQuery
-     * @return
+     * @api {GET} http://{url}/api/user/list 用户列表
+     * @apiName list
+     * @apiGroup User
+     * @apiUse UserListQuery
+     * @apiSuccess {UserList} data
+     * @apiUse UserList
      */
     @RequestMapping(value = "/list")
     @ResponseBody
@@ -104,10 +124,11 @@ public class UserController {
     }
 
     /**
-     * 增加用户
-     *
-     * @param userInsertDTO
-     * @return
+     * @api {POST} http://{url}/api/user/add 增加用户
+     * @apiName add
+     * @apiGroup User
+     * @apiUse UserInsert
+     * @apiSuccess {number} data 添加成功后的ID
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
@@ -126,10 +147,12 @@ public class UserController {
     }
 
     /**
-     * 查看用户信息
-     *
-     * @param id
-     * @return
+     * @api {POST} http://{url}/api/user/get 查看用户信息
+     * @apiName get
+     * @apiGroup User
+     * @apiParam {number} id 用户ID
+     * @apiSuccess {UserInsertDTO} data 用户信息
+     * @apiUse UserInsertDTO
      */
     @RequestMapping(value = "/get")
     @ResponseBody
@@ -141,10 +164,11 @@ public class UserController {
     }
 
     /**
-     * 修改用户
-     *
-     * @param userInsertDTO
-     * @return
+     * @api {POST} http://{url}/api/user/update 修改用户信息
+     * @apiName update
+     * @apiGroup User
+     * @apiUse UserInsert
+     * @apiSuccess {number} data 添加后的Id
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
@@ -161,10 +185,11 @@ public class UserController {
     }
 
     /**
-     * 删除用户
-     *
      * @param id
      * @return
+     * @api {get} http://{url}/api/user/delete 删除用户信息
+     * @apiName delete
+     * @apiGroup User
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
@@ -177,11 +202,11 @@ public class UserController {
 
 
     /**
-     * 批量分配<暂时不处理>
-     *
-     * @param ids
-     * @param id
-     * @return
+     * @apiIgnore {GET} http://{url}/api/user/assignedBatch 批量分配<暂时不处理>
+     * @apiName assignedBatch
+     * @apiGroup User
+     * @apiParam {string} ids 操作成员ID的集合,","分隔
+     * @apiParam {number} id 交付给某人
      */
     @RequestMapping(value = "/assignedBatch")
     @ResponseBody
@@ -194,11 +219,11 @@ public class UserController {
     }
 
     /**
-     * 批量设置状态
-     *
-     * @param ids
-     * @param status
-     * @return
+     * @api {GET} http://{url}/api/user/statusBatch 批量设置状态
+     * @apiName statusBatch
+     * @apiGroup User
+     * @apiParam {string} ids 操作成员ID的集合,","分隔
+     * @apiParam {number} status 状态
      */
     @RequestMapping(value = "/statusBatch")
     @ResponseBody
@@ -211,10 +236,10 @@ public class UserController {
     }
 
     /**
-     * 成员信息导入
-     *
-     * @param file
-     * @return
+     * @api {GET} http://{url}/api/user/userExcel 成员信息excel导入
+     * @apiName userExcel
+     * @apiGroup User
+     * @apiParam {file} file 上传的excel文件
      */
     @RequestMapping(value = "/userExcel")
     @ResponseBody
@@ -233,10 +258,10 @@ public class UserController {
     }
 
     /**
-     * 消息提醒
-     *
-     * @param ids
-     * @return
+     * @api {GET} http://{url}/api/user/sendMsg 消息提醒
+     * @apiName sendMsg
+     * @apiGroup User
+     * @apiParam {string} ids 操作用户ID集合,","分隔
      */
     @RequestMapping(value = "/sendMsg")
     @ResponseBody
@@ -253,10 +278,10 @@ public class UserController {
     }
 
     /**
-     * 批量重置密码
-     *
-     * @param ids
-     * @return
+     * @api {GET} http://{url}/api/user/setPwdBatch 批量重置密码
+     * @apiName setPwdBatch
+     * @apiGroup User
+     * @apiParam {string} ids 操作用户ID集合,","分隔
      */
     @RequestMapping(value = "/setPwdBatch")
     @ResponseBody
@@ -273,16 +298,20 @@ public class UserController {
     }
 
     /**
-     * 重置密码
-     *
-     * @param id
-     * @param pwd
+     * @api {POST} http://{url}/api/user/setPwd 重置密码
+     * @apiName setPwd
+     * @apiGroup User
+     * @apiParam {number} id 被操作用户
+     * @apiParam {string} pwd 新密码
      * @return
      */
-    @RequestMapping(value = "/setPwd")
+    @RequestMapping(value = "/setPwd", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse setPwd(@RequestParam(required = true) Integer id, @RequestParam(required = true) String pwd) {
         if (CommonUtil.checkParam(id, pwd)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if(pwd.length() < 6){
             return JsonResponseTool.paramErr("参数错误");
         }
         return userService.setPwd(id, pwd);

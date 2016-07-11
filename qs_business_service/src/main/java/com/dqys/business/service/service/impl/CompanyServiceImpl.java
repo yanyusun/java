@@ -40,7 +40,7 @@ public class CompanyServiceImpl implements CompanyService {
         OrganizationQuery organizationQuery = new OrganizationQuery();
 
         organizationQuery.setCompanyId(companyId);
-        organizationQuery.setType(organizationTypeEnum.getName());
+        organizationQuery.setType(organizationTypeEnum.name());
 
         return JsonResponseTool.success(
                 CompanyServiceUtils.toOrganizationDTO(organizationMapper.list(organizationQuery)));
@@ -96,5 +96,13 @@ public class CompanyServiceImpl implements CompanyService {
         }
         Organization organization = CompanyServiceUtils.toOrganization(organizationInsertDTO);
         return CommonUtil.responseBack(organizationMapper.update(organization));
+    }
+
+    @Override
+    public JsonResponse getOrganization(Integer id) {
+        if(CommonUtil.checkParam(id)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return CommonUtil.responseBack(CompanyServiceUtils.toOrganizationDTO(organizationMapper.get(id)));
     }
 }

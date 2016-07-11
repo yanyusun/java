@@ -1,8 +1,18 @@
 package com.dqys.business.service.dto.company;
 
 /**
- * Created by Yvan on 16/6/30.
+ * @apiDefine CompanyDTO
+ * @apiSuccessExample {json} CompanyDTO-Response:
+ * HTTP/1.1 2000 ok
+ * {
+ *     id:1,
+ *     name:'name',
+ *     province:'浙江省',
+ *     city:'杭州市',
+ *     district:'江干区'
+ * }
  *
+ * Created by Yvan on 16/6/30.
  * 公司信息
  */
 public class CompanyDTO {

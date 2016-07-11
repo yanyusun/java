@@ -1,8 +1,16 @@
 package com.dqys.business.service.dto.company;
 
 /**
+ * @apiDefine OrganizationDTO
+ * @apiSuccessExample {json} Organization:
+ * {
+ * "id": 4,
+ * "name": "管理层",
+ * "user": null,
+ * "userId": null
+ * }
  * Created by Yvan on 16/6/30.
- *
+ * <p/>
  * 组织信息
  */
 public class OrganizationDTO {

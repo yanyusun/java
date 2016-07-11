@@ -5,8 +5,21 @@ import com.dqys.core.base.BasePagination;
 import java.util.List;
 
 /**
+ * @apiDefine UserListQuery
+ * @apiParam {number} [province] 省份
+ * @apiParam {number} [city] 城市
+ * @apiParam {number} [district] 区域
+ * @apiParam {number} [accountType] 账号类型<平台方|委托方|处置方|个体用户|c用户>
+ * @apiParam {number} [role] 角色<管理员|负责人|参与人>
+ * @apiParam {number} [type] 类型<机构|个人>
+ * @apiParam {number} [status] 状态<启用|禁用|未激活>
+ * @apiParam {number} [statuss] 状态复选(集合)<启用|禁用|未激活>
+ * @apiParam {string} [name] 模糊查询
+ *
+ * @apiParam {number} [page] 页码
+ * @apiParam {number} [pageCount] 显示条数
+ *
  * Created by Yvan on 16/6/22.
- * <p/>
  * 用户模块条件查询
  */
 public class UserListQuery extends BasePagination {

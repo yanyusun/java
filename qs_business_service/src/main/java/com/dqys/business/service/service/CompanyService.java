@@ -57,6 +57,11 @@ public interface CompanyService {
      */
     JsonResponse updateOrganization(OrganizationInsertDTO organizationInsertDTO);
 
-
+    /**
+     * ID获取组织
+     * @param id
+     * @return
+     */
+    JsonResponse getOrganization(Integer id);
 
 }

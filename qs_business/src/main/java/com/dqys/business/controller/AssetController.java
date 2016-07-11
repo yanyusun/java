@@ -1,6 +1,5 @@
 package com.dqys.business.controller;
 
-import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.service.constant.AssetModelTypeEnum;
 import com.dqys.business.service.dto.asset.AssetDTO;
 import com.dqys.business.service.dto.asset.ContactDTO;
@@ -34,12 +33,13 @@ public class AssetController {
     private LenderService lenderService;
 
     /**
-     * 添加一个资产包信息
-     *
-     * @param assetDTO
-     * @return
+     * @api {POST} http://{url}/asset/add 添加资产包
+     * @apiName add
+     * @apiGroup asset
+     * @apiUse Asset
+     * @apiSuccess {number} data 新增的ID
      */
-    @RequestMapping(value = "/add")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse add(@ModelAttribute AssetDTO assetDTO) {
         if (CommonUtil.checkParam(assetDTO, assetDTO.getType(), assetDTO.getStartAt(),
@@ -51,10 +51,11 @@ public class AssetController {
     }
 
     /**
-     * 修改资产包信息
-     *
-     * @param assetDTO
-     * @return
+     * @api {POST} http://{url}/asset/update 修改资产包
+     * @apiName update
+     * @apiGroup asset
+     * @apiUse Asset
+     * @apiSuccess {number} data 修改的ID
      */
     @RequestMapping(value = "/update")
     @ResponseBody
@@ -67,10 +68,11 @@ public class AssetController {
     }
 
     /**
-     * 获取资产包信息
-     *
-     * @param id
-     * @return
+     * @api {POST} http://{url}/asset/update 获取资产包
+     * @apiName update
+     * @apiGroup asset
+     * @apiParam {number} id 资产包ID
+     * @apiUse AssetDTO
      */
     @RequestMapping(value = "/get")
     @ResponseBody
@@ -82,7 +84,12 @@ public class AssetController {
     }
 
     /**
-     * 获取初始化数据
+     *
+     * @api {POST} http://{url}/asset/update 获取资产包
+     * @apiName update
+     * @apiGroup asset
+     * @apiParam {number} id 资产包ID获取初始化数据
+     *
      * @return
      */
     @RequestMapping(value = "/getInit")
@@ -92,7 +99,6 @@ public class AssetController {
 
         return null;
     }
-
 
 
     /**

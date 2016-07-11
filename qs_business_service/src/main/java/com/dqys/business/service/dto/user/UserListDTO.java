@@ -1,6 +1,22 @@
 package com.dqys.business.service.dto.user;
 
 /**
+ * @apiDefine UserList
+ * @apiSuccessExample {json} UserList:
+ * {
+ *      id:1,
+ *      status:1,
+ *      avg:"http://114.215.239.181:9988/html/jiagoutu.png",
+ *      sex:1,
+ *      userName:"userName",
+ *      realName:"realName",
+ *      account:"",
+ *      mobile:"",
+ *      email:"",
+ *      area:"",
+ *      company:"",
+ *      taskNum:0
+ * }
  * Created by Yvan on 16/6/22.
  * 用户模块用户列表数据传输对象
  */

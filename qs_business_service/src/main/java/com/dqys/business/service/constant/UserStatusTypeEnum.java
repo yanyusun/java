@@ -4,11 +4,15 @@ import com.dqys.core.base.BaseSelectonDTO;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
+ * @apiDefine UserStatusTypeEnum
+ * @apiSuccessExample {json} UserStatusTypeEnum-Success-Response:
+ * {
+ * 0:"未激活"
+ * }
  * Created by Yvan on 16/6/30.
- *
+ * <p/>
  * 成员用户状态枚举
  */
 public enum UserStatusTypeEnum {
@@ -21,15 +25,15 @@ public enum UserStatusTypeEnum {
     private Integer value;
     private String name;
 
-    UserStatusTypeEnum(Integer value, String name){
+    UserStatusTypeEnum(Integer value, String name) {
         this.value = value;
         this.name = name;
     }
 
-    public static UserStatusTypeEnum getUserStatusTypeEnum(Integer value){
-        if(value != null){
-            for(UserStatusTypeEnum userStatusTypeEnum: UserStatusTypeEnum.values()){
-                if(userStatusTypeEnum.equals(value)){
+    public static UserStatusTypeEnum getUserStatusTypeEnum(Integer value) {
+        if (value != null) {
+            for (UserStatusTypeEnum userStatusTypeEnum : UserStatusTypeEnum.values()) {
+                if (userStatusTypeEnum.equals(value)) {
                     return userStatusTypeEnum;
                 }
             }
@@ -37,12 +41,12 @@ public enum UserStatusTypeEnum {
         return null;
     }
 
-    public static List<BaseSelectonDTO> listUserStatusTypeEnum(){
+    public static List<BaseSelectonDTO> listUserStatusTypeEnum() {
         List<BaseSelectonDTO> selectonDTOList = new ArrayList<>();
-        for(UserStatusTypeEnum userStatusTypeEnum : UserStatusTypeEnum.values()){
+        for (UserStatusTypeEnum userStatusTypeEnum : UserStatusTypeEnum.values()) {
             BaseSelectonDTO baseSelectonDTO = new BaseSelectonDTO();
             baseSelectonDTO.setKey(userStatusTypeEnum.getValue().toString());
-            baseSelectonDTO.setKey(userStatusTypeEnum.getName());
+            baseSelectonDTO.setValue(userStatusTypeEnum.getName());
             selectonDTOList.add(baseSelectonDTO);
         }
         return selectonDTOList;
@@ -63,4 +67,5 @@ public enum UserStatusTypeEnum {
     public void setName(String name) {
         this.name = name;
     }
+
 }

@@ -18,6 +18,9 @@ import java.util.List;
 public class CompanyServiceUtils {
 
     public static CompanyDTO toCompanyDTO(TCompanyInfo companyInfo){
+        if(companyInfo == null){
+            return null;
+        }
         CompanyDTO companyDTO = new CompanyDTO();
 
         companyDTO.setId(companyInfo.getId());
@@ -40,6 +43,9 @@ public class CompanyServiceUtils {
     }
 
     public static Organization toOrganization(OrganizationInsertDTO organizationInsertDTO){
+        if(organizationInsertDTO == null){
+            return null;
+        }
         Organization organization = new Organization();
 
         organization.setType(organizationInsertDTO.getType());
@@ -53,6 +59,9 @@ public class CompanyServiceUtils {
     }
 
     public static OrganizationDTO toOrganizationDTO(Organization organization){
+        if(organization == null){
+            return null;
+        }
         OrganizationDTO organizationDTO = new OrganizationDTO();
 
         organizationDTO.setId(organization.getId());
