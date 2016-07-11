@@ -1,11 +1,12 @@
 package com.dqys.business.controller;
 
-import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.service.constant.AssetModelTypeEnum;
+import com.dqys.business.service.constant.AssetTypeEnum;
 import com.dqys.business.service.dto.asset.AssetDTO;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.dto.asset.PawnDTO;
+import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.business.service.service.AssetService;
 import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yvan on 16/6/1.
@@ -33,12 +35,13 @@ public class AssetController {
     private LenderService lenderService;
 
     /**
-     * 添加一个资产包信息
-     *
-     * @param assetDTO
-     * @return
+     * @api {POST} http://{url}/asset/add 添加资产包
+     * @apiName add
+     * @apiGroup asset
+     * @apiUse Asset
+     * @apiSuccess {number} data 新增的ID
      */
-    @RequestMapping(value = "add")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse add(@ModelAttribute AssetDTO assetDTO) {
         if (CommonUtil.checkParam(assetDTO, assetDTO.getType(), assetDTO.getStartAt(),
@@ -50,12 +53,13 @@ public class AssetController {
     }
 
     /**
-     * 修改资产包信息
-     *
-     * @param assetDTO
-     * @return
+     * @api {POST} http://{url}/asset/update 修改资产包
+     * @apiName update
+     * @apiGroup asset
+     * @apiUse Asset
+     * @apiSuccess {number} data 修改的ID
      */
-    @RequestMapping(value = "update")
+    @RequestMapping(value = "/update")
     @ResponseBody
     public JsonResponse update(@ModelAttribute AssetDTO assetDTO) {
         if (CommonUtil.checkParam(assetDTO, assetDTO.getId())) {
@@ -66,66 +70,64 @@ public class AssetController {
     }
 
     /**
-     * 获取资产包信息
-     *
-     * @param id
-     * @return
+     * @api {get} http://{url}/asset/get 获取资产包
+     * @apiName get
+     * @apiGroup asset
+     * @apiParam {number} id 资产包ID
+     * @apiSuccess {AssetDTO} data 资产包信息
+     * @apiUse AssetDTO
      */
-    @RequestMapping(value = "get")
+    @RequestMapping(value = "/get")
     @ResponseBody
-    public JsonResponse get(@PathVariable Integer id) {
+    public JsonResponse get(@RequestParam("id") Integer id) {
         if (id == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
-
         return assetService.getById(id);
-
-//        AssetInfo assetInfo = assetService.getById(id);
-//        if (assetInfo == null) {
-//            // 查询失败
-//
-//            return JsonResponseTool.failure("获取失败");
-//        } else {
-//            // 成功
-//
-//            return JsonResponseTool.success(AssetServiceUtils.toAssetDTO(assetInfo));
-//        }
     }
 
     /**
-     * 分页获取资产包
-     *
-     * @param page
-     * @param pageCount
-     * @return
+     * @api {get} http://{url}/asset/getInit 获取初始化数据
+     * @apiName getInit
+     * @apiGroup asset
+     * @apiSuccess {SelectonDTO} assetType 资产包类型
+     * @apiUse SelectonDTO
+     */
+    @RequestMapping(value = "/getInit")
+    @ResponseBody
+    public JsonResponse getInit() {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        resultMap.put("assetType", AssetTypeEnum.list()); // 资产包种类
+
+        return JsonResponseTool.success(resultMap);
+    }
+
+
+    /**
+     * @api {get} http://{url}/asset/list 获取资产包列表
+     * @apiName list
+     * @apiGroup asset
+     * @apiUse AssetListQuery
+     * @apiSuccess {AssetDTO} data 资产包信息
+     * @apiUse AssetDTO
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public JsonResponse list(@RequestParam(required = false) Integer page,
-                             @RequestParam(required = false) Integer pageCount,
-                             @ModelAttribute AssetQuery assetQuery) {
-//        assetQuery.setPage(page);
-//        assetQuery.setPageCount(pageCount);
-////        assetQuery.set
-//        List<AssetInfo> assetInfoList = assetService.pageList(assetQuery);
-//        if (assetInfoList == null) {
-//            return JsonResponseTool.failure("获取失败");
-//        } else {
-//            return JsonResponseTool.success(assetInfoList);
-//        }
-        return null;
+    public JsonResponse list(@ModelAttribute AssetListQuery assetListQuery) {
+        return assetService.pageList(assetListQuery);
     }
 
     /**
-     * excel导入资产包的借款人
-     *
-     * @param id
-     * @param file
-     * @return
+     * @api {get} http://{url}/asset/excelIn excel导入资产包的借款人
+     * @apiName excelIn
+     * @apiGroup asset
+     * @apiParam {number} id 公司ID
+     * @apiParam {file} file excel文件
      */
     @RequestMapping(value = "/excelIn")
     @ResponseBody
-    public JsonResponse addLenders(@RequestParam Integer id, MultipartFile file) {
+    public JsonResponse addLenders(@RequestParam(required = true) Integer id,@RequestParam(required = true) MultipartFile file) {
         List<AssetDTO> assetDTOList = new ArrayList<>();
         List<ContactDTO> contactDTOList = new ArrayList<>();
         List<PawnDTO> pawnDTOList = new ArrayList<>();
@@ -188,6 +190,7 @@ public class AssetController {
 
     /**
      * 批量分配
+     * todo 未完成
      *
      * @param ids 批量分配对象ID集合
      * @param id  被分配者ID
@@ -195,7 +198,7 @@ public class AssetController {
      */
     @RequestMapping(value = "/assignedBatch")
     @ResponseBody
-    public JsonResponse assignedBatch(@PathVariable Integer[] ids, @PathVariable Integer id) {
+    public JsonResponse assignedBatch(@PathVariable String ids, @PathVariable Integer id) {
         if (CommonUtil.checkParam(ids, id)) {
             return JsonResponseTool.paramErr("参数错误");
         }

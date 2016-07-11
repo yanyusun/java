@@ -1,9 +1,17 @@
 package com.dqys.core.utils;
 
+import com.dqys.core.base.BasePageDTO;
+import com.dqys.core.base.BasePropertyDTO;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.TSysProperty;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.JsonResponseTool;
+import org.apache.poi.ss.formula.functions.T;
+import sun.swing.BakedArrayList;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Yvan on 16/6/12.
@@ -79,14 +87,14 @@ public class CommonUtil {
 
 //        String reg = NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM);
 //        String reg1 = NoSQLWithRedisTool.getValueObject(KeyEnum.ROLE_ADMINISTRATOR_KEY);
-
+        // 这里写死
         String reg = "1";
         String reg1 = "1";
+
         if (roleStr.indexOf(reg) > 0
                 && typeStr.indexOf(reg1) > 0) {
             return true;
         }
         return false;
     }
-
 }

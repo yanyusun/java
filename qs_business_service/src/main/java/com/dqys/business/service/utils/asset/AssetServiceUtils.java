@@ -1,12 +1,19 @@
 package com.dqys.business.service.utils.asset;
 
+import com.dqys.business.orm.query.asset.AssetQuery;
+import com.dqys.business.service.query.asset.AssetListQuery;
+import com.dqys.core.model.TArea;
+import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.business.service.dto.asset.*;
 import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.core.utils.DateFormatTool;
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.awt.geom.Area;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -514,6 +521,70 @@ public class AssetServiceUtils {
         return iouDTO;
     }
 
+    public static AssetQuery toAssetQuery(AssetListQuery assetListQuery){
+        AssetQuery assetQuery = new AssetQuery();
+
+        if(assetListQuery.getPage() != null || assetListQuery.getPageCount() != null){
+            assetQuery.setIsPaging(true);
+            if(assetListQuery.getPage() != null && assetListQuery.getPage() > 0){
+                if(assetListQuery.getPageCount() != null){
+                    assetQuery.setStartPageNum(
+                            (assetListQuery.getPage() - 1) * assetListQuery.getPageCount());
+                }
+            }else{
+                assetQuery.setStartPageNum(0);
+            }
+        }
+        assetQuery.setPageSize(assetListQuery.getPageCount());
+
+        assetQuery.setAreaId(assetListQuery.getAreaId());
+        assetQuery.setType(assetListQuery.getType());
+        assetQuery.setStartAt(assetListQuery.getStartAt());
+        assetQuery.setEndAt(assetListQuery.getEndAt());
+        assetQuery.setCode(assetListQuery.getCode());
+        assetQuery.setOperator(assetListQuery.getOperator());
+
+        return assetQuery;
+    }
+
+    public static List<AssetListDTO> toAssetListDTO(List<AssetInfo> assetInfoList){
+        List<AssetListDTO> assetListDTOList = new ArrayList<>();
+        assetInfoList.forEach(assetInfo -> {
+            assetListDTOList.add(toAssetListDTO(assetInfo));
+        });
+        return assetListDTOList;
+    }
+
+    public static AssetListDTO toAssetListDTO(AssetInfo assetInfo){
+        AssetListDTO assetListDTO = new AssetListDTO();
+
+        assetListDTO.setId(assetInfo.getId());
+        assetListDTO.setCode(assetInfo.getAssetNo());
+        assetListDTO.setType(assetInfo.getType());
+        assetListDTO.setAccrual(assetInfo.getAccrual());
+        assetListDTO.setLoan(assetInfo.getLoan());
+        assetListDTO.setAppraisal(assetInfo.getAppraisal());
+        assetListDTO.setName(assetInfo.getName());
+        assetListDTO.setCreateAt(assetInfo.getCreateAt());
+        assetListDTO.setRemark(assetInfo.getRemark());
+        assetListDTO.setFlag(assetInfo.getStateflag().equals(0) ? 1 : 0);
+        if(assetInfo.getCity() != null){
+            TArea area = AreaTool.getAreaById(assetInfo.getCity());
+            if(area != null){
+                assetListDTO.setCity(area.getName());
+            }
+        }
+
+        long dayTime = assetInfo.getEndAt().getTime()- Calendar.getInstance().getTime().getTime();
+        assetListDTO.setLessDay(dayTime > 0 ? dayTime / 1000 / 3600 / 24 : 0);
+
+        // TODO 需要补充
+        assetListDTO.setRate(null);
+        assetListDTO.setOperator(null);
+
+        return assetListDTO;
+    }
+
     /**
      * 生成资产包号
      * @return
@@ -523,10 +594,6 @@ public class AssetServiceUtils {
                 + DateFormatTool.format(DateFormatTool.DATE_FORMAT_6)
                 + RandomStringUtils.randomNumeric(4);
     }
-
-
-
-
 
     /**
      * 生成借据号

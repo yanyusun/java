@@ -27,13 +27,13 @@
     <where>
       stateflag = 0
       <if test="companyId != null">
-        company_id = #{companyId,jdbcType=INTEGER}
+        AND company_id = #{companyId,jdbcType=INTEGER}
       </if>
       <if test="type != null">
-        type = #{type,jdbcType=VARCHAR}
+        AND type = #{type,jdbcType=VARCHAR}
       </if>
-      <if test="pId != null">
-        pid = #{pId,jdbcType=INTEGER}
+      <if test="pid != null">
+        AND pid = #{pid,jdbcType=INTEGER}
       </if>
     </where>
   </sql>

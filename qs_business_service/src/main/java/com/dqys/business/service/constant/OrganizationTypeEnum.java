@@ -12,12 +12,10 @@ public enum  OrganizationTypeEnum {
     team, // 团队
     occupation; // 职业
 
-    private String name;
-
     public static OrganizationTypeEnum getOrganizationTypeEnum(String name){
         if(name != null){
             for(OrganizationTypeEnum o: OrganizationTypeEnum.values()){
-                if(o.getName().equals(name)){
+                if(o.name().equals(name)){
                     return o;
                 }
             }
@@ -25,11 +23,4 @@ public enum  OrganizationTypeEnum {
         return null;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }
