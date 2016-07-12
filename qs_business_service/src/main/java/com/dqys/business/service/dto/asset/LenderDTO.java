@@ -6,7 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
- * @apiDefine lender
+ * @apiDefine Lender
  * @apiParam {number} id 主键
  * @apiParam {date} startAt 委托开始时间
  * @apiParam {date} endAt 委托结束时间
@@ -45,7 +45,7 @@ import java.util.Date;
  * Created by Yvan on 16/6/16.
  * 借款人基础信息
  *
- * @apiDefine lenderDTO
+ * @apiDefine LenderDTO
  * @apiSuccessExample {json} lenderDTO:
  * {
  * "id": 1,

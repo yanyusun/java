@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @apiDefine iouDTO
+ * @apiDefine IouDTO
  * @apiSuccessExample {json} IouDTO:
  * {
  *

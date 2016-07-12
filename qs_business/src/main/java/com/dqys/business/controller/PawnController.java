@@ -39,7 +39,7 @@ public class PawnController {
      * @api {post} http://{url}/pawn/add 增加抵押物信息
      * @apiName add
      * @apiGroup pawn
-     * @apiUse pawn
+     * @apiUse Pawn
      * @apiSuccess {number} data 增加后的数据ID
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
@@ -55,7 +55,7 @@ public class PawnController {
      * @api {post} http://{url}/pawn/update 修改抵押物信息
      * @apiName update
      * @apiGroup pawn
-     * @apiUse pawn
+     * @apiUse Pawn
      * @apiSuccess {number} data 增加后的数据ID
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
