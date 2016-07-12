@@ -41,6 +41,8 @@ public class LenderInfo extends BaseModel implements Serializable {
     private Integer isWorth;  // 抵押物是否能覆盖债务
     private String memo;  // 备注
 
+    private Integer assetId; // 资产包Id
+
     @Override
     public String toString() {
         String string = "LenderInfo:[";
@@ -297,5 +299,13 @@ public class LenderInfo extends BaseModel implements Serializable {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public Integer getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
     }
 }

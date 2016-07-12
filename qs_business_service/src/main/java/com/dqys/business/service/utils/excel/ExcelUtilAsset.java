@@ -1,6 +1,6 @@
 package com.dqys.business.service.utils.excel;
 
-import com.dqys.business.service.constant.ContactTypeEnum;
+import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
@@ -72,7 +72,7 @@ public class ExcelUtilAsset {
      * @return
      */
     private static boolean checkExcel(List<Map<String, Object>> list0, List<Map<String, Object>> list1, List<Map<String, Object>> list2, List<Map<String, Object>> list3, List<ExcelMessage> error) {
-        String[] str0 = {"序号", "*借款人", "*类型", "*来源", "*评优", "*评级", "个性处置方式", "标签", "*担保方式", "*公司担保", "*抵押",
+        String[] str0 = {"序号", "*借款人", "*类型", "*来源", "*所属资产包", "*评优", "*评级", "个性处置方式", "标签", "*担保方式", "*公司担保", "*抵押",
                 "*质押", "*担保人是否能联系", "*担保人经济状况", "*抵押物估价能否覆盖债务", "*诉讼与否", "*判决与否", "*实地催收次数",
                 "*电话催收次数", "*委托催收次数", "*债务方是否能正常联系", "*债务方是否有能力偿还"};
         String[] str1 = {"序号", "*关系", "*所属原始借据（号）", "*贷款金额", "*抵押物类型", "*抵押物面积", "*抵押率", "*抵押物地址",
@@ -131,71 +131,75 @@ public class ExcelUtilAsset {
                 placeByExcel(error, name, i, 3, transMapToString(map, "var3"), "不能为空");
                 ;
             }
-            if (transMapToString(l, "var4").equals("")) {//*评优
+            if (transMapToString(l, "var4").equals("")) {//*所属资产包
                 placeByExcel(error, name, i, 4, transMapToString(map, "var4"), "不能为空");
                 ;
             }
-            if (transMapToString(l, "var5").equals("")) {//*评级
+            if (transMapToString(l, "var5").equals("")) {//*评优
                 placeByExcel(error, name, i, 5, transMapToString(map, "var5"), "不能为空");
+                ;
             }
-            if (!transMapToString(l, "var6").equals("") && transMapToString(l, "var6").indexOf("，") > 0) {//个性处置方式
-                placeByExcel(error, name, i, 6, transMapToString(map, "var6"), "不是英文逗号");
+            if (transMapToString(l, "var6").equals("")) {//*评级
+                placeByExcel(error, name, i, 6, transMapToString(map, "var6"), "不能为空");
             }
-            if (!transMapToString(l, "var7").equals("") && transMapToString(l, "var8").indexOf("，") > 0) {//标签
+            if (!transMapToString(l, "var7").equals("") && transMapToString(l, "var7").indexOf("，") > 0) {//个性处置方式
                 placeByExcel(error, name, i, 7, transMapToString(map, "var7"), "不是英文逗号");
             }
-            if (transMapToString(l, "var8").equals("")) {//*担保方式
-                placeByExcel(error, name, i, 8, transMapToString(map, "var8"), "不能为空");
+            if (!transMapToString(l, "var8").equals("") && transMapToString(l, "var8").indexOf("，") > 0) {//标签
+                placeByExcel(error, name, i, 8, transMapToString(map, "var8"), "不是英文逗号");
             }
-            if (!transMapToString(l, "var8").equals("") && transMapToString(l, "var9").equals("")) {//*公司担保
+            if (transMapToString(l, "var9").equals("")) {//*担保方式
                 placeByExcel(error, name, i, 9, transMapToString(map, "var9"), "不能为空");
             }
-            if (transMapToString(l, "var8").equals("公司担保") && transMapToString(l, "var9").equals("抵押") && transMapToString(l, "var10").equals("")) {//*抵押
+            if (!transMapToString(l, "var9").equals("") && transMapToString(l, "var10").equals("")) {//*公司担保
                 placeByExcel(error, name, i, 10, transMapToString(map, "var10"), "不能为空");
             }
-            if (transMapToString(l, "var8").equals("公司担保") && transMapToString(l, "var9").equals("质押") && transMapToString(l, "var11").equals("")) {//*质押
-                placeByExcel(error, name, i, 11, transMapToString(map, "var11"), "不能为空");
+            if (transMapToString(l, "var9").equals("公司担保") && transMapToString(l, "var10").equals("抵押") && transMapToString(l, "var11").equals("")) {//*抵押
+                placeByExcel(error, name, i, 11, transMapToString(map, "var1"), "不能为空");
             }
-            if (!transMapToString(l, "var8").equals("公司担保")) {
-                if (!transMapToString(l, "var9").equals("")) {
-                    placeByExcel(error, name, i, 9, transMapToString(map, "var9"), "必须为空");
-                }
+            if (transMapToString(l, "var9").equals("公司担保") && transMapToString(l, "var10").equals("质押") && transMapToString(l, "var12").equals("")) {//*质押
+                placeByExcel(error, name, i, 12, transMapToString(map, "var12"), "不能为空");
+            }
+            if (!transMapToString(l, "var9").equals("公司担保")) {
                 if (!transMapToString(l, "var10").equals("")) {
                     placeByExcel(error, name, i, 10, transMapToString(map, "var10"), "必须为空");
                 }
                 if (!transMapToString(l, "var11").equals("")) {
                     placeByExcel(error, name, i, 11, transMapToString(map, "var11"), "必须为空");
                 }
+                if (!transMapToString(l, "var12").equals("")) {
+                    placeByExcel(error, name, i, 12, transMapToString(map, "var12"), "必须为空");
+                }
             }
-            if (transMapToString(l, "var12").equals("")) {//*担保人是否能联系
-                placeByExcel(error, name, i, 12, transMapToString(map, "var12"), "不能为空");
-            }
-            if (transMapToString(l, "var13").equals("")) {//*担保人经济状况
+            if (transMapToString(l, "var13").equals("")) {//*担保人是否能联系
                 placeByExcel(error, name, i, 13, transMapToString(map, "var13"), "不能为空");
             }
-            if (transMapToString(l, "var14").equals("")) {//*抵押物估价能否覆盖债务
+            if (transMapToString(l, "var14").equals("")) {//*担保人经济状况
                 placeByExcel(error, name, i, 14, transMapToString(map, "var14"), "不能为空");
             }
-            if (transMapToString(l, "var15").equals("")) {//*诉讼与否
+            if (transMapToString(l, "var15").equals("")) {//*抵押物估价能否覆盖债务
                 placeByExcel(error, name, i, 15, transMapToString(map, "var15"), "不能为空");
             }
-            if (transMapToString(l, "var16").equals("")) {//*判决与否
+            if (transMapToString(l, "var16").equals("")) {//*诉讼与否
                 placeByExcel(error, name, i, 16, transMapToString(map, "var16"), "不能为空");
             }
-            if (transMapToString(l, "var17").equals("")) {//*实地催收次数
+            if (transMapToString(l, "var17").equals("")) {//*判决与否
                 placeByExcel(error, name, i, 17, transMapToString(map, "var17"), "不能为空");
             }
-            if (transMapToString(l, "var18").equals("")) {//*电话催收次数
+            if (transMapToString(l, "var18").equals("")) {//*实地催收次数
                 placeByExcel(error, name, i, 18, transMapToString(map, "var18"), "不能为空");
             }
-            if (transMapToString(l, "var19").equals("")) {//*委托催收次数
+            if (transMapToString(l, "var19").equals("")) {//*电话催收次数
                 placeByExcel(error, name, i, 19, transMapToString(map, "var19"), "不能为空");
             }
-            if (transMapToString(l, "var20").equals("")) {//*债务方是否能正常联系
+            if (transMapToString(l, "var20").equals("")) {//*委托催收次数
                 placeByExcel(error, name, i, 20, transMapToString(map, "var20"), "不能为空");
             }
-            if (transMapToString(l, "var21").equals("")) {//*债务方是否有能力偿还
+            if (transMapToString(l, "var21").equals("")) {//*债务方是否能正常联系
                 placeByExcel(error, name, i, 21, transMapToString(map, "var21"), "不能为空");
+            }
+            if (transMapToString(l, "var22").equals("")) {//*债务方是否有能力偿还
+                placeByExcel(error, name, i, 22, transMapToString(map, "var22"), "不能为空");
                 ;
             }
         }
@@ -495,12 +499,7 @@ public class ExcelUtilAsset {
             iouDTO.setEndAt(DateFormatTool.parse(transMapToString(map2, "var19"), DateFormatTool.DATE_FORMAT_10_REG2));
             iouDTO.setWorth(transStringToDouble(transMapToString(map2, "var20")));
             iouDTO.setAdvanceCorpus(transStringToDouble(transMapToString(map2, "var21")));
-            String[] strs = transMapToString(map2, "var22").split(",");
-            List<String> pawnIds = new ArrayList<String>();
-            for (String paw : strs) {
-                pawnIds.add(paw);
-            }
-            iouDTO.setPawnIds(pawnIds);
+            iouDTO.setPawnIds(transMapToString(map2, "var22"));
             iouDTOs.add(iouDTO);
         }
     }
@@ -520,12 +519,7 @@ public class ExcelUtilAsset {
             pawnDTO.setAddress(transMapToString(map1, "var7"));
             pawnDTO.setDisposeStatus(transMapToString(map1, "var8"));
             pawnDTO.setWorth(transStringToDouble(transMapToString(map1, "var9")));
-            String[] strs = transMapToString(map1, "var10").split(",");
-            List<Integer> iouids = new ArrayList<Integer>();
-            for (String iou : strs) {
-                iouids.add(transStringToInteger(iou));
-            }
-            pawnDTO.setIouIds(iouids);
+            pawnDTO.setIouIds(transMapToString(map1, "var10"));
             pawnDTO.setMemo(transMapToString(map1, "var11"));
             pawnDTOs.add(pawnDTO);
         }
@@ -539,24 +533,23 @@ public class ExcelUtilAsset {
             }
             LenderDTO lenderDTO = new LenderDTO();
             lenderDTO.setId(transStringToInteger(transMapToString(map0, "var0")));
-            lenderDTO.setEntrustBorn(transMapToString(map0,"var3"));
-            lenderDTO.setEvaluateExcellent(transMapToString(map0, "var4"));
-            lenderDTO.setEvaluateLevel(transMapToString(map0, "var5"));
-            lenderDTO.setDisposeMode(transMapToString(map0, "var6"));
-            lenderDTO.setTags(transMapToString(map0, "var7"));
-            lenderDTO.setGuaranteeType(transMapToString(map0, "var8").equals("公司担保") == true ? "公司" : "个人");
-            lenderDTO.setGuaranteeMode(transMapToString(map0, "var9"));
-            lenderDTO.setGuaranteeSource(lenderDTO.getGuaranteeMode().equals("") == true ? "" : lenderDTO.getGuaranteeMode().equals("抵押") == true ? transMapToString(map0, "var10") : transMapToString(map0, "var11"));
-            lenderDTO.setIsGuaranteeConnection(transMapToString(map0, "var12").equals("是") == true ? 1 : 0);
-            lenderDTO.setGuarenteeEconomic(transMapToString(map0, "var13"));
-            lenderDTO.setIsWorth(transMapToString(map0, "var14").equals("否") == true ? 0 : transMapToString(map0, "var14").equals("能") == true ? 1 : 2);
-            lenderDTO.setIsLawsuit(transMapToString(map0, "var15").equals("未诉讼") == true ? 0 : transMapToString(map0, "var15").equals("已诉讼") == true ? 1 : 2);
-            lenderDTO.setIsDecision(transMapToString(map0, "var16").equals("未判决") == true ? 0 : transMapToString(map0, "var16").equals("已判决") == true ? 1 : 2);
-            lenderDTO.setRealUrgeTime(transStringToInteger(transMapToString(map0, "var17")));
-            lenderDTO.setPhoneUrgeTime(transStringToInteger(transMapToString(map0, "var18")));
-            lenderDTO.setEntrustUrgeTime(transStringToInteger(transMapToString(map0, "var19")));
-            lenderDTO.setCanContact(transMapToString(map0, "var20").equals("是") == true ? 1 : 0);
-            lenderDTO.setCanPay(transMapToString(map0, "var21").equals("是") == true ? 1 : 0);
+            lenderDTO.setEvaluateExcellent(transMapToString(map0, "var5"));
+            lenderDTO.setEvaluateLevel(transMapToString(map0, "var6"));
+            lenderDTO.setDisposeMode(transMapToString(map0, "var7"));
+            lenderDTO.setTags(transMapToString(map0, "var8"));
+            lenderDTO.setGuaranteeType(transMapToString(map0, "var9").equals("公司担保") == true ? "公司" : "个人");
+            lenderDTO.setGuaranteeMode(transMapToString(map0, "var10"));
+            lenderDTO.setGuaranteeSource(lenderDTO.getGuaranteeMode().equals("") == true ? "" : lenderDTO.getGuaranteeMode().equals("抵押") == true ? transMapToString(map0, "var11") : transMapToString(map0, "var12"));
+            lenderDTO.setIsGuaranteeConnection(transMapToString(map0, "var13").equals("是") == true ? 1 : 0);
+            lenderDTO.setGuaranteeEconomic(transMapToString(map0, "var14"));
+            lenderDTO.setIsWorth(transMapToString(map0, "var15").equals("否") == true ? 0 : transMapToString(map0, "var15").equals("能") == true ? 1 : 2);
+            lenderDTO.setIsLawsuit(transMapToString(map0, "var16").equals("未诉讼") == true ? 0 : transMapToString(map0, "var16").equals("已诉讼") == true ? 1 : 2);
+            lenderDTO.setIsDecision(transMapToString(map0, "var17").equals("未判决") == true ? 0 : transMapToString(map0, "var17").equals("已判决") == true ? 1 : 2);
+            lenderDTO.setRealUrgeTime(transStringToInteger(transMapToString(map0, "var18")));
+            lenderDTO.setPhoneUrgeTime(transStringToInteger(transMapToString(map0, "var19")));
+            lenderDTO.setEntrustUrgeTime(transStringToInteger(transMapToString(map0, "var20")));
+            lenderDTO.setCanContact(transMapToString(map0, "var21").equals("是") == true ? 1 : 0);
+            lenderDTO.setCanPay(transMapToString(map0, "var22").equals("是") == true ? 1 : 0);
             lenderDTOs.add(lenderDTO);
         }
     }

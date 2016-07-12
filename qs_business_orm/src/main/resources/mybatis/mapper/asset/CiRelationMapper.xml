@@ -36,6 +36,16 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
+  <delete id="deleteByIouId" parameterType="java.lang.Integer" >
+    UPDATE bt_ci_relation set stateflag = CURRENT_TIMESTAMP
+    where iou_id = #{id,jdbcType=INTEGER} AND stateflag = 0
+  </delete>
+
+  <delete id="deleteByCaseId" parameterType="java.lang.Integer" >
+    UPDATE bt_ci_relation set stateflag = CURRENT_TIMESTAMP
+    where case_id = #{id,jdbcType=INTEGER} AND stateflag = 0
+  </delete>
+
   <!-- 单取 -->
   <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select

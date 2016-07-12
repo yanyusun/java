@@ -1,9 +1,18 @@
 package com.dqys.business.service.service.impl;
 
 import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
+import com.dqys.business.orm.mapper.asset.ContactInfoMapper;
+import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
+import com.dqys.business.orm.pojo.asset.ContactInfo;
+import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.query.asset.AssetQuery;
+import com.dqys.business.service.constant.asset.AssetModelTypeEnum;
+import com.dqys.business.service.constant.asset.ContactTypeEnum;
+import com.dqys.business.service.constant.asset.LenderTypeEnum;
 import com.dqys.business.service.dto.asset.AssetDTO;
+import com.dqys.business.service.dto.asset.AssetLenderDTO;
+import com.dqys.business.service.dto.asset.LenderListDTO;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.business.service.service.AssetService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
@@ -15,6 +24,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -26,6 +36,10 @@ public class AssetServiceImpl implements AssetService {
 
     @Autowired
     private AssetInfoMapper assetInfoMapper;
+    @Autowired
+    private LenderInfoMapper lenderInfoMapper;
+    @Autowired
+    private ContactInfoMapper contactInfoMapper;
 
     @Override
     public JsonResponse add(AssetDTO assetDTO) {
@@ -101,5 +115,32 @@ public class AssetServiceImpl implements AssetService {
             idList.add(Integer.valueOf(s));
         }
         return CommonUtil.responseBack(assetInfoMapper.assignedBatch(idList, id));
+    }
+
+    @Override
+    public JsonResponse listLender(Integer id) {
+        if(CommonUtil.checkParam(id)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        AssetInfo assetInfo = assetInfoMapper.get(id);
+        if(assetInfo == null){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        List<LenderInfo> lenderInfoList = lenderInfoMapper.listByAssetId(id);
+        List<AssetLenderDTO> assetLenderDTOList = AssetServiceUtils.toAssetLenderDTO(lenderInfoList);
+        if(assetLenderDTOList != null){
+            Iterator<AssetLenderDTO> iterator = assetLenderDTOList.iterator();
+            while (iterator.hasNext()){
+                iterator.next().setAssetName(assetInfo.getName()); // 设置资产包名称
+                ContactInfo contactInfo = contactInfoMapper.getByLenderId(
+                        AssetModelTypeEnum.LENDER,
+                        ContactTypeEnum.LENDER.getValue(),
+                        iterator.next().getId());
+                if(contactInfo != null){
+                    iterator.next().setName(contactInfo.getName()); // 设置资产包名称
+                }
+            }
+        }
+        return JsonResponseTool.success(assetLenderDTOList);
     }
 }

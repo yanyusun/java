@@ -65,4 +65,12 @@ public interface AssetService {
      */
     JsonResponse assignedBatch(String ids, Integer id);
 
+    /**
+     * 根据资产包信息查询所属借款人
+     *
+     * @param id
+     * @return
+     */
+    JsonResponse listLender(Integer id);
+
 }

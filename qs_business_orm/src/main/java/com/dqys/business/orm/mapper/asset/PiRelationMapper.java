@@ -14,6 +14,20 @@ public interface PiRelationMapper {
     Integer deleteByPrimaryKey(Integer id);
 
     /**
+     * 逻辑删除抵押物的关联关系
+     * @param id
+     * @return
+     */
+    Integer deleteByPawnId(Integer id);
+
+    /**
+     * 逻辑删除借据的关联关系
+     * @param id
+     * @return
+     */
+    Integer deleteByIouId(Integer id);
+
+    /**
      * 新增
      * @param record
      * @return

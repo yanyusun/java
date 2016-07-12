@@ -6,8 +6,80 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.util.Date;
 
 /**
+ * @apiDefine Lender
+ * @apiParam {number} id 主键
+ * @apiParam {date} startAt 委托开始时间
+ * @apiParam {date} endAt 委托结束时间
+ * @apiParam {number} accrual 总利息
+ * @apiParam {number} loan 总贷款
+ * @apiParam {number} appraisal 总评估
+ * @apiParam {string} loanType 贷款类型
+ * @apiParam {string} loanMode 贷款方式
+ * @apiParam {string} loanName 贷款名称
+ * @apiParam {string} evaluateExcellent 评优
+ * @apiParam {string} evaluateLevel 评级
+ * @apiParam {string} disposeMode 处置方式
+ * @apiParam {string} tags 标签
+ * @apiParam {string} urgeType 催收阶段
+ * @apiParam {string} entrustBornType 委托来源类型
+ * @apiParam {string} entrustBorn 委托来源
+ * @apiParam {string} guaranteeType 担保类型
+ * @apiParam {string} guaranteeMode 担保方式
+ * @apiParam {string} guaranteeSource 担保资源
+ * @apiParam {number} isGuaranteeConnection 担保方是否能联系
+ * @apiParam {string} guaranteeEconomic 担保方经济情况
+ * @apiParam {number} isLawsuit 是否诉讼
+ * @apiParam {number} isDecision 是否判决
+ * @apiParam {number} realUrgeTime 实地催收次数
+ * @apiParam {number} phoneUrgeTime 电话催收次数
+ * @apiParam {number} entrustUrgeTime 委托催收次数
+ * @apiParam {number} canContact 债务方是否能联系
+ * @apiParam {number} canPay 债务方是否能偿还
+ * @apiParam {number} isWorth 抵押物是否覆盖债务
+ * @apiParam {string} memo 备注
+ * @apiParam {number} operatorId 操作人ID
+ *
+ */
+
+/**
  * Created by Yvan on 16/6/16.
  * 借款人基础信息
+ *
+ * @apiDefine LenderDTO
+ * @apiSuccessExample {json} lenderDTO:
+ * {
+ * "id": 1,
+ * "startAt": "2016-07-06",
+ * "endAt": "2016-09-06",
+ * "accrual": null,
+ * "loan": null,
+ * "appraisal": null,
+ * "loanType": null,
+ * "loanMode": null,
+ * "loanName": null,
+ * "evaluateExcellent": null,
+ * "evaluateLevel": null,
+ * "disposeMode": null,
+ * "tags": null,
+ * "urgeType": null,
+ * "entrustBornType": null,
+ * "entrustBorn": null,
+ * "guaranteeType": null,
+ * "guaranteeMode": null,
+ * "guaranteeSource": null,
+ * "isGuaranteeConnection": null,
+ * "guarenteeEconomic": null,
+ * "isLawsuit": null,
+ * "isDecision": null,
+ * "realUrgeTime": null,
+ * "phoneUrgeTime": null,
+ * "entrustUrgeTime": null,
+ * "canContact": null,
+ * "canPay": null,
+ * "isWorth": null,
+ * "memo": null,
+ * "operatorId": 0,
+ * }
  */
 public class LenderDTO {
 
@@ -34,7 +106,7 @@ public class LenderDTO {
     private String guaranteeMode;  // 担保方式(抵押|质押)
     private String guaranteeSource;  // 担保源
     private Integer isGuaranteeConnection;  // 担保人是否能联系
-    private String guarenteeEconomic;  // 担保人经济状况
+    private String guaranteeEconomic;  // 担保人经济状况
     private Integer isLawsuit;  // 诉讼与否
     private Integer isDecision;  // 判决与否
     private Integer realUrgeTime;  // 实地催收次数
@@ -45,18 +117,10 @@ public class LenderDTO {
     private Integer isWorth;  // 抵押物是否能覆盖债务
     private String memo;  // 备注
 
-    private Integer lenderId;  // 借款人基础信息ID
-    private ContactDTO lender;  // 借款人信息
     private Integer operatorId;  // 操作人Id
-    private UserDTO operator;  // 操作人信息
 
-    public Integer getLenderId() {
-        return lenderId;
-    }
-
-    public void setLenderId(Integer lenderId) {
-        this.lenderId = lenderId;
-    }
+    private String name; // 借款人姓名
+    private String sex; // 借款人性别
 
     public Integer getOperatorId() {
         return operatorId;
@@ -226,12 +290,12 @@ public class LenderDTO {
         this.isGuaranteeConnection = isGuaranteeConnection;
     }
 
-    public String getGuarenteeEconomic() {
-        return guarenteeEconomic;
+    public String getGuaranteeEconomic() {
+        return guaranteeEconomic;
     }
 
-    public void setGuarenteeEconomic(String guarenteeEconomic) {
-        this.guarenteeEconomic = guarenteeEconomic;
+    public void setGuaranteeEconomic(String guarenteeEconomic) {
+        this.guaranteeEconomic = guarenteeEconomic;
     }
 
     public Integer getIsLawsuit() {
@@ -306,19 +370,19 @@ public class LenderDTO {
         this.memo = memo;
     }
 
-    public ContactDTO getLender() {
-        return lender;
+    public String getName() {
+        return name;
     }
 
-    public void setLender(ContactDTO lender) {
-        this.lender = lender;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public UserDTO getOperator() {
-        return operator;
+    public String getSex() {
+        return sex;
     }
 
-    public void setOperator(UserDTO operator) {
-        this.operator = operator;
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 }

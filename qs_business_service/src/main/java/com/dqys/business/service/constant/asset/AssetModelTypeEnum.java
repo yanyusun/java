@@ -1,4 +1,4 @@
-package com.dqys.business.service.constant;
+package com.dqys.business.service.constant.asset;
 
 /**
  * Created by Yvan on 16/6/16.

@@ -14,6 +14,20 @@ public interface CiRelationMapper {
     Integer deleteByPrimaryKey(Integer id);
 
     /**
+     * 删除借据的关联案件
+     * @param id
+     * @return
+     */
+    Integer deleteByIouId(Integer id);
+
+    /**
+     * 删除案件的关联借据
+     * @param id
+     * @return
+     */
+    Integer deleteByCaseId(Integer id);
+
+    /**
      * 新增
      * @param record
      * @return

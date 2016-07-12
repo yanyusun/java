@@ -6,7 +6,29 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * @apiDefine IouDTO
+ * @apiSuccessExample {json} IouDTO:
+ * {
+ *
+ * }
+ */
+
+/**
  * Created by Yvan on 16/6/16.
+ * @apiDefine Iou
+ * @apiParam {numbder} id 主键
+ * @apiParam {numbder} id 主键
+ * @apiParam {numbder} id 主键
+ * @apiParam {numbder} id 主键
+ * @apiParam {numbder} id 主键
+ * @apiParam {numbder} id 主键
+ * @apiParam {numbder} id 主键
+ * @apiParam {numbder} id 主键
+ * @apiParam {numbder} id 主键
+ * @apiParam {numbder} id 主键
+ * @apiParam {numbder} id 主键
+ * @apiParam {numbder} id 主键
+ * @apiParam {numbder} id 主键
  */
 public class IouDTO {
 
@@ -43,7 +65,7 @@ public class IouDTO {
     private Integer lenderId;  // 借款基础信息ID
     private ContactDTO lender;  //借款人信息
 
-    private List<String> pawnIds; // 抵押物IDs
+    private String pawnIds; // 抵押物IDs
 
     public Integer getId() {
         return id;
@@ -53,11 +75,11 @@ public class IouDTO {
         this.id = id;
     }
 
-    public List<String> getPawnIds() {
+    public String getPawnIds() {
         return pawnIds;
     }
 
-    public void setPawnIds(List<String> pawnIds) {
+    public void setPawnIds(String pawnIds) {
         this.pawnIds = pawnIds;
     }
 

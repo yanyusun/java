@@ -1,26 +1,25 @@
 package com.dqys.business.controller;
 
-import com.dqys.business.service.dto.asset.ContactDTO;
-import com.dqys.business.service.dto.asset.LenderDTO;
-import com.dqys.core.utils.CommonUtil;
-import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
-import com.dqys.business.service.constant.ContactTypeEnum;
+import com.dqys.business.service.constant.asset.ContactTypeEnum;
+import com.dqys.business.service.constant.asset.LenderTypeEnum;
+import com.dqys.business.service.dto.asset.ContactDTO;
+import com.dqys.business.service.dto.asset.LenderDTO;
+import com.dqys.business.service.query.asset.LenderListQuery;
 import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yvan on 16/6/12.
@@ -33,10 +32,62 @@ public class LenderController {
     private LenderService lenderService;
 
     /**
-     * 删除借款人
-     *
-     * @param id
-     * @return
+     * @api {get} http://{url}/lender/getInit 获取初始化数据
+     * @apiName getInit
+     * @apiGroup lender
+     * @apiSuccess {SelectonDTO} lenderType 借款人联系人类型
+     * @apiUse SelectonDTO
+     */
+    @RequestMapping(value = "/getInit")
+    @ResponseBody
+    public JsonResponse getInit() {
+        Map<String, Object> resultMap = new HashMap<>();
+
+        resultMap.put("lenderType", LenderTypeEnum.list());
+
+        return JsonResponseTool.success(resultMap);
+    }
+
+    /**
+     * @api {get} http://{url}/lender/list 获取借款人列表
+     * @apiName list
+     * @apiGroup lender
+     * @apiUse LenderListQuery
+     * @apiSuccess {LenderListDTO} data 借款人列表信息
+     * @apiUse LenderListDTO
+     */
+    @RequestMapping(value = "/list")
+    @ResponseBody
+    public JsonResponse list(@ModelAttribute LenderListQuery lenderListQuery) {
+        return lenderService.queryList(lenderListQuery);
+    }
+
+    /**
+     * @api {get} http://{url}/lender/add 新增借款人
+     * @apiName add
+     * @apiGroup lender
+     * @apiParam {LenderDTO} lenderDTO 借款人基础信息
+     * @apiParam {ContactDTO} contactDTOs 联系人集合
+     * @apiUse LenderDTO
+     * @apiUse ContactDTO
+     * @apiSuccess {number} data 增加后的数据ID
+     */
+    @RequestMapping(value = "/add")
+    @ResponseBody
+    public JsonResponse add(
+            @ModelAttribute List<ContactDTO> contactDTOs,
+            @ModelAttribute LenderDTO lenderDTO) {
+        if (CommonUtil.checkParam(contactDTOs, lenderDTO)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return lenderService.add(contactDTOs, lenderDTO);
+    }
+
+    /**
+     * @api {get} http://{url}/lender/delete 删除借款人
+     * @apiName delete
+     * @apiGroup lender
+     * @apiParam {number} id 借款人Id
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
@@ -44,57 +95,18 @@ public class LenderController {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return CommonUtil.responseBack(lenderService.deleteLenderRelation(id));
+        return lenderService.delete(id);
     }
 
     /**
-     * 新增借款人
-     *
-     * @param contactDTOs
-     * @param lenderDTO
-     * @return
-     */
-    @RequestMapping(value = "/add")
-    @ResponseBody
-    public JsonResponse addLenderRelation(
-            @ModelAttribute List<ContactDTO> contactDTOs,
-            @ModelAttribute LenderDTO lenderDTO) {
-        if (CommonUtil.checkParam(contactDTOs, lenderDTO)) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        // 增加借款人以及相关联系人的身份信息
-        Integer lenderId = null;
-        HashMap<Integer, String> relation = new HashMap<>();
-        for (ContactDTO contactDTO : contactDTOs) {
-            ContactTypeEnum contactTypeEnum = ContactTypeEnum.getContactTypeEnum(contactDTO.getType());
-            if (contactTypeEnum == null) {
-                return JsonResponseTool.paramErr("联系人类型参数错误");
-            }
-            Integer id = lenderService.addLenderInfo(AssetServiceUtils.toContactInfo(contactDTO));
-            if (id > 0) {
-                if (contactTypeEnum.getValue().equals(contactTypeEnum.LENDER.getValue())) {
-                    lenderId = id;
-                }
-                if (relation.get(contactTypeEnum.getValue()) != null) {
-                    relation.put(contactTypeEnum.getValue(), relation.get(contactTypeEnum.getValue()) + "," + id);
-                } else {
-                    relation.put(contactTypeEnum.getValue(), id.toString());
-                }
-            }
-        }
-        if (lenderId == null) {
-            JsonResponseTool.failure("增加借款人基础信息失败");
-        }
-
-        return CommonUtil.responseBack(lenderService.addLenderRelation(AssetServiceUtils.toLenderInfo(lenderDTO)));
-    }
-
-    /**
-     * 修改借款人
-     *
-     * @param contactDTOs
-     * @param lenderDTO
-     * @return
+     * @api {get} http://{url}/lender/update 修改借款人
+     * @apiName update
+     * @apiGroup lender
+     * @apiParam {LenderDTO} lenderDTO 借款人基础信息
+     * @apiParam {ContactDTO} contactDTOs 联系人集合
+     * @apiUse LenderDTO
+     * @apiUse ContactDTO
+     * @apiSuccess {number} data 修改后的数据ID
      */
     @RequestMapping(value = "/update")
     @ResponseBody
@@ -104,206 +116,47 @@ public class LenderController {
                 contactDTOs, lenderDTO, lenderDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-
-        LenderInfo lenderInfo1 = lenderService.getLenderRelation(lenderDTO.getId());
-        if (lenderInfo1 == null) {
-            return JsonResponseTool.paramErr("参数错误,不存在该借款人信息");
-        }
-
-        HashMap<Integer, String> relation = new HashMap<>();
-        for (ContactDTO contactDTO : contactDTOs) {
-            ContactTypeEnum contactTypeEnum = ContactTypeEnum.getContactTypeEnum(contactDTO.getType());
-            if (contactTypeEnum == null) {
-                return JsonResponseTool.paramErr("联系人类型参数错误");
-            }
-            Integer id = contactDTO.getId();
-            if (id == null) {
-                // 新增联系人
-                id = lenderService.addLenderInfo(AssetServiceUtils.toContactInfo(contactDTO));
-            } else {
-                // 修改联系人
-                ContactInfo contactInfo1 = lenderService.getLenderInfo(id);
-                if (!contactInfo1.toString().equals(contactDTO.toString())) {
-                    lenderService.updateLenderInfo(AssetServiceUtils.toContactInfo(contactDTO));
-                }
-            }
-            if (id > 0) {
-                if (relation.get(contactTypeEnum.getValue()) != null) {
-                    relation.put(contactTypeEnum.getValue(), relation.get(contactTypeEnum.getValue()) + "," + id);
-                } else {
-                    relation.put(contactTypeEnum.getValue(), id.toString());
-                }
-            }
-        }
-
-        if (lenderInfo1.toString().equals(lenderDTO.toString())) {
-            return JsonResponseTool.success(lenderDTO.getId());
-        } else {
-            Integer id = lenderService.addLenderRelation(AssetServiceUtils.toLenderInfo(lenderDTO));
-            if (id > 0) {
-                return JsonResponseTool.success(id);
-            } else {
-                return JsonResponseTool.failure("修改失败");
-            }
-        }
+        return lenderService.update(contactDTOs, lenderDTO);
     }
 
     /**
-     * 获取借款人
-     *
-     * @param id
-     * @return
+     * @api {get} http://{url}/lender/get 获取借款人信息
+     * @apiName get
+     * @apiGroup lender
+     * @apiParam {numbder} id 借款人ID
+     * @apiSuccess {LenderDTO} data 联系人信息
+     * @apiUse LenderDTO
      */
     @RequestMapping(value = "/get")
     @ResponseBody
-    public JsonResponse getLenderRelation(@PathVariable Integer id) {
-        if(CommonUtil.checkParam(id)){
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        LenderDTO lenderDTO = AssetServiceUtils.toLenderDTO(lenderService.getLenderRelation(id));
-        return JsonResponseTool.success(lenderDTO);
-    }
-
-    /**
-     * 删除抵押物
-     *
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/deletePawn")
-    @ResponseBody
-    public JsonResponse deletePawn(@PathVariable Integer id) {
+    public JsonResponse get(@RequestParam(required = true) Integer id) {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return JsonResponseTool.success(lenderService.deletePawn(id));
+        return lenderService.get(id);
     }
 
     /**
-     * 增加抵押物信息
+     * @api {get} http://{url}/lender/getLenderAll 获取联系人所有相关信息
+     * @apiName getLenderAll
+     * @apiGroup lender
+     * @apiParam {numbder} id 借款人ID
      *
-     * @param pawnInfo
-     * @param id
-     * @return
+     * @apiSuccess {ContactDTO} contactDTOs 相关联系人信息
+     * @apiSuccess {LenderDTO} lenderDTO 借款人基础信息
+     * @apiSuccess {IouDTO} iouDTOs 借据信息
+     * @apiSuccess {PawnDTO} pawnDTOs 抵押物信息
+     * @apiUse ContactDTO
+     * @apiUse LenderDTO
+     * @apiUse IouDTO
+     * @apiUse PawnDTO
      */
-    @RequestMapping(value = "/addPawn")
+    @RequestMapping(value = "/getLenderAll")
     @ResponseBody
-    public JsonResponse addPawn(@ModelAttribute PawnInfo pawnInfo, @PathVariable Integer id) {
-        if (CommonUtil.checkParam(pawnInfo, id)) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        ContactInfo contactInfo = lenderService.getLenderInfo(id);
-        if (contactInfo == null) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        pawnInfo.setLenderId(id);
-        return CommonUtil.responseBack(lenderService.addPawn(pawnInfo));
-    }
-
-    /**
-     * 修改抵押物信息
-     *
-     * @param pawnInfo
-     * @return
-     */
-    @RequestMapping(value = "/updatePawn")
-    @ResponseBody
-    public JsonResponse updatePawn(@ModelAttribute PawnInfo pawnInfo) {
-        if (CommonUtil.checkParam(pawnInfo)) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        Integer id = lenderService.updatePawn(pawnInfo);
-        if (id == null) {
-            return JsonResponseTool.failure("修改失败");
-        } else {
-            return JsonResponseTool.success(id);
-        }
-    }
-
-    /**
-     * 获取抵押物信息
-     *
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/getPawn")
-    @ResponseBody
-    public JsonResponse updatePawn(@PathVariable Integer id) {
+    public JsonResponse getAllLenderInfo(@RequestParam(required = true) Integer id) {
         if (CommonUtil.checkParam(id)) {
-            return JsonResponseTool.paramErr("参数错误");
+            return JsonResponseTool.success("参数错误");
         }
-        return CommonUtil.responseBack(lenderService.getPawn(id));
+        return lenderService.getLenderAll(id);
     }
-
-    /**
-     * 删除借据
-     *
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/deleteIou")
-    @ResponseBody
-    public JsonResponse deleteIou(@PathVariable Integer id) {
-        if (CommonUtil.checkParam(id)) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        return JsonResponseTool.success(lenderService.deleteIOUInfo(id));
-    }
-
-    /**
-     * 增加借据信息
-     *
-     * @param IOUInfo
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/addIou")
-    @ResponseBody
-    public JsonResponse addIou(@ModelAttribute IOUInfo IOUInfo, @PathVariable Integer id) {
-        if (CommonUtil.checkParam(IOUInfo, id)) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        ContactInfo contactInfo = lenderService.getLenderInfo(id);
-        if (contactInfo == null) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        IOUInfo.setLenderId(id);
-        return CommonUtil.responseBack(lenderService.addIOUInfo(IOUInfo, contactInfo.getName()));
-    }
-
-    /**
-     * 修改借据信息
-     *
-     * @param IOUInfo
-     * @return
-     */
-    @RequestMapping(value = "/updateIou")
-    @ResponseBody
-    public JsonResponse updateIou(@ModelAttribute IOUInfo IOUInfo) {
-        if (CommonUtil.checkParam(IOUInfo)) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        Integer id = lenderService.updateIOUInfo(IOUInfo);
-        if (id == null) {
-            return JsonResponseTool.failure("修改失败");
-        } else {
-            return JsonResponseTool.success(id);
-        }
-    }
-
-    /**
-     * 获取借据信息
-     *
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/getIouInfo")
-    @ResponseBody
-    public JsonResponse getIou(@PathVariable Integer id) {
-        if (CommonUtil.checkParam(id)) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        return CommonUtil.responseBack(lenderService.getIOUInfo(id));
-    }
-
 }

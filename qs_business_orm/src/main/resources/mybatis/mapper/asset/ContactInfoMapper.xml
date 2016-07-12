@@ -56,6 +56,12 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
+  <!-- 根据模块以及模块ID逻辑删除 -->
+  <delete id="deleteByMode">
+    UPDATE bt_contact SET stateflag = CURRENT_TIMESTAMP
+    where stateflag = 0 AND mode = #{mode,jdbcType=VARCHAR} AND mode_id = #{id,jdbcType=INTEGER}
+  </delete>
+
   <!-- 新增 -->
   <insert id="insert" parameterType="com.dqys.business.orm.pojo.asset.ContactInfo" useGeneratedKeys="true" keyProperty="id">
     insert into bt_contact
@@ -249,6 +255,19 @@
     SELECT * FROM bt_contact
     <include refid="Query_condition" />
     ORDER by id DESC
+  </select>
+
+  <!-- 获取特定模块特定类型的联系人信息 -->
+  <select id="getByModel" resultMap="BaseResultMap">
+    SELECT * from bt_contact
+    where stateflag = 0 AND mode = #{model,jdbcType=VARCHAR}
+    AND mode_id = #{id,jdbcType=INTEGER} AND type = #{type,jdbcType=INTEGER}
+  </select>
+
+
+  <select id="listByMode" resultMap="BaseResultMap">
+    SELECT * from bt_contact
+    where stateflag = 0 AND mode = #{model,jdbcType=VARCHAR} AND mode_id = #{id,jdbcType=INTEGER}
   </select>
   
 </mapper>

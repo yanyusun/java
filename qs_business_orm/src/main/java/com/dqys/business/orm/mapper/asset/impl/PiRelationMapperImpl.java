@@ -4,16 +4,30 @@ import com.dqys.business.orm.mapper.asset.PiRelationMapper;
 import com.dqys.business.orm.pojo.asset.PiRelation;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.core.base.BaseDao;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * Created by Yvan on 16/6/16.
  */
+@Repository
+@Primary
 public class PiRelationMapperImpl extends BaseDao implements PiRelationMapper {
     @Override
     public Integer deleteByPrimaryKey(Integer id) {
         return super.getSqlSession().getMapper(PiRelationMapper.class).deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public Integer deleteByPawnId(Integer id) {
+        return super.getSqlSession().getMapper(PiRelationMapper.class).deleteByPawnId(id);
+    }
+
+    @Override
+    public Integer deleteByIouId(Integer id) {
+        return super.getSqlSession().getMapper(PiRelationMapper.class).deleteByIouId(id);
     }
 
     @Override
