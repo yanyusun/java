@@ -47,6 +47,10 @@ public class AssetController {
      * @apiSuccess {SelectonDTO} excellent 评优
      * @apiUse SelectonDTO
      * @apiSuccess {string} level 评级
+     *
+     *
+     *
+     *
      */
     @RequestMapping(value = "/getInit")
     @ResponseBody
