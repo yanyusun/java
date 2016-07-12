@@ -10,6 +10,7 @@ public class LenderQuery extends BaseQuery {
     private Integer lenderId; // 借款人ID
     private String idCard; // 身份证号码
     private String idCardLike; // 身份证模糊查询
+    private Integer assetId; // 资产包ID
 
     public String getIdCard() {
         return idCard;
@@ -35,4 +36,11 @@ public class LenderQuery extends BaseQuery {
         this.lenderId = lenderId;
     }
 
+    public Integer getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
+    }
 }

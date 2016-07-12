@@ -1,6 +1,7 @@
 package com.dqys.business.service.utils.asset;
 
 import com.dqys.business.orm.query.asset.AssetQuery;
+import com.dqys.business.service.constant.asset.LenderTypeEnum;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.core.model.TArea;
 import com.dqys.core.utils.AreaTool;
@@ -10,10 +11,8 @@ import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.core.utils.DateFormatTool;
 import org.apache.commons.lang3.RandomStringUtils;
 
-import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -267,7 +266,7 @@ public class AssetServiceUtils {
         lenderInfo.setGuaranteeMode(lenderDTO.getGuaranteeMode());
         lenderInfo.setGuaranteeSource(lenderDTO.getGuaranteeSource());
         lenderInfo.setIsGuaranteeConnection(lenderDTO.getIsGuaranteeConnection());
-        lenderInfo.setGuarenteeEconomic(lenderDTO.getGuarenteeEconomic());
+        lenderInfo.setGuarenteeEconomic(lenderDTO.getGuaranteeEconomic());
         lenderInfo.setIsLawsuit(lenderDTO.getIsLawsuit());
         lenderInfo.setIsDecision(lenderDTO.getIsDecision());
         lenderInfo.setRealUrgeTime(lenderDTO.getRealUrgeTime());
@@ -326,7 +325,7 @@ public class AssetServiceUtils {
         lenderDTO.setGuaranteeMode(lenderInfo.getGuaranteeMode());
         lenderDTO.setGuaranteeSource(lenderInfo.getGuaranteeSource());
         lenderDTO.setIsGuaranteeConnection(lenderInfo.getIsGuaranteeConnection());
-        lenderDTO.setGuarenteeEconomic(lenderInfo.getGuarenteeEconomic());
+        lenderDTO.setGuaranteeEconomic(lenderInfo.getGuarenteeEconomic());
         lenderDTO.setIsLawsuit(lenderInfo.getIsLawsuit());
         lenderDTO.setIsDecision(lenderInfo.getIsDecision());
         lenderDTO.setRealUrgeTime(lenderInfo.getRealUrgeTime());
@@ -585,6 +584,48 @@ public class AssetServiceUtils {
         return assetListDTO;
     }
 
+    public static List<AssetLenderDTO> toAssetLenderDTO(List<LenderInfo> lenderInfoList){
+        if(lenderInfoList == null || lenderInfoList.size() == 0){
+            return null;
+        }
+        List<AssetLenderDTO> assetLenderDTOList = new ArrayList<>();
+        lenderInfoList.forEach(lenderInfo -> {
+            assetLenderDTOList.add(toAssetLenderDTO(lenderInfo));
+        });
+        return assetLenderDTOList;
+    }
+
+    public static AssetLenderDTO toAssetLenderDTO(LenderInfo lenderInfo){
+        if(lenderInfo == null){
+            return null;
+        }
+        AssetLenderDTO assetLenderDTO = new AssetLenderDTO();
+
+        assetLenderDTO.setId(lenderInfo.getId());
+        assetLenderDTO.setType(LenderTypeEnum.lender.getName());
+        assetLenderDTO.setBorn(lenderInfo.getEntrustBornType() + "-" + lenderInfo.getEntrustBorn());
+        assetLenderDTO.setExcellent(LenderTypeEnum.getLenderTypeEnum(lenderInfo.getEvaluateExcellent()).getName());
+        assetLenderDTO.setLevel(lenderInfo.getEvaluateLevel());
+        assetLenderDTO.setDispose(lenderInfo.getDisposeMode());
+        assetLenderDTO.setTag(lenderInfo.getTags());
+        assetLenderDTO.setGuaranteeType(lenderInfo.getGuaranteeType());
+        assetLenderDTO.setGuaranteeMode(lenderInfo.getGuaranteeMode());
+        assetLenderDTO.setGuaranteeSource(lenderInfo.getGuaranteeSource());
+        assetLenderDTO.setGuaranteeContact(lenderInfo.getIsGuaranteeConnection().equals(1) ? "是" : "否");
+        assetLenderDTO.setIsWorth(booleanBack(lenderInfo.getIsWorth()));
+        assetLenderDTO.setIsLawsuit(booleanBack(lenderInfo.getIsLawsuit()));
+        assetLenderDTO.setIsDecision(booleanBack(lenderInfo.getIsDecision()));
+        assetLenderDTO.setRealUrgeTime(lenderInfo.getRealUrgeTime());
+        assetLenderDTO.setPhoneUrgeTime(lenderInfo.getPhoneUrgeTime());
+        assetLenderDTO.setEntrustTime(lenderInfo.getEntrustUrgeTime());
+        assetLenderDTO.setRealUrgeTime(lenderInfo.getRealUrgeTime());
+        assetLenderDTO.setCanContact(booleanBack(lenderInfo.getCanContact()));
+        assetLenderDTO.setCanPay(booleanBack(lenderInfo.getCanPay()));
+        assetLenderDTO.setMemo(lenderInfo.getRemark());
+
+        return assetLenderDTO;
+    }
+
     /**
      * 生成资产包号
      * @return
@@ -612,6 +653,18 @@ public class AssetServiceUtils {
         return PRE_PAWN_CODE
                 + UPLETTER[Integer.valueOf(RandomStringUtils.randomNumeric(3))%24]
                 + RandomStringUtils.randomNumeric(6);
+    }
+
+    public static String[] initLevel(Integer num){
+        return UPLETTER.toString().substring(0,num).split(",");
+    }
+
+    public static String booleanBack(Integer value){
+        if(value.equals(1)){
+            return "是";
+        }else{
+            return "否";
+        }
     }
 
 }

@@ -1,6 +1,6 @@
 package com.dqys.business.service.utils.excel;
 
-import com.dqys.business.service.constant.ContactTypeEnum;
+import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
@@ -499,12 +499,7 @@ public class ExcelUtilAsset {
             iouDTO.setEndAt(DateFormatTool.parse(transMapToString(map2, "var19"), DateFormatTool.DATE_FORMAT_10_REG2));
             iouDTO.setWorth(transStringToDouble(transMapToString(map2, "var20")));
             iouDTO.setAdvanceCorpus(transStringToDouble(transMapToString(map2, "var21")));
-            String[] strs = transMapToString(map2, "var22").split(",");
-            List<String> pawnIds = new ArrayList<String>();
-            for (String paw : strs) {
-                pawnIds.add(paw);
-            }
-            iouDTO.setPawnIds(pawnIds);
+            iouDTO.setPawnIds(transMapToString(map2, "var22"));
             iouDTOs.add(iouDTO);
         }
     }
@@ -524,12 +519,7 @@ public class ExcelUtilAsset {
             pawnDTO.setAddress(transMapToString(map1, "var7"));
             pawnDTO.setDisposeStatus(transMapToString(map1, "var8"));
             pawnDTO.setWorth(transStringToDouble(transMapToString(map1, "var9")));
-            String[] strs = transMapToString(map1, "var10").split(",");
-            List<Integer> iouids = new ArrayList<Integer>();
-            for (String iou : strs) {
-                iouids.add(transStringToInteger(iou));
-            }
-            pawnDTO.setIouIds(iouids);
+            pawnDTO.setIouIds(transMapToString(map1, "var10"));
             pawnDTO.setMemo(transMapToString(map1, "var11"));
             pawnDTOs.add(pawnDTO);
         }
@@ -551,7 +541,7 @@ public class ExcelUtilAsset {
             lenderDTO.setGuaranteeMode(transMapToString(map0, "var10"));
             lenderDTO.setGuaranteeSource(lenderDTO.getGuaranteeMode().equals("") == true ? "" : lenderDTO.getGuaranteeMode().equals("抵押") == true ? transMapToString(map0, "var11") : transMapToString(map0, "var12"));
             lenderDTO.setIsGuaranteeConnection(transMapToString(map0, "var13").equals("是") == true ? 1 : 0);
-            lenderDTO.setGuarenteeEconomic(transMapToString(map0, "var14"));
+            lenderDTO.setGuaranteeEconomic(transMapToString(map0, "var14"));
             lenderDTO.setIsWorth(transMapToString(map0, "var15").equals("否") == true ? 0 : transMapToString(map0, "var15").equals("能") == true ? 1 : 2);
             lenderDTO.setIsLawsuit(transMapToString(map0, "var16").equals("未诉讼") == true ? 0 : transMapToString(map0, "var16").equals("已诉讼") == true ? 1 : 2);
             lenderDTO.setIsDecision(transMapToString(map0, "var17").equals("未判决") == true ? 0 : transMapToString(map0, "var17").equals("已判决") == true ? 1 : 2);

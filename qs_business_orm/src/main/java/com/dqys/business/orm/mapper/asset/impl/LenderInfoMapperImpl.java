@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.asset.impl;
 
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.query.asset.LenderQuery;
 import com.dqys.core.base.BaseDao;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -35,4 +36,13 @@ public class LenderInfoMapperImpl extends BaseDao implements LenderInfoMapper {
         return super.getSqlSession().getMapper(LenderInfoMapper.class).get(id);
     }
 
+    @Override
+    public List<LenderInfo> listByAssetId(Integer id) {
+        return super.getSqlSession().getMapper(LenderInfoMapper.class).listByAssetId(id);
+    }
+
+    @Override
+    public List<LenderInfo> queryList(LenderQuery lenderQuery) {
+        return super.getSqlSession().getMapper(LenderInfoMapper.class).queryList(lenderQuery);
+    }
 }

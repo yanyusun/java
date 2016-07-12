@@ -9,13 +9,13 @@ public class PawnInfo extends BaseModel implements Serializable {
     private Integer lenderId;  // 借款人ID
     private String pawnNo;  // 编号
     private Double amount;  // 贷款金额
-    private String type;  // 抵押物雷系
+    private String type;  // 抵押物类型
     private String evaluateExcellent;  // 评优
     private String evaluateLevel;  // 评级
     private String size;  // 规模大小
-    private String province;  //省
-    private String city;  // 市
-    private String district;  // 区
+    private Integer province;  //省
+    private Integer city;  // 市
+    private Integer district;  // 区
     private String address;  // 详细地址
     private Double pawnRate;  // 抵押率
     private String disposeStatus;  // 处置状态
@@ -78,27 +78,27 @@ public class PawnInfo extends BaseModel implements Serializable {
         this.size = size;
     }
 
-    public String getProvince() {
+    public Integer getProvince() {
         return province;
     }
 
-    public void setProvince(String province) {
+    public void setProvince(Integer province) {
         this.province = province;
     }
 
-    public String getCity() {
+    public Integer getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(Integer city) {
         this.city = city;
     }
 
-    public String getDistrict() {
+    public Integer getDistrict() {
         return district;
     }
 
-    public void setDistrict(String district) {
+    public void setDistrict(Integer district) {
         this.district = district;
     }
 

@@ -37,10 +37,7 @@ import java.util.Date;
  * @apiParam {number} canPay 债务方是否能偿还
  * @apiParam {number} isWorth 抵押物是否覆盖债务
  * @apiParam {string} memo 备注
- * @apiParam {number} lenderId 借款人基础信息ID
- * @apiParam {string} lender 借款人名称
  * @apiParam {number} operatorId 操作人ID
- * @apiParam {string} operator 操作人名称
  *
  */
 
@@ -81,10 +78,7 @@ import java.util.Date;
  * "canPay": null,
  * "isWorth": null,
  * "memo": null,
- * "lenderId": null,
- * "lender": null,
  * "operatorId": 0,
- * "operator": null
  * }
  */
 public class LenderDTO {
@@ -112,7 +106,7 @@ public class LenderDTO {
     private String guaranteeMode;  // 担保方式(抵押|质押)
     private String guaranteeSource;  // 担保源
     private Integer isGuaranteeConnection;  // 担保人是否能联系
-    private String guarenteeEconomic;  // 担保人经济状况
+    private String guaranteeEconomic;  // 担保人经济状况
     private Integer isLawsuit;  // 诉讼与否
     private Integer isDecision;  // 判决与否
     private Integer realUrgeTime;  // 实地催收次数
@@ -123,18 +117,10 @@ public class LenderDTO {
     private Integer isWorth;  // 抵押物是否能覆盖债务
     private String memo;  // 备注
 
-    private Integer lenderId;  // 借款人基础信息ID
-    private ContactDTO lender;  // 借款人信息
     private Integer operatorId;  // 操作人Id
-    private UserDTO operator;  // 操作人信息
 
-    public Integer getLenderId() {
-        return lenderId;
-    }
-
-    public void setLenderId(Integer lenderId) {
-        this.lenderId = lenderId;
-    }
+    private String name; // 借款人姓名
+    private String sex; // 借款人性别
 
     public Integer getOperatorId() {
         return operatorId;
@@ -304,12 +290,12 @@ public class LenderDTO {
         this.isGuaranteeConnection = isGuaranteeConnection;
     }
 
-    public String getGuarenteeEconomic() {
-        return guarenteeEconomic;
+    public String getGuaranteeEconomic() {
+        return guaranteeEconomic;
     }
 
-    public void setGuarenteeEconomic(String guarenteeEconomic) {
-        this.guarenteeEconomic = guarenteeEconomic;
+    public void setGuaranteeEconomic(String guarenteeEconomic) {
+        this.guaranteeEconomic = guarenteeEconomic;
     }
 
     public Integer getIsLawsuit() {
@@ -384,19 +370,19 @@ public class LenderDTO {
         this.memo = memo;
     }
 
-    public ContactDTO getLender() {
-        return lender;
+    public String getName() {
+        return name;
     }
 
-    public void setLender(ContactDTO lender) {
-        this.lender = lender;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public UserDTO getOperator() {
-        return operator;
+    public String getSex() {
+        return sex;
     }
 
-    public void setOperator(UserDTO operator) {
-        this.operator = operator;
+    public void setSex(String sex) {
+        this.sex = sex;
     }
 }

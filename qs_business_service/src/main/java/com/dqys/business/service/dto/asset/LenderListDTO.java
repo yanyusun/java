@@ -4,6 +4,11 @@ import java.util.Date;
 
 /**
  * Created by Yvan on 16/7/11.
+ * @apiDefine LenderListDTO
+ * @apiSuccessExample {json} lenderListDTO:
+ * {
+ *     id:1,
+ * }
  */
 public class LenderListDTO {
 

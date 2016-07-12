@@ -1,4 +1,4 @@
-package com.dqys.business.service.constant;
+package com.dqys.business.service.constant.asset;
 
 import com.dqys.core.base.BaseSelectonDTO;
 

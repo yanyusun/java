@@ -6,6 +6,11 @@ import java.util.List;
 
 /**
  * @author by pan on 16-4-12.
+ * @apiDefine UserDTO
+ * @apiSuccessExample {json} UserDTO:
+ * {
+ *     
+ * }
  */
 public class UserDTO extends BaseDTO {
 

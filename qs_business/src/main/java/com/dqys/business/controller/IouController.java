@@ -2,16 +2,15 @@ package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
+import com.dqys.business.service.dto.asset.IouDTO;
+import com.dqys.business.service.service.IouService;
 import com.dqys.business.service.service.LenderService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by Yvan on 16/7/11.
@@ -21,76 +20,86 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class IouController {
 
     @Autowired
-    private LenderService lenderService;
+    private IouService iouService;
 
     /**
-     * 删除借据
-     *
-     * @param id
-     * @return
+     * @api {get} http://{url}/iou/delete 删除借据
+     * @apiName delete
+     * @apiGroup iou
+     * @apiParam {number} id 借据ID
      */
-    @RequestMapping(value = "/deleteIou")
+    @RequestMapping(value = "/delete")
     @ResponseBody
-    public JsonResponse deleteIou(@PathVariable Integer id) {
+    public JsonResponse delete(@RequestParam Integer id) {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return JsonResponseTool.success(lenderService.deleteIOUInfo(id));
+        return iouService.delete(id);
     }
 
     /**
-     * 增加借据信息
-     *
-     * @param IOUInfo
-     * @param id
-     * @return
+     * @api {post} http://{url}/iou/add 新增借据
+     * @apiName add
+     * @apiGroup iou
+     * @apiUse Iou
      */
-    @RequestMapping(value = "/addIou")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse addIou(@ModelAttribute IOUInfo IOUInfo, @PathVariable Integer id) {
-        if (CommonUtil.checkParam(IOUInfo, id)) {
+    public JsonResponse add(@ModelAttribute IouDTO iouDTO) {
+        if (CommonUtil.checkParam(iouDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        ContactInfo contactInfo = lenderService.getLenderInfo(id);
-        if (contactInfo == null) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        IOUInfo.setLenderId(id);
-        return CommonUtil.responseBack(lenderService.addIOUInfo(IOUInfo, contactInfo.getName()));
+        return iouService.add(iouDTO);
     }
 
     /**
-     * 修改借据信息
-     *
-     * @param IOUInfo
-     * @return
+     * @api {post} http://{url}/iou/update 修改借据信息
+     * @apiName update
+     * @apiGroup iou
+     * @apiUse Iou
+     * @apiSuccess {number} data 修改后的ID
      */
-    @RequestMapping(value = "/updateIou")
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse updateIou(@ModelAttribute IOUInfo IOUInfo) {
-        if (CommonUtil.checkParam(IOUInfo)) {
+    public JsonResponse update(@ModelAttribute IouDTO iouDTO) {
+        if (CommonUtil.checkParam(iouDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer id = lenderService.updateIOUInfo(IOUInfo);
-        if (id == null) {
-            return JsonResponseTool.failure("修改失败");
-        } else {
-            return JsonResponseTool.success(id);
-        }
+        return iouService.update(iouDTO);
     }
 
     /**
-     * 获取借据信息
-     *
-     * @param id
-     * @return
+     * @api {post} http://{url}/iou/get 获取借据信息
+     * @apiName get
+     * @apiGroup iou
+     * @apiParam {number} id 借据ID
+     * @apiUse IouDTO
      */
-    @RequestMapping(value = "/getIouInfo")
+    @RequestMapping(value = "/get")
     @ResponseBody
-    public JsonResponse getIou(@PathVariable Integer id) {
+    public JsonResponse get(@RequestParam Integer id) {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return CommonUtil.responseBack(lenderService.getIOUInfo(id));
+        return iouService.get(id);
     }
+
+    /**
+     * @api {post} http://{url}/iou/listIou 获取借款人的借据信息
+     * @apiName listIou
+     * @apiGroup iou
+     * @apiParam {number} id 借款人ID
+     * @apiSuccess {IouDTO} data 借据信息
+     * @apiUse IouDTO
+     */
+    @RequestMapping(value = "/listIou")
+    @ResponseBody
+    public JsonResponse listIou(@RequestParam Integer id) {
+        if (CommonUtil.checkParam(id)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return iouService.listIouByLenderId(id);
+    }
+
+
 }

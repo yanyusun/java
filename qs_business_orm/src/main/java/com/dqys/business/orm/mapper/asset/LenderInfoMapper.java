@@ -1,6 +1,7 @@
 package com.dqys.business.orm.mapper.asset;
 
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.query.asset.LenderQuery;
 
 import java.util.List;
 
@@ -33,6 +34,19 @@ public interface LenderInfoMapper {
      */
     LenderInfo get(Integer id);
 
+    /**
+     * 根据资产包Id查询借款人
+     * @param id
+     * @return
+     */
+    List<LenderInfo> listByAssetId(Integer id);
+
+    /**
+     * 条件搜索借款人
+     * @param lenderQuery
+     * @return
+     */
+    List<LenderInfo> queryList(LenderQuery lenderQuery);
 
 
 }

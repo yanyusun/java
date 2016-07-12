@@ -36,12 +36,24 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
+  <!-- 删除抵押物关联 -->
+  <delete id="deleteByPawnId" parameterType="java.lang.Integer" >
+    UPDATE bt_pi_relation set stateflag = CURRENT_TIMESTAMP
+    where pawn_id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <!-- 删除借据关联 -->
+  <delete id="deleteByIouId" parameterType="java.lang.Integer" >
+    UPDATE bt_pi_relation set stateflag = CURRENT_TIMESTAMP
+    where iou_id = #{id,jdbcType=INTEGER}
+  </delete>
+
   <!-- 单取 -->
   <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select
     <include refid="Base_Column_List" />
     from bt_pi_relation
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </select>
 
   <!-- 新增 -->
@@ -98,4 +110,5 @@
     <include refid="Query_Condition" />
     ORDER BY id DESC
   </select>
+
 </mapper>

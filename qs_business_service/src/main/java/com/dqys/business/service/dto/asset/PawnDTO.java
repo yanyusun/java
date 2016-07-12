@@ -1,9 +1,34 @@
 package com.dqys.business.service.dto.asset;
 
 import java.util.List;
+/**
+ * @apiDefine PawnDTO
+ * @apiSuccessExample {json} PawnDTO:
+ * {
+ *
+ * }
+ */
 
 /**
  * Created by Yvan on 16/6/16.
+ * @apiDefine Pawn
+ * @apiParam {number} id 主键
+ * @apiParam {number} lenderId 借款人ID
+ * @apiParam {string} pawnNo 借款人ID
+ * @apiParam {number} amount 贷款金额
+ * @apiParam {string} type 抵押物类型
+ * @apiParam {string} evaluateExcellent 评优
+ * @apiParam {string} evaluateLevel 评级
+ * @apiParam {string} size 规模大小
+ * @apiParam {number} province 省份
+ * @apiParam {number} city 城市
+ * @apiParam {number} district 区域
+ * @apiParam {string} address 详细地址
+ * @apiParam {number} pawnRate 抵押率
+ * @apiParam {string} disposeStatus 处置状态
+ * @apiParam {number} worth 价值
+ * @apiParam {string} memo 备注
+ * @apiParam {string} iouIds 借据Id集合
  */
 public class PawnDTO {
 
@@ -15,9 +40,9 @@ public class PawnDTO {
     private String evaluateExcellent;  // 评优
     private String evaluateLevel;  // 评级
     private String size;  // 规模大小
-    private String province;  //省
-    private String city;  // 市
-    private String district;  // 区
+    private Integer province;  //省
+    private Integer city;  // 市
+    private Integer district;  // 区
     private String address;  // 详细地址
     private Double pawnRate;  // 抵押率
     private String disposeStatus;  // 处置状态
@@ -25,10 +50,8 @@ public class PawnDTO {
     private String memo;  // 备注
 
     private Integer lenderId;  // 借款人基础信息ID
-    private ContactDTO lender;  // 借款人信息
 
-
-    private List<Integer> iouIds;
+    private String iouIds;
 
 
     public Integer getId() {
@@ -39,11 +62,11 @@ public class PawnDTO {
         this.id = id;
     }
 
-    public List<Integer> getIouIds() {
+    public String getIouIds() {
         return iouIds;
     }
 
-    public void setIouIds(List<Integer> iouIds) {
+    public void setIouIds(String iouIds) {
         this.iouIds = iouIds;
     }
 
@@ -103,27 +126,27 @@ public class PawnDTO {
         this.size = size;
     }
 
-    public String getProvince() {
+    public Integer getProvince() {
         return province;
     }
 
-    public void setProvince(String province) {
+    public void setProvince(Integer province) {
         this.province = province;
     }
 
-    public String getCity() {
+    public Integer getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(Integer city) {
         this.city = city;
     }
 
-    public String getDistrict() {
+    public Integer getDistrict() {
         return district;
     }
 
-    public void setDistrict(String district) {
+    public void setDistrict(Integer district) {
         this.district = district;
     }
 
@@ -165,13 +188,5 @@ public class PawnDTO {
 
     public void setMemo(String memo) {
         this.memo = memo;
-    }
-
-    public ContactDTO getLender() {
-        return lender;
-    }
-
-    public void setLender(ContactDTO lender) {
-        this.lender = lender;
     }
 }

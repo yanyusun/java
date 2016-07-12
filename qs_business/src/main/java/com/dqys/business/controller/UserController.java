@@ -83,6 +83,22 @@ public class UserController {
     }
 
     /**
+     * @api {GET} http://{url}/api/user/listUser 获取公司旗下所有的用户
+     * @apiName listUser
+     * @apiGroup User
+     * @apiDescription 暂未补充
+     * @apiSuccess {UserDTO} data 用户信息
+     * @apiUse UserDTO
+     */
+    @RequestMapping(value = "/listUser")
+    @ResponseBody
+    public JsonResponse listUser() {
+
+
+        return null;
+    }
+
+    /**
      * @api {GET} http://{url}/api/user/getInit 获取初始化列表
      * @apiName getInit
      * @apiGroup User
