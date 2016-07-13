@@ -1,21 +1,13 @@
-package com.dqys.business.service.constant;
+package com.dqys.business.service.constant.ObjectEnum;
 
 /**
- * '
- * 操作类型
- * Created by mkfeng on 2016/7/4.
+ * 资产包
+ * Created by mkfeng on 2016/7/7.
  */
-public enum OperTypeEnum {
-
-    USER_INFO(99, "用户信息"),;
-
+public enum AssetPackageEnum {
+    update(101, "编辑"),;
     private Integer value;
     private String name;
-
-    OperTypeEnum(Integer value, String name) {
-        this.value = value;
-        this.name = name;
-    }
 
     public Integer getValue() {
         return value;
@@ -30,6 +22,12 @@ public enum OperTypeEnum {
     }
 
     public void setName(String name) {
+        this.name = name;
+    }
+
+    AssetPackageEnum(Integer value, String name) {
+
+        this.value = value;
         this.name = name;
     }
 }

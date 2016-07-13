@@ -3,12 +3,12 @@ package com.dqys.business.service.service.impl;
 import com.dqys.business.orm.mapper.operType.OperTypeMapper;
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.service.OperTypeService;
+import com.dqys.core.cache.MybatisRedisCache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by mkfeng on 2016/7/1.
@@ -18,6 +18,9 @@ public class OperTypeServiceImpl implements OperTypeService {
 
     @Autowired
     private OperTypeMapper operTypeMapper;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     public List<OperType> selectByRoleToOperType(Integer roleId, Integer userType, Integer objectType) {
@@ -40,23 +43,17 @@ public class OperTypeServiceImpl implements OperTypeService {
     }
 
     @Override
-    public List<OperType> getOperType(String userId_roleId_objectId) {
-        Map<String, Object> maps = new HashMap<String, Object>();
-        if (maps.get(userId_roleId_objectId) != null) {
-            return (List<OperType>) maps.get(userId_roleId_objectId);
+    public List<OperType> getOperType(Integer roleId, Integer userType, Integer objectType) {
+        MybatisRedisCache mybatisRedisCache = new MybatisRedisCache();
+        String userId_roleId_objectId = userType + "_" + roleId + "_" + objectType;
+        List<OperType> list = (List<OperType>) mybatisRedisCache.getObject(userId_roleId_objectId);
+        if (list != null) {
+            return list;
         } else {
-            List<Integer> userIds = selectByUserIds();
-            List<Integer> roleIds = selectByRoleIds();
-            List<Integer> objectIds = selectByObjectIds();
-            for (Integer use : userIds) {
-                for (Integer rol : roleIds) {
-                    for (Integer obj : objectIds) {
-                        List<OperType> operTypes = selectByRoleToOperType(rol, use, obj);
-                        maps.put(use + "_" + rol + "_" + obj, operTypes);
-                    }
-                }
-            }
+            mybatisRedisCache.putObject(userId_roleId_objectId, selectByRoleToOperType(roleId, userType, objectType));
         }
-        return (List<OperType>) maps.get(userId_roleId_objectId);
+        return (List<OperType>) mybatisRedisCache.getObject(userId_roleId_objectId);
     }
+
+
 }

@@ -28,17 +28,14 @@ public class OperLogController {
     OperTypeService operTypeService;
 
     /**
-     * @param operLog(page:分页,pageCount:每页展示数量,time:操作时间（时间段的就用“,”分隔）,userId:操作人)
-     * @return
-     * @api {post} operLog 操作记录
+     * @api {post} operLog/pageList 操作记录
      * @apiParam {int} page 分页数
      * @apiParam {int} pageCount 显示数目
      * @apiParam {string} time 操作时间
      * @apiParam {int} userId 用户id
      * @apiDescription 查询操作记录信息
      * @apiSampleRequest operLog/pageList
-     * @apiGroup USER
-     * @apiName operLog/pageList
+     * @apiGroup operLog
      */
     @RequestMapping("/pageList")
     @ResponseBody
@@ -52,11 +49,12 @@ public class OperLogController {
     }
 
     /**
-     * 修改备注
-     *
-     * @param remark 备注
-     * @param id
-     * @return
+     * @api {post} operLog/update 修改备注
+     * @apiParam {int} id 操作记录id
+     * @apiParam {string} remark 备注
+     * @apiDescription 修改备注
+     * @apiSampleRequest operLog/update
+     * @apiGroup operLog
      */
     @RequestMapping("/update")
     @ResponseBody
