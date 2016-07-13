@@ -10,6 +10,15 @@ public class MessageDTO {
     private String sendTime;
     private String typeName;
     private Integer status;
+    private String label;
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
     public Integer getStatus() {
         return status;

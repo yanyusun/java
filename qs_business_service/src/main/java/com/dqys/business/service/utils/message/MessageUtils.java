@@ -40,6 +40,7 @@ public class MessageUtils {
             messageDTO.setSendTime(m.getSendTime());
             messageDTO.setTypeName(MessageEnum.getEnumByValue(m.getType()));
             messageDTO.setStatus(m.getStatus());
+            messageDTO.setLabel(m.getLabel()==null?"":m.getLabel());
             list.add(messageDTO);
         }
         return list;
