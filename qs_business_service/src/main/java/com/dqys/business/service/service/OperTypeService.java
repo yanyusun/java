@@ -11,11 +11,12 @@ public interface OperTypeService {
     /**
      * 初始化权限
      *
-     * @param roleId
-     * @param userType
+     * @param roleType   角色类型
+     * @param userType   用户类型
+     * @param objectType 对象类型
      * @return
      */
-    public List<OperType> selectByRoleToOperType(Integer roleId, Integer userType, Integer objectType);
+    public List<OperType> selectByRoleToOperType(Integer roleType, Integer userType, Integer objectType);
 
     /**
      * 查询用户类型
@@ -39,10 +40,12 @@ public interface OperTypeService {
     List<Integer> selectByObjectIds();
 
     /**
-     * 根据用户类型，角色id，操作类型获取对应权限
+     * 根据用户类型，角色id，操作类型获取对应权限;用户类型_角色id_操作类型
      *
-     * @param userId_roleId_objectId 用户类型_角色id_操作类型
+     * @param roleType   角色类型
+     * @param userType   用户类型
+     * @param objectType 对象类型
      * @return
      */
-    public List<OperType> getOperType(String userId_roleId_objectId);
+    public List<OperType> getOperType(Integer roleType, Integer userType, Integer objectType);
 }
