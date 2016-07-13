@@ -48,8 +48,8 @@ public class ContactInfoInfoMapperImpl extends BaseDao implements ContactInfoMap
     }
 
     @Override
-    public ContactInfo getByLenderId(@Param("mode") String model, @Param("type") Integer type, @Param("id") Integer id) {
-        return super.getSqlSession().getMapper(ContactInfoMapper.class).getByLenderId(model, type, id);
+    public ContactInfo getByModel(@Param("model") String model, @Param("type") Integer type, @Param("id") Integer id) {
+        return super.getSqlSession().getMapper(ContactInfoMapper.class).getByModel(model, type, id);
     }
 
     @Override
