@@ -1,7 +1,8 @@
 package com.dqys.business.service.constant.ObjectEnum;
 
 /**
- * Created by Administrator on 2016/7/7.
+ * 借据
+ * Created by mkfeng on 2016/7/7.
  */
 public enum IouEnum {
     MAINTAIN_REGULAR(130, "维持常规催收"),
