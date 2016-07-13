@@ -18,12 +18,11 @@ public class CompanyRelationMapperImplTest extends BaseTest {
     public void test() {
         CompanyRelation companyRelation = new CompanyRelation();
         companyRelation.setCompanyAId(1);
-        companyRelation.setCompanyBId(2);
-        Integer num = companyRelationMapper.insert(companyRelation);
+        companyRelation.setCompanyBId(120);
+        Integer num = companyRelationMapper.insertSelective(companyRelation);
         Assert.assertNotNull(num);
         Assert.assertNotEquals("0", num);
-        companyRelation.setStateflag(22L);
-        Integer n2 = companyRelationMapper.updateByPrimaryKey(companyRelation);
+        Integer n2 = companyRelationMapper.updateByPrimaryKeySelective(companyRelation);
         Assert.assertNotNull(n2);
         Assert.assertNotEquals("0", n2);
 

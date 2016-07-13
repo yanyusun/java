@@ -24,7 +24,7 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from t_teammate_re
+    update t_teammate_re set stateflag=now()
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.dqys.business.orm.pojo.coordinator.TeammateRe" useGeneratedKeys="true"
@@ -35,8 +35,8 @@
       stateflag)
     values (#{id,jdbcType=INTEGER}, #{userTeamId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, 
       #{type,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{joinType,jdbcType=INTEGER}, 
-      #{version,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
-      #{stateflag,jdbcType=BIGINT})
+      0, now(),now(),
+      0)
   </insert>
     <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.coordinator.TeammateRe"
             useGeneratedKeys="true"
@@ -61,18 +61,8 @@
             <if test="joinType != null">
                 join_type,
             </if>
-            <if test="version != null">
-                version,
-            </if>
-            <if test="createAt != null">
-                create_at,
-            </if>
-            <if test="updateAt != null">
-                update_at,
-            </if>
-            <if test="stateflag != null">
-                stateflag,
-            </if>
+            create_at,
+            update_at,
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -93,18 +83,8 @@
             <if test="joinType != null">
                 #{joinType,jdbcType=INTEGER},
             </if>
-            <if test="version != null">
-                #{version,jdbcType=INTEGER},
-            </if>
-            <if test="createAt != null">
-                #{createAt,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateAt != null">
-                #{updateAt,jdbcType=TIMESTAMP},
-            </if>
-            <if test="stateflag != null">
-                #{stateflag,jdbcType=BIGINT},
-            </if>
+            now(),
+            now(),
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.coordinator.TeammateRe">
@@ -125,18 +105,8 @@
             <if test="joinType != null">
                 join_type = #{joinType,jdbcType=INTEGER},
             </if>
-            <if test="version != null">
-                version = #{version,jdbcType=INTEGER},
-            </if>
-            <if test="createAt != null">
-                create_at = #{createAt,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateAt != null">
-                update_at = #{updateAt,jdbcType=TIMESTAMP},
-            </if>
-            <if test="stateflag != null">
-                stateflag = #{stateflag,jdbcType=BIGINT},
-            </if>
+            version = version+1,
+            update_at = now(),
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -147,10 +117,8 @@
       type = #{type,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       join_type = #{joinType,jdbcType=INTEGER},
-      version = #{version,jdbcType=INTEGER},
-      create_at = #{createAt,jdbcType=TIMESTAMP},
-      update_at = #{updateAt,jdbcType=TIMESTAMP},
-      stateflag = #{stateflag,jdbcType=BIGINT}
+      version = version+1,
+      update_at = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
