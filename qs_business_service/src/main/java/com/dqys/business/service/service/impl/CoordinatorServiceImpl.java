@@ -3,10 +3,8 @@ package com.dqys.business.service.service.impl;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
-import com.dqys.business.service.constant.ObjectTypeEnum;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.LenderService;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +26,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType) {
-        LenderInfo lenderInfo = lenderService.getLenderRelation(objectId);
+        LenderInfo lenderInfo = (LenderInfo) lenderService.get(objectId).getData();
         if (lenderInfo == null) {
             map.put("result", "no_lender");
         } else {
@@ -50,7 +48,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
             map.put("teams", list);//团队信息
             map.put("people", getPeopleNum(companyId, objectId, objectType));//团队人数
-            map.put("result","yes");
+            map.put("result", "yes");
         }
     }
 
@@ -91,4 +89,13 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         return coordinatorMapper.getPeopleNum(companyId, objectId, objectType);
     }
 
+    @Override
+    public Integer createDistribution(String type, Integer id) {
+        return null;
+    }
+
+    @Override
+    public Integer inviteDistribution(Integer companyId, Integer distributionId, String cooperationType, Integer userId) {
+        return null;
+    }
 }
