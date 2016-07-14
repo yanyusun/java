@@ -2,6 +2,8 @@ package com.dqys.business.service.service;
 
 import java.util.List;
 
+import java.util.Map;
+
 /**
  * Created by mkfeng on 2016/7/12.
  */
@@ -26,5 +28,15 @@ public interface CoordinatorService {
     Integer inviteDistribution(Integer companyId, Integer distributionId,
                                String cooperationType, Integer userId);
 
-    
+
+    /**
+     * 借款人信息或资产包信息和团队列表
+     *
+     * @param map
+     * @param companyId
+     * @param objectId
+     * @param objectType
+     */
+    void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType);
+
 }
