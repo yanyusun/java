@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.businessLog.BusinessLogMapper" >
+  <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.businessLog.BusinessLog" >
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="object_type" jdbcType="INTEGER" property="objectType" />
+    <result column="object_id" jdbcType="INTEGER" property="objectId" />
+    <result column="oper_type" jdbcType="INTEGER" property="operType" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="text" jdbcType="VARCHAR" property="text" />
+    <result column="team_id" jdbcType="INTEGER" property="teamId" />
+    <result column="business_id" jdbcType="INTEGER" property="businessId" />
+    <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
+    <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
+    <result column="stateflag" jdbcType="BIGINT" property="stateflag" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, object_type, object_id, oper_type, remark, user_id, time, text, team_id, business_id,
+    version, create_at, update_at, stateflag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_business_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_business_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.dqys.business.orm.pojo.businessLog.BusinessLog" >
+    insert into t_business_log (id, object_type, object_id, 
+      oper_type, remark, user_id, 
+      time, text, team_id, business_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{objectType,jdbcType=INTEGER}, #{objectId,jdbcType=INTEGER}, 
+      #{operType,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, 
+      #{time,jdbcType=DATE}, #{text,jdbcType=VARCHAR}, #{teamId,jdbcType=INTEGER}, #{businessId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.businessLog.BusinessLog" >
+    insert into t_business_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="objectType != null" >
+        object_type,
+      </if>
+      <if test="objectId != null" >
+        object_id,
+      </if>
+      <if test="operType != null" >
+        oper_type,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="text != null" >
+        text,
+      </if>
+      <if test="teamId != null" >
+        team_id,
+      </if>
+      <if test="businessId != null" >
+        business_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="objectType != null" >
+        #{objectType,jdbcType=INTEGER},
+      </if>
+      <if test="objectId != null" >
+        #{objectId,jdbcType=INTEGER},
+      </if>
+      <if test="operType != null" >
+        #{operType,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=DATE},
+      </if>
+      <if test="text != null" >
+        #{text,jdbcType=VARCHAR},
+      </if>
+      <if test="teamId != null" >
+        #{teamId,jdbcType=INTEGER},
+      </if>
+      <if test="businessId != null" >
+        #{businessId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.businessLog.BusinessLog" >
+    update t_business_log
+    <set >
+      <if test="objectType != null" >
+        object_type = #{objectType,jdbcType=INTEGER},
+      </if>
+      <if test="objectId != null" >
+        object_id = #{objectId,jdbcType=INTEGER},
+      </if>
+      <if test="operType != null" >
+        oper_type = #{operType,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=DATE},
+      </if>
+      <if test="text != null" >
+        text = #{text,jdbcType=VARCHAR},
+      </if>
+      <if test="teamId != null" >
+        team_id = #{teamId,jdbcType=INTEGER},
+      </if>
+      <if test="businessId != null" >
+        business_id = #{businessId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.businessLog.BusinessLog" >
+    update t_business_log
+    set object_type = #{objectType,jdbcType=INTEGER},
+      object_id = #{objectId,jdbcType=INTEGER},
+      oper_type = #{operType,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      time = #{time,jdbcType=DATE},
+      text = #{text,jdbcType=VARCHAR},
+      team_id = #{teamId,jdbcType=INTEGER},
+      business_id = #{businessId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.query.businessLog.BusinessLogQuery" >
+    select
+    <include refid="Base_Column_List" />
+    from t_business_log
+    where 1=1
+    <if test="objectType != null" >
+      AND object_type = #{objectType,jdbcType=INTEGER}
+    </if>
+    <if test="objectId != null" >
+      AND object_id = #{objectId,jdbcType=INTEGER}
+    </if>
+    <if test="operType != null" >
+      AND oper_type = #{operType,jdbcType=INTEGER}
+    </if>
+    <if test="userId != null" >
+      AND user_id = #{userId,jdbcType=INTEGER}
+    </if>
+    <if test="text != null" >
+      AND text = #{text,jdbcType=VARCHAR}
+    </if>
+    <if test="teamId != null" >
+      AND team_id = #{teamId,jdbcType=INTEGER}
+    </if>
+    <if test="businessId != null" >
+      AND business_id = #{businessId,jdbcType=INTEGER}
+    </if>
+    ORDER BY create_at DESC
+    <if test="isPaging">
+      limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </if>
+  </select>
+</mapper>
