@@ -238,7 +238,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JsonResponse statusBatch(String ids, Integer id) {
-        Integer result = tUserInfoMapper.queryUpdateStatus(ids, id);
+        Integer result = tUserInfoMapper.queryUpdateStatus(new ArrayList<>(), id);
         if (result > 0) {
             return JsonResponseTool.success(null);
         } else {
