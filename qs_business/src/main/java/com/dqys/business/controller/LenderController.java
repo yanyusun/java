@@ -1,15 +1,10 @@
 package com.dqys.business.controller;
 
-import com.dqys.business.orm.pojo.asset.ContactInfo;
-import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.pojo.asset.PawnInfo;
-import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.constant.asset.LenderTypeEnum;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
 import com.dqys.business.service.query.asset.LenderListQuery;
 import com.dqys.business.service.service.LenderService;
-import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
@@ -141,7 +136,6 @@ public class LenderController {
      * @apiName getLenderAll
      * @apiGroup lender
      * @apiParam {numbder} id 借款人ID
-     *
      * @apiSuccess {ContactDTO} contactDTOs 相关联系人信息
      * @apiSuccess {LenderDTO} lenderDTO 借款人基础信息
      * @apiSuccess {IouDTO} iouDTOs 借据信息

@@ -120,6 +120,7 @@ public class CompanyController {
         }
         return companyService.getOrganization(id);
     }
-    
+
+
 
 }

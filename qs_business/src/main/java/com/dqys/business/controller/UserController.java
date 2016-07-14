@@ -94,7 +94,6 @@ public class UserController {
     @ResponseBody
     public JsonResponse listUser() {
 
-
         return null;
     }
 

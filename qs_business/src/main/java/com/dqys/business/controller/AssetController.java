@@ -266,21 +266,26 @@ public class AssetController {
         return assetService.assignedBatch(ids, id);
     }
 
-//
-//    @RequestMapping(value = "/gettDistribution")
-//    @ResponseBody
-//    public JsonResponse getDistribution(@PathVariable String ids, @PathVariable Integer id) {
-//        if (CommonUtil.checkParam(ids, id)) {
-//            return JsonResponseTool.paramErr("参数错误");
-//        }
-//        // todo 校验id是否存在
-//        if (userService.get(id).getData() == null) {
-//            return JsonResponseTool.paramErr("用户ID参数错误");
-//        }
-//        // 分配
-//        return assetService.assignedBatch(ids, id);
-//    }
-
+    /**
+     * @api {get} http://{url}/asset/getDistribution 批量分配
+     * @apiName getDistribution
+     * @apiGroup asset
+     * @apiParam {number} id 资产包Id
+     * @apiSuccess {} data 分配器成员信息
+     */
+    @RequestMapping(value = "/getDistribution")
+    @ResponseBody
+    public JsonResponse getDistribution(@RequestParam(required = true)Integer id) {
+        if (CommonUtil.checkParam(id)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        // todo 校验id是否存在
+        if (userService.get(id).getData() == null) {
+            return JsonResponseTool.paramErr("用户ID参数错误");
+        }
+        // 分配
+        return assetService.getById(id);
+    }
 
 
 }

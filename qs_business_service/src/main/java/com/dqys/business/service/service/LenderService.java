@@ -1,12 +1,5 @@
 package com.dqys.business.service.service;
 
-import com.dqys.business.orm.pojo.asset.IOUInfo;
-import com.dqys.business.orm.pojo.asset.ContactInfo;
-import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.pojo.asset.PawnInfo;
-import com.dqys.business.orm.query.asset.IOUQuery;
-import com.dqys.business.orm.query.asset.LenderQuery;
-import com.dqys.business.orm.query.asset.PawnQuery;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
 import com.dqys.business.service.query.asset.LenderListQuery;
@@ -21,6 +14,7 @@ public interface LenderService {
 
     /**
      * 条件获取借款联系人基础信息
+     *
      * @param lenderListQuery
      * @return
      */
@@ -28,6 +22,7 @@ public interface LenderService {
 
     /**
      * 添加借款人
+     *
      * @param contactDTOList
      * @param lenderDTO
      * @return
@@ -36,6 +31,7 @@ public interface LenderService {
 
     /**
      * 删除借款人
+     *
      * @param id
      * @return
      */
@@ -43,6 +39,7 @@ public interface LenderService {
 
     /**
      * 修改借款人信息
+     *
      * @param contactDTOList
      * @param lenderDTO
      * @return
@@ -51,6 +48,7 @@ public interface LenderService {
 
     /**
      * 根据ID获取借款人关系
+     *
      * @param id
      * @return
      */
@@ -58,6 +56,7 @@ public interface LenderService {
 
     /**
      * 获取借款人的所有信息
+     *
      * @param id
      * @return
      */
@@ -65,6 +64,7 @@ public interface LenderService {
 
     /**
      * 获取资产包下的所有借款人信息
+     *
      * @param id
      * @return
      */

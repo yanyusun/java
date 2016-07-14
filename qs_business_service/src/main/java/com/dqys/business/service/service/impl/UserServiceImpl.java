@@ -278,7 +278,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JsonResponse sendMsg(List<Integer> ids) {
-        Map map = new HashMap<>();
         return null;
     }
 
