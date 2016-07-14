@@ -16,15 +16,15 @@ public class TeammateReMapperImplTest extends BaseTest {
 
     @Test
     public void test() {
-        TeammateRe teammateRe = new TeammateRe();
-        teammateRe.setUserId(1);
-        teammateRe.setUserTeamId(2);
-        Integer n = teammateReMapper.insert(teammateRe);
-        Assert.assertNotNull(n);
-        Assert.assertNotEquals("0", n);
-        teammateRe.setType(2);
-        Integer n2 = teammateReMapper.updateByPrimaryKey(teammateRe);
-        Assert.assertNotNull(n2);
-        Assert.assertNotEquals("0", n2);
+//        TeammateRe teammateRe = new TeammateRe();
+//        teammateRe.setUserId(1);
+//        teammateRe.setUserTeamId(2);
+//        Integer n = teammateReMapper.insert(teammateRe);
+//        Assert.assertNotNull(n);
+//        Assert.assertNotEquals("0", n);
+//        teammateRe.setType(2);
+//        Integer n2 = teammateReMapper.updateByPrimaryKey(teammateRe);
+//        Assert.assertNotNull(n2);
+//        Assert.assertNotEquals("0", n2);
     }
 }
