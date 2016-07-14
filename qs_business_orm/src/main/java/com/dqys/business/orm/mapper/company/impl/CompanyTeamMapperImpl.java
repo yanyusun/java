@@ -3,6 +3,7 @@ package com.dqys.business.orm.mapper.company.impl;
 import com.dqys.business.orm.mapper.company.CompanyTeamMapper;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
 import com.dqys.core.base.BaseDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -30,5 +31,10 @@ public class CompanyTeamMapperImpl extends BaseDao implements CompanyTeamMapper 
     @Override
     public List<CompanyTeam> listBySendId(Integer id) {
         return super.getSqlSession().getMapper(CompanyTeamMapper.class).listBySendId(id);
+    }
+
+    @Override
+    public CompanyTeam getByTypeId(@Param("type") Integer type, @Param("id") Integer id) {
+        return super.getSqlSession().getMapper(CompanyTeamMapper.class).getByTypeId(type, id);
     }
 }

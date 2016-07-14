@@ -1,5 +1,10 @@
 package com.dqys.business.orm.constant.company;
 
+import com.dqys.core.base.BaseSelectonDTO;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 被操作对象类型
  * Created by mkfeng on 2016/7/4.
@@ -21,6 +26,29 @@ public enum ObjectTypeEnum {
         this.value = value;
         this.name = name;
     }
+
+    public static ObjectTypeEnum getObjectTypeEnum(Integer value){
+        if(value != null){
+            for(ObjectTypeEnum objectTypeEnum : ObjectTypeEnum.values()){
+                if(objectTypeEnum.getValue().equals(value)){
+                    return objectTypeEnum;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static List<BaseSelectonDTO> list(){
+        List<BaseSelectonDTO> selectonDTOList = new ArrayList<>();
+        for(ObjectTypeEnum objectTypeEnum : ObjectTypeEnum.values()){
+            BaseSelectonDTO selectonDTO = new BaseSelectonDTO();
+            selectonDTO.setKey(objectTypeEnum.getValue().toString());
+            selectonDTO.setValue(objectTypeEnum.getName());
+            selectonDTOList.add(selectonDTO);
+        }
+        return selectonDTOList;
+    }
+
 
     public Integer getValue() {
         return value;

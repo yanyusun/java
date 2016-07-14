@@ -2,25 +2,34 @@ package com.dqys.business.service.service.impl;
 
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.pojo.CompanyDetailInfo;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.mapper.company.CompanyRelationMapper;
+import com.dqys.business.orm.mapper.company.CompanyTeamMapper;
+import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.mapper.company.OrganizationMapper;
 import com.dqys.business.orm.pojo.company.Organization;
 import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
+import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
+import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
+import com.dqys.business.orm.query.company.CompanyTeamReQuery;
 import com.dqys.business.orm.query.company.OrganizationQuery;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
-import com.dqys.business.service.dto.company.CompanyDTO;
-import com.dqys.business.service.dto.company.OrganizationInsertDTO;
+import com.dqys.business.service.dto.company.*;
 import com.dqys.business.service.service.CompanyService;
 import com.dqys.business.service.utils.company.CompanyServiceUtils;
+import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.NoSQLWithRedisTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +47,10 @@ public class CompanyServiceImpl implements CompanyService {
     private CompanyRelationMapper companyRelationMapper;
     @Autowired
     private TUserInfoMapper userInfoMapper;
+    @Autowired
+    private CompanyTeamMapper companyTeamMapper;
+    @Autowired
+    private CompanyTeamReMapper companyTeamReMapper;
 
     @Override
     public JsonResponse listOrganization(Integer companyId, OrganizationTypeEnum organizationTypeEnum) {
@@ -111,56 +124,52 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Integer addRelation_tx(Integer aId, Integer bId) {
-        if(CommonUtil.checkParam(aId, bId)){
-            return null;
-        }
-        CompanyRelation companyRelation = new CompanyRelation();
-        companyRelation.setCompanyAId(aId);
-        companyRelation.setCompanyBId(bId);
-
-        Integer result = companyRelationMapper.insert(companyRelation);
-        if(!CommonUtil.checkResult(result)){
-            return companyRelation.getId();
-        }
-        return null;
-    }
-
-    @Override
-    public Boolean deleteRelation_tx(Integer id) {
-        if(CommonUtil.checkParam(id)){
-            return null;
-        }
-        if(CommonUtil.checkResult(companyRelationMapper.deleteByPrimaryKey(id))){
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public Boolean deleteRelation_tx(Integer aId, Integer bId) {
-        if(CommonUtil.checkParam(aId, bId)){
-            return null;
-        }
-        if(CommonUtil.checkResult(companyRelationMapper.deleteByCompanyId(aId, bId))){
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public List<CompanyRelation> getListRelation(Integer companyId) {
+    public List<CompanyRelationDTO> getListRelation(Integer companyId) {
         if(CommonUtil.checkParam(companyId)){
             return null;
         }
-        return null;
+        return CompanyServiceUtils.toCompanyRelationDTO(companyRelationMapper.listByCompanyId(companyId));
     }
 
     @Override
-    public CompanyRelation get(Integer aId, Integer bId) {
-        if(CommonUtil.checkParam(aId, bId)){
+    public DistributionDTO getDistribution_tx(Integer type, Integer id) {
+        if(CommonUtil.checkParam(type, id)){
             return null;
         }
-        return null;
+        // 查询分配器
+        CompanyTeam companyTeam = companyTeamMapper.getByTypeId(type, id);
+        if(companyTeam == null){
+            // 分配器不存在,创建分配器
+            companyTeam = new CompanyTeam();
+            companyTeam.setObjectId(id);
+            companyTeam.setSenderId(UserSession.getCurrent().getUserId());
+            companyTeam.setObjectType(type);
+            Integer result = companyTeamMapper.insert(companyTeam);
+            if(CommonUtil.checkResult(result)){
+                // 创建失败
+                return null;
+            }
+            Integer teamId = companyTeam.getId();
+            companyTeam = companyTeamMapper.get(teamId);
+        }
+        // 查询分配器成员
+        CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
+        companyTeamReQuery.setTeamId(companyTeam.getId());
+        List<CompanyTeamRe> companyTeamReList = companyTeamReMapper.queryList(companyTeamReQuery);
+        List<CompanyTeamReDTO> companyTeamReDTOList = new ArrayList<>();
+        DistributionDTO distributionDTO = new DistributionDTO();
+        companyTeamReList.forEach(companyTeamRe -> {
+            CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(companyTeamRe.getId());
+            if(companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM))){
+                distributionDTO.setPlatformNum(distributionDTO.getPlatformNum()+1); // 平台方
+            }else if(companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST))){
+                distributionDTO.setMechanismNum(distributionDTO.getMechanismNum()+1); // 机构方
+            }else{
+                distributionDTO.setDisposeNum(distributionDTO.getDisposeNum()+1); // 处置方
+            }
+            companyTeamReDTOList.add(CompanyServiceUtils.toCompanyTeamReDTO(companyTeamRe, companyDetailInfo, null, null));
+        });
+        distributionDTO.setCompanyTeamReDTOList(companyTeamReDTOList);
+        return distributionDTO;
     }
 }

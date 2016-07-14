@@ -22,6 +22,22 @@
     <result column="is_auth" property="isAuth" jdbcType="BIT" />
   </resultMap>
 
+  <resultMap id="CompanyDetailMap" type="com.dqys.auth.orm.pojo.CompanyDetailInfo">
+    <id column="id" property="companyId" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+    <result column="province" property="province" jdbcType="INTEGER" />
+    <result column="city" property="city" jdbcType="INTEGER" />
+    <result column="area" property="district" jdbcType="INTEGER" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="is_auth" property="isAuth" jdbcType="BIT" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="avg" property="avg" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+  </resultMap>
+
   <!-- 基础字段 -->
   <sql id="Base_Column_List" >
     id, version, create_at, update_at, stateflag, remark, company_name, credential, licence, 
@@ -194,6 +210,20 @@
     <if test="isPaging">
       limit #{startPageNum,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
     </if>
+  </select>
+
+  <select id="get" parameterType="java.lang.Integer" resultMap="CompanyDetailMap">
+    SELECT tci.id as id,create_at,company_name,province,city,area,is_auth,address,
+      res.id as user_id,res.avg,res.user_name as name,res.phone,res.user_type as type
+    from t_company_info tci
+    INNER JOIN
+      (SELECT tui.id,avg,user_name,mobile as phone,tui.company_id,tut.user_type
+      FROM t_user_info tui
+      INNER JOIN t_user_tag tut
+      ON
+        tui.id = tut.user_id AND tui.stateflag = 0 AND tut.role_id = 1) res
+    ON
+      res.company_id = tci.id AND tci.stateflag = 0 AND tci.id = #{id,jdbcType=INTEGER};
   </select>
 
 </mapper>

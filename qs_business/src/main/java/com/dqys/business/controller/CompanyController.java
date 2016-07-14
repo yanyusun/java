@@ -1,5 +1,6 @@
 package com.dqys.business.controller;
 
+import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
 import com.dqys.business.service.dto.company.OrganizationInsertDTO;
 import com.dqys.business.service.service.CompanyService;
@@ -85,7 +86,7 @@ public class CompanyController {
     }
 
     /**
-     * @api {POST} http://{url}/api/company/deleteOrganization 删除组织(部门|团队)
+     * @api {get} http://{url}/api/company/deleteOrganization 删除组织(部门|团队)
      * @apiName deleteOrganization
      * @apiGroup organization
      * @apiParam {number} id 组织ID
@@ -100,7 +101,7 @@ public class CompanyController {
     }
 
     /**
-     * @api {POST} http://{url}/api/company/getOrganization 获取组织(部门|团队)
+     * @api {get} http://{url}/api/company/getOrganization 获取组织(部门|团队)
      * @apiName getOrganization
      * @apiGroup organization
      * @apiParam {string} type 组织类型
@@ -111,15 +112,96 @@ public class CompanyController {
     @RequestMapping(value = "/getOrganization")
     @ResponseBody
     public JsonResponse getOrganization(@RequestParam(required = true) String type,
-                                        @RequestParam(required = true) Integer id){
-        if(CommonUtil.checkParam(type, id)){
+                                        @RequestParam(required = true) Integer id) {
+        if (CommonUtil.checkParam(type, id)) {
             return JsonResponseTool.success("参数错误");
         }
-        if(OrganizationTypeEnum.getOrganizationTypeEnum(type) == null){
+        if (OrganizationTypeEnum.getOrganizationTypeEnum(type) == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return companyService.getOrganization(id);
     }
+
+    /**
+     * @api {get} http://{url}/api/company/getDistribution 获取该对象的分配器列表
+     * @apiName getDistribution
+     * @apiGroup distribution
+     * @apiParam {number} type 分配对象类型(如:资产包asset)
+     * @apiParam {number} id 分配对象ID
+     */
+    @RequestMapping(value = "/getDistribution")
+    @ResponseBody
+    public JsonResponse getDistribution(@RequestParam(required = true) Integer type,
+                                        @RequestParam(required = true) Integer id) {
+        if (CommonUtil.checkParam(type, id)) {
+            return JsonResponseTool.success("参数错误");
+        }
+        if (ObjectTypeEnum.getObjectTypeEnum(type) == null) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return JsonResponseTool.success(companyService.getDistribution_tx(type, id));
+    }
+
+    /**
+     * @api {get} http://{url}/api/company/joinDistribution 加入分配器
+     * @apiName joinDistribution
+     * @apiGroup distribution
+     * @apiParam type
+     * @apiParam id
+     */
+    @RequestMapping(value = "/joinDistribution")
+    @ResponseBody
+    public JsonResponse joinDistribution(@RequestParam(required = true) String type,
+                                         @RequestParam(required = true) Integer id) {
+        if (CommonUtil.checkParam(type, id)) {
+            return JsonResponseTool.success("参数错误");
+        }
+        if (OrganizationTypeEnum.getOrganizationTypeEnum(type) == null) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return companyService.getOrganization(id);
+    }
+
+    /**
+     * @return
+     * @api {get} http://{url}/api/company/getDistribution 退出分配器
+     * @apiName getDistribution
+     * @apiGroup distribution 分配器
+     * @apiParam type
+     * @apiParam id
+     */
+    @RequestMapping(value = "/exitDistribution")
+    @ResponseBody
+    public JsonResponse exitDistribution(@RequestParam(required = true) String type,
+                                         @RequestParam(required = true) Integer id) {
+        if (CommonUtil.checkParam(type, id)) {
+            return JsonResponseTool.success("参数错误");
+        }
+        if (OrganizationTypeEnum.getOrganizationTypeEnum(type) == null) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return companyService.getOrganization(id);
+    }
+
+    /**
+     * @return
+     * @api {get} http://{url}/api/company/getRelation 获取公司间合作关系
+     * @apiName getRelation
+     * @apiGroup companyRelation
+     * @apiParam type
+     * @apiParam id
+     * @apiUse DistributionDTO
+     * @apiUse CompanyTeamReDTO
+     */
+    @RequestMapping(value = "/getRelation")
+    @ResponseBody
+    public JsonResponse getRelation(@RequestParam(required = true) Integer id) {
+        if (CommonUtil.checkParam(id)) {
+            return JsonResponseTool.success("参数错误");
+        }
+        return JsonResponseTool.success(companyService.getListRelation(id));
+    }
+
 
 
 

@@ -1,8 +1,9 @@
 package com.dqys.auth.orm.dao.impl;
 
-import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
-import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.base.BaseTest;
+import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
+import com.dqys.auth.orm.pojo.CompanyDetailInfo;
+import com.dqys.auth.orm.pojo.TCompanyInfo;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,5 +49,8 @@ public class TCompanyInfoMapperImplTest extends BaseTest {
 
         count = tCompanyInfoMapper.deleteByPrimaryKey(tCompanyInfoSel.getId());
         Assert.assertEquals(1, count);
+
+        CompanyDetailInfo companyDetailInfo = tCompanyInfoMapper.get(120);
+        Assert.assertNotNull(companyDetailInfo);
     }
 }

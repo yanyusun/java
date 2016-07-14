@@ -5,6 +5,15 @@ import java.util.List;
 /**
  * Created by Yvan on 16/7/14.
  * 分配器
+ * @apiDefine DistributionDTO
+ * @apiSuccessExample {json} DistributionDTO:
+ * {
+ *     platformNum:0,
+ *     mechanismNum:0,
+ *     disposeNum:0,
+ *     companyTeamReDTOList:[{CompanyTeamReDTO}...],
+ * }
+ * platformNum:平台数量 mechanismNum:机构数量 disposeNum:处置方数量
  */
 public class DistributionDTO {
 

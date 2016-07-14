@@ -1,6 +1,7 @@
 package com.dqys.auth.orm.dao.impl;
 
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
+import com.dqys.auth.orm.pojo.CompanyDetailInfo;
 import com.dqys.auth.orm.query.CompanyQuery;
 import com.dqys.core.base.BaseDao;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
@@ -43,5 +44,10 @@ public class TCompanyInfoMapperImpl extends BaseDao implements TCompanyInfoMappe
     @Override
     public List<TCompanyInfo> queryList(CompanyQuery query) {
         return super.getSqlSession().getMapper(TCompanyInfoMapper.class).queryList(query);
+    }
+
+    @Override
+    public CompanyDetailInfo get(Integer id) {
+        return super.getSqlSession().getMapper(TCompanyInfoMapper.class).get(id);
     }
 }

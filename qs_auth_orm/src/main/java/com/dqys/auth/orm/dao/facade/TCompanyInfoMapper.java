@@ -1,5 +1,6 @@
 package com.dqys.auth.orm.dao.facade;
 
+import com.dqys.auth.orm.pojo.CompanyDetailInfo;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.query.CompanyQuery;
 
@@ -17,4 +18,6 @@ public interface TCompanyInfoMapper {
     Integer countByQuery(CompanyQuery query);
 
     List<TCompanyInfo> queryList(CompanyQuery query);
+
+    CompanyDetailInfo get(Integer id);
 }
