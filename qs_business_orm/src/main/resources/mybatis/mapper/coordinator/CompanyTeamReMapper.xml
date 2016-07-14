@@ -24,7 +24,7 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    delete from t_company_team_re
+    UPDATE  t_company_team_re set stateflag=now()
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.dqys.business.orm.pojo.coordinator.CompanyTeamRe" useGeneratedKeys="true" keyProperty="id" >
@@ -34,8 +34,8 @@
       stateflag)
     values (#{id,jdbcType=INTEGER}, #{acceptCompanyId,jdbcType=INTEGER}, #{companyTeamId,jdbcType=INTEGER}, 
       #{status,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{accepterId,jdbcType=INTEGER}, 
-      #{version,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
-      #{stateflag,jdbcType=BIGINT})
+      0, now(), now(),
+     0)
   </insert>
   <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.coordinator.CompanyTeamRe" useGeneratedKeys="true" keyProperty="id" >
     insert into t_company_team_re
@@ -58,18 +58,8 @@
       <if test="accepterId != null" >
         accepter_id,
       </if>
-      <if test="version != null" >
-        version,
-      </if>
-      <if test="createAt != null" >
         create_at,
-      </if>
-      <if test="updateAt != null" >
         update_at,
-      </if>
-      <if test="stateflag != null" >
-        stateflag,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -90,18 +80,8 @@
       <if test="accepterId != null" >
         #{accepterId,jdbcType=INTEGER},
       </if>
-      <if test="version != null" >
-        #{version,jdbcType=INTEGER},
-      </if>
-      <if test="createAt != null" >
-        #{createAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateAt != null" >
-        #{updateAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="stateflag != null" >
-        #{stateflag,jdbcType=BIGINT},
-      </if>
+        now(),
+        now(),
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.coordinator.CompanyTeamRe" >
@@ -122,18 +102,8 @@
       <if test="accepterId != null" >
         accepter_id = #{accepterId,jdbcType=INTEGER},
       </if>
-      <if test="version != null" >
-        version = #{version,jdbcType=INTEGER},
-      </if>
-      <if test="createAt != null" >
-        create_at = #{createAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateAt != null" >
-        update_at = #{updateAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="stateflag != null" >
-        stateflag = #{stateflag,jdbcType=BIGINT},
-      </if>
+        version = version+1,
+        update_at = now(),
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -144,10 +114,8 @@
       status = #{status,jdbcType=INTEGER},
       type = #{type,jdbcType=INTEGER},
       accepter_id = #{accepterId,jdbcType=INTEGER},
-      version = #{version,jdbcType=INTEGER},
-      create_at = #{createAt,jdbcType=TIMESTAMP},
-      update_at = #{updateAt,jdbcType=TIMESTAMP},
-      stateflag = #{stateflag,jdbcType=BIGINT}
+      version = version+1,
+      update_at = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
