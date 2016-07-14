@@ -6,11 +6,8 @@ import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
-import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.query.asset.IOUQuery;
-import com.dqys.business.orm.query.asset.LenderQuery;
 import com.dqys.business.orm.query.asset.PawnQuery;
 import com.dqys.business.service.constant.asset.AssetModelTypeEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
@@ -53,30 +50,29 @@ public class LenderServiceImpl implements LenderService {
     public JsonResponse queryList(LenderListQuery lenderListQuery) {
 
 
-
         return null;
     }
 
     @Override
     public JsonResponse add(List<ContactDTO> contactDTOList, LenderDTO lenderDTO) {
-        if(CommonUtil.checkParam(contactDTOList, lenderDTO) || contactDTOList.size() == 0){
+        if (CommonUtil.checkParam(contactDTOList, lenderDTO) || contactDTOList.size() == 0) {
             return JsonResponseTool.paramErr("参数错误");
         }
         boolean flag = false;
-        for(ContactDTO contactDTO : contactDTOList){
-            if(ContactTypeEnum.getContactTypeEnum(contactDTO.getType()) == null){
+        for (ContactDTO contactDTO : contactDTOList) {
+            if (ContactTypeEnum.getContactTypeEnum(contactDTO.getType()) == null) {
                 return JsonResponseTool.paramErr("联系人类型参数错误");
             }
-            if(ContactTypeEnum.getContactTypeEnum(contactDTO.getType()).getValue().equals(ContactTypeEnum.LENDER)){
+            if (ContactTypeEnum.getContactTypeEnum(contactDTO.getType()).getValue().equals(ContactTypeEnum.LENDER)) {
                 flag = true;
             }
         }
-        if(!flag){
+        if (!flag) {
             return JsonResponseTool.paramErr("缺少借款人信息");
         }
         // 添加借款人基础信息
         Integer lenderId = lenderInfoMapper.insert(AssetServiceUtils.toLenderInfo(lenderDTO));
-        if(lenderId == null || lenderId.equals(0)){
+        if (lenderId == null || lenderId.equals(0)) {
             return JsonResponseTool.failure("添加失败");
         }
         // 增加借款人相关联系人的身份信息
@@ -84,7 +80,7 @@ public class LenderServiceImpl implements LenderService {
             contactDTO.setMode(AssetModelTypeEnum.LENDER);
             contactDTO.setModeId(lenderId);
             Integer id = contactInfoMapper.insert(AssetServiceUtils.toContactInfo(contactDTO));
-            if(CommonUtil.checkResult(id)){
+            if (CommonUtil.checkResult(id)) {
                 // todo 联系人增加失败,请处理
 
             }
@@ -94,15 +90,15 @@ public class LenderServiceImpl implements LenderService {
 
     @Override
     public JsonResponse delete(Integer id) {
-        if(CommonUtil.checkParam(id)){
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer lender  = lenderInfoMapper.deleteByPrimaryKey(id);
+        Integer lender = lenderInfoMapper.deleteByPrimaryKey(id);
         Integer contact = contactInfoMapper.deleteByMode(AssetModelTypeEnum.LENDER, id);
 
-        if(CommonUtil.checkResult(lender) && CommonUtil.checkResult(contact)){
+        if (CommonUtil.checkResult(lender) && CommonUtil.checkResult(contact)) {
             return JsonResponseTool.success(null);
-        }else{
+        } else {
             return JsonResponseTool.failure("删除失败");
         }
     }
@@ -110,43 +106,43 @@ public class LenderServiceImpl implements LenderService {
 
     @Override
     public JsonResponse update(List<ContactDTO> contactDTOList, LenderDTO lenderDTO) {
-        if(CommonUtil.checkParam(contactDTOList, lenderDTO, lenderDTO.getId())){
+        if (CommonUtil.checkParam(contactDTOList, lenderDTO, lenderDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         boolean flag = false;
-        for(ContactDTO contactDTO : contactDTOList){
-            if(ContactTypeEnum.getContactTypeEnum(contactDTO.getType()) == null){
+        for (ContactDTO contactDTO : contactDTOList) {
+            if (ContactTypeEnum.getContactTypeEnum(contactDTO.getType()) == null) {
                 return JsonResponseTool.paramErr("联系人类型参数错误");
             }
-            if(ContactTypeEnum.getContactTypeEnum(contactDTO.getType()).getValue().equals(ContactTypeEnum.LENDER)){
+            if (ContactTypeEnum.getContactTypeEnum(contactDTO.getType()).getValue().equals(ContactTypeEnum.LENDER)) {
                 flag = true;
             }
         }
-        if(!flag){
+        if (!flag) {
             return JsonResponseTool.paramErr("缺少借款人信息");
         }
         Integer lender = lenderInfoMapper.update(AssetServiceUtils.toLenderInfo(lenderDTO));
-        if(!CommonUtil.checkResult(lender)){
+        if (!CommonUtil.checkResult(lender)) {
             flag = true;
         }
         // 流程:比较先有的联系人信息与数据库中的差异性,余删缺增.
         List<ContactInfo> contactInfoList = contactInfoMapper.listByMode(AssetModelTypeEnum.LENDER, lender);
-        for(ContactInfo contactInfo : contactInfoList){
+        for (ContactInfo contactInfo : contactInfoList) {
             boolean isExit = false; // 用于判断这条数据是否还在
-            for(ContactDTO contactDTO : contactDTOList){
-                if(contactInfo.getId().equals(contactDTO.getId())){
+            for (ContactDTO contactDTO : contactDTOList) {
+                if (contactInfo.getId().equals(contactDTO.getId())) {
                     isExit = true;
                     Integer update = contactInfoMapper.update(AssetServiceUtils.toContactInfo(contactDTO));
                     break;
                 }
             }
-            if(!isExit){
+            if (!isExit) {
                 contactInfoMapper.deleteByPrimaryKey(contactInfo.getId());
             }
         }
         // 补足新增联系人
-        for(ContactDTO contactDTO : contactDTOList){
-            if(contactDTO.getId() == null){
+        for (ContactDTO contactDTO : contactDTOList) {
+            if (contactDTO.getId() == null) {
                 contactInfoMapper.insert(AssetServiceUtils.toContactInfo(contactDTO));
             }
         }
@@ -155,17 +151,17 @@ public class LenderServiceImpl implements LenderService {
 
     @Override
     public JsonResponse get(Integer id) {
-        if(CommonUtil.checkParam(id)){
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         LenderInfo lenderInfo = lenderInfoMapper.get(id);
-        if(lenderInfo == null){
+        if (lenderInfo == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
         LenderDTO lenderDTO = AssetServiceUtils.toLenderDTO(lenderInfo);
         ContactInfo contactInfo = contactInfoMapper.getByModel(
                 AssetModelTypeEnum.LENDER, ContactTypeEnum.LENDER.getValue(), id);
-        if(contactInfo != null){
+        if (contactInfo != null) {
             lenderDTO.setName(contactInfo.getName());
             lenderDTO.setSex(contactInfo.getGender());
         }
@@ -175,12 +171,12 @@ public class LenderServiceImpl implements LenderService {
     @Override
     public JsonResponse getLenderAll(Integer id) {
         Map<String, Object> resultMap = new HashMap<>();
-        if(CommonUtil.checkParam(id)){
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         // 借款人
         LenderInfo lenderInfo = lenderInfoMapper.get(id);
-        if(lenderInfo == null){
+        if (lenderInfo == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
         resultMap.put("lenderDTO", AssetServiceUtils.toLenderDTO(lenderInfo));
@@ -200,16 +196,16 @@ public class LenderServiceImpl implements LenderService {
 
     @Override
     public JsonResponse listLender(Integer id) {
-        if(CommonUtil.checkParam(id)){
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         List<BaseSelectonDTO> selectonDTOList = new ArrayList<>();
         List<LenderInfo> lenderInfoList = lenderInfoMapper.listByAssetId(id);
-        for(LenderInfo lenderInfo : lenderInfoList){
+        for (LenderInfo lenderInfo : lenderInfoList) {
             ContactInfo contactInfo = contactInfoMapper.getByModel(
                     AssetModelTypeEnum.LENDER, ContactTypeEnum.LENDER.getValue(), lenderInfo.getId()
             );
-            if(contactInfo != null){
+            if (contactInfo != null) {
                 BaseSelectonDTO selectonDTO = new BaseSelectonDTO();
                 selectonDTO.setKey(lenderInfo.getId().toString());
                 selectonDTO.setValue(contactInfo.getName());

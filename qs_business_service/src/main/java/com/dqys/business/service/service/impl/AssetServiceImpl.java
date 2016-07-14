@@ -9,17 +9,14 @@ import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.service.constant.asset.AssetModelTypeEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
-import com.dqys.business.service.constant.asset.LenderTypeEnum;
 import com.dqys.business.service.dto.asset.AssetDTO;
 import com.dqys.business.service.dto.asset.AssetLenderDTO;
-import com.dqys.business.service.dto.asset.LenderListDTO;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.business.service.service.AssetService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
-import org.apache.tools.ant.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -42,7 +39,7 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public JsonResponse add(AssetDTO assetDTO) {
-        if(CommonUtil.checkParam(assetDTO, assetDTO.getStartAt(), assetDTO.getEndAt())){
+        if (CommonUtil.checkParam(assetDTO, assetDTO.getStartAt(), assetDTO.getEndAt())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         AssetInfo assetInfo = AssetServiceUtils.toAssetInfo(assetDTO);
@@ -57,7 +54,7 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public JsonResponse updateById(AssetDTO assetDTO) {
-        if(CommonUtil.checkParam(assetDTO)){
+        if (CommonUtil.checkParam(assetDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return CommonUtil.responseBack(assetInfoMapper.update(AssetServiceUtils.toAssetInfo(assetDTO)));
@@ -65,7 +62,7 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public JsonResponse delete(Integer id) {
-        if(CommonUtil.checkParam(id)){
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return CommonUtil.responseBack(assetInfoMapper.deleteByPrimaryKey(id));
@@ -73,13 +70,13 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public JsonResponse getById(Integer id) {
-        if(CommonUtil.checkParam(id)){
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         AssetInfo assetInfo = assetInfoMapper.get(id);
-        if(assetInfo == null){
+        if (assetInfo == null) {
             return JsonResponseTool.failure("获取失败");
-        }else{
+        } else {
             return JsonResponseTool.success(AssetServiceUtils.toAssetDTO(assetInfo));
         }
     }
@@ -93,13 +90,13 @@ public class AssetServiceImpl implements AssetService {
     public JsonResponse pageList(AssetListQuery assetListQuery) {
         Map<String, Object> map = new HashMap<>();
         AssetQuery assetQuery = new AssetQuery();
-        if(assetListQuery != null){
+        if (assetListQuery != null) {
             assetQuery = AssetServiceUtils.toAssetQuery(assetListQuery);
         }
         List<AssetInfo> assetInfoList = assetInfoMapper.pageList(assetQuery);
-        if(assetInfoList == null || assetInfoList.size() == 0){
+        if (assetInfoList == null || assetInfoList.size() == 0) {
             return JsonResponseTool.success(null);
-        }else{
+        } else {
             map.put("data", AssetServiceUtils.toAssetListDTO(assetInfoList));
             map.put("total", assetInfoMapper.queryCount(assetQuery));
             return JsonResponseTool.success(map);
@@ -108,12 +105,12 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public JsonResponse assignedBatch(String ids, Integer id) {
-        if(ids == null || ids.length() == 0){
+        if (ids == null || ids.length() == 0) {
             return JsonResponseTool.paramErr("参数错误");
         }
         String[] idArr = ids.split(",");
         List idList = new ArrayList<>();
-        for(String s : idArr){
+        for (String s : idArr) {
             idList.add(Integer.valueOf(s));
         }
         return CommonUtil.responseBack(assetInfoMapper.assignedBatch(idList, id));
@@ -121,24 +118,24 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public JsonResponse listLender(Integer id) {
-        if(CommonUtil.checkParam(id)){
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         AssetInfo assetInfo = assetInfoMapper.get(id);
-        if(assetInfo == null){
+        if (assetInfo == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
         List<LenderInfo> lenderInfoList = lenderInfoMapper.listByAssetId(id);
         List<AssetLenderDTO> assetLenderDTOList = AssetServiceUtils.toAssetLenderDTO(lenderInfoList);
-        if(assetLenderDTOList != null){
+        if (assetLenderDTOList != null) {
             Iterator<AssetLenderDTO> iterator = assetLenderDTOList.iterator();
-            while (iterator.hasNext()){
+            while (iterator.hasNext()) {
                 iterator.next().setAssetName(assetInfo.getName()); // 设置资产包名称
                 ContactInfo contactInfo = contactInfoMapper.getByModel(
                         AssetModelTypeEnum.LENDER,
                         ContactTypeEnum.LENDER.getValue(),
                         iterator.next().getId());
-                if(contactInfo != null){
+                if (contactInfo != null) {
                     iterator.next().setName(contactInfo.getName()); // 设置资产包名称
                 }
             }
