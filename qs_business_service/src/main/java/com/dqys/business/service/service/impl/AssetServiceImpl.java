@@ -19,13 +19,12 @@ import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import org.apache.tools.ant.Project;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Yvan on 16/6/6.
@@ -92,6 +91,7 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public JsonResponse pageList(AssetListQuery assetListQuery) {
+        Map<String, Object> map = new HashMap<>();
         AssetQuery assetQuery = new AssetQuery();
         if(assetListQuery != null){
             assetQuery = AssetServiceUtils.toAssetQuery(assetListQuery);
@@ -100,7 +100,9 @@ public class AssetServiceImpl implements AssetService {
         if(assetInfoList == null || assetInfoList.size() == 0){
             return JsonResponseTool.success(null);
         }else{
-            return JsonResponseTool.success(AssetServiceUtils.toAssetListDTO(assetInfoList));
+            map.put("data", AssetServiceUtils.toAssetListDTO(assetInfoList));
+            map.put("total", assetInfoMapper.queryCount(assetQuery));
+            return JsonResponseTool.success(map);
         }
     }
 
@@ -132,7 +134,7 @@ public class AssetServiceImpl implements AssetService {
             Iterator<AssetLenderDTO> iterator = assetLenderDTOList.iterator();
             while (iterator.hasNext()){
                 iterator.next().setAssetName(assetInfo.getName()); // 设置资产包名称
-                ContactInfo contactInfo = contactInfoMapper.getByLenderId(
+                ContactInfo contactInfo = contactInfoMapper.getByModel(
                         AssetModelTypeEnum.LENDER,
                         ContactTypeEnum.LENDER.getValue(),
                         iterator.next().getId());

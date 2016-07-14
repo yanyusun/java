@@ -1,6 +1,7 @@
 package com.dqys.business.service.service;
 
 import com.dqys.business.orm.pojo.company.Organization;
+import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
 import com.dqys.business.service.dto.company.CompanyDTO;
 import com.dqys.business.service.dto.company.OrganizationInsertDTO;
@@ -63,5 +64,43 @@ public interface CompanyService {
      * @return
      */
     JsonResponse getOrganization(Integer id);
+
+    /**
+     * 增加公司合作关系
+     * @param aId 甲方公司
+     * @param bId 乙方公司
+     * @return
+     */
+    Integer addRelation_tx(Integer aId, Integer bId);
+
+    /**
+     * 删除公司间的合作关系
+     * @param id
+     * @return
+     */
+    Boolean deleteRelation_tx(Integer id);
+
+    /**
+     * 根据两个公司Id删除两者之间的联系
+     * @param aId 甲方公司
+     * @param bId 乙方公司
+     * @return
+     */
+    Boolean deleteRelation_tx(Integer aId, Integer bId);
+
+    /**
+     * 遍历该公司的所有合作关系
+     * @param companyId
+     * @return
+     */
+    List<CompanyRelation> getListRelation(Integer companyId);
+
+    /**
+     * 获取公司之间的关联关系
+     * @param aId
+     * @param bId
+     * @return null 不存在关联关系
+     */
+    CompanyRelation get(Integer aId, Integer bId);
 
 }

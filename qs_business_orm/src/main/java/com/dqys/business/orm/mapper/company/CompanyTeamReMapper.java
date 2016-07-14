@@ -1,7 +1,10 @@
-package com.dqys.business.orm.mapper.coordinator;
+package com.dqys.business.orm.mapper.company;
 
 
 import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
+import com.dqys.business.orm.query.company.CompanyTeamReQuery;
+
+import java.util.List;
 
 public interface CompanyTeamReMapper {
     /**
@@ -20,9 +23,19 @@ public interface CompanyTeamReMapper {
      */
     Integer insert(CompanyTeamRe record);
 
-    Integer insertSelective(CompanyTeamRe record);
+    /**
+     * 根据Id获取
+     * @param id
+     * @return
+     */
+    CompanyTeamRe get(Integer id);
 
-    CompanyTeamRe selectByPrimaryKey(Integer id);
+    /**
+     * 条件获取分配器详情
+     * @param companyTeamReQuery
+     * @return
+     */
+    List<CompanyTeamRe> queryList(CompanyTeamReQuery companyTeamReQuery);
 
     /**
      * 修改协作器与邀请人员的关系
@@ -30,7 +43,6 @@ public interface CompanyTeamReMapper {
      * @param record
      * @return
      */
-    Integer updateByPrimaryKeySelective(CompanyTeamRe record);
+    Integer update(CompanyTeamRe record);
 
-    Integer updateByPrimaryKey(CompanyTeamRe record);
 }

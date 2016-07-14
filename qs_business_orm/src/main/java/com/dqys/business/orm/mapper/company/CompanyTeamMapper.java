@@ -1,7 +1,9 @@
-package com.dqys.business.orm.mapper.coordinator;
+package com.dqys.business.orm.mapper.company;
 
 
 import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
+
+import java.util.List;
 
 public interface CompanyTeamMapper {
     /**
@@ -20,17 +22,18 @@ public interface CompanyTeamMapper {
      */
     Integer insert(CompanyTeam record);
 
-    Integer insertSelective(CompanyTeam record);
-
-    CompanyTeam selectByPrimaryKey(Integer id);
-
     /**
-     * 修改公司协作器
-     *
-     * @param record
+     * 根据Id获取
+     * @param id
      * @return
      */
-    Integer updateByPrimaryKeySelective(CompanyTeam record);
+    CompanyTeam get(Integer id);
 
-    Integer updateByPrimaryKey(CompanyTeam record);
+    /**
+     * 根据邀请人Id
+     * @param id
+     * @return
+     */
+    List<CompanyTeam> listBySendId(Integer id);
+
 }

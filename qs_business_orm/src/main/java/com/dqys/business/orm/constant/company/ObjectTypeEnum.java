@@ -1,4 +1,4 @@
-package com.dqys.business.service.constant;
+package com.dqys.business.orm.constant.company;
 
 /**
  * 被操作对象类型

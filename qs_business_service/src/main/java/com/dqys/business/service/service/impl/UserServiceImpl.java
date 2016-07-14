@@ -276,4 +276,19 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
+    public JsonResponse sendMsg(List<Integer> ids) {
+
+        return null;
+    }
+
+    @Override
+    public JsonResponse setPwdBatch(List<Integer> ids) {
+        return null;
+    }
+
+    @Override
+    public JsonResponse setPwd(Integer id, String pwd) {
+        return null;
+    }
 }

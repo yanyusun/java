@@ -47,10 +47,6 @@ public class AssetController {
      * @apiSuccess {SelectonDTO} excellent 评优
      * @apiUse SelectonDTO
      * @apiSuccess {string} level 评级
-     *
-     *
-     *
-     *
      */
     @RequestMapping(value = "/getInit")
     @ResponseBody
@@ -269,5 +265,22 @@ public class AssetController {
         // 分配
         return assetService.assignedBatch(ids, id);
     }
+
+//
+//    @RequestMapping(value = "/gettDistribution")
+//    @ResponseBody
+//    public JsonResponse getDistribution(@PathVariable String ids, @PathVariable Integer id) {
+//        if (CommonUtil.checkParam(ids, id)) {
+//            return JsonResponseTool.paramErr("参数错误");
+//        }
+//        // todo 校验id是否存在
+//        if (userService.get(id).getData() == null) {
+//            return JsonResponseTool.paramErr("用户ID参数错误");
+//        }
+//        // 分配
+//        return assetService.assignedBatch(ids, id);
+//    }
+
+
 
 }

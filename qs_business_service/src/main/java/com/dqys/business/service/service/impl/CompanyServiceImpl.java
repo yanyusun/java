@@ -4,8 +4,10 @@ import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.business.orm.mapper.company.CompanyRelationMapper;
 import com.dqys.business.orm.mapper.company.OrganizationMapper;
 import com.dqys.business.orm.pojo.company.Organization;
+import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
 import com.dqys.business.orm.query.company.OrganizationQuery;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
 import com.dqys.business.service.dto.company.CompanyDTO;
@@ -19,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by Yvan on 16/6/30.
  */
@@ -30,6 +34,8 @@ public class CompanyServiceImpl implements CompanyService {
     private OrganizationMapper organizationMapper;
     @Autowired
     private TCompanyInfoMapper companyInfoMapper;
+    @Autowired
+    private CompanyRelationMapper companyRelationMapper;
     @Autowired
     private TUserInfoMapper userInfoMapper;
 
@@ -102,5 +108,59 @@ public class CompanyServiceImpl implements CompanyService {
             return JsonResponseTool.paramErr("参数错误");
         }
         return CommonUtil.responseBack(CompanyServiceUtils.toOrganizationDTO(organizationMapper.get(id)));
+    }
+
+    @Override
+    public Integer addRelation_tx(Integer aId, Integer bId) {
+        if(CommonUtil.checkParam(aId, bId)){
+            return null;
+        }
+        CompanyRelation companyRelation = new CompanyRelation();
+        companyRelation.setCompanyAId(aId);
+        companyRelation.setCompanyBId(bId);
+
+        Integer result = companyRelationMapper.insert(companyRelation);
+        if(!CommonUtil.checkResult(result)){
+            return companyRelation.getId();
+        }
+        return null;
+    }
+
+    @Override
+    public Boolean deleteRelation_tx(Integer id) {
+        if(CommonUtil.checkParam(id)){
+            return null;
+        }
+        if(CommonUtil.checkResult(companyRelationMapper.deleteByPrimaryKey(id))){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean deleteRelation_tx(Integer aId, Integer bId) {
+        if(CommonUtil.checkParam(aId, bId)){
+            return null;
+        }
+        if(CommonUtil.checkResult(companyRelationMapper.deleteByCompanyId(aId, bId))){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public List<CompanyRelation> getListRelation(Integer companyId) {
+        if(CommonUtil.checkParam(companyId)){
+            return null;
+        }
+        return null;
+    }
+
+    @Override
+    public CompanyRelation get(Integer aId, Integer bId) {
+        if(CommonUtil.checkParam(aId, bId)){
+            return null;
+        }
+        return null;
     }
 }

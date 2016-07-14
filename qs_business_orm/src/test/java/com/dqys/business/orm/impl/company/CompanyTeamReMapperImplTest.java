@@ -1,7 +1,7 @@
-package com.dqys.business.orm.impl.coordinator;
+package com.dqys.business.orm.impl.company;
 
 import com.dqys.business.orm.base.BaseTest;
-import com.dqys.business.orm.mapper.coordinator.CompanyTeamReMapper;
+import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
 import org.junit.Assert;
 import org.junit.Test;
