@@ -10,12 +10,12 @@
             <bean class="com.dqys.core.interceptor.CrossOriginIntercetpor"/>
         </mvc:interceptor>
 
-        <mvc:interceptor>
+       <!-- <mvc:interceptor>-->
             <!--默认全部需要登录身份-->
-            <mvc:mapping path="/**"/>
+        <!--  <mvc:mapping path="/**"/>-->
 
-            <bean class="com.dqys.core.interceptor.HeaderInterceptor"/>
-        </mvc:interceptor>
+         <!--<bean class="com.dqys.core.interceptor.HeaderInterceptor"/>
+     </mvc:interceptor>-->
     </mvc:interceptors>
 
 </beans>

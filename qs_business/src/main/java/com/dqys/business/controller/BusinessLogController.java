@@ -20,6 +20,15 @@ public class BusinessLogController {
     private BusinessLogService businessLogService;
 
 
+    /**
+     * @api {GET} http://{url}/b_log/list 查看组织列表(部门|团队)
+     * @apiName listOrganization
+     * @apiGroup organization
+     * @apiParam {number} companyId 公司Id
+     * @apiParam {type} type 组织类型
+     * @apiSuccess {OrganizationDTO} data 组织架构
+     * @apiUse OrganizationDTO
+     */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse list(@ModelAttribute BusinessLogQuery businessLogQuery) {

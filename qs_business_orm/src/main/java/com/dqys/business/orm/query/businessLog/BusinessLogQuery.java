@@ -33,6 +33,8 @@ public class BusinessLogQuery extends BaseQuery {
 
     private Integer businessId;
 
+    private String text;
+
     public Integer getId() {
         return id;
     }
@@ -87,5 +89,13 @@ public class BusinessLogQuery extends BaseQuery {
 
     public void setObjectType(Integer objectType) {
         this.objectType = objectType;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 }

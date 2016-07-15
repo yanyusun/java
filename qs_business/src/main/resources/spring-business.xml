@@ -9,7 +9,7 @@
 
     <import resource="classpath*:/spring/spring-*.xml"/>
     <import resource="spring-authorization.xml"/>
-    <mvc:annotation-driven>
+   <mvc:annotation-driven>
         <mvc:async-support default-timeout="30000"/>
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">

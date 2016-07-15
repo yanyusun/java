@@ -17,7 +17,7 @@
     <result column="stateflag" jdbcType="BIGINT" property="stateflag" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, object_type, object_id, oper_type, remark, user_id, time, text, team_id, business_id,
+    id, object_type, object_id, oper_type, remark, user_id, text, team_id, business_id,
     version, create_at, update_at, stateflag
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -154,7 +154,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.query.businessLog.BusinessLogQuery" >
+  <select id="list" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.query.businessLog.BusinessLogQuery" >
     select
     <include refid="Base_Column_List" />
     from t_business_log

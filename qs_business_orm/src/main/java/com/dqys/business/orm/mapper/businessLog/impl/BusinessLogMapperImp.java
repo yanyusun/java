@@ -22,7 +22,7 @@ public class BusinessLogMapperImp extends BaseDao implements BusinessLogMapper {
 
     @Override
     public int insert(BusinessLog record) {
-        return 0;
+        return super.getSqlSession().getMapper(BusinessLogMapper.class).insert(record);
     }
 
     @Override
@@ -49,4 +49,6 @@ public class BusinessLogMapperImp extends BaseDao implements BusinessLogMapper {
     public List<BusinessLog> list(BusinessLogQuery query) {
         return super.getSqlSession().getMapper(BusinessLogMapper.class).list(query);
     }
+
+
 }

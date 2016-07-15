@@ -7,6 +7,7 @@ import com.dqys.business.orm.query.businessLog.BusinessLogQuery;
 import java.util.List;
 
 public interface BusinessLogMapper {
+
     int deleteByPrimaryKey(Integer id);
 
     int insert(BusinessLog record);
