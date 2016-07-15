@@ -23,6 +23,16 @@ public class TeammateRe {
 
     private Long stateflag;
 
+    private Integer businessType;
+
+    public Integer getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(Integer businessType) {
+        this.businessType = businessType;
+    }
+
     public Integer getId() {
         return id;
     }

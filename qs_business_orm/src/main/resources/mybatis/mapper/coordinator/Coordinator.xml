@@ -44,6 +44,39 @@
           and tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} and tut.company_id=#{companyId,jdbcType=INTEGER}
           GROUP BY ttr.type
     </select>
+    <!--获取相应的公司-->
+    <select id="companyList" resultType="java.util.Map">
+        SELECT tci.id,tci.company_name from t_company_info tci
+        where tci.id IN (
+        SELECT tut.company_id from t_user_team tut
+	        where tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} GROUP BY tut.company_id )
+    </select>
+    <!--根据公司id获取公司的管理员信息-->
+    <select id="getAdminUser" resultType="java.util.Map">
+        SELECT tui.id,tui.real_name realName,tui.mobile,tui.user_name userName from t_user_info tui LEFT JOIN t_user_tag tust
+        ON tust.user_id=tui.id
+        WHERE tust.stateflag=0 and tust.role_id=1 and tust.is_certified=1
+			and tui.company_id=#{companyId,jdbcType=INTEGER}
+    </select>
+    <!--获取员工公司下的所有员工-->
+    <select id="getCompanyUserList" resultType="java.util.Map">
+        SELECT tci.company_name companyName,tui.company_id companyId,tui.real_name realName,tui.user_name
+        userName,tui.id userId
+        from t_company_info tci LEFT JOIN t_user_info tui
+        ON tui.company_id=tci.id
+        WHERE tci.id in (
+        <if test="companyId !=null">
+            #{companyId,jdbcType=INTEGER}
+        </if>
+        <if test="userId !=null">
+            SELECT tui2.company_id from t_user_info tui2 where tui2.id=#{userId,jdbcType=INTEGER}
+        </if>
+        )
+        <if test="realName !=null ">
+            AND (tui.real_name LIKE CONCAT('%',#{realName,jdbcType=VARCHAR},'%') OR tui.user_name LIKE
+            CONCAT('%',#{realName,jdbcType=VARCHAR},'%'))
+        </if>
+    </select>
 
 
 </mapper>

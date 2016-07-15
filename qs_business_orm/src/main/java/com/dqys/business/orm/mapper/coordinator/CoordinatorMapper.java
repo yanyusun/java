@@ -1,6 +1,7 @@
 package com.dqys.business.orm.mapper.coordinator;
 
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
+import com.rabbitmq.http.client.domain.UserInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public interface CoordinatorMapper {
      * @param userId
      * @return(ongoing)
      */
-    Map<String, Object> getTaskOngoing(@Param("companyId") Integer companyId, @Param("userId") Integer userId,@Param("objectType") Integer objectType);
+    Map<String, Object> getTaskOngoing(@Param("companyId") Integer companyId, @Param("userId") Integer userId, @Param("objectType") Integer objectType);
 
     /**
      * 获取业绩比例
@@ -36,14 +37,39 @@ public interface CoordinatorMapper {
      * @param userId
      * @return(finish,total)
      */
-    Map<String, Object> getTaskRatio(@Param("companyId") Integer companyId, @Param("userId") Integer userId,@Param("objectType") Integer objectType);
+    Map<String, Object> getTaskRatio(@Param("companyId") Integer companyId, @Param("userId") Integer userId, @Param("objectType") Integer objectType);
 
     /**
      * 获取团队人数
+     *
      * @param companyId
      * @param objectId
      * @param objectType
      * @return（type,peopleNum）
      */
-    List<Map<String,Object>> getPeopleNum(@Param("companyId") Integer companyId, @Param("objectId") Integer objectId,@Param("objectType") Integer objectType);
+    List<Map<String, Object>> getPeopleNum(@Param("companyId") Integer companyId, @Param("objectId") Integer objectId, @Param("objectType") Integer objectType);
+
+    /**
+     * 获取相关公司名称
+     *
+     * @return
+     */
+    List<Map<String, Object>> companyList(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType);
+
+    /**
+     * 根据公司id获取公司的管理员信息
+     *
+     * @param companyId
+     * @return
+     */
+    Map<String, Object> getAdminUser(Integer companyId);
+
+    /**
+     * 获取员工公司下的所有员工
+     *
+     * @param realName
+     * @param userId
+     * @param companyId
+     */
+    List<Map<String, Object>> getCompanyUserList(@Param("realName") String realName, @Param("userId") Integer userId, @Param("companyId") Integer companyId);
 }

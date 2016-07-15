@@ -22,7 +22,7 @@ public interface UserTeamMapper {
 
     Integer insertSelective(UserTeam record);
 
-    UserTeam selectByPrimaryKey(Integer id);
+    UserTeam selectByPrimaryKeySelective(UserTeam userTeam);
 
     /**
      * 修改公司内成员协作器表数据

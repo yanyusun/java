@@ -33,4 +33,19 @@ public class CoordinatorMapperImpl extends BaseDao implements CoordinatorMapper 
     public List<Map<String, Object>> getPeopleNum(@Param("companyId") Integer companyId, @Param("objectId") Integer objectId, @Param("objectType") Integer objectType) {
         return super.getSqlSession().getMapper(CoordinatorMapper.class).getPeopleNum(companyId,objectId,objectType);
     }
+
+    @Override
+    public List<Map<String, Object>> companyList(Integer objectId, Integer objectType) {
+        return  super.getSqlSession().getMapper(CoordinatorMapper.class).companyList(objectId,objectType);
+    }
+
+    @Override
+    public Map<String, Object> getAdminUser(Integer companyId) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).getAdminUser(companyId);
+    }
+
+    @Override
+    public  List<Map<String,Object>> getCompanyUserList(String realName, Integer userId, Integer companyId) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).getCompanyUserList(realName,userId,companyId);
+    }
 }
