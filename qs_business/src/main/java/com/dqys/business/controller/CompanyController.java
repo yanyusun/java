@@ -1,5 +1,7 @@
 package com.dqys.business.controller;
 
+import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
+import com.dqys.business.orm.constant.company.ObjectBusinessTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
 import com.dqys.business.service.dto.company.OrganizationInsertDTO;
@@ -143,44 +145,80 @@ public class CompanyController {
     }
 
     /**
-     * @api {get} http://{url}/api/company/joinDistribution 加入分配器
+     * @api {get} http://{url}/api/company/joinDistribution 申请加入分配器
      * @apiName joinDistribution
      * @apiGroup distribution
-     * @apiParam type
-     * @apiParam id
+     * @apiParam {number} id 分配器ID
+     * @apiParam {number} companyId 公司ID
+     * @apiSuccess {number} id
      */
     @RequestMapping(value = "/joinDistribution")
     @ResponseBody
-    public JsonResponse joinDistribution(@RequestParam(required = true) String type,
-                                         @RequestParam(required = true) Integer id) {
-        if (CommonUtil.checkParam(type, id)) {
+    public JsonResponse joinDistribution(@RequestParam(required = true) Integer id) {
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.success("参数错误");
         }
-        if (OrganizationTypeEnum.getOrganizationTypeEnum(type) == null) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        return companyService.getOrganization(id);
+        return CommonUtil.responseBack(
+                companyService.joinDistribution_tx(id, ObjectBusinessTypeEnum.join.getValue(), null));
     }
 
     /**
+     * @api {get} http://{url}/api/company/inviteDistribution 邀请加入分配器
+     * @apiName inviteDistribution
+     * @apiGroup distribution
+     * @apiParam {number} id 分配器ID
+     * @apiParam {number} companyId 公司ID
+     * @apiParam {string} [text] 邀请内容
+     * @apiSuccess {number} id
+     */
+    @RequestMapping(value = "/inviteDistribution")
+    @ResponseBody
+    public JsonResponse inviteDistribution(@RequestParam(required = true) Integer id,
+                                           @RequestParam(required = true) Integer companyId,
+                                           @RequestParam(required = true) String text) {
+        if (CommonUtil.checkParam(companyId, id)) {
+            return JsonResponseTool.success("参数错误");
+        }
+        return CommonUtil.responseBack(companyService.joinDistribution_tx(id, ObjectBusinessTypeEnum.assign.getValue(), text));
+    }
+
+    /**
+     * @api {get} http://{url}/api/company/designDistribution 决定加入分配器(同意或者拒绝)
+     * @apiName designDistribution
+     * @apiGroup distribution
+     * @apiParam {number} id 被邀请ID
+     * @apiParam {number} type 操作类型(接收1|拒绝2)
+     * @apiSuccess {number} id
+     */
+    @RequestMapping(value = "/designDistribution")
+    @ResponseBody
+    public JsonResponse designDistribution(@RequestParam(required = true) Integer id,
+                                           @RequestParam(required = true) Integer type) {
+        if (CommonUtil.checkParam(id, type)) {
+            return JsonResponseTool.success("参数错误");
+        }
+        if(ObjectAcceptTypeEnum.getObjectAcceptTypeEnum(type) == null){
+            return JsonResponseTool.paramErr("操作类型参数错误");
+        }
+        return CommonUtil.responseBack(companyService.updateDistribution_tx(id, type));
+    }
+
+
+    /**
      * @return
-     * @api {get} http://{url}/api/company/getDistribution 退出分配器
-     * @apiName getDistribution
+     * @api {get} http://{url}/api/company/exitDistribution 退出分配器
+     * @apiName exitDistribution
      * @apiGroup distribution 分配器
      * @apiParam type
      * @apiParam id
      */
     @RequestMapping(value = "/exitDistribution")
     @ResponseBody
-    public JsonResponse exitDistribution(@RequestParam(required = true) String type,
-                                         @RequestParam(required = true) Integer id) {
-        if (CommonUtil.checkParam(type, id)) {
+    public JsonResponse exitDistribution(@RequestParam(required = true) Integer id) {
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.success("参数错误");
         }
-        if (OrganizationTypeEnum.getOrganizationTypeEnum(type) == null) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        return companyService.getOrganization(id);
+        return CommonUtil.responseBack(companyService.exitDistribution_tx(id));
     }
 
     /**
@@ -201,8 +239,6 @@ public class CompanyController {
         }
         return JsonResponseTool.success(companyService.getListRelation(id));
     }
-
-
 
 
 }

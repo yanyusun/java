@@ -1,5 +1,6 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.ContactInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
@@ -13,6 +14,7 @@ import com.dqys.business.service.dto.asset.AssetDTO;
 import com.dqys.business.service.dto.asset.AssetLenderDTO;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.business.service.service.AssetService;
+import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
@@ -37,6 +39,10 @@ public class AssetServiceImpl implements AssetService {
     @Autowired
     private ContactInfoMapper contactInfoMapper;
 
+
+    @Autowired
+    private BusinessService businessService;
+
     @Override
     public JsonResponse add(AssetDTO assetDTO) {
         if (CommonUtil.checkParam(assetDTO, assetDTO.getStartAt(), assetDTO.getEndAt())) {
@@ -46,7 +52,10 @@ public class AssetServiceImpl implements AssetService {
         assetInfo.setAssetNo(AssetServiceUtils.createAssetCode());
         Integer addResult = assetInfoMapper.insert(assetInfo);
         if (addResult.equals(1)) {
-            return JsonResponseTool.success(assetInfo.getId());
+            Integer id = assetInfo.getId();
+            // 增加业务数据
+            Integer serviceObjectId = businessService.addServiceObject(ObjectTypeEnum.ASSETPACKAGE.getValue(), id, null, null);
+            return JsonResponseTool.success(id);
         } else {
             return JsonResponseTool.failure(null);
         }

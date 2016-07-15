@@ -8,6 +8,7 @@ import java.util.List;
  * @apiDefine DistributionDTO
  * @apiSuccessExample {json} DistributionDTO:
  * {
+ *      id:1,
  *     platformNum:0,
  *     mechanismNum:0,
  *     disposeNum:0,
@@ -16,10 +17,19 @@ import java.util.List;
  * platformNum:平台数量 mechanismNum:机构数量 disposeNum:处置方数量
  */
 public class DistributionDTO {
+    private Integer id; // 分配器ID
 
     private Integer platformNum = 0; // 平台数量
     private Integer mechanismNum = 0; // 机构数量
     private Integer disposeNum = 0; // 处置方数量
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     private List<CompanyTeamReDTO> companyTeamReDTOList; // 分配器成员
 

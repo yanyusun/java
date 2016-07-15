@@ -246,6 +246,7 @@ public class AssetServiceUtils {
         LenderInfo lenderInfo = new LenderInfo();
 
         lenderInfo.setId(lenderDTO.getId());
+        lenderInfo.setAssetId(lenderDTO.getAssetId());
         lenderInfo.setStartAt(lenderDTO.getStartAt());
         lenderInfo.setEndAt(lenderDTO.getEndAt());
         lenderInfo.setOperator(lenderDTO.getOperatorId());
@@ -305,6 +306,7 @@ public class AssetServiceUtils {
         LenderDTO lenderDTO = new LenderDTO();
 
         lenderDTO.setId(lenderInfo.getId());
+        lenderDTO.setAssetId(lenderInfo.getAssetId());
         lenderDTO.setStartAt(lenderInfo.getStartAt());
         lenderDTO.setEndAt(lenderInfo.getEndAt());
         lenderDTO.setOperatorId(lenderInfo.getOperator());

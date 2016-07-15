@@ -21,6 +21,7 @@ public class CompanyTeamReDTO {
     private Integer task; // 正在进行的任务
     private String contact; // 联系人
     private Date time; // 接收时间
+    private Integer stateflag; // 数据状态
 
     public Integer getId() {
         return id;
@@ -84,5 +85,13 @@ public class CompanyTeamReDTO {
 
     public void setTime(Date time) {
         this.time = time;
+    }
+
+    public Integer getStateflag() {
+        return stateflag;
+    }
+
+    public void setStateflag(Integer stateflag) {
+        this.stateflag = stateflag;
     }
 }

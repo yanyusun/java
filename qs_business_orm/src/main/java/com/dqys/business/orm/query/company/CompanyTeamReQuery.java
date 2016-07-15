@@ -5,9 +5,11 @@ package com.dqys.business.orm.query.company;
  */
 public class CompanyTeamReQuery {
 
-    private Integer id;
-    private Integer teamId;
-    private Integer status;
+    private Integer id; // 主键
+    private Integer teamId; // 分配器ID
+    private Integer status; // 数据状态
+    private Integer companyId; // 公司ID
+    private Integer statefalg; // 数据状态
 
     public Integer getId() {
         return id;
@@ -31,5 +33,21 @@ public class CompanyTeamReQuery {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
+    }
+
+    public Integer getStatefalg() {
+        return statefalg;
+    }
+
+    public void setStatefalg(Integer statefalg) {
+        this.statefalg = statefalg;
     }
 }

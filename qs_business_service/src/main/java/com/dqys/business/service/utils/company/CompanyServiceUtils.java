@@ -12,6 +12,7 @@ import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.NoSQLWithRedisTool;
 import com.dqys.core.utils.SysPropertyTool;
+import com.rabbitmq.http.client.domain.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,6 +134,7 @@ public class CompanyServiceUtils {
         companyTeamReDTO.setRate(rate);
         companyTeamReDTO.setContact(companyDetailInfo.getName());
         companyTeamReDTO.setTask(task);
+        companyTeamReDTO.setStateflag(companyTeamRe.getStateflag().intValue());
         switch (companyDetailInfo.getType()){
             case 1:companyTeamReDTO.setType("平台");break;
             case 0:companyTeamReDTO.setType("普通用户");break;
@@ -144,9 +146,5 @@ public class CompanyServiceUtils {
         return companyTeamReDTO;
     }
 
-    public static DistributionDTO toDistributionDTO(List<CompanyService> companyServices){
-
-        return null;
-    }
 
 }

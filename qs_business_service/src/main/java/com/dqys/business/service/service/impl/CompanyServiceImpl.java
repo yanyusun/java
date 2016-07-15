@@ -5,6 +5,8 @@ import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.CompanyDetailInfo;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
+import com.dqys.business.orm.constant.company.ObjectBusinessTypeEnum;
 import com.dqys.business.orm.mapper.company.CompanyRelationMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
@@ -158,6 +160,7 @@ public class CompanyServiceImpl implements CompanyService {
         List<CompanyTeamRe> companyTeamReList = companyTeamReMapper.queryList(companyTeamReQuery);
         List<CompanyTeamReDTO> companyTeamReDTOList = new ArrayList<>();
         DistributionDTO distributionDTO = new DistributionDTO();
+        distributionDTO.setId(companyTeam.getId());
         companyTeamReList.forEach(companyTeamRe -> {
             CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(companyTeamRe.getId());
             if(companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM))){
@@ -167,9 +170,82 @@ public class CompanyServiceImpl implements CompanyService {
             }else{
                 distributionDTO.setDisposeNum(distributionDTO.getDisposeNum()+1); // 处置方
             }
+            // todo  这里需要填充业绩比率,当前任务
             companyTeamReDTOList.add(CompanyServiceUtils.toCompanyTeamReDTO(companyTeamRe, companyDetailInfo, null, null));
         });
         distributionDTO.setCompanyTeamReDTOList(companyTeamReDTOList);
         return distributionDTO;
+    }
+
+    @Override
+    public Integer joinDistribution_tx(Integer id, Integer type, String text) {
+        if(CommonUtil.checkParam(id, type)){
+            return null;
+        }
+        TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
+        if(userInfo == null || userInfo.getCompanyId() == null){
+            return null;
+        }
+        CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
+        companyTeamReQuery.setTeamId(id);
+        companyTeamReQuery.setCompanyId(userInfo.getCompanyId());
+        List<CompanyTeamRe> companyTeamReList = companyTeamReMapper.queryList(companyTeamReQuery);
+        if(companyTeamReList != null || companyTeamReList.size() > 0){
+            // 已经存在在该分配器中无需再次申请或邀请
+            return null;
+        }
+        CompanyTeamRe companyTeamRe = new CompanyTeamRe();
+        companyTeamRe.setCompanyTeamId(id);
+        companyTeamRe.setAcceptCompanyId(userInfo.getCompanyId());
+        companyTeamRe.setStatus(ObjectAcceptTypeEnum.init.getValue());
+        companyTeamRe.setType(type);
+        Integer result = companyTeamReMapper.insert(companyTeamRe);
+        if(CommonUtil.checkResult(result)){
+            return null;
+        }else{
+            // todo 发送短信内容
+
+            return companyTeamRe.getId();
+        }
+    }
+
+    @Override
+    public Integer updateDistribution_tx(Integer id, Integer status) {
+        if(CommonUtil.checkParam(id, status)){
+            return null;
+        }
+        CompanyTeamRe companyTeamRe = companyTeamReMapper.get(id);
+        if(companyTeamRe == null){
+            return null;
+        }
+        TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
+        if(userInfo == null || userInfo.getCompanyId() == null){
+            return null;
+        }
+        if(!userInfo.getCompanyId().equals(companyTeamRe.getAcceptCompanyId())){
+            // 避免非公司人员操作
+            return null;
+        }
+        companyTeamRe.setStatus(status);
+        companyTeamRe.setAccepterId(userInfo.getId());
+        return companyTeamReMapper.update(companyTeamRe);
+    }
+
+    @Override
+    public Integer exitDistribution_tx(Integer id) {
+        if(id == null){
+            return null;
+        }
+        // 存在该分配数据
+        CompanyTeamRe companyTeamRe =companyTeamReMapper.get(id);
+        if(companyTeamRe == null){
+            return null;
+        }
+        // 校验是否是该公司的管理员
+        CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(companyTeamRe.getAcceptCompanyId());
+        if(companyDetailInfo == null || !companyDetailInfo.getUserId().equals(UserSession.getCurrent().getUserId())){
+            return null;
+        }
+        return companyTeamReMapper.deleteByPrimaryKey(id);
     }
 }

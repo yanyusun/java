@@ -8,6 +8,7 @@ import java.util.Date;
 /**
  * @apiDefine Lender
  * @apiParam {number} id 主键
+ * @apiParam {number} [assetId] 资产包ID,只有是资产包借款人时才有
  * @apiParam {date} startAt 委托开始时间
  * @apiParam {date} endAt 委托结束时间
  * @apiParam {number} accrual 总利息
@@ -49,6 +50,7 @@ import java.util.Date;
  * @apiSuccessExample {json} lenderDTO:
  * {
  * "id": 1,
+ * "assetId": 1,
  * "startAt": "2016-07-06",
  * "endAt": "2016-09-06",
  * "accrual": null,
@@ -118,6 +120,7 @@ public class LenderDTO {
     private String memo;  // 备注
 
     private Integer operatorId;  // 操作人Id
+    private Integer assetId; // 资产包ID
 
     private String name; // 借款人姓名
     private String sex; // 借款人性别
@@ -382,7 +385,16 @@ public class LenderDTO {
         return sex;
     }
 
+    public Integer getAssetId() {
+        return assetId;
+    }
+
+    public void setAssetId(Integer assetId) {
+        this.assetId = assetId;
+    }
+
     public void setSex(String sex) {
         this.sex = sex;
     }
+
 }
