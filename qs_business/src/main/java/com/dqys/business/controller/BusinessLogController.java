@@ -21,13 +21,23 @@ public class BusinessLogController {
 
 
     /**
-     * @api {GET} http://{url}/b_log/list 查看组织列表(部门|团队)
-     * @apiName listOrganization
-     * @apiGroup organization
-     * @apiParam {number} companyId 公司Id
-     * @apiParam {type} type 组织类型
-     * @apiSuccess {OrganizationDTO} data 组织架构
-     * @apiUse OrganizationDTO
+     * @api {GET} http://{url}/b_log/list 查看日志列表
+     * @apiName list
+     * @apiGroup businessLog
+     * @apiUse BusinessLogQuery
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * plateform:1,
+     * plateformCompany:1,
+     * entrustTotal:1,
+     * entrustAgency:1,
+     * entrustSingle:1,
+     * disposeTotal:1,
+     * urge:1,
+     * judicial:1,
+     * dispose:1,
+     * }
+     *
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody

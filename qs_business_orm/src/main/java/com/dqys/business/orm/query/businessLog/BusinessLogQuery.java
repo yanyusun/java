@@ -5,7 +5,7 @@ import com.dqys.core.base.BaseQuery;
 /**
  * Created by yan on 16-7-13.
  *
- * @apiDefine BusinessLogListQuery
+ * @apiDefine BusinessLogQuery
  * @apiParam {number} [id] id
  * @apiParam {number} [objectType] 对象类型
  * @apiParam {number} [operType] 操作类型
