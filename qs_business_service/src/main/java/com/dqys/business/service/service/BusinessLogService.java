@@ -2,6 +2,7 @@ package com.dqys.business.service.service;
 
 import com.dqys.business.orm.pojo.businessLog.BusinessLog;
 import com.dqys.business.orm.query.businessLog.BusinessLogQuery;
+import com.dqys.business.service.utils.businessLog.exception.BusinessLogException;
 
 import java.util.List;
 
@@ -28,6 +29,6 @@ public interface BusinessLogService {
      * @param businessId 业务号(0为由方法自己查找得到)
      * @param teamId t_team_user的id（0为由方法自己得到）
      */
-    void add(int objectId, int objectType,int operType,String text, String remark,int businessId,int teamId);
+    void add(int objectId, int objectType,int operType,String text, String remark,int businessId,int teamId) throws BusinessLogException;
 
 }
