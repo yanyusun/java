@@ -27,16 +27,27 @@ public class BusinessLogController {
      * @apiUse BusinessLogQuery
      * @apiSuccessExample {json} Data-Response:
      * {
-     * plateform:1,
-     * plateformCompany:1,
-     * entrustTotal:1,
-     * entrustAgency:1,
-     * entrustSingle:1,
-     * disposeTotal:1,
-     * urge:1,
-     * judicial:1,
-     * dispose:1,
-     * }
+        "code": 2000,
+        "msg": "成功",
+        "data": [
+            {
+            "id": 1,
+            "objectType": 1,
+            "objectId": 1,
+            "operType": 1,
+            "remark": "1",
+            "userId": 1,
+            "time": null,
+            "text": "1",
+            "teamId": 1,
+            "businessId": 1,
+            "version": 1,
+            "createAt": "2016-07-16",
+            "updateAt": "2016-07-16",
+            "stateflag": 1
+            }
+           ]
+         }
      *
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)

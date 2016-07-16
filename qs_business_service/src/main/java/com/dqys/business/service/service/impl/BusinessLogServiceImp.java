@@ -6,8 +6,8 @@ import com.dqys.business.orm.mapper.businessLog.BusinessLogMapper;
 import com.dqys.business.orm.pojo.businessLog.BusinessLog;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.orm.query.businessLog.BusinessLogQuery;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
-import com.dqys.business.service.utils.businessLog.exception.BusinessLogException;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class BusinessLogServiceImp implements BusinessLogService{
     public void add(int objectId, int objectType,int operType,String text, String remark,int businessId,int teamId) throws BusinessLogException {
         if(CommonUtil.checkParam(objectId,objectType,text)){
             throw new BusinessLogException("objectId->"+objectId+",objectType->"+objectType+",text->"+text
-                    ,BusinessLogException.PARAM_ISNOULL_MSG);
+                    , BusinessLogException.PARAM_ISNOULL_ERROR);
         }
         int userId=UserSession.getCurrent().getUserId();
         BusinessLog businessLog=new BusinessLog();

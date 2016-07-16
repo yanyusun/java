@@ -2,7 +2,7 @@ package com.dqys.business.service.service;
 
 import com.dqys.business.orm.pojo.businessLog.BusinessLog;
 import com.dqys.business.orm.query.businessLog.BusinessLogQuery;
-import com.dqys.business.service.utils.businessLog.exception.BusinessLogException;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 
 import java.util.List;
 

@@ -17,6 +17,31 @@
             </PatternLayout>
         </RandomAccessFile>
 
+        <RollingRandomAccessFile name="businessRAF" fileName="/mnt/logs/business.log"
+                     filePattern="/mnt/logs/$${date:yyyy-MM}/business-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingRandomAccessFile>
+
+        <RollingRandomAccessFile name="businessErrorRAF" fileName="/mnt/logs/businessError.log"
+                                 filePattern="/mnt/logs/$${date:yyyy-MM}/businessError-%d{MM-dd-yyyy}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingRandomAccessFile>
+
+
         <Async name="sysAsync">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="sysRAF"/>
@@ -24,6 +49,14 @@
         <Async name="bizAsync">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="bizRAF"/>
+        </Async>
+        <Async name="businessAsync">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="businessRAF"/>
+        </Async>
+        <Async name="businessErrorAsync">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="businessErrorRAF"/>
         </Async>
     </Appenders>
 
@@ -38,6 +71,15 @@
         <Logger name="sysLog" level="debug" additivity="false">
             <AppenderRef ref="sysAsync"/>
         </Logger>
+        <!--业务日志-->
+        <Logger name="businessLog" level="debug" additivity="false">
+            <AppenderRef ref="businessAsync"/>
+        </Logger>
+        <!--业务错误日志-->
+        <Logger name="businessErrorLog" level="error" additivity="false">
+            <AppenderRef ref="businessErrorAsync"/>
+        </Logger>
+
 
 
         <Logger name="org.springframework.amqp.rabbit.listener.BlockingQueueConsumer" level="info">
@@ -48,7 +90,6 @@
                 additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>-->
-
 
 
         <!--
