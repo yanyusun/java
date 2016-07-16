@@ -111,4 +111,37 @@
     where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </update>
 
+  <!--分页或者不分也查询ObjectUserRelation 列表-->
+  <select id="list" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.query.business.ObjectUserRelationQuery" >
+    select
+    <include refid="Base_Column_List" />
+    from object_user_relation
+    where 1=1
+    <if test="objectType != null" >
+      object_type = #{objectType,jdbcType=INTEGER},
+    </if>
+    <if test="objectId != null" >
+      object_id = #{objectId,jdbcType=INTEGER},
+    </if>
+    <if test="userId != null" >
+      user_id = #{userId,jdbcType=INTEGER},
+    </if>
+    <if test="status != null" >
+      status = #{status,jdbcType=INTEGER},
+    </if>
+    <if test="type != null" >
+      type = #{type,jdbcType=INTEGER},
+    </if>
+    <if test="employerId != null" >
+      employer_id = #{employerId,jdbcType=INTEGER},
+    </if>
+    <if test="businessId != null" >
+      business_id = #{businessId,jdbcType=INTEGER},
+    </if>
+    ORDER BY create_at DESC
+    <if test="isPaging">
+      limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </if>
+  </select>
+
 </mapper>

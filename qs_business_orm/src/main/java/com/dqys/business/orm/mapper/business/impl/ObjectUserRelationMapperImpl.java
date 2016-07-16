@@ -2,9 +2,12 @@ package com.dqys.business.orm.mapper.business.impl;
 
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
+import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.core.base.BaseDao;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created by Yvan on 16/7/15.
@@ -30,5 +33,10 @@ public class ObjectUserRelationMapperImpl extends BaseDao implements ObjectUserR
     @Override
     public Integer update(ObjectUserRelation record) {
         return super.getSqlSession().getMapper(ObjectUserRelationMapper.class).update(record);
+    }
+
+    @Override
+    public List<ObjectUserRelation> list(ObjectUserRelationQuery query) {
+        return super.getSqlSession().getMapper(ObjectUserRelationMapper.class).list(query);
     }
 }
