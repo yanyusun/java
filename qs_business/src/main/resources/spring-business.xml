@@ -30,5 +30,5 @@
     </bean>
     <bean id="xmlMapper" parent="objectMapper" p:createXmlMapper="true"/>
 
-
+    <bean id="businessExceptionHandler" class="com.dqys.business.service.exception.handler.BusinessExceptionHandler"/>
 </beans>

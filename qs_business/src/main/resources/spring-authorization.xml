@@ -17,8 +17,8 @@
          <!--<bean class="com.dqys.core.interceptor.HeaderInterceptor"/>
      </mvc:interceptor>-->
         <mvc:interceptor>
-            <mvc:mapping path="/b_log"/>
-            <bean class="com.dqys.core.interceptor.CrossOriginIntercetpor"/>
+            <mvc:mapping path="/b_log/*"/>
+            <bean class="com.dqys.business.interceptor.BusinessLogIntercetpor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 
