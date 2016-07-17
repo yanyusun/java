@@ -9,4 +9,6 @@ public interface BussinessException {
      * @return 错误编号
      */
     int getExceptionCode();
+
+    String getExceptionName();
 }

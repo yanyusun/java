@@ -1,6 +1,6 @@
 package com.dqys.business.service.exception.handler;
 
-import com.dqys.business.service.exception.bean.BusinessLogException;
+import com.dqys.business.service.exception.bean.base.BussinessException;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,9 +32,9 @@ public class BusinessExceptionHandler implements HandlerExceptionResolver {
         String name = UNKOWN_EXCEPTION_NAME;
         int code = UNKOWN_ERROR;
         // 根据不同错误转向不同页面
-        if (e instanceof BusinessLogException) {
-            name = BusinessLogException.EXCEPTION_NAME;
-            code = BusinessExceptionHandler.UNKOWN_ERROR;
+        if (e instanceof BussinessException) {
+            name = ((BussinessException) e).getExceptionName();
+            code = ((BussinessException) e).getExceptionCode();
         }
         model.put("name", name);
         model.put("code", code);
