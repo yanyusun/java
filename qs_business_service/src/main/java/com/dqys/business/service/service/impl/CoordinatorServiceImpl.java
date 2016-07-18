@@ -3,10 +3,12 @@ package com.dqys.business.service.service.impl;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
+import com.dqys.business.orm.mapper.coordinator.OURelationMapper;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.coordinator.UserTeamMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.coordinator.OURelation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
@@ -18,6 +20,7 @@ import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -39,6 +42,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     private AssetInfoMapper assetInfoMapper;
     @Autowired
     private TeammateReMapper teammateReMapper;
+    @Autowired
+    private OURelationMapper ouRelationMapper;
 
     @Override
     public void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType, Integer userid) {
@@ -123,7 +128,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             List<TeammateRe> list = teammateReMapper.selectSelective(teammateRe);//查询用于判断人员类别的定位
             teammateRe.setUserId(uid);
             if (list.size() > 0) {
-               users = teammateReMapper.selectSelective(teammateRe);//查询用于判断人员加入过这个协作器没有
+                users = teammateReMapper.selectSelective(teammateRe);//查询用于判断人员加入过这个协作器没有
             }
             if (users.size() > 0) {
                 TeammateRe teammateRe1 = users.get(0);
@@ -150,6 +155,30 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                     //发送短信或是邮件
                 }
             }
+        }
+        return map;
+    }
+
+    @Override
+    @Transactional
+    public Map isAccept(Integer teammateId, Integer status) {
+        Map<String, Object> map = new HashMap<>();
+        TeammateRe teammateRe = new TeammateRe();
+        teammateRe.setId(teammateId);
+        teammateRe.setStatus(status);
+        Integer result = teammateReMapper.updateByPrimaryKeySelective(teammateRe);
+        if (status == 1) {
+            if (result > 0) {
+               Map userTeammate= coordinatorMapper.selectByUserTeamAndMateRe(teammateId);
+                OURelation ouRelation=new OURelation();
+                ouRelation.setStatus(1);
+                ouRelation.setType(1);
+                ouRelation.setObjectType(MessageUtils.transMapToInt(userTeammate, "object_type"));
+                ouRelation.setObjectId(MessageUtils.transMapToInt(userTeammate, "object_id"));
+                ouRelation.setUserId(MessageUtils.transMapToInt(userTeammate, "user_id"));
+                ouRelationMapper.insertSelective(ouRelation);
+            }
+            map.put("result","yes");
         }
         return map;
     }

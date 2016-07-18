@@ -84,6 +84,16 @@ public class CoordinatorController {
         return JsonResponseTool.success(map);
     }
 
+    /**
+     * @api {post} coordinator/addTeammate 添加邀请人员
+     * @apiParam {int} userTeamId 协作器id
+     * @apiParam {string} remark 验证消息
+     * @apiParam {int} userIds 被邀请人的id
+     * @apiDescription 添加邀请人员到参与人关联表
+     * @apiSampleRequest coordinator/addTeammate
+     * @apiGroup Coordinator
+     * @apiName coordinator/addTeammate
+     */
     @RequestMapping("/addTeammate")
     @ResponseBody
     public JsonResponse addTeammate(@RequestParam("userTeamId") Integer userTeamId, @RequestParam("remark") String remark, HttpServletRequest httpServletRequest, Integer... userIds) throws Exception {
@@ -98,5 +108,22 @@ public class CoordinatorController {
         return JsonResponseTool.success(map);
 
     }
+
+    /**
+     * @api {post} coordinator/isAccept 被邀请人员同意或是拒绝请求
+     * @apiParam {int} teammateId 参与人关联表id
+     * @apiParam {string} status 状态（1同意2拒绝）
+     * @apiDescription 被邀请人员确认和拒绝
+     * @apiSampleRequest coordinator/isAccept
+     * @apiGroup Coordinator
+     * @apiName coordinator/isAccept
+     */
+    @RequestMapping("/isAccept")
+    @ResponseBody
+    public JsonResponse isAccept(Integer teammateId, Integer status) {
+        Map map = coordinatorService.isAccept(teammateId, status);
+        return JsonResponseTool.success(map);
+    }
+
 
 }

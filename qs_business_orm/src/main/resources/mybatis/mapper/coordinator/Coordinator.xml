@@ -78,5 +78,11 @@
         </if>
     </select>
 
+    <select id="selectByUserTeamAndMateRe" resultType="java.util.Map">
+        SELECT tut.object_id,tut.object_type,ttr.user_id,ttr.user_team_id from t_user_team tut LEFT JOIN t_teammate_re ttr
+        ON ttr.user_team_id=tut.id
+        where ttr.status=1 and ttr.id=#{teammateId,jdbcType=INTEGER} LIMIT 0,1
+    </select>
+
 
 </mapper>

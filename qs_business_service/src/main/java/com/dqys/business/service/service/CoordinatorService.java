@@ -53,4 +53,12 @@ public interface CoordinatorService {
      * 添加邀请人
      */
     Map addTeammate(Integer userTeamId, Integer userId, String remark, Integer[] userIds);
+
+    /**
+     * 是否同意邀请
+     * @param teammateId
+     * @param status
+     * @return
+     */
+    Map isAccept(Integer teammateId, Integer status);
 }
