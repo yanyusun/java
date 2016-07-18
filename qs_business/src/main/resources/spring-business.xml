@@ -9,7 +9,6 @@
 
     <import resource="classpath*:/spring/spring-*.xml"/>
     <import resource="spring-authorization.xml"/>
-    <import resource="spring-businessview.xml"/>
 
    <mvc:annotation-driven>
         <mvc:async-support default-timeout="30000"/>
