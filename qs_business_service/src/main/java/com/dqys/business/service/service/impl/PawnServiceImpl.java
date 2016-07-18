@@ -5,8 +5,12 @@ import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.asset.PiRelationMapper;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
+import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.asset.PiRelation;
+import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.dto.asset.PawnDTO;
+import com.dqys.business.service.exception.bean.BusinessLogException;
+import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.PawnService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
@@ -32,22 +36,33 @@ public class PawnServiceImpl implements PawnService {
     private IOUInfoMapper iouInfoMapper;
     @Autowired
     private BusinessService businessService;
+    @Autowired
+    private BusinessLogService businessLogService;
 
     @Override
-    public JsonResponse delete(Integer id) {
+    public JsonResponse delete_tx(Integer id) throws BusinessLogException{
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return CommonUtil.responseBack(pawnInfoMapper.deleteByPrimaryKey(id));
+        Integer result = pawnInfoMapper.deleteByPrimaryKey(id);
+        if(CommonUtil.checkResult(result)){
+            return JsonResponseTool.failure("删除失败");
+        }
+        // 增加操作记录
+        businessLogService.add(id, ObjectTypeEnum.ASSETSOURCE.getValue(), PawnEnum.DELETE.getValue(),
+                "", "", 0, 0);
+        return JsonResponseTool.success(null);
     }
 
     @Override
-    public JsonResponse add(PawnDTO pawnDTO) {
+    public JsonResponse add_tx(PawnDTO pawnDTO) throws BusinessLogException{
         if (CommonUtil.checkParam(pawnDTO, pawnDTO.getLenderId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer pawnId = pawnInfoMapper.insert(AssetServiceUtils.toPawnInfo(pawnDTO));
-        if(!CommonUtil.checkResult(pawnId)){
+        PawnInfo pawnInfo = AssetServiceUtils.toPawnInfo(pawnDTO);
+        Integer addResult = pawnInfoMapper.insert(pawnInfo);
+        if(!CommonUtil.checkResult(addResult)){
+            Integer pawnId = pawnInfo.getId();
             // 添加关联关系
             if(pawnDTO.getIouIds().length() > 0){
                 String[] idStr = pawnDTO.getIouIds().split(",");
@@ -64,6 +79,9 @@ public class PawnServiceImpl implements PawnService {
             // 添加业务
             businessService.addServiceObject(ObjectTypeEnum.LENDER.getValue(), pawnId,
                     ObjectTypeEnum.LENDER.getValue(), pawnDTO.getLenderId());
+            // 增加操作记录
+            businessLogService.add(pawnId, ObjectTypeEnum.ASSETSOURCE.getValue(), PawnEnum.ADD.getValue(),
+                    "", pawnDTO.getMemo(), 0, 0);
             return JsonResponseTool.success(pawnId);
         }else{
             return JsonResponseTool.failure("增加失败");
@@ -71,7 +89,7 @@ public class PawnServiceImpl implements PawnService {
     }
 
     @Override
-    public JsonResponse update(PawnDTO pawnDTO) {
+    public JsonResponse update_tx(PawnDTO pawnDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(pawnDTO, pawnDTO.getLenderId(), pawnDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -93,6 +111,9 @@ public class PawnServiceImpl implements PawnService {
                 }
             }
         }
+        // 增加操作记录
+        businessLogService.add(pawnId, ObjectTypeEnum.ASSETSOURCE.getValue(), PawnEnum.UPDATE.getValue(),
+                "", pawnDTO.getMemo(), 0, 0);
         return JsonResponseTool.success(pawnId);
     }
 

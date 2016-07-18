@@ -3,6 +3,7 @@ package com.dqys.business.controller;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.service.dto.asset.IouDTO;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.IouService;
 import com.dqys.business.service.service.LenderService;
 import com.dqys.core.model.JsonResponse;
@@ -30,11 +31,11 @@ public class IouController {
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public JsonResponse delete(@RequestParam Integer id) {
+    public JsonResponse delete(@RequestParam Integer id) throws BusinessLogException{
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return iouService.delete(id);
+        return iouService.delete_tx(id);
     }
 
     /**
@@ -45,11 +46,11 @@ public class IouController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse add(@ModelAttribute IouDTO iouDTO) {
+    public JsonResponse add(@ModelAttribute IouDTO iouDTO) throws BusinessLogException{
         if (CommonUtil.checkParam(iouDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return iouService.add(iouDTO);
+        return iouService.add_tx(iouDTO);
     }
 
     /**
@@ -61,11 +62,11 @@ public class IouController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse update(@ModelAttribute IouDTO iouDTO) {
+    public JsonResponse update(@ModelAttribute IouDTO iouDTO) throws BusinessLogException{
         if (CommonUtil.checkParam(iouDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return iouService.update(iouDTO);
+        return iouService.update_tx(iouDTO);
     }
 
     /**

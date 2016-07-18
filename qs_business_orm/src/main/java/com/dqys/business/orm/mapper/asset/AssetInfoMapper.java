@@ -3,6 +3,7 @@ package com.dqys.business.orm.mapper.asset;
 
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.query.asset.AssetQuery;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -76,5 +77,5 @@ public interface AssetInfoMapper {
      * @param id
      * @return
      */
-    Integer assignedBatch(List<Integer> ids, Integer id);
+    Integer assignedBatch(@Param("ids")List<Integer> ids, @Param("id")Integer id);
 }

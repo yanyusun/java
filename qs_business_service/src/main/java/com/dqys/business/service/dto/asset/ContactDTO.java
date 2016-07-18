@@ -8,6 +8,7 @@ package com.dqys.business.service.dto.asset;
  * {
  *
  * }
+ * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/asset/ContactDTO.java
  */
 public class ContactDTO {
 
@@ -32,6 +33,8 @@ public class ContactDTO {
     private String address;  // 详细地址
     private String memo;  // 备注
     private String code; // 工号
+
+    private String otherAddress; // 其他地址(json格式的地址,格式:[{province:11,city:1102,district:110228,address:""}...])
 
     public String getMode() {
         return mode;
@@ -183,5 +186,13 @@ public class ContactDTO {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getOtherAddress() {
+        return otherAddress;
+    }
+
+    public void setOtherAddress(String otherAddress) {
+        this.otherAddress = otherAddress;
     }
 }

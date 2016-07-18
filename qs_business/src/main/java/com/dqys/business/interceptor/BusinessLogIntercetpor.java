@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 public class BusinessLogIntercetpor extends AuthenticationInterceptor {
     private String baseUrl="/b_log";
     private String listUrl=baseUrl+"list";
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         String url = request.getRequestURI();

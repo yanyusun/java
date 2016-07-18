@@ -5,6 +5,7 @@ package com.dqys.business.service.constant.ObjectEnum;
  * Created by mkfeng on 2016/7/7.
  */
 public enum PawnEnum {
+    ADD(120, "新增"),
     MAINTAIN_REGULAR(121, "维持常规催收"),
     MARKET_DISPOSITION(122, "市场处置（变卖）"),
     CM_SIMULTANEOUS(123, "催收/市场同时进行"),
@@ -21,7 +22,10 @@ public enum PawnEnum {
     FOLLOW_UP(1215, "填写跟进"),
     RECOVERY_PLAN(1216, "填写清收计划"),
     SOLUTION(1217, "填写化解方案"),
-    REMARK(1218, "填写备注"),;
+    REMARK(1218, "填写备注"),
+    DELETE(1219, "删除"),
+    UPDATE(1219, "修改")
+    ;
     private Integer value;
     private String name;
 

@@ -7,6 +7,7 @@ import com.dqys.business.service.dto.company.CompanyDTO;
 import com.dqys.business.service.dto.company.CompanyRelationDTO;
 import com.dqys.business.service.dto.company.DistributionDTO;
 import com.dqys.business.service.dto.company.OrganizationInsertDTO;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.core.model.JsonResponse;
 
 import java.util.List;
@@ -80,7 +81,7 @@ public interface CompanyService {
      * @param id
      * @return
      */
-    DistributionDTO getDistribution_tx(Integer type, Integer id);
+    DistributionDTO getDistribution_tx(Integer type, Integer id) throws BusinessLogException;
 
     /**
      * 加入分配器
@@ -89,7 +90,7 @@ public interface CompanyService {
      * @param text 邀请内容
      * @return
      */
-    Integer joinDistribution_tx(Integer id, Integer type, String text);
+    Integer joinDistribution_tx(Integer id, Integer type, String text) throws BusinessLogException;
 
     /**
      * 修改分配器(同意加入|拒绝加入)
@@ -97,12 +98,12 @@ public interface CompanyService {
      * @param type
      * @return
      */
-    Integer updateDistribution_tx(Integer id, Integer type);
+    Integer updateDistribution_tx(Integer id, Integer type) throws BusinessLogException;
 
     /**
      * 退出该分配记录
      * @param id
      * @return
      */
-    Integer exitDistribution_tx(Integer id);
+    Integer exitDistribution_tx(Integer id) throws BusinessLogException;
 }

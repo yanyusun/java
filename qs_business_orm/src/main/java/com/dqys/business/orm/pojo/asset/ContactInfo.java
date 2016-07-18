@@ -26,6 +26,7 @@ public class ContactInfo extends BaseModel implements Serializable{
     private String district;  // 区
     private String address;  // 详细地址
     private String code; // 工号
+    private String otherAddress; // 其他地址
 
     public String toString(){
         String string = "lenderInfo:[";
@@ -174,5 +175,13 @@ public class ContactInfo extends BaseModel implements Serializable{
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getOtherAddress() {
+        return otherAddress;
+    }
+
+    public void setOtherAddress(String otherAddress) {
+        this.otherAddress = otherAddress;
     }
 }
