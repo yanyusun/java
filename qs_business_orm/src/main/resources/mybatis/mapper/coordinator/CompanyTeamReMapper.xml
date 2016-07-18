@@ -21,7 +21,6 @@
 
   <sql id="Query_Condition">
     <where>
-      stateflag = 0
       <if test="id != null">
         AND id = #{id,jdbcType=INTEGER}
       </if>
@@ -30,6 +29,12 @@
       </if>
       <if test="status != null">
         AND status = #{status,jdbcType=INTEGER}
+      </if>
+      <if test="companyId != null">
+        AND accept_company_id = #{companyId,jdbcType=INTEGER}
+      </if>
+      <if test="stateflag != null">
+        AND stateflag = #{stateflag,jdbcType=INTEGER}
       </if>
     </where>
   </sql>

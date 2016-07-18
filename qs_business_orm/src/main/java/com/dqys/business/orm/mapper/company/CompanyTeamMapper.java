@@ -2,12 +2,13 @@ package com.dqys.business.orm.mapper.company;
 
 
 import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 public interface CompanyTeamMapper {
     /**
-     * 删除公司协作器
+     * 删除分配器
      *
      * @param id
      * @return
@@ -15,7 +16,7 @@ public interface CompanyTeamMapper {
     Integer deleteByPrimaryKey(Integer id);
 
     /**
-     * 添加公司协作器
+     * 添加分配器
      *
      * @param record
      * @return
@@ -30,10 +31,19 @@ public interface CompanyTeamMapper {
     CompanyTeam get(Integer id);
 
     /**
-     * 根据邀请人Id
+     * 根据类型以及ID联合查询分配器
+     * @param type
+     * @param id
+     * @return
+     */
+    CompanyTeam getByTypeId(@Param("type")Integer type, @Param("id")Integer id);
+
+    /**
+     * 根据邀请人Id获取分配器
      * @param id
      * @return
      */
     List<CompanyTeam> listBySendId(Integer id);
+
 
 }

@@ -249,7 +249,7 @@ public class AuthController extends BaseApiContorller {
      * @api {POST} http://{url}/auth/login 用户登陆
      * @apiName login
      * @apiGroup Auth
-     * @apiDecription 用户登录模块返回信息包含独有信息,具体参考Login-Success-Response
+     * @apiDescription 用户登录模块返回信息包含独有信息,具体参考Login-Success-Response
      *
      * @apiUse RequestAccount
      * @apiUse JsonResponse

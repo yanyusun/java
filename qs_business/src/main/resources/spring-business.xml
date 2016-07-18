@@ -9,7 +9,9 @@
 
     <import resource="classpath*:/spring/spring-*.xml"/>
     <import resource="spring-authorization.xml"/>
-    <mvc:annotation-driven>
+    <import resource="spring-businessview.xml"/>
+
+   <mvc:annotation-driven>
         <mvc:async-support default-timeout="30000"/>
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
@@ -28,5 +30,5 @@
     </bean>
     <bean id="xmlMapper" parent="objectMapper" p:createXmlMapper="true"/>
 
-
+    <bean id="businessExceptionHandler" class="com.dqys.business.service.exception.handler.BusinessExceptionHandler"/>
 </beans>

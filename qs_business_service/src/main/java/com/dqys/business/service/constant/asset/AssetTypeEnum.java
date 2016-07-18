@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * @apiDefine AssetTypeEnum
- * @apiSuccessExcample {json} AssetTypeEnum
+ * @apiSuccessExample {json} AssetTypeEnum
  * {
  *      1:"资产包"
  * }

@@ -12,6 +12,7 @@ public enum ResponseCodeEnum {
     SERVER_ERR(5000, "服务器错误"),
     ILLEGAL_REQUEST(5001, "非法请求"),
     NOT_FOUND(5002, "资源不存在"),
+    BUSINESS_ERROR(9000,"业务操作错误")
     ;
 
     private Integer value;

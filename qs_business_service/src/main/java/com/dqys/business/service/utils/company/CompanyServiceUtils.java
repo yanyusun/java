@@ -1,13 +1,18 @@
 package com.dqys.business.service.utils.company;
 
+import com.dqys.auth.orm.pojo.CompanyDetailInfo;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.business.orm.pojo.company.Organization;
-import com.dqys.business.service.dto.company.CompanyDTO;
-import com.dqys.business.service.dto.company.OrganizationDTO;
-import com.dqys.business.service.dto.company.OrganizationInsertDTO;
+import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
+import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
+import com.dqys.business.service.dto.company.*;
+import com.dqys.business.service.service.CompanyService;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.utils.AreaTool;
+import com.dqys.core.utils.NoSQLWithRedisTool;
 import com.dqys.core.utils.SysPropertyTool;
+import com.rabbitmq.http.client.domain.UserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,5 +75,76 @@ public class CompanyServiceUtils {
 
         return organizationDTO;
     }
+
+    /**
+     * 转化公司关系为DTO
+     * @param companyRelationList
+     * @return
+     */
+    public static List<CompanyRelationDTO> toCompanyRelationDTO(List<CompanyRelation> companyRelationList){
+        if(companyRelationList == null || companyRelationList.size() == 0){
+            return null;
+        }
+        List<CompanyRelationDTO> companyRelationDTOList = new ArrayList<>();
+        companyRelationList.forEach(companyRelation -> {
+            companyRelationDTOList.add(toCompanyRelationDTO(companyRelation, null, null));
+        });
+        return companyRelationDTOList;
+    }
+
+    /**
+     * 转化公司关系为DTO
+     * @param companyRelation
+     * @param aName
+     * @param bName
+     * @return
+     */
+    public static CompanyRelationDTO toCompanyRelationDTO(CompanyRelation companyRelation, String aName, String bName){
+        if(companyRelation == null){
+            return null;
+        }
+        CompanyRelationDTO companyRelationDTO = new CompanyRelationDTO();
+
+        companyRelationDTO.setId(companyRelation.getId());
+        companyRelationDTO.setaId(companyRelation.getCompanyAId());
+        companyRelationDTO.setbId(companyRelation.getCompanyBId());
+        companyRelationDTO.setCreateAt(companyRelation.getCreateAt());
+        companyRelationDTO.setaName(aName);
+        companyRelationDTO.setbName(bName);
+
+        return companyRelationDTO;
+    }
+
+    public static CompanyTeamReDTO toCompanyTeamReDTO(CompanyTeamRe companyTeamRe, CompanyDetailInfo companyDetailInfo,
+                                                      String rate, Integer task){
+        if(companyTeamRe == null){
+            return null;
+        }
+        if(companyDetailInfo == null){
+            companyDetailInfo = new CompanyDetailInfo();
+        }
+        CompanyTeamReDTO companyTeamReDTO = new CompanyTeamReDTO();
+
+        companyTeamReDTO.setId(companyTeamRe.getId());
+        companyTeamReDTO.setTime(companyTeamRe.getUpdateAt());
+        companyTeamReDTO.setAvg(companyDetailInfo.getAvg());
+        companyTeamReDTO.setAddress(AreaTool.getAreaById(companyDetailInfo.getProvince()).getName()
+                + AreaTool.getAreaById(companyDetailInfo.getCity()).getName()
+                + AreaTool.getAreaById(companyDetailInfo.getDistrict()).getName());
+        companyTeamReDTO.setRate(rate);
+        companyTeamReDTO.setContact(companyDetailInfo.getName());
+        companyTeamReDTO.setTask(task);
+        companyTeamReDTO.setStateflag(companyTeamRe.getStateflag().intValue());
+        switch (companyDetailInfo.getType()){
+            case 1:companyTeamReDTO.setType("平台");break;
+            case 0:companyTeamReDTO.setType("普通用户");break;
+            case 31:companyTeamReDTO.setType("催收方");break;
+            case 32:companyTeamReDTO.setType("律所");break;
+            case 33:companyTeamReDTO.setType("中介");break;
+            case 2:companyTeamReDTO.setType("委托方");break;
+        }
+        return companyTeamReDTO;
+    }
+
 
 }

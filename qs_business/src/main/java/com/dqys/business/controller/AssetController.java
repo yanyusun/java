@@ -271,7 +271,7 @@ public class AssetController {
      * @apiName getDistribution
      * @apiGroup asset
      * @apiParam {number} id 资产包Id
-     * @apiSuccess {} data 分配器成员信息
+     * @apiSuccess {Object} data 分配器成员信息
      */
     @RequestMapping(value = "/getDistribution")
     @ResponseBody

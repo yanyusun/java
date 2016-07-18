@@ -1,6 +1,7 @@
 package com.dqys.business.service.service.impl;
 
 
+import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.ContactInfoMapper;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
@@ -14,6 +15,7 @@ import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
 import com.dqys.business.service.query.asset.LenderListQuery;
+import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.core.base.BaseSelectonDTO;
@@ -44,6 +46,9 @@ public class LenderServiceImpl implements LenderService {
     private PawnInfoMapper pawnInfoMapper;
     @Autowired
     private IOUInfoMapper iouInfoMapper;
+
+    @Autowired
+    private BusinessService businessService;
 
 
     @Override
@@ -84,6 +89,13 @@ public class LenderServiceImpl implements LenderService {
                 // todo 联系人增加失败,请处理
 
             }
+        }
+        // 添加业务
+        if(lenderDTO.getAssetId() == null){
+            businessService.addServiceObject(ObjectTypeEnum.LENDER.getValue(), lenderId, null, null);
+        }else{
+            businessService.addServiceObject(ObjectTypeEnum.LENDER.getValue(), lenderId,
+                    ObjectTypeEnum.ASSETPACKAGE.getValue(), lenderDTO.getAssetId());
         }
         return JsonResponseTool.success(lenderId);
     }

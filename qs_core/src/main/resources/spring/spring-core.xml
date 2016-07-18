@@ -45,7 +45,8 @@
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <tx:attributes>
             <tx:method name="get*" read-only="true" rollback-for="UnexpectedRollbackException"/>
-            <tx:method name="*_tx" rollback-for="Exception" propagation="REQUIRED"/>
+            <!--<tx:method name="*_tx" rollback-for="Exception" propagation="REQUIRED"/>-->
+            <tx:method name="*"  rollback-for="Exception" propagation="REQUIRED"/>
         </tx:attributes>
     </tx:advice>
     <aop:config>

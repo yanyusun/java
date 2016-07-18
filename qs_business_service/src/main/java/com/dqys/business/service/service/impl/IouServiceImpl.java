@@ -1,11 +1,13 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.asset.PiRelationMapper;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.asset.PiRelation;
 import com.dqys.business.service.dto.asset.IouDTO;
+import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.IouService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.core.model.JsonResponse;
@@ -28,6 +30,8 @@ public class IouServiceImpl implements IouService {
     private PawnInfoMapper pawnInfoMapper;
     @Autowired
     private PiRelationMapper piRelationMapper;
+    @Autowired
+    private BusinessService businessService;
 
     @Override
     public JsonResponse delete(Integer id) {
@@ -57,6 +61,9 @@ public class IouServiceImpl implements IouService {
                     }
                 }
             }
+            // 添加业务
+            businessService.addServiceObject(ObjectTypeEnum.LENDER.getValue(), iouId,
+                    ObjectTypeEnum.LENDER.getValue(), iouDTO.getLenderId());
             return JsonResponseTool.success(iouId);
         }else{
             return JsonResponseTool.failure("增加失败");

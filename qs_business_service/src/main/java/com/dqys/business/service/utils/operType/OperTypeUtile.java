@@ -29,7 +29,7 @@ public class OperTypeUtile implements ApplicationContextAware {
 
     public void opertype() {
         MybatisRedisCache mybatisRedisCache = new MybatisRedisCache();
-        List<Integer> userIds = operTypeService.selectByUserIds();
+        List<Integer> userIds = operTypeService.selectByUserIds();//?????
         List<Integer> roleIds = operTypeService.selectByRoleIds();
         List<Integer> objectIds = operTypeService.selectByObjectIds();
         for (Integer use : userIds) {
@@ -40,5 +40,31 @@ public class OperTypeUtile implements ApplicationContextAware {
                 }
             }
         }
+    }
+
+    /**
+     *
+     * 请完善这个方法????
+     *
+     * @param userType 用户类型
+     * @param userRole 用户角色
+     * @param objType  对象类型
+     * @return 该用户对这种操作对象所具有的操作列表
+     */
+    public static List<OperType> operTypes(int userType,int userRole,int objType){
+        String key=userType + "_" + userRole + "_" + objType;
+        return null;
+    }
+
+    /**
+     * 请完善这个方法????
+     * @param userType 用户类型
+     * @param userRole 用户角色
+     * @param objType 对象类型
+     * @param Oper 操作类型
+     * @return 该用户是否具有对应操作的权限
+     */
+    public static boolean hasAuth(int userType,int userRole,int objType,int Oper){
+        return true;
     }
 }
