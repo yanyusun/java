@@ -1,5 +1,7 @@
 package com.dqys.business.service.service;
 
+import com.dqys.business.service.exception.bean.BusinessLogException;
+
 import java.util.List;
 
 import java.util.Map;
@@ -52,7 +54,7 @@ public interface CoordinatorService {
     /**
      * 添加邀请人
      */
-    Map addTeammate(Integer userTeamId, Integer userId, String remark, Integer[] userIds);
+    Map addTeammate(Integer userTeamId, Integer userId, String remark, Integer[] userIds) throws BusinessLogException;
 
     /**
      * 是否同意邀请
@@ -60,5 +62,13 @@ public interface CoordinatorService {
      * @param status
      * @return
      */
-    Map isAccept(Integer teammateId, Integer status);
+    Map isAccept(Integer teammateId, Integer status) throws BusinessLogException;
+
+    /**
+     * 主动加入案组
+     * @param teammateId
+     * @param userId
+     * @return
+     */
+    Map addTeammate(Integer userTeammateId, Integer userId) throws BusinessLogException;
 }

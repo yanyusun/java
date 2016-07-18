@@ -1,9 +1,11 @@
 package com.dqys.business.controller;
 
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.ProtocolTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 协作器（跨部门、跨机构协作工具）
+ * 协作器（协作工具）
  * Created by mkfeng on 2016/7/12.
  */
 @Controller
@@ -104,6 +106,9 @@ public class CoordinatorController {
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
         );
+        if (CommonUtil.checkParam(userTeamId, userIds)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
         Map map = coordinatorService.addTeammate(userTeamId, userId, remark, userIds);
         return JsonResponseTool.success(map);
 
@@ -112,7 +117,7 @@ public class CoordinatorController {
     /**
      * @api {post} coordinator/isAccept 被邀请人员同意或是拒绝请求
      * @apiParam {int} teammateId 参与人关联表id
-     * @apiParam {string} status 状态（1同意2拒绝）
+     * @apiParam {int} status 状态（1同意2拒绝）
      * @apiDescription 被邀请人员确认和拒绝
      * @apiSampleRequest coordinator/isAccept
      * @apiGroup Coordinator
@@ -120,8 +125,41 @@ public class CoordinatorController {
      */
     @RequestMapping("/isAccept")
     @ResponseBody
-    public JsonResponse isAccept(Integer teammateId, Integer status) {
-        Map map = coordinatorService.isAccept(teammateId, status);
+    public JsonResponse isAccept(Integer teammateId, Integer status) throws BusinessLogException {
+        if (CommonUtil.checkParam(teammateId, status)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if (status == 1 || status == 2) {
+            Map map = coordinatorService.isAccept(teammateId, status);
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+
+    }
+
+    /**
+     * @api {post} coordinator/addInitiative 人员主动添加到案组
+     * @apiParam {int} userTeammateId 协作器id
+     * @apiDescription 主动加入案组
+     * @apiSampleRequest coordinator/addInitiative
+     * @apiGroup Coordinator
+     * @apiName coordinator/addInitiative
+     */
+    @RequestMapping("/addInitiative")
+    @ResponseBody
+    public JsonResponse addInitiative(Integer userTeammateId, HttpServletRequest httpServletRequest) throws Exception {
+        Integer userId = ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+        );
+        if (CommonUtil.checkParam(userTeammateId)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        Map map = coordinatorService.addTeammate(userTeammateId, userId);
         return JsonResponseTool.success(map);
     }
 

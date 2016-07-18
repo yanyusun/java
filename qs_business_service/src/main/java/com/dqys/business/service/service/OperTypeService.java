@@ -48,4 +48,15 @@ public interface OperTypeService {
      * @return
      */
     public List<OperType> getOperType(Integer roleType, Integer userType, Integer objectType);
+
+    /**
+     * 判断是否拥有权限（true有权限，false无权限）
+     * @param roleType
+     * @param userType
+     * @param objectType
+     * @param operType
+     * @return
+     */
+    public boolean checkOperType(Integer roleType, Integer userType, Integer objectType,Integer operType);
+
 }

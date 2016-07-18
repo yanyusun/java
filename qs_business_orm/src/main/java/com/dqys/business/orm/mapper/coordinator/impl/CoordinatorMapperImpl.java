@@ -36,7 +36,7 @@ public class CoordinatorMapperImpl extends BaseDao implements CoordinatorMapper 
 
     @Override
     public List<Map<String, Object>> companyList(Integer objectId, Integer objectType) {
-        return  super.getSqlSession().getMapper(CoordinatorMapper.class).companyList(objectId,objectType);
+        return  super.getSqlSession().getMapper(CoordinatorMapper.class).companyList(objectId, objectType);
     }
 
     @Override
@@ -46,11 +46,16 @@ public class CoordinatorMapperImpl extends BaseDao implements CoordinatorMapper 
 
     @Override
     public  List<Map<String,Object>> getCompanyUserList(String realName, Integer userId, Integer companyId) {
-        return super.getSqlSession().getMapper(CoordinatorMapper.class).getCompanyUserList(realName,userId,companyId);
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).getCompanyUserList(realName, userId, companyId);
     }
 
     @Override
     public Map selectByUserTeamAndMateRe(Integer teammateId) {
         return super.getSqlSession().getMapper(CoordinatorMapper.class).selectByUserTeamAndMateRe(teammateId);
+    }
+
+    @Override
+    public Map getLastLeaveWord(Integer userId) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).getLastLeaveWord(userId);
     }
 }

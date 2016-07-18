@@ -1,7 +1,6 @@
 package com.dqys.business.orm.mapper.coordinator;
 
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
-import com.rabbitmq.http.client.domain.UserInfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -75,8 +74,17 @@ public interface CoordinatorMapper {
 
     /**
      * 查询团队中的协作器信息
+     *
      * @param teammateId
      * @return
      */
     Map selectByUserTeamAndMateRe(Integer teammateId);
+
+    /**
+     * 获取最后留言时间
+     *
+     * @param userId
+     * @return
+     */
+    Map getLastLeaveWord(Integer userId);
 }

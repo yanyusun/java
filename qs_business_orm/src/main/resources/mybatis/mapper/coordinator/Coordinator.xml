@@ -83,6 +83,11 @@
         ON ttr.user_team_id=tut.id
         where ttr.status=1 and ttr.id=#{teammateId,jdbcType=INTEGER} LIMIT 0,1
     </select>
+    <!--最后留言时间-->
+    <select id="getLastLeaveWord" resultType="java.util.Map">
+        SELECT DATE_FORMAT(lw.time,'%Y-%m-%d') time from leave_word lw
+          where lw.user_id=#{userId,jdbcType=INTEGER} ORDER BY lw.time desc LIMIT 0,1
+    </select>
 
 
 </mapper>

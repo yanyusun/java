@@ -1,4 +1,4 @@
-package com.dqys.business.service.constant.coordinator;
+package com.dqys.business.orm.constant.coordinator;
 
 /**
  * Created by mkfeng on 2016/7/15.
