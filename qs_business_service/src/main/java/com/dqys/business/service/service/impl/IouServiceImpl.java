@@ -4,9 +4,13 @@ import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.asset.PiRelationMapper;
+import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.asset.PiRelation;
+import com.dqys.business.service.constant.ObjectEnum.IouEnum;
 import com.dqys.business.service.dto.asset.IouDTO;
+import com.dqys.business.service.exception.bean.BusinessLogException;
+import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.IouService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
@@ -32,22 +36,33 @@ public class IouServiceImpl implements IouService {
     private PiRelationMapper piRelationMapper;
     @Autowired
     private BusinessService businessService;
+    @Autowired
+    private BusinessLogService businessLogService;
 
     @Override
-    public JsonResponse delete(Integer id) {
+    public JsonResponse delete_tx(Integer id) throws BusinessLogException{
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return CommonUtil.responseBack(iouInfoMapper.deleteByPrimaryKey(id));
+        Integer result = iouInfoMapper.deleteByPrimaryKey(id);
+        if(CommonUtil.checkResult(result)){
+            return JsonResponseTool.failure("删除失败");
+        }
+        // 添加操作记录
+        businessLogService.add(id, ObjectTypeEnum.IOU.getValue(), IouEnum.DELETE.getValue(),
+                "", "", 0, 0);
+        return JsonResponseTool.success(null);
     }
 
     @Override
-    public JsonResponse add(IouDTO iouDTO) {
+    public JsonResponse add_tx(IouDTO iouDTO) throws BusinessLogException{
         if (CommonUtil.checkParam(iouDTO, iouDTO.getLenderId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer iouId = iouInfoMapper.insert(AssetServiceUtils.toIouInfo(iouDTO));
-        if(!CommonUtil.checkResult(iouId)){
+        IOUInfo iouInfo = AssetServiceUtils.toIouInfo(iouDTO);
+        Integer iouResult = iouInfoMapper.insert(iouInfo);
+        if(!CommonUtil.checkResult(iouResult)){
+            Integer iouId = iouInfo.getId();
             // 添加关联关系
             if(iouDTO.getPawnIds().length() > 0){
                 String[] idStr = iouDTO.getPawnIds().split(",");
@@ -64,6 +79,9 @@ public class IouServiceImpl implements IouService {
             // 添加业务
             businessService.addServiceObject(ObjectTypeEnum.LENDER.getValue(), iouId,
                     ObjectTypeEnum.LENDER.getValue(), iouDTO.getLenderId());
+            // 添加操作记录
+            businessLogService.add(iouId, ObjectTypeEnum.IOU.getValue(), IouEnum.ADD.getValue(),
+                    "", iouDTO.getMemo(), 0, 0);
             return JsonResponseTool.success(iouId);
         }else{
             return JsonResponseTool.failure("增加失败");
@@ -71,8 +89,8 @@ public class IouServiceImpl implements IouService {
     }
 
     @Override
-    public JsonResponse update(IouDTO iouDTO) {
-        if (CommonUtil.checkParam(iouDTO, iouDTO.getLenderId())) {
+    public JsonResponse update_tx(IouDTO iouDTO) throws BusinessLogException{
+        if (CommonUtil.checkParam(iouDTO, iouDTO.getLenderId(), iouDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         Integer iouId = iouDTO.getId();
@@ -93,6 +111,9 @@ public class IouServiceImpl implements IouService {
                 }
             }
         }
+        // 添加操作记录
+        businessLogService.add(iouId, ObjectTypeEnum.IOU.getValue(), IouEnum.UPDATE.getValue(),
+                "", "", 0, 0);
         return JsonResponseTool.success(iouId);
     }
 

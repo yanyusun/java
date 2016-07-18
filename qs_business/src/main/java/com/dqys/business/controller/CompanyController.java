@@ -5,10 +5,14 @@ import com.dqys.business.orm.constant.company.ObjectBusinessTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
 import com.dqys.business.service.dto.company.OrganizationInsertDTO;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.CompanyService;
+import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.NoSQLWithRedisTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -134,7 +138,7 @@ public class CompanyController {
     @RequestMapping(value = "/getDistribution")
     @ResponseBody
     public JsonResponse getDistribution(@RequestParam(required = true) Integer type,
-                                        @RequestParam(required = true) Integer id) {
+                                        @RequestParam(required = true) Integer id) throws BusinessLogException{
         if (CommonUtil.checkParam(type, id)) {
             return JsonResponseTool.success("参数错误");
         }
@@ -154,7 +158,7 @@ public class CompanyController {
      */
     @RequestMapping(value = "/joinDistribution")
     @ResponseBody
-    public JsonResponse joinDistribution(@RequestParam(required = true) Integer id) {
+    public JsonResponse joinDistribution(@RequestParam(required = true) Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.success("参数错误");
         }
@@ -175,11 +179,17 @@ public class CompanyController {
     @ResponseBody
     public JsonResponse inviteDistribution(@RequestParam(required = true) Integer id,
                                            @RequestParam(required = true) Integer companyId,
-                                           @RequestParam(required = true) String text) {
+                                           @RequestParam(required = true) String text) throws BusinessLogException{
         if (CommonUtil.checkParam(companyId, id)) {
             return JsonResponseTool.success("参数错误");
         }
-        return CommonUtil.responseBack(companyService.joinDistribution_tx(id, ObjectBusinessTypeEnum.assign.getValue(), text));
+        if(UserSession.getCurrent().getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM))){
+            // 平台
+            return CommonUtil.responseBack(companyService.joinDistribution_tx(id, ObjectBusinessTypeEnum.platform.getValue(), text));
+        }else{
+            // 机构
+            return CommonUtil.responseBack(companyService.joinDistribution_tx(id, ObjectBusinessTypeEnum.mechanism.getValue(), text));
+        }
     }
 
     /**
@@ -193,7 +203,7 @@ public class CompanyController {
     @RequestMapping(value = "/designDistribution")
     @ResponseBody
     public JsonResponse designDistribution(@RequestParam(required = true) Integer id,
-                                           @RequestParam(required = true) Integer type) {
+                                           @RequestParam(required = true) Integer type) throws BusinessLogException {
         if (CommonUtil.checkParam(id, type)) {
             return JsonResponseTool.success("参数错误");
         }
@@ -214,7 +224,7 @@ public class CompanyController {
      */
     @RequestMapping(value = "/exitDistribution")
     @ResponseBody
-    public JsonResponse exitDistribution(@RequestParam(required = true) Integer id) {
+    public JsonResponse exitDistribution(@RequestParam(required = true) Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.success("参数错误");
         }

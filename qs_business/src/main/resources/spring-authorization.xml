@@ -20,6 +20,30 @@
             <mvc:mapping path="/b_log/*"/>
             <bean class="com.dqys.business.interceptor.BusinessLogIntercetpor"/>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/asset/*"/>
+            <bean class="com.dqys.business.interceptor.asset.AssetInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/api/company/*"/>
+            <bean class="com.dqys.business.interceptor.asset.CompanyInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/iou/*"/>
+            <bean class="com.dqys.business.interceptor.asset.IouInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/lender/*"/>
+            <bean class="com.dqys.business.interceptor.asset.LenderInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/pawn/*"/>
+            <bean class="com.dqys.business.interceptor.asset.PawnInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/api/user/*"/>
+            <bean class="com.dqys.business.interceptor.asset.UserInterceptor"/>
+        </mvc:interceptor>
     </mvc:interceptors>
 
 </beans>

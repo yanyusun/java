@@ -1,6 +1,8 @@
 package com.dqys.business.service.dto.company;
 
 /**
+ * Created by Yvan on 16/6/30.
+ * 公司信息
  * @apiDefine CompanyDTO
  * @apiSuccessExample {json} CompanyDTO-Response:
  * HTTP/1.1 2000 ok
@@ -11,9 +13,7 @@ package com.dqys.business.service.dto.company;
  *     city:'杭州市',
  *     district:'江干区'
  * }
- *
- * Created by Yvan on 16/6/30.
- * 公司信息
+ * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/company/CompanyDTO.java
  */
 public class CompanyDTO {
 

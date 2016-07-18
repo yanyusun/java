@@ -11,24 +11,38 @@ import java.util.List;
  * {
  *
  * }
+ * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/asset/iouDTO.java
  */
 
 /**
  * Created by Yvan on 16/6/16.
  * @apiDefine Iou
  * @apiParam {numbder} id 主键
- * @apiParam {numbder} id 主键
- * @apiParam {numbder} id 主键
- * @apiParam {numbder} id 主键
- * @apiParam {numbder} id 主键
- * @apiParam {numbder} id 主键
- * @apiParam {numbder} id 主键
- * @apiParam {numbder} id 主键
- * @apiParam {numbder} id 主键
- * @apiParam {numbder} id 主键
- * @apiParam {numbder} id 主键
- * @apiParam {numbder} id 主键
- * @apiParam {numbder} id 主键
+ * @apiParam {numbder} iouNo 编号
+ * @apiParam {string} type 借据类型
+ * @apiParam {string} agency 代理机构
+ * @apiParam {date} loanTime 放款时间
+ * @apiParam {date} loanAtTime 到款时间
+ * @apiParam {numbder} amount 金额
+ * @apiParam {numbder} pactRate 合同利率
+ * @apiParam {numbder} outtimeMultiple 逾期倍数
+ * @apiParam {string} appropriationMultiple 挪用倍数
+ * @apiParam {numbder} accrualRepay 已还利息金额
+ * @apiParam {numbder} loanRepay 已还贷款金额
+ * @apiParam {string} levelType 5级分类
+ * @apiParam {numbder} outDays 逾期天数
+ * @apiParam {numbder} lessCorpus 剩余本金
+ * @apiParam {numbder} accrualArrears 拖欠利息
+ * @apiParam {numbder} penalty 罚息
+ * @apiParam {numbder} arrears 欠款合计
+ * @apiParam {date} endAt 欠款截止日期
+ * @apiParam {numbder} worth 价值
+ * @apiParam {numbder} advanceCorpus 提前偿还本金
+ * @apiParam {string} evaluateExcellent 评优
+ * @apiParam {string} evaluateLevel 评级
+ * @apiParam {string} memo 备注
+ * @apiParam {number} lenderId 借款基础信息
+ * @apiParam {string} pawnIds 抵押物IDs
  */
 public class IouDTO {
 
@@ -41,7 +55,7 @@ public class IouDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date loanTime;  // 放款时间
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date loanAttime;  // 到款时间
+    private Date loanAtTime;  // 到款时间
     private Double amount;  // 金额
     private Double pactRate;  // 合同利率
     private Double outtimeMultiple;  // 逾期倍数
@@ -131,12 +145,12 @@ public class IouDTO {
         this.loanTime = loanTime;
     }
 
-    public Date getLoanAttime() {
-        return loanAttime;
+    public Date getLoanAtTime() {
+        return loanAtTime;
     }
 
-    public void setLoanAttime(Date loanAttime) {
-        this.loanAttime = loanAttime;
+    public void setLoanAtTime(Date loanAttime) {
+        this.loanAtTime = loanAttime;
     }
 
     public Double getAmount() {

@@ -7,6 +7,12 @@ import java.util.List;
 
 /**
  * Created by Yvan on 16/7/11.
+ * @apiDefine LenderTypeEnum
+ * @apiSuccessExample {json} LenderTypeEnum:
+ * {
+ *
+ * }
+ * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/constant/asset/LenderTypeEnum.java
  */
 public enum LenderTypeEnum {
 

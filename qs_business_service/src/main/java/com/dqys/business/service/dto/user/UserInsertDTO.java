@@ -1,5 +1,34 @@
 package com.dqys.business.service.dto.user;
 /**
+ * @apiDefine UserInsertDTO
+ * @apiSuccessExample {json} UserInsert:
+ * {
+ * "id": 30,
+ * "avg": null,
+ * "userName": "name1",
+ * "realName": "real11111",
+ * "sex": 0,
+ * "roleId": 13,
+ * "account": "asd",
+ * "mobile": "13302021212",
+ * "wechat": "wechar",
+ * "email": "email",
+ * "qq": null,
+ * "occupation": "职位",
+ * "occupationTel": null,
+ * "apartmentId": 1,
+ * "duty": "经理助理",
+ * "dutyMark": null,
+ * "areaId": 1128,
+ * "teamId": null,
+ * "remark": null,
+ * "userType": 1,
+ * "companyId": 120
+ * }
+ * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/user/UserInsertDTO.java
+ */
+
+/**
  * @apiDefine UserInsert
  * @apiParam {number} [id] 主键
  * @apiParam {string} [avg] 头像地址
@@ -22,38 +51,10 @@ package com.dqys.business.service.dto.user;
  * @apiParam {string} [remark] 备注
  * @apiParam {number} userType 用户类型
  * @apiParam {number} [companyId] 公司Id
- *
+ * <p/>
  * Created by Yvan on 16/6/23.
  */
 public class UserInsertDTO {
-    /**
-     * @apiDefine UserInsertDTO
-     * @apiSuccessExample {json} UserInsert:
-     * {
-     * "id": 30,
-     * "avg": null,
-     * "userName": "name1",
-     * "realName": "real11111",
-     * "sex": 0,
-     * "roleId": 13,
-     * "account": "asd",
-     * "mobile": "13302021212",
-     * "wechat": "wechar",
-     * "email": "email",
-     * "qq": null,
-     * "occupation": "职位",
-     * "occupationTel": null,
-     * "apartmentId": 1,
-     * "duty": "经理助理",
-     * "dutyMark": null,
-     * "areaId": 1128,
-     * "teamId": null,
-     * "remark": null,
-     * "userType": 1,
-     * "companyId": 120
-     * }
-     */
-
     private Integer id;
 
     private String avg; //头像地址

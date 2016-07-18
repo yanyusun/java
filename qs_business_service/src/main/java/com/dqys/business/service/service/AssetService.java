@@ -2,6 +2,7 @@ package com.dqys.business.service.service;
 
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.service.dto.asset.AssetDTO;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.core.model.JsonResponse;
 
@@ -16,7 +17,7 @@ public interface AssetService {
      * @param assetDTO
      * @return
      */
-    JsonResponse add(AssetDTO assetDTO);
+    JsonResponse add_tx(AssetDTO assetDTO) throws BusinessLogException;
 
     /**
      * 修改资产包
@@ -24,7 +25,7 @@ public interface AssetService {
      * @param assetDTO
      * @return
      */
-    JsonResponse updateById(AssetDTO assetDTO);
+    JsonResponse updateById_tx(AssetDTO assetDTO) throws BusinessLogException;
 
     /**
      * 逻辑删除资产包
@@ -32,7 +33,7 @@ public interface AssetService {
      * @param id
      * @return
      */
-    JsonResponse delete(Integer id);
+    JsonResponse delete_tx(Integer id) throws BusinessLogException;
 
     /**
      * 根据ID获取单个资产包
@@ -63,7 +64,7 @@ public interface AssetService {
      * @param ids
      * @return
      */
-    JsonResponse assignedBatch(String ids, Integer id);
+    JsonResponse assignedBatch(String ids, Integer id) throws BusinessLogException;
 
     /**
      * 根据资产包信息查询所属借款人

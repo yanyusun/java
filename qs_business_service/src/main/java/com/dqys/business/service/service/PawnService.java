@@ -2,6 +2,7 @@ package com.dqys.business.service.service;
 
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.service.dto.asset.PawnDTO;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.core.model.JsonResponse;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface PawnService {
      * @param id
      * @return
      */
-    JsonResponse delete(Integer id);
+    JsonResponse delete_tx(Integer id) throws BusinessLogException;
 
     /**
      * 新增
@@ -25,7 +26,7 @@ public interface PawnService {
      * @param pawnDTO
      * @return
      */
-    JsonResponse add(PawnDTO pawnDTO);
+    JsonResponse add_tx(PawnDTO pawnDTO) throws BusinessLogException;
 
     /**
      * 修改
@@ -33,7 +34,7 @@ public interface PawnService {
      * @param pawnDTO
      * @return
      */
-    JsonResponse update(PawnDTO pawnDTO);
+    JsonResponse update_tx(PawnDTO pawnDTO) throws BusinessLogException;
 
     /**
      * 根据ID提取抵押物
