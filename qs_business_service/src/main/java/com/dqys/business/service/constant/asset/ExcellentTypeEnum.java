@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Created by Yvan on 16/7/11.
- * @apiUse ExcellentTypeEnum
+ * @apiDefine ExcellentTypeEnum
  * @apiSuccessExample {json} ExcellentTypeEnum:
  * {
  *
