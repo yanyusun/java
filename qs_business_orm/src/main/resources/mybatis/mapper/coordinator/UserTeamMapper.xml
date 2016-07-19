@@ -19,11 +19,28 @@
     id, create_at, remark, company_id, manger_id, status, ctreater_id, object_id, object_type, 
     version, update_at, stateflag
   </sql>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+    <!--根据条件查询结果-->
+    <select id="selectByPrimaryKeySelective" resultMap="BaseResultMap"
+            parameterType="com.dqys.business.orm.pojo.coordinator.UserTeam">
         select
         <include refid="Base_Column_List"/>
         from t_user_team
-        where id = #{id,jdbcType=INTEGER}
+        <where>
+            stateflag=0
+            <if test="id !=null">
+                and id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="objectId !=null">
+                and object_id=#{objectId,jdbcType=INTEGER}
+            </if>
+            <if test="companyId !=null">
+                and company_id=#{companyId,jdbcType=INTEGER}
+            </if>
+            <if test="objectType !=null">
+                and object_type=#{objectType,jdbcType=INTEGER}
+            </if>
+        </where>
+        Limit 0,1
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     update t_user_team set stateflag=now()

@@ -5,6 +5,8 @@ import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.core.base.BaseDao;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by mkfeng on 2016/7/12.
  */
@@ -38,5 +40,10 @@ public class TeammateReMapperImpl extends BaseDao implements TeammateReMapper {
     @Override
     public Integer updateByPrimaryKey(TeammateRe record) {
         return super.getSqlSession().getMapper(TeammateReMapper.class).updateByPrimaryKey(record);
+    }
+
+    @Override
+    public List<TeammateRe> selectSelective(TeammateRe teammateRe) {
+        return super.getSqlSession().getMapper(TeammateReMapper.class).selectSelective(teammateRe);
     }
 }

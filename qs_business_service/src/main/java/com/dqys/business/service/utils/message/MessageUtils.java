@@ -7,6 +7,7 @@ import com.dqys.business.service.constant.MessageEnum;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mkfeng on 2016/7/11.
@@ -40,11 +41,38 @@ public class MessageUtils {
             messageDTO.setSendTime(m.getSendTime());
             messageDTO.setTypeName(MessageEnum.getEnumByValue(m.getType()));
             messageDTO.setStatus(m.getStatus());
-            messageDTO.setLabel(m.getLabel()==null?"":m.getLabel());
+            messageDTO.setLabel(m.getLabel() == null ? "" : m.getLabel());
             list.add(messageDTO);
         }
         return list;
     }
 
+    public static String transMapToString(Map map, String key) {
+        return map.get(key) == null ? "" : map.get(key).toString();
+    }
+
+    public static Integer transStringToInt(Object obj) {
+        try {
+            return Integer.parseInt(obj.toString().trim());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static Double transStringToDou(Object obj) {
+        try {
+            return Double.parseDouble(obj.toString().trim());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static Integer transMapToInt(Map map, String key) {
+        return transStringToInt(transMapToString(map, key));
+    }
+
+    public static Double transMapToDou(Map map, String key) {
+        return transStringToDou(transMapToString(map, key));
+    }
 
 }

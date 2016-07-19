@@ -12,10 +12,10 @@
         <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
         <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
         <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+        <result column="business_type" property="businessType" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, user_team_id, user_id, type, status, join_type, version, create_at, update_at, 
-    stateflag
+    id, user_team_id, user_id, type, status, join_type, version, create_at, update_at,business_type,stateflag
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -61,6 +61,9 @@
             <if test="joinType != null">
                 join_type,
             </if>
+            <if test="businessType !=null">
+                business_type,
+            </if>
             create_at,
             update_at,
         </trim>
@@ -82,6 +85,9 @@
             </if>
             <if test="joinType != null">
                 #{joinType,jdbcType=INTEGER},
+            </if>
+            <if test="businessType != null">
+                #{businessType,jdbcType=INTEGER},
             </if>
             now(),
             now(),
@@ -105,6 +111,9 @@
             <if test="joinType != null">
                 join_type = #{joinType,jdbcType=INTEGER},
             </if>
+            <if test="businessType != null">
+                business_type=#{businessType,jdbcType=INTEGER},
+            </if>
             version = version+1,
             update_at = now(),
         </set>
@@ -121,4 +130,23 @@
       update_at = now()
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+    <select id="selectSelective" parameterType="com.dqys.business.orm.pojo.coordinator.TeammateRe"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_teammate_re
+        <where>
+         stateflag=0
+        <if test="userTeamId !=null">
+          AND user_team_id=#{userTeamId,jdbcType=INTEGER}
+        </if>
+        <if test="type !=null">
+            AND type=#{type,jdbcType=INTEGER}
+        </if>
+        <if test="userId !=null">
+            AND user_id=#{userId,jdbcType=INTEGER}
+        </if>
+        </where>
+    </select>
 </mapper>

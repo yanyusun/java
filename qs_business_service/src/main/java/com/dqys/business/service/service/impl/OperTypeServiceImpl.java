@@ -55,5 +55,16 @@ public class OperTypeServiceImpl implements OperTypeService {
         return (List<OperType>) mybatisRedisCache.getObject(userId_roleId_objectId);
     }
 
+    @Override
+    public boolean checkOperType(Integer roleType, Integer userType, Integer objectType, Integer operType) {
+        List<OperType> list=getOperType(roleType,userType,objectType);
+        for(OperType o:list){
+            if(o.getOperType()==operType){
+               return true;
+            }
+        }
+        return false;
+    }
+
 
 }
