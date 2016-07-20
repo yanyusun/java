@@ -1,6 +1,7 @@
 package com.dqys.business.controller;
 
 import com.dqys.business.service.dto.asset.PawnDTO;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.PawnService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
@@ -28,11 +29,11 @@ public class PawnController {
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public JsonResponse delete(@RequestParam Integer id) {
+    public JsonResponse delete(@RequestParam Integer id) throws BusinessLogException{
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return pawnService.delete(id);
+        return pawnService.delete_tx(id);
     }
 
     /**
@@ -44,11 +45,11 @@ public class PawnController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse add(@ModelAttribute PawnDTO pawnDTO) {
+    public JsonResponse add(@ModelAttribute PawnDTO pawnDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(pawnDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return pawnService.add(pawnDTO);
+        return pawnService.add_tx(pawnDTO);
     }
 
     /**
@@ -60,11 +61,11 @@ public class PawnController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse update(@ModelAttribute PawnDTO pawnDTO) {
+    public JsonResponse update(@ModelAttribute PawnDTO pawnDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(pawnDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return pawnService.update(pawnDTO);
+        return pawnService.update_tx(pawnDTO);
     }
 
     /**
@@ -77,7 +78,7 @@ public class PawnController {
      */
     @RequestMapping(value = "/get")
     @ResponseBody
-    public JsonResponse updatePawn(@RequestParam Integer id) {
+    public JsonResponse get(@RequestParam Integer id) {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }

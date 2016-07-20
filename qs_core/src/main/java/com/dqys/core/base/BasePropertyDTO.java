@@ -3,6 +3,7 @@ package com.dqys.core.base;
 import java.util.Date;
 
 /**
+ * Created by Yvan on 16/7/11.
  * @apiDefine PropertyDTO
  * @apiSuccessExample {json} Property:
  * {
@@ -12,7 +13,6 @@ import java.util.Date;
  *     name:"name",
  *     value:1
  * }
- * Created by Yvan on 16/7/11.
  */
 public class BasePropertyDTO {
 

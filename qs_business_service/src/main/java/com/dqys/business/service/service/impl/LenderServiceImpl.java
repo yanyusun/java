@@ -10,11 +10,15 @@ import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.query.asset.IOUQuery;
 import com.dqys.business.orm.query.asset.PawnQuery;
+import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
 import com.dqys.business.service.constant.asset.AssetModelTypeEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
+import com.dqys.business.service.constant.asset.LenderTypeEnum;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.LenderListQuery;
+import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
@@ -49,6 +53,8 @@ public class LenderServiceImpl implements LenderService {
 
     @Autowired
     private BusinessService businessService;
+    @Autowired
+    private BusinessLogService businessLogService;
 
 
     @Override
@@ -59,7 +65,7 @@ public class LenderServiceImpl implements LenderService {
     }
 
     @Override
-    public JsonResponse add(List<ContactDTO> contactDTOList, LenderDTO lenderDTO) {
+    public JsonResponse add_tx(List<ContactDTO> contactDTOList, LenderDTO lenderDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(contactDTOList, lenderDTO) || contactDTOList.size() == 0) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -76,16 +82,21 @@ public class LenderServiceImpl implements LenderService {
             return JsonResponseTool.paramErr("缺少借款人信息");
         }
         // 添加借款人基础信息
-        Integer lenderId = lenderInfoMapper.insert(AssetServiceUtils.toLenderInfo(lenderDTO));
-        if (lenderId == null || lenderId.equals(0)) {
+        LenderInfo lenderInfo = AssetServiceUtils.toLenderInfo(lenderDTO);
+        Integer addResult = lenderInfoMapper.insert(lenderInfo);
+        if (CommonUtil.checkResult(addResult)) {
             return JsonResponseTool.failure("添加失败");
         }
+        Integer lenderId = lenderInfo.getId();
+        // 添加历史记录
+        businessLogService.add(lenderId, ObjectTypeEnum.LENDER.getValue(), LenderEnum.ADD.getValue(),
+                "", "", 0, 0);
         // 增加借款人相关联系人的身份信息
         for (ContactDTO contactDTO : contactDTOList) {
             contactDTO.setMode(AssetModelTypeEnum.LENDER);
             contactDTO.setModeId(lenderId);
-            Integer id = contactInfoMapper.insert(AssetServiceUtils.toContactInfo(contactDTO));
-            if (CommonUtil.checkResult(id)) {
+            Integer result = contactInfoMapper.insert(AssetServiceUtils.toContactInfo(contactDTO));
+            if (CommonUtil.checkResult(result)) {
                 // todo 联系人增加失败,请处理
 
             }
@@ -101,7 +112,7 @@ public class LenderServiceImpl implements LenderService {
     }
 
     @Override
-    public JsonResponse delete(Integer id) {
+    public JsonResponse delete_tx(Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -109,6 +120,9 @@ public class LenderServiceImpl implements LenderService {
         Integer contact = contactInfoMapper.deleteByMode(AssetModelTypeEnum.LENDER, id);
 
         if (CommonUtil.checkResult(lender) && CommonUtil.checkResult(contact)) {
+            // 添加历史记录
+            businessLogService.add(id, ObjectTypeEnum.LENDER.getValue(), LenderEnum.DELETE.getValue(),
+                    "", "", 0, 0);
             return JsonResponseTool.success(null);
         } else {
             return JsonResponseTool.failure("删除失败");
@@ -117,7 +131,7 @@ public class LenderServiceImpl implements LenderService {
 
 
     @Override
-    public JsonResponse update(List<ContactDTO> contactDTOList, LenderDTO lenderDTO) {
+    public JsonResponse update_tx(List<ContactDTO> contactDTOList, LenderDTO lenderDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(contactDTOList, lenderDTO, lenderDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -137,6 +151,9 @@ public class LenderServiceImpl implements LenderService {
         if (!CommonUtil.checkResult(lender)) {
             flag = true;
         }
+        // 添加历史记录
+        businessLogService.add(lenderDTO.getId(), ObjectTypeEnum.LENDER.getValue(), LenderEnum.UPDATE_EDIT.getValue(),
+                "", "", 0, 0);
         // 流程:比较先有的联系人信息与数据库中的差异性,余删缺增.
         List<ContactInfo> contactInfoList = contactInfoMapper.listByMode(AssetModelTypeEnum.LENDER, lender);
         for (ContactInfo contactInfo : contactInfoList) {

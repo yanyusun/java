@@ -483,7 +483,7 @@ public class ExcelUtilAsset {
             iouDTO.setType(transMapToString(map2, "var3"));
             iouDTO.setAgency(transMapToString(map2, "var4"));
             iouDTO.setLoanTime(DateFormatTool.parse(transMapToString(map2, "var5"), DateFormatTool.DATE_FORMAT_10_REG2));
-            iouDTO.setLoanAttime(DateFormatTool.parse(transMapToString(map2, "var6"), DateFormatTool.DATE_FORMAT_10_REG2));
+            iouDTO.setLoanAtTime(DateFormatTool.parse(transMapToString(map2, "var6"), DateFormatTool.DATE_FORMAT_10_REG2));
             iouDTO.setAmount(transStringToDouble(transMapToString(map2, "var7")));
             iouDTO.setPactRate(transStringToDouble(transMapToString(map2, "var8").replace("%", "")));
             iouDTO.setOuttimeMultiple(transStringToDouble(transMapToString(map2, "var9")));

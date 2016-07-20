@@ -31,6 +31,8 @@ public class AssetInfo extends BaseModel implements Serializable {
     private String tags;  //  标签
     private Integer isshow;  // 是否展示外网
 
+    private Integer belong;
+
     @Override
     public String toString() {
         String string = "Asset:[";
@@ -203,5 +205,13 @@ public class AssetInfo extends BaseModel implements Serializable {
 
     public void setIsshow(Integer isshow) {
         this.isshow = isshow;
+    }
+
+    public Integer getBelong() {
+        return belong;
+    }
+
+    public void setBelong(Integer belong) {
+        this.belong = belong;
     }
 }

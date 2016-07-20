@@ -1,6 +1,9 @@
 package com.dqys.business.service.dto.company;
 
 /**
+ * Created by Yvan on 16/6/30.
+ * <p/>
+ * 组织信息
  * @apiDefine OrganizationDTO
  * @apiSuccessExample {json} Organization:
  * {
@@ -9,9 +12,7 @@ package com.dqys.business.service.dto.company;
  * "user": null,
  * "userId": null
  * }
- * Created by Yvan on 16/6/30.
- * <p/>
- * 组织信息
+ * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/company/OrganizationDTO.java
  */
 public class OrganizationDTO {
 

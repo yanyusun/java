@@ -8,12 +8,15 @@ import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.query.asset.AssetQuery;
+import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
 import com.dqys.business.service.constant.asset.AssetModelTypeEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.dto.asset.AssetDTO;
 import com.dqys.business.service.dto.asset.AssetLenderDTO;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.business.service.service.AssetService;
+import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.core.model.JsonResponse;
@@ -24,6 +27,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * Created by Yvan on 16/6/6.
@@ -39,12 +44,13 @@ public class AssetServiceImpl implements AssetService {
     @Autowired
     private ContactInfoMapper contactInfoMapper;
 
-
+    @Autowired
+    private BusinessLogService businessLogService;
     @Autowired
     private BusinessService businessService;
 
     @Override
-    public JsonResponse add(AssetDTO assetDTO) {
+    public JsonResponse add_tx(AssetDTO assetDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(assetDTO, assetDTO.getStartAt(), assetDTO.getEndAt())) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -55,6 +61,13 @@ public class AssetServiceImpl implements AssetService {
             Integer id = assetInfo.getId();
             // 增加业务数据
             Integer serviceObjectId = businessService.addServiceObject(ObjectTypeEnum.ASSETPACKAGE.getValue(), id, null, null);
+            if(CommonUtil.checkResult(serviceObjectId)){
+                // todo 日志记录
+
+            }
+            // 增加操作记录
+            businessLogService.add(id, ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.add.getValue(),
+                    "", assetDTO.getMemo(), 0, 0);
             return JsonResponseTool.success(id);
         } else {
             return JsonResponseTool.failure(null);
@@ -62,19 +75,31 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public JsonResponse updateById(AssetDTO assetDTO) {
+    public JsonResponse updateById_tx(AssetDTO assetDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(assetDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return CommonUtil.responseBack(assetInfoMapper.update(AssetServiceUtils.toAssetInfo(assetDTO)));
+        Integer result = assetInfoMapper.update(AssetServiceUtils.toAssetInfo(assetDTO));
+        if (CommonUtil.checkResult(result)) {
+            return JsonResponseTool.failure("修改失败");
+        }
+        businessLogService.add(assetDTO.getId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.update.getValue(),
+                "", assetDTO.getMemo(), 0, 0);
+        return JsonResponseTool.success(null);
     }
 
     @Override
-    public JsonResponse delete(Integer id) {
+    public JsonResponse delete_tx(Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return CommonUtil.responseBack(assetInfoMapper.deleteByPrimaryKey(id));
+        Integer result = assetInfoMapper.deleteByPrimaryKey(id);
+        if (CommonUtil.checkResult(result)) {
+            return JsonResponseTool.failure("删除失败");
+        }
+        businessLogService.add(id, ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.delete.getValue(),
+                "", "", 0, 0);
+        return JsonResponseTool.success(null);
     }
 
     @Override
@@ -113,7 +138,7 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public JsonResponse assignedBatch(String ids, Integer id) {
+    public JsonResponse assignedBatch(String ids, Integer id) throws BusinessLogException {
         if (ids == null || ids.length() == 0) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -122,7 +147,13 @@ public class AssetServiceImpl implements AssetService {
         for (String s : idArr) {
             idList.add(Integer.valueOf(s));
         }
-        return CommonUtil.responseBack(assetInfoMapper.assignedBatch(idList, id));
+        Integer result = assetInfoMapper.assignedBatch(idList, id);
+        if (CommonUtil.checkResult(result)) {
+            return JsonResponseTool.failure("分配失败");
+        }
+        businessLogService.add(id, ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.update.getValue(),
+                "", "", 0, 0);
+        return JsonResponseTool.success(null);
     }
 
     @Override

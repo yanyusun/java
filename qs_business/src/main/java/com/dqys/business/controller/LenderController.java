@@ -3,6 +3,7 @@ package com.dqys.business.controller;
 import com.dqys.business.service.constant.asset.LenderTypeEnum;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.LenderListQuery;
 import com.dqys.business.service.service.LenderService;
 import com.dqys.core.model.JsonResponse;
@@ -32,6 +33,7 @@ public class LenderController {
      * @apiGroup lender
      * @apiSuccess {SelectonDTO} lenderType 借款人联系人类型
      * @apiUse SelectonDTO
+     * @apiUse LenderTypeEnum
      */
     @RequestMapping(value = "/getInit")
     @ResponseBody
@@ -71,11 +73,11 @@ public class LenderController {
     @ResponseBody
     public JsonResponse add(
             @ModelAttribute List<ContactDTO> contactDTOs,
-            @ModelAttribute LenderDTO lenderDTO) {
+            @ModelAttribute LenderDTO lenderDTO) throws BusinessLogException{
         if (CommonUtil.checkParam(contactDTOs, lenderDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return lenderService.add(contactDTOs, lenderDTO);
+        return lenderService.add_tx(contactDTOs, lenderDTO);
     }
 
     /**
@@ -86,11 +88,11 @@ public class LenderController {
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public JsonResponse deleteLenderRelation(@PathVariable Integer id) {
+    public JsonResponse deleteLenderRelation(@PathVariable Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return lenderService.delete(id);
+        return lenderService.delete_tx(id);
     }
 
     /**
@@ -106,12 +108,12 @@ public class LenderController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public JsonResponse updateLenderRelation(@ModelAttribute List<ContactDTO> contactDTOs,
-                                             @ModelAttribute LenderDTO lenderDTO) {
+                                             @ModelAttribute LenderDTO lenderDTO) throws BusinessLogException{
         if (CommonUtil.checkParam(
                 contactDTOs, lenderDTO, lenderDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return lenderService.update(contactDTOs, lenderDTO);
+        return lenderService.update_tx(contactDTOs, lenderDTO);
     }
 
     /**

@@ -17,7 +17,8 @@ public enum ObjectTypeEnum {
     INFORMATION(14, "资料实勘"),
     CASE(15, "案件"),
     ASSETSOURCE(16, "资产源"),
-    USER_INFO(99, "用户信息"),;
+    DISTRIBUTION(17, "分配器"),
+    USER_INFO(99, "用户信息");
 
     private Integer value;
     private String name;

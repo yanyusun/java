@@ -85,11 +85,11 @@ public class CommonUtil {
         String roleStr = UserSession.getCurrent().getRoleId();
         String typeStr = UserSession.getCurrent().getUserType();
 
-//        String reg = NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM);
-//        String reg1 = NoSQLWithRedisTool.getValueObject(KeyEnum.ROLE_ADMINISTRATOR_KEY);
+        String reg = NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM);
+        String reg1 = NoSQLWithRedisTool.getValueObject(KeyEnum.ROLE_ADMINISTRATOR_KEY);
         // 这里写死
-        String reg = "1";
-        String reg1 = "1";
+//        String reg = "1";
+//        String reg1 = "1";
 
         if (roleStr.indexOf(reg) > 0
                 && typeStr.indexOf(reg1) > 0) {
@@ -97,5 +97,6 @@ public class CommonUtil {
         }
         return false;
     }
+
 
 }

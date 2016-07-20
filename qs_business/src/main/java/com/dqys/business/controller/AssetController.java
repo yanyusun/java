@@ -6,6 +6,7 @@ import com.dqys.business.service.dto.asset.AssetDTO;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.dto.asset.PawnDTO;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
@@ -46,6 +47,8 @@ public class AssetController {
      * @apiSuccess {SelectonDTO} assetType 资产包类型
      * @apiSuccess {SelectonDTO} excellent 评优
      * @apiUse SelectonDTO
+     * @apiUse AssetTypeEnum
+     * @apiUse ExcellentTypeEnum
      * @apiSuccess {string} level 评级
      */
     @RequestMapping(value = "/getInit")
@@ -69,13 +72,13 @@ public class AssetController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse add(@ModelAttribute AssetDTO assetDTO) {
+    public JsonResponse add(@ModelAttribute AssetDTO assetDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(assetDTO, assetDTO.getType(), assetDTO.getStartAt(),
                 assetDTO.getEndAt(), assetDTO.getAccrual(), assetDTO.getLoan(),
                 assetDTO.getAppraisal())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return assetService.add(assetDTO);
+        return assetService.add_tx(assetDTO);
     }
 
     /**
@@ -86,11 +89,11 @@ public class AssetController {
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public JsonResponse delete(Integer id) {
+    public JsonResponse delete(Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return assetService.delete(id);
+        return assetService.delete_tx(id);
     }
 
     /**
@@ -102,11 +105,11 @@ public class AssetController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public JsonResponse update(@ModelAttribute AssetDTO assetDTO) {
+    public JsonResponse update(@ModelAttribute AssetDTO assetDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(assetDTO, assetDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return assetService.updateById(assetDTO);
+        return assetService.updateById_tx(assetDTO);
     }
 
 
@@ -134,6 +137,7 @@ public class AssetController {
      * @apiParam {number} id 资产包ID
      * @apiSuccess {SelectonDTO} data 借款人信息
      * @apiUse SelectonDTO
+     * @apiUse LenderListDTO
      */
     @RequestMapping(value = "/listLenderSelect")
     @ResponseBody
@@ -254,7 +258,7 @@ public class AssetController {
      */
     @RequestMapping(value = "/assignedBatch")
     @ResponseBody
-    public JsonResponse assignedBatch(@PathVariable String ids, @PathVariable Integer id) {
+    public JsonResponse assignedBatch(@PathVariable String ids, @PathVariable Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(ids, id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -264,27 +268,6 @@ public class AssetController {
         }
         // 分配
         return assetService.assignedBatch(ids, id);
-    }
-
-    /**
-     * @api {get} http://{url}/asset/getDistribution 批量分配
-     * @apiName getDistribution
-     * @apiGroup asset
-     * @apiParam {number} id 资产包Id
-     * @apiSuccess {Object} data 分配器成员信息
-     */
-    @RequestMapping(value = "/getDistribution")
-    @ResponseBody
-    public JsonResponse getDistribution(@RequestParam(required = true)Integer id) {
-        if (CommonUtil.checkParam(id)) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        // todo 校验id是否存在
-        if (userService.get(id).getData() == null) {
-            return JsonResponseTool.paramErr("用户ID参数错误");
-        }
-        // 分配
-        return assetService.getById(id);
     }
 
 
