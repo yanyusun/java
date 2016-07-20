@@ -8,15 +8,15 @@ import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
 public enum  CompanyTypeEnum {
 
     bank(21, "银行"),
-    ziguan(21, "资管公司"),
-    fayuan(32, "法院"),
-    lvsuo(21, "律所"),
-    p2p(21, "P2P公司"),
-    xiaodai(21, "小贷公司"),
-    xiaofei(21, "消费金融公司"),
-    paimai(21, "拍卖公司"),
-    diandang(21, "典当行"),
-    danbao(21, "担保公司");
+    ziguan(22, "资管公司"),
+    fayuan(23, "法院"),
+    lvsuo(24, "律所"),
+    p2p(25, "P2P公司"),
+    xiaodai(26, "小贷公司"),
+    xiaofei(27, "消费金融公司"),
+    paimai(28, "拍卖公司"),
+    diandang(29, "典当行"),
+    danbao(20, "担保公司");
 
     private Integer value;
     private String name;

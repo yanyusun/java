@@ -1,6 +1,7 @@
 package com.dqys.business.service.service;
 
 import com.dqys.business.service.dto.asset.IouDTO;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.core.model.JsonResponse;
 
 /**
@@ -14,7 +15,7 @@ public interface IouService {
      * @param id
      * @return
      */
-    JsonResponse delete(Integer id);
+    JsonResponse delete_tx(Integer id) throws BusinessLogException;
 
     /**
      * 新增
@@ -22,7 +23,7 @@ public interface IouService {
      * @param iouDTO
      * @return
      */
-    JsonResponse add(IouDTO iouDTO);
+    JsonResponse add_tx(IouDTO iouDTO) throws BusinessLogException;
 
     /**
      * 修改
@@ -30,7 +31,7 @@ public interface IouService {
      * @param iouDTO
      * @return
      */
-    JsonResponse update(IouDTO iouDTO);
+    JsonResponse update_tx(IouDTO iouDTO) throws BusinessLogException;
 
     /**
      * 根据ID获取

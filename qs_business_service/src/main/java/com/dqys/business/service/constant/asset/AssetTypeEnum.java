@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Created by Yvan on 16/7/11.
  * @apiDefine AssetTypeEnum
  * @apiSuccessExample {json} AssetTypeEnum
  * {
  *      1:"资产包"
  * }
- * Created by Yvan on 16/7/11.
+ * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/constant/asset/AssetTypeEnum.java
  */
 public enum  AssetTypeEnum {
     house(1, "房产包"),

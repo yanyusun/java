@@ -2,6 +2,7 @@ package com.dqys.business.service.service;
 
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.LenderListQuery;
 import com.dqys.core.model.JsonResponse;
 
@@ -27,7 +28,7 @@ public interface LenderService {
      * @param lenderDTO
      * @return
      */
-    JsonResponse add(List<ContactDTO> contactDTOList, LenderDTO lenderDTO);
+    JsonResponse add_tx(List<ContactDTO> contactDTOList, LenderDTO lenderDTO) throws BusinessLogException;
 
     /**
      * 删除借款人
@@ -35,7 +36,7 @@ public interface LenderService {
      * @param id
      * @return
      */
-    JsonResponse delete(Integer id);
+    JsonResponse delete_tx(Integer id) throws BusinessLogException;
 
     /**
      * 修改借款人信息
@@ -44,7 +45,7 @@ public interface LenderService {
      * @param lenderDTO
      * @return
      */
-    JsonResponse update(List<ContactDTO> contactDTOList, LenderDTO lenderDTO);
+    JsonResponse update_tx(List<ContactDTO> contactDTOList, LenderDTO lenderDTO) throws BusinessLogException;
 
     /**
      * 根据ID获取借款人关系

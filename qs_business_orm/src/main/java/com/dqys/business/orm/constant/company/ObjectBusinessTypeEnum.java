@@ -5,7 +5,9 @@ package com.dqys.business.orm.constant.company;
  */
 public enum ObjectBusinessTypeEnum {
 
-    assign(0,"分配"),
+    create(2, "创建者"),
+    mechanism(3, "机构分配"),
+    platform(0,"平台分配"),
     join(1,"主动加入");
 
     private Integer value;

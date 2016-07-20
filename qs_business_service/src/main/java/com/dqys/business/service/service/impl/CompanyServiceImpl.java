@@ -7,18 +7,21 @@ import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectBusinessTypeEnum;
+import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.company.CompanyRelationMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.mapper.company.OrganizationMapper;
 import com.dqys.business.orm.pojo.company.Organization;
-import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
 import com.dqys.business.orm.query.company.CompanyTeamReQuery;
 import com.dqys.business.orm.query.company.OrganizationQuery;
+import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
 import com.dqys.business.service.dto.company.*;
+import com.dqys.business.service.exception.bean.BusinessLogException;
+import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CompanyService;
 import com.dqys.business.service.utils.company.CompanyServiceUtils;
 import com.dqys.core.constant.KeyEnum;
@@ -27,6 +30,7 @@ import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.NoSQLWithRedisTool;
+import com.rabbitmq.http.client.domain.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -53,6 +57,9 @@ public class CompanyServiceImpl implements CompanyService {
     private CompanyTeamMapper companyTeamMapper;
     @Autowired
     private CompanyTeamReMapper companyTeamReMapper;
+
+    @Autowired
+    private BusinessLogService businessLogService;
 
     @Override
     public JsonResponse listOrganization(Integer companyId, OrganizationTypeEnum organizationTypeEnum) {
@@ -134,7 +141,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public DistributionDTO getDistribution_tx(Integer type, Integer id) {
+    public DistributionDTO getDistribution_tx(Integer type, Integer id) throws BusinessLogException{
         if(CommonUtil.checkParam(type, id)){
             return null;
         }
@@ -153,6 +160,25 @@ public class CompanyServiceImpl implements CompanyService {
             }
             Integer teamId = companyTeam.getId();
             companyTeam = companyTeamMapper.get(teamId);
+            // 添加操作记录
+            businessLogService.add(teamId, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.add.getValue(),
+                    "", "", 0, 0);
+            // 添加本家信息
+            TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
+            if(userInfo != null && userInfo.getCompanyId() != null){
+                Integer companyId = userInfo.getCompanyId();
+                CompanyTeamRe companyTeamRe = new CompanyTeamRe();
+                companyTeamRe.setCompanyTeamId(teamId);
+                companyTeamRe.setAcceptCompanyId(companyId);
+                companyTeamRe.setStatus(ObjectAcceptTypeEnum.accept.getValue());
+                companyTeamRe.setType(ObjectBusinessTypeEnum.create.getValue());
+                result = companyTeamReMapper.insert(companyTeamRe);
+                if(!CommonUtil.checkResult(result)){
+                    // 添加操作记录
+                    businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.join.getValue(),
+                            "", "", 0, teamId);
+                }
+            }
         }
         // 查询分配器成员
         CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
@@ -178,7 +204,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Integer joinDistribution_tx(Integer id, Integer type, String text) {
+    public Integer joinDistribution_tx(Integer id, Integer type, String text) throws BusinessLogException{
         if(CommonUtil.checkParam(id, type)){
             return null;
         }
@@ -203,6 +229,9 @@ public class CompanyServiceImpl implements CompanyService {
         if(CommonUtil.checkResult(result)){
             return null;
         }else{
+            // 添加操作记录
+            businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.join.getValue(),
+                    "", "", 0, id);
             // todo 发送短信内容
 
             return companyTeamRe.getId();
@@ -210,7 +239,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Integer updateDistribution_tx(Integer id, Integer status) {
+    public Integer updateDistribution_tx(Integer id, Integer status) throws BusinessLogException {
         if(CommonUtil.checkParam(id, status)){
             return null;
         }
@@ -228,11 +257,19 @@ public class CompanyServiceImpl implements CompanyService {
         }
         companyTeamRe.setStatus(status);
         companyTeamRe.setAccepterId(userInfo.getId());
-        return companyTeamReMapper.update(companyTeamRe);
+        Integer result = companyTeamReMapper.update(companyTeamRe);
+        if(CommonUtil.checkResult(result)){
+            return null;
+        }else{
+            // 添加操作记录
+            businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.update.getValue(),
+                    "", "", 0, id);
+            return result;
+        }
     }
 
     @Override
-    public Integer exitDistribution_tx(Integer id) {
+    public Integer exitDistribution_tx(Integer id) throws BusinessLogException {
         if(id == null){
             return null;
         }
@@ -246,6 +283,14 @@ public class CompanyServiceImpl implements CompanyService {
         if(companyDetailInfo == null || !companyDetailInfo.getUserId().equals(UserSession.getCurrent().getUserId())){
             return null;
         }
-        return companyTeamReMapper.deleteByPrimaryKey(id);
+        Integer result = companyTeamReMapper.deleteByPrimaryKey(id);
+        if(CommonUtil.checkResult(result)){
+            return null;
+        }else{
+            // 添加操作记录
+            businessLogService.add(id, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.exit.getValue(),
+                    "", "", 0, companyTeamRe.getCompanyTeamId());
+            return result;
+        }
     }
 }

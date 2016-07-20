@@ -5,6 +5,7 @@ import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.core.base.BaseDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -57,7 +58,7 @@ public class AssetInfoMapperImpl extends BaseDao implements AssetInfoMapper {
     }
 
     @Override
-    public Integer assignedBatch(List<Integer> ids, Integer id) {
-        return null;
+    public Integer assignedBatch(@Param("ids") List<Integer> ids, @Param("id") Integer id) {
+        return super.getSqlSession().getMapper(AssetInfoMapper.class).assignedBatch(ids, id);
     }
 }

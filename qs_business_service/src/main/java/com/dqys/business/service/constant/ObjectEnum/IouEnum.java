@@ -15,7 +15,11 @@ public enum IouEnum {
     REIMBURSEMENT(137, "还款"),
     DISPOSAL_FINISH(138, "已处置"),
     INVALID_SET_EFFECTIVELY(139, "无效/设置为有效"),
-    OPERATION_RECORD(1310, "操作记录"),;
+    OPERATION_RECORD(1310, "操作记录"),
+    ADD(1311, "新增"),
+    UPDATE(1312, "修改"),
+    DELETE(1313, "删除")
+    ;
     private Integer value;
     private String name;
 

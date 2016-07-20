@@ -1,6 +1,8 @@
 package com.dqys.business.service.dto.user;
 
 /**
+ * Created by Yvan on 16/6/22.
+ * 用户模块用户列表数据传输对象
  * @apiDefine UserList
  * @apiSuccessExample {json} UserList:
  * {
@@ -17,8 +19,7 @@ package com.dqys.business.service.dto.user;
  *      company:"",
  *      taskNum:0
  * }
- * Created by Yvan on 16/6/22.
- * 用户模块用户列表数据传输对象
+ * git 地址 : http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/user/UserListDTO.java
  */
 public class UserListDTO {
 

@@ -172,6 +172,7 @@ public class AssetServiceUtils {
         contactInfo.setCity(contactDTO.getCity());
         contactInfo.setDistrict(contactDTO.getDistrict());
         contactInfo.setAddress(contactDTO.getAddress());
+        contactInfo.setOtherAddress(contactDTO.getOtherAddress());
 
         return contactInfo;
     }
@@ -217,6 +218,7 @@ public class AssetServiceUtils {
         contactDTO.setCity(contactInfo.getCity());
         contactDTO.setDistrict(contactInfo.getDistrict());
         contactDTO.setAddress(contactInfo.getAddress());
+        contactDTO.setOtherAddress(contactInfo.getOtherAddress());
 
         return contactDTO;
     }
@@ -455,7 +457,7 @@ public class AssetServiceUtils {
         iouInfo.setAgency(iouDTO.getAgency());
         iouInfo.setIouCode(iouDTO.getIouCode());
         iouInfo.setLoanTime(iouDTO.getLoanTime());
-        iouInfo.setLoanAttime(iouDTO.getLoanAttime());
+        iouInfo.setLoanAttime(iouDTO.getLoanAtTime());
         iouInfo.setAmount(iouDTO.getAmount());
         iouInfo.setPactRate(iouDTO.getPactRate());
         iouInfo.setOuttimeMultiple(iouDTO.getOuttimeMultiple());
@@ -499,7 +501,7 @@ public class AssetServiceUtils {
         iouDTO.setAgency(iouInfo.getAgency());
         iouDTO.setIouCode(iouInfo.getIouCode());
         iouDTO.setLoanTime(iouInfo.getLoanTime());
-        iouDTO.setLoanAttime(iouInfo.getLoanAttime());
+        iouDTO.setLoanAtTime(iouInfo.getLoanAttime());
         iouDTO.setAmount(iouInfo.getAmount());
         iouDTO.setPactRate(iouInfo.getPactRate());
         iouDTO.setOuttimeMultiple(iouInfo.getOuttimeMultiple());
