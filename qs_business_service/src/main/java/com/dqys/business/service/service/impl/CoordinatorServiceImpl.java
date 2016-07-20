@@ -113,6 +113,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("companys", companyList(objectId, objectType));//对象类型相应的公司
             map.put("teams", list);//团队信息
             map.put("people", getPeopleNum(companyId, objectId, objectType));//团队人数
+            map.put("userTeamId", team.getId());
             map.put("result", "yes");
         }
     }
@@ -133,7 +134,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             Integer flag = 0;
             Integer businessType = TeammateReEnum.BUSINESS_TYPE_TASK.getValue();
             Integer joinType = TeammateReEnum.JOIN_TYPE_PASSIVITY.getValue();
-            flag = getTeammateFlag(userTeamId, uid, flag, businessType, joinType);
+            flag = getTeammateFlag(userTeamId, uid, flag, businessType, joinType);//添加参与人
             if (flag > 0) {
                 Integer result = messageService.add("任务邀请", remark, userId, uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue());//添加消息记录
                 if (result > 0) {
@@ -155,7 +156,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
         if (users.size() > 0) {
             TeammateRe teammateRe1 = users.get(0);
-            if (teammateRe1.getStatus() == TeammateReEnum.STATUS_REFUSE.getValue()) {
+            if (teammateRe1.getStatus() == TeammateReEnum.STATUS_REFUSE.getValue()) {//邀请过的并且以前拒绝过的就修改为待接收状态
                 teammateRe1.setStatus(TeammateReEnum.STATUS_INIT.getValue());
                 flag = teammateReMapper.updateByPrimaryKeySelective(teammateRe1);
             }
