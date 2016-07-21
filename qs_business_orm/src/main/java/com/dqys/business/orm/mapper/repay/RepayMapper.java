@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.repay;
 
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
 import org.apache.ibatis.annotations.Param;
 
@@ -74,5 +75,36 @@ public interface RepayMapper {
      * @param status
      * @return
      */
-    Integer updateBusinessStatus(@Param("id")Integer id, @Param("status")int status);
+    Integer updateBusinessStatus(@Param("id") Integer id, @Param("status") int status);
+
+    /**
+     * 添加延期申请记录
+     *
+     * @param damageApply
+     * @return
+     */
+    Integer addDamageApply(DamageApply damageApply);
+
+    /**
+     * 条件查询延期申请记录
+     *
+     * @param damageApply
+     * @return
+     */
+    List<DamageApply> selectByDamageApply(DamageApply damageApply);
+
+    /**
+     * 根据id获取延期申请记录
+     * @param id
+     * @return
+     */
+    DamageApply getDamageApply(Integer id);
+
+    /**
+     * 修改延期申请记录
+     *
+     * @param damageApply
+     * @return
+     */
+    Integer updateDamageApply(DamageApply damageApply);
 }

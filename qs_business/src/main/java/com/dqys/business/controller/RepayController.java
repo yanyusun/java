@@ -1,15 +1,17 @@
 package com.dqys.business.controller;
 
+import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.constant.repay.RepayEnum;
+import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.service.service.RepayService;
 import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.JsonResponse;
-import com.dqys.core.utils.CommonUtil;
-import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.core.utils.ProtocolTool;
+import com.dqys.core.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +38,7 @@ public class RepayController {
      * @apiParam {int} repayWay 还款方式 （0直接还款1转贷还款2变卖还款3其他方式）
      * @apiParam {double} money 还款金额
      * @apiParam {string} remark 备注
-     * * @apiParam {string} file 文件
+     * @apiParam {file} file 文件
      * @apiGroup Repay
      */
     @RequestMapping("/repayMoney")
@@ -46,6 +48,12 @@ public class RepayController {
                                    @RequestParam("file") MultipartFile file, HttpServletRequest httpServletRequest) {
         if (CommonUtil.checkParam(objectId, objectType, repayType, repayWay, money)) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        if (file.getName().indexOf("jpg") < 0 && file.getName().indexOf("jpeg") < 0) {
+            return JsonResponseTool.paramErr("文件格式错误");
+        }
+        if (objectType != RepayEnum.OBJECT_IOU.getValue() && objectType != RepayEnum.OBJECT_PAWN.getValue()) {
+            return JsonResponseTool.paramErr("对象类型错误");
         }
         Map map = new HashMap<>();
         try {
@@ -63,5 +71,84 @@ public class RepayController {
             return JsonResponseTool.serverErr();
         }
     }
+
+    /**
+     * @api {post} repay/postpone 延期申请操作
+     * @apiName repay/postpone
+     * @apiSampleRequest repay/postpone
+     * @apiParam {int} objectId 对象id
+     * @apiParam {int} objectType 对象类型（11借款人10资产包）
+     * @apiParam {string} postponeTime 延期时间（格式：yyyy-MM-dd）
+     * @apiGroup Repay
+     */
+    @RequestMapping("/postpone")
+    @ResponseBody
+    public JsonResponse postpone(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType, @RequestParam("postponeTime") String postponeTime, HttpServletRequest httpServletRequest) {
+        if (CommonUtil.checkParam(objectId, objectType, postponeTime)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if (!FormatValidateTool.isDate(postponeTime)) {
+            return JsonResponseTool.paramErr("日期格式错误");
+        }
+        if (objectType != ObjectTypeEnum.ASSETPACKAGE.getValue() && objectType != ObjectTypeEnum.LENDER.getValue()) {
+            return JsonResponseTool.paramErr("对象类型错误");
+        }
+        Map map = new HashMap<>();
+        try {
+            Integer userId = ProtocolTool.validateUser(
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+            );
+            DamageApply damageApply = new DamageApply();
+            damageApply.setStatus(0);
+            damageApply.setApply_object_id(objectId);
+            damageApply.setApply_user_id(userId);
+            damageApply.setDamage_date(DateFormatTool.parse(postponeTime, DateFormatTool.DATE_FORMAT_10_REG1));
+            damageApply.setObject_type(objectType);
+            repayService.postpone(damageApply, map);
+            return JsonResponseTool.success(map);
+        } catch (Exception e) {
+            map.put("result", "exception");
+            return JsonResponseTool.serverErr();
+        }
+    }
+
+    /**
+     * @api {post} repay/auditPostpone 延期申请审核操作
+     * @apiName repay/auditPostpone
+     * @apiSampleRequest repay/auditPostpone
+     * @apiParam {int} applyId 延期记录id
+     * @apiParam {int} status 审核状态（1通过2拒绝）
+     * @apiGroup Repay
+     */
+    @RequestMapping("/auditPostpone")
+    @ResponseBody
+    public JsonResponse postpone(@RequestParam("applyId") Integer applyId, @RequestParam("status") Integer status, HttpServletRequest httpServletRequest) {
+        Map map = new HashMap<>();
+        if (CommonUtil.checkParam(applyId, status)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if (status != 1 && status != 2) {
+            return JsonResponseTool.paramErr("审批状态错误");
+        }
+        try {
+            Integer userId = ProtocolTool.validateUser(
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+            );
+            repayService.auditPostpone(applyId, status, userId, map);
+            return JsonResponseTool.success(map);
+        } catch (Exception e) {
+            map.put("result", "exception");
+            return JsonResponseTool.serverErr();
+        }
+    }
+
 
 }

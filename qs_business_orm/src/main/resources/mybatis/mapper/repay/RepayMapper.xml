@@ -14,7 +14,7 @@
             <if test="accMoney !=null and penalty==null">
                 accrual_arrears=accrual_arrears-#{accMoney,jdbcType=DOUBLE},
                 accrual_repay=accrual_repay+#{accMoney,jdbcType=DOUBLE},
-             </if>
+            </if>
             <if test="penalty !=null">
                 accrual_arrears=accrual_arrears-#{accMoney,jdbcType=DOUBLE},
                 penalty=penalty-#{penalty,jdbcType=DOUBLE},
@@ -79,7 +79,7 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-
+    <!--添加还款记录-->
     <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.repay.Repay">
         insert into t_repay
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -193,5 +193,104 @@
     <update id="updateBusinessStatus">
         UPDATE business set status=#{status,jdbcType=INTEGER} WHERE id=#{id,jdbcType=INTEGER}
     </update>
+    <!--添加延期申请记录-->
+    <insert id="addDamageApply" parameterType="com.dqys.business.orm.pojo.repay.DamageApply">
+        insert into t_damage_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="damage_date != null">
+                damage_date,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="apply_user_id != null">
+                apply_user_id,
+            </if>
+            <if test="eaxm_user_id != null">
+                eaxm_user_id,
+            </if>
+            apply_date,
+            <if test="apply_object_id != null">
+                apply_object_id,
+            </if>
+            <if test="object_type != null">
+                object_type,
+            </if>
+            <if test="damage_type != null">
+                damage_type,
+            </if>
+            <if test="original_time != null">
+                original_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="damage_date != null">
+                #{damage_date},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="apply_user_id != null">
+                #{apply_user_id},
+            </if>
+            <if test="eaxm_user_id != null">
+                #{eaxm_user_id},
+            </if>
+            now(),
+            <if test="apply_object_id != null">
+                #{apply_object_id},
+            </if>
+            <if test="object_type != null">
+                #{object_type},
+            </if>
+            <if test="damage_type != null">
+                #{damage_type},
+            </if>
+            <if test="original_time != null">
+                #{original_time},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateDamageApply" parameterType="com.dqys.business.orm.pojo.repay.DamageApply">
+        UPDATE t_damage_apply
+        <set>
+            <if test="damage_type != null">
+                damage_type=#{damage_type},
+            </if>
+            <if test="original_time != null">
+                original_time=#{original_time},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+        </set>
+        WHERE id=#{id}
+    </update>
+    <!--根据条件查询延期申请记录-->
+    <select id="selectByDamageApply" parameterType="com.dqys.business.orm.pojo.repay.DamageApply"
+            resultType="com.dqys.business.orm.pojo.repay.DamageApply">
+        SELECT * from t_damage_apply tda
+        where 1=1
+        <if test="apply_object_id !=null">
+            and tda.apply_object_id=#{apply_object_id}
+        </if>
+        <if test="object_type !=null">
+            and tda.object_type=#{object_type}
+        </if>
+        <if test="status !=null">
+            and status=#{status}
+        </if>
+    </select>
+    <select id="getDamageApply" parameterType="int"
+            resultType="com.dqys.business.orm.pojo.repay.DamageApply">
+        SELECT * from t_damage_apply tda
+        where id=#{id}
+    </select>
 
 </mapper>
