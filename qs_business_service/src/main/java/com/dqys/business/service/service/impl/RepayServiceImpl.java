@@ -151,7 +151,7 @@ public class RepayServiceImpl implements RepayService {
             Double accMoney = MessageUtils.transMapToDou(iouMap, "accMoney");
             Double penMoney = MessageUtils.transMapToDou(iouMap, "penMoney");
             if ((lessMoney == null || lessMoney == 0) && (accMoney == null || accMoney == 0) && (penMoney == null || penMoney == 0)) {
-                Integer num = repayMapper.updateBusinessStatus(id, 1);
+                Integer num = repayMapper.updateBusinessStatus(id, 100);//状态改为已完成
                 if (num == 0) {
                     throw new Exception();
                 }
