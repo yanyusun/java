@@ -21,17 +21,17 @@ public class CoordinatorMapperImpl extends BaseDao implements CoordinatorMapper 
 
     @Override
     public Map<String, Object> getTaskOngoing(@Param("companyId") Integer companyId, @Param("userId") Integer userId,@Param("objectType") Integer objectType) {
-        return  super.getSqlSession().getMapper(CoordinatorMapper.class).getTaskOngoing(companyId,userId,objectType);
+        return  super.getSqlSession().getMapper(CoordinatorMapper.class).getTaskOngoing(companyId, userId, objectType);
     }
 
     @Override
     public Map<String, Object> getTaskRatio(@Param("companyId") Integer companyId, @Param("userId") Integer userId,@Param("objectType") Integer objectType) {
-        return  super.getSqlSession().getMapper(CoordinatorMapper.class).getTaskRatio(companyId,userId,objectType);
+        return  super.getSqlSession().getMapper(CoordinatorMapper.class).getTaskRatio(companyId, userId, objectType);
     }
 
     @Override
     public List<Map<String, Object>> getPeopleNum(@Param("companyId") Integer companyId, @Param("objectId") Integer objectId, @Param("objectType") Integer objectType) {
-        return super.getSqlSession().getMapper(CoordinatorMapper.class).getPeopleNum(companyId,objectId,objectType);
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).getPeopleNum(companyId, objectId, objectType);
     }
 
     @Override
@@ -57,5 +57,10 @@ public class CoordinatorMapperImpl extends BaseDao implements CoordinatorMapper 
     @Override
     public Map getLastLeaveWord(Integer userId) {
         return super.getSqlSession().getMapper(CoordinatorMapper.class).getLastLeaveWord(userId);
+    }
+
+    @Override
+    public Map selectByBusinessId(Integer objectType, Integer objectId) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).selectByBusinessId(objectType,objectId);
     }
 }

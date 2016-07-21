@@ -127,4 +127,20 @@
       business_id = #{businessId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+<!--条件查询操作人与事物关系-->
+    <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.pojo.coordinator.OURelation">
+        select
+        <include refid="Base_Column_List"/>
+        from object_user_relation
+        where 1=1
+        <if test="objectType !=null">
+            and object_type=#{objectType}
+        </if>
+        <if test="objectId !=null">
+            and object_id=#{objectId}
+        </if>
+        <if test="userId !=null">
+            and user_id=#{userId}
+        </if>
+    </select>
 </mapper>
