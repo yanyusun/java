@@ -10,6 +10,7 @@ import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.coordinator.OURelationMapper;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.coordinator.UserTeamMapper;
+import com.dqys.business.orm.mapper.repay.RepayMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.coordinator.OURelation;
@@ -17,15 +18,15 @@ import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.service.constant.MessageEnum;
+import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
+import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.exception.bean.BusinessLogException;
-import com.dqys.business.service.query.asset.LenderListQuery;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
-import com.dqys.core.model.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +54,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     private OURelationMapper ouRelationMapper;
     @Autowired
     private BusinessLogService businessLogService;
+    @Autowired
+    private RepayMapper repayMapper;
 
     @Override
     public void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType, Integer userid) {
@@ -152,6 +155,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 Integer result = messageService.add("任务邀请", remark, userId, uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue());//添加消息记录
                 if (result > 0) {
                     //发送短信或是邮件
+
                 }
             }
         }
@@ -214,7 +218,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 if (ouRelation.getObjectType() == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
                     LenderInfo lenderInfo = new LenderInfo();
                     lenderInfo.setAssetId(ouRelation.getObjectId());
-                    List<LenderInfo> lends =coordinatorMapper.selectByLender(lenderInfo);
+                    List<LenderInfo> lends = coordinatorMapper.selectByLender(lenderInfo);
                     for (LenderInfo len : lends) {
                         ouRelation.setObjectId(len.getId());
                         ouRelation.setObjectType(ObjectTypeEnum.LENDER.getValue());
@@ -251,6 +255,39 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         Integer flag = 0;
         getTeammateFlag(userTeammateId, userId, flag, TeammateReEnum.BUSINESS_TYPE_TASK.getValue(), TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue());
         return map;
+    }
+
+    @Override
+    public void auditBusiness(Map map,Integer userId, Integer objectId, Integer objectType, Integer status) throws BusinessLogException {
+        Integer operType=0;
+        String text="";
+        Integer receive_id=0;//录入人
+        if(objectType==ObjectTypeEnum.LENDER.getValue()){
+           LenderInfo len= coordinatorMapper.getLenderInfo(objectId);
+            receive_id=len.getOperator();
+            operType= LenderEnum.UPDATE_EDIT.getValue();
+            text="借款人审核操作";
+        }else if(objectType==ObjectTypeEnum.ASSETPACKAGE.getValue()){
+            AssetInfo assetInfo=coordinatorMapper.getAssetInfo(objectId);
+            receive_id=assetInfo.getOperator();
+            operType= AssetPackageEnum.UPDATE.getValue();
+            text="资产包审核操作";
+        }
+        businessLogService.add(objectId, objectType,operType,text , "", 0, 0);//添加操作日志
+        List<Integer> ids = new ArrayList<>();
+        ids.add(objectId);
+        List<Integer> buinessIds = repayMapper.getBusinessId(objectType, ids);
+        if (buinessIds.size() > 0) {
+            Integer result = repayMapper.updateBusinessStatus(buinessIds.get(0), status);
+            if (result > 0) {
+                messageService.add("审核结果","您的审核"+(status==1?"通过":"不通过"),userId,receive_id,"",MessageEnum.SERVE.getValue());//添加通知消息
+                //发送短信或邮件
+
+                map.put("result", "yes");
+                return;
+            }
+        }
+        map.put("result", "no");
     }
 
     /**

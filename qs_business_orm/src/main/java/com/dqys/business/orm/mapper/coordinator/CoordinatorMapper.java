@@ -1,5 +1,6 @@
 package com.dqys.business.orm.mapper.coordinator;
 
+import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import org.apache.ibatis.annotations.Param;
@@ -103,4 +104,18 @@ public interface CoordinatorMapper {
      * @return
      */
     List<LenderInfo> selectByLender(LenderInfo lenderInfo);
+
+    /**
+     * 获取借款人信息
+     * @param objectId
+     * @return
+     */
+    LenderInfo getLenderInfo(Integer objectId);
+
+    /**
+     * 获取资产包信息
+     * @param objectId
+     * @return
+     */
+    AssetInfo getAssetInfo(Integer objectId);
 }

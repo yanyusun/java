@@ -44,9 +44,18 @@ public interface CoordinatorService {
 
     /**
      * 主动加入案组
-     * @param teammateId
+     * @param userTeammateId
      * @param userId
      * @return
      */
     Map addTeammate(Integer userTeammateId, Integer userId) throws BusinessLogException;
+
+    /**
+     * 平台业务审核
+     * @param map
+     * @param objectId
+     * @param objectType
+     * @param status
+     */
+    void auditBusiness(Map map,Integer userId, Integer objectId, Integer objectType, Integer status) throws BusinessLogException;
 }

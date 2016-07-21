@@ -5,9 +5,9 @@ package com.dqys.business.service.constant.ObjectEnum;
  * Created by mkfeng on 2016/7/7.
  */
 public enum AssetPackageEnum {
-    delete(102, "删除"),
-    update(101, "编辑"),
-    add(100, "添加");
+    DELETE(102, "删除"),
+    UPDATE(101, "编辑"),
+    ADD(100, "添加");
     private Integer value;
     private String name;
 

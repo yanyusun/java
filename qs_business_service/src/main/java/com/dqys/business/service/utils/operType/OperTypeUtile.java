@@ -24,7 +24,7 @@ public class OperTypeUtile implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         redisTemplate = (RedisTemplate) applicationContext.getBean("redisTemplate");
         operTypeService = applicationContext.getBean(OperTypeService.class);
-        opertype();
+//        opertype();
     }
 
     public void opertype() {

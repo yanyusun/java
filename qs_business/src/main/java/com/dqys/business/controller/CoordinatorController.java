@@ -162,6 +162,25 @@ public class CoordinatorController {
         Map map = coordinatorService.addTeammate(userTeammateId, userId);
         return JsonResponseTool.success(map);
     }
+    /**
+     * @api {post} coordinator/auditBusiness 平台业务审核
+     * @apiParam {int} objectId 协作器id
+     * @apiParam {int} objectType 协作器id
+     * @apiParam {int} status 协作器id
+     * @apiSampleRequest coordinator/auditBusiness
+     * @apiGroup Coordinator
+     * @apiName coordinator/auditBusiness
+     */
+    @RequestMapping("/auditBusiness")
+    @ResponseBody
+    public JsonResponse auditBusiness(@RequestParam("objectId")Integer objectId,@RequestParam("objectType")Integer objectType,@RequestParam("status")Integer status) throws BusinessLogException {
+            if(CommonUtil.checkParam(objectType,objectId,status)){
+                return JsonResponseTool.paramErr("参数错误");
+            }
+        Map map=new HashMap<>();
+        coordinatorService.auditBusiness(map,objectId,objectType,status);
+        return JsonResponseTool.success(map);
+    }
 
 
 }
