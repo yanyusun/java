@@ -5,10 +5,6 @@ package com.dqys.core.constant;
  */
 public class KeyEnum {
 
-    /* 系统配置key */
-    public static final String SYS_WEB_DOMAIN = "sys_web_domain"; // 官方网站域名
-    public static final String SYS_SOURCE_WEB = "sys_source_domain"; // 资源网站域名
-
     public static final String SYS_PROTOCOL_SALT_KEY = "sys_protocol_salt";     //加密密钥
     public static final String SYS_USER_EXPIRE_DAYS_KEY = "sys_user_login_expire";      //登陆状态保持时间
     public static final String SYS_ACCESS_ORIGIN_KEY = "sys_access_origin";     //允许远程访问的主机

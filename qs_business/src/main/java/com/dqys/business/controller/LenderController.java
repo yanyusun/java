@@ -1,6 +1,6 @@
 package com.dqys.business.controller;
 
-import com.dqys.business.orm.constant.company.CompanyTypeEnum;
+import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.business.service.constant.asset.LenderTabEnum;
 import com.dqys.business.service.constant.asset.LenderTypeEnum;
 import com.dqys.business.service.dto.asset.ContactDTO;
@@ -55,20 +55,6 @@ public class LenderController {
         resultMap.put("accountType", accountType);
 
         return JsonResponseTool.success(resultMap);
-    }
-
-    /**
-     * @api {GET} http://{url}/api/company/listCompany 根据公司类型获取所有的委托方公司
-     * @apiName listCompany
-     * @apiGroup organization
-     * @apiParam {number} id
-     */
-    @RequestMapping(value = "/listCompany")
-    @ResponseBody
-    public JsonResponse listCompany(Integer id, Integer type) {
-
-
-        return null;
     }
 
 

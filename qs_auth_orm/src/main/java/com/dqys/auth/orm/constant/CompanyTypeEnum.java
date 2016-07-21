@@ -1,4 +1,4 @@
-package com.dqys.business.orm.constant.company;
+package com.dqys.auth.orm.constant;
 
 import com.dqys.core.base.BaseSelectonDTO;
 

@@ -21,6 +21,7 @@ public class TCompanyInfo extends BaseModel implements Serializable {
     private String address;
 
     private Boolean isAuth;
+    private Integer type; // 公司类型
 
     private static final long serialVersionUID = 1L;
 
@@ -94,5 +95,13 @@ public class TCompanyInfo extends BaseModel implements Serializable {
 
     public void setIsAuth(Boolean isAuth) {
         this.isAuth = isAuth;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

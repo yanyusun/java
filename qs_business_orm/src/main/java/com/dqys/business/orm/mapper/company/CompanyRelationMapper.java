@@ -48,6 +48,14 @@ public interface CompanyRelationMapper {
     List<CompanyRelation> listByCompanyId(Integer id);
 
     /**
+     * 根据单方面公司查询所有联系公司
+     *
+     * @param id
+     * @return
+     */
+    List<CompanyRelation> listByCompanyIdAndType(@Param("id")Integer id, @Param("type")Integer type);
+
+    /**
      * 根据两公司ID获取关联关系
      *
      * @param aId

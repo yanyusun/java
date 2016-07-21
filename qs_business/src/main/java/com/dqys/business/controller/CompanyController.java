@@ -7,6 +7,7 @@ import com.dqys.business.service.constant.OrganizationTypeEnum;
 import com.dqys.business.service.dto.company.OrganizationInsertDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.CompanyService;
+import com.dqys.business.service.service.DistributionService;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -28,6 +29,8 @@ public class CompanyController {
 
     @Autowired
     private CompanyService companyService;
+    @Autowired
+    private DistributionService distributionService;
 
     /**
      * @api {GET} http://{url}/api/company/listOrganization 查看组织列表(部门|团队)
@@ -145,7 +148,7 @@ public class CompanyController {
         if (ObjectTypeEnum.getObjectTypeEnum(type) == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return JsonResponseTool.success(companyService.getDistribution_tx(type, id));
+        return JsonResponseTool.success(distributionService.getDistribution_tx(type, id));
     }
 
     /**
@@ -163,7 +166,7 @@ public class CompanyController {
             return JsonResponseTool.success("参数错误");
         }
         return CommonUtil.responseBack(
-                companyService.joinDistribution_tx(id, ObjectBusinessTypeEnum.join.getValue(), null));
+                distributionService.joinDistribution_tx(id, ObjectBusinessTypeEnum.join.getValue(), null));
     }
 
     /**
@@ -185,10 +188,10 @@ public class CompanyController {
         }
         if(UserSession.getCurrent().getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM))){
             // 平台
-            return CommonUtil.responseBack(companyService.joinDistribution_tx(id, ObjectBusinessTypeEnum.platform.getValue(), text));
+            return CommonUtil.responseBack(distributionService.joinDistribution_tx(id, ObjectBusinessTypeEnum.platform.getValue(), text));
         }else{
             // 机构
-            return CommonUtil.responseBack(companyService.joinDistribution_tx(id, ObjectBusinessTypeEnum.mechanism.getValue(), text));
+            return CommonUtil.responseBack(distributionService.joinDistribution_tx(id, ObjectBusinessTypeEnum.mechanism.getValue(), text));
         }
     }
 
@@ -210,7 +213,7 @@ public class CompanyController {
         if(ObjectAcceptTypeEnum.getObjectAcceptTypeEnum(type) == null){
             return JsonResponseTool.paramErr("操作类型参数错误");
         }
-        return CommonUtil.responseBack(companyService.updateDistribution_tx(id, type));
+        return CommonUtil.responseBack(distributionService.updateDistribution_tx(id, type));
     }
 
 
@@ -228,7 +231,7 @@ public class CompanyController {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.success("参数错误");
         }
-        return CommonUtil.responseBack(companyService.exitDistribution_tx(id));
+        return CommonUtil.responseBack(distributionService.exitDistribution_tx(id));
     }
 
     /**

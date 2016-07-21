@@ -40,6 +40,11 @@
     <result column="can_pay" property="canPay" jdbcType="INTEGER" />
     <result column="is_worth" property="isWorth" jdbcType="INTEGER" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="is_collection" property="isCollection" jdbcType="INTEGER" />
+    <result column="is_lawyer" property="isLawyer" jdbcType="INTEGER" />
+    <result column="is_agent" property="isAgent" jdbcType="INTEGER" />
+    <result column="follow_up_times" property="followUpTime" jdbcType="INTEGER" />
+    <result column="is_stop" property="isStop" jdbcType="INTEGER" />
   </resultMap>
 
   <!-- 基础字段 -->
@@ -48,7 +53,8 @@
     accrual, loan, appraisal, loan_type, loan_mode, loan_name, evaluate_excellent, evaluate_level,
     dispose_mode, tags, urge_type, entrust_born_type, entrust_born, guarantee_type, guarantee_mode,
     guarantee_source, is_guarantee_connection, guarentee_economic, is_lawsuit, is_decision, real_urge_time,
-    phone_urge_time, entrust_urge_time, can_contact, can_pay, is_worth, memo
+    phone_urge_time, entrust_urge_time, can_contact, can_pay, is_worth, memo, is_collection, is_lawyer,
+    is_agent, follow_up_times, is_stop
   </sql>
 
   <sql id="Query_Condition">
@@ -211,6 +217,21 @@
       <if test="memo != null" >
         memo,
       </if>
+      <if test="isCollection != null" >
+        is_collection,
+      </if>
+      <if test="isLawyer != null" >
+        is_lawyer,
+      </if>
+      <if test="isAgent != null" >
+        is_agent,
+      </if>
+      <if test="followUpTime != null" >
+        follow_up_times,
+      </if>
+      <if test="isStop != null" >
+        is_stop,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -308,6 +329,21 @@
       </if>
       <if test="memo != null" >
         #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="isCollection != null" >
+        #{isCollection,jdbcType=INTEGER},
+      </if>
+      <if test="isLawyer != null" >
+        #{isLawyer,jdbcType=INTEGER},
+      </if>
+      <if test="isAgent != null" >
+        #{isAgent,jdbcType=INTEGER},
+      </if>
+      <if test="followUpTime != null" >
+        #{followUpTime,jdbcType=INTEGER},
+      </if>
+      <if test="isStop != null" >
+        #{isStop,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -428,6 +464,21 @@
       </if>
       <if test="memo != null" >
         memo = #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="isCollection != null" >
+        is_collection = #{isCollection,jdbcType=INTEGER},
+      </if>
+      <if test="isLawyer != null" >
+        is_lawyer = #{isLawyer,jdbcType=INTEGER},
+      </if>
+      <if test="isAgent != null" >
+        is_agent = #{isAgent,jdbcType=INTEGER},
+      </if>
+      <if test="followUpTime != null" >
+        follow_up_times = #{followUpTime,jdbcType=INTEGER},
+      </if>
+      <if test="isStop != null" >
+        is_stop = #{isStop,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
