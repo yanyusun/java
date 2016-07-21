@@ -87,4 +87,12 @@ public interface CoordinatorMapper {
      * @return
      */
     Map getLastLeaveWord(Integer userId);
+
+    /**
+     * 获取业务号id
+     * @param objectType
+     * @param objectId
+     * @return
+     */
+    Map selectByBusinessId(@Param("objectType")Integer objectType, @Param("objectId")Integer objectId);
 }

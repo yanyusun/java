@@ -5,6 +5,8 @@ import com.dqys.business.orm.pojo.coordinator.OURelation;
 import com.dqys.core.base.BaseDao;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by mkfeng on 2016/7/12.
  */
@@ -28,6 +30,11 @@ public class OURelationMapperImpl extends BaseDao implements OURelationMapper {
     @Override
     public OURelation selectByPrimaryKey(Integer id) {
         return super.getSqlSession().getMapper(OURelationMapper.class).selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<OURelation> selectBySelective(OURelation record) {
+        return super.getSqlSession().getMapper(OURelationMapper.class).selectBySelective(record);
     }
 
     @Override

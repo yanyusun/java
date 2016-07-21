@@ -89,5 +89,10 @@
           where lw.user_id=#{userId,jdbcType=INTEGER} ORDER BY lw.time desc LIMIT 0,1
     </select>
 
+    <select id="selectByBusinessId" resultType="java.util.Map">
+          SELECT bor.business_id from t_business_obj_re bor
+        where bor.object_id=#{objectId} and bor.object_type=#{objectType}
+    </select>
+
 
 </mapper>
