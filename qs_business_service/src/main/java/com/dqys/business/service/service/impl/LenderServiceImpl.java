@@ -119,7 +119,7 @@ public class LenderServiceImpl implements LenderService {
             }
         }
         if (lenderListQuery.getSearch() != null){
-            // 搜索内容
+            // 搜索内容(借款人编号)
 
         }
         if (lenderListQuery.getBelong() != null) {

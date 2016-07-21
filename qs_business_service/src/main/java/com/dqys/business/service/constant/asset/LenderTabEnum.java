@@ -18,7 +18,8 @@ public enum LenderTabEnum {
     joined(10, "已参与"),
     check(11, "待审核"),
     handle(12, "待处置"),
-    assign(13, "待分配")
+    assign(13, "待分配"),
+    new48h(14, "48H 新")
     ;
 
     private Integer value;
