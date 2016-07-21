@@ -16,10 +16,11 @@ public interface LenderService {
     /**
      * 条件获取借款联系人基础信息
      *
-     * @param lenderListQuery
+     * @param lenderListQuery 导航栏搜索条件
+     * @param type 什么类型的导航栏
      * @return
      */
-    JsonResponse queryList(LenderListQuery lenderListQuery);
+    JsonResponse queryList(LenderListQuery lenderListQuery, Integer type);
 
     /**
      * 添加借款人

@@ -20,6 +20,7 @@
     <result column="area" property="area" jdbcType="INTEGER" />
     <result column="address" property="address" jdbcType="VARCHAR" />
     <result column="is_auth" property="isAuth" jdbcType="BIT" />
+    <result column="type" property="type" jdbcType="INTEGER" />
   </resultMap>
 
   <resultMap id="CompanyDetailMap" type="com.dqys.auth.orm.pojo.CompanyDetailInfo">
@@ -36,12 +37,13 @@
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="phone" property="phone" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="company_type" property="companyType" jdbcType="INTEGER" />
   </resultMap>
 
   <!-- 基础字段 -->
   <sql id="Base_Column_List" >
     id, version, create_at, update_at, stateflag, remark, company_name, credential, licence, 
-    legal_person, province, city, area, address, is_auth
+    legal_person, province, city, area, address, is_auth, type
   </sql>
 
   <!-- 条件查询 -->
@@ -115,6 +117,9 @@
       <if test="isAuth != null" >
         is_auth,
       </if>
+      <if test="type != null" >
+        type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -146,6 +151,9 @@
       </if>
       <if test="isAuth != null" >
         #{isAuth,jdbcType=BIT},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -186,6 +194,9 @@
       <if test="isAuth != null" >
         is_auth = #{isAuth,jdbcType=BIT},
       </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=BIT},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
     and version = #{version,jdbcType=INTEGER}
@@ -213,7 +224,7 @@
   </select>
 
   <select id="get" parameterType="java.lang.Integer" resultMap="CompanyDetailMap">
-    SELECT tci.id as id,create_at,company_name,province,city,area,is_auth,address,
+    SELECT tci.id as id,create_at,company_name,province,city,area,is_auth,address,type as company_type
       res.id as user_id,res.avg,res.user_name as name,res.phone,res.user_type as type
     from t_company_info tci
     INNER JOIN

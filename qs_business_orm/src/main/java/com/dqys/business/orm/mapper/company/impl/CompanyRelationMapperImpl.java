@@ -41,6 +41,11 @@ public class CompanyRelationMapperImpl extends BaseDao implements CompanyRelatio
     }
 
     @Override
+    public List<CompanyRelation> listByCompanyIdAndType(@Param("id") Integer id, @Param("type") Integer type) {
+        return super.getSqlSession().getMapper(CompanyRelationMapper.class).listByCompanyIdAndType(id, type);
+    }
+
+    @Override
     public CompanyRelation getByCompanyId(@Param("aId") Integer aId, @Param("bId") Integer bId) {
         return super.getSqlSession().getMapper(CompanyRelationMapper.class).getByCompanyId(aId, bId);
     }

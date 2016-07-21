@@ -61,4 +61,11 @@
     where stateflag = 0 AND (company_a_id = #{id,jdbcType=INTEGER} OR company_b_id = #{id,jdbcType=INTEGER})
   </select>
 
+  <select id="listByCompanyIdAndType" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_company_relaiton
+    where stateflag = 0 AND (company_a_id = #{id,jdbcType=INTEGER} OR company_b_id = #{id,jdbcType=INTEGER})
+  </select>
+
 </mapper>

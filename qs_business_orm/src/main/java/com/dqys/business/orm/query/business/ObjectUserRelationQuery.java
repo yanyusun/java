@@ -2,6 +2,8 @@ package com.dqys.business.orm.query.business;
 
 import com.dqys.core.base.BaseQuery;
 
+import java.util.Date;
+
 /**
  * Created by yan on 16-7-16.
  *
@@ -34,6 +36,9 @@ public class ObjectUserRelationQuery extends BaseQuery {
     private Integer employerId; //关联对象id:t_inside_team的id或者t_outside_team的id
 
     private Integer businessId; // 业务ID
+
+    private Date startAt; // 开始时间
+    private Date endAt; // 结束时间
 
     public Integer getBusinessId() {
         return businessId;
@@ -101,6 +106,19 @@ public class ObjectUserRelationQuery extends BaseQuery {
         this.id = id;
     }
 
+    public Date getStartAt() {
+        return startAt;
+    }
 
+    public void setStartAt(Date startAt) {
+        this.startAt = startAt;
+    }
 
+    public Date getEndAt() {
+        return endAt;
+    }
+
+    public void setEndAt(Date endAt) {
+        this.endAt = endAt;
+    }
 }

@@ -25,7 +25,7 @@ public class LenderInfo extends BaseModel implements Serializable {
     private String tags;  // 标签
     private String urgeType;  // 催收阶段
     private String entrustBornType;  // 委托来源类型
-    private String entrustBorn;  // 委托来源
+    private Integer entrustBorn;  // 委托公司ID
     private String guaranteeType;  // 担保类型(个人|公司)
     private String guaranteeMode;  // 担保方式(抵押|质押)
     private String guaranteeSource;  // 担保源
@@ -41,7 +41,14 @@ public class LenderInfo extends BaseModel implements Serializable {
     private Integer isWorth;  // 抵押物是否能覆盖债务
     private String memo;  // 备注
 
+    private Integer isCollection; // 催收介入
+    private Integer isLawyer; // 律所介入
+    private Integer isAgent; // 中介介入
+    private Integer followUpTime; // 跟进次数
+    private Integer isStop; // 暂停状态
+
     private Integer assetId; // 资产包Id
+    private String lenderNo; // 借款人编号
 
     @Override
     public String toString() {
@@ -181,11 +188,11 @@ public class LenderInfo extends BaseModel implements Serializable {
         this.entrustBornType = entrustBornType;
     }
 
-    public String getEntrustBorn() {
+    public Integer getEntrustBorn() {
         return entrustBorn;
     }
 
-    public void setEntrustBorn(String entrustBorn) {
+    public void setEntrustBorn(Integer entrustBorn) {
         this.entrustBorn = entrustBorn;
     }
 
@@ -307,5 +314,53 @@ public class LenderInfo extends BaseModel implements Serializable {
 
     public void setAssetId(Integer assetId) {
         this.assetId = assetId;
+    }
+
+    public String getLenderNo() {
+        return lenderNo;
+    }
+
+    public void setLenderNo(String lenderNo) {
+        this.lenderNo = lenderNo;
+    }
+
+    public Integer getIsCollection() {
+        return isCollection;
+    }
+
+    public void setIsCollection(Integer isCollection) {
+        this.isCollection = isCollection;
+    }
+
+    public Integer getIsLawyer() {
+        return isLawyer;
+    }
+
+    public void setIsLawyer(Integer isLawyer) {
+        this.isLawyer = isLawyer;
+    }
+
+    public Integer getIsAgent() {
+        return isAgent;
+    }
+
+    public void setIsAgent(Integer isAgent) {
+        this.isAgent = isAgent;
+    }
+
+    public Integer getFollowUpTime() {
+        return followUpTime;
+    }
+
+    public void setFollowUpTime(Integer followUpTime) {
+        this.followUpTime = followUpTime;
+    }
+
+    public Integer getIsStop() {
+        return isStop;
+    }
+
+    public void setIsStop(Integer isStop) {
+        this.isStop = isStop;
     }
 }

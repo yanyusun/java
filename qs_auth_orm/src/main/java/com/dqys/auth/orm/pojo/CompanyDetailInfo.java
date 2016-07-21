@@ -14,15 +14,17 @@ public class CompanyDetailInfo {
     private Integer city; // 城市
     private Integer district; // 城镇区域
     private String address; // 详细地址
-    private String position; // 位置(省份+城市+区域)
     private Integer isAuth; // 认证情况
-
+    private Integer companyTypeId; // 公司类型id
     // 管理员部分
     private Integer userId; // 管理员ID
     private String avg; // 头像
     private String name; // 管理员名称
     private String phone; // 管理员联系方式
     private Integer type; // 账号类型
+    // 处理后的数据
+    private String companyType; // 公司类型
+    private String position; // 位置(省份+城市+区域)
 
     public Integer getCompanyId() {
         return companyId;
@@ -134,5 +136,22 @@ public class CompanyDetailInfo {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public String getCompanyType() {
+        return companyType;
+    }
+
+    public void setCompanyType(String companyType) {
+        this.companyType = companyType;
+    }
+
+    public Integer getCompanyTypeId() {
+
+        return companyTypeId;
+    }
+
+    public void setCompanyTypeId(Integer companyTypeId) {
+        this.companyTypeId = companyTypeId;
     }
 }

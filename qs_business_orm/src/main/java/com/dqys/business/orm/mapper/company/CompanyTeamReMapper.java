@@ -3,6 +3,7 @@ package com.dqys.business.orm.mapper.company;
 
 import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
 import com.dqys.business.orm.query.company.CompanyTeamReQuery;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -25,13 +26,23 @@ public interface CompanyTeamReMapper {
 
     /**
      * 根据Id获取
+     *
      * @param id
      * @return
      */
     CompanyTeamRe get(Integer id);
 
     /**
+     * 条件统计
+     *
+     * @param companyTeamReQuery
+     * @return
+     */
+    Integer queryCount(CompanyTeamReQuery companyTeamReQuery);
+
+    /**
      * 条件获取分配器详情
+     *
      * @param companyTeamReQuery
      * @return
      */
@@ -41,8 +52,24 @@ public interface CompanyTeamReMapper {
      * 修改协作器与邀请人员的关系
      *
      * @param record
-     * @return
      */
     Integer update(CompanyTeamRe record);
+
+    /**
+     * 根据对象类型和被邀请公司Id以及受邀情况搜索对象ID
+     *
+     * @param type   对象类型
+     * @param status 受邀状态
+     * @param id     管理员ID
+     */
+    List<Integer> listObjectIdByTypeAndManager(@Param("type") Integer type, @Param("status") Integer status,
+                                               @Param("id") Integer id);
+
+    /**
+     * 遍历所有已分配的对象ID
+     *
+     * @param type 对象类型
+     */
+    List<Integer> listAssigned(@Param("type") Integer type);
 
 }

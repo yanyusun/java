@@ -2,6 +2,7 @@ package com.dqys.business.service.service.impl;
 
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.constant.coordinator.CoordinatorEnum;
 import com.dqys.business.orm.constant.coordinator.OURelationEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
 import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
@@ -16,7 +17,6 @@ import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.service.constant.MessageEnum;
-import com.dqys.business.orm.constant.coordinator.CoordinatorEnum;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
@@ -127,7 +127,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public Map addTeammate(Integer userTeamId, Integer userId, String remark, Integer[] userIds) throws BusinessLogException {
-        businessLogService.add(userId,ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.ADD_COMMON_USER.getValue(),"添加参与人","",0,0);
+        businessLogService.add(userId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.ADD_COMMON_USER.getValue(), "添加参与人", "", 0, 0);
         Map map = new HashMap<>();
         for (Integer uid : userIds) {
             Integer flag = 0;
@@ -177,7 +177,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public Map isAccept(Integer teammateId, Integer status) throws BusinessLogException {
-        businessLogService.add(teammateId,ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.UPDATE_COMMON_USER.getValue(),"被邀请人同意或拒绝","",0,0);
+        businessLogService.add(teammateId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.UPDATE_COMMON_USER.getValue(), "被邀请人同意或拒绝", "", 0, 0);
         Map<String, Object> map = new HashMap<>();
         TeammateRe teammateRe = new TeammateRe();
         teammateRe.setId(teammateId);
@@ -201,7 +201,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public Map addTeammate(Integer userTeammateId, Integer userId) throws BusinessLogException {
-        businessLogService.add(userId,ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.ADD_COMMON_USER.getValue(),"主动加入案组","",0,0);
+        businessLogService.add(userId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.ADD_COMMON_USER.getValue(), "主动加入案组", "", 0, 0);
         Map map = new HashMap<>();
         Integer flag = 0;
         getTeammateFlag(userTeammateId, userId, flag, TeammateReEnum.BUSINESS_TYPE_TASK.getValue(), TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue());
@@ -258,13 +258,4 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         return coordinatorMapper.companyList(objectId, objectType);
     }
 
-    @Override
-    public Integer createDistribution(String type, Integer id) {
-        return null;
-    }
-
-    @Override
-    public Integer inviteDistribution(Integer companyId, Integer distributionId, String cooperationType, Integer userId) {
-        return null;
-    }
 }

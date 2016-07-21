@@ -28,31 +28,31 @@ public class CompanyInterceptor extends AuthenticationInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         String url = request.getRequestURI();
-        if(API_LIST_OGA.equals(url)){//待后期完善根据业务号，团队id，操作对象，人员控制权限
+        if (API_LIST_OGA.equals(url)) {//待后期完善根据业务号，团队id，操作对象，人员控制权限
             return true;
-        }else if(API_ADD_OGA.equals(url)){
+        } else if (API_ADD_OGA.equals(url)) {
             return true;
-        }else if(API_DELETE_OGA.equals(url)){
+        } else if (API_DELETE_OGA.equals(url)) {
             return true;
-        }else if(API_UPDATE_OGA.equals(url)){
+        } else if (API_UPDATE_OGA.equals(url)) {
             return true;
-        }else if(API_GET_OGA.equals(url)){
+        } else if (API_GET_OGA.equals(url)) {
             return true;
-        }else if(API_GET_DIS.equals(url)){
+        } else if (API_GET_DIS.equals(url)) {
             return true;
-        }else if(API_JOIN_DIS.equals(url)){
+        } else if (API_JOIN_DIS.equals(url)) {
             return true;
-        }else if(API_INVITE_DIS.equals(url)){
+        } else if (API_INVITE_DIS.equals(url)) {
             return true;
-        }else if(API_DESIGN_DIS.equals(url)){
+        } else if (API_DESIGN_DIS.equals(url)) {
             return true;
-        }else if(API_EXIST_DIS.equals(url)){
+        } else if (API_EXIST_DIS.equals(url)) {
             return true;
-        }else if(API_GET_REL.equals(url)){
+        } else if (API_GET_REL.equals(url)) {
             return true;
-        }else {
-            LogManager.getLogger("businessAsync").warn("未知请求链接错误:"+url);
-            throw new UrlException("未知请求链接错误",UrlException.UNKNOWN_URL_ERROR);
+        } else {
+            LogManager.getLogger("businessAsync").warn("未知请求链接错误:" + url);
+            throw new UrlException("未知请求链接错误", UrlException.UNKNOWN_URL_ERROR);
         }
     }
 }

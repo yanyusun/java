@@ -9,14 +9,16 @@ public class AssetListDTO {
 
     private Integer id; // 主键
 
+    private String name; // 资产包名称
     private String code; // 编号
-    private Integer type; // 资产包类型
+    private String type; // 资产包类型
     private Double accrual; // 总利息
     private Double loan; // 总贷款
     private Double appraisal; // 评估总价
-    private String name; // 资产包名称
     private String company; // 贷款机构
     private String city; // 行政区划
+
+
     private Long lessDay; // 剩余天数
     private String rate; // 完成率
     private String operator; // 录入人员
@@ -40,11 +42,11 @@ public class AssetListDTO {
         this.code = code;
     }
 
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 

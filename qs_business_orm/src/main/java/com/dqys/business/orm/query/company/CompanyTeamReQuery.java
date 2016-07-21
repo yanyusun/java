@@ -9,7 +9,7 @@ public class CompanyTeamReQuery {
     private Integer teamId; // 分配器ID
     private Integer status; // 数据状态
     private Integer companyId; // 公司ID
-    private Integer statefalg; // 数据状态
+    private Integer stateflag; // 数据状态
 
     public Integer getId() {
         return id;
@@ -44,10 +44,10 @@ public class CompanyTeamReQuery {
     }
 
     public Integer getStatefalg() {
-        return statefalg;
+        return stateflag;
     }
 
     public void setStatefalg(Integer statefalg) {
-        this.statefalg = statefalg;
+        this.stateflag = statefalg;
     }
 }
