@@ -2,14 +2,25 @@ package com.dqys.business.service.service.impl;
 
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.repay.RepayEnum;
+import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.repay.RepayMapper;
+import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
+import com.dqys.business.service.constant.MessageEnum;
+import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
+import com.dqys.business.service.constant.ObjectEnum.IouEnum;
+import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.business.service.service.BusinessLogService;
+import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.service.RepayService;
 import com.dqys.business.service.utils.message.MessageUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,8 +45,17 @@ public class RepayServiceImpl implements RepayService {
     @Autowired
     private LenderInfoMapper lenderInfoMapper;
 
+    @Autowired
+    private AssetInfoMapper assetInfoMapper;
+
+    @Autowired
+    private MessageService messageService;
+
+    private BusinessLogService businessLogService;
+
     @Override
     public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, MultipartFile file) throws Exception {
+        businessLogService.add(objectId,ObjectTypeEnum.IOU.getValue(), IouEnum.REIMBURSEMENT.getValue(),"还款操作","",0,0);//操作日志
         Map map = new HashMap<>();
         List<IOUInfo> ious = new ArrayList<>();
         ious = getIouInfos(objectId, objectType, ious);//根据对象类型获取所有借据
@@ -124,7 +144,7 @@ public class RepayServiceImpl implements RepayService {
             }
         }
         //查询对应抵押物或借据是否全部还完了，还完款的就要在业务表上改为已完成
-        List<Integer> businessIds = repayMapper.getBusinessId(ObjectTypeEnum.IOU.getValue(),iouIds);
+        List<Integer> businessIds = repayMapper.getBusinessId(ObjectTypeEnum.IOU.getValue(), iouIds);
         for (Integer id : businessIds) {
             Map iouMap = repayMapper.getIouSumByBusinessId(id, ObjectTypeEnum.IOU.getValue());
             Double lessMoney = MessageUtils.transMapToDou(iouMap, "lessMoney");
@@ -141,7 +161,7 @@ public class RepayServiceImpl implements RepayService {
         if (money != 0) {
             throw new Exception();
         }
-        map.put("result","yes");
+        map.put("result", "yes");
         return map;
     }
 
@@ -174,6 +194,89 @@ public class RepayServiceImpl implements RepayService {
             }
         }
         return false;
+    }
+
+    @Override
+    public void postpone(DamageApply damageApply, Map map) {
+        setDamage(damageApply);
+        Integer num = repayMapper.addDamageApply(damageApply);
+        if (num > 0) {
+            map.put("result", "yes");
+        } else {
+            map.put("result", "no");
+        }
+    }
+
+    @Override
+    public void auditPostpone(Integer id, Integer statuas,Integer userId, Map map) throws Exception {
+
+        DamageApply damageApply = repayMapper.getDamageApply(id);
+        if (damageApply == null) {//无记录无效
+            map.put("result", "no");
+            return;
+        }
+        if (damageApply.getStatus() != 0) {//已经审核过得无效
+            map.put("result", "no");
+            return;
+        }
+//        if(damageApply.getEaxm_user_id()!=userId){//不是要求的审核人
+//            map.put("result", "no");
+//            return;
+//        }
+        setDamage(damageApply);
+        damageApply.setStatus(statuas);
+        Integer num = repayMapper.updateDamageApply(damageApply);//修改审核状态
+        if (num > 0) {
+            Integer result=0;
+            if (damageApply.getObject_type() == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+                AssetInfo assetInfo = new AssetInfo();
+                assetInfo.setId(damageApply.getApply_object_id());
+                assetInfo.setEndAt(damageApply.getDamage_date());
+                result=assetInfoMapper.update(assetInfo);
+                businessLogService.add(assetInfo.getId(),ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.update.getValue(),"延期申请审核操作","",0,0);//操作日志
+            }
+            if (damageApply.getObject_type() == ObjectTypeEnum.LENDER.getValue()) {
+                LenderInfo lenderInfo = new LenderInfo();
+                lenderInfo.setId(damageApply.getApply_object_id());
+                lenderInfo.setEndAt(damageApply.getDamage_date());
+                result=lenderInfoMapper.update(lenderInfo);
+                businessLogService.add(lenderInfo.getId(),ObjectTypeEnum.LENDER.getValue(), LenderEnum.UPDATE_EDIT.getValue(),"延期申请审核操作","",0,0);//操作日志
+            }
+            if(result>0){
+                //添加通知消息记录
+                messageService.add("延期审核结果","您的审核"+(statuas==1?"通过！":"不通过！"),damageApply.getEaxm_user_id(),damageApply.getApply_user_id(),"", MessageEnum.PRODUCT.getValue());
+                //发送短信或邮件
+
+            }else{
+                throw  new Exception();
+            }
+            map.put("result", "yes");
+        } else {
+            map.put("result", "no");//审核修改失败
+        }
+    }
+
+    private void setDamage(DamageApply damageApply) {
+        if (damageApply.getObject_type() == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+            AssetInfo assetInfo = assetInfoMapper.get(damageApply.getApply_object_id());
+            damageApply.setOriginal_time(assetInfo.getEndAt());
+            damageApply.setEaxm_user_id(assetInfo.getOperator());
+        }
+        if (damageApply.getObject_type() == ObjectTypeEnum.LENDER.getValue()) {
+            LenderInfo lenderInfo = lenderInfoMapper.get(damageApply.getApply_object_id());
+            damageApply.setOriginal_time(lenderInfo.getEndAt());
+            damageApply.setEaxm_user_id(lenderInfo.getOperator());
+        }
+        DamageApply damageApply1 = new DamageApply();
+        damageApply1.setStatus(1);
+        damageApply1.setApply_object_id(damageApply.getApply_object_id());
+        damageApply1.setObject_type(damageApply.getObject_type());
+        List<DamageApply> damages = repayMapper.selectByDamageApply(damageApply1);
+        if (damages.size() > 0) {
+            damageApply.setDamage_type(9);
+        } else {
+            damageApply.setDamage_type(0);
+        }
     }
 
 }

@@ -4,6 +4,7 @@ import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.repay.RepayMapper;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
@@ -54,5 +55,25 @@ public class RepayMapperImpl extends BaseDao implements RepayMapper {
     @Override
     public Integer updateBusinessStatus(Integer id, int status) {
         return super.getSqlSession().getMapper(RepayMapper.class).updateBusinessStatus(id, status);
+    }
+
+    @Override
+    public Integer addDamageApply(DamageApply damageApply) {
+        return super.getSqlSession().getMapper(RepayMapper.class).addDamageApply(damageApply);
+    }
+
+    @Override
+    public List<DamageApply> selectByDamageApply(DamageApply damageApply) {
+        return super.getSqlSession().getMapper(RepayMapper.class).selectByDamageApply(damageApply);
+    }
+
+    @Override
+    public DamageApply getDamageApply(Integer id) {
+        return super.getSqlSession().getMapper(RepayMapper.class).getDamageApply(id);
+    }
+
+    @Override
+    public Integer updateDamageApply(DamageApply damageApply) {
+        return super.getSqlSession().getMapper(RepayMapper.class).updateDamageApply(damageApply);
     }
 }
