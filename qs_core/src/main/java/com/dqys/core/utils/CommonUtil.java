@@ -10,8 +10,7 @@ import com.dqys.core.utils.JsonResponseTool;
 import org.apache.poi.ss.formula.functions.T;
 import sun.swing.BakedArrayList;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Yvan on 16/6/12.
@@ -75,6 +74,55 @@ public class CommonUtil {
         return false;
     }
 
+    /**
+     * 对数据去重
+     * @param list
+     * @return
+     */
+    public static List<Integer> exceptMulty(List<Integer> list){
+        List<Integer> result = new ArrayList<>();
+        Set<Integer> set = new HashSet<>();
+        list.forEach(integer -> {
+            set.add(integer);
+        });
+        Iterator<Integer> iterator = set.iterator();
+        while (iterator.hasNext()){
+            result.add(iterator.next());
+        }
+        return result;
+    }
+
+    /**
+     * 两个表数据提取出不重复的重复数据
+     * @param list
+     * @param list2
+     * @return
+     */
+    public static List<Integer> unionList(List<Integer> list, List<Integer> list2){
+        if(checkParam(list, list2)){
+            return null;
+        }
+        if(list == null){
+            return exceptMulty(list2);
+        }
+        if(list2 == null){
+            return exceptMulty(list);
+        }
+        List<Integer> result = new ArrayList<>();
+        list = exceptMulty(list);
+        list2 = exceptMulty(list2);
+        for(Integer i : list){
+            for(Integer j : list2){
+                if(i.equals(j)){
+                    result.add(i);break;
+                }
+            }
+        }
+        if(result.size() == 0){
+            result.add(0);
+        }
+        return result;
+    }
 
     /**
      * 判断当前登录用户是否是总管理员

@@ -1,5 +1,6 @@
 package com.dqys.auth.controller;
 
+import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.service.constant.MailVerifyTypeEnum;
@@ -542,7 +543,7 @@ public class AuthController extends BaseApiContorller {
      * @apiUse JsonResponse
      */
     @RequestMapping(value = "/add_company", method = RequestMethod.POST)
-    public Callable<JsonResponse> addCompany(@RequestParam String companyName, @RequestParam String credential, @RequestParam String licence,
+    public Callable<JsonResponse> addCompany(@RequestParam String companyName, @RequestParam String credential, @RequestParam String licence, @RequestParam Integer type,
                                              @RequestParam Integer province, @RequestParam Integer city, @RequestParam Integer area, @RequestParam String address) {
         return () -> {
             //验证区域有效性
@@ -560,6 +561,9 @@ public class AuthController extends BaseApiContorller {
             if(StringUtils.isBlank(licence)) {
                 return JsonResponseTool.paramErr("营业执照未上传");
             }
+            if(CompanyTypeEnum.getCompanyTypeEnum(type) == null){
+                return JsonResponseTool.paramErr("公司类型错误");
+            }
 
             //验证公司有效性
             ServiceResult<Integer> companyResult = companyService.validateCompany(credential);
@@ -576,6 +580,7 @@ public class AuthController extends BaseApiContorller {
             tCompanyInfo.setCity(city);
             tCompanyInfo.setArea(area);
             tCompanyInfo.setAddress(address);
+            tCompanyInfo.setType(type);
             companyResult = companyService.addCompany_tx(tCompanyInfo);
             if(!companyResult.getFlag()) {
                 return JsonResponseTool.failure(companyResult.getMessage());

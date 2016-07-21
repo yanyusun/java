@@ -85,4 +85,5 @@ public class AssetQuery extends BaseQuery {
     public void setStateflag(Integer stateflag) {
         this.stateflag = stateflag;
     }
+
 }

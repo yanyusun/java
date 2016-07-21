@@ -23,7 +23,7 @@ import java.util.Date;
  * @apiParam {string} tags 标签
  * @apiParam {string} urgeType 催收阶段
  * @apiParam {string} entrustBornType 委托来源类型
- * @apiParam {string} entrustBorn 委托来源
+ * @apiParam {number} entrustBorn 委托来源公司ID
  * @apiParam {string} guaranteeType 担保类型
  * @apiParam {string} guaranteeMode 担保方式
  * @apiParam {string} guaranteeSource 担保资源
@@ -104,7 +104,7 @@ public class LenderDTO {
     private String tags;  // 标签
     private String urgeType;  // 催收阶段
     private String entrustBornType;  // 委托来源类型
-    private String entrustBorn;  // 委托来源
+    private Integer entrustBorn;  // 委托来源
     private String guaranteeType;  // 担保类型(个人|公司)
     private String guaranteeMode;  // 担保方式(抵押|质押)
     private String guaranteeSource;  // 担保源
@@ -125,6 +125,7 @@ public class LenderDTO {
 
     private String name; // 借款人姓名
     private String sex; // 借款人性别
+    private String lenderNo; // 借款人编号
 
     public Integer getOperatorId() {
         return operatorId;
@@ -254,11 +255,11 @@ public class LenderDTO {
         this.entrustBornType = entrustBornType;
     }
 
-    public String getEntrustBorn() {
+    public Integer getEntrustBorn() {
         return entrustBorn;
     }
 
-    public void setEntrustBorn(String entrustBorn) {
+    public void setEntrustBorn(Integer entrustBorn) {
         this.entrustBorn = entrustBorn;
     }
 
@@ -398,4 +399,11 @@ public class LenderDTO {
         this.sex = sex;
     }
 
+    public String getLenderNo() {
+        return lenderNo;
+    }
+
+    public void setLenderNo(String lenderNo) {
+        this.lenderNo = lenderNo;
+    }
 }

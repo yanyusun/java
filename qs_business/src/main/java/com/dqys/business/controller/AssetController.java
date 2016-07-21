@@ -10,6 +10,8 @@ import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
+import com.dqys.business.service.utils.asset.IouServiceUtils;
+import com.dqys.business.service.utils.asset.PawnServiceUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
@@ -34,10 +36,6 @@ public class AssetController {
     @Autowired
     private LenderService lenderService;
     @Autowired
-    private IouService iouService;
-    @Autowired
-    private PawnService pawnService;
-    @Autowired
     private UserService userService;
 
     /**
@@ -58,7 +56,7 @@ public class AssetController {
 
         resultMap.put("assetType", AssetTypeEnum.list()); // 资产包种类
         resultMap.put("excellent", ExcellentTypeEnum.list()); // 评优
-        resultMap.put("level", AssetServiceUtils.initLevel(8)); // 评级
+        resultMap.put("level", PawnServiceUtils.initLevel(8)); // 评级
 
         return JsonResponseTool.success(resultMap);
     }
@@ -82,7 +80,7 @@ public class AssetController {
     }
 
     /**
-     * @api {get} http://{url}/asset/delete 逻辑删除资产包
+     * @api {get} http://{url}/asset/delete 删除资产包
      * @apiName delete
      * @apiGroup asset
      * @apiParam {number} id 资产包ID
