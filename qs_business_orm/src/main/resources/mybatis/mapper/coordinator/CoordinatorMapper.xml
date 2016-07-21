@@ -8,6 +8,51 @@
         <result column="name" property="teamName" jdbcType="VARCHAR"/>
         <result column="real_name" property="realName" jdbcType="VARCHAR"/>
     </resultMap>
+
+    <resultMap id="BaseResultMapLenderInfo" type="com.dqys.business.orm.pojo.asset.LenderInfo" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="version" property="version" jdbcType="INTEGER" />
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+        <result column="stateflag" property="stateflag" jdbcType="INTEGER" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="asset_id" property="assetId" jdbcType="INTEGER" />
+        <result column="start_at" property="startAt" jdbcType="TIMESTAMP" />
+        <result column="end_at" property="endAt" jdbcType="TIMESTAMP" />
+        <result column="operator" property="operator" jdbcType="INTEGER" />
+        <result column="accrual" property="accrual" jdbcType="DOUBLE" />
+        <result column="loan" property="loan" jdbcType="DOUBLE" />
+        <result column="appraisal" property="appraisal" jdbcType="DOUBLE" />
+        <result column="loan_type" property="loanType" jdbcType="VARCHAR" />
+        <result column="loan_mode" property="loanMode" jdbcType="VARCHAR" />
+        <result column="loan_name" property="loanName" jdbcType="VARCHAR" />
+        <result column="evaluate_excellent" property="evaluateExcellent" jdbcType="VARCHAR" />
+        <result column="evaluate_level" property="evaluateLevel" jdbcType="VARCHAR" />
+        <result column="dispose_mode" property="disposeMode" jdbcType="VARCHAR" />
+        <result column="tags" property="tags" jdbcType="VARCHAR" />
+        <result column="urge_type" property="urgeType" jdbcType="VARCHAR" />
+        <result column="entrust_born_type" property="entrustBornType" jdbcType="VARCHAR" />
+        <result column="entrust_born" property="entrustBorn" jdbcType="VARCHAR" />
+        <result column="guarantee_type" property="guaranteeType" jdbcType="VARCHAR" />
+        <result column="guarantee_mode" property="guaranteeMode" jdbcType="VARCHAR" />
+        <result column="guarantee_source" property="guaranteeSource" jdbcType="VARCHAR" />
+        <result column="is_guarantee_connection" property="isGuaranteeConnection" jdbcType="INTEGER" />
+        <result column="guarentee_economic" property="guarenteeEconomic" jdbcType="VARCHAR" />
+        <result column="is_lawsuit" property="isLawsuit" jdbcType="INTEGER" />
+        <result column="is_decision" property="isDecision" jdbcType="INTEGER" />
+        <result column="real_urge_time" property="realUrgeTime" jdbcType="INTEGER" />
+        <result column="phone_urge_time" property="phoneUrgeTime" jdbcType="INTEGER" />
+        <result column="entrust_urge_time" property="entrustUrgeTime" jdbcType="INTEGER" />
+        <result column="can_contact" property="canContact" jdbcType="INTEGER" />
+        <result column="can_pay" property="canPay" jdbcType="INTEGER" />
+        <result column="is_worth" property="isWorth" jdbcType="INTEGER" />
+        <result column="memo" property="memo" jdbcType="VARCHAR" />
+        <result column="is_collection" property="isCollection" jdbcType="INTEGER" />
+        <result column="is_lawyer" property="isLawyer" jdbcType="INTEGER" />
+        <result column="is_agent" property="isAgent" jdbcType="INTEGER" />
+        <result column="follow_up_times" property="followUpTime" jdbcType="INTEGER" />
+        <result column="is_stop" property="isStop" jdbcType="INTEGER" />
+    </resultMap>
     <!--查询借款人或资产包的团队信息-->
     <select id="getLenderOrAsset" resultMap="BaseResultMap">
         SELECT tusi.real_name,bor.name,ttr.user_id,ttr.type
@@ -88,11 +133,18 @@
         SELECT DATE_FORMAT(lw.time,'%Y-%m-%d') time from leave_word lw
           where lw.user_id=#{userId,jdbcType=INTEGER} ORDER BY lw.time desc LIMIT 0,1
     </select>
-
+    <!--根据对象类型和对象id获取业务号id-->
     <select id="selectByBusinessId" resultType="java.util.Map">
           SELECT bor.business_id from t_business_obj_re bor
         where bor.object_id=#{objectId} and bor.object_type=#{objectType}
     </select>
 
+    <select id="selectByLender" parameterType="com.dqys.business.orm.pojo.asset.LenderInfo" resultMap="BaseResultMapLenderInfo">
+      SELECT * from bt_lender len
+      where 1=1
+      <if test="assetId !=null">
+      and len.asset_id=#{assetId}
+      </if>
+    </select>
 
 </mapper>

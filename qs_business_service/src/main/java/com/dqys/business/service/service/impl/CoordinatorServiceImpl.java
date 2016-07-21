@@ -212,9 +212,9 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 }
                 //如果是资产包，还需要加入资产包下的借款人
                 if (ouRelation.getObjectType() == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
-                    LenderListQuery lenderListQuery = new LenderListQuery();
-                    lenderListQuery.setAssist(ouRelation.getObjectId());
-                    List<LenderInfo> lends = (List<LenderInfo>) lenderService.queryList(lenderListQuery).getData();
+                    LenderInfo lenderInfo = new LenderInfo();
+                    lenderInfo.setAssetId(ouRelation.getObjectId());
+                    List<LenderInfo> lends =coordinatorMapper.selectByLender(lenderInfo);
                     for (LenderInfo len : lends) {
                         ouRelation.setObjectId(len.getId());
                         ouRelation.setObjectType(ObjectTypeEnum.LENDER.getValue());

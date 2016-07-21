@@ -1,6 +1,7 @@
 package com.dqys.business.orm.mapper.coordinator.impl;
 
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
+import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
@@ -61,6 +62,11 @@ public class CoordinatorMapperImpl extends BaseDao implements CoordinatorMapper 
 
     @Override
     public Map selectByBusinessId(Integer objectType, Integer objectId) {
-        return super.getSqlSession().getMapper(CoordinatorMapper.class).selectByBusinessId(objectType,objectId);
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).selectByBusinessId(objectType, objectId);
+    }
+
+    @Override
+    public List<LenderInfo> selectByLender(LenderInfo lenderInfo) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).selectByLender(lenderInfo);
     }
 }
