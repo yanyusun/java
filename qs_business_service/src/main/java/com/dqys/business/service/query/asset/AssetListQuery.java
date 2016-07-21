@@ -11,12 +11,15 @@ import java.util.Date;
  * @apiParam {number} [type] 资产包类型
  * @apiParam {number} [areaId] 行政区域ID
  * @apiParam {number} [operator] 操作人Id
- * @apiParam {number} [companyId] 公司
+ * @apiParam {boolean} [isOwn] 是否选择自己录入选项
+ * @apiParam {number} [companyId] 贷款公司Id
  * @apiParam {string} [code] 编号
  * @apiParam {date} [startAt] 开始时间
  * @apiParam {date} [endAt] 结束时间
  */
 public class AssetListQuery extends BasePagination {
+
+    private Integer searchType = 0; //
 
     private Integer type; //资产包种类
     private Integer areaId; // 区域ID
@@ -27,6 +30,8 @@ public class AssetListQuery extends BasePagination {
     private Date startAt;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endAt;
+
+    private boolean isOwn; // 是否自己创建的资产包(0未选中,1选中)
 
     public Integer getType() {
         return type;
@@ -82,5 +87,13 @@ public class AssetListQuery extends BasePagination {
 
     public void setEndAt(Date endAt) {
         this.endAt = endAt;
+    }
+
+    public boolean isOwn() {
+        return isOwn;
+    }
+
+    public void setIsOwn(boolean isOwn) {
+        this.isOwn = isOwn;
     }
 }

@@ -114,9 +114,31 @@
     where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </update>
 
+  <select id="queryCount" parameterType="com.dqys.business.orm.query.company.CompanyTeamReQuery" resultType="java.lang.Integer">
+    SELECT count(id) from t_company_team_re
+    <include refid="Query_Condition" />
+  </select>
+
   <select id="queryList" parameterType="com.dqys.business.orm.query.company.CompanyTeamReQuery" resultMap="BaseResultMap">
     SELECT * from t_company_team_re
     <include refid="Query_Condition" />
     ORDER BY id DESC
   </select>
+
+  <select id="listObjectIdByTypeAndManager" resultType="java.lang.Integer">
+    SELECT object_id from t_company_team WHERE object_type = #{type,jdbcType=INTEGER} AND id IN (
+      SELECT company_team_id from t_company_team_re
+      WHERE accepter_id = #{id,jdbcType=INTEGER} AND stateflag = 0 AND status = #{status,jdbcType=INTEGER}
+    ) AND stateflag = 0
+  </select>
+
+  <select id="listAssigned" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    SELECT object_id from t_company_team where object_type = #{type,jdbcType=INTEGER} AND id IN (
+      SELECT s.id FROM (
+        SELECT count(company_team_id) as num,company_team_id as id FROM t_company_team_re GROUP BY company_team_id
+      ) s WHERE s.num > 1
+    )
+  </select>
+
+
 </mapper>

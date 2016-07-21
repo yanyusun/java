@@ -19,6 +19,7 @@ public class LenderInterceptor extends AuthenticationInterceptor {
     public static final String API_GET = "/lender/get";
     public static final String API_GET_ALL = "/lender/getLenderAll";
     public static final String API_LIST = "/lender/list";
+    public static final String API_LIST_COMPANY = "/lender/listCompany";
 
 
     @Override
@@ -37,6 +38,8 @@ public class LenderInterceptor extends AuthenticationInterceptor {
         }else if(API_GET_ALL.equals(url)){
             return true;
         }else if(API_LIST.equals(url)){
+            return true;
+        }else if(API_LIST_COMPANY.equals(url)){
             return true;
         }else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:"+url);

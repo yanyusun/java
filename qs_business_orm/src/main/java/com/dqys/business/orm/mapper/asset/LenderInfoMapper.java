@@ -48,5 +48,12 @@ public interface LenderInfoMapper {
      */
     List<LenderInfo> queryList(LenderQuery lenderQuery);
 
+    /**
+     * 条件统计
+     * @param lenderQuery
+     * @return
+     */
+    Integer queryCount(LenderQuery lenderQuery);
+
 
 }

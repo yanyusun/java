@@ -179,7 +179,7 @@ public class CompanyController {
     @ResponseBody
     public JsonResponse inviteDistribution(@RequestParam(required = true) Integer id,
                                            @RequestParam(required = true) Integer companyId,
-                                           @RequestParam(required = true) String text) throws BusinessLogException{
+                                           @RequestParam(required = false) String text) throws BusinessLogException{
         if (CommonUtil.checkParam(companyId, id)) {
             return JsonResponseTool.success("参数错误");
         }

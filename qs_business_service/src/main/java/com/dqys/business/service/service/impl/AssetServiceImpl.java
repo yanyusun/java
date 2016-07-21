@@ -1,12 +1,16 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.business.orm.constant.business.BusinessRelationEnum;
+import com.dqys.business.orm.constant.business.ObjectUserStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.ContactInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
+import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
 import com.dqys.business.service.constant.asset.AssetModelTypeEnum;
@@ -20,6 +24,7 @@ import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +32,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
 
 /**
  * Created by Yvan on 16/6/6.
@@ -43,6 +46,8 @@ public class AssetServiceImpl implements AssetService {
     private LenderInfoMapper lenderInfoMapper;
     @Autowired
     private ContactInfoMapper contactInfoMapper;
+    @Autowired
+    private ObjectUserRelationMapper objectUserRelationMapper;
 
     @Autowired
     private BusinessLogService businessLogService;
@@ -61,13 +66,28 @@ public class AssetServiceImpl implements AssetService {
             Integer id = assetInfo.getId();
             // 增加业务数据
             Integer serviceObjectId = businessService.addServiceObject(ObjectTypeEnum.ASSETPACKAGE.getValue(), id, null, null);
-            if(CommonUtil.checkResult(serviceObjectId)){
-                // todo 日志记录
+            if (CommonUtil.checkResult(serviceObjectId)) {
+                // 增加业务数据失败,记录
+
 
             }
             // 增加操作记录
             businessLogService.add(id, ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.add.getValue(),
                     "", assetDTO.getMemo(), 0, 0);
+            // 增加对象与操作事物的联系
+            ObjectUserRelation objectUserRelation = new ObjectUserRelation();
+            objectUserRelation.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
+            objectUserRelation.setObjectId(id);
+            objectUserRelation.setUserId(UserSession.getCurrent().getUserId());
+            objectUserRelation.setStatus(ObjectUserStatusEnum.checked.getValue());
+            objectUserRelation.setType(BusinessRelationEnum.own.getValue());
+            Integer result = objectUserRelationMapper.insert(objectUserRelation);
+            if (CommonUtil.checkResult(result)) {
+                // 增加失败,请记录
+
+                
+            }
+
             return JsonResponseTool.success(id);
         } else {
             return JsonResponseTool.failure(null);

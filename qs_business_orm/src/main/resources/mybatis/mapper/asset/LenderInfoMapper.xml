@@ -53,13 +53,55 @@
 
   <sql id="Query_Condition">
     <where>
-      stateflag = 0
+      <if test="stateflag != null">
+        AND statefalg != 0
+      </if>
       <if test="assetId != null">
         AND asset_id = #{assetId,jdbcType=INTEGER}
       </if>
       <if test="lenderId != null">
         AND id = #{lenderId,jdbcType=INTEGER}
       </if>
+      <if test="canContact != null">
+        AND can_contact = #{canContact,jdbcType=INTEGER}
+      </if>
+      <if test="isWorth != null">
+        AND is_worth = #{isWorth,jdbcType=INTEGER}
+      </if>
+      <if test="entrustId != null">
+        AND entrust_born = #{entrustId,jdbcType=INTEGER}
+      </if>
+
+      <if test="startAt != null">
+        <![CDATA[ AND create_at >= #{startAt} ]]>
+      </if>
+      <if test="endAt != null">
+        <![CDATA[ AND create_at <= #{endAt} ]]>
+      </if>
+
+      <if test="isOver">
+        AND accrual = 0 AND loan = 0
+      </if>
+      <if test="isAsset">
+        AND asset_id > 0
+      </if>
+      <if test="isOutTime">
+        <![CDATA[ AND endAt < CURRENT_TIMESTAMP ]]>
+      </if>
+
+      <if test="ids != null">
+        AND id in
+        <foreach collection="ids" item="i" open="(" close=")" separator=",">
+          #{i}
+        </foreach>
+      </if>
+      <if test="exceptIds != null">
+        AND id NOT in
+        <foreach collection="exceptIds" item="i" open="(" close=")" separator=",">
+          #{i}
+        </foreach>
+      </if>
+
     </where>
   </sql>
 
@@ -402,4 +444,10 @@
     <include refid="Query_Condition" />
     ORDER BY id DESC
   </select>
+  
+  <select id="queryCount" resultType="java.lang.Integer" parameterType="com.dqys.business.orm.query.asset.LenderQuery">
+    SELECT COUNT (id) FROM bt_lender
+    <include refid="Query_Condition" />
+  </select>
+  
 </mapper>

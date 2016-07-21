@@ -1,14 +1,18 @@
 package com.dqys.business.controller;
 
+import com.dqys.business.orm.constant.company.CompanyTypeEnum;
+import com.dqys.business.service.constant.asset.LenderTabEnum;
 import com.dqys.business.service.constant.asset.LenderTypeEnum;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.LenderListQuery;
 import com.dqys.business.service.service.LenderService;
+import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.NoSQLWithRedisTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +36,7 @@ public class LenderController {
      * @apiName getInit
      * @apiGroup lender
      * @apiSuccess {SelectonDTO} lenderType 借款人联系人类型
+     * @apiSuccess {SelectonDTO} companyType 公司类型集合
      * @apiUse SelectonDTO
      * @apiUse LenderTypeEnum
      */
@@ -41,9 +46,31 @@ public class LenderController {
         Map<String, Object> resultMap = new HashMap<>();
 
         resultMap.put("lenderType", LenderTypeEnum.list());
+        resultMap.put("companyType", CompanyTypeEnum.list());
+        Map<Integer, String> accountType = new HashMap<>();
+        accountType.put(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY), "市场处置"); // 中介
+        accountType.put(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW), "司法化解"); // 律所
+        accountType.put(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE), "常规催收"); // 催收
+        accountType.put(0, "常规催收司法化解同时进行");
+        resultMap.put("accountType", accountType);
 
         return JsonResponseTool.success(resultMap);
     }
+
+    /**
+     * @api {GET} http://{url}/api/company/listCompany 根据公司类型获取所有的委托方公司
+     * @apiName listCompany
+     * @apiGroup organization
+     * @apiParam {number} id
+     */
+    @RequestMapping(value = "/listCompany")
+    @ResponseBody
+    public JsonResponse listCompany(Integer id, Integer type) {
+
+
+        return null;
+    }
+
 
     /**
      * @api {get} http://{url}/lender/list 获取借款人列表
@@ -55,8 +82,11 @@ public class LenderController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public JsonResponse list(@ModelAttribute LenderListQuery lenderListQuery) {
-        return lenderService.queryList(lenderListQuery);
+    public JsonResponse list(@RequestParam(required = true) Integer type, @ModelAttribute LenderListQuery lenderListQuery) {
+        if (LenderTabEnum.getLenderTabEnum(type) == null) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return lenderService.queryList(lenderListQuery, type);
     }
 
     /**
@@ -73,7 +103,7 @@ public class LenderController {
     @ResponseBody
     public JsonResponse add(
             @ModelAttribute List<ContactDTO> contactDTOs,
-            @ModelAttribute LenderDTO lenderDTO) throws BusinessLogException{
+            @ModelAttribute LenderDTO lenderDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(contactDTOs, lenderDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -108,7 +138,7 @@ public class LenderController {
     @RequestMapping(value = "/update")
     @ResponseBody
     public JsonResponse updateLenderRelation(@ModelAttribute List<ContactDTO> contactDTOs,
-                                             @ModelAttribute LenderDTO lenderDTO) throws BusinessLogException{
+                                             @ModelAttribute LenderDTO lenderDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(
                 contactDTOs, lenderDTO, lenderDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
@@ -155,4 +185,6 @@ public class LenderController {
         }
         return lenderService.getLenderAll(id);
     }
+
+
 }

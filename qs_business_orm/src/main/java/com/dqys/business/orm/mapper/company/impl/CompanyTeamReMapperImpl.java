@@ -4,6 +4,7 @@ import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
 import com.dqys.business.orm.query.company.CompanyTeamReQuery;
 import com.dqys.core.base.BaseDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -36,5 +37,21 @@ public class CompanyTeamReMapperImpl extends BaseDao implements CompanyTeamReMap
     @Override
     public Integer update(CompanyTeamRe record) {
         return super.getSqlSession().getMapper(CompanyTeamReMapper.class).update(record);
+    }
+
+    @Override
+    public Integer queryCount(CompanyTeamReQuery companyTeamReQuery) {
+        return super.getSqlSession().getMapper(CompanyTeamReMapper.class).queryCount(companyTeamReQuery);
+    }
+
+    @Override
+    public List<Integer> listObjectIdByTypeAndManager(@Param("type") Integer type, @Param("status") Integer status,
+                                                      @Param("id") Integer id) {
+        return super.getSqlSession().getMapper(CompanyTeamReMapper.class).listObjectIdByTypeAndManager(type, status, id);
+    }
+
+    @Override
+    public List<Integer> listAssigned(@Param("type") Integer type) {
+        return super.getSqlSession().getMapper(CompanyTeamReMapper.class).listAssigned(type);
     }
 }

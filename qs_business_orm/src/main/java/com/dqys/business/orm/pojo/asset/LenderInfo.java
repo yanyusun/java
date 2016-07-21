@@ -25,7 +25,7 @@ public class LenderInfo extends BaseModel implements Serializable {
     private String tags;  // 标签
     private String urgeType;  // 催收阶段
     private String entrustBornType;  // 委托来源类型
-    private String entrustBorn;  // 委托来源
+    private Integer entrustBorn;  // 委托公司ID
     private String guaranteeType;  // 担保类型(个人|公司)
     private String guaranteeMode;  // 担保方式(抵押|质押)
     private String guaranteeSource;  // 担保源
@@ -42,6 +42,7 @@ public class LenderInfo extends BaseModel implements Serializable {
     private String memo;  // 备注
 
     private Integer assetId; // 资产包Id
+    private String lenderNo; // 借款人编号
 
     @Override
     public String toString() {
@@ -181,11 +182,11 @@ public class LenderInfo extends BaseModel implements Serializable {
         this.entrustBornType = entrustBornType;
     }
 
-    public String getEntrustBorn() {
+    public Integer getEntrustBorn() {
         return entrustBorn;
     }
 
-    public void setEntrustBorn(String entrustBorn) {
+    public void setEntrustBorn(Integer entrustBorn) {
         this.entrustBorn = entrustBorn;
     }
 
@@ -307,5 +308,13 @@ public class LenderInfo extends BaseModel implements Serializable {
 
     public void setAssetId(Integer assetId) {
         this.assetId = assetId;
+    }
+
+    public String getLenderNo() {
+        return lenderNo;
+    }
+
+    public void setLenderNo(String lenderNo) {
+        this.lenderNo = lenderNo;
     }
 }

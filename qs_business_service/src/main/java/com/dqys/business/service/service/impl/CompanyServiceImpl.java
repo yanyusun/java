@@ -5,13 +5,17 @@ import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.CompanyDetailInfo;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.business.orm.constant.business.BusinessRelationEnum;
+import com.dqys.business.orm.constant.business.ObjectUserStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectBusinessTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.mapper.company.CompanyRelationMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.mapper.company.OrganizationMapper;
+import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.company.Organization;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
@@ -30,7 +34,6 @@ import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.NoSQLWithRedisTool;
-import com.rabbitmq.http.client.domain.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -57,6 +60,8 @@ public class CompanyServiceImpl implements CompanyService {
     private CompanyTeamMapper companyTeamMapper;
     @Autowired
     private CompanyTeamReMapper companyTeamReMapper;
+    @Autowired
+    private ObjectUserRelationMapper objectUserRelationMapper;
 
     @Autowired
     private BusinessLogService businessLogService;
@@ -134,27 +139,27 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<CompanyRelationDTO> getListRelation(Integer companyId) {
-        if(CommonUtil.checkParam(companyId)){
+        if (CommonUtil.checkParam(companyId)) {
             return null;
         }
         return CompanyServiceUtils.toCompanyRelationDTO(companyRelationMapper.listByCompanyId(companyId));
     }
 
     @Override
-    public DistributionDTO getDistribution_tx(Integer type, Integer id) throws BusinessLogException{
-        if(CommonUtil.checkParam(type, id)){
+    public DistributionDTO getDistribution_tx(Integer type, Integer id) throws BusinessLogException {
+        if (CommonUtil.checkParam(type, id)) {
             return null;
         }
         // 查询分配器
         CompanyTeam companyTeam = companyTeamMapper.getByTypeId(type, id);
-        if(companyTeam == null){
+        if (companyTeam == null) {
             // 分配器不存在,创建分配器
             companyTeam = new CompanyTeam();
             companyTeam.setObjectId(id);
             companyTeam.setSenderId(UserSession.getCurrent().getUserId());
             companyTeam.setObjectType(type);
             Integer result = companyTeamMapper.insert(companyTeam);
-            if(CommonUtil.checkResult(result)){
+            if (CommonUtil.checkResult(result)) {
                 // 创建失败
                 return null;
             }
@@ -163,17 +168,18 @@ public class CompanyServiceImpl implements CompanyService {
             // 添加操作记录
             businessLogService.add(teamId, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.add.getValue(),
                     "", "", 0, 0);
-            // 添加本家信息
+            // 添加本家分配记录
             TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
-            if(userInfo != null && userInfo.getCompanyId() != null){
+            if (userInfo != null && userInfo.getCompanyId() != null) {
                 Integer companyId = userInfo.getCompanyId();
                 CompanyTeamRe companyTeamRe = new CompanyTeamRe();
                 companyTeamRe.setCompanyTeamId(teamId);
                 companyTeamRe.setAcceptCompanyId(companyId);
                 companyTeamRe.setStatus(ObjectAcceptTypeEnum.accept.getValue());
                 companyTeamRe.setType(ObjectBusinessTypeEnum.create.getValue());
+                companyTeamRe.setAccepterId(UserSession.getCurrent().getUserId()); // 接收人为创建者
                 result = companyTeamReMapper.insert(companyTeamRe);
-                if(!CommonUtil.checkResult(result)){
+                if (!CommonUtil.checkResult(result)) {
                     // 添加操作记录
                     businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.join.getValue(),
                             "", "", 0, teamId);
@@ -189,12 +195,12 @@ public class CompanyServiceImpl implements CompanyService {
         distributionDTO.setId(companyTeam.getId());
         companyTeamReList.forEach(companyTeamRe -> {
             CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(companyTeamRe.getId());
-            if(companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM))){
-                distributionDTO.setPlatformNum(distributionDTO.getPlatformNum()+1); // 平台方
-            }else if(companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST))){
-                distributionDTO.setMechanismNum(distributionDTO.getMechanismNum()+1); // 机构方
-            }else{
-                distributionDTO.setDisposeNum(distributionDTO.getDisposeNum()+1); // 处置方
+            if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM))) {
+                distributionDTO.setPlatformNum(distributionDTO.getPlatformNum() + 1); // 平台方
+            } else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST))) {
+                distributionDTO.setMechanismNum(distributionDTO.getMechanismNum() + 1); // 机构方
+            } else {
+                distributionDTO.setDisposeNum(distributionDTO.getDisposeNum() + 1); // 处置方
             }
             // todo  这里需要填充业绩比率,当前任务
             companyTeamReDTOList.add(CompanyServiceUtils.toCompanyTeamReDTO(companyTeamRe, companyDetailInfo, null, null));
@@ -204,19 +210,28 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public Integer joinDistribution_tx(Integer id, Integer type, String text) throws BusinessLogException{
-        if(CommonUtil.checkParam(id, type)){
+    public Integer joinDistribution_tx(Integer id, Integer type, String text) throws BusinessLogException {
+        if (CommonUtil.checkParam(id, type)) {
             return null;
         }
         TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
-        if(userInfo == null || userInfo.getCompanyId() == null){
-            return null;
+        if (userInfo == null || userInfo.getCompanyId() == null) {
+            return null; // 用户不存在
         }
+        CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(userInfo.getCompanyId());
+        if(companyDetailInfo == null){
+            return null; // 公司不存在
+        }
+        CompanyTeam companyTeam = companyTeamMapper.get(id);
+        if (companyTeam == null) {
+            return null; // 分配器不存在
+        }
+
         CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
         companyTeamReQuery.setTeamId(id);
         companyTeamReQuery.setCompanyId(userInfo.getCompanyId());
         List<CompanyTeamRe> companyTeamReList = companyTeamReMapper.queryList(companyTeamReQuery);
-        if(companyTeamReList != null || companyTeamReList.size() > 0){
+        if (companyTeamReList != null || companyTeamReList.size() > 0) {
             // 已经存在在该分配器中无需再次申请或邀请
             return null;
         }
@@ -225,14 +240,30 @@ public class CompanyServiceImpl implements CompanyService {
         companyTeamRe.setAcceptCompanyId(userInfo.getCompanyId());
         companyTeamRe.setStatus(ObjectAcceptTypeEnum.init.getValue());
         companyTeamRe.setType(type);
+        companyTeamRe.setAccepterId(companyDetailInfo.getUserId());
         Integer result = companyTeamReMapper.insert(companyTeamRe);
-        if(CommonUtil.checkResult(result)){
+        if (CommonUtil.checkResult(result)) {
             return null;
-        }else{
+        } else {
             // 添加操作记录
             businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.join.getValue(),
                     "", "", 0, id);
+            // 增加对象与操作事物的联系
+            ObjectUserRelation objectUserRelation = new ObjectUserRelation();
+            objectUserRelation.setObjectType(companyTeam.getObjectType());
+            objectUserRelation.setObjectId(companyTeam.getObjectId());
+            objectUserRelation.setUserId(companyDetailInfo.getUserId());
+            objectUserRelation.setStatus(ObjectUserStatusEnum.checked.getValue());
+            objectUserRelation.setType(BusinessRelationEnum.company.getValue());
+            result = objectUserRelationMapper.insert(objectUserRelation);
+            if(result == null){
+                // 添加事物关系失败
+
+            }
             // todo 发送短信内容
+            if (text == null) {
+                text = ""; // 默认消息
+            }
 
             return companyTeamRe.getId();
         }
@@ -240,27 +271,27 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Integer updateDistribution_tx(Integer id, Integer status) throws BusinessLogException {
-        if(CommonUtil.checkParam(id, status)){
+        if (CommonUtil.checkParam(id, status)) {
             return null;
         }
         CompanyTeamRe companyTeamRe = companyTeamReMapper.get(id);
-        if(companyTeamRe == null){
+        if (companyTeamRe == null) {
             return null;
         }
         TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
-        if(userInfo == null || userInfo.getCompanyId() == null){
+        if (userInfo == null || userInfo.getCompanyId() == null) {
             return null;
         }
-        if(!userInfo.getCompanyId().equals(companyTeamRe.getAcceptCompanyId())){
+        if (!userInfo.getCompanyId().equals(companyTeamRe.getAcceptCompanyId())) {
             // 避免非公司人员操作
             return null;
         }
         companyTeamRe.setStatus(status);
         companyTeamRe.setAccepterId(userInfo.getId());
         Integer result = companyTeamReMapper.update(companyTeamRe);
-        if(CommonUtil.checkResult(result)){
+        if (CommonUtil.checkResult(result)) {
             return null;
-        }else{
+        } else {
             // 添加操作记录
             businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.update.getValue(),
                     "", "", 0, id);
@@ -270,23 +301,23 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public Integer exitDistribution_tx(Integer id) throws BusinessLogException {
-        if(id == null){
+        if (id == null) {
             return null;
         }
         // 存在该分配数据
-        CompanyTeamRe companyTeamRe =companyTeamReMapper.get(id);
-        if(companyTeamRe == null){
+        CompanyTeamRe companyTeamRe = companyTeamReMapper.get(id);
+        if (companyTeamRe == null) {
             return null;
         }
         // 校验是否是该公司的管理员
         CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(companyTeamRe.getAcceptCompanyId());
-        if(companyDetailInfo == null || !companyDetailInfo.getUserId().equals(UserSession.getCurrent().getUserId())){
+        if (companyDetailInfo == null || !companyDetailInfo.getUserId().equals(UserSession.getCurrent().getUserId())) {
             return null;
         }
         Integer result = companyTeamReMapper.deleteByPrimaryKey(id);
-        if(CommonUtil.checkResult(result)){
+        if (CommonUtil.checkResult(result)) {
             return null;
-        }else{
+        } else {
             // 添加操作记录
             businessLogService.add(id, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.exit.getValue(),
                     "", "", 0, companyTeamRe.getCompanyTeamId());
