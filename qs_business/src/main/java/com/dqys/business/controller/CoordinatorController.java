@@ -173,12 +173,19 @@ public class CoordinatorController {
      */
     @RequestMapping("/auditBusiness")
     @ResponseBody
-    public JsonResponse auditBusiness(@RequestParam("objectId")Integer objectId,@RequestParam("objectType")Integer objectType,@RequestParam("status")Integer status) throws BusinessLogException {
+    public JsonResponse auditBusiness(@RequestParam("objectId")Integer objectId,@RequestParam("objectType")Integer objectType,@RequestParam("status")Integer status,HttpServletRequest httpServletRequest) throws Exception {
             if(CommonUtil.checkParam(objectType,objectId,status)){
                 return JsonResponseTool.paramErr("参数错误");
             }
+        Integer userId = ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+        );
         Map map=new HashMap<>();
-        coordinatorService.auditBusiness(map,objectId,objectType,status);
+        coordinatorService.auditBusiness(map,userId,objectId,objectType,status);
         return JsonResponseTool.success(map);
     }
 

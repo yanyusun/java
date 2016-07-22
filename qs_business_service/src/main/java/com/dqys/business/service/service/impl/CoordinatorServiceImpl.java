@@ -270,7 +270,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }else if(objectType==ObjectTypeEnum.ASSETPACKAGE.getValue()){
             AssetInfo assetInfo=coordinatorMapper.getAssetInfo(objectId);
             receive_id=assetInfo.getOperator();
-            operType= AssetPackageEnum.UPDATE.getValue();
+            operType= AssetPackageEnum.update.getValue();
             text="资产包审核操作";
         }
         businessLogService.add(objectId, objectType,operType,text , "", 0, 0);//添加操作日志
