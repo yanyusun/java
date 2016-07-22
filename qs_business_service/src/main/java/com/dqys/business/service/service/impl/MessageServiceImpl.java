@@ -1,8 +1,11 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.mapper.message.MessageMapper;
 import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.service.service.MessageService;
+import com.dqys.business.service.utils.message.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,8 @@ public class MessageServiceImpl implements MessageService {
 
     @Autowired
     private MessageMapper messageMapper;
+    @Autowired
+    private TUserInfoMapper tUserInfoMapper;
 
     @Override
     public List<Message> selectByMessage(Message message) {
@@ -61,5 +66,19 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Integer selectCount(Message message) {
         return messageMapper.selectCount(message);
+    }
+
+    @Override
+    public Integer sendSMS(Integer receiveUserId, Integer mobilePhone, String content) {
+        if (mobilePhone == null) {
+            TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(receiveUserId);
+            if (tUserInfo != null) {
+                mobilePhone = MessageUtils.transStringToInt(tUserInfo.getMobile());
+            }
+        }
+        if (mobilePhone != null) {
+            //发送短信接口
+        }
+        return null;
     }
 }

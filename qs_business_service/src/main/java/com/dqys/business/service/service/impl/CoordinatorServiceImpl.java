@@ -155,7 +155,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 Integer result = messageService.add("任务邀请", remark, userId, uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue());//添加消息记录
                 if (result > 0) {
                     //发送短信或是邮件
-
+                    messageService.sendSMS(uid,null,remark);
                 }
             }
         }
@@ -280,14 +280,50 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         if (buinessIds.size() > 0) {
             Integer result = repayMapper.updateBusinessStatus(buinessIds.get(0), status);
             if (result > 0) {
-                messageService.add("审核结果","您的审核"+(status==1?"通过":"不通过"),userId,receive_id,"",MessageEnum.SERVE.getValue());//添加通知消息
+                String content="您的审核"+(status==1?"通过":"不通过");
+                messageService.add("审核结果",content,userId,receive_id,"",MessageEnum.SERVE.getValue());//添加通知消息
                 //发送短信或邮件
-
+                messageService.sendSMS(receive_id,null,content);
                 map.put("result", "yes");
                 return;
             }
         }
         map.put("result", "no");
+    }
+
+    @Override
+    public void isPause(Map map, Integer objectId, Integer objectType, Integer status,Integer userId) throws BusinessLogException {
+       Integer operType=0;
+        String text="";
+        List<Integer> receive_ids=new ArrayList<>();
+        LenderInfo lenderInfo=new LenderInfo();
+        if(objectType==ObjectTypeEnum.LENDER.getValue()){
+            lenderInfo.setId(objectId);
+            lenderInfo.setIsStop(status);
+            coordinatorMapper.updateLender(lenderInfo);//借款人暂停后开启
+            operType= LenderEnum.UPDATE_EDIT.getValue();
+            text="借款人暂停操作";
+            receive_ids=coordinatorMapper.getUserIdByObjUserRelToLender(objectType,objectId);
+        }else if(objectType==ObjectTypeEnum.ASSETPACKAGE.getValue()){
+            AssetInfo assetInfo=new AssetInfo();
+            assetInfo.setId(objectId);
+            assetInfo.setIsStop(status);
+            if(assetInfoMapper.update(assetInfo)>0){//资产包暂停后，下面的借款人全部暂停了
+                lenderInfo.setIsStop(status);
+                lenderInfo.setAssetId(objectId);
+                coordinatorMapper.updateLender(lenderInfo);
+            };
+            operType= AssetPackageEnum.update.getValue();
+            text="资产包暂停操作";
+            receive_ids=coordinatorMapper.getUserIdByObjUserRelToAsset(objectType,objectId);
+        }
+        String content="对暂停操作进行了"+(status==0?"关闭":"开启");
+        businessLogService.add(objectId, objectType,operType,text , "", 0, 0);//添加操作日志
+        for(Integer receive_id :receive_ids){
+            messageService.add(text,content,userId,receive_id,"",MessageEnum.SERVE.getValue());//添加通知消息
+            //发送短信或邮件
+            messageService.sendSMS(receive_id, null, content);
+        }
     }
 
     /**

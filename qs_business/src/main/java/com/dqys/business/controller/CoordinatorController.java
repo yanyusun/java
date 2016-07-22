@@ -162,21 +162,22 @@ public class CoordinatorController {
         Map map = coordinatorService.addTeammate(userTeammateId, userId);
         return JsonResponseTool.success(map);
     }
+
     /**
      * @api {post} coordinator/auditBusiness 平台业务审核
-     * @apiParam {int} objectId 协作器id
-     * @apiParam {int} objectType 协作器id
-     * @apiParam {int} status 协作器id
+     * @apiParam {int} objectId 对象id
+     * @apiParam {int} objectType 对象类型(10资产包11借款人)
+     * @apiParam {int} status 状态（1通过2不通过）
      * @apiSampleRequest coordinator/auditBusiness
      * @apiGroup Coordinator
      * @apiName coordinator/auditBusiness
      */
     @RequestMapping("/auditBusiness")
     @ResponseBody
-    public JsonResponse auditBusiness(@RequestParam("objectId")Integer objectId,@RequestParam("objectType")Integer objectType,@RequestParam("status")Integer status,HttpServletRequest httpServletRequest) throws Exception {
-            if(CommonUtil.checkParam(objectType,objectId,status)){
-                return JsonResponseTool.paramErr("参数错误");
-            }
+    public JsonResponse auditBusiness(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType, @RequestParam("status") Integer status, HttpServletRequest httpServletRequest) throws Exception {
+        if (CommonUtil.checkParam(objectType, objectId, status)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
         Integer userId = ProtocolTool.validateUser(
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
@@ -184,10 +185,37 @@ public class CoordinatorController {
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
         );
-        Map map=new HashMap<>();
-        coordinatorService.auditBusiness(map,userId,objectId,objectType,status);
+        Map map = new HashMap<>();
+        coordinatorService.auditBusiness(map, userId, objectId, objectType, status);
         return JsonResponseTool.success(map);
     }
 
+    /**
+     * @api {post} coordinator/isPause 借款人或资产包暂停操作
+     * @apiParam {int} objectId 对象id
+     * @apiParam {int} objectType 对象类型(10资产包11借款人)
+     * @apiParam {int} status 状态（0开启1暂停）
+     * @apiSampleRequest coordinator/isPause
+     * @apiGroup Coordinator
+     * @apiName coordinator/isPause
+     */
+    @RequestMapping("/isPause")
+    @ResponseBody
+    public JsonResponse isPause(Integer objectId, Integer objectType, Integer status, HttpServletRequest httpServletRequest) throws Exception {
+
+        Integer userId = ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+        );
+        Map map = new HashMap<>();
+        if (CommonUtil.checkParam(objectType, objectId, status)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        coordinatorService.isPause(map,objectId,objectType,status,userId);
+        return JsonResponseTool.success(map);
+    }
 
 }

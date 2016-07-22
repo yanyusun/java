@@ -58,4 +58,13 @@ public interface CoordinatorService {
      * @param status
      */
     void auditBusiness(Map map,Integer userId, Integer objectId, Integer objectType, Integer status) throws BusinessLogException;
+
+    /**
+     * 借款人或资产包暂停操作
+     * @param map
+     * @param objectId
+     * @param objectType
+     * @param status
+     */
+    void isPause(Map map, Integer objectId, Integer objectType, Integer status,Integer userId) throws BusinessLogException;
 }

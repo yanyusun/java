@@ -80,4 +80,19 @@ public class CoordinatorMapperImpl extends BaseDao implements CoordinatorMapper 
     public AssetInfo getAssetInfo(Integer objectId) {
         return super.getSqlSession().getMapper(CoordinatorMapper.class).getAssetInfo(objectId);
     }
+
+    @Override
+    public Integer updateLender(LenderInfo lenderInfo) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).updateLender(lenderInfo);
+    }
+
+    @Override
+    public List<Integer> getUserIdByObjUserRelToLender(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).getUserIdByObjUserRelToAsset(objectType, objectId);
+    }
+
+    @Override
+    public List<Integer> getUserIdByObjUserRelToAsset(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).getUserIdByObjUserRelToAsset(objectType, objectId);
+    }
 }

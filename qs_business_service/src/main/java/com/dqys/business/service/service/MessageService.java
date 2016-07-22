@@ -50,4 +50,13 @@ public interface MessageService {
      * @return
      */
     Integer selectCount(Message message);
+
+    /**
+     * 发送短信
+     * @param receiveUserId 接受短信人的用户id(当手机传入为NUll时，根据用户id查询对应手机号发送)
+     * @param mobilePhone 接收人的手机号
+     * @param content 短信内容
+     * @return
+     */
+    Integer sendSMS(Integer receiveUserId,Integer mobilePhone,String content);
 }

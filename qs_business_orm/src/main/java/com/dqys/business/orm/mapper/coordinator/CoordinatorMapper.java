@@ -92,14 +92,16 @@ public interface CoordinatorMapper {
 
     /**
      * 获取业务号id
+     *
      * @param objectType
      * @param objectId
      * @return
      */
-    Map selectByBusinessId(@Param("objectType")Integer objectType, @Param("objectId")Integer objectId);
+    Map selectByBusinessId(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId);
 
     /**
      * 获取借款人
+     *
      * @param lenderInfo
      * @return
      */
@@ -107,6 +109,7 @@ public interface CoordinatorMapper {
 
     /**
      * 获取借款人信息
+     *
      * @param objectId
      * @return
      */
@@ -114,8 +117,34 @@ public interface CoordinatorMapper {
 
     /**
      * 获取资产包信息
+     *
      * @param objectId
      * @return
      */
     AssetInfo getAssetInfo(Integer objectId);
+
+    /**
+     * 修改借款人信息
+     *
+     * @param lenderInfo
+     * @return
+     */
+    Integer updateLender(LenderInfo lenderInfo);
+
+    /**
+     * 根据借款人获取操作员id
+     * @param objectType
+     * @param objectId
+     * @return
+     */
+    List<Integer> getUserIdByObjUserRelToLender(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId);
+
+    /**
+     * 根据资产包获取操作员id
+     * @param objectType
+     * @param objectId
+     * @return
+     */
+    List<Integer> getUserIdByObjUserRelToAsset(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId);
+
 }

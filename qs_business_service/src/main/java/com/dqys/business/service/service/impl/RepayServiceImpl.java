@@ -244,9 +244,10 @@ public class RepayServiceImpl implements RepayService {
             }
             if(result>0){
                 //添加通知消息记录
-                messageService.add("延期审核结果","您的审核"+(statuas==1?"通过！":"不通过！"),damageApply.getEaxm_user_id(),damageApply.getApply_user_id(),"", MessageEnum.PRODUCT.getValue());
+                String content="您的延期审核"+(statuas==1?"通过！":"不通过！");
+                messageService.add("延期审核结果",content,damageApply.getEaxm_user_id(),damageApply.getApply_user_id(),"", MessageEnum.PRODUCT.getValue());
                 //发送短信或邮件
-
+                messageService.sendSMS(damageApply.getApply_user_id(),null,content);
             }else{
                 throw  new Exception();
             }
