@@ -1,5 +1,6 @@
 package com.dqys.business.service.service;
 
+import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 
 import java.util.List;
@@ -44,9 +45,11 @@ public interface CoordinatorService {
 
     /**
      * 主动加入案组
-     * @param teammateId
+     * @param userTeammateId
      * @param userId
      * @return
      */
     Map addTeammate(Integer userTeammateId, Integer userId) throws BusinessLogException;
+
+    List<TeamDTO> getLenderOrAsset(Integer companyId, Integer objectId, Integer objectType);
 }

@@ -1,5 +1,10 @@
 package com.dqys.business.service.constant.asset;
 
+import com.dqys.core.base.BaseSelectonDTO;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Yvan on 16/7/19.
  */
@@ -7,7 +12,7 @@ public enum LenderTabEnum {
 
     accept(0, "待接收"),
     apply(1, "待申请"),
-    handling(2, "正在处置"),
+    handling_urge(2, "正在处置"),
     focus(3, "聚焦"),
     month(4, "当月"),
     stock(5, "存量"),
@@ -19,7 +24,9 @@ public enum LenderTabEnum {
     check(11, "待审核"),
     handle(12, "待处置"),
     assign(13, "待分配"),
-    new48h(14, "48H 新")
+    new48h(14, "48H 新"),
+    handling_entrust(16, "处置中"),
+    task(15, "我的任务")
     ;
 
     private Integer value;
@@ -39,6 +46,17 @@ public enum LenderTabEnum {
             }
         }
         return null;
+    }
+
+    public static List<BaseSelectonDTO> list(){
+        List<BaseSelectonDTO> selectonDTOList = new ArrayList<>();
+        for(LenderTabEnum lenderTabEnum : LenderTabEnum.values()){
+            BaseSelectonDTO selectonDTO = new BaseSelectonDTO();
+            selectonDTO.setKey(lenderTabEnum.getValue().toString());
+            selectonDTO.setValue(lenderTabEnum.getName());
+            selectonDTOList.add(selectonDTO);
+        }
+        return selectonDTOList;
     }
 
     public Integer getValue() {

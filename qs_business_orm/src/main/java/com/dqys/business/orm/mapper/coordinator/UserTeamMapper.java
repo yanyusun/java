@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.coordinator;
 
 
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
+import com.dqys.business.orm.query.coordinator.UserTeamQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -46,4 +47,19 @@ public interface UserTeamMapper {
      */
     List<Integer> selectByOperatorAndStatus(
             @Param("id") Integer id, @Param("status") Integer status, @Param("type")Integer type);
+
+    /**
+     * 根据对像类型和对象ID查询协作器
+     * @param id
+     * @param type
+     * @return
+     */
+    UserTeam getByObject(@Param("id") Integer id, @Param("type") Integer type);
+
+    /**
+     * 条件遍历
+     * @param userTeamQuery
+     * @return
+     */
+    List<UserTeam> queryList(UserTeamQuery userTeamQuery);
 }

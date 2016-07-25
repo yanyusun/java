@@ -14,7 +14,7 @@ public class ContactInfo extends BaseModel implements Serializable{
     private String name;  // 姓名
     private Integer type;  // 借款类型
     private String avg;  // 头像地址
-    private String gender;  // 性别
+    private Integer gender;  // 性别
     private String idcard;  // 身份证
     private String company;  // 公司
     private String mobile;  // 手机号
@@ -81,11 +81,11 @@ public class ContactInfo extends BaseModel implements Serializable{
         this.avg = avg;
     }
 
-    public String getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 

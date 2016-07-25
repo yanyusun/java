@@ -22,7 +22,7 @@ public class ContactDTO {
     private String mode;  // 模块
     private Integer modeId;  // 模块Id
     private String avg;  // 头像地址
-    private String gender;  // 性别
+    private Integer gender;  // 性别
     private String company;  // 公司
     private String homeTel;  // 家庭电话
     private String officeTel;  // 办公电话
@@ -100,11 +100,11 @@ public class ContactDTO {
         this.avg = avg;
     }
 
-    public String getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 

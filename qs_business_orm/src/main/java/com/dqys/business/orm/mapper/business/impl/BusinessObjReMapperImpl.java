@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by Yvan on 16/7/15.
  */
@@ -36,5 +38,12 @@ public class BusinessObjReMapperImpl extends BaseDao implements BusinessObjReMap
     @Override
     public BusinessObjRe getByObject(@Param("type") Integer type, @Param("id") Integer id) {
         return super.getSqlSession().getMapper(BusinessObjReMapper.class).getByObject(type, id);
+    }
+
+    @Override
+    public List<Integer> listIdByTypeIdStatusUser(@Param("type") Integer type, @Param("status") Integer status,
+                                                  @Param("userId") Integer userId) {
+        return super.getSqlSession().getMapper(BusinessObjReMapper.class)
+                .listIdByTypeIdStatusUser(type, status, userId);
     }
 }

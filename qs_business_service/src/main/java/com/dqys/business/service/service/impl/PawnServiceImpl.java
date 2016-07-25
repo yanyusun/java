@@ -90,19 +90,6 @@ public class PawnServiceImpl implements PawnService {
             // 增加操作记录
             businessLogService.add(pawnId, ObjectTypeEnum.PAWN.getValue(), PawnEnum.ADD.getValue(),
                     "", pawnDTO.getMemo(), 0, 0);
-            // 增加对象与操作事物的联系
-            ObjectUserRelation objectUserRelation = new ObjectUserRelation();
-            objectUserRelation.setObjectType(ObjectTypeEnum.PAWN.getValue());
-            objectUserRelation.setObjectId(pawnId);
-            objectUserRelation.setUserId(UserSession.getCurrent().getUserId());
-            objectUserRelation.setStatus(ObjectUserStatusEnum.checked.getValue());
-            objectUserRelation.setType(BusinessRelationEnum.own.getValue());
-            Integer result = objectUserRelationMapper.insert(objectUserRelation);
-            if (CommonUtil.checkResult(result)) {
-                // 增加失败,请记录
-
-
-            }
             return JsonResponseTool.success(pawnId);
         }else{
             return JsonResponseTool.failure("增加失败");

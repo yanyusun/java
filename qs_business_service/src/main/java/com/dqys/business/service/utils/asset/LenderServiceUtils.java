@@ -1,17 +1,23 @@
 package com.dqys.business.service.utils.asset;
 
+import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.coordinator.TeammateRe;
+import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.orm.query.asset.LenderQuery;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
+import com.dqys.business.service.dto.asset.LenderListDTO;
 import com.dqys.business.service.query.asset.LenderListQuery;
+import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.DateFormatTool;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -271,6 +277,63 @@ public class LenderServiceUtils {
         lenderQuery.setEntrustId(lenderListQuery.getEntrustId());
 
         return lenderQuery;
+    }
+
+    public static LenderListDTO toLenderListDTO(LenderInfo lenderInfo, ContactInfo contactInfo, List<TeamDTO> teamDTOList){
+        LenderListDTO lenderListDTO = new LenderListDTO();
+
+        lenderListDTO.setAvg(contactInfo.getAvg());
+        lenderListDTO.setName(contactInfo.getName());
+        lenderListDTO.setSex(contactInfo.getGender());
+        lenderListDTO.setAvg(contactInfo.getAvg());
+        lenderListDTO.setPhone(contactInfo.getMobile());
+        lenderListDTO.setLenderId(lenderInfo.getId());
+        lenderListDTO.setCode(lenderInfo.getLenderNo());
+        lenderListDTO.setAccrual(lenderInfo.getAccrual());
+        lenderListDTO.setLoan(lenderInfo.getLoan());
+        lenderListDTO.setAppraisal(lenderInfo.getAppraisal());
+        lenderListDTO.setUrgeType(lenderInfo.getUrgeType());
+        lenderListDTO.setEvaluateExcellent(lenderInfo.getEvaluateExcellent());
+        lenderListDTO.setEvaluateLevel(lenderInfo.getEvaluateLevel());
+        Calendar calendar = Calendar.getInstance();
+        lenderListDTO.setSourceType(lenderInfo.getEntrustBornType());// 来源类型
+        if(calendar.getTime().compareTo(lenderInfo.getEndAt()) > 0){
+            // 逾期
+            lenderListDTO.setLessDay(0);
+        }else{
+            long timeMirr = lenderInfo.getEndAt().getTime() - calendar.getTime().getTime();
+            lenderListDTO.setLessDay(Integer.parseInt(String.valueOf(timeMirr / 24 / 3600 / 1000)));
+        }
+        lenderListDTO.setLastFollow(lenderInfo.getFollowUpDate());
+        lenderListDTO.setFollowTime(lenderInfo.getFollowUpTime());
+        lenderListDTO.setMemo(lenderInfo.getMemo());
+        lenderListDTO.setCoordinator(teamDTOList);
+        if(teamDTOList != null && teamDTOList.size() > 0){
+            teamDTOList.forEach(teamDTO -> {
+                if (teamDTO.getRoleType().equals(TeammateReEnum.TYPE_AUXILIARY.getValue())) {
+                    lenderListDTO.setBelongId(teamDTO.getUserId());
+                    lenderListDTO.setBelongName(teamDTO.getRealName());
+                }
+            });
+        }
+
+        lenderListDTO.setManageTime(lenderInfo.getBelongFollowTimes());// 所属人催收次数
+        if(lenderInfo.getIsCollection().equals(SysProperty.BOOLEAN_TRUE) &&
+                lenderInfo.getIsLawsuit().equals(SysProperty.BOOLEAN_TRUE)){
+            lenderListDTO.setStatus("常规催收司法化解同时进行");// 化解状态
+        }else if(lenderInfo.getIsLawsuit().equals(SysProperty.BOOLEAN_TRUE)){
+            lenderListDTO.setStatus("司法化解");
+        }else if(lenderInfo.getIsAgent().equals(SysProperty.BOOLEAN_TRUE)){
+            lenderListDTO.setStatus("市场处置");
+        }else if(lenderInfo.getIsCollection().equals(SysProperty.BOOLEAN_TRUE)){
+            lenderListDTO.setStatus("常规催收");
+        }else{
+            lenderListDTO.setStatus(null);
+        }
+
+        lenderListDTO.setMessage(null);// 消息
+
+        return lenderListDTO;
     }
 
 }

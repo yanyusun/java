@@ -40,10 +40,11 @@ public interface CompanyTeamMapper {
 
     /**
      * 根据邀请人Id获取分配器
-     * @param id
+     * @param id 创建人ID
+     * @param type 查询对象类型
      * @return
      */
-    List<CompanyTeam> listBySendId(Integer id);
+    List<CompanyTeam> listBySendId(@Param("type") Integer type, @Param("id") Integer id);
 
 
 }

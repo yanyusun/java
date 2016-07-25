@@ -90,19 +90,6 @@ public class IouServiceImpl implements IouService {
             // 添加操作记录
             businessLogService.add(iouId, ObjectTypeEnum.IOU.getValue(), IouEnum.ADD.getValue(),
                     "", iouDTO.getMemo(), 0, 0);
-            // 增加对象与操作事物的联系
-            ObjectUserRelation objectUserRelation = new ObjectUserRelation();
-            objectUserRelation.setObjectType(ObjectTypeEnum.IOU.getValue());
-            objectUserRelation.setObjectId(iouId);
-            objectUserRelation.setUserId(UserSession.getCurrent().getUserId());
-            objectUserRelation.setStatus(ObjectUserStatusEnum.checked.getValue());
-            objectUserRelation.setType(BusinessRelationEnum.own.getValue());
-            Integer result = objectUserRelationMapper.insert(objectUserRelation);
-            if (CommonUtil.checkResult(result)) {
-                // 增加失败,请记录
-
-
-            }
             return JsonResponseTool.success(iouId);
         }else{
             return JsonResponseTool.failure("增加失败");

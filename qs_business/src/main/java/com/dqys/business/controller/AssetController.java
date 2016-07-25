@@ -180,7 +180,6 @@ public class AssetController {
         // 添加联系人信息
         contactDTOList.forEach(contactDTO -> {
             Integer index = contactDTO.getId();
-//            contactDTO.setMode(AssetModelTypeEnum.LENDER);
 //            contactDTO.setModeId(lenderMap.get(index));
 //            contactDTO.setId(null);
 //            Integer contactId = lenderService.addLenderInfo(AssetServiceUtils.toContactInfo(contactDTO));

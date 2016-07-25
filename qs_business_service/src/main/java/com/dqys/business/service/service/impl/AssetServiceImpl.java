@@ -1,7 +1,5 @@
 package com.dqys.business.service.service.impl;
 
-import com.dqys.business.orm.constant.business.BusinessRelationEnum;
-import com.dqys.business.orm.constant.business.ObjectUserStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.ContactInfoMapper;
@@ -10,10 +8,8 @@ import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
-import com.dqys.business.service.constant.asset.AssetModelTypeEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.dto.asset.AssetDTO;
 import com.dqys.business.service.dto.asset.AssetLenderDTO;
@@ -24,7 +20,6 @@ import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.core.model.JsonResponse;
-import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,20 +69,6 @@ public class AssetServiceImpl implements AssetService {
             // 增加操作记录
             businessLogService.add(id, ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.add.getValue(),
                     "", assetDTO.getMemo(), 0, 0);
-            // 增加对象与操作事物的联系
-            ObjectUserRelation objectUserRelation = new ObjectUserRelation();
-            objectUserRelation.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
-            objectUserRelation.setObjectId(id);
-            objectUserRelation.setUserId(UserSession.getCurrent().getUserId());
-            objectUserRelation.setStatus(ObjectUserStatusEnum.checked.getValue());
-            objectUserRelation.setType(BusinessRelationEnum.own.getValue());
-            Integer result = objectUserRelationMapper.insert(objectUserRelation);
-            if (CommonUtil.checkResult(result)) {
-                // 增加失败,请记录
-
-                
-            }
-
             return JsonResponseTool.success(id);
         } else {
             return JsonResponseTool.failure(null);
@@ -192,7 +173,7 @@ public class AssetServiceImpl implements AssetService {
             while (iterator.hasNext()) {
                 iterator.next().setAssetName(assetInfo.getName()); // 设置资产包名称
                 ContactInfo contactInfo = contactInfoMapper.getByModel(
-                        AssetModelTypeEnum.LENDER,
+                        ObjectTypeEnum.LENDER.getValue().toString(),
                         ContactTypeEnum.LENDER.getValue(),
                         iterator.next().getId());
                 if (contactInfo != null) {
