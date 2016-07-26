@@ -54,4 +54,11 @@ public interface IOUInfoMapper {
      */
     List<IOUInfo> queryList(IOUQuery IOUQuery);
 
+    /**
+     * 多条件统计
+     * @param iouQuery
+     * @return
+     */
+    Integer queryCount(IOUQuery iouQuery);
+
 }

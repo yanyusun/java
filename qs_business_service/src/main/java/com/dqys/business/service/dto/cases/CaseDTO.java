@@ -8,6 +8,26 @@ import java.util.Date;
 
 /**
  * Created by Yvan on 16/6/16.
+ * @apiDefine Case
+ * @apiParam {number} [id] 主键ID(修改时必传,增加时可不传)
+ * @apiParam {string} plaintiff 原告
+ * @apiParam {string} defendant 被告
+ * @apiParam {string} spouse 被告
+ * @apiParam {string} mortgagor 抵押人
+ * @apiParam {string} mortgageTime 抵押次数
+ * @apiParam {number} lawsuitAmount 诉讼金额
+ * @apiParam {number} lawsuitCorpus 诉讼本金
+ * @apiParam {number} lawsuitAccrual 诉讼利息
+ * @apiParam {number} isAttachment 是否查封
+ * @apiParam {number} attachmentTime 查封次数
+ * @apiParam {string} attachmentCode 诉讼本金
+ * @apiParam {number} attachmentCourt 诉讼本金
+ * @apiParam {number} attachmentDate 诉讼本金
+ * @apiParam {number} lawsuitCorpus 诉讼本金
+ * @apiParam {string} plaintiff 原告
+ * @apiParam {string} plaintiff 原告
+ * @apiParam {string} plaintiff 原告
+ * @apiParam {string} plaintiff 原告
  */
 public class CaseDTO {
 
@@ -30,7 +50,9 @@ public class CaseDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date attachmentDate; // 查封时间
     private Boolean isPreservation; // 是否保全
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date preservationStart; // 保全开始时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date preservationEnd; // 保全结束时间
     private String memo; // 案件备注
     private String lawsuitMemo; // 诉讼备注

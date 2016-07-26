@@ -17,6 +17,21 @@ import java.util.*;
  */
 public class CommonUtil {
 
+    public static final String[] UPLETTER = {"A","B","C","D","E","F","G",
+            "H","I","J","K","L","M","N",
+            "O","P","Q","R","S","T",
+            "U","V","W","X","Y","Z"};
+    public static final String[] LOWERLETTER = {"a","b","c","d","e","f","g",
+            "h","i","j","k","l","m","n",
+            "o","p","q","r","s","t",
+            "u","v","w","x","y","z"};
+    public static final String[] CNA_UP_CASE_NUMBER = {
+            "零", "壹", "贰", "叁", "肆", "伍", "陆", "染", "捌", "玖"
+    };
+    public static final String[] CNA_UP_CASE_UNIT = {
+            "", "拾", "佰", "仟", "萬", "亿"
+    };
+
     /**
      * 检验参数是否为空
      * @param data
@@ -26,22 +41,6 @@ public class CommonUtil {
         if(data.length > 0){
             for(Object o : data){
                 if(o == null){
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 检验参数是否为空
-     * @param data
-     * @return true 存在空值数据
-     */
-    public static boolean checkParam(List<Object>... data){
-        if(data.length > 0){
-            for(List<Object> objectList : data){
-                if(objectList == null || objectList.size() == 0){
                     return true;
                 }
             }
@@ -223,5 +222,60 @@ public class CommonUtil {
         return false;
     }
 
+    /**
+     * 创建特定位数的数字
+     * @param number
+     * @param size
+     * @return
+     */
+    public static String createStringNumber(Integer number, Integer size){
+        StringBuffer result = new StringBuffer();
+        while (number > 0){
+            Integer suffNum = number % 10;
+            number = number / 10;
+            result.insert(0, suffNum);
+        }
+        while (result.length() < size){
+            result.insert(0, 0);
+        }
+        return result.toString();
+    }
+
+    /**
+     * 将数字单纯转化为大写的数字
+     * @param number
+     * @return
+     */
+    public static String createCNANumber(Integer number){
+        StringBuffer result = new StringBuffer();
+        while (number > 0){
+            result.insert(0, CNA_UP_CASE_NUMBER[number % 10]);
+            number = number / 10;
+        }
+        return result.toString();
+    }
+
+    /**
+     * 将数字字符串转化成大写
+     * @param numberStr
+     * @return
+     */
+    public static String createCNANumber(String numberStr){
+        StringBuffer result = new StringBuffer();
+        Integer index = 0;
+        while (numberStr.length() > index){
+            result.append(CNA_UP_CASE_NUMBER[Integer.valueOf(numberStr.substring(index, index+1))]);
+            index++;
+        }
+        return result.toString();
+    }
+
+
+//    public static void main(String[] a){
+//
+//        System.out.println(createStringNumber(20,5));
+//        System.out.println(createCNANumber(305));
+//        System.out.println(createCNANumber("00234"));
+//    }
 
 }

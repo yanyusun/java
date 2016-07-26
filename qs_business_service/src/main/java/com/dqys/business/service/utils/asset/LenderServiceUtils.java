@@ -95,7 +95,7 @@ public class LenderServiceUtils {
         contactInfo.setType(contactDTO.getType());
         contactInfo.setAvg(contactDTO.getAvg());
         contactInfo.setGender(contactDTO.getGender());
-        contactInfo.setIdcard(contactDTO.getIdcard());
+        contactInfo.setIdCard(contactDTO.getIdcard());
         contactInfo.setCompany(contactDTO.getCompany());
         contactInfo.setMobile(contactDTO.getMobile());
         contactInfo.setHomeTel(contactDTO.getHomeTel());
@@ -240,7 +240,7 @@ public class LenderServiceUtils {
         contactDTO.setType(contactInfo.getType());
         contactDTO.setAvg(contactInfo.getAvg());
         contactDTO.setGender(contactInfo.getGender());
-        contactDTO.setIdcard(contactInfo.getIdcard());
+        contactDTO.setIdcard(contactInfo.getIdCard());
         contactDTO.setCompany(contactInfo.getCompany());
         contactDTO.setMobile(contactInfo.getMobile());
         contactDTO.setHomeTel(contactInfo.getHomeTel());

@@ -11,6 +11,7 @@ import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.asset.PiRelation;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
+import com.dqys.business.orm.query.asset.IOUQuery;
 import com.dqys.business.service.constant.ObjectEnum.IouEnum;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
@@ -68,6 +69,12 @@ public class IouServiceImpl implements IouService {
             return JsonResponseTool.paramErr("参数错误");
         }
         IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
+
+        IOUQuery iouQuery = new IOUQuery();
+        iouQuery.setLenderId(iouDTO.getLenderId());
+        Integer count = iouInfoMapper.queryCount(iouQuery);
+        iouInfo.setIouNo(IouServiceUtils.createIouCode(count));
+
         Integer iouResult = iouInfoMapper.insert(iouInfo);
         if(!CommonUtil.checkResult(iouResult)){
             Integer iouId = iouInfo.getId();

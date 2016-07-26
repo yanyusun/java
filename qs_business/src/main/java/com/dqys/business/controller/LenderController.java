@@ -1,7 +1,7 @@
 package com.dqys.business.controller;
 
 import com.dqys.auth.orm.constant.CompanyTypeEnum;
-import com.dqys.business.service.constant.asset.LenderTabEnum;
+import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.constant.asset.LenderTypeEnum;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
@@ -63,13 +63,14 @@ public class LenderController {
      * @apiName list
      * @apiGroup lender
      * @apiUse LenderListQuery
+     * @apiUse tabEnum
      * @apiSuccess {LenderListDTO} data 借款人列表信息
      * @apiUse LenderListDTO
      */
     @RequestMapping(value = "/list")
     @ResponseBody
     public JsonResponse list(@RequestParam(required = true) Integer type, @ModelAttribute LenderListQuery lenderListQuery) {
-        if (LenderTabEnum.getLenderTabEnum(type) == null) {
+        if (ObjectTabEnum.getObjectTabEnum(type) == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return lenderService.queryList(lenderListQuery, type);

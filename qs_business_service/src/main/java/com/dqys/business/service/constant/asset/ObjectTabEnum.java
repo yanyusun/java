@@ -7,8 +7,10 @@ import java.util.List;
 
 /**
  * Created by Yvan on 16/7/19.
+ * @apiDefine tabEnum
+ * @apiParam {number} type 导航栏左侧tab git: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/constant/asset/ObjectTabEnum.java
  */
-public enum LenderTabEnum {
+public enum ObjectTabEnum {
 
     accept(0, "待接收"),
     apply(1, "待申请"),
@@ -26,22 +28,23 @@ public enum LenderTabEnum {
     assign(13, "待分配"),
     new48h(14, "48H 新"),
     handling_entrust(16, "处置中"),
+    refuse(17, "已驳回"),
     task(15, "我的任务")
     ;
 
     private Integer value;
     private String name;
 
-    LenderTabEnum(Integer value, String name){
+    ObjectTabEnum(Integer value, String name){
         this.value = value;
         this.name = name;
     }
 
-    public static LenderTabEnum getLenderTabEnum(Integer value){
+    public static ObjectTabEnum getObjectTabEnum(Integer value){
         if(value != null){
-            for(LenderTabEnum lenderTabEnum :LenderTabEnum.values()){
-                if(lenderTabEnum.getValue().equals(value)){
-                    return lenderTabEnum;
+            for(ObjectTabEnum objectTabEnum : ObjectTabEnum.values()){
+                if(objectTabEnum.getValue().equals(value)){
+                    return objectTabEnum;
                 }
             }
         }
@@ -50,10 +53,10 @@ public enum LenderTabEnum {
 
     public static List<BaseSelectonDTO> list(){
         List<BaseSelectonDTO> selectonDTOList = new ArrayList<>();
-        for(LenderTabEnum lenderTabEnum : LenderTabEnum.values()){
+        for(ObjectTabEnum objectTabEnum : ObjectTabEnum.values()){
             BaseSelectonDTO selectonDTO = new BaseSelectonDTO();
-            selectonDTO.setKey(lenderTabEnum.getValue().toString());
-            selectonDTO.setValue(lenderTabEnum.getName());
+            selectonDTO.setKey(objectTabEnum.getValue().toString());
+            selectonDTO.setValue(objectTabEnum.getName());
             selectonDTOList.add(selectonDTO);
         }
         return selectonDTOList;

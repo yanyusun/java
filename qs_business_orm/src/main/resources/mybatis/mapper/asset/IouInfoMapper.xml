@@ -337,5 +337,11 @@
     order by id desc
   </select>
 
+  <!-- 多条件查出统计 -->
+  <select id="queryList" parameterType="com.dqys.business.orm.query.asset.IOUQuery" resultMap="BaseResultMap">
+    SELECT COUNT(id) from bt_iou
+    <include refid="Query_Condition" />
+  </select>
+
 
 </mapper>

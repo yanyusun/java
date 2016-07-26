@@ -11,6 +11,7 @@ import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.asset.PiRelation;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
+import com.dqys.business.orm.query.asset.PawnQuery;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.dto.asset.PawnDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
@@ -68,6 +69,11 @@ public class PawnServiceImpl implements PawnService {
             return JsonResponseTool.paramErr("参数错误");
         }
         PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
+        // 统计当前借款人已经具有的抵押物数量
+        PawnQuery pawnQuery = new PawnQuery();
+        pawnQuery.setLenderId(pawnDTO.getLenderId());
+        Integer count = pawnInfoMapper.queryCount(pawnQuery);
+        pawnInfo.setPawnNo(PawnServiceUtils.createPawnCode(count));
         Integer addResult = pawnInfoMapper.insert(pawnInfo);
         if(!CommonUtil.checkResult(addResult)){
             Integer pawnId = pawnInfo.getId();

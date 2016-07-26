@@ -2,6 +2,7 @@ package com.dqys.business.controller;
 
 import com.dqys.business.service.constant.asset.AssetTypeEnum;
 import com.dqys.business.service.constant.asset.ExcellentTypeEnum;
+import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.dto.asset.AssetDTO;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.IouDTO;
@@ -235,13 +236,17 @@ public class AssetController {
      * @apiName list
      * @apiGroup asset
      * @apiUse AssetListQuery
+     * @apiUse tabEnum
      * @apiSuccess {AssetDTO} data 资产包信息
      * @apiUse AssetDTO
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public JsonResponse list(@ModelAttribute AssetListQuery assetListQuery) {
-        return assetService.pageList(assetListQuery);
+    public JsonResponse list(@ModelAttribute AssetListQuery assetListQuery, @RequestParam(required = true) Integer type) {
+        if(ObjectTabEnum.getObjectTabEnum(type) == null){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return assetService.pageList(assetListQuery, type);
     }
 
     /**

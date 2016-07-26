@@ -15,7 +15,7 @@
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="avg" property="avg" jdbcType="VARCHAR" />
     <result column="gender" property="gender" jdbcType="VARCHAR" />
-    <result column="idcard" property="idcard" jdbcType="VARCHAR" />
+    <result column="idcard" property="idCard" jdbcType="VARCHAR" />
     <result column="company" property="company" jdbcType="VARCHAR" />
     <result column="mobile" property="mobile" jdbcType="VARCHAR" />
     <result column="home_tel" property="homeTel" jdbcType="VARCHAR" />
@@ -54,8 +54,8 @@
       <if test="type != null" >
         type = #{type,jdbcType=INTEGER},
       </if>
-      <if test="idcard != null" >
-        idcard = #{idcard,jdbcType=VARCHAR},
+      <if test="idCard != null" >
+        idcard = #{idCard,jdbcType=VARCHAR},
       </if>
       <if test="mobile != null" >
         mobile = #{mobile,jdbcType=VARCHAR},
@@ -121,7 +121,7 @@
       <if test="gender != null" >
         gender,
       </if>
-      <if test="idcard != null" >
+      <if test="idCard != null" >
         idcard,
       </if>
       <if test="company != null" >
@@ -180,8 +180,8 @@
       <if test="gender != null" >
         #{gender,jdbcType=VARCHAR},
       </if>
-      <if test="idcard != null" >
-        #{idcard,jdbcType=VARCHAR},
+      <if test="idCard != null" >
+        #{idCard,jdbcType=VARCHAR},
       </if>
       <if test="company != null" >
         #{company,jdbcType=VARCHAR},
@@ -254,8 +254,8 @@
       <if test="gender != null" >
         gender = #{gender,jdbcType=VARCHAR},
       </if>
-      <if test="idcard != null" >
-        idcard = #{idcard,jdbcType=VARCHAR},
+      <if test="idCard != null" >
+        idcard = #{idCard,jdbcType=VARCHAR},
       </if>
       <if test="company != null" >
         company = #{company,jdbcType=VARCHAR},

@@ -14,6 +14,9 @@ public class SysProperty {
     public static final Integer BOOLEAN_TRUE = 1;
     public static final Integer BOOLEAN_FALSE = 0;
 
+    // 数据状态
+    public static final Integer DEFAULT = 0;
+
     // 存在init|true|false情况下填充(如:待处理,接收|不接受)
     public static final Integer STATUS_INIT = 0;
     public static final Integer STATUS_TRUE = 1;

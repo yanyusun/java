@@ -48,10 +48,19 @@ public interface PawnInfoMapper {
      */
     List<PawnInfo> listByLenderId(Integer lenderId);
 
+
+
     /**
      * 多条件查询抵押物
      * @param pawnQuery
      * @return
      */
     List<PawnInfo> queryList(PawnQuery pawnQuery);
+
+    /**
+     * 多条件统计
+     * @param pawnQuery
+     * @return
+     */
+    Integer queryCount(PawnQuery pawnQuery);
 }

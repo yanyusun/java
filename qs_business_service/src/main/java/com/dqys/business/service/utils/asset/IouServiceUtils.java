@@ -13,14 +13,14 @@ import java.util.List;
  */
 public class IouServiceUtils {
 
-    public static final String MIDDLE_IOU_CODE = "-借"; // 格式:XXX-借01
+    public static final String MIDDLE_IOU_CODE = "借据"; // 格式:XXX-借01
     /**
      * 生成借据号
-     * @param name
+     * @param count
      * @return
      */
-    public static String createIouCode(String name){
-        return name + MIDDLE_IOU_CODE + RandomStringUtils.randomNumeric(6);
+    public static String createIouCode(Integer count){
+        return MIDDLE_IOU_CODE + CommonUtil.createStringNumber(count+1, 2);
     }
 
     public static List<IouDTO> toIouDTO(List<IOUInfo> iouInfoList){
