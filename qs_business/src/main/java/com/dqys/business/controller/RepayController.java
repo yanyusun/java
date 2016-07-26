@@ -29,6 +29,24 @@ public class RepayController {
     private RepayService repayService;
 
     /**
+     * @api {post} repay/getIouAndPawnByLender 根据借款人id获取底下的借据和抵押物
+     * @apiName repay/getIouAndPawnByLender
+     * @apiSampleRequest repay/getIouAndPawnByLender
+     * @apiParam {int} lenderId 借款人id
+     * @apiGroup Repay
+     */
+    @RequestMapping("/getIouAndPawnByLender")
+    @ResponseBody
+    public JsonResponse getIouAndPawnByLender(@RequestParam("lenderId") Integer lenderId) {
+        if (CommonUtil.checkParam(lenderId)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        Map map = new HashMap<>();
+        repayService.getIouAndPawnByLender(lenderId, map);
+        return JsonResponseTool.success(map);
+    }
+
+    /**
      * @api {post} repay/repayMoney 还款操作
      * @apiName repay/repayMoney
      * @apiSampleRequest repay/repayMoney
@@ -42,6 +60,7 @@ public class RepayController {
      * @apiGroup Repay
      */
     @RequestMapping("/repayMoney")
+    @ResponseBody
     public JsonResponse repayMoney(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType,
                                    @RequestParam("repayType") Integer repayType, @RequestParam("repayWay") Integer repayWay,
                                    @RequestParam("money") Double money, @RequestParam("remark") String remark,
@@ -49,9 +68,9 @@ public class RepayController {
         if (CommonUtil.checkParam(objectId, objectType, repayType, repayWay, money)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        if (file.getName().indexOf("jpg") < 0 && file.getName().indexOf("jpeg") < 0) {
-            return JsonResponseTool.paramErr("文件格式错误");
-        }
+//        if (file.getName().indexOf("jpg") < 0 && file.getName().indexOf("jpeg") < 0) {
+//            return JsonResponseTool.paramErr("文件格式错误");
+//        }
         if (objectType != RepayEnum.OBJECT_IOU.getValue() && objectType != RepayEnum.OBJECT_PAWN.getValue()) {
             return JsonResponseTool.paramErr("对象类型错误");
         }
@@ -65,6 +84,33 @@ public class RepayController {
                     httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
             );
             map = repayService.repayMoney(userId, objectId, objectType, repayType, repayWay, money, remark, file);
+            return JsonResponseTool.success(map);
+        } catch (Exception e) {
+            map.put("result", "exception");
+            return JsonResponseTool.serverErr();
+        }
+    }
+
+    /**
+     * @api {post} repay/reversal 还款冲正操作
+     * @apiName repay/reversal
+     * @apiSampleRequest repay/reversal
+     * @apiParam {int} objectId 对象id
+     * @apiParam {int} objectType 对象类型（1借据2抵押物）
+     * @apiGroup Repay
+     */
+    @RequestMapping("/reversal")
+    @ResponseBody
+    public JsonResponse reversal(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType) {
+        if (CommonUtil.checkParam(objectId, objectType)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if (objectType != RepayEnum.OBJECT_IOU.getValue() && objectType != RepayEnum.OBJECT_PAWN.getValue()) {
+            return JsonResponseTool.paramErr("对象类型错误");
+        }
+        Map map = new HashMap<>();
+        try {
+            map = repayService.reversal(objectId, objectType);
             return JsonResponseTool.success(map);
         } catch (Exception e) {
             map.put("result", "exception");

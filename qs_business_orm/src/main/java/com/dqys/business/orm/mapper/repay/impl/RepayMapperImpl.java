@@ -6,6 +6,7 @@ import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
+import com.dqys.business.orm.pojo.repay.RepayRecord;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,16 @@ public class RepayMapperImpl extends BaseDao implements RepayMapper {
     @Override
     public Integer repayLender(@Param("lenderId") Integer lenderId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney) {
         return super.getSqlSession().getMapper(RepayMapper.class).repayLender(lenderId, version, priMoney, accMoney);
+    }
+
+    @Override
+    public Integer repayLenderReversal(@Param("lenderId") Integer lenderId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney) {
+        return super.getSqlSession().getMapper(RepayMapper.class).repayLenderReversal(lenderId, version, priMoney, accMoney);
+    }
+
+    @Override
+    public Integer repayIouReversal(@Param("iouId") Integer iouId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney, @Param("penalty") Double penalty) {
+        return super.getSqlSession().getMapper(RepayMapper.class).repayIouReversal(iouId, version, priMoney, accMoney, penalty);
     }
 
     @Override
@@ -75,5 +86,30 @@ public class RepayMapperImpl extends BaseDao implements RepayMapper {
     @Override
     public Integer updateDamageApply(DamageApply damageApply) {
         return super.getSqlSession().getMapper(RepayMapper.class).updateDamageApply(damageApply);
+    }
+
+    @Override
+    public Object getIouByLenderId(Integer lenderId) {
+        return super.getSqlSession().getMapper(RepayMapper.class).getIouByLenderId(lenderId);
+    }
+
+    @Override
+    public Object getPawnByLenderId(Integer lenderId) {
+        return super.getSqlSession().getMapper(RepayMapper.class).getPawnByLenderId(lenderId);
+    }
+
+    @Override
+    public List<RepayRecord> getRepayRecord(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType) {
+        return super.getSqlSession().getMapper(RepayMapper.class).getRepayRecord(objectId, objectType);
+    }
+
+    @Override
+    public Integer insertRecordSelective(RepayRecord repayRecord) {
+        return super.getSqlSession().getMapper(RepayMapper.class).insertRecordSelective(repayRecord);
+    }
+
+    @Override
+    public Integer updateRecordSelective(RepayRecord repayRecord) {
+        return super.getSqlSession().getMapper(RepayMapper.class).updateRecordSelective(repayRecord);
     }
 }

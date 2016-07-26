@@ -37,5 +37,22 @@ public interface RepayService {
      *
      * @param map
      */
-    void auditPostpone(Integer id,Integer statuas,Integer userId, Map map) throws Exception;
+    void auditPostpone(Integer id, Integer statuas, Integer userId, Map map) throws Exception;
+
+    /**
+     * 获取借款人下的所有借据和抵押物
+     *
+     * @param lenderId
+     * @param map
+     */
+    void getIouAndPawnByLender(Integer lenderId, Map map);
+
+    /**
+     * 还款冲正操作
+     *
+     * @param objectId
+     * @param objectType
+     * @return
+     */
+    Map reversal(Integer objectId, Integer objectType) throws Exception;
 }
