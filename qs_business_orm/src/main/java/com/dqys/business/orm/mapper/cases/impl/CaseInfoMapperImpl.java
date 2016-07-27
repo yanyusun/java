@@ -3,8 +3,11 @@ package com.dqys.business.orm.mapper.cases.impl;
 import com.dqys.business.orm.mapper.cases.CaseInfoMapper;
 import com.dqys.business.orm.pojo.cases.CaseInfo;
 import com.dqys.core.base.BaseDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created by Yvan on 16/6/14.
@@ -30,5 +33,25 @@ public class CaseInfoMapperImpl extends BaseDao implements CaseInfoMapper {
     @Override
     public Integer update(CaseInfo caseInfo) {
         return super.getSqlSession().getMapper(CaseInfoMapper.class).update(caseInfo);
+    }
+
+    @Override
+    public Integer countByLender(Integer id) {
+        return super.getSqlSession().getMapper(CaseInfoMapper.class).countByLender(id);
+    }
+
+    @Override
+    public CaseInfo getByLender(@Param("id")Integer id, @Param("index")Integer index) {
+        return super.getSqlSession().getMapper(CaseInfoMapper.class).getByLender(id, index);
+    }
+
+    @Override
+    public Integer countByCase(Integer id) {
+        return super.getSqlSession().getMapper(CaseInfoMapper.class).countByCase(id);
+    }
+
+    @Override
+    public CaseInfo getByCase(@Param("id") Integer id, @Param("index") Integer index) {
+        return super.getSqlSession().getMapper(CaseInfoMapper.class).getByCase(id, index);
     }
 }
