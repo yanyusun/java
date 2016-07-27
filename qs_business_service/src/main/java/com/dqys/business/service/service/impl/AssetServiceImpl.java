@@ -153,7 +153,7 @@ public class AssetServiceImpl implements AssetService {
             return null;
         }
         AssetQuery assetQuery = createAssetQuery(type);
-        if(assetQuery.getId().equals(SysProperty.NULL_DATA_ID)){
+        if(assetQuery.getId() == null || assetQuery.getId().equals(SysProperty.NULL_DATA_ID)){
             return JsonResponseTool.successNullList();
         }
         if (assetListQuery != null) {

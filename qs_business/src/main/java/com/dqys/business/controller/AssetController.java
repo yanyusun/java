@@ -235,6 +235,7 @@ public class AssetController {
      * @api {get} http://{url}/asset/list 获取资产包列表
      * @apiName list
      * @apiGroup asset
+     * @apiParam {number} type 子导航栏项目
      * @apiUse AssetListQuery
      * @apiUse tabEnum
      * @apiSuccess {AssetDTO} data 资产包信息
