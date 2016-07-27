@@ -62,6 +62,7 @@ public class LenderController {
      * @api {get} http://{url}/lender/list 获取借款人列表
      * @apiName list
      * @apiGroup lender
+     * @apiParam {number} nav 具体的导航栏项目
      * @apiUse LenderListQuery
      * @apiUse tabEnum
      * @apiSuccess {LenderListDTO} data 借款人列表信息
@@ -69,11 +70,11 @@ public class LenderController {
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public JsonResponse list(@RequestParam(required = true) Integer type, @ModelAttribute LenderListQuery lenderListQuery) {
-        if (ObjectTabEnum.getObjectTabEnum(type) == null) {
+    public JsonResponse list(@RequestParam(required = true) Integer nav, @ModelAttribute LenderListQuery lenderListQuery) {
+        if (ObjectTabEnum.getObjectTabEnum(nav) == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return lenderService.queryList(lenderListQuery, type);
+        return lenderService.queryList(lenderListQuery, nav);
     }
 
     /**
