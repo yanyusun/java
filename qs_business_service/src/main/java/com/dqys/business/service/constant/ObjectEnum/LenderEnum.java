@@ -18,7 +18,13 @@ public enum LenderEnum {
     OPERATION_LOG(1110, "操作日志"),
     ADD_REIMBURSEMENT(1111, "添加一条还款"),
     DISTRIBUTION_BORROWER(1112, "分配借款人"),
-    DELETE(1113, "删除");
+    DELETE(1113, "删除"),
+    //    以下为借款人状态
+    STATUS_CHECK_PENDING(0, "待审核"),
+    STATUS_COLLECTION(1, "常规催收"),
+    STATUS_JUDICIARY(2, "司法化解"),
+    STATUS_BAZAAR(3, "市场处置"),
+    STATUS_OTHER(99, "其他处置方式"),;
     private Integer value;
     private String name;
 

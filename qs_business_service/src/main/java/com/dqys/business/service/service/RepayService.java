@@ -1,0 +1,41 @@
+package com.dqys.business.service.service;
+
+import com.dqys.business.orm.pojo.repay.DamageApply;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Map;
+
+/**
+ * Created by mkfeng on 2016/7/19.
+ */
+public interface RepayService {
+
+    /**
+     * 还款操作
+     *
+     * @param objectId   对象id
+     * @param objectType 对象类型
+     * @param repayType  还款类型
+     * @param repayWay   还款方式
+     * @param money      金额
+     * @param remark     备注
+     * @param file       文件
+     * @return
+     */
+    Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, MultipartFile file) throws Exception;
+
+    /**
+     * 延期申请操作
+     *
+     * @param map
+     * @return
+     */
+    void postpone(DamageApply damageApply, Map map);
+
+    /**
+     * 延期申请审核
+     *
+     * @param map
+     */
+    void auditPostpone(Integer id,Integer statuas,Integer userId, Map map) throws Exception;
+}

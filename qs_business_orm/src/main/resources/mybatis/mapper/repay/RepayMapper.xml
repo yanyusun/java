@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.repay.RepayMapper">
+
+    <!--扣除借据中的金额-->
+    <update id="repayIou">
+        UPDATE bt_iou
+        <set>
+            version=version+1,
+            <if test="priMoney !=null">
+                less_corpus=less_corpus-#{priMoney,jdbcType=DOUBLE},
+                loan_repay=loan_repay+#{priMoney,jdbcType=DOUBLE},
+            </if>
+            <if test="accMoney !=null and penalty==null">
+                accrual_arrears=accrual_arrears-#{accMoney,jdbcType=DOUBLE},
+                accrual_repay=accrual_repay+#{accMoney,jdbcType=DOUBLE},
+            </if>
+            <if test="penalty !=null">
+                accrual_arrears=accrual_arrears-#{accMoney,jdbcType=DOUBLE},
+                penalty=penalty-#{penalty,jdbcType=DOUBLE},
+                accrual_repay=accrual_repay+#{penalty,jdbcType=DOUBLE},
+            </if>
+        </set>
+        WHERE id=#{iouId,jdbcType=INTEGER} and version=#{version,jdbcType=INTEGER}
+    </update>
+    <!--扣除借款人表的金额-->
+    <update id="repayLender">
+        UPDATE bt_lender
+        <set>
+            version=version+1,
+            accrual=accrual-#{accMoney,jdbcType=DOUBLE},
+            loan=loan-#{priMoney,jdbcType=DOUBLE},
+        </set>
+        WHERE id=#{lenderId,jdbcType=INTEGER} and version=#{version,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.repay.Repay">
+        update t_repay
+        <set>
+            <if test="damageDate != null">
+                damage_date = #{damageDate,jdbcType=DATE},
+            </if>
+            <if test="repayType != null">
+                repay_type = #{repayType,jdbcType=INTEGER},
+            </if>
+            <if test="operUserId != null">
+                oper_user_id = #{operUserId,jdbcType=INTEGER},
+            </if>
+            <if test="iouId != null">
+                iou_id = #{iouId,jdbcType=INTEGER},
+            </if>
+            <if test="repayM != null">
+                repay_m = #{repayM,jdbcType=DOUBLE},
+            </if>
+            <if test="repayFid != null">
+                repay_fid = #{repayFid,jdbcType=INTEGER},
+            </if>
+            <if test="repayWay != null">
+                repay_way = #{repayWay,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="version != null">
+                version = #{version,jdbcType=INTEGER},
+            </if>
+            <if test="createAt != null">
+                create_at = #{createAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateAt != null">
+                update_at = #{updateAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="stateflag != null">
+                stateflag = #{stateflag,jdbcType=BIGINT},
+            </if>
+            <if test="repayBills != null">
+                repay_bills = #{repayBills,jdbcType=LONGVARBINARY},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <!--添加还款记录-->
+    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.repay.Repay">
+        insert into t_repay
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="damageDate != null">
+                damage_date,
+            </if>
+            <if test="repayType != null">
+                repay_type,
+            </if>
+            <if test="operUserId != null">
+                oper_user_id,
+            </if>
+            <if test="iouId != null">
+                iou_id,
+            </if>
+            <if test="repayM != null">
+                repay_m,
+            </if>
+            <if test="repayFid != null">
+                repay_fid,
+            </if>
+            <if test="repayWay != null">
+                repay_way,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="version != null">
+                version,
+            </if>
+            <if test="createAt != null">
+                create_at,
+            </if>
+            <if test="updateAt != null">
+                update_at,
+            </if>
+            <if test="stateflag != null">
+                stateflag,
+            </if>
+            <if test="repayBills != null">
+                repay_bills,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="damageDate != null">
+                #{damageDate,jdbcType=DATE},
+            </if>
+            <if test="repayType != null">
+                #{repayType,jdbcType=INTEGER},
+            </if>
+            <if test="operUserId != null">
+                #{operUserId,jdbcType=INTEGER},
+            </if>
+            <if test="iouId != null">
+                #{iouId,jdbcType=INTEGER},
+            </if>
+            <if test="repayM != null">
+                #{repayM,jdbcType=DOUBLE},
+            </if>
+            <if test="repayFid != null">
+                #{repayFid,jdbcType=INTEGER},
+            </if>
+            <if test="repayWay != null">
+                #{repayWay,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="version != null">
+                #{version,jdbcType=INTEGER},
+            </if>
+            <if test="createAt != null">
+                #{createAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateAt != null">
+                #{updateAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="stateflag != null">
+                #{stateflag,jdbcType=BIGINT},
+            </if>
+            <if test="repayBills != null">
+                #{repayBills,jdbcType=LONGVARBINARY},
+            </if>
+        </trim>
+    </insert>
+
+    <!--查询借据的业务id-->
+    <select id="getBusinessId" resultType="int">
+        SELECT bor.business_id from t_business_obj_re bor
+        where bor.object_type=#{objectType} and
+        bor.object_id IN
+        <foreach collection="objectIds" index="index" item="item" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+        GROUP BY bor.business_id
+    </select>
+    <!--根据业务id下所有借据的求和-->
+    <select id="getIouSumByBusinessId" resultType="java.util.Map">
+        SELECT SUM(iou.less_corpus) lessMoney,SUM(iou.accrual_arrears) accMoney,SUM(iou.penalty) penMoney
+             from t_business_obj_re bor LEFT JOIN bt_iou iou
+            ON iou.id=bor.object_id  and bor.object_type=#{objectType,jdbcType=INTEGER}
+            where bor.business_id=#{businessId,jdbcType=INTEGER}
+    </select>
+    <!--修改业务表状态-->
+    <update id="updateBusinessStatus">
+        UPDATE business set status=#{status,jdbcType=INTEGER} WHERE id=#{id,jdbcType=INTEGER}
+    </update>
+    <!--添加延期申请记录-->
+    <insert id="addDamageApply" parameterType="com.dqys.business.orm.pojo.repay.DamageApply">
+        insert into t_damage_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="damage_date != null">
+                damage_date,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="apply_user_id != null">
+                apply_user_id,
+            </if>
+            <if test="eaxm_user_id != null">
+                eaxm_user_id,
+            </if>
+            apply_date,
+            <if test="apply_object_id != null">
+                apply_object_id,
+            </if>
+            <if test="object_type != null">
+                object_type,
+            </if>
+            <if test="damage_type != null">
+                damage_type,
+            </if>
+            <if test="original_time != null">
+                original_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="damage_date != null">
+                #{damage_date},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="apply_user_id != null">
+                #{apply_user_id},
+            </if>
+            <if test="eaxm_user_id != null">
+                #{eaxm_user_id},
+            </if>
+            now(),
+            <if test="apply_object_id != null">
+                #{apply_object_id},
+            </if>
+            <if test="object_type != null">
+                #{object_type},
+            </if>
+            <if test="damage_type != null">
+                #{damage_type},
+            </if>
+            <if test="original_time != null">
+                #{original_time},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateDamageApply" parameterType="com.dqys.business.orm.pojo.repay.DamageApply">
+        UPDATE t_damage_apply
+        <set>
+            <if test="damage_type != null">
+                damage_type=#{damage_type},
+            </if>
+            <if test="original_time != null">
+                original_time=#{original_time},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+        </set>
+        WHERE id=#{id}
+    </update>
+    <!--根据条件查询延期申请记录-->
+    <select id="selectByDamageApply" parameterType="com.dqys.business.orm.pojo.repay.DamageApply"
+            resultType="com.dqys.business.orm.pojo.repay.DamageApply">
+        SELECT * from t_damage_apply tda
+        where 1=1
+        <if test="apply_object_id !=null">
+            and tda.apply_object_id=#{apply_object_id}
+        </if>
+        <if test="object_type !=null">
+            and tda.object_type=#{object_type}
+        </if>
+        <if test="status !=null">
+            and status=#{status}
+        </if>
+    </select>
+    <select id="getDamageApply" parameterType="int"
+            resultType="com.dqys.business.orm.pojo.repay.DamageApply">
+        SELECT * from t_damage_apply tda
+        where id=#{id}
+    </select>
+
+</mapper>
