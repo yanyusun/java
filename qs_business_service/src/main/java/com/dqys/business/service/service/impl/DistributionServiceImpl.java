@@ -9,14 +9,17 @@ import com.dqys.business.orm.constant.business.ObjectUserStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectBusinessTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
+import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
+import com.dqys.business.orm.query.asset.LenderQuery;
 import com.dqys.business.orm.query.company.CompanyTeamReQuery;
 import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.dto.company.CompanyTeamReDTO;
@@ -53,6 +56,8 @@ public class DistributionServiceImpl implements DistributionService {
     private ObjectUserRelationMapper objectUserRelationMapper;
     @Autowired
     private LenderInfoMapper lenderInfoMapper;
+    @Autowired
+    private AssetInfoMapper assetInfoMapper;
     @Autowired
     private TUserInfoMapper userInfoMapper;
     @Autowired
@@ -164,23 +169,10 @@ public class DistributionServiceImpl implements DistributionService {
             // 添加操作记录
             businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.join.getValue(),
                     "", "", 0, id);
-            // 增加对象与操作事物的联系
-            ObjectUserRelation objectUserRelation = new ObjectUserRelation();
-            objectUserRelation.setObjectType(companyTeam.getObjectType());
-            objectUserRelation.setObjectId(companyTeam.getObjectId());
-            objectUserRelation.setUserId(companyDetailInfo.getUserId());
-            objectUserRelation.setStatus(ObjectUserStatusEnum.handled.getValue());
-            objectUserRelation.setType(BusinessRelationEnum.company.getValue());
-            result = objectUserRelationMapper.insert(objectUserRelation);
-            if (result == null) {
-                // 添加事物关系失败
-
-            }
-            // todo 发送短信内容
+            // todo 发送短信内容,邮件,消息
             if (text == null) {
                 text = ""; // 默认消息
             }
-
             return companyTeamRe.getId();
         }
     }
@@ -240,21 +232,47 @@ public class DistributionServiceImpl implements DistributionService {
                                 lenderInfoMapper.update(lenderInfo);
                             }
                         }
+                        // 添加操作者与操作事物的关联
+                        createObjectUserRelation(companyTeam);
                     }else if (companyTeam.getObjectType().equals(ObjectTypeEnum.ASSETPACKAGE.getValue())) {
                         // 资产包类型
                         CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(companyTeamRe.getAcceptCompanyId());
                         if (companyDetailInfo != null) {
                             if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW))) {
                                 // 律所
-
+                                AssetInfo assetInfo = new AssetInfo();
+                                assetInfo.setId(companyTeam.getObjectId());
+                                assetInfo.setIsLawyer(SysProperty.BOOLEAN_TRUE);
+                                assetInfoMapper.update(assetInfo);
                             }else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE))){
                                 // 催收
-
+                                AssetInfo assetInfo = new AssetInfo();
+                                assetInfo.setId(companyTeam.getObjectId());
+                                assetInfo.setIsCollection(SysProperty.BOOLEAN_TRUE);
+                                assetInfoMapper.update(assetInfo);
                             }else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY))){
                                 // 中介
-                                
+                                AssetInfo assetInfo = new AssetInfo();
+                                assetInfo.setId(companyTeam.getObjectId());
+                                assetInfo.setIsAgent(SysProperty.BOOLEAN_TRUE);
+                                assetInfoMapper.update(assetInfo);
                             }
                         }
+                        createObjectUserRelation(companyTeam);
+                        LenderQuery lenderQuery = new LenderQuery();
+                        lenderQuery.setAssetId(companyTeam.getObjectId());
+                        List<LenderInfo> lenderInfoList = lenderInfoMapper.queryList(lenderQuery);
+                        for (LenderInfo lenderInfo : lenderInfoList) {
+                            CompanyTeam companyTeam1 = companyTeamMapper.getByTypeId(ObjectTypeEnum.LENDER.getValue(), lenderInfo.getId());
+                            if(companyTeam1 == null){
+                                companyTeam1 = new CompanyTeam();
+                                companyTeam1.setObjectType(ObjectTypeEnum.LENDER.getValue());
+                                companyTeam1.setObjectId(lenderInfo.getId());
+                                createObjectUserRelation(companyTeam1);
+                            }
+                        }
+                    }else if (companyTeam.getObjectType().equals(ObjectTypeEnum.PAWN.getValue())) {
+                        createObjectUserRelation(companyTeam);
                     }
                 }
             }
@@ -308,9 +326,47 @@ public class DistributionServiceImpl implements DistributionService {
                         lenderInfo.setIsAgent(SysProperty.BOOLEAN_FALSE);
                         lenderInfoMapper.update(lenderInfo);
                     }
+                }else if (companyTeam.getObjectType().equals(ObjectTypeEnum.ASSETPACKAGE.getValue())) {
+                    // 资产包类型
+                    if (companyDetailInfo != null) {
+                        if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW))) {
+                            // 律所
+                            AssetInfo assetInfo = new AssetInfo();
+                            assetInfo.setId(companyTeam.getObjectId());
+                            assetInfo.setIsLawyer(SysProperty.BOOLEAN_FALSE);
+                            assetInfoMapper.update(assetInfo);
+                        }else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE))){
+                            // 催收
+                            AssetInfo assetInfo = new AssetInfo();
+                            assetInfo.setId(companyTeam.getObjectId());
+                            assetInfo.setIsCollection(SysProperty.BOOLEAN_FALSE);
+                            assetInfoMapper.update(assetInfo);
+                        }else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY))){
+                            // 中介
+                            AssetInfo assetInfo = new AssetInfo();
+                            assetInfo.setId(companyTeam.getObjectId());
+                            assetInfo.setIsAgent(SysProperty.BOOLEAN_FALSE);
+                            assetInfoMapper.update(assetInfo);
+                        }
+                    }
                 }
             }
             return result;
         }
+    }
+
+    private Integer createObjectUserRelation(CompanyTeam companyTeam){
+        // 增加对象与操作事物的联系
+        ObjectUserRelation objectUserRelation = new ObjectUserRelation();
+        objectUserRelation.setObjectType(companyTeam.getObjectType());
+        objectUserRelation.setObjectId(companyTeam.getObjectId());
+        objectUserRelation.setUserId(UserSession.getCurrent().getUserId()); // 只有管理员才可以接收
+        objectUserRelation.setType(BusinessRelationEnum.company.getValue());
+        Integer result = objectUserRelationMapper.insert(objectUserRelation);
+        if (result == null) {
+            // 添加事物关系失败
+            return null;
+        }
+        return result;
     }
 }
