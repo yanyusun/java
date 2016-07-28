@@ -21,8 +21,6 @@ import java.util.Map;
  * Created by mkefeng on 2016/6/27.
  */
 public class ExcelUtilAsset {
-
-
     /**
      * 资产包表格文件的上传
      */
@@ -31,24 +29,19 @@ public class ExcelUtilAsset {
         String type = SysPropertyTypeEnum.FILE_BUSINESS_TYPE.getValue().toString();
         Integer userId = 0;
         try {
+            // 临时保存上传文件
             String fileName = FileTool.saveFileSyncTmp(type, userId, file);//上传保存文件
-            String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/" + type + "/" + userId + "/";
-//            String path = "E://";
-//            String fileName = "1.xls";
+            String path = SysPropertyTool.getProperty(
+                    SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue()
+                    + "/temp/" + type + "/" + userId + "/";
             List<Map<String, Object>> list0 = ExcelTool.readExcelForList(path, fileName, 0, 0, 0);//借款人
             List<Map<String, Object>> list1 = ExcelTool.readExcelForList(path, fileName, 0, 0, 1);//抵押物
             List<Map<String, Object>> list2 = ExcelTool.readExcelForList(path, fileName, 0, 0, 2);//借据
             List<Map<String, Object>> list3 = ExcelTool.readExcelForList(path, fileName, 0, 0, 3);//联系人
             //判断文件的字段格式
             List<ExcelMessage> error = new ArrayList<ExcelMessage>();//错误信息
-
             if (!checkExcel(list0, list1, list2, list3, error)) {
                 //文件的写出成表格文件
-//                fileName = "errorAsset" + DateFormatTool.format(DateFormatTool.DATE_FORMAT_10_REG1)
-//                        + RandomStringUtils.randomNumeric(4) + ".xls";
-//                String[] str = {"序号", "表名称", "位置", "字段名称", "问题内容"};
-//                ExcelTool.exportExcel(error, str, path, fileName);
-//                map.put("filePath", path + fileName);
                 map.put("result", "error");
                 map.put("data", error);
             } else {
@@ -82,14 +75,15 @@ public class ExcelUtilAsset {
                 "*抵押物银行估值", "*提前偿还本金", "*借据中的抵押物"};
         String[] str3 = {"序号", "*相关人种类", "*姓名", "*身份证号", "*手机号码", "住宅电话", "办公电话", "电子邮箱", "其它联系方式01", "其它联系方式02",
                 "其它联系方式03", "所在机构", "备注"};
-        String msg = "";
-        msg += templateFormat(str0, list0.get(0), "借款人模板字段信息有问题；");
-        msg += templateFormat(str1, list1.get(0), "抵押物模板字段信息有问题；");
-        msg += templateFormat(str2, list2.get(0), "借据模板字段信息有问题；");
-        msg += templateFormat(str3, list3.get(0), "联系人模板字段信息有问题；");
+        // 表头校验
+        templateFormat(str0, list0.get(0), "借款人", "表头信息出错", error);
+        templateFormat(str1, list1.get(0), "抵押物", "表头信息出错", error);
+        templateFormat(str2, list2.get(0), "借据", "表头信息出错", error);
+        templateFormat(str3, list3.get(0), "相关联系人", "表头信息出错", error);
+
         boolean flag = true;
-        if (msg.equals("")) {
-            //判断每个表格的数据类型
+        if (error.size() == 0) {
+            //判断每个表格内的数据类型
             checkLender(error, list0);
             checkPawn(error, list1);
             checkIou(error, list2);
@@ -98,10 +92,7 @@ public class ExcelUtilAsset {
                 flag = false;
             }
         } else {
-            //导出错误信息到文件
-            String[] str = {"1", "", "", "", msg};
-            ExcelMessage excelMessage = new ExcelMessage(1, "", "", "", msg);
-            error.add(excelMessage);//模板有问题
+            //表头校验不过关
             flag = false;
         }
         return flag;
@@ -115,29 +106,24 @@ public class ExcelUtilAsset {
             if (transStringToInteger(transMapToString(l, "var0")) == null) {
                 continue;
             }
+            // 序号
             if (!FormatValidateTool.isDecimals(transMapToString(l, "var0"), 0)) {
                 placeByExcel(error, name, i, 0, transMapToString(map, "var0"), "格式错误");
-                ;
             }
             if (transMapToString(l, "var1").equals("")) {//*借款人
                 placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "不能为空");
-                ;
             }
             if (transMapToString(l, "var2").equals("")) {//*类型
                 placeByExcel(error, name, i, 2, transMapToString(map, "var2"), "不能为空");
-                ;
             }
             if (transMapToString(l, "var3").equals("")) {//*来源
                 placeByExcel(error, name, i, 3, transMapToString(map, "var3"), "不能为空");
-                ;
             }
             if (transMapToString(l, "var4").equals("")) {//*所属资产包
                 placeByExcel(error, name, i, 4, transMapToString(map, "var4"), "不能为空");
-                ;
             }
             if (transMapToString(l, "var5").equals("")) {//*评优
                 placeByExcel(error, name, i, 5, transMapToString(map, "var5"), "不能为空");
-                ;
             }
             if (transMapToString(l, "var6").equals("")) {//*评级
                 placeByExcel(error, name, i, 6, transMapToString(map, "var6"), "不能为空");
@@ -391,11 +377,32 @@ public class ExcelUtilAsset {
      * @param fieldsName 字段名称
      * @param msg        错误内容
      */
-    private static void placeByExcel(List<ExcelMessage> error, String name, Integer row, Integer col, String fieldsName, String msg) {
+    private static void placeByExcel(List<ExcelMessage> error, String name,
+                                     Integer row, Integer col, String fieldsName, String msg) {
 //        String[] str = {(error.size() + 1) + "", name, (row) + "行" + (col + 1) + "列", fieldsName, msg};
         ExcelMessage excelMessage = new ExcelMessage((error.size() + 1), name, (row) + "行" + (col + 1) + "列", fieldsName, msg);
         error.add(excelMessage);
     }
+
+    /**
+     * 模板格式判断
+     *
+     * @param arr    要求模板字段属性
+     * @param map    模板第一行对应的属性名称
+     * @param name   表名
+     * @param errMsg 错误信息
+     * @param error  错误收集对象
+     */
+    public static void templateFormat(String[] arr, Map<String, Object> map, String name,
+                                      String errMsg, List<ExcelMessage> error) {
+        for (int i = 0; i < arr.length; i++) {
+            if (!transMapToString(map, "var" + i).equals(arr[i])) {
+                ExcelMessage excelMessage = new ExcelMessage(1, name, String.valueOf(i + 1), arr[i], errMsg);
+                error.add(excelMessage);
+            }
+        }
+    }
+
 
     /**
      * 模板格式判断

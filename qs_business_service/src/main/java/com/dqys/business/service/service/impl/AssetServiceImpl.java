@@ -7,33 +7,28 @@ import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
-import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
-import com.dqys.business.orm.mapper.asset.ContactInfoMapper;
-import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
+import com.dqys.business.orm.mapper.asset.*;
 import com.dqys.business.orm.mapper.business.BusinessObjReMapper;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
-import com.dqys.business.orm.mapper.company.CompanyTeamMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.coordinator.UserTeamMapper;
-import com.dqys.business.orm.pojo.asset.AssetInfo;
-import com.dqys.business.orm.pojo.asset.ContactInfo;
-import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
-import com.dqys.business.service.dto.asset.AssetDTO;
-import com.dqys.business.service.dto.asset.AssetLenderDTO;
-import com.dqys.business.service.dto.asset.AssetListDTO;
+import com.dqys.business.service.dto.asset.*;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.AssetListQuery;
-import com.dqys.business.service.service.AssetService;
-import com.dqys.business.service.service.BusinessLogService;
-import com.dqys.business.service.service.BusinessService;
+import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
+import com.dqys.business.service.utils.asset.IouServiceUtils;
+import com.dqys.business.service.utils.asset.LenderServiceUtils;
+import com.dqys.business.service.utils.asset.PawnServiceUtils;
+import com.dqys.business.service.utils.excel.ExcelUtilAsset;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -42,6 +37,7 @@ import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -58,6 +54,10 @@ public class AssetServiceImpl implements AssetService {
     private LenderInfoMapper lenderInfoMapper;
     @Autowired
     private ContactInfoMapper contactInfoMapper;
+    @Autowired
+    private PawnInfoMapper pawnInfoMapper;
+    @Autowired
+    private IOUInfoMapper iouInfoMapper;
     @Autowired
     private ObjectUserRelationMapper objectUserRelationMapper;
     @Autowired
@@ -149,11 +149,11 @@ public class AssetServiceImpl implements AssetService {
 
     @Override
     public JsonResponse pageList(AssetListQuery assetListQuery, Integer type) {
-        if(CommonUtil.checkParam(type) || ObjectTabEnum.getObjectTabEnum(type) == null){
+        if (CommonUtil.checkParam(type) || ObjectTabEnum.getObjectTabEnum(type) == null) {
             return null;
         }
         AssetQuery assetQuery = createAssetQuery(type);
-        if(assetQuery.getId() == null || assetQuery.getId().equals(SysProperty.NULL_DATA_ID)){
+        if (assetQuery.getId() == null || assetQuery.getId().equals(SysProperty.NULL_DATA_ID)) {
             return JsonResponseTool.successNullList();
         }
         if (assetListQuery != null) {
@@ -161,11 +161,11 @@ public class AssetServiceImpl implements AssetService {
         }
 
         Map<String, Object> map = new HashMap<>();
-        if(!CommonUtil.checkParam(assetQuery.getIds(), assetQuery.getExceptIds())){
+        if (!CommonUtil.checkParam(assetQuery.getIds(), assetQuery.getExceptIds())) {
             List<Integer> ids = CommonUtil.exceptList(assetQuery.getIds(), assetQuery.getExceptIds());
-            if(CommonUtil.checkParam(ids)){
+            if (CommonUtil.checkParam(ids)) {
                 return JsonResponseTool.successNullList();
-            }else{
+            } else {
                 assetQuery.setIds(ids);
             }
         }
@@ -234,10 +234,11 @@ public class AssetServiceImpl implements AssetService {
 
     /**
      * 将参数type转化成相应的搜索条件
+     *
      * @param type
      * @return
      */
-    private AssetQuery createAssetQuery(Integer type){
+    private AssetQuery createAssetQuery(Integer type) {
         if (type == null || ObjectTabEnum.getObjectTabEnum(type) == null) {
             return null;
         }
@@ -464,5 +465,110 @@ public class AssetServiceImpl implements AssetService {
             return null;
         }
         return assetQuery;
+    }
+
+    @Override
+    public JsonResponse addLender_tx(Integer id, List<ContactDTO> contactDTOList, LenderDTO lenderDTO,
+                                     List<PawnDTO> pawnDTOList, List<IouDTO> iouDTOList) throws BusinessLogException {
+        if (CommonUtil.checkParam(id, contactDTOList, lenderDTO, pawnDTOList, iouDTOList)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        // 借款人信息
+        lenderDTO.setAssetId(id);
+        LenderInfo lenderInfo = LenderServiceUtils.toLenderInfo(lenderDTO);
+        Integer result = lenderInfoMapper.insert(lenderInfo);
+        if (CommonUtil.checkResult(result)) {
+            // 添加失败
+            return JsonResponseTool.failure("添加借款人失败");
+        }
+        Integer lenderId = lenderInfo.getId();
+        // 抵押物信息
+        for (PawnDTO pawnDTO : pawnDTOList) {
+            pawnDTO.setLenderId(lenderId);
+            PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
+            result = pawnInfoMapper.insert(pawnInfo);
+            if (CommonUtil.checkResult(result)) {
+                // 添加失败
+                return JsonResponseTool.failure("添加抵押物失败");
+            }
+        }
+        // 借据信息
+        for (IouDTO iouDTO : iouDTOList) {
+            iouDTO.setLenderId(lenderId);
+            IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
+            result = iouInfoMapper.insert(iouInfo);
+            if (CommonUtil.checkResult(result)) {
+                // 添加失败
+                return JsonResponseTool.failure("添加借据失败");
+            }
+        }
+        return JsonResponseTool.success(null);
+    }
+
+    @Override
+    public JsonResponse excelImport_tx(Integer id, MultipartFile file) throws BusinessLogException {
+        if (CommonUtil.checkParam(id, file)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        Map<String, Object> map = ExcelUtilAsset.uploadExcel(file);
+        if (map.get("result").equals("error")) {
+            return JsonResponseTool.failure(map.get("data").toString());
+        }
+        List<ContactDTO> contactDTOList = (List<ContactDTO>) map.get("contactDTOs");
+        List<LenderDTO> lenderDTOList = (List<LenderDTO>) map.get("lenderDTOs");
+        List<PawnDTO> pawnDTOList = (List<PawnDTO>) map.get("pawnDTOs");
+        List<IouDTO> iouDTOList = (List<IouDTO>) map.get("iouDTOs");
+        if (CommonUtil.checkParam(lenderDTOList, contactDTOList)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+
+        Map<Integer, Integer> idMap = new HashMap<>();
+        // 增加借款人基础信息
+        for (LenderDTO lenderDTO : lenderDTOList) {
+            LenderInfo lenderInfo = LenderServiceUtils.toLenderInfo(lenderDTO);
+            Integer result = lenderInfoMapper.insert(lenderInfo);
+            if (CommonUtil.checkResult(result)) {
+                return JsonResponseTool.failure("增加借款人基础信息失败");
+            }
+            idMap.put(lenderDTO.getId(), lenderInfo.getId());
+        }
+        // 增加借款人的相关联系人
+        for (ContactDTO contactDTO : contactDTOList) {
+            if (idMap.get(contactDTO.getId()) == null) {
+                return JsonResponseTool.failure("借款人的相关联系人序号关联不对");
+            }
+            contactDTO.setMode(ObjectTypeEnum.LENDER.getValue().toString());
+            contactDTO.setModeId(idMap.get(contactDTO.getId()));
+            ContactInfo contactInfo = LenderServiceUtils.toContactInfo(contactDTO);
+            Integer result = contactInfoMapper.insert(contactInfo);
+            if (CommonUtil.checkResult(result)) {
+                return JsonResponseTool.failure("增加借款人相关联系人基础信息失败");
+            }
+        }
+        // 增加抵押物
+        for (PawnDTO pawnDTO : pawnDTOList) {
+            if (idMap.get(pawnDTO.getId()) == null) {
+                return JsonResponseTool.failure("借款人的相关联系人序号关联不对");
+            }
+            pawnDTO.setLenderId(idMap.get(pawnDTO.getId()));
+            PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
+            Integer result = pawnInfoMapper.insert(pawnInfo);
+            if (CommonUtil.checkResult(result)) {
+                return JsonResponseTool.failure("增加抵押物信息失败");
+            }
+        }
+        // 增加借据
+        for (IouDTO iouDTO : iouDTOList) {
+            if (idMap.get(iouDTO.getId()) == null) {
+                return JsonResponseTool.failure("借款人的相关联系人序号关联不对");
+            }
+            iouDTO.setLenderId(idMap.get(iouDTO.getId()));
+            IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
+            Integer result = iouInfoMapper.insert(iouInfo);
+            if (CommonUtil.checkResult(result)) {
+                return JsonResponseTool.failure("增加借据信息失败");
+            }
+        }
+        return JsonResponseTool.success(null);
     }
 }
