@@ -15,9 +15,6 @@ import java.util.List;
  * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/asset/LenderListDTO.java
  */
 public class LenderListDTO {
-
-    private Integer id; // 主键
-
     private String avg; // 头像
     private Integer lenderId; // 借款人ID
     private String name; // 姓名
@@ -42,13 +39,6 @@ public class LenderListDTO {
     private String memo; // 备注
     private List<TeamDTO> coordinator; // 协作器
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getAvg() {
         return avg;

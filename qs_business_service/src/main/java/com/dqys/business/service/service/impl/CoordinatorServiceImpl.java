@@ -261,7 +261,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
      * @param objectType
      * @return
      */
-    private List<TeamDTO> getLenderOrAsset(Integer companyId, Integer objectId, Integer objectType) {
+    @Override
+    public List<TeamDTO> getLenderOrAsset(Integer companyId, Integer objectId, Integer objectType) {
         return coordinatorMapper.getLenderOrAsset(companyId, objectId, objectType);
     }
 

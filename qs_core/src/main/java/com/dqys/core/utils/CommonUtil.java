@@ -17,14 +17,29 @@ import java.util.*;
  */
 public class CommonUtil {
 
+    public static final String[] UPLETTER = {"A","B","C","D","E","F","G",
+            "H","I","J","K","L","M","N",
+            "O","P","Q","R","S","T",
+            "U","V","W","X","Y","Z"};
+    public static final String[] LOWERLETTER = {"a","b","c","d","e","f","g",
+            "h","i","j","k","l","m","n",
+            "o","p","q","r","s","t",
+            "u","v","w","x","y","z"};
+    public static final String[] CNA_UP_CASE_NUMBER = {
+            "零", "壹", "贰", "叁", "肆", "伍", "陆", "染", "捌", "玖"
+    };
+    public static final String[] CNA_UP_CASE_UNIT = {
+            "", "拾", "佰", "仟", "萬", "亿"
+    };
+
     /**
      * 检验参数是否为空
-     * @param datas
+     * @param data
      * @return true 存在空值数据
      */
-    public static boolean checkParam(Object... datas){
-        if(datas.length > 0){
-            for(Object o : datas){
+    public static boolean checkParam(Object... data){
+        if(data.length > 0){
+            for(Object o : data){
                 if(o == null){
                     return true;
                 }
@@ -80,6 +95,9 @@ public class CommonUtil {
      * @return
      */
     public static List<Integer> exceptMulty(List<Integer> list){
+        if(list == null || list.size() == 0){
+            return null;
+        }
         List<Integer> result = new ArrayList<>();
         Set<Integer> set = new HashSet<>();
         list.forEach(integer -> {
@@ -102,10 +120,10 @@ public class CommonUtil {
         if(checkParam(list, list2)){
             return null;
         }
-        if(list == null){
+        if(list == null || list.size() == 0){
             return exceptMulty(list2);
         }
-        if(list2 == null){
+        if(list2 == null || list2.size() == 0){
             return exceptMulty(list);
         }
         List<Integer> result = new ArrayList<>();
@@ -118,8 +136,66 @@ public class CommonUtil {
                 }
             }
         }
-        if(result.size() == 0){
-            result.add(0);
+        return result;
+    }
+
+    /**
+     * 两个列表的数据整合到一起,且去重
+     * @param list
+     * @param list2
+     * @return
+     */
+    public static List<Integer> pickList(List<Integer> list, List<Integer> list2){
+        if(checkParam(list, list2)){
+            return null;
+        }
+        if(list == null || list.size() == 0){
+            return exceptMulty(list2);
+        }
+        if(list2 == null || list2.size() == 0){
+            return exceptMulty(list);
+        }
+        List<Integer> result = new ArrayList<>();
+        list = exceptMulty(list);
+        list2 = exceptMulty(list2);
+        for(Integer i : list){
+            boolean flag = true;
+            for(Integer j : list2){
+                if(i.equals(j)){
+                    break;
+                }
+            }
+            if(flag){
+                result.add(i);
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 以pList为基础,去除pList与cList之间重复的部分
+     * @param pList
+     * @param cList
+     * @return
+     */
+    public static List<Integer> exceptList(List<Integer> pList, List<Integer> cList){
+        if(pList == null || pList.size() == 0){
+            return null;
+        }
+        if(cList == null || cList.size() == 0){
+            return pList;
+        }
+        List<Integer> result = new ArrayList<>();
+        for(Integer i : pList){
+            boolean flag = true;
+            for(Integer j : cList){
+                if(i.equals(j)){
+                    flag = false;break;
+                }
+            }
+            if(flag){
+                result.add(i);
+            }
         }
         return result;
     }
@@ -146,5 +222,60 @@ public class CommonUtil {
         return false;
     }
 
+    /**
+     * 创建特定位数的数字
+     * @param number
+     * @param size
+     * @return
+     */
+    public static String createStringNumber(Integer number, Integer size){
+        StringBuffer result = new StringBuffer();
+        while (number > 0){
+            Integer suffNum = number % 10;
+            number = number / 10;
+            result.insert(0, suffNum);
+        }
+        while (result.length() < size){
+            result.insert(0, 0);
+        }
+        return result.toString();
+    }
+
+    /**
+     * 将数字单纯转化为大写的数字
+     * @param number
+     * @return
+     */
+    public static String createCNANumber(Integer number){
+        StringBuffer result = new StringBuffer();
+        while (number > 0){
+            result.insert(0, CNA_UP_CASE_NUMBER[number % 10]);
+            number = number / 10;
+        }
+        return result.toString();
+    }
+
+    /**
+     * 将数字字符串转化成大写
+     * @param numberStr
+     * @return
+     */
+    public static String createCNANumber(String numberStr){
+        StringBuffer result = new StringBuffer();
+        Integer index = 0;
+        while (numberStr.length() > index){
+            result.append(CNA_UP_CASE_NUMBER[Integer.valueOf(numberStr.substring(index, index+1))]);
+            index++;
+        }
+        return result.toString();
+    }
+
+
+//    public static void main(String[] a){
+//
+//        System.out.println(createStringNumber(20,5));
+//        System.out.println(createCNANumber(305));
+//        System.out.println(createCNANumber("00234"));
+//    }
 
 }

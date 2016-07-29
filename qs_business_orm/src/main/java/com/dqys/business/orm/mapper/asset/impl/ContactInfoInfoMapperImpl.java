@@ -3,7 +3,7 @@ package com.dqys.business.orm.mapper.asset.impl;
 
 import com.dqys.business.orm.mapper.asset.ContactInfoMapper;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
-import com.dqys.business.orm.query.asset.LenderQuery;
+import com.dqys.business.orm.query.asset.ContactQuery;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
@@ -38,8 +38,8 @@ public class ContactInfoInfoMapperImpl extends BaseDao implements ContactInfoMap
     }
 
     @Override
-    public List<ContactInfo> queryList(LenderQuery lenderQuery) {
-        return super.getSqlSession().getMapper(ContactInfoMapper.class).queryList(lenderQuery);
+    public List<ContactInfo> queryList(ContactQuery contactQuery) {
+        return super.getSqlSession().getMapper(ContactInfoMapper.class).queryList(contactQuery);
     }
 
     @Override

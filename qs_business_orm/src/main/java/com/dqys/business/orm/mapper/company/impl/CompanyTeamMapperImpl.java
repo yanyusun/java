@@ -29,8 +29,8 @@ public class CompanyTeamMapperImpl extends BaseDao implements CompanyTeamMapper 
     }
 
     @Override
-    public List<CompanyTeam> listBySendId(Integer id) {
-        return super.getSqlSession().getMapper(CompanyTeamMapper.class).listBySendId(id);
+    public List<CompanyTeam> listBySendId(@Param("type") Integer type, @Param("id") Integer id) {
+        return super.getSqlSession().getMapper(CompanyTeamMapper.class).listBySendId(type, id);
     }
 
     @Override

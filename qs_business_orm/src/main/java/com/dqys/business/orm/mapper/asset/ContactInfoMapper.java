@@ -2,7 +2,7 @@ package com.dqys.business.orm.mapper.asset;
 
 
 import com.dqys.business.orm.pojo.asset.ContactInfo;
-import com.dqys.business.orm.query.asset.LenderQuery;
+import com.dqys.business.orm.query.asset.ContactQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -18,11 +18,12 @@ public interface ContactInfoMapper {
 
     /**
      * 逻辑删除联系人
+     *
      * @param mode
      * @param id
      * @return
      */
-    Integer deleteByMode(@Param("mode")String mode, @Param("id")Integer id);
+    Integer deleteByMode(@Param("mode") String mode, @Param("id") Integer id);
 
     /**
      * 新增
@@ -61,13 +62,14 @@ public interface ContactInfoMapper {
     /**
      * 条件查询
      *
-     * @param lenderQuery
+     * @param contactQuery
      * @return
      */
-    List<ContactInfo> queryList(LenderQuery lenderQuery);
+    List<ContactInfo> queryList(ContactQuery contactQuery);
 
     /**
      * 根据类型ID获取所有类型联系人信息
+     *
      * @param model
      * @param id
      * @return

@@ -14,27 +14,19 @@ import java.util.List;
 public class PawnServiceUtils {
 
     public static final String PRE_PAWN_CODE = "抵"; // 格式:抵AXXXXXX
-    public static final String[] UPLETTER = {"A","B","C","D","E","F","G",
-            "H","I","J","K","L","M","N",
-            "O","P","Q","R","S","T",
-            "U","V","W","X","Y","Z"};
-    public static final String[] LOWERLETTER = {"a","b","c","d","e","f","g",
-            "h","i","j","k","l","m","n",
-            "o","p","q","r","s","t",
-            "u","v","w","x","y","z"};
 
     /**
      * 生成抵押物号
      * @return
      */
-    public static String createPawnCode(){
+    public static String createPawnCode(Integer count){
         return PRE_PAWN_CODE
-                + UPLETTER[Integer.valueOf(RandomStringUtils.randomNumeric(3))%24]
+                + CommonUtil.UPLETTER[count % 26]
                 + RandomStringUtils.randomNumeric(6);
     }
 
     public static String[] initLevel(Integer num){
-        return UPLETTER.toString().substring(0,num).split(",");
+        return CommonUtil.UPLETTER.toString().substring(0,num).split(",");
     }
 
     /**

@@ -5,8 +5,9 @@ package com.dqys.business.orm.constant.business;
  */
 public enum BusinessTypeEnum {
 
-    handing(0, "进行中"),
-    end(1, "已完成");
+    asset(10, "资产包业务"),
+    lender(11, "借款人业务"),
+    law(15, "案件业务");
 
     private Integer value;
     private String name;
@@ -16,7 +17,7 @@ public enum BusinessTypeEnum {
         this.name = name;
     }
 
-    public static BusinessTypeEnum getBusinessTypeEnum(Integer value){
+    public static BusinessTypeEnum getBusinessStatusEnum(Integer value){
         if(value != null){
             for(BusinessTypeEnum businessTypeEnum :BusinessTypeEnum.values()){
                 if(businessTypeEnum.getValue().equals(value)){
@@ -43,4 +44,5 @@ public enum BusinessTypeEnum {
     public void setName(String name) {
         this.name = name;
     }
+
 }

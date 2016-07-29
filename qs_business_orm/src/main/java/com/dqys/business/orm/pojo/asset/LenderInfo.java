@@ -45,7 +45,10 @@ public class LenderInfo extends BaseModel implements Serializable {
     private Integer isLawyer; // 律所介入
     private Integer isAgent; // 中介介入
     private Integer followUpTime; // 跟进次数
+    private Date followUpDate; // 最后跟进时间
     private Integer isStop; // 暂停状态
+    private Integer belongFollowTimes; // 所属人跟进次数
+    private Date belongFollowTime; // 所属人跟进时间
 
     private Integer assetId; // 资产包Id
     private String lenderNo; // 借款人编号
@@ -362,5 +365,29 @@ public class LenderInfo extends BaseModel implements Serializable {
 
     public void setIsStop(Integer isStop) {
         this.isStop = isStop;
+    }
+
+    public Date getFollowUpDate() {
+        return followUpDate;
+    }
+
+    public void setFollowUpDate(Date followUpDate) {
+        this.followUpDate = followUpDate;
+    }
+
+    public Integer getBelongFollowTimes() {
+        return belongFollowTimes;
+    }
+
+    public void setBelongFollowTimes(Integer belongFollowTimes) {
+        this.belongFollowTimes = belongFollowTimes;
+    }
+
+    public Date getBelongFollowTime() {
+        return belongFollowTime;
+    }
+
+    public void setBelongFollowTime(Date belongFollowTime) {
+        this.belongFollowTime = belongFollowTime;
     }
 }

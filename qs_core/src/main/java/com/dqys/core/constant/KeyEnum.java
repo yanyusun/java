@@ -33,8 +33,9 @@ public class KeyEnum {
     public static final String UTYPE_PLATFORM_KEY = "u_type_platform";
 
     /* 角色配置key */
-    public static final String ROLE_ADMINISTRATOR_KEY = "role_administrator";
-    public static final String ROLE_MANAGER_KEY = "role_manager";
+    public static final String ROLE_ADMINISTRATOR_KEY = "role_administrator"; // 管理员
+    public static final String ROLE_MANAGER_KEY = "role_manager"; // 管理者
+    public static final String ROLE_EMPLOYEE = "role_employee"; // 普通员工
 
     /* api配置key */
     public static final String API_SYS_PROPERTY_KEY = "api_sys_property";

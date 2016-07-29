@@ -3,6 +3,7 @@ package com.dqys.business.orm.impl.asset;
 import com.dqys.business.orm.base.BaseTest;
 import com.dqys.business.orm.mapper.asset.ContactInfoMapper;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
+import com.dqys.business.orm.query.asset.ContactQuery;
 import com.dqys.business.orm.query.asset.LenderQuery;
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,9 +43,9 @@ public class ContactInfoMapperImplTest extends BaseTest {
         for(int i = 0;i<4;i++){
             contactInfoMapper.insert(newOne(i));
         }
-        LenderQuery lenderQuery = new LenderQuery();
-        lenderQuery.setIdCardLike("4444");
-        List<ContactInfo> contactInfos = contactInfoMapper.queryList(lenderQuery);
+        ContactQuery contactQuery = new ContactQuery();
+        contactQuery.setIdCardLike("4444");
+        List<ContactInfo> contactInfos = contactInfoMapper.queryList(contactQuery);
         Assert.assertNotNull(contactInfos);
 
         Integer delete = contactInfoMapper.deleteByPrimaryKey(id);
@@ -55,9 +56,9 @@ public class ContactInfoMapperImplTest extends BaseTest {
         ContactInfo contactInfo = new ContactInfo();
 
         contactInfo.setName("name" + index);
-        contactInfo.setGender("mail");
+        contactInfo.setGender(1);
         contactInfo.setMobile("1339999000" + index);
-        contactInfo.setIdcard("666666444422223"+index);
+        contactInfo.setIdCard("666666444422223"+index);
         contactInfo.setOtherAddress("asddddddddddddddddddd");
 
         return contactInfo;

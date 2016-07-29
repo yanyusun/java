@@ -31,7 +31,14 @@ public class AssetInfo extends BaseModel implements Serializable {
     private String tags;  //  标签
     private Integer isshow;  // 是否展示外网
 
-    private Integer belong;
+    private Integer followUpTimes;
+    private Date followUpTime;
+    private Integer belongUpTimes;
+    private Date belongUpTime;
+    private Integer isCollection;
+    private Integer isLawyer;
+    private Integer isAgent;
+    private Integer isStop;
 
     @Override
     public String toString() {
@@ -207,11 +214,67 @@ public class AssetInfo extends BaseModel implements Serializable {
         this.isshow = isshow;
     }
 
-    public Integer getBelong() {
-        return belong;
+    public Integer getFollowUpTimes() {
+        return followUpTimes;
     }
 
-    public void setBelong(Integer belong) {
-        this.belong = belong;
+    public void setFollowUpTimes(Integer followUpTimes) {
+        this.followUpTimes = followUpTimes;
+    }
+
+    public Date getFollowUpTime() {
+        return followUpTime;
+    }
+
+    public void setFollowUpTime(Date followUpTime) {
+        this.followUpTime = followUpTime;
+    }
+
+    public Integer getBelongUpTimes() {
+        return belongUpTimes;
+    }
+
+    public void setBelongUpTimes(Integer belongUpTimes) {
+        this.belongUpTimes = belongUpTimes;
+    }
+
+    public Date getBelongUpTime() {
+        return belongUpTime;
+    }
+
+    public void setBelongUpTime(Date belongUpTime) {
+        this.belongUpTime = belongUpTime;
+    }
+
+    public Integer getIsCollection() {
+        return isCollection;
+    }
+
+    public void setIsCollection(Integer isCollection) {
+        this.isCollection = isCollection;
+    }
+
+    public Integer getIsLawyer() {
+        return isLawyer;
+    }
+
+    public void setIsLawyer(Integer isLawyer) {
+        this.isLawyer = isLawyer;
+    }
+
+    public Integer getIsAgent() {
+        return isAgent;
+    }
+
+    public void setIsAgent(Integer isAgent) {
+        this.isAgent = isAgent;
+    }
+
+    public Integer getIsStop() {
+        return isStop;
+    }
+
+    public void setIsStop(Integer isStop) {
+        this.isStop = isStop;
     }
 }

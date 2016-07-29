@@ -25,8 +25,8 @@ public class BusinessMapperImplTest extends BaseTest {
     @Test
     public void test() {
         Business business = new Business();
-        business.setStatus(BusinessStatusEnum.asset.getValue());
-        business.setType(BusinessTypeEnum.end.getValue());
+        business.setStatus(BusinessStatusEnum.init.getValue());
+        business.setType(BusinessTypeEnum.asset.getValue());
         business.setCreateId(11);
 
         Integer result = businessMapper.insert(business);

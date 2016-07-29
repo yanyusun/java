@@ -19,6 +19,34 @@
     id, create_at, remark, company_id, manger_id, status, ctreater_id, object_id, object_type, 
     version, update_at, stateflag
   </sql>
+
+    <sql id="Query_Condition">
+      <where> 1=1
+          <if test="id != null">
+              AND id = #{id,jdbcType=INTEGER}
+          </if>
+          <if test="companyId != null">
+              AND company_id = #{companyId,jdbcType=INTEGER}
+          </if>
+          <if test="mangerId != null">
+              AND manager_id = #{mangerId,jdbcType=INTEGER}
+          </if>
+          <if test="status != null">
+              AND status = #{status,jdbcType=INTEGER}
+          </if>
+          <if test="ctreaterId != null">
+              AND ctreater_id = #{ctreaterId,jdbcType=INTEGER}
+          </if>
+          <if test="objectId != null">
+              AND object_id = #{objectId,jdbcType=INTEGER}
+          </if>
+          <if test="objectType != null">
+              AND object_type = #{objectType,jdbcType=INTEGER}
+          </if>
+      </where>
+    </sql>
+
+
     <!--根据条件查询结果-->
     <select id="selectByPrimaryKeySelective" resultMap="BaseResultMap"
             parameterType="com.dqys.business.orm.pojo.coordinator.UserTeam">
@@ -164,10 +192,37 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
+    <!--<select id="selectByOperatorAndStatus">-->
+        <!--SELECT object_id FROM t_user_team where object_type = #{type,jdbcType=INTEGER} AND id IN (-->
+        <!--SELECT user_team_id from t_teammate_re-->
+        <!--where stateflag = 0 AND ctreater_id = #{id,jdbcType=INTEGER} AND status = #{status,jdbcType=INTEGER}-->
+        <!--) AND stateflag = 0-->
+    <!--</select>-->
+
     <select id="selectByOperatorAndStatus">
         SELECT object_id FROM t_user_team where object_type = #{type,jdbcType=INTEGER} AND id IN (
-        SELECT user_team_id from t_teammate_re
-        where stateflag = 0 AND ctreater_id = #{id,jdbcType=INTEGER} AND status = #{status,jdbcType=INTEGER}
-        ) AND stateflag = 0
+            select res.id from(
+                select user_team_id as id,count(user_team_id) as num
+                from t_teammate_re
+                where stateflag = 0 AND user_id = #{id,jdbcType=INTEGER} AND status = #{status,jdbcType=INTEGER}
+            ) as res
+            WHERE (res.num = 0 AND res.num = 1 AND res.num = 2 AND res.num = 3 AND res.num = 4)
+        )
     </select>
+
+    <select id="getByObject" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM t_user_team WHERE stateflag = 0 AND object_type = #{type,jdbcType=INTEGER} AND object_id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="queryList" parameterType="com.dqys.business.orm.query.coordinator.UserTeamQuery" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        from t_user_team
+        <include refid="Query_Condition" />
+        ORDER BY id DESC
+        <if test="isPaging">
+            limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+        </if>
+    </select>
+
 </mapper>

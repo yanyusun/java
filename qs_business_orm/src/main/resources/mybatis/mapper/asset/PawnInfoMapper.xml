@@ -236,5 +236,11 @@
     ORDER by id desc
   </select>
 
+  <!-- 多条件统计抵押物 -->
+  <select id="queryCount" parameterType="com.dqys.business.orm.query.asset.PawnQuery" resultMap="BaseResultMap">
+    SELECT count(id) from bt_pawn
+    <include refid="Query_Condition" />
+  </select>
+
 
 </mapper>

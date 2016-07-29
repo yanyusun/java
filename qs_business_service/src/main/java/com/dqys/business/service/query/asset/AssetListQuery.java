@@ -19,13 +19,12 @@ import java.util.Date;
  */
 public class AssetListQuery extends BasePagination {
 
-    private Integer searchType = 0; //
-
     private Integer type; //资产包种类
     private Integer areaId; // 区域ID
     private Integer operator; // 操作人
     private Integer companyId; // 公司Id
     private String code; // 资产包编号
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startAt;
     @DateTimeFormat(pattern = "yyyy-MM-dd")

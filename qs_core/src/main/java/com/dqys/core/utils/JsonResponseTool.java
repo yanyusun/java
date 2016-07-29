@@ -4,6 +4,9 @@ package com.dqys.core.utils;
 import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author by pan on 9/10/15.
  */
@@ -20,6 +23,23 @@ public abstract class JsonResponseTool {
         jsonResponse.setCode(ResponseCodeEnum.SUCCESS.getValue());
         jsonResponse.setMsg(ResponseCodeEnum.SUCCESS.getText());
         jsonResponse.setData(data);
+
+        return jsonResponse;
+    }
+
+    /**
+     * 成功返回空表数据
+     *
+     * @return
+     */
+    public static JsonResponse successNullList() {
+        JsonResponse jsonResponse = new JsonResponse();
+        jsonResponse.setCode(ResponseCodeEnum.SUCCESS.getValue());
+        jsonResponse.setMsg(ResponseCodeEnum.SUCCESS.getText());
+        Map<String, Object> map = new HashMap<>();
+        map.put("total", 0);
+        map.put("data", null);
+        jsonResponse.setData(map);
 
         return jsonResponse;
     }
@@ -107,7 +127,7 @@ public abstract class JsonResponseTool {
     public static JsonResponse authFailure(String msg) {
         JsonResponse jsonResponse = new JsonResponse();
         jsonResponse.setCode(ResponseCodeEnum.AUTH_FAILURE.getValue());
-        jsonResponse.setMsg(null==msg?ResponseCodeEnum.AUTH_FAILURE.getText():msg);
+        jsonResponse.setMsg(null == msg ? ResponseCodeEnum.AUTH_FAILURE.getText() : msg);
         jsonResponse.setData(null);
 
         return jsonResponse;

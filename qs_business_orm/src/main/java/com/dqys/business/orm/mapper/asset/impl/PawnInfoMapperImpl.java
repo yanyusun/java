@@ -49,4 +49,9 @@ public class PawnInfoMapperImpl extends BaseDao implements PawnInfoMapper {
     public List<PawnInfo> queryList(PawnQuery pawnQuery) {
         return super.getSqlSession().getMapper(PawnInfoMapper.class).queryList(pawnQuery);
     }
+
+    @Override
+    public Integer queryCount(PawnQuery pawnQuery) {
+        return super.getSqlSession().getMapper(PawnInfoMapper.class).queryCount(pawnQuery);
+    }
 }

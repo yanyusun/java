@@ -42,6 +42,14 @@
             <mvc:mapping path="/api/user/*"/>
             <bean class="com.dqys.business.interceptor.asset.UserInterceptor"/>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/nav/*"/>
+            <bean class="com.dqys.business.interceptor.company.NavigationIntegercepter"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/case/*"/>
+            <bean class="com.dqys.business.interceptor.cases.CaseIntecepter"/>
+        </mvc:interceptor>
     </mvc:interceptors>
 
 </beans>

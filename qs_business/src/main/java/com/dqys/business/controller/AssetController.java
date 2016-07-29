@@ -2,6 +2,7 @@ package com.dqys.business.controller;
 
 import com.dqys.business.service.constant.asset.AssetTypeEnum;
 import com.dqys.business.service.constant.asset.ExcellentTypeEnum;
+import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.dto.asset.AssetDTO;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.IouDTO;
@@ -121,7 +122,7 @@ public class AssetController {
      */
     @RequestMapping(value = "/get")
     @ResponseBody
-    public JsonResponse get(@RequestParam("id") Integer id) {
+    public JsonResponse get(@RequestParam Integer id) {
         if (id == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -180,7 +181,6 @@ public class AssetController {
         // 添加联系人信息
         contactDTOList.forEach(contactDTO -> {
             Integer index = contactDTO.getId();
-//            contactDTO.setMode(AssetModelTypeEnum.LENDER);
 //            contactDTO.setModeId(lenderMap.get(index));
 //            contactDTO.setId(null);
 //            Integer contactId = lenderService.addLenderInfo(AssetServiceUtils.toContactInfo(contactDTO));
@@ -235,14 +235,19 @@ public class AssetController {
      * @api {get} http://{url}/asset/list 获取资产包列表
      * @apiName list
      * @apiGroup asset
+     * @apiParam {number} nav 子导航栏项目
      * @apiUse AssetListQuery
+     * @apiUse tabEnum
      * @apiSuccess {AssetDTO} data 资产包信息
      * @apiUse AssetDTO
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public JsonResponse list(@ModelAttribute AssetListQuery assetListQuery) {
-        return assetService.pageList(assetListQuery);
+    public JsonResponse list(@ModelAttribute AssetListQuery assetListQuery, @RequestParam(required = true) Integer nav) {
+        if(ObjectTabEnum.getObjectTabEnum(nav) == null){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return assetService.pageList(assetListQuery, nav);
     }
 
     /**

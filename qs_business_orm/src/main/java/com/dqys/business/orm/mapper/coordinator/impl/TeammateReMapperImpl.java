@@ -3,6 +3,7 @@ package com.dqys.business.orm.mapper.coordinator.impl;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.core.base.BaseDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -45,5 +46,11 @@ public class TeammateReMapperImpl extends BaseDao implements TeammateReMapper {
     @Override
     public List<TeammateRe> selectSelective(TeammateRe teammateRe) {
         return super.getSqlSession().getMapper(TeammateReMapper.class).selectSelective(teammateRe);
+    }
+
+    @Override
+    public List<Integer> listObjectIdByJoinType(@Param("type") Integer type, @Param("userId") Integer userId,
+                                                @Param("joinType") Integer joinType) {
+        return super.getSqlSession().getMapper(TeammateReMapper.class).listObjectIdByJoinType(type, userId, joinType);
     }
 }

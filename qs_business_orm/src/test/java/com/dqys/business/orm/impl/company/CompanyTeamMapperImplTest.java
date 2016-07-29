@@ -35,7 +35,7 @@ public class CompanyTeamMapperImplTest extends BaseTest {
         CompanyTeam companyTeam1 = companyTeamMapper.get(id);
         Assert.assertNotNull(companyTeam1);
 
-        List<CompanyTeam> companyTeams = companyTeamMapper.listBySendId(sendId);
+        List<CompanyTeam> companyTeams = companyTeamMapper.listBySendId(ObjectTypeEnum.LENDER.getValue(),sendId);
         Assert.assertNotNull(companyTeams);
         Assert.assertNotEquals(0, companyTeams.size());
 

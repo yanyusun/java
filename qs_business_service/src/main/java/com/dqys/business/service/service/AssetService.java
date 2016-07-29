@@ -56,7 +56,7 @@ public interface AssetService {
      *
      * @return
      */
-    JsonResponse pageList(AssetListQuery assetQuery);
+    JsonResponse pageList(AssetListQuery assetQuery, Integer type);
 
     /**
      * 批量分配

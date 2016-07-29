@@ -44,7 +44,10 @@
     <result column="is_lawyer" property="isLawyer" jdbcType="INTEGER" />
     <result column="is_agent" property="isAgent" jdbcType="INTEGER" />
     <result column="follow_up_times" property="followUpTime" jdbcType="INTEGER" />
+    <result column="follow_up_time" property="followUpDate" jdbcType="TIMESTAMP" />
     <result column="is_stop" property="isStop" jdbcType="INTEGER" />
+    <result column="belong_follow_time" property="belongFollowTime" jdbcType="TIMESTAMP" />
+    <result column="belong_follow_times" property="belongFollowTimes" jdbcType="INTEGER" />
   </resultMap>
 
   <!-- 基础字段 -->
@@ -54,7 +57,7 @@
     dispose_mode, tags, urge_type, entrust_born_type, entrust_born, guarantee_type, guarantee_mode,
     guarantee_source, is_guarantee_connection, guarentee_economic, is_lawsuit, is_decision, real_urge_time,
     phone_urge_time, entrust_urge_time, can_contact, can_pay, is_worth, memo, is_collection, is_lawyer,
-    is_agent, follow_up_times, is_stop
+    is_agent, follow_up_times, is_stop, follow_up_time, belong_follow_time, belong_follow_times
   </sql>
 
   <sql id="Query_Condition">
@@ -78,12 +81,17 @@
         AND entrust_born = #{entrustId,jdbcType=INTEGER}
       </if>
 
+
       <if test="startAt != null">
         <![CDATA[ AND create_at >= #{startAt} ]]>
       </if>
       <if test="endAt != null">
         <![CDATA[ AND create_at <= #{endAt} ]]>
       </if>
+      <if test="belongFollowDate != null">
+        <![CDATA[ AND belong_follow_time >= #{belongFollowDate} ]]>
+      </if>
+
 
       <if test="isOver">
         AND accrual = 0 AND loan = 0
@@ -91,9 +99,31 @@
       <if test="isAsset">
         AND asset_id > 0
       </if>
+      <if test="isCollection">
+        AND is_collection > 0
+      </if>
+      <if test="isAgent">
+        AND is_agent > 0
+      </if>
+      <if test="isLawyer">
+        AND is_lawyer > 0
+      </if>
+      <if test="isNotAsset">
+        AND asset_id is NULL
+      </if>
+      <if test="isTakePart">
+        AND (is_collection == 1 OR is_lawyer == 1 OR is_agent == 1)
+      </if>
       <if test="isOutTime">
         <![CDATA[ AND endAt < CURRENT_TIMESTAMP ]]>
       </if>
+
+
+      <if test="listSearch != null">
+        AND (memo LIKE CONCAT('%', #{listSearch,jdbcType=VARHCAR} ,'%')
+        OR lender_no LIKE CONCAT('%', #{listSearch,jdbcType=VARHCAR} ,'%'))
+      </if>
+
 
       <if test="ids != null">
         AND id in
@@ -101,9 +131,9 @@
           #{i}
         </foreach>
       </if>
-      <if test="exceptIds != null">
-        AND id NOT in
-        <foreach collection="exceptIds" item="i" open="(" close=")" separator=",">
+      <if test="withIds != null">
+        OR id in
+        <foreach collection="withIds" item="i" open="(" close=")" separator=",">
           #{i}
         </foreach>
       </if>
@@ -232,6 +262,15 @@
       <if test="isStop != null" >
         is_stop,
       </if>
+      <if test="followUpDate != null" >
+        follow_up_time,
+      </if>
+      <if test="belongFollowTime != null" >
+        belong_follow_time,
+      </if>
+      <if test="belongFollowTimes != null" >
+        belong_follow_times,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -344,6 +383,15 @@
       </if>
       <if test="isStop != null" >
         #{isStop,jdbcType=INTEGER},
+      </if>
+      <if test="followUpDate != null" >
+        #{followUpDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="belongFollowTime != null" >
+        #{belongFollowTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="belongFollowTimes != null" >
+        #{belongFollowTimes,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -479,6 +527,15 @@
       </if>
       <if test="isStop != null" >
         is_stop = #{isStop,jdbcType=INTEGER},
+      </if>
+      <if test="followUpDate != null" >
+        follow_up_time = #{followUpDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="belongFollowTime != null" >
+        belong_follow_time = #{belongFollowTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="belongFollowTimes != null" >
+        belong_follow_times = #{belongFollowTimes,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

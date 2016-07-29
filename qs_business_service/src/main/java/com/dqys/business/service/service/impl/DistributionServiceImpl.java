@@ -169,7 +169,7 @@ public class DistributionServiceImpl implements DistributionService {
             objectUserRelation.setObjectType(companyTeam.getObjectType());
             objectUserRelation.setObjectId(companyTeam.getObjectId());
             objectUserRelation.setUserId(companyDetailInfo.getUserId());
-            objectUserRelation.setStatus(ObjectUserStatusEnum.checked.getValue());
+            objectUserRelation.setStatus(ObjectUserStatusEnum.handled.getValue());
             objectUserRelation.setType(BusinessRelationEnum.company.getValue());
             result = objectUserRelationMapper.insert(objectUserRelation);
             if (result == null) {
@@ -238,6 +238,21 @@ public class DistributionServiceImpl implements DistributionService {
                                 lenderInfo.setId(companyTeam.getObjectId());
                                 lenderInfo.setIsAgent(SysProperty.BOOLEAN_TRUE);
                                 lenderInfoMapper.update(lenderInfo);
+                            }
+                        }
+                    }else if (companyTeam.getObjectType().equals(ObjectTypeEnum.ASSETPACKAGE.getValue())) {
+                        // 资产包类型
+                        CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(companyTeamRe.getAcceptCompanyId());
+                        if (companyDetailInfo != null) {
+                            if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW))) {
+                                // 律所
+
+                            }else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE))){
+                                // 催收
+
+                            }else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY))){
+                                // 中介
+                                
                             }
                         }
                     }

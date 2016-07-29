@@ -124,7 +124,7 @@ public class LenderDTO {
     private Integer assetId; // 资产包ID
 
     private String name; // 借款人姓名
-    private String sex; // 借款人性别
+    private Integer sex; // 借款人性别
     private String lenderNo; // 借款人编号
 
     public Integer getOperatorId() {
@@ -383,7 +383,7 @@ public class LenderDTO {
         this.name = name;
     }
 
-    public String getSex() {
+    public Integer getSex() {
         return sex;
     }
 
@@ -395,7 +395,7 @@ public class LenderDTO {
         this.assetId = assetId;
     }
 
-    public void setSex(String sex) {
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
 

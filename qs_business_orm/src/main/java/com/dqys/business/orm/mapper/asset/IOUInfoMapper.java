@@ -55,6 +55,13 @@ public interface IOUInfoMapper {
     List<IOUInfo> queryList(IOUQuery IOUQuery);
 
     /**
+     * 多条件统计
+     * @param iouQuery
+     * @return
+     */
+    Integer queryCount(IOUQuery iouQuery);
+
+    /**
      * 根据抵押物id获取抵押物下的所有借据
      * @param objectId 抵押物id
      * @return

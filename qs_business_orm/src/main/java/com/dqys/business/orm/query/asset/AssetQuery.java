@@ -16,11 +16,39 @@ public class AssetQuery extends BaseQuery {
     private Integer areaId; // 区域ID
     private Integer operator; // 操作人
     private String code; // 资产包编号
-    private Date startAt;
-    private Date endAt;
 
-    private List<Integer> ids;
+    private Date startAt; // 开始时间
+    private Date endAt; // 结束时间
 
+    private List<Integer> ids; // 限制ID域里的数据
+    private List<Integer> exceptIds; // 限制ID域外的数据
+
+    private boolean outTime; // 超时
+    private boolean takePart; // 处置方加入
+
+    public boolean isTakePart() {
+        return takePart;
+    }
+
+    public void setTakePart(boolean takePart) {
+        this.takePart = takePart;
+    }
+
+    public boolean isOutTime() {
+        return outTime;
+    }
+
+    public void setOutTime(boolean outTime) {
+        this.outTime = outTime;
+    }
+
+    public List<Integer> getExceptIds() {
+        return exceptIds;
+    }
+
+    public void setExceptIds(List<Integer> exceptIds) {
+        this.exceptIds = exceptIds;
+    }
 
     public List<Integer> getIds() {
         return ids;

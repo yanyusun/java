@@ -14,8 +14,8 @@ public class ContactInfo extends BaseModel implements Serializable{
     private String name;  // 姓名
     private Integer type;  // 借款类型
     private String avg;  // 头像地址
-    private String gender;  // 性别
-    private String idcard;  // 身份证
+    private Integer gender;  // 性别
+    private String idCard;  // 身份证
     private String company;  // 公司
     private String mobile;  // 手机号
     private String homeTel;  // 家庭电话
@@ -31,7 +31,7 @@ public class ContactInfo extends BaseModel implements Serializable{
     public String toString(){
         String string = "lenderInfo:[";
         string += "id:" + super.getId() + ",name:" + name + ",type:" + type
-                + ",avg:" + avg + ",idcard:" + idcard + ",gender:" + gender
+                + ",avg:" + avg + ",idcard:" + idCard + ",gender:" + gender
                 + ",company:" + company + ",mobile:" + mobile + ",homeTel:" + homeTel
                 + ",officeTel:" + officeTel + ",email:" + email + ",province:" + province
                 + ",city:" + city + ",district:" + district + ",address:" + address
@@ -81,20 +81,20 @@ public class ContactInfo extends BaseModel implements Serializable{
         this.avg = avg;
     }
 
-    public String getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 
-    public String getIdcard() {
-        return idcard;
+    public String getIdCard() {
+        return idCard;
     }
 
-    public void setIdcard(String idcard) {
-        this.idcard = idcard;
+    public void setIdCard(String idcard) {
+        this.idCard = idcard;
     }
 
     public String getCompany() {
