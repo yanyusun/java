@@ -3,19 +3,28 @@ package com.dqys.business.service.service.impl;
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
+import com.dqys.auth.orm.pojo.CompanyDetailInfo;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.auth.orm.query.CompanyQuery;
 import com.dqys.auth.orm.query.TUserQuery;
 import com.dqys.auth.orm.query.TUserTagQuery;
+import com.dqys.business.orm.mapper.company.OrganizationMapper;
+import com.dqys.business.orm.pojo.company.Organization;
+import com.dqys.business.orm.query.company.OrganizationQuery;
+import com.dqys.business.service.constant.OrganizationTypeEnum;
+import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;
 import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.business.service.service.UserService;
+import com.dqys.business.service.utils.excel.UserExcelUtil;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.mapper.facade.TAreaMapper;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.TArea;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
@@ -25,6 +34,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +54,10 @@ public class UserServiceImpl implements UserService {
     private TUserTagMapper tUserTagMapper;
     @Autowired
     private TCompanyInfoMapper tCompanyInfoMapper;
+    @Autowired
+    private TAreaMapper areaMapper;
+    @Autowired
+    private OrganizationMapper organizationMapper;
 
     public static final String INIT_PASSSWORD = "123456";
 
@@ -401,6 +415,74 @@ public class UserServiceImpl implements UserService {
             }
         }
         return null;
+    }
+
+    @Override
+    public JsonResponse excelImport_tx(MultipartFile file) {
+        if(CommonUtil.checkParam(file)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        CompanyDetailInfo companyDetailInfo = tCompanyInfoMapper.get(UserSession.getCurrent().getUserId());
+        if(companyDetailInfo == null){
+            return JsonResponseTool.paramErr("您不是管理员,没有权限导入成员");
+        }
+
+        Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file);
+        if (map.get("result") == null || map.get("result").equals("error")) {
+            return JsonResponseTool.failure(map.get("data").toString());
+        } else {
+            // 返回CODE
+            List<UserFileDTO> userFileDTOList = (List<UserFileDTO>)map.get("userFileDTOs");
+            if(userFileDTOList == null || userFileDTOList.size() == 0){
+                return JsonResponseTool.failure("没有数据添加");
+            }
+            for (UserFileDTO userFileDTO : userFileDTOList) {
+                // 用户基础信息
+                TUserInfo userInfo = UserServiceUtils.toUserInfo(userFileDTO);
+                userInfo.setCompanyId(companyDetailInfo.getCompanyId());
+                // 用户身份信息
+                TUserTag userTag = UserServiceUtils.toUserTag(userFileDTO);
+                userTag.setUserType(companyDetailInfo.getType().byteValue());
+                if(userFileDTO.getJoinAt() != null){
+                    userTag.setCreateAt(userFileDTO.getJoinAt());
+                }
+                TArea area = areaMapper.getByName(userFileDTO.getDutyArea());
+                if(area != null){
+                    userTag.setDutyArea(area.getId());
+                }
+                OrganizationQuery organizationQuery = new OrganizationQuery();
+                organizationQuery.setCompanyId(companyDetailInfo.getCompanyId());
+                organizationQuery.setName(userFileDTO.getApartment());
+                List<Organization> organizationList = organizationMapper.list(organizationQuery);
+                if(organizationList != null && organizationList.size() > 0){
+                    userTag.setApartmentId(organizationList.get(0).getId());
+                }else{
+                    Organization organization = new Organization();
+                    organization.setType(OrganizationTypeEnum.apartment.name());
+                    organization.setName(userFileDTO.getApartment());
+                    organization.setCompanyId(companyDetailInfo.getCompanyId());
+                    organization.setUserId(companyDetailInfo.getUserId());
+                    Integer result = organizationMapper.insert(organization);
+                    if(CommonUtil.checkResult(result)){
+                        return JsonResponseTool.failure("添加部门信息时失败");
+                    }else{
+                        Integer id = organization.getId();
+                        userTag.setApartmentId(id);
+                    }
+                }
+                Integer userAdd = tUserInfoMapper.insertSelective(userInfo);
+                if(CommonUtil.checkResult(userAdd)){
+                    return JsonResponseTool.failure("添加用户信息失败");
+                }
+                Integer userId = userInfo.getId();
+                userTag.setUserId(userId);
+                Integer tagAdd = tUserTagMapper.insertSelective(userTag);
+                if(CommonUtil.checkResult(tagAdd)){
+                    return JsonResponseTool.failure("添加用户信息失败");
+                }
+            }
+        }
+        return JsonResponseTool.success("添加成功");
     }
 
     /**

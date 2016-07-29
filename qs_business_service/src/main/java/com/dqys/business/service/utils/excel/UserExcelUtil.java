@@ -29,24 +29,16 @@ public class UserExcelUtil {
         String type = SysPropertyTypeEnum.FILE_BUSINESS_TYPE.getValue().toString();
         Integer userId = 0;
         try {
+            // 临时保存文件
             String fileName = FileTool.saveFileSyncTmp(type, userId, file);//上传保存临时文件
             String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue()
                     + "/temp/" + type + "/" + userId + "/";
 
-//            String path="E://";
-//            String fileName="1.xlsx";
-
             List<Map<String, Object>> list = ExcelTool.readExcelForList(path, fileName, 1, 0, 0);//借款人
             //判断文件的字段格式
             List<ExcelMessage> error = new ArrayList<ExcelMessage>();//错误信息
-
             if (!checkUserExcel(list, error)) {
                 //文件的写出成表格文件
-//                fileName = "error" + DateFormatTool.format(DateFormatTool.DATE_FORMAT_10_REG1)
-//                        + RandomStringUtils.randomNumeric(4) + ".xls";
-//                String[] str = {"序号", "表名称", "位置", "字段名称", "问题内容"};
-//                ExcelTool.exportExcel(error, str, path, fileName);
-//                map.put("filePath", path + fileName);
                 map.put("result", "error");
                 map.put("data", error);
             } else {
@@ -110,20 +102,15 @@ public class UserExcelUtil {
     private static boolean checkUserExcel(List<Map<String, Object>> list, List<ExcelMessage> error) {
         String[] str = {"序号", "*姓名", "*昵称", "*性别", "*自定义账号", "*微信号", "QQ号", "办公电话", "*手机号", "*工作邮箱", "*部门", "*职位名称",
                 "*职责名称", "职责描述", "*职责区域", "*系统角色", "从业年限(年）", "入职时间", "历史业绩（总数量）", "备注"};
-        String msg = "";
-        msg += templateFormat(str, list.get(0), "用户信息表问题");
+        ExcelUtilAsset.templateFormat(str, list.get(0), "用户", "表头信息错误", error);
         boolean flag = true;
-        if (msg.equals("")) {
+        if (error != null && error.size() < 1) {
             //判断每个表格的数据类型
             checkUser(error, list);
             if (error.size() > 0) {
                 flag = false;
             }
         } else {
-            //导出错误信息到文件
-//            String[] string = {"1", "", "", "", msg};
-            ExcelMessage excelMessage=new ExcelMessage(1, "", "", "", msg);
-            error.add(excelMessage);//模板有问题
             flag = false;
         }
         return flag;

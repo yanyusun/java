@@ -77,6 +77,9 @@
       <if test="remark != null" >
         remark,
       </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
       <if test="userId != null" >
         user_id,
       </if>
@@ -114,6 +117,9 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=TIMESTAMP},
       </if>
       <if test="userId != null" >
         #{userId,jdbcType=INTEGER},
@@ -157,6 +163,9 @@
     <set >
       version = version+1,
       update_at = CURRENT_TIMESTAMP ,
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>

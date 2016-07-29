@@ -26,5 +26,11 @@
     order by level
   </select>
 
+  <select id="getByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from t_area
+    WHERE name = #{name.jdbcType=VARCHAR}
+  </select>
 
 </mapper>

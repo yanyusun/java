@@ -4,9 +4,12 @@ import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.business.orm.pojo.company.Organization;
+import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;
+import com.dqys.core.base.SysProperty;
 import com.dqys.core.utils.AreaTool;
+import com.dqys.core.utils.NoSQLWithRedisTool;
 
 /**
  * Created by Yvan on 16/6/29.
@@ -106,5 +109,35 @@ public class UserServiceUtils {
 
         return userTag;
     }
+
+    public static TUserInfo toUserInfo(UserFileDTO userFileDTO){
+        TUserInfo userInfo = new TUserInfo();
+
+        userInfo.setRealName(userFileDTO.getRealName());
+        userInfo.setUserName(userFileDTO.getUserName());
+        userInfo.setSex(userFileDTO.getSex().equals(SysProperty.BOOLEAN_TRUE));
+        userInfo.setAccount(userFileDTO.getAccount());
+        userInfo.setMobile(userFileDTO.getMobile());
+        userInfo.setWechat(userFileDTO.getWechat());
+        userInfo.setEmail(userFileDTO.getEmail());
+        userInfo.setQQ(userFileDTO.getQq());
+        userInfo.setCreateAt(userFileDTO.getJoinAt());
+        userInfo.setRemark(userFileDTO.getRemark());
+
+        return userInfo;
+    }
+
+    public static TUserTag toUserTag(UserFileDTO userFileDTO){
+        TUserTag userTag = new TUserTag();
+
+        userTag.setRoleId(userFileDTO.getRole().byteValue());
+        userTag.setDuty(userFileDTO.getDuty());
+        userTag.setDutyMark(userFileDTO.getDutyMark());
+        userTag.setOccupationTel(userFileDTO.getOfficeTel());
+        userTag.setOccupation(userFileDTO.getOccupation());
+
+        return userTag;
+    }
+
 
 }
