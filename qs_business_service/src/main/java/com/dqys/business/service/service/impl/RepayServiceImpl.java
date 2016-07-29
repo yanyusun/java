@@ -219,15 +219,19 @@ public class RepayServiceImpl implements RepayService {
     }
 
     /**
-     * 减去借据金额和借款人金额
+     * 减去借据金额和借款人金额和资产包金额
      */
     private boolean dispose(Integer lenderId, Integer iouId, Integer version, Double priMoney, Double accMoney, Double penalty) {
-        int result = repayMapper.repayIou(iouId, version, priMoney, accMoney, penalty);
+        int result = repayMapper.repayIou(iouId, version, priMoney, accMoney, penalty);//借据扣除
         if (result > 0) {
             LenderInfo len = lenderInfoMapper.get(lenderId);
-            Integer num = repayMapper.repayLender(lenderId, len.getVersion(), priMoney, penalty != null ? penalty : accMoney);
+            Integer num = repayMapper.repayLender(lenderId, len.getVersion(), priMoney, penalty != null ? penalty : accMoney);//借款人扣除
             if (num > 0) {
-                return true;
+                AssetInfo assetInfo = assetInfoMapper.get(len.getAssetId());
+                Integer count = repayMapper.repayAsset(assetInfo.getId(), assetInfo.getVersion(), priMoney, penalty != null ? penalty : accMoney);//资产包扣除
+                if (count > 0) {
+                    return true;
+                }
             }
         }
         return false;
@@ -327,11 +331,15 @@ public class RepayServiceImpl implements RepayService {
             LenderInfo len = lenderInfoMapper.get(iouInfo.getLenderId());
             Integer num = repayMapper.repayLenderReversal(len.getId(), len.getVersion(), re.getRepayPrincipal(), re.getRepayFine() != null ? re.getRepayFine() : re.getRepayInterest());
             if (num > 0) {
-                RepayRecord record = new RepayRecord();
-                record.setId(re.getId());
-                record.setStatus(2);
-                if (repayMapper.updateRecordSelective(record) > 0) {
-                    return true;
+                AssetInfo assetInfo = assetInfoMapper.get(len.getAssetId());
+                Integer count = repayMapper.repayAssetReversal(assetInfo.getId(), assetInfo.getVersion(), re.getRepayPrincipal(), re.getRepayFine() != null ? re.getRepayFine() : re.getRepayInterest());
+                if (count > 0) {
+                    RepayRecord record = new RepayRecord();
+                    record.setId(re.getId());
+                    record.setStatus(2);
+                    if (repayMapper.updateRecordSelective(record) > 0) {
+                        return true;
+                    }
                 }
             }
         }

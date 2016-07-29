@@ -70,6 +70,20 @@
         </set>
         WHERE id=#{lenderId,jdbcType=INTEGER} and version=#{version,jdbcType=INTEGER}
     </update>
+    <!--扣除资产包表的金额-->
+    <update id="repayAsset">
+        UPDATE bt_asset
+        <set>
+            version=version+1,
+            <if test="accMoney !=null">
+                accrual=accrual-#{accMoney,jdbcType=DOUBLE},
+            </if>
+            <if test="priMoney !=null">
+                loan=loan-#{priMoney,jdbcType=DOUBLE},
+            </if>
+        </set>
+        WHERE id=#{assetId,jdbcType=INTEGER} and version=#{version,jdbcType=INTEGER}
+    </update>
     <!--借据中的金额冲正-->
     <update id="repayIouReversal">
         UPDATE bt_iou
@@ -106,6 +120,20 @@
             </if>
         </set>
         WHERE id=#{lenderId,jdbcType=INTEGER} and version=#{version,jdbcType=INTEGER}
+    </update>
+    <!--资产包表的金额冲正-->
+    <update id="repayAssetReversal">
+        UPDATE bt_asset
+        <set>
+            version=version+1,
+            <if test="accMoney !=null">
+                accrual=accrual+#{accMoney,jdbcType=DOUBLE},
+            </if>
+            <if test="priMoney !=null">
+                loan=loan+#{priMoney,jdbcType=DOUBLE},
+            </if>
+        </set>
+        WHERE id=#{assetId,jdbcType=INTEGER} and version=#{version,jdbcType=INTEGER}
     </update>
     <!--修改还款记录-->
     <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.repay.Repay">

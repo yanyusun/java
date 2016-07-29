@@ -34,6 +34,11 @@ public class RepayMapperImpl extends BaseDao implements RepayMapper {
     }
 
     @Override
+    public Integer repayAsset(@Param("assetId") Integer assetId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney) {
+        return super.getSqlSession().getMapper(RepayMapper.class).repayLender(assetId, version, priMoney, accMoney);
+    }
+
+    @Override
     public Integer repayLenderReversal(@Param("lenderId") Integer lenderId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney) {
         return super.getSqlSession().getMapper(RepayMapper.class).repayLenderReversal(lenderId, version, priMoney, accMoney);
     }

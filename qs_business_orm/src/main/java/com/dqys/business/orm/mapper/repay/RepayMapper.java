@@ -18,7 +18,7 @@ public interface RepayMapper {
     /**
      * 扣除借据金额
      *
-     * @param iouId
+     * @param iouId    借据id
      * @param priMoney 本金金额
      * @param accMoney 利息金额
      * @return
@@ -33,17 +33,27 @@ public interface RepayMapper {
      * @param accMoney 利息金额
      * @return
      */
-    public Integer repayLenderReversal(@Param("lenderId") Integer lenderId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney);
+    public Integer repayLender(@Param("lenderId") Integer lenderId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney);
 
     /**
-     * 借据金额冲正
+     * 扣除资产包金额
      *
-     * @param iouId
+     * @param assetId  资产包id
      * @param priMoney 本金金额
      * @param accMoney 利息金额
      * @return
      */
-    public Integer repayIouReversal(@Param("iouId") Integer iouId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney, @Param("penalty") Double penalty);
+    public Integer repayAsset(@Param("assetId") Integer assetId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney);
+
+    /**
+     * 资产包金额冲正
+     *
+     * @param assetId  资产包id
+     * @param priMoney 本金金额
+     * @param accMoney 利息金额
+     * @return
+     */
+    public Integer repayAssetReversal(@Param("assetId") Integer assetId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney);
 
     /**
      * 借款人金额冲正
@@ -53,7 +63,18 @@ public interface RepayMapper {
      * @param accMoney 利息金额
      * @return
      */
-    public Integer repayLender(@Param("lenderId") Integer lenderId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney);
+    public Integer repayLenderReversal(@Param("lenderId") Integer lenderId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney);
+
+    /**
+     * 借据金额冲正
+     *
+     * @param iouId    借据id
+     * @param priMoney 本金金额
+     * @param accMoney 利息金额
+     * @return
+     */
+    public Integer repayIouReversal(@Param("iouId") Integer iouId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney, @Param("penalty") Double penalty);
+
 
     /**
      * 修改还款记录
