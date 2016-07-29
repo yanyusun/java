@@ -191,4 +191,21 @@ public interface RepayMapper {
      * @return
      */
     Integer updateRecordSelective(RepayRecord repayRecord);
+
+    /**
+     * 获取金额
+     * @param id
+     * @param type
+     * @return
+     */
+    Map getSumMoney(@Param("id")Integer id,@Param("type") Integer type);
+
+    /**
+     * 修改支付状态
+     * @param id
+     * @param type
+     * @param repayStatus
+     * @return
+     */
+    Integer updateRepayStatus(@Param("id")Integer id,@Param("type") Integer type,@Param("repayStatus")Integer repayStatus);
 }

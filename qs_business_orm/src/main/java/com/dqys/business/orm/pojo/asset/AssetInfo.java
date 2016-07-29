@@ -40,16 +40,6 @@ public class AssetInfo extends BaseModel implements Serializable {
     private Integer isAgent;
     private Integer isStop;
 
-    public Integer getIsStop() {
-        return IsStop;
-    }
-
-    public void setIsStop(Integer isStop) {
-        IsStop = isStop;
-    }
-
-    private  Integer IsStop;
-
     @Override
     public String toString() {
         String string = "Asset:[";

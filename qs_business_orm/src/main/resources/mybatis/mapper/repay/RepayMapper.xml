@@ -445,5 +445,36 @@
         where rec.status=0 and rep.repay_fid=#{objectId,jdbcType=INTEGER}
         and rep.repay_fid_type=#{objectType,jdbcType=INTEGER}
     </select>
+    <!--查询金额总和-->
+    <select id="getSumMoney" resultType="java.util.Map">
+        <if test="type==1">
+            SELECT SUM(IF(bt.accrual IS null,0,bt.accrual)+IF(bt.loan IS null,0,bt.loan)) total from bt_asset bt
+            where id=#{id}
+        </if>
+        <if test="type==2">
+            SELECT SUM(IF(bt.accrual IS null,0,bt.accrual)+IF(bt.loan IS null,0,bt.loan)) total from bt_lender bt
+            where id=#{id}
+        </if>
+        <if test="type==3">
+            SELECT SUM(IF(bt.less_corpus IS null,0,bt.less_corpus)+IF(bt.accrual_arrears IS
+            null,0,bt.accrual_arrears)+IF(bt.penalty IS null,0,bt.penalty)) total from bt_iou bt
+            where id=#{id}
+        </if>
+    </select>
+    <!--修改还款状态-->
+    <update id="updateRepayStatus">
+        <if test="type==1">
+            UPDATE bt_asset set repay_status=#{repayStatus}
+            where id=#{id}
+        </if>
+        <if test="type==2">
+            UPDATE bt_lender set repay_status=#{repayStatus}
+            where id=#{id}
+        </if>
+        <if test="type==3">
+            UPDATE bt_iou set repay_status=#{repayStatus}
+            where id=#{id}
+        </if>
+    </update>
 
 </mapper>

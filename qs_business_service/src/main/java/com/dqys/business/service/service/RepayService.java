@@ -22,7 +22,7 @@ public interface RepayService {
      * @param file       文件
      * @return
      */
-    Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, MultipartFile file) throws Exception;
+    Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception;
 
     /**
      * 延期申请操作

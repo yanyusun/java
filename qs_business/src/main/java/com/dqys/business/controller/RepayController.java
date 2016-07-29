@@ -64,7 +64,7 @@ public class RepayController {
     public JsonResponse repayMoney(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType,
                                    @RequestParam("repayType") Integer repayType, @RequestParam("repayWay") Integer repayWay,
                                    @RequestParam("money") Double money, @RequestParam("remark") String remark,
-                                   @RequestParam("file") MultipartFile file, HttpServletRequest httpServletRequest) {
+                                   @RequestParam("file") String file, HttpServletRequest httpServletRequest) {
         if (CommonUtil.checkParam(objectId, objectType, repayType, repayWay, money)) {
             return JsonResponseTool.paramErr("参数错误");
         }

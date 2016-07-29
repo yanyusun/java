@@ -56,8 +56,8 @@ public class RepayServiceImpl implements RepayService {
     private BusinessLogService businessLogService;
 
     @Override
-    public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, MultipartFile file) throws Exception {
-        businessLogService.add(objectId, ObjectTypeEnum.IOU.getValue(), IouEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
+    public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
+//        businessLogService.add(objectId, ObjectTypeEnum.IOU.getValue(), IouEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
         Map map = new HashMap<>();
         List<IOUInfo> ious = new ArrayList<>();
         ious = getIouInfos(objectId, objectType, ious);//根据对象类型获取所有借据
@@ -94,12 +94,12 @@ public class RepayServiceImpl implements RepayService {
         repay.setRepayType(repayType);
         repay.setRepayWay(repayWay);
         repay.setRepayFidType(objectType);
-        InputStream in = file.getInputStream();
-        if (file.getSize() > 0) {
-            byte[] bytes = new byte[(int) file.getSize()];
-            in.read(bytes);
-            repay.setRepayBills(bytes);
-        }
+//        InputStream in = file.getInputStream();
+//        if (file.getSize() > 0) {
+//            byte[] bytes = new byte[(int) file.getSize()];
+//            in.read(bytes);
+//            repay.setRepayBills(bytes);
+//        }
         repay.setRepayM(money);
         repayMapper.insertSelective(repay);
         //对还款金额进行操作
@@ -230,8 +230,28 @@ public class RepayServiceImpl implements RepayService {
                 AssetInfo assetInfo = assetInfoMapper.get(len.getAssetId());
                 Integer count = repayMapper.repayAsset(assetInfo.getId(), assetInfo.getVersion(), priMoney, penalty != null ? penalty : accMoney);//资产包扣除
                 if (count > 0) {
+                    setRepayStatus(assetInfo.getId(),1);
+                    setRepayStatus(len.getId(),2);
+                    setRepayStatus(iouId,3);
                     return true;
                 }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 还款状态
+     * @param id
+     * @param type(1资产包2借款人3借据)
+     * @return
+     */
+    private boolean setRepayStatus(Integer id, Integer type) {
+        Map map = repayMapper.getSumMoney(id, type);
+        if (MessageUtils.transMapToInt(map, "total") == null || MessageUtils.transMapToInt(map, "total") == 0) {
+            Integer num = repayMapper.updateRepayStatus(id, type, 1);//完成
+            if (num > 0) {
+                return true;
             }
         }
         return false;

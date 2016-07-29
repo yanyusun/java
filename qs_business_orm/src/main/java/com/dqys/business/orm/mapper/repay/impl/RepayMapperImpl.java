@@ -35,7 +35,12 @@ public class RepayMapperImpl extends BaseDao implements RepayMapper {
 
     @Override
     public Integer repayAsset(@Param("assetId") Integer assetId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney) {
-        return super.getSqlSession().getMapper(RepayMapper.class).repayLender(assetId, version, priMoney, accMoney);
+        return super.getSqlSession().getMapper(RepayMapper.class).repayAsset(assetId, version, priMoney, accMoney);
+    }
+
+    @Override
+    public Integer repayAssetReversal(@Param("assetId") Integer assetId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney) {
+        return  super.getSqlSession().getMapper(RepayMapper.class).repayAssetReversal(assetId, version, priMoney, accMoney);
     }
 
     @Override
@@ -116,5 +121,15 @@ public class RepayMapperImpl extends BaseDao implements RepayMapper {
     @Override
     public Integer updateRecordSelective(RepayRecord repayRecord) {
         return super.getSqlSession().getMapper(RepayMapper.class).updateRecordSelective(repayRecord);
+    }
+
+    @Override
+    public Map getSumMoney(@Param("id") Integer id, @Param("type") Integer type) {
+        return super.getSqlSession().getMapper(RepayMapper.class).getSumMoney(id,type);
+    }
+
+    @Override
+    public Integer updateRepayStatus(@Param("id") Integer id, @Param("type") Integer type, @Param("repayStatus") Integer repayStatus) {
+        return super.getSqlSession().getMapper(RepayMapper.class).updateRepayStatus(id, type, repayStatus);
     }
 }
