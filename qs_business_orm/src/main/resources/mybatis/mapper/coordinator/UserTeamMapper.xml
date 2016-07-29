@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.business.orm.mapper.coordinator.UserTeamMapper">
+
     <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.coordinator.UserTeam">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
@@ -199,7 +200,7 @@
         <!--) AND stateflag = 0-->
     <!--</select>-->
 
-    <select id="selectByOperatorAndStatus">
+    <select id="selectByOperatorAndStatus" resultType="java.lang.Integer">
         SELECT object_id FROM t_user_team where object_type = #{type,jdbcType=INTEGER} AND id IN (
             select res.id from(
                 select user_team_id as id,count(user_team_id) as num
@@ -216,7 +217,8 @@
     </select>
 
     <select id="queryList" parameterType="com.dqys.business.orm.query.coordinator.UserTeamQuery" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
+        SELECT
+        <include refid="Base_Column_List" />
         from t_user_team
         <include refid="Query_Condition" />
         ORDER BY id DESC
