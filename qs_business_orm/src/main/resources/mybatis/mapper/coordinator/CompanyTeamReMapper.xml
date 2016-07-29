@@ -135,7 +135,18 @@
   <select id="listAssigned" parameterType="java.lang.Integer" resultType="java.lang.Integer">
     SELECT object_id from t_company_team where object_type = #{type,jdbcType=INTEGER} AND id IN (
       SELECT s.id FROM (
-        SELECT count(company_team_id) as num,company_team_id as id FROM t_company_team_re GROUP BY company_team_id
+        SELECT count(company_team_id) as num,company_team_id as id FROM t_company_team_re
+        WHERE accept_company_id in (
+          SELECT id FROM t_company_info
+          WHERE id in (
+            SELECT company_id FROM t_user_info
+            WHERE id in (
+              SELECT user_id FROM t_user_tag
+              WHERE stateflag = 0 AND role_id = 1 AND user_type in (31,32,33)
+            )
+          )
+        )
+        GROUP BY company_team_id
       ) s WHERE s.num > 1
     )
   </select>

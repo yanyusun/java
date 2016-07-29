@@ -42,13 +42,13 @@ public class BusinessServiceImpl implements BusinessService {
             // 建立业务对象
             Business business = new Business();
             if(pType == null && pId == null){
-                business.setType(BusinessTypeEnum.handing.getValue());
+                business.setStatus(BusinessStatusEnum.init.getValue());
                 if(type.equals(ObjectTypeEnum.ASSETPACKAGE.getValue())){
-                    business.setStatus(BusinessStatusEnum.asset.getValue());
+                    business.setType(BusinessTypeEnum.asset.getValue());
                 }else if(type.equals(ObjectTypeEnum.LENDER.getValue())){
-                    business.setStatus(BusinessStatusEnum.lender.getValue());
+                    business.setType(BusinessTypeEnum.lender.getValue());
                 }else if(type.equals(ObjectTypeEnum.CASE.getValue())){
-                    business.setStatus(BusinessStatusEnum.law.getValue());
+                    business.setType(BusinessTypeEnum.law.getValue());
                 }else{
                     // 创建业务失败,业务类型不对
                     return null;
@@ -83,7 +83,11 @@ public class BusinessServiceImpl implements BusinessService {
             objectUserRelation.setUserId(UserSession.getCurrent().getUserId());
             objectUserRelation.setBusinessId(business.getId());
             objectUserRelation.setType(BusinessRelationEnum.own.getValue());
-            objectUserRelationMapper.insert(objectUserRelation);
+            result = objectUserRelationMapper.insert(objectUserRelation);
+            if(CommonUtil.checkResult(result)){
+                // TODO 增加操作人员与被操作事物之间的关系失败,请记录
+
+            }
             return businessObjRe.getId();
         }
         return null;

@@ -51,6 +51,11 @@ public class IOUInfoMapperImpl extends BaseDao implements IOUInfoMapper {
     }
 
     @Override
+    public Integer queryCount(IOUQuery iouQuery) {
+        return super.getSqlSession().getMapper(IOUInfoMapper.class).queryCount(iouQuery);
+    }
+
+    @Override
     public List<IOUInfo> selectIouInfoByPawnId(Integer objectId) {
         return  super.getSqlSession().getMapper(IOUInfoMapper.class).selectIouInfoByPawnId(objectId);
     }

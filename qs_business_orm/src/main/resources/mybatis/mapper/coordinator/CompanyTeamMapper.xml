@@ -36,7 +36,8 @@
   </insert>
 
     <select id="listBySendId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-        SELECT * FROM t_company_team where sender_id = #{sendId,jdbcType=INTEGER} AND stateflag = 0
+        SELECT * FROM t_company_team where sender_id = #{id,jdbcType=INTEGER} AND object_type = #{type,jdbcType=INTEGER}
+        AND stateflag = 0
     </select>
 
     <select id="getByTypeId" resultMap="BaseResultMap">

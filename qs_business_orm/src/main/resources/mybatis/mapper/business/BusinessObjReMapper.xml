@@ -57,4 +57,12 @@
     where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </update>
 
+  <select id="listIdByTypeIdStatusUser" resultType="java.lang.Integer">
+    SELECT object_id FROM t_business_obj_re WHERE object_type = #{type,jdbcType=INTEGER} AND business_id in (
+      SELECT id FROM business WHERE create_id = #{userId,jdbcType=INTEGER} AND status = #{status,jdbcType=INTEGER}
+      AND stateflag = 0
+    ) AND stateflag = 0
+  </select>
+
+
 </mapper>

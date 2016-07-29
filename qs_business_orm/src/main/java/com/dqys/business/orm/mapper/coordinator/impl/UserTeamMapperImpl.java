@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.coordinator.impl;
 
 import com.dqys.business.orm.mapper.coordinator.UserTeamMapper;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
+import com.dqys.business.orm.query.coordinator.UserTeamQuery;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -46,5 +47,15 @@ public class UserTeamMapperImpl extends BaseDao implements UserTeamMapper {
     @Override
     public List<Integer> selectByOperatorAndStatus(@Param("id") Integer id, @Param("status") Integer status, @Param("type") Integer type) {
         return super.getSqlSession().getMapper(UserTeamMapper.class).selectByOperatorAndStatus(id, status, type);
+    }
+
+    @Override
+    public UserTeam getByObject(@Param("id") Integer id, @Param("type") Integer type) {
+        return super.getSqlSession().getMapper(UserTeamMapper.class).getByObject(id, type);
+    }
+
+    @Override
+    public List<UserTeam> queryList(UserTeamQuery userTeamQuery) {
+        return super.getSqlSession().getMapper(UserTeamMapper.class).queryList(userTeamQuery);
     }
 }

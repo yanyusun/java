@@ -18,9 +18,9 @@ public class AssetListDTO {
     private String company; // 贷款机构
     private String city; // 行政区划
 
-
     private Long lessDay; // 剩余天数
     private String rate; // 完成率
+    private Integer operatorId; // 录入人员ID
     private String operator; // 录入人员
     private Date createAt; // 创建时间
     private String remark; // 备注
@@ -144,5 +144,13 @@ public class AssetListDTO {
 
     public void setFlag(Integer flag) {
         this.flag = flag;
+    }
+
+    public Integer getOperatorId() {
+        return operatorId;
+    }
+
+    public void setOperatorId(Integer operatorId) {
+        this.operatorId = operatorId;
     }
 }

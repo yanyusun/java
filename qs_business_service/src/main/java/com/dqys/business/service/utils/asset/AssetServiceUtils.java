@@ -1,9 +1,11 @@
 package com.dqys.business.service.utils.asset;
 
+import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.service.constant.asset.AssetTypeEnum;
 import com.dqys.business.service.constant.asset.LenderTypeEnum;
 import com.dqys.business.service.query.asset.AssetListQuery;
+import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.TArea;
 import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
@@ -121,9 +123,8 @@ public class AssetServiceUtils {
         return assetDTO;
     }
 
-    public static AssetQuery toAssetQuery(AssetListQuery assetListQuery){
-        AssetQuery assetQuery = new AssetQuery();
-
+    public static AssetQuery toAssetQuery(AssetListQuery assetListQuery, AssetQuery assetQuery){
+        // 分页
         if(assetListQuery.getPage() != null || assetListQuery.getPageCount() != null){
             assetQuery.setIsPaging(true);
             if(assetListQuery.getPage() != null && assetListQuery.getPage() > 0){
@@ -147,15 +148,7 @@ public class AssetServiceUtils {
         return assetQuery;
     }
 
-    public static List<AssetListDTO> toAssetListDTO(List<AssetInfo> assetInfoList){
-        List<AssetListDTO> assetListDTOList = new ArrayList<>();
-        assetInfoList.forEach(assetInfo -> {
-            assetListDTOList.add(toAssetListDTO(assetInfo));
-        });
-        return assetListDTOList;
-    }
-
-    public static AssetListDTO toAssetListDTO(AssetInfo assetInfo){
+    public static AssetListDTO toAssetListDTO(AssetInfo assetInfo, TUserInfo userInfo, String rate){
         AssetListDTO assetListDTO = new AssetListDTO();
 
         assetListDTO.setId(assetInfo.getId());
@@ -167,6 +160,7 @@ public class AssetServiceUtils {
         assetListDTO.setName(assetInfo.getName());
         assetListDTO.setCreateAt(assetInfo.getCreateAt());
         assetListDTO.setRemark(assetInfo.getRemark());
+        assetListDTO.setOperatorId(assetInfo.getOperator());
         assetListDTO.setFlag(assetInfo.getStateflag().equals(0) ? 1 : 0);
         if(assetInfo.getCity() != null){
             TArea area = AreaTool.getAreaById(assetInfo.getCity());
@@ -178,9 +172,9 @@ public class AssetServiceUtils {
         long dayTime = assetInfo.getEndAt().getTime()- Calendar.getInstance().getTime().getTime();
         assetListDTO.setLessDay(dayTime > 0 ? dayTime / 1000 / 3600 / 24 : 0);
 
-        // TODO 需要补充
-        assetListDTO.setRate(null);
-        assetListDTO.setOperator(null);
+        assetListDTO.setRate(rate);
+        assetListDTO.setOperator(userInfo.getUserName());
+        assetListDTO.setCompany(assetInfo.getLoanOrganization());
 
         return assetListDTO;
     }

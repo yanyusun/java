@@ -224,7 +224,7 @@
   </select>
 
   <select id="get" parameterType="java.lang.Integer" resultMap="CompanyDetailMap">
-    SELECT tci.id as id,create_at,company_name,province,city,area,is_auth,address,type as company_type
+    SELECT tci.id as id,create_at,company_name,province,city,area,is_auth,address,type as company_type,
       res.id as user_id,res.avg,res.user_name as name,res.phone,res.user_type as type
     from t_company_info tci
     INNER JOIN

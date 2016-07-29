@@ -11,24 +11,31 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="case_no" property="caseNo" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="VARCHAR" />
-    <result column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="pid" property="pId" jdbcType="INTEGER" />
     <result column="pawn_id" property="pawnId" jdbcType="INTEGER" />
     <result column="plaintiff" property="plaintiff" jdbcType="VARCHAR" />
     <result column="defendant" property="defendant" jdbcType="VARCHAR" />
-    <result column="guarantor_id" property="guarantorId" jdbcType="INTEGER" />
+    <result column="spouse" property="spouse" jdbcType="VARCHAR" />
+    <result column="guarantor" property="guarantor" jdbcType="VARCHAR" />
     <result column="mortgagor" property="mortgagor" jdbcType="VARCHAR" />
     <result column="mortgage_time" property="mortgageTime" jdbcType="VARCHAR" />
+    <result column="evaluate_excellent" property="evaluateExcellent" jdbcType="VARCHAR" />
+    <result column="evaluate_level" property="evaluateLevel" jdbcType="VARCHAR" />
     <result column="lawsuit_amount" property="lawsuitAmount" jdbcType="DOUBLE" />
     <result column="lawsuit_corpus" property="lawsuitCorpus" jdbcType="DOUBLE" />
     <result column="lawsuit_accrual" property="lawsuitAccrual" jdbcType="DOUBLE" />
-    <result column="is_attachment" property="isAttachment" jdbcType="BIT" />
-    <result column="attachment_time" property="attachmentTime" jdbcType="BIT" />
-    <result column="attachment_code" property="attachmentCode" jdbcType="VARCHAR" />
-    <result column="attachment_court" property="attachmentCourt" jdbcType="VARCHAR" />
+    <result column="attachment_status" property="attachmentStatus" jdbcType="INTEGER" />
     <result column="attachment_date" property="attachmentDate" jdbcType="TIMESTAMP" />
-    <result column="is_preservation" property="isPreservation" jdbcType="BIT" />
+    <result column="attachment_court" property="attachmentCourt" jdbcType="VARCHAR" />
+    <result column="attachment_time" property="attachmentTime" jdbcType="TINYINT" />
+    <result column="is_preservation" property="isPreservation" jdbcType="INTEGER" />
     <result column="preservation_start" property="preservationStart" jdbcType="TIMESTAMP" />
     <result column="preservation_end" property="preservationEnd" jdbcType="TIMESTAMP" />
+    <result column="is_first" property="isFirst" jdbcType="INTEGER" />
+    <result column="first_attachment_court" property="firstAttachmentCourt" jdbcType="VARCHAR" />
+    <result column="preservation_court" property="preservationCourt" jdbcType="VARCHAR" />
+    <result column="first_attachment_code" property="firstAttachmentCode" jdbcType="VARCHAR" />
+    <result column="first_attachment_date" property="firstAttachmentDate" jdbcType="TIMESTAMP" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
     <result column="lawsuit_memo" property="lawsuitMemo" jdbcType="LONGVARCHAR" />
     <result column="attachment_memo" property="attachmentMemo" jdbcType="LONGVARCHAR" />
@@ -37,11 +44,12 @@
 
   <!-- 基础字段 -->
   <sql id="Base_Column_List" >
-    id, version, create_at, update_at, stateflag, remark, case_no, lender_id, type, pid,
-    pawn_id, plaintiff, defendant, guarantor_id, mortgagor, mortgage_time, lawsuit_amount,
-    lawsuit_corpus, lawsuit_accrual, is_attachment, attachment_time, attachment_code,
-    attachment_court, attachment_date, is_preservation, preservation_start, preservation_end,
-    memo, lawsuit_memo, attachment_memo, preservation_memo
+    id, version, create_at, update_at, stateflag, remark, case_no, type, pid, pawn_id,
+    plaintiff, defendant, spouse, guarantor, mortgagor, mortgage_time, evaluate_excellent,
+    evaluate_level, lawsuit_amount, lawsuit_corpus, lawsuit_accrual, attachment_status,
+    attachment_date, attachment_court, attachment_time, is_preservation, preservation_start,
+    preservation_end, is_first, first_attachment_court, preservation_court, first_attachment_code,
+    first_attachment_date, memo, lawsuit_memo, attachment_memo, preservation_memo
   </sql>
 
   <!-- 逻辑删除-->
@@ -63,7 +71,7 @@
       <if test="type != null" >
         type,
       </if>
-      <if test="pid != null" >
+      <if test="pId != null" >
         pid,
       </if>
       <if test="pawnId != null" >
@@ -75,14 +83,23 @@
       <if test="defendant != null" >
         defendant,
       </if>
-      <if test="guarantorId != null" >
-        guarantor_id,
+      <if test="spouse != null" >
+        spouse,
+      </if>
+      <if test="guarantor != null" >
+        guarantor,
       </if>
       <if test="mortgagor != null" >
         mortgagor,
       </if>
       <if test="mortgageTime != null" >
         mortgage_time,
+      </if>
+      <if test="evaluateExcellent != null" >
+        evaluate_excellent,
+      </if>
+      <if test="evaluateLevel != null" >
+        evaluate_level,
       </if>
       <if test="lawsuitAmount != null" >
         lawsuit_amount,
@@ -93,20 +110,17 @@
       <if test="lawsuitAccrual != null" >
         lawsuit_accrual,
       </if>
-      <if test="isAttachment != null" >
-        is_attachment,
+      <if test="attachmentStatus != null" >
+        attachment_status,
       </if>
-      <if test="attachmentTime != null" >
-        attachment_time,
-      </if>
-      <if test="attachmentCode != null" >
-        attachment_code,
+      <if test="attachmentDate != null" >
+        attachment_date,
       </if>
       <if test="attachmentCourt != null" >
         attachment_court,
       </if>
-      <if test="attachmentDate != null" >
-        attachment_date,
+      <if test="attachmentTime != null" >
+        attachment_time,
       </if>
       <if test="isPreservation != null" >
         is_preservation,
@@ -117,17 +131,32 @@
       <if test="preservationEnd != null" >
         preservation_end,
       </if>
+      <if test="isFirst != null" >
+        is_first,
+      </if>
+      <if test="firstAttachmentCourt != null" >
+        first_attachment_court,
+      </if>
+      <if test="preservationCourt != null" >
+        preservation_court,
+      </if>
+      <if test="firstAttachmentCode != null" >
+        first_attachment_code,
+      </if>
+      <if test="firstAttachmentDate != null" >
+        first_attachment_date,
+      </if>
       <if test="memo != null" >
         memo,
       </if>
       <if test="lawsuitMemo != null" >
         lawsuit_memo,
       </if>
-      <if test="attachmentMemo != null" >
-        attachment_memo,
-      </if>
       <if test="preservationMemo != null" >
         preservation_memo,
+      </if>
+      <if test="attachmentMemo != null" >
+        attachment_memo,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -140,7 +169,7 @@
       <if test="type != null" >
         #{type,jdbcType=VARCHAR},
       </if>
-      <if test="pid != null" >
+      <if test="pId != null" >
         #{pid,jdbcType=INTEGER},
       </if>
       <if test="pawnId != null" >
@@ -152,14 +181,23 @@
       <if test="defendant != null" >
         #{defendant,jdbcType=VARCHAR},
       </if>
-      <if test="guarantorId != null" >
-        #{guarantorId,jdbcType=VARCHAR},
+      <if test="spouse != null" >
+        #{spouse,jdbcType=VARCHAR},
+      </if>
+      <if test="guarantor != null" >
+        #{guarantor,jdbcType=VARCHAR},
       </if>
       <if test="mortgagor != null" >
         #{mortgagor,jdbcType=VARCHAR},
       </if>
       <if test="mortgageTime != null" >
         #{mortgageTime,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateExcellent != null" >
+        #{evaluateExcellent,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateLevel != null" >
+        #{evaluateLevel,jdbcType=VARCHAR},
       </if>
       <if test="lawsuitAmount != null" >
         #{lawsuitAmount,jdbcType=DOUBLE},
@@ -170,23 +208,20 @@
       <if test="lawsuitAccrual != null" >
         #{lawsuitAccrual,jdbcType=DOUBLE},
       </if>
-      <if test="isAttachment != null" >
-        #{isAttachment,jdbcType=BIT},
-      </if>
-      <if test="attachmentTime != null" >
-        #{attachmentTime,jdbcType=BIT},
-      </if>
-      <if test="attachmentCode != null" >
-        #{attachmentCode,jdbcType=VARCHAR},
-      </if>
-      <if test="attachmentCourt != null" >
-        #{attachmentCourt,jdbcType=VARCHAR},
+      <if test="attachmentStatus != null" >
+        #{attachmentStatus,jdbcType=INTEGER},
       </if>
       <if test="attachmentDate != null" >
         #{attachmentDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="attachmentCourt != null" >
+        #{attachmentCourt,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentTime != null" >
+        #{attachmentTime,jdbcType=TINYINT},
+      </if>
       <if test="isPreservation != null" >
-        #{isPreservation,jdbcType=BIT},
+        #{isPreservation,jdbcType=INTEGER},
       </if>
       <if test="preservationStart != null" >
         #{preservationStart,jdbcType=TIMESTAMP},
@@ -194,17 +229,32 @@
       <if test="preservationEnd != null" >
         #{preservationEnd,jdbcType=TIMESTAMP},
       </if>
+      <if test="isFirst != null" >
+        #{isFirst,jdbcType=INTEGER},
+      </if>
+      <if test="firstAttachmentCourt != null" >
+        #{firstAttachmentCourt,jdbcType=VARCHAR},
+      </if>
+      <if test="preservationCourt != null" >
+        #{preservationCourt,jdbcType=VARCHAR},
+      </if>
+      <if test="firstAttachmentCode != null" >
+        #{firstAttachmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="firstAttachmentDate != null" >
+        #{firstAttachmentDate,jdbcType=TIMESTAMP},
+      </if>
       <if test="memo != null" >
         #{memo,jdbcType=VARCHAR},
       </if>
       <if test="lawsuitMemo != null" >
         #{lawsuitMemo,jdbcType=LONGVARCHAR},
       </if>
-      <if test="attachmentMemo != null" >
-        #{attachmentMemo,jdbcType=LONGVARCHAR},
-      </if>
       <if test="preservationMemo != null" >
         #{preservationMemo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="attachmentMemo != null" >
+        #{attachmentMemo,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -224,8 +274,8 @@
       <if test="type != null" >
         type = #{type,jdbcType=VARCHAR},
       </if>
-      <if test="pid != null" >
-        pid = #{pid,jdbcType=INTEGER},
+      <if test="pId != null" >
+        pid = #{pId,jdbcType=INTEGER},
       </if>
       <if test="pawnId != null" >
         pawn_id = #{pawnId,jdbcType=INTEGER},
@@ -236,14 +286,23 @@
       <if test="defendant != null" >
         defendant = #{defendant,jdbcType=VARCHAR},
       </if>
-      <if test="guarantorId != null" >
-        guarantor_id = #{guarantorId,jdbcType=INTEGER},
+      <if test="spouse != null" >
+        spouse = #{spouse,jdbcType=VARCHAR},
+      </if>
+      <if test="guarantor != null" >
+        guarantor = #{guarantor,jdbcType=VARCHAR},
       </if>
       <if test="mortgagor != null" >
         mortgagor = #{mortgagor,jdbcType=VARCHAR},
       </if>
       <if test="mortgageTime != null" >
         mortgage_time = #{mortgageTime,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateExcellent != null" >
+        evaluate_excellent = #{evaluateExcellent,jdbcType=VARCHAR},
+      </if>
+      <if test="evaluateLevel != null" >
+        evaluate_level = #{evaluateLevel,jdbcType=VARCHAR},
       </if>
       <if test="lawsuitAmount != null" >
         lawsuit_amount = #{lawsuitAmount,jdbcType=DOUBLE},
@@ -254,23 +313,20 @@
       <if test="lawsuitAccrual != null" >
         lawsuit_accrual = #{lawsuitAccrual,jdbcType=DOUBLE},
       </if>
-      <if test="isAttachment != null" >
-        is_attachment = #{isAttachment,jdbcType=BIT},
-      </if>
-      <if test="attachmentTime != null" >
-        attachment_time = #{attachmentTime,jdbcType=BIT},
-      </if>
-      <if test="attachmentCode != null" >
-        attachment_code = #{attachmentCode,jdbcType=VARCHAR},
-      </if>
-      <if test="attachmentCourt != null" >
-        attachment_court = #{attachmentCourt,jdbcType=VARCHAR},
+      <if test="attachmentStatus != null" >
+        attachment_status = #{attachmentStatus,jdbcType=INTEGER},
       </if>
       <if test="attachmentDate != null" >
         attachment_date = #{attachmentDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="attachmentCourt != null" >
+        attachment_court = #{attachmentCourt,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentTime != null" >
+        attachment_time = #{attachmentTime,jdbcType=TINYINT},
+      </if>
       <if test="isPreservation != null" >
-        is_preservation = #{isPreservation,jdbcType=BIT},
+        is_preservation = #{isPreservation,jdbcType=INTEGER},
       </if>
       <if test="preservationStart != null" >
         preservation_start = #{preservationStart,jdbcType=TIMESTAMP},
@@ -278,17 +334,32 @@
       <if test="preservationEnd != null" >
         preservation_end = #{preservationEnd,jdbcType=TIMESTAMP},
       </if>
+      <if test="isFirst != null" >
+        is_first = #{isFirst,jdbcType=INTEGER},
+      </if>
+      <if test="firstAttachmentCourt != null" >
+        first_attachment_court = #{firstAttachmentCourt,jdbcType=VARCHAR},
+      </if>
+      <if test="preservationCourt != null" >
+        preservation_court = #{preservationCourt,jdbcType=VARCHAR},
+      </if>
+      <if test="firstAttachmentCode != null" >
+        first_attachment_code = #{firstAttachmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="firstAttachmentDate != null" >
+        first_attachment_date = #{firstAttachmentDate,jdbcType=TIMESTAMP},
+      </if>
       <if test="memo != null" >
         memo = #{memo,jdbcType=VARCHAR},
       </if>
       <if test="lawsuitMemo != null" >
         lawsuit_memo = #{lawsuitMemo,jdbcType=LONGVARCHAR},
       </if>
-      <if test="attachmentMemo != null" >
-        attachment_memo = #{attachmentMemo,jdbcType=LONGVARCHAR},
-      </if>
       <if test="preservationMemo != null" >
         preservation_memo = #{preservationMemo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="attachmentMemo != null" >
+        attachment_memo = #{attachmentMemo,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -299,4 +370,33 @@
     SELECT * from bt_case where id = #{id,jdbcType=INTEGER}
   </select>
 
+  <select id="countByLender" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    SELECT COUNT(id) FROM bt_case WHERE type = 0 AND pawn_id in (
+      SELECT id FROM bt_pawn WHERE lender_id = #{id,jdbcType=INTEGER}
+    )
+  </select>
+
+  <select id="listByLender" resultMap="BaseResultMap" >
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM bt_case
+    WHERE type = 0 AND pawn_id in (
+      SELECT id FROM bt_pawn WHERE lender_id = #{id,jdbcType=INTEGER}
+    )
+    ORDER by id DESC
+    limit #{index,jdbcType=INTEGER},1
+  </select>
+  
+  <select id="countByCase" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    SELECT COUNT (id) FROM bt_case WHERE stateflag = 0 AND pid = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="getByCase" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM bt_case WHERE stateflag = 0 AND pid = #{id,jdbcType=INTEGER}
+    ORDER by id DESC
+    limit #{index,jdbcType=INTEGER},1
+  </select>
+  
 </mapper>

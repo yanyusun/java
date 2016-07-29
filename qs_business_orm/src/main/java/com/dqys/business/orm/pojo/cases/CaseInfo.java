@@ -10,31 +10,37 @@ import java.util.Date;
  */
 public class CaseInfo extends BaseModel implements Serializable {
 
-    private String caseNo; // 编号
+    private String caseNo; // 编号(显示)
+    private Integer pId; // 父级案件ID
     private String type; // 案件类型(0母案件,1子案件)
-    private Integer pid; // 父级ID
-    private Integer pawnId; // 抵押物ID
+    private Integer pawnId;  // 抵押物ID
     private String plaintiff; // 原告
     private String defendant; // 被告
     private String spouse; // 配偶
-    private String guarantorId; // 保证人Id
-    private String mortgagor; // 抵押人
-    private String mortgageTime; //抵押次数
+    private String mortgagor; // 抵押人名称
+    private Integer mortgageTime; //抵押次数
+    private String guarantor;  // 保证人信息
+    private Integer evaluateExcellent; // 评优
+    private Integer evaluateLevel; // 评级
+    private String memo; // 案件备注
     private Double lawsuitAmount; // 诉讼金额
     private Double lawsuitCorpus; // 诉讼本金
     private Double lawsuitAccrual; // 诉讼利息
-    private Integer isAttachment; // 是否查封(0否1是)
-    private Integer attachmentTime; // 查封次数
-    private String attachmentCode; // 法院案号
-    private String attachmentCourt; // 法院
+    private String lawsuitMemo; // 诉讼备注
+    private Integer attachmentStatus; // 查封(0否1是)
     private Date attachmentDate; // 查封时间
+    private String attachmentCourt; // 查封法院
+    private Integer attachmentTime; // 查封次数
     private Boolean isPreservation; // 是否保全
     private Date preservationStart; // 保全开始时间
     private Date preservationEnd; // 保全结束时间
-    private String memo; // 案件备注
-    private String lawsuitMemo; // 诉讼备注
-    private String attachmentMemo; // 查封情况
     private String preservationMemo; // 续保情况
+    private Integer isFirst; // 首封(0否1是)
+    private String firstAttachmentCourt; // 首封法院
+    private String preservationCourt; // 执行保全法院
+    private String firstAttachmentCode; // 首封案号
+    private Date firstAttachmentDate; // 首封时间
+    private String attachmentMemo; // 查封情况
 
     public String getCaseNo() {
         return caseNo;
@@ -44,20 +50,20 @@ public class CaseInfo extends BaseModel implements Serializable {
         this.caseNo = caseNo;
     }
 
+    public Integer getpId() {
+        return pId;
+    }
+
+    public void setpId(Integer pId) {
+        this.pId = pId;
+    }
+
     public String getType() {
         return type;
     }
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public Integer getPid() {
-        return pid;
-    }
-
-    public void setPid(Integer pid) {
-        this.pid = pid;
     }
 
     public Integer getPawnId() {
@@ -92,14 +98,6 @@ public class CaseInfo extends BaseModel implements Serializable {
         this.spouse = spouse;
     }
 
-    public String getGuarantorId() {
-        return guarantorId;
-    }
-
-    public void setGuarantorId(String guarantorId) {
-        this.guarantorId = guarantorId;
-    }
-
     public String getMortgagor() {
         return mortgagor;
     }
@@ -108,12 +106,44 @@ public class CaseInfo extends BaseModel implements Serializable {
         this.mortgagor = mortgagor;
     }
 
-    public String getMortgageTime() {
+    public Integer getMortgageTime() {
         return mortgageTime;
     }
 
-    public void setMortgageTime(String mortgageTime) {
+    public void setMortgageTime(Integer mortgageTime) {
         this.mortgageTime = mortgageTime;
+    }
+
+    public String getGuarantor() {
+        return guarantor;
+    }
+
+    public void setGuarantor(String guarantor) {
+        this.guarantor = guarantor;
+    }
+
+    public Integer getEvaluateExcellent() {
+        return evaluateExcellent;
+    }
+
+    public void setEvaluateExcellent(Integer evaluateExcellent) {
+        this.evaluateExcellent = evaluateExcellent;
+    }
+
+    public Integer getEvaluateLevel() {
+        return evaluateLevel;
+    }
+
+    public void setEvaluateLevel(Integer evaluateLevel) {
+        this.evaluateLevel = evaluateLevel;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 
     public Double getLawsuitAmount() {
@@ -140,28 +170,28 @@ public class CaseInfo extends BaseModel implements Serializable {
         this.lawsuitAccrual = lawsuitAccrual;
     }
 
-    public Integer getIsAttachment() {
-        return isAttachment;
+    public String getLawsuitMemo() {
+        return lawsuitMemo;
     }
 
-    public void setIsAttachment(Integer isAttachment) {
-        this.isAttachment = isAttachment;
+    public void setLawsuitMemo(String lawsuitMemo) {
+        this.lawsuitMemo = lawsuitMemo;
     }
 
-    public Integer getAttachmentTime() {
-        return attachmentTime;
+    public Integer getAttachmentStatus() {
+        return attachmentStatus;
     }
 
-    public void setAttachmentTime(Integer attachmentTime) {
-        this.attachmentTime = attachmentTime;
+    public void setAttachmentStatus(Integer attachmentStatus) {
+        this.attachmentStatus = attachmentStatus;
     }
 
-    public String getAttachmentCode() {
-        return attachmentCode;
+    public Date getAttachmentDate() {
+        return attachmentDate;
     }
 
-    public void setAttachmentCode(String attachmentCode) {
-        this.attachmentCode = attachmentCode;
+    public void setAttachmentDate(Date attachmentDate) {
+        this.attachmentDate = attachmentDate;
     }
 
     public String getAttachmentCourt() {
@@ -172,12 +202,12 @@ public class CaseInfo extends BaseModel implements Serializable {
         this.attachmentCourt = attachmentCourt;
     }
 
-    public Date getAttachmentDate() {
-        return attachmentDate;
+    public Integer getAttachmentTime() {
+        return attachmentTime;
     }
 
-    public void setAttachmentDate(Date attachmentDate) {
-        this.attachmentDate = attachmentDate;
+    public void setAttachmentTime(Integer attachmentTime) {
+        this.attachmentTime = attachmentTime;
     }
 
     public Boolean getIsPreservation() {
@@ -204,20 +234,52 @@ public class CaseInfo extends BaseModel implements Serializable {
         this.preservationEnd = preservationEnd;
     }
 
-    public String getMemo() {
-        return memo;
+    public String getPreservationMemo() {
+        return preservationMemo;
     }
 
-    public void setMemo(String memo) {
-        this.memo = memo;
+    public void setPreservationMemo(String preservationMemo) {
+        this.preservationMemo = preservationMemo;
     }
 
-    public String getLawsuitMemo() {
-        return lawsuitMemo;
+    public Integer getIsFirst() {
+        return isFirst;
     }
 
-    public void setLawsuitMemo(String lawsuitMemo) {
-        this.lawsuitMemo = lawsuitMemo;
+    public void setIsFirst(Integer isFirst) {
+        this.isFirst = isFirst;
+    }
+
+    public String getFirstAttachmentCourt() {
+        return firstAttachmentCourt;
+    }
+
+    public void setFirstAttachmentCourt(String firstAttachmentCourt) {
+        this.firstAttachmentCourt = firstAttachmentCourt;
+    }
+
+    public String getPreservationCourt() {
+        return preservationCourt;
+    }
+
+    public void setPreservationCourt(String preservationCourt) {
+        this.preservationCourt = preservationCourt;
+    }
+
+    public String getFirstAttachmentCode() {
+        return firstAttachmentCode;
+    }
+
+    public void setFirstAttachmentCode(String firstAttachmentCode) {
+        this.firstAttachmentCode = firstAttachmentCode;
+    }
+
+    public Date getFirstAttachmentDate() {
+        return firstAttachmentDate;
+    }
+
+    public void setFirstAttachmentDate(Date firstAttachmentDate) {
+        this.firstAttachmentDate = firstAttachmentDate;
     }
 
     public String getAttachmentMemo() {
@@ -226,13 +288,5 @@ public class CaseInfo extends BaseModel implements Serializable {
 
     public void setAttachmentMemo(String attachmentMemo) {
         this.attachmentMemo = attachmentMemo;
-    }
-
-    public String getPreservationMemo() {
-        return preservationMemo;
-    }
-
-    public void setPreservationMemo(String preservationMemo) {
-        this.preservationMemo = preservationMemo;
     }
 }

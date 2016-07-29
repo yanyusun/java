@@ -59,7 +59,6 @@ import java.util.Date;
  * @apiParam {number} isshow 是否展示
  * @apiParam {string} memo 备注
  * @apiParam {number} operatorId 操作人ID
- * @apiParam {string} operator 操作人
  * Created by Yvan on 16/6/16.
  */
 public class AssetDTO {

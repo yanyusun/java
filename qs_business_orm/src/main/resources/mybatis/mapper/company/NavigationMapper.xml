@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.company.NavigationMapper" >
+
+  <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.company.Navigation" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="manager" property="manager" jdbcType="BIT" />
+    <result column="governor" property="governor" jdbcType="BIT" />
+    <result column="employee" property="employee" jdbcType="BIT" />
+    <result column="platform" property="platform" jdbcType="BIT" />
+    <result column="personal" property="personal" jdbcType="BIT" />
+    <result column="entrust" property="entrust" jdbcType="BIT" />
+    <result column="collection" property="collection" jdbcType="BIT" />
+    <result column="agent" property="agent" jdbcType="BIT" />
+    <result column="law" property="law" jdbcType="BIT" />
+    <result column="child" property="child" jdbcType="BIT" />
+    <result column="sort" property="sort" jdbcType="INTEGER" />
+    <result column="icon" property="icon" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, value, name, pid, manager, governor, employee, platform, personal, entrust, collection,
+    agent, law, sort, icon, child
+  </sql>
+
+  <sql id="Base_Condition">
+    <where> 1=1
+      <if test="id != null">
+        AND id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="pid != null" >
+        AND pid = #{pid,jdbcType=INTEGER}
+      </if>
+      <if test="manager" >
+        AND manager = 1
+      </if>
+      <if test="governor" >
+        AND governor = 1
+      </if>
+      <if test="employee" >
+        AND emplyee = 1
+      </if>
+      <if test="platform" >
+        AND platform = 1
+      </if>
+      <if test="personal" >
+        AND personal = 1
+      </if>
+      <if test="entrust" >
+        AND entrust = 1
+      </if>
+      <if test="collection" >
+        AND collection = 1
+      </if>
+      <if test="agent" >
+        AND agent = 1
+      </if>
+      <if test="law" >
+        AND law = 1
+      </if>
+
+
+    </where>
+  </sql>
+
+  <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from bt_navigation
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from bt_navigation
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="insert" parameterType="com.dqys.business.orm.pojo.company.Navigation" useGeneratedKeys="true" keyProperty="id" >
+    insert into bt_navigation
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="value != null" >
+        value,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="pid != null" >
+        pid,
+      </if>
+      <if test="manager != null" >
+        manager,
+      </if>
+      <if test="governor != null" >
+        governor,
+      </if>
+      <if test="employee != null" >
+        employee,
+      </if>
+      <if test="platform != null" >
+        platform,
+      </if>
+      <if test="personal != null" >
+        personal,
+      </if>
+      <if test="entrust != null" >
+        entrust,
+      </if>
+      <if test="collection != null" >
+        collection,
+      </if>
+      <if test="agent != null" >
+        agent,
+      </if>
+      <if test="law != null" >
+        law,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="icon != null" >
+        icon,
+      </if>
+      <if test="child != null" >
+        child,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="value != null" >
+        #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="manager != null" >
+        #{manager,jdbcType=BIT},
+      </if>
+      <if test="governor != null" >
+        #{governor,jdbcType=BIT},
+      </if>
+      <if test="employee != null" >
+        #{employee,jdbcType=BIT},
+      </if>
+      <if test="platform != null" >
+        #{platform,jdbcType=BIT},
+      </if>
+      <if test="personal != null" >
+        #{personal,jdbcType=BIT},
+      </if>
+      <if test="entrust != null" >
+        #{entrust,jdbcType=BIT},
+      </if>
+      <if test="collection != null" >
+        #{collection,jdbcType=BIT},
+      </if>
+      <if test="agent != null" >
+        #{agent,jdbcType=BIT},
+      </if>
+      <if test="law != null" >
+        #{law,jdbcType=BIT},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null" >
+        #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="child != null" >
+        #{child,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="update" parameterType="com.dqys.business.orm.pojo.company.Navigation" >
+    update bt_navigation
+    <set >
+      <if test="value != null" >
+        value = #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        pid = #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="manager != null" >
+        manager = #{manager,jdbcType=BIT},
+      </if>
+      <if test="governor != null" >
+        governor = #{governor,jdbcType=BIT},
+      </if>
+      <if test="employee != null" >
+        emplyee = #{emplyee,jdbcType=BIT},
+      </if>
+      <if test="platform != null" >
+        platform = #{platform,jdbcType=BIT},
+      </if>
+      <if test="personal != null" >
+        personal = #{personal,jdbcType=BIT},
+      </if>
+      <if test="entrust != null" >
+        entrust = #{entrust,jdbcType=BIT},
+      </if>
+      <if test="collection != null" >
+        collection = #{collection,jdbcType=BIT},
+      </if>
+      <if test="agent != null" >
+        agent = #{agent,jdbcType=BIT},
+      </if>
+      <if test="law != null" >
+        law = #{law,jdbcType=BIT},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null" >
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+      <if test="child != null" >
+        child = #{child,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="queryList" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.query.company.NavigationQuery">
+    SELECT
+    <include refid="Base_Column_List" />
+    from bt_navigation
+    <include refid="Base_Condition" />
+    ORDER BY sort DESC
+  </select>
+  
+  <select id="getParent" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    from bt_navigation WHERE id = #{id,jdbcType=INTEGER}
+  </select>
+
+</mapper>

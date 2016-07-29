@@ -52,7 +52,7 @@ public class LenderInfoMapperImplTest extends BaseTest {
         LenderInfo lenderInfo = new LenderInfo();
 
         lenderInfo.setCanPay(1);
-        lenderInfo.setEntrustBorn("担保公司"+index);
+        lenderInfo.setEntrustBorn(index);
         lenderInfo.setLoan(200.22);
 
         return lenderInfo;

@@ -67,4 +67,6 @@ public interface CoordinatorService {
      * @param status
      */
     void isPause(Map map, Integer objectId, Integer objectType, Integer status,Integer userId) throws BusinessLogException;
+
+    List<TeamDTO> getLenderOrAsset(Integer companyId, Integer objectId, Integer objectType);
 }
