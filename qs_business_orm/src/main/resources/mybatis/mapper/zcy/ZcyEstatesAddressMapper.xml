@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.chebaiyong.biz.asset.dao.ZcyEstatesAddressMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.zcy.ZcyEstatesAddress">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="estates_id" property="estatesId" jdbcType="INTEGER"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="area" property="area" jdbcType="VARCHAR"/>
+        <result column="road" property="road" jdbcType="VARCHAR"/>
+        <result column="plot_name" property="plotName" jdbcType="VARCHAR"/>
+        <result column="building_no" property="buildingNo" jdbcType="VARCHAR"/>
+        <result column="element" property="element" jdbcType="VARCHAR"/>
+        <result column="floor" property="floor" jdbcType="VARCHAR"/>
+        <result column="floor_total" property="floorTotal" jdbcType="VARCHAR"/>
+        <result column="doorplate" property="doorplate" jdbcType="VARCHAR"/>
+        <result column="img_url" property="imgUrl" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, estates_id, province, city, area, road, plot_name, building_no, element, floor, 
+    floor_total, doorplate, img_url, version, create_at, update_at, stateflag
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_zcy_estates_address
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+     UPDATE t_zcy_estates_address SET stateflag=now()
+    where estates_id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstatesAddress" keyProperty="id"
+            useGeneratedKeys="true">
+    insert into t_zcy_estates_address (id, estates_id, province, 
+      city, area, road, plot_name, 
+      building_no, element, floor, 
+      floor_total, doorplate, img_url, 
+      version, create_at, update_at, 
+      stateflag)
+    values (#{id,jdbcType=INTEGER}, #{estatesId,jdbcType=INTEGER}, #{province,jdbcType=VARCHAR}, 
+      #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{road,jdbcType=VARCHAR}, #{plotName,jdbcType=VARCHAR}, 
+      #{buildingNo,jdbcType=VARCHAR}, #{element,jdbcType=VARCHAR}, #{floor,jdbcType=VARCHAR}, 
+      #{floorTotal,jdbcType=VARCHAR}, #{doorplate,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
+      0, now(),now(),
+      0)
+  </insert>
+    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstatesAddress" keyProperty="id"
+            useGeneratedKeys="true">
+        insert into t_zcy_estates_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="estatesId != null">
+                estates_id,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="area != null">
+                area,
+            </if>
+            <if test="road != null">
+                road,
+            </if>
+            <if test="plotName != null">
+                plot_name,
+            </if>
+            <if test="buildingNo != null">
+                building_no,
+            </if>
+            <if test="element != null">
+                element,
+            </if>
+            <if test="floor != null">
+                floor,
+            </if>
+            <if test="floorTotal != null">
+                floor_total,
+            </if>
+            <if test="doorplate != null">
+                doorplate,
+            </if>
+            <if test="imgUrl != null">
+                img_url,
+            </if>
+            create_at,
+            update_at,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="estatesId != null">
+                #{estatesId,jdbcType=INTEGER},
+            </if>
+            <if test="province != null">
+                #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="area != null">
+                #{area,jdbcType=VARCHAR},
+            </if>
+            <if test="road != null">
+                #{road,jdbcType=VARCHAR},
+            </if>
+            <if test="plotName != null">
+                #{plotName,jdbcType=VARCHAR},
+            </if>
+            <if test="buildingNo != null">
+                #{buildingNo,jdbcType=VARCHAR},
+            </if>
+            <if test="element != null">
+                #{element,jdbcType=VARCHAR},
+            </if>
+            <if test="floor != null">
+                #{floor,jdbcType=VARCHAR},
+            </if>
+            <if test="floorTotal != null">
+                #{floorTotal,jdbcType=VARCHAR},
+            </if>
+            <if test="doorplate != null">
+                #{doorplate,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl != null">
+                #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            now(),
+            now(),
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstatesAddress">
+        update t_zcy_estates_address
+        <set>
+            <if test="estatesId != null">
+                estates_id = #{estatesId,jdbcType=INTEGER},
+            </if>
+            <if test="province != null">
+                province = #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                city = #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="area != null">
+                area = #{area,jdbcType=VARCHAR},
+            </if>
+            <if test="road != null">
+                road = #{road,jdbcType=VARCHAR},
+            </if>
+            <if test="plotName != null">
+                plot_name = #{plotName,jdbcType=VARCHAR},
+            </if>
+            <if test="buildingNo != null">
+                building_no = #{buildingNo,jdbcType=VARCHAR},
+            </if>
+            <if test="element != null">
+                element = #{element,jdbcType=VARCHAR},
+            </if>
+            <if test="floor != null">
+                floor = #{floor,jdbcType=VARCHAR},
+            </if>
+            <if test="floorTotal != null">
+                floor_total = #{floorTotal,jdbcType=VARCHAR},
+            </if>
+            <if test="doorplate != null">
+                doorplate = #{doorplate,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl != null">
+                img_url = #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            version =version+1,
+            update_at = now(),
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstatesAddress">
+    update t_zcy_estates_address
+    set estates_id = #{estatesId,jdbcType=INTEGER},
+      province = #{province,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
+      area = #{area,jdbcType=VARCHAR},
+      road = #{road,jdbcType=VARCHAR},
+      plot_name = #{plotName,jdbcType=VARCHAR},
+      building_no = #{buildingNo,jdbcType=VARCHAR},
+      element = #{element,jdbcType=VARCHAR},
+      floor = #{floor,jdbcType=VARCHAR},
+      floor_total = #{floorTotal,jdbcType=VARCHAR},
+      doorplate = #{doorplate,jdbcType=VARCHAR},
+      img_url = #{imgUrl,jdbcType=VARCHAR},
+      version = version+1,
+      update_at =now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <!--根据资产信息id获取地址信息-->
+    <select id="selectBySelective"  parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstatesAddress" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_zcy_estates_address
+        where  stateflag=0
+        <if test="estatesId !=null">
+            and estates_id=#{estatesId}
+        </if>
+    </select>
+</mapper>

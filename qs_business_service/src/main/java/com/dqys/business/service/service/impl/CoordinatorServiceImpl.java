@@ -64,6 +64,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         userTeam.setObjectId(objectId);
         userTeam.setCompanyId(companyId);
         UserTeam team = new UserTeam();
+        team = userTeamMapper.selectByPrimaryKeySelective(userTeam);
         if (objectType == ObjectTypeEnum.LENDER.getValue()) {//借款人
             LenderInfo lenderInfo = (LenderInfo) lenderService.get(objectId).getData();
             if (lenderInfo == null) {
@@ -79,7 +80,6 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 int day = (int) (calendar.getTimeInMillis() - nowTime) / (1000 * 3600 * 24);
                 map.put("dayCount", day > 0 ? day : 0);//逾期天数
             }
-            team = userTeamMapper.selectByPrimaryKeySelective(userTeam);
             if (team == null) {
                 userTeam.setObjectId(lenderInfo.getAssetId());
                 userTeam.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
@@ -105,7 +105,6 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 int day = (int) (calendar.getTimeInMillis() - nowTime) / (1000 * 3600 * 24);
                 map.put("dayCount", day > 0 ? day : 0);//逾期天数
             }
-            team = userTeamMapper.selectByPrimaryKeySelective(userTeam);
         }
 
         if (team == null) {//判断是否在t_user_team表中添加了记录，添加了返回信息，没添加的返回id

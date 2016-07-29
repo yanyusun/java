@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.zcy.ZcyOwnerMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.zcy.ZcyOwner">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="estates_id" property="estatesId" jdbcType="INTEGER"/>
+        <result column="sell_price" property="sellPrice" jdbcType="DOUBLE"/>
+        <result column="owner_price" property="ownerPrice" jdbcType="DOUBLE"/>
+        <result column="entrust_protocol_time" property="entrustProtocolTime" jdbcType="TIMESTAMP"/>
+        <result column="entrust_abort_time" property="entrustAbortTime" jdbcType="TIMESTAMP"/>
+        <result column="annotation_name" property="annotationName" jdbcType="VARCHAR"/>
+        <result column="annotation_content" property="annotationContent" jdbcType="VARCHAR"/>
+        <result column="owner_number" property="ownerNumber" jdbcType="VARCHAR"/>
+        <result column="entrust_source" property="entrustSource" jdbcType="VARCHAR"/>
+        <result column="entrust_detail" property="entrustDetail" jdbcType="VARCHAR"/>
+        <result column="owner_mariage" property="ownerMariage" jdbcType="VARCHAR"/>
+        <result column="special_house" property="specialHouse" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, estates_id, sell_price, owner_price, entrust_protocol_time, entrust_abort_time, 
+    annotation_name, annotation_content, owner_number, entrust_source, entrust_detail, 
+    owner_mariage, special_house, version, create_at, update_at, stateflag
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_zcy_owner
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    UPDATE t_zcy_owner SET stateflag=now()
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.zcy.ZcyOwner" keyProperty="id" useGeneratedKeys="true" >
+    insert into t_zcy_owner (id, estates_id, sell_price, 
+      owner_price, entrust_protocol_time, entrust_abort_time, 
+      annotation_name, annotation_content, owner_number, 
+      entrust_source, entrust_detail, owner_mariage, 
+      special_house, version, create_at, 
+      update_at, stateflag)
+    values (#{id,jdbcType=INTEGER}, #{estatesId,jdbcType=INTEGER}, #{sellPrice,jdbcType=DOUBLE}, 
+      #{ownerPrice,jdbcType=DOUBLE}, #{entrustProtocolTime,jdbcType=TIMESTAMP}, #{entrustAbortTime,jdbcType=TIMESTAMP}, 
+      #{annotationName,jdbcType=VARCHAR}, #{annotationContent,jdbcType=VARCHAR}, #{ownerNumber,jdbcType=VARCHAR}, 
+      #{entrustSource,jdbcType=VARCHAR}, #{entrustDetail,jdbcType=VARCHAR}, #{ownerMariage,jdbcType=VARCHAR}, 
+      #{specialHouse,jdbcType=VARCHAR}, 0, now(),
+     now(), 0)
+  </insert>
+    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyOwner" keyProperty="id" useGeneratedKeys="true">
+        insert into t_zcy_owner
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="estatesId != null">
+                estates_id,
+            </if>
+            <if test="sellPrice != null">
+                sell_price,
+            </if>
+            <if test="ownerPrice != null">
+                owner_price,
+            </if>
+            <if test="entrustProtocolTime != null">
+                entrust_protocol_time,
+            </if>
+            <if test="entrustAbortTime != null">
+                entrust_abort_time,
+            </if>
+            <if test="annotationName != null">
+                annotation_name,
+            </if>
+            <if test="annotationContent != null">
+                annotation_content,
+            </if>
+            <if test="ownerNumber != null">
+                owner_number,
+            </if>
+            <if test="entrustSource != null">
+                entrust_source,
+            </if>
+            <if test="entrustDetail != null">
+                entrust_detail,
+            </if>
+            <if test="ownerMariage != null">
+                owner_mariage,
+            </if>
+            <if test="specialHouse != null">
+                special_house,
+            </if>
+            <if test="version != null">
+                version,
+            </if>
+            create_at,
+            update_at,
+            <if test="stateflag != null">
+                stateflag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="estatesId != null">
+                #{estatesId,jdbcType=INTEGER},
+            </if>
+            <if test="sellPrice != null">
+                #{sellPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="ownerPrice != null">
+                #{ownerPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="entrustProtocolTime != null">
+                #{entrustProtocolTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="entrustAbortTime != null">
+                #{entrustAbortTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="annotationName != null">
+                #{annotationName,jdbcType=VARCHAR},
+            </if>
+            <if test="annotationContent != null">
+                #{annotationContent,jdbcType=VARCHAR},
+            </if>
+            <if test="ownerNumber != null">
+                #{ownerNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustSource != null">
+                #{entrustSource,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustDetail != null">
+                #{entrustDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="ownerMariage != null">
+                #{ownerMariage,jdbcType=VARCHAR},
+            </if>
+            <if test="specialHouse != null">
+                #{specialHouse,jdbcType=VARCHAR},
+            </if>
+            <if test="version != null">
+                #{version,jdbcType=INTEGER},
+            </if>
+            now(),
+            now(),
+            <if test="stateflag != null">
+                #{stateflag,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyOwner">
+        update t_zcy_owner
+        <set>
+            <if test="estatesId != null">
+                estates_id = #{estatesId,jdbcType=INTEGER},
+            </if>
+            <if test="sellPrice != null">
+                sell_price = #{sellPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="ownerPrice != null">
+                owner_price = #{ownerPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="entrustProtocolTime != null">
+                entrust_protocol_time = #{entrustProtocolTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="entrustAbortTime != null">
+                entrust_abort_time = #{entrustAbortTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="annotationName != null">
+                annotation_name = #{annotationName,jdbcType=VARCHAR},
+            </if>
+            <if test="annotationContent != null">
+                annotation_content = #{annotationContent,jdbcType=VARCHAR},
+            </if>
+            <if test="ownerNumber != null">
+                owner_number = #{ownerNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustSource != null">
+                entrust_source = #{entrustSource,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustDetail != null">
+                entrust_detail = #{entrustDetail,jdbcType=VARCHAR},
+            </if>
+            <if test="ownerMariage != null">
+                owner_mariage = #{ownerMariage,jdbcType=VARCHAR},
+            </if>
+            <if test="specialHouse != null">
+                special_house = #{specialHouse,jdbcType=VARCHAR},
+            </if>
+            version = version+1,
+            update_at = now(),
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.zcy.ZcyOwner">
+        update t_zcy_owner
+        set estates_id = #{estatesId,jdbcType=INTEGER},
+        sell_price = #{sellPrice,jdbcType=DOUBLE},
+        owner_price = #{ownerPrice,jdbcType=DOUBLE},
+        entrust_protocol_time = #{entrustProtocolTime,jdbcType=TIMESTAMP},
+        entrust_abort_time = #{entrustAbortTime,jdbcType=TIMESTAMP},
+        annotation_name = #{annotationName,jdbcType=VARCHAR},
+        annotation_content = #{annotationContent,jdbcType=VARCHAR},
+        owner_number = #{ownerNumber,jdbcType=VARCHAR},
+        entrust_source = #{entrustSource,jdbcType=VARCHAR},
+        entrust_detail = #{entrustDetail,jdbcType=VARCHAR},
+        owner_mariage = #{ownerMariage,jdbcType=VARCHAR},
+        special_house = #{specialHouse,jdbcType=VARCHAR},
+        version = version+1,
+        update_at = now()
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.pojo.zcy.ZcyOwner">
+        select
+        <include refid="Base_Column_List"/>
+        from t_zcy_owner
+        where  stateflag=0
+        <if test="estatesId !=null">
+            and estates_id=#{estatesId}
+        </if>
+    </select>
+</mapper>

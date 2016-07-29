@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.zcy.ZcyExpressMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.zcy.ZcyExpress">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="estates_id" property="estatesId" jdbcType="INTEGER"/>
+        <result column="protocol_no" property="protocolNo" jdbcType="VARCHAR"/>
+        <result column="express_price" property="expressPrice" jdbcType="VARCHAR"/>
+        <result column="entrust_abort_time" property="entrustAbortTime" jdbcType="VARCHAR"/>
+        <result column="entrust_protocol_time" property="entrustProtocolTime" jdbcType="VARCHAR"/>
+        <result column="entrust_deposit" property="entrustDeposit" jdbcType="VARCHAR"/>
+        <result column="express_people" property="expressPeople" jdbcType="VARCHAR"/>
+        <result column="team" property="team" jdbcType="VARCHAR"/>
+        <result column="express_follow" property="expressFollow" jdbcType="VARCHAR"/>
+        <result column="img_url" property="imgUrl" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, estates_id, protocol_no, express_price, entrust_abort_time, entrust_protocol_time, 
+    entrust_deposit, express_people, team, express_follow, img_url, version, create_at, 
+    update_at, stateflag
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_zcy_express
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+     UPDATE t_zcy_express SET stateflag=now()
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.zcy.ZcyExpress" keyProperty="id"
+            useGeneratedKeys="true">
+    insert into t_zcy_express (id, estates_id, protocol_no, 
+      express_price, entrust_abort_time, entrust_protocol_time, 
+      entrust_deposit, express_people, team, 
+      express_follow, img_url, version, 
+      create_at, update_at, stateflag
+      )
+    values (#{id,jdbcType=INTEGER}, #{estatesId,jdbcType=INTEGER}, #{protocolNo,jdbcType=VARCHAR}, 
+      #{expressPrice,jdbcType=VARCHAR}, #{entrustAbortTime,jdbcType=VARCHAR}, #{entrustProtocolTime,jdbcType=VARCHAR}, 
+      #{entrustDeposit,jdbcType=VARCHAR}, #{expressPeople,jdbcType=VARCHAR}, #{team,jdbcType=VARCHAR}, 
+      #{expressFollow,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 0,
+     now(), now(), 0}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyExpress" keyProperty="id"
+            useGeneratedKeys="true">
+        insert into t_zcy_express
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="estatesId != null">
+                estates_id,
+            </if>
+            <if test="protocolNo != null">
+                protocol_no,
+            </if>
+            <if test="expressPrice != null">
+                express_price,
+            </if>
+            <if test="entrustAbortTime != null">
+                entrust_abort_time,
+            </if>
+            <if test="entrustProtocolTime != null">
+                entrust_protocol_time,
+            </if>
+            <if test="entrustDeposit != null">
+                entrust_deposit,
+            </if>
+            <if test="expressPeople != null">
+                express_people,
+            </if>
+            <if test="team != null">
+                team,
+            </if>
+            <if test="expressFollow != null">
+                express_follow,
+            </if>
+            <if test="imgUrl != null">
+                img_url,
+            </if>
+            create_at,
+            update_at,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="estatesId != null">
+                #{estatesId,jdbcType=INTEGER},
+            </if>
+            <if test="protocolNo != null">
+                #{protocolNo,jdbcType=VARCHAR},
+            </if>
+            <if test="expressPrice != null">
+                #{expressPrice,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustAbortTime != null">
+                #{entrustAbortTime,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustProtocolTime != null">
+                #{entrustProtocolTime,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustDeposit != null">
+                #{entrustDeposit,jdbcType=VARCHAR},
+            </if>
+            <if test="expressPeople != null">
+                #{expressPeople,jdbcType=VARCHAR},
+            </if>
+            <if test="team != null">
+                #{team,jdbcType=VARCHAR},
+            </if>
+            <if test="expressFollow != null">
+                #{expressFollow,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl != null">
+                #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            now(),
+            now(),
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyExpress">
+        update t_zcy_express
+        <set>
+            <if test="estatesId != null">
+                estates_id = #{estatesId,jdbcType=INTEGER},
+            </if>
+            <if test="protocolNo != null">
+                protocol_no = #{protocolNo,jdbcType=VARCHAR},
+            </if>
+            <if test="expressPrice != null">
+                express_price = #{expressPrice,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustAbortTime != null">
+                entrust_abort_time = #{entrustAbortTime,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustProtocolTime != null">
+                entrust_protocol_time = #{entrustProtocolTime,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustDeposit != null">
+                entrust_deposit = #{entrustDeposit,jdbcType=VARCHAR},
+            </if>
+            <if test="expressPeople != null">
+                express_people = #{expressPeople,jdbcType=VARCHAR},
+            </if>
+            <if test="team != null">
+                team = #{team,jdbcType=VARCHAR},
+            </if>
+            <if test="expressFollow != null">
+                express_follow = #{expressFollow,jdbcType=VARCHAR},
+            </if>
+            <if test="imgUrl != null">
+                img_url = #{imgUrl,jdbcType=VARCHAR},
+            </if>
+            version = version+1,
+            update_at = now(),
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.zcy.ZcyExpress">
+    update t_zcy_express
+    set estates_id = #{estatesId,jdbcType=INTEGER},
+      protocol_no = #{protocolNo,jdbcType=VARCHAR},
+      express_price = #{expressPrice,jdbcType=VARCHAR},
+      entrust_abort_time = #{entrustAbortTime,jdbcType=VARCHAR},
+      entrust_protocol_time = #{entrustProtocolTime,jdbcType=VARCHAR},
+      entrust_deposit = #{entrustDeposit,jdbcType=VARCHAR},
+      express_people = #{expressPeople,jdbcType=VARCHAR},
+      team = #{team,jdbcType=VARCHAR},
+      express_follow = #{expressFollow,jdbcType=VARCHAR},
+      img_url = #{imgUrl,jdbcType=VARCHAR},
+      version =version+1,
+      update_at = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.pojo.zcy.ZcyExpress">
+        select
+        <include refid="Base_Column_List"/>
+        from t_zcy_express
+        where  stateflag=0
+        <if test="estatesId !=null">
+            and estates_id=#{estatesId}
+        </if>
+    </select>
+
+</mapper>

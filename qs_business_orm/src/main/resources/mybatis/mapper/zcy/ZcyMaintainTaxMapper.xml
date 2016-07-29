@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.zcy.ZcyMaintainTaxMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.zcy.ZcyMaintainTax">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="maintain_id" property="maintainId" jdbcType="INTEGER"/>
+        <result column="tax_type" property="taxType" jdbcType="VARCHAR"/>
+        <result column="tax_rate" property="taxRate" jdbcType="VARCHAR"/>
+        <result column="tax_price" property="taxPrice" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, maintain_id, tax_type, tax_rate, tax_price, version, create_at, update_at, stateflag
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_zcy_maintain_tax
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+   UPDATE t_zcy_maintain_tax SET stateflag=now()
+    where maintain_id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.zcy.ZcyMaintainTax" keyProperty="id" useGeneratedKeys="true">
+    insert into t_zcy_maintain_tax (id, maintain_id, tax_type, 
+      tax_rate, tax_price, version, 
+      create_at, update_at, stateflag
+      )
+    values (#{id,jdbcType=INTEGER}, #{maintainId,jdbcType=INTEGER}, #{taxType,jdbcType=VARCHAR}, 
+      #{taxRate,jdbcType=VARCHAR}, #{taxPrice,jdbcType=VARCHAR}, 0,
+      now(), now(),0
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyMaintainTax" keyProperty="id" useGeneratedKeys="true" >
+        insert into t_zcy_maintain_tax
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="maintainId != null">
+                maintain_id,
+            </if>
+            <if test="taxType != null">
+                tax_type,
+            </if>
+            <if test="taxRate != null">
+                tax_rate,
+            </if>
+            <if test="taxPrice != null">
+                tax_price,
+            </if>
+            create_at,
+            update_at,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="maintainId != null">
+                #{maintainId,jdbcType=INTEGER},
+            </if>
+            <if test="taxType != null">
+                #{taxType,jdbcType=VARCHAR},
+            </if>
+            <if test="taxRate != null">
+                #{taxRate,jdbcType=VARCHAR},
+            </if>
+            <if test="taxPrice != null">
+                #{taxPrice,jdbcType=VARCHAR},
+            </if>
+            now(),
+            now(),
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyMaintainTax">
+        update t_zcy_maintain_tax
+        <set>
+            <if test="maintainId != null">
+                maintain_id = #{maintainId,jdbcType=INTEGER},
+            </if>
+            <if test="taxType != null">
+                tax_type = #{taxType,jdbcType=VARCHAR},
+            </if>
+            <if test="taxRate != null">
+                tax_rate = #{taxRate,jdbcType=VARCHAR},
+            </if>
+            <if test="taxPrice != null">
+                tax_price = #{taxPrice,jdbcType=VARCHAR},
+            </if>
+            version = version+1,
+            update_at = now(),
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.zcy.ZcyMaintainTax">
+    update t_zcy_maintain_tax
+    set maintain_id = #{maintainId,jdbcType=INTEGER},
+      tax_type = #{taxType,jdbcType=VARCHAR},
+      tax_rate = #{taxRate,jdbcType=VARCHAR},
+      tax_price = #{taxPrice,jdbcType=VARCHAR},
+      version = version+1,
+      update_at =now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.pojo.zcy.ZcyMaintainTax">
+        select
+        <include refid="Base_Column_List"/>
+        from t_zcy_maintain_tax
+        where  stateflag=0
+        <if test="maintainId !=null">
+            and maintain_id=#{maintainId}
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.zcy.ZcyEstatesMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.zcy.ZcyEstates">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="DATE"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+        <result column="annotation" property="annotation" jdbcType="VARCHAR"/>
+        <result column="replenish" property="replenish" jdbcType="VARCHAR"/>
+        <result column="house_s" property="houseS" jdbcType="VARCHAR"/>
+        <result column="house_t" property="houseT" jdbcType="VARCHAR"/>
+        <result column="house_c" property="houseC" jdbcType="VARCHAR"/>
+        <result column="house_w" property="houseW" jdbcType="VARCHAR"/>
+        <result column="house_remark" property="houseRemark" jdbcType="VARCHAR"/>
+        <result column="quota" property="quota" jdbcType="VARCHAR"/>
+        <result column="acreage" property="acreage" jdbcType="VARCHAR"/>
+        <result column="selling_price" property="sellingPrice" jdbcType="DOUBLE"/>
+        <result column="decade" property="decade" jdbcType="VARCHAR"/>
+        <result column="property" property="property" jdbcType="VARCHAR"/>
+        <result column="orientation" property="orientation" jdbcType="VARCHAR"/>
+        <result column="guide_price" property="guidePrice" jdbcType="DOUBLE"/>
+        <result column="guide_remark" property="guideRemark" jdbcType="VARCHAR"/>
+        <result column="house_remarkv" property="houseRemarkv" jdbcType="VARCHAR"/>
+        <result column="decorate_price" property="decoratePrice" jdbcType="DOUBLE"/>
+        <result column="tenement_price" property="tenementPrice" jdbcType="DOUBLE"/>
+        <result column="facility" property="facility" jdbcType="VARCHAR"/>
+        <result column="internal_number" property="internalNumber" jdbcType="VARCHAR"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="decorate_type" property="decorateType" jdbcType="VARCHAR"/>
+        <result column="decorate_case" property="decorateCase" jdbcType="VARCHAR"/>
+        <result column="decorate_time" property="decorateTime" jdbcType="VARCHAR"/>
+        <result column="build_type" property="buildType" jdbcType="VARCHAR"/>
+        <result column="house_belong" property="houseBelong" jdbcType="VARCHAR"/>
+        <result column="house_use" property="houseUse" jdbcType="VARCHAR"/>
+        <result column="heating_way" property="heatingWay" jdbcType="VARCHAR"/>
+        <result column="metro" property="metro" jdbcType="VARCHAR"/>
+        <result column="school_house" property="schoolHouse" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.dqys.business.orm.pojo.zcy.ZcyEstates" extends="BaseResultMap">
+        <result column="content" property="content" jdbcType="LONGVARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, create_at, update_at, stateflag, annotation, replenish, house_s, house_t, house_c, 
+    house_w, house_remark, quota, acreage, selling_price, decade, property, orientation, 
+    guide_price, guide_remark, house_remarkv, decorate_price, tenement_price, facility, 
+    internal_number, title, decorate_type, decorate_case, decorate_time, build_type, 
+    house_belong, house_use, heating_way, metro, school_house, version
+  </sql>
+    <sql id="Blob_Column_List">
+    content
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from t_zcy_estates
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    UPDATE t_zcy_estates SET stateflag=now()
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates" keyProperty="id" useGeneratedKeys="true">
+    insert into t_zcy_estates (id, create_at, update_at, 
+      stateflag, annotation, replenish, 
+      house_s, house_t, house_c, 
+      house_w, house_remark, quota, 
+      acreage, selling_price, decade, 
+      property, orientation, guide_price, 
+      guide_remark, house_remarkv, decorate_price, 
+      tenement_price, facility, internal_number, 
+      title, decorate_type, decorate_case, 
+      decorate_time, build_type, house_belong, 
+      house_use, heating_way, metro, 
+      school_house, version, content
+      )
+    values (#{id,jdbcType=INTEGER}, now(), now(),
+      0, #{annotation,jdbcType=VARCHAR}, #{replenish,jdbcType=VARCHAR},
+      #{houseS,jdbcType=VARCHAR}, #{houseT,jdbcType=VARCHAR}, #{houseC,jdbcType=VARCHAR}, 
+      #{houseW,jdbcType=VARCHAR}, #{houseRemark,jdbcType=VARCHAR}, #{quota,jdbcType=VARCHAR}, 
+      #{acreage,jdbcType=VARCHAR}, #{sellingPrice,jdbcType=DOUBLE}, #{decade,jdbcType=VARCHAR}, 
+      #{property,jdbcType=VARCHAR}, #{orientation,jdbcType=VARCHAR}, #{guidePrice,jdbcType=DOUBLE}, 
+      #{guideRemark,jdbcType=VARCHAR}, #{houseRemarkv,jdbcType=VARCHAR}, #{decoratePrice,jdbcType=DOUBLE}, 
+      #{tenementPrice,jdbcType=DOUBLE}, #{facility,jdbcType=VARCHAR}, #{internalNumber,jdbcType=VARCHAR}, 
+      #{title,jdbcType=VARCHAR}, #{decorateType,jdbcType=VARCHAR}, #{decorateCase,jdbcType=VARCHAR}, 
+      #{decorateTime,jdbcType=VARCHAR}, #{buildType,jdbcType=VARCHAR}, #{houseBelong,jdbcType=VARCHAR}, 
+      #{houseUse,jdbcType=VARCHAR}, #{heatingWay,jdbcType=VARCHAR}, #{metro,jdbcType=VARCHAR}, 
+      #{schoolHouse,jdbcType=VARCHAR}, 0, #{content,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates" keyProperty="id" useGeneratedKeys="true" >
+        insert into t_zcy_estates
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            create_at,
+            update_at,
+            <if test="annotation != null">
+                annotation,
+            </if>
+            <if test="replenish != null">
+                replenish,
+            </if>
+            <if test="houseS != null">
+                house_s,
+            </if>
+            <if test="houseT != null">
+                house_t,
+            </if>
+            <if test="houseC != null">
+                house_c,
+            </if>
+            <if test="houseW != null">
+                house_w,
+            </if>
+            <if test="houseRemark != null">
+                house_remark,
+            </if>
+            <if test="quota != null">
+                quota,
+            </if>
+            <if test="acreage != null">
+                acreage,
+            </if>
+            <if test="sellingPrice != null">
+                selling_price,
+            </if>
+            <if test="decade != null">
+                decade,
+            </if>
+            <if test="property != null">
+                property,
+            </if>
+            <if test="orientation != null">
+                orientation,
+            </if>
+            <if test="guidePrice != null">
+                guide_price,
+            </if>
+            <if test="guideRemark != null">
+                guide_remark,
+            </if>
+            <if test="houseRemarkv != null">
+                house_remarkv,
+            </if>
+            <if test="decoratePrice != null">
+                decorate_price,
+            </if>
+            <if test="tenementPrice != null">
+                tenement_price,
+            </if>
+            <if test="facility != null">
+                facility,
+            </if>
+            <if test="internalNumber != null">
+                internal_number,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="decorateType != null">
+                decorate_type,
+            </if>
+            <if test="decorateCase != null">
+                decorate_case,
+            </if>
+            <if test="decorateTime != null">
+                decorate_time,
+            </if>
+            <if test="buildType != null">
+                build_type,
+            </if>
+            <if test="houseBelong != null">
+                house_belong,
+            </if>
+            <if test="houseUse != null">
+                house_use,
+            </if>
+            <if test="heatingWay != null">
+                heating_way,
+            </if>
+            <if test="metro != null">
+                metro,
+            </if>
+            <if test="schoolHouse != null">
+                school_house,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            now(),
+            now(),
+            <if test="stateflag != null">
+                #{stateflag,jdbcType=BIGINT},
+            </if>
+            <if test="annotation != null">
+                #{annotation,jdbcType=VARCHAR},
+            </if>
+            <if test="replenish != null">
+                #{replenish,jdbcType=VARCHAR},
+            </if>
+            <if test="houseS != null">
+                #{houseS,jdbcType=VARCHAR},
+            </if>
+            <if test="houseT != null">
+                #{houseT,jdbcType=VARCHAR},
+            </if>
+            <if test="houseC != null">
+                #{houseC,jdbcType=VARCHAR},
+            </if>
+            <if test="houseW != null">
+                #{houseW,jdbcType=VARCHAR},
+            </if>
+            <if test="houseRemark != null">
+                #{houseRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="quota != null">
+                #{quota,jdbcType=VARCHAR},
+            </if>
+            <if test="acreage != null">
+                #{acreage,jdbcType=VARCHAR},
+            </if>
+            <if test="sellingPrice != null">
+                #{sellingPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="decade != null">
+                #{decade,jdbcType=VARCHAR},
+            </if>
+            <if test="property != null">
+                #{property,jdbcType=VARCHAR},
+            </if>
+            <if test="orientation != null">
+                #{orientation,jdbcType=VARCHAR},
+            </if>
+            <if test="guidePrice != null">
+                #{guidePrice,jdbcType=DOUBLE},
+            </if>
+            <if test="guideRemark != null">
+                #{guideRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="houseRemarkv != null">
+                #{houseRemarkv,jdbcType=VARCHAR},
+            </if>
+            <if test="decoratePrice != null">
+                #{decoratePrice,jdbcType=DOUBLE},
+            </if>
+            <if test="tenementPrice != null">
+                #{tenementPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="facility != null">
+                #{facility,jdbcType=VARCHAR},
+            </if>
+            <if test="internalNumber != null">
+                #{internalNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="decorateType != null">
+                #{decorateType,jdbcType=VARCHAR},
+            </if>
+            <if test="decorateCase != null">
+                #{decorateCase,jdbcType=VARCHAR},
+            </if>
+            <if test="decorateTime != null">
+                #{decorateTime,jdbcType=VARCHAR},
+            </if>
+            <if test="buildType != null">
+                #{buildType,jdbcType=VARCHAR},
+            </if>
+            <if test="houseBelong != null">
+                #{houseBelong,jdbcType=VARCHAR},
+            </if>
+            <if test="houseUse != null">
+                #{houseUse,jdbcType=VARCHAR},
+            </if>
+            <if test="heatingWay != null">
+                #{heatingWay,jdbcType=VARCHAR},
+            </if>
+            <if test="metro != null">
+                #{metro,jdbcType=VARCHAR},
+            </if>
+            <if test="schoolHouse != null">
+                #{schoolHouse,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates">
+        update t_zcy_estates
+        <set>
+            update_at = now(),
+            <if test="annotation != null">
+                annotation = #{annotation,jdbcType=VARCHAR},
+            </if>
+            <if test="replenish != null">
+                replenish = #{replenish,jdbcType=VARCHAR},
+            </if>
+            <if test="houseS != null">
+                house_s = #{houseS,jdbcType=VARCHAR},
+            </if>
+            <if test="houseT != null">
+                house_t = #{houseT,jdbcType=VARCHAR},
+            </if>
+            <if test="houseC != null">
+                house_c = #{houseC,jdbcType=VARCHAR},
+            </if>
+            <if test="houseW != null">
+                house_w = #{houseW,jdbcType=VARCHAR},
+            </if>
+            <if test="houseRemark != null">
+                house_remark = #{houseRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="quota != null">
+                quota = #{quota,jdbcType=VARCHAR},
+            </if>
+            <if test="acreage != null">
+                acreage = #{acreage,jdbcType=VARCHAR},
+            </if>
+            <if test="sellingPrice != null">
+                selling_price = #{sellingPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="decade != null">
+                decade = #{decade,jdbcType=VARCHAR},
+            </if>
+            <if test="property != null">
+                property = #{property,jdbcType=VARCHAR},
+            </if>
+            <if test="orientation != null">
+                orientation = #{orientation,jdbcType=VARCHAR},
+            </if>
+            <if test="guidePrice != null">
+                guide_price = #{guidePrice,jdbcType=DOUBLE},
+            </if>
+            <if test="guideRemark != null">
+                guide_remark = #{guideRemark,jdbcType=VARCHAR},
+            </if>
+            <if test="houseRemarkv != null">
+                house_remarkv = #{houseRemarkv,jdbcType=VARCHAR},
+            </if>
+            <if test="decoratePrice != null">
+                decorate_price = #{decoratePrice,jdbcType=DOUBLE},
+            </if>
+            <if test="tenementPrice != null">
+                tenement_price = #{tenementPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="facility != null">
+                facility = #{facility,jdbcType=VARCHAR},
+            </if>
+            <if test="internalNumber != null">
+                internal_number = #{internalNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="decorateType != null">
+                decorate_type = #{decorateType,jdbcType=VARCHAR},
+            </if>
+            <if test="decorateCase != null">
+                decorate_case = #{decorateCase,jdbcType=VARCHAR},
+            </if>
+            <if test="decorateTime != null">
+                decorate_time = #{decorateTime,jdbcType=VARCHAR},
+            </if>
+            <if test="buildType != null">
+                build_type = #{buildType,jdbcType=VARCHAR},
+            </if>
+            <if test="houseBelong != null">
+                house_belong = #{houseBelong,jdbcType=VARCHAR},
+            </if>
+            <if test="houseUse != null">
+                house_use = #{houseUse,jdbcType=VARCHAR},
+            </if>
+            <if test="heatingWay != null">
+                heating_way = #{heatingWay,jdbcType=VARCHAR},
+            </if>
+            <if test="metro != null">
+                metro = #{metro,jdbcType=VARCHAR},
+            </if>
+            <if test="schoolHouse != null">
+                school_house = #{schoolHouse,jdbcType=VARCHAR},
+            </if>
+            version = version+1,
+            <if test="content != null">
+                content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates">
+    update t_zcy_estates
+    set
+      update_at = now(),
+      annotation = #{annotation,jdbcType=VARCHAR},
+      replenish = #{replenish,jdbcType=VARCHAR},
+      house_s = #{houseS,jdbcType=VARCHAR},
+      house_t = #{houseT,jdbcType=VARCHAR},
+      house_c = #{houseC,jdbcType=VARCHAR},
+      house_w = #{houseW,jdbcType=VARCHAR},
+      house_remark = #{houseRemark,jdbcType=VARCHAR},
+      quota = #{quota,jdbcType=VARCHAR},
+      acreage = #{acreage,jdbcType=VARCHAR},
+      selling_price = #{sellingPrice,jdbcType=DOUBLE},
+      decade = #{decade,jdbcType=VARCHAR},
+      property = #{property,jdbcType=VARCHAR},
+      orientation = #{orientation,jdbcType=VARCHAR},
+      guide_price = #{guidePrice,jdbcType=DOUBLE},
+      guide_remark = #{guideRemark,jdbcType=VARCHAR},
+      house_remarkv = #{houseRemarkv,jdbcType=VARCHAR},
+      decorate_price = #{decoratePrice,jdbcType=DOUBLE},
+      tenement_price = #{tenementPrice,jdbcType=DOUBLE},
+      facility = #{facility,jdbcType=VARCHAR},
+      internal_number = #{internalNumber,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      decorate_type = #{decorateType,jdbcType=VARCHAR},
+      decorate_case = #{decorateCase,jdbcType=VARCHAR},
+      decorate_time = #{decorateTime,jdbcType=VARCHAR},
+      build_type = #{buildType,jdbcType=VARCHAR},
+      house_belong = #{houseBelong,jdbcType=VARCHAR},
+      house_use = #{houseUse,jdbcType=VARCHAR},
+      heating_way = #{heatingWay,jdbcType=VARCHAR},
+      metro = #{metro,jdbcType=VARCHAR},
+      school_house = #{schoolHouse,jdbcType=VARCHAR},
+      version =version+1,
+      content = #{content,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates">
+    update t_zcy_estates
+    set
+      update_at = now(),
+      annotation = #{annotation,jdbcType=VARCHAR},
+      replenish = #{replenish,jdbcType=VARCHAR},
+      house_s = #{houseS,jdbcType=VARCHAR},
+      house_t = #{houseT,jdbcType=VARCHAR},
+      house_c = #{houseC,jdbcType=VARCHAR},
+      house_w = #{houseW,jdbcType=VARCHAR},
+      house_remark = #{houseRemark,jdbcType=VARCHAR},
+      quota = #{quota,jdbcType=VARCHAR},
+      acreage = #{acreage,jdbcType=VARCHAR},
+      selling_price = #{sellingPrice,jdbcType=DOUBLE},
+      decade = #{decade,jdbcType=VARCHAR},
+      property = #{property,jdbcType=VARCHAR},
+      orientation = #{orientation,jdbcType=VARCHAR},
+      guide_price = #{guidePrice,jdbcType=DOUBLE},
+      guide_remark = #{guideRemark,jdbcType=VARCHAR},
+      house_remarkv = #{houseRemarkv,jdbcType=VARCHAR},
+      decorate_price = #{decoratePrice,jdbcType=DOUBLE},
+      tenement_price = #{tenementPrice,jdbcType=DOUBLE},
+      facility = #{facility,jdbcType=VARCHAR},
+      internal_number = #{internalNumber,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      decorate_type = #{decorateType,jdbcType=VARCHAR},
+      decorate_case = #{decorateCase,jdbcType=VARCHAR},
+      decorate_time = #{decorateTime,jdbcType=VARCHAR},
+      build_type = #{buildType,jdbcType=VARCHAR},
+      house_belong = #{houseBelong,jdbcType=VARCHAR},
+      house_use = #{houseUse,jdbcType=VARCHAR},
+      heating_way = #{heatingWay,jdbcType=VARCHAR},
+      metro = #{metro,jdbcType=VARCHAR},
+      school_house = #{schoolHouse,jdbcType=VARCHAR},
+      version = version+1
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectBySelective" resultMap="ResultMapWithBLOBs" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from t_zcy_estates
+        where  stateflag=0
+    </select>
+
+</mapper>
