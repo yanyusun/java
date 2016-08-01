@@ -51,7 +51,8 @@ public class FileTool implements ApplicationContextAware {
 
         //验证业务类型对应的文件类型
         if(null != multipartFile && !multipartFile.isEmpty()) {
-            String endfix = multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().indexOf(".")+1, multipartFile.getOriginalFilename().length());
+            String endfix = multipartFile.getOriginalFilename().substring(
+                    multipartFile.getOriginalFilename().indexOf(".")+1, multipartFile.getOriginalFilename().length());
             if(0 > tSysProperty.getPropertyValue().indexOf(endfix)) {
                 return "err:不支持的文件类型";
             }
@@ -76,7 +77,6 @@ public class FileTool implements ApplicationContextAware {
         taskScheduler.schedule(() -> {
             fileTmp.delete();
         }, new Date(curTime + Long.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_TMP_DEL_TIMER_KEY).getPropertyValue()) * 3600 * 1000));
-
 
         return fileName;
     }
@@ -134,6 +134,60 @@ public class FileTool implements ApplicationContextAware {
         taskScheduler.schedule(() -> {
             file.delete();
         }, date);
+    }
+
+    /**
+     * 保存临时文件
+     * @param type 系统配置的类型
+     * @param userId 用户ID
+     * @param multipartFile
+     * @param fileType
+     * @return
+     * @throws IOException
+     */
+    public static String saveFileTmp(String type, Integer userId, MultipartFile multipartFile, Integer fileType) throws IOException {
+        TSysProperty tSysProperty = SysPropertyTool.getProperty(SysPropertyTypeEnum.FILE_BUSINESS_TYPE, type);
+        //验证允许上传的业务类型 或者 文件是否为空
+        if(null == multipartFile || multipartFile.isEmpty()) {
+            return "err:上传的文件为空";
+        }
+        if(null == tSysProperty) {
+            return "err:不支持的业务类型";
+        }
+
+        long curTime = System.currentTimeMillis();
+        String fileName = type + "_" + userId + "_" + curTime;
+
+        //验证业务类型对应的文件类型
+        if(null != multipartFile && !multipartFile.isEmpty()) {
+            String endfix = multipartFile.getOriginalFilename().substring(
+                    multipartFile.getOriginalFilename().indexOf(".")+1, multipartFile.getOriginalFilename().length());
+            if(0 > tSysProperty.getPropertyValue().indexOf(endfix)) {
+                return "err:不支持的文件类型";
+            }
+
+            fileName += "." + endfix;
+        }
+
+        //保存到临时目录
+        String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/" + type + "/" + userId + "/";
+        File dirTmp = new File(path);
+        if(!dirTmp.exists()) {
+            dirTmp.mkdirs();
+        }
+        File fileTmp = new File(path + fileName);
+        if(fileTmp.exists()) {
+            fileTmp.delete();
+        }
+        fileTmp.createNewFile();
+        FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), fileTmp);
+
+        //定时删除
+        taskScheduler.schedule(() -> {
+            fileTmp.delete();
+        }, new Date(curTime + Long.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_TMP_DEL_TIMER_KEY).getPropertyValue()) * 3600 * 1000));
+
+        return fileName;
     }
 
 }
