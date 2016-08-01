@@ -4,53 +4,29 @@ import com.dqys.core.base.BaseModel;
 
 import java.io.Serializable;
 
-/**
- * 资源信息
- */
-public class SourceInfo extends BaseModel implements Serializable{
+public class SourceInfo extends BaseModel implements Serializable {
 
-    private String mode;  // 资源模块
-    private Integer modeId;  //资源模块Id
-    private String type;  // 资源类型
-    private Integer pid;  // 资源关联id
-    private String code;  // 资源编号
-    private String name;  // 资源名称
-    private String fileType;  // 资源类型
-    private String path;  // 保存路径
-    private String tags;  // 标签
-    private Integer sort;  // 排序
-    private String memo; // 备注
+    private Integer sourceType; // 资源类型
+    private Integer navId; // 资源分类ID
+    private String code; // 资源编号
+    private Integer lenderId; // 借款人
+    private Integer show; // 展示在外网(1)
+    private Integer watermark; // 水印(1)
 
-    public String getMode() {
-        return mode;
+    public Integer getSourceType() {
+        return sourceType;
     }
 
-    public void setMode(String mode) {
-        this.mode = mode;
+    public void setSourceType(Integer sourceType) {
+        this.sourceType = sourceType;
     }
 
-    public Integer getModeId() {
-        return modeId;
+    public Integer getNavId() {
+        return navId;
     }
 
-    public void setModeId(Integer modeId) {
-        this.modeId = modeId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Integer getPid() {
-        return pid;
-    }
-
-    public void setPid(Integer pid) {
-        this.pid = pid;
+    public void setNavId(Integer navId) {
+        this.navId = navId;
     }
 
     public String getCode() {
@@ -61,51 +37,27 @@ public class SourceInfo extends BaseModel implements Serializable{
         this.code = code;
     }
 
-    public String getName() {
-        return name;
+    public Integer getLenderId() {
+        return lenderId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLenderId(Integer lenderId) {
+        this.lenderId = lenderId;
     }
 
-    public String getFileType() {
-        return fileType;
+    public Integer getShow() {
+        return show;
     }
 
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
+    public void setShow(Integer show) {
+        this.show = show;
     }
 
-    public String getPath() {
-        return path;
+    public Integer getWatermark() {
+        return watermark;
     }
 
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getTags() {
-        return tags;
-    }
-
-    public void setTags(String tags) {
-        this.tags = tags;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    public String getMemo() {
-        return memo;
-    }
-
-    public void setMemo(String memo) {
-        this.memo = memo;
+    public void setWatermark(Integer watermark) {
+        this.watermark = watermark;
     }
 }

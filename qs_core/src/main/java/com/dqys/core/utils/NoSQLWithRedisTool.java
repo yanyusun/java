@@ -26,6 +26,9 @@ public class NoSQLWithRedisTool implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         redisTemplate = (RedisTemplate) applicationContext.getBean("redisTemplate");
+        if(redisTemplate == null){
+            SysPropertyTool.initProperty();
+        }
         /*msgRedisTemplate = (RedisTemplate) applicationContext.getBean("msgRedisTemplate");*/
     }
 

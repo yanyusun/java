@@ -113,7 +113,7 @@ public class FileTool implements ApplicationContextAware {
         if(strs.length != 3) {
             return false;
         }
-        File srcFile = new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/"
+        File srcFile = new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_OPEN_PATH_KEY).getPropertyValue() + "/temp/"
                 + strs[0] + "/" + strs[1] + "/" + fileName);
         if(!srcFile.exists()) {
             return false;

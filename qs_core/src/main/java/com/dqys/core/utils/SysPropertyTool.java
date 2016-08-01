@@ -30,7 +30,9 @@ public class SysPropertyTool implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         tSysPropertyMapper = applicationContext.getBean(TSysPropertyMapper.class);
         redisTemplate = (RedisTemplate) applicationContext.getBean("redisTemplate");
-        this.initProperty();
+        if(redisTemplate == null){
+            this.initProperty();
+        }
     }
 
     /**
@@ -210,7 +212,7 @@ public class SysPropertyTool implements ApplicationContextAware {
 
 
     /* 初始化系统配置 */
-    public void initProperty() {
+    public static void initProperty() {
         try {
             loadAllProperty();
             //AreaTool.loadArea();  // FIXME: 16-5-26 测试环境不加载
