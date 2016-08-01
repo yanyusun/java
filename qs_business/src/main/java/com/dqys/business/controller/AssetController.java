@@ -3,10 +3,7 @@ package com.dqys.business.controller;
 import com.dqys.business.service.constant.asset.AssetTypeEnum;
 import com.dqys.business.service.constant.asset.ExcellentTypeEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
-import com.dqys.business.service.dto.asset.AssetDTO;
-import com.dqys.business.service.dto.asset.ContactDTO;
-import com.dqys.business.service.dto.asset.IouDTO;
-import com.dqys.business.service.dto.asset.PawnDTO;
+import com.dqys.business.service.dto.asset.*;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.business.service.service.*;
@@ -156,64 +153,12 @@ public class AssetController {
      */
     @RequestMapping(value = "/excelIn")
     @ResponseBody
-    public JsonResponse addLenders(@RequestParam(required = true) Integer id, @RequestParam(required = true) MultipartFile file) {
-        List<AssetDTO> assetDTOList = new ArrayList<>();
-        List<ContactDTO> contactDTOList = new ArrayList<>();
-        List<PawnDTO> pawnDTOList = new ArrayList<>();
-        List<IouDTO> iouDTOList = new ArrayList<>();
-
-        // 添加借款人基础信息
-        HashMap<Integer, Integer> lenderMap = new HashMap<>();
-        for (AssetDTO assetDTO : assetDTOList) {
-            Integer index = assetDTO.getId();
-            assetDTO.setId(null);
-            return null;
-//
-//            Integer assetId = assetService.add(AssetServiceUtils.toAssetInfo(assetDTO));
-//            if(assetId > 0){
-//                lenderMap.put(index, assetId);
-//            }else{
-//                // 新增借款人失败处理
-//
-//            }
+    public JsonResponse addLenders(@RequestParam(required = true) Integer id,
+                                   @RequestParam(required = true) MultipartFile file) throws BusinessLogException {
+        if(CommonUtil.checkParam(id, file)){
+            return JsonResponseTool.paramErr("参数错误");
         }
-
-        // 添加联系人信息
-        contactDTOList.forEach(contactDTO -> {
-            Integer index = contactDTO.getId();
-//            contactDTO.setModeId(lenderMap.get(index));
-//            contactDTO.setId(null);
-//            Integer contactId = lenderService.addLenderInfo(AssetServiceUtils.toContactInfo(contactDTO));
-//            if (contactId == null || contactId.equals("0")) {
-//                // 添加联系人失败处理
-//
-//            }
-        });
-
-        // 添加抵押物
-        pawnDTOList.forEach(pawnDTO -> {
-            Integer index = pawnDTO.getId();
-//            pawnDTO.setId(null);
-//            pawnDTO.setLenderId(lenderMap.get(index));
-//            Integer pawnId = pawnService.addPawn(AssetServiceUtils.toPawnInfo(pawnDTO));
-//            if (CommonUtil.checkResult(pawnId)) {
-//                // 添加抵押物失败处理
-//
-//            }
-        });
-
-        // 添加借据
-        iouDTOList.forEach(iouDTO -> {
-            Integer index = iouDTO.getId();
-//            iouDTO.setLenderId(index);
-//            iouDTO.setId(null);
-//            Integer iouId = iouService.addIOUInfo(AssetServiceUtils.toIouInfo(iouDTO), null);
-//            if (CommonUtil.checkResult(iouId)) {
-//                // 添加借据失败处理
-//
-//            }
-        });
-        return JsonResponseTool.success("导入成功");
+        return assetService.excelImport_tx(id, file);
     }
 
     /**
@@ -251,7 +196,7 @@ public class AssetController {
     }
 
     /**
-     * @api {get} http://{url}/asset/assignedBatch 批量分配
+     * @api {get} http://{url}/asset/assignedBatch 批量分配(未完成)
      * @apiName assignedBatch
      * @apiGroup asset
      * @apiDescription 协作器时补充
@@ -273,5 +218,27 @@ public class AssetController {
         return assetService.assignedBatch(ids, id);
     }
 
+    /**
+     * @api {get} http://{url}/asset/addLender 添加资产包借款人(整合版)
+     * @apiName addLender
+     * @apiGroup asset
+     * @apiParam {number} id  资产包ID
+     * @apiParam {LenderDTO} lenderDTO 借款人基础信息
+     * @apiParam {List<ContactDTO>} contactDTOList 联系人集合
+     * @apiParam {List<PawnDTO>} pawnDTOList 抵押物集合
+     * @apiParam {List<IouDTO>} iouDTOList 借据集合
+     * @apiUse Iou
+     * @apiUse Pawn
+     * @apiUse LenderDTO
+     * @apiUse ContactDTO
+     */
+    public JsonResponse addLender(@RequestParam Integer id, @RequestParam List<ContactDTO> contactDTOList,
+                                  @RequestParam List<PawnDTO> pawnDTOList, @RequestParam List<IouDTO> iouDTOList,
+                                  @ModelAttribute LenderDTO lenderDTO) throws BusinessLogException{
+        if(CommonUtil.checkParam(id, lenderDTO, pawnDTOList, contactDTOList, iouDTOList)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return assetService.addLender_tx(id, contactDTOList, lenderDTO, pawnDTOList, iouDTOList);
+    }
 
 }

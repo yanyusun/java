@@ -6,6 +6,7 @@ import java.io.Serializable;
  * Created by mkfeng on 2016/7/5.
  */
 public class ExcelMessage implements Serializable{
+
     private Integer index;//序号
     private String excelName;//表名称
     private String site;//位置

@@ -9,6 +9,7 @@ public class OrganizationQuery extends BaseQuery {
 
     private Integer companyId; // 公司ID
     private String type; // 类型
+    private String name; // 组织名称
     private String pid; // 上级id
 
     public Integer getCompanyId() {
@@ -33,5 +34,13 @@ public class OrganizationQuery extends BaseQuery {
 
     public void setPid(String pid) {
         this.pid = pid;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -3,6 +3,7 @@ package com.dqys.business.service.service;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.core.model.JsonResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -93,4 +94,11 @@ public interface UserService {
      * @return
      */
     JsonResponse setPwd(Integer id, String pwd);
+
+    /**
+     * excel导入用户数据
+     * @param file
+     * @return
+     */
+    JsonResponse excelImport_tx(MultipartFile file);
 }

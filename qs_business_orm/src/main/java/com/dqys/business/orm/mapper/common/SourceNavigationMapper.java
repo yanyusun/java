@@ -1,11 +1,10 @@
 package com.dqys.business.orm.mapper.common;
 
-import com.dqys.business.orm.pojo.common.SourceInfo;
+import com.dqys.business.orm.pojo.common.SourceNavigation;
 
-public interface SourceInfoMapper {
-
+public interface SourceNavigationMapper {
     /**
-     * 逻辑删除
+     * 数据删除
      *
      * @param id
      * @return
@@ -18,7 +17,7 @@ public interface SourceInfoMapper {
      * @param record
      * @return
      */
-    Integer insert(SourceInfo record);
+    Integer insert(SourceNavigation record);
 
     /**
      * 根据ID单取
@@ -26,7 +25,7 @@ public interface SourceInfoMapper {
      * @param id
      * @return
      */
-    SourceInfo get(Integer id);
+    SourceNavigation get(Integer id);
 
     /**
      * 修改
@@ -34,6 +33,6 @@ public interface SourceInfoMapper {
      * @param record
      * @return
      */
-    Integer update(SourceInfo record);
+    Integer update(SourceNavigation record);
 
 }
