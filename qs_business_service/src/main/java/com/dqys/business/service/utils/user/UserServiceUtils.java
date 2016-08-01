@@ -3,13 +3,12 @@ package com.dqys.business.service.utils.user;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
-import com.dqys.business.orm.pojo.company.Organization;
 import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.utils.AreaTool;
-import com.dqys.core.utils.NoSQLWithRedisTool;
+import com.dqys.core.utils.CommonUtil;
 
 /**
  * Created by Yvan on 16/6/29.
@@ -17,6 +16,9 @@ import com.dqys.core.utils.NoSQLWithRedisTool;
 public class UserServiceUtils {
 
     public static UserListDTO toUserListDTO(TUserInfo userInfo, TCompanyInfo companyInfo) {
+        if (CommonUtil.checkParam(userInfo, userInfo.getId())) {
+            return null;
+        }
         UserListDTO userListDTO = new UserListDTO();
 
         userListDTO.setId(userInfo.getId());
@@ -24,7 +26,8 @@ public class UserServiceUtils {
         userListDTO.setAvg(userInfo.getAvg());
         userListDTO.setUserName(userInfo.getUserName());
         userListDTO.setRealName(userInfo.getRealName());
-        userListDTO.setSex(userInfo.getSex() ? 1 : 0);
+        userListDTO.setSex(
+                (userInfo.getSex() == null || userInfo.getSex().equals(SysProperty.BOOLEAN_TRUE)) ? 1 : 0);
         userListDTO.setAccount(userInfo.getAccount());
         userListDTO.setMobile(userInfo.getMobile());
         userListDTO.setEmail(userInfo.getEmail());
@@ -93,7 +96,7 @@ public class UserServiceUtils {
         return tUserInfo;
     }
 
-    public static TUserTag toTUserTag(UserInsertDTO userInsertDTO, Integer userId){
+    public static TUserTag toTUserTag(UserInsertDTO userInsertDTO, Integer userId) {
         TUserTag userTag = new TUserTag();
 
         userTag.setUserId(userId);
@@ -110,7 +113,7 @@ public class UserServiceUtils {
         return userTag;
     }
 
-    public static TUserInfo toUserInfo(UserFileDTO userFileDTO){
+    public static TUserInfo toUserInfo(UserFileDTO userFileDTO) {
         TUserInfo userInfo = new TUserInfo();
 
         userInfo.setRealName(userFileDTO.getRealName());
@@ -127,7 +130,7 @@ public class UserServiceUtils {
         return userInfo;
     }
 
-    public static TUserTag toUserTag(UserFileDTO userFileDTO){
+    public static TUserTag toUserTag(UserFileDTO userFileDTO) {
         TUserTag userTag = new TUserTag();
 
         userTag.setRoleId(userFileDTO.getRole().byteValue());
