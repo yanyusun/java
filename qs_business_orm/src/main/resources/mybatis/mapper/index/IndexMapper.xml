@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.index.IndexMapper">
+    <!--待接受任务-->
+    <select id="receive" resultType="java.util.Map" parameterType="int">
+        SELECT count(*) count from t_teammate_re ttr
+        where ttr.status=0 and ttr.user_id=#{userId}
+    </select>
+    <!--获取借款人自己分配和公司分配的任务-->
+    <select id="getLenderAllotByOneSelfAndCompany" resultType="java.util.Map">
+        SELECT count(*) count from object_user_relation our LEFT JOIN bt_lender len
+        ON len.id=our.object_id and (our.type=0 or our.type=2)
+        where  len.repay_status=#{repayStatus,jdbcType=INTEGER} and our.object_type=#{objectType,jdbcType=INTEGER} and our.user_id=#{userId,jdbcType=INTEGER}
+    </select>
+    <!--获取借款人团队分配的任务-->
+    <select id="getLenderAllotByTeam" resultType="java.util.Map">
+        SELECT count(*) count from object_user_relation our LEFT JOIN t_teammate_re ttr
+        ON ttr.id=our.employer_id and our.type=1 and ttr.type !=2 LEFT JOIN bt_lender len
+        ON len.id=our.object_id
+        where len.repay_status=#{repayStatus,jdbcType=INTEGER} and our.object_type=#{objectType,jdbcType=INTEGER} and our.user_id=#{userId,jdbcType=INTEGER}
+    </select>
+    <!--参加的任务数-->
+    <select id="getJoinTask" resultType="java.util.Map">
+        SELECT count(*) count FROM object_user_relation our LEFT JOIN t_teammate_re ttr
+        ON ttr.user_id=our.user_id and our.object_type=#{objectType,jdbcType=INTEGER} and ttr.type=2 and our.user_id=#{userId,jdbcType=INTEGER}
+    </select>
+    <!--获取抵押物团队分配的未完成任务-->
+    <select id="getUnfinishedBy" resultType="java.util.Map">
+        SELECT count(*) count from object_user_relation our LEFT JOIN t_teammate_re ttr
+        ON ttr.id=our.employer_id and our.type=1 and ttr.type!=2 LEFT JOIN bt_pawn paw
+        ON paw.id=our.object_id  LEFT JOIN bt_pi_relation pi
+        ON pi.pawn_id=paw.id LEFT JOIN bt_iou iou
+        ON iou.id=pi.iou_id AND iou.repay_status=0
+        where our.object_type=11 and our.user_id=1 GROUP BY our.object_id
+    </select>
+    <select id="">
+
+    </select>
+
+</mapper>
