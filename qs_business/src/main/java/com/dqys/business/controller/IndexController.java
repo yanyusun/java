@@ -23,6 +23,12 @@ public class IndexController {
     @Autowired
     private IndexService indexSerice;
 
+    /**
+     * @api {post} index/general 任务统计
+     * @apiSampleRequest index/general
+     * @apiGroup INDEX
+     * @apiName index/general
+     */
     @RequestMapping("/general")
     public JsonResponse general(HttpServletRequest httpServletRequest){
         Map map=new HashMap<>();
@@ -34,6 +40,7 @@ public class IndexController {
                     httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
                     httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
             );
+            userId=11;
             indexSerice.getStatistic(map,userId);
         } catch (Exception e) {
             e.printStackTrace();

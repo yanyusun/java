@@ -28,7 +28,7 @@ public class IndexServiceImpl implements IndexService {
     public void getStatistic(Map map, Integer userId) {
         Integer userType = 0;//用户类型
         List<TUserTag> tUserTags = tUserTagMapper.selectByUserId(userId);
-        if (tUserTags.size() > 10) {
+        if (tUserTags.size() > 0) {
             TUserTag tUserTag = tUserTags.get(0);
             userType = (int) tUserTag.getUserType();
         }
@@ -58,9 +58,12 @@ public class IndexServiceImpl implements IndexService {
             map.put("unfinished", count3 + count4);//正在进行中------------
 
         } else if (objectType == ObjectTypeEnum.PAWN.getValue()) {
-            map.put("",getClass());
+            Integer total = MessageUtils.transMapToInt(indexMapper.getPawnTotalTask(objectType, userId), "count");
+            Integer count3 = MessageUtils.transMapToInt(indexMapper.getPawnAllotByOCIsUnfinished(objectType, userId), "count");//正在进行任务自己或公司分配
+            Integer count4 = MessageUtils.transMapToInt(indexMapper.getPawnAllotByTeamIsUnfinished(objectType, userId), "count");//正在进行任务团队分配
+            map.put("unfinished", (count3 == null ? 0 : count3) + (count4 == null ? 0 : count4));//正在进行中------------
+            map.put("finish", total - count3 - count4);//已完成------------
         }
-
 
     }
 }

@@ -28,9 +28,22 @@ public interface IndexMapper {
 
     /**
      * 获取参与的任务
+     *
      * @param objectType
      * @param userId
      * @return
      */
     Map getJoinTask(@Param("objectType") Integer objectType, @Param("userId") Integer userId);
+
+    /**
+     * 获取抵押物团队分配的未完成任务
+     */
+    Map getPawnAllotByTeamIsUnfinished(@Param("objectType") Integer objectType, @Param("userId") Integer userId);
+
+    /**
+     * 获取抵押物自己分配和公司分配的未完成任务
+     */
+    Map getPawnAllotByOCIsUnfinished(@Param("objectType") Integer objectType, @Param("userId") Integer userId);
+
+    Map getPawnTotalTask(@Param("objectType") Integer objectType, @Param("userId") Integer userId);
 }

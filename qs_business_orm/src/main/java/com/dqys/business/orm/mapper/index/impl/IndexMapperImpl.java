@@ -32,4 +32,19 @@ public class IndexMapperImpl extends BaseDao implements IndexMapper {
     public Map getJoinTask(@Param("objectType") Integer objectType, @Param("userId") Integer userId) {
         return super.getSqlSession().getMapper(IndexMapper.class).getJoinTask(objectType, userId);
     }
+
+    @Override
+    public Map getPawnAllotByTeamIsUnfinished(@Param("objectType") Integer objectType, @Param("userId") Integer userId) {
+        return super.getSqlSession().getMapper(IndexMapper.class).getPawnAllotByTeamIsUnfinished(objectType, userId);
+    }
+
+    @Override
+    public Map getPawnAllotByOCIsUnfinished(@Param("objectType") Integer objectType, @Param("userId") Integer userId) {
+        return super.getSqlSession().getMapper(IndexMapper.class).getPawnAllotByOCIsUnfinished(objectType, userId);
+    }
+
+    @Override
+    public Map getPawnTotalTask(@Param("objectType") Integer objectType, @Param("userId") Integer userId) {
+        return super.getSqlSession().getMapper(IndexMapper.class).getPawnTotalTask(objectType, userId);
+    }
 }
