@@ -22,4 +22,9 @@ public class TAreaMapperImpl extends BaseDao implements TAreaMapper {
     public List<TArea> selectAll() {
         return super.getSqlSession().getMapper(TAreaMapper.class).selectAll();
     }
+
+    @Override
+    public TArea getByName(String name) {
+        return super.getSqlSession().getMapper(TAreaMapper.class).getByName(name);
+    }
 }

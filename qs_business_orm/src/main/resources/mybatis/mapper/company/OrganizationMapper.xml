@@ -35,6 +35,9 @@
       <if test="pid != null">
         AND pid = #{pid,jdbcType=INTEGER}
       </if>
+      <if test="name != null">
+        AND name = #{name,jdbcType=INTEGER}
+      </if>
     </where>
   </sql>
 

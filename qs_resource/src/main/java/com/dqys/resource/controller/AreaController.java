@@ -23,7 +23,8 @@ import java.util.concurrent.Callable;
 public class AreaController extends BaseApiContorller {
 
     @RequestMapping(path = "/list")
-    public Callable<JsonResponse> queryAreaByUpper(@RequestParam(defaultValue = "0") Integer aid, @RequestParam(required = false) String nameLike) {
+    public Callable<JsonResponse> queryAreaByUpper(@RequestParam(defaultValue = "0") Integer aid,
+                                                   @RequestParam(required = false) String nameLike) {
         return () -> {
             List<TArea> tAreaList = AreaTool.listAreaByUpperId(aid);
             if (null == tAreaList || tAreaList.isEmpty()) {

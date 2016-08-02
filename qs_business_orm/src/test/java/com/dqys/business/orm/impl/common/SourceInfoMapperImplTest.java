@@ -17,36 +17,24 @@ public class SourceInfoMapperImplTest extends BaseTest {
 
     @Test
     public void test(){
-        SourceInfo sourceInfo = newOne(0);
+        SourceInfo sourceInfo = new SourceInfo();
+        sourceInfo.setSourceType(1);
+        sourceInfo.setNavId(1);
+        sourceInfo.setCode("code" + 1);
+        sourceInfo.setLenderId(1);
+        sourceInfo.setNavId(1);
+        sourceInfo.setShow(1);
+        sourceInfo.setWatermark(1);
+
         Integer result = sourceInfoMapper.insert(sourceInfo);
         Assert.assertNotNull(result);
-        Assert.assertNotEquals(result, "0");
-        Integer id = sourceInfo.getId();
-        Assert.assertNotNull(id);
 
+        Integer id = sourceInfo.getId();
         SourceInfo sourceInfo1 = sourceInfoMapper.get(id);
         Assert.assertNotNull(sourceInfo1);
-        Assert.assertEquals(sourceInfo.getMode(), sourceInfo1.getMode());
+        Assert.assertEquals(sourceInfo1.getCode(), sourceInfo.getCode());
 
-        sourceInfo1.setMode("QS151212");
-        Integer update = sourceInfoMapper.update(sourceInfo1);
-        Assert.assertNotNull(update);
-        Assert.assertNotEquals(update, "0");
 
-        SourceInfo assetInfo2 = sourceInfoMapper.get(id);
-        Assert.assertEquals(assetInfo2.getMode(), "QS151212");
 
-        Integer delete = sourceInfoMapper.deleteByPrimaryKey(id);
-        Assert.assertEquals("1", String.valueOf(delete));
-
-    }
-
-    private SourceInfo newOne(Integer index){
-        SourceInfo sourceInfo = new SourceInfo();
-
-        sourceInfo.setMode("mode"+index);
-        sourceInfo.setModeId(index);
-
-        return sourceInfo;
     }
 }

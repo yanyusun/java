@@ -1,10 +1,13 @@
 package com.dqys.business.service.service;
 
 import com.dqys.business.orm.query.asset.AssetQuery;
-import com.dqys.business.service.dto.asset.AssetDTO;
+import com.dqys.business.service.dto.asset.*;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.core.model.JsonResponse;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * Created by Yvan on 16/6/1.
@@ -73,5 +76,26 @@ public interface AssetService {
      * @return
      */
     JsonResponse listLender(Integer id);
+
+    /**
+     * 整合添加资产包借款人
+     * @param id
+     * @param contactDTOList
+     * @param lenderDTO
+     * @param pawnDTOList
+     * @param iouDTOList
+     * @return
+     */
+    JsonResponse addLender_tx(Integer id, List<ContactDTO> contactDTOList, LenderDTO lenderDTO,
+                              List<PawnDTO> pawnDTOList, List<IouDTO> iouDTOList) throws BusinessLogException;
+
+    /**
+     * 添加
+     *
+     * @param id
+     * @param file
+     * @return
+     */
+    JsonResponse excelImport_tx(Integer id, MultipartFile file) throws BusinessLogException;
 
 }

@@ -22,6 +22,7 @@ public class AssetInterceptor extends AuthenticationInterceptor {
     public static final String API_LIST_LENDER = "/asset/listLender";
     public static final String API_LIST = "/asset/list";
     public static final String API_ASSIGNED_BATCH = "/asset/assignedBatch";
+    public static final String API_ADD_LENDER = "/asset/addLender";
 
 
     @Override
@@ -46,6 +47,8 @@ public class AssetInterceptor extends AuthenticationInterceptor {
         }else if(API_LIST.equals(url)){
             return true;
         }else if(API_ASSIGNED_BATCH.equals(url)){
+            return true;
+        }else if(API_ADD_LENDER.equals(url)){
             return true;
         }else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:"+url);

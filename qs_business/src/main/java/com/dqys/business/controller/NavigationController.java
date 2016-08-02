@@ -34,7 +34,7 @@ public class NavigationController {
 
 
     /**
-     * @api {POST} http://{url}/nav/company/add 增加导航栏
+     * @api {POST} http://{url}/nav/add 增加导航栏
      * @apiName add
      * @apiGroup navigation
      * @apiUse Navigation
@@ -55,7 +55,7 @@ public class NavigationController {
     }
 
     /**
-     * @api {POST} http://{url}/nav/company/delete 删除导航栏
+     * @api {POST} http://{url}/nav/delete 删除导航栏
      * @apiName delete
      * @apiGroup navigation
      * @apiParam {number} id 导航栏key
@@ -75,7 +75,7 @@ public class NavigationController {
     }
 
     /**
-     * @api {POST} http://{url}/nav/company/update 修改导航栏
+     * @api {POST} http://{url}/nav/update 修改导航栏
      * @apiName update
      * @apiGroup navigation
      * @apiUse Navigation
@@ -95,7 +95,7 @@ public class NavigationController {
     }
 
     /**
-     * @api {POST} http://{url}/nav/company/get 获取导航栏
+     * @api {POST} http://{url}/nav/get 获取导航栏
      * @apiName get
      * @apiGroup navigation
      * @apiParam {number} id 导航栏KEY
@@ -117,7 +117,7 @@ public class NavigationController {
     }
 
     /**
-     * @api {POST} http://{url}/nav/company/getInit 获取初始导航栏
+     * @api {POST} http://{url}/nav/getInit 获取初始导航栏
      * @apiName getInit
      * @apiGroup navigation
      * @apiSuccess {NavigationDTO} data 导航栏数据
@@ -140,7 +140,7 @@ public class NavigationController {
     }
 
     /**
-     * @api {POST} http://{url}/nav/company/listById 根据导航栏key获取子导航栏
+     * @api {POST} http://{url}/nav/listById 根据导航栏key获取子导航栏
      * @apiName listById
      * @apiGroup navigation
      * @apiParam {number} id 导航栏key

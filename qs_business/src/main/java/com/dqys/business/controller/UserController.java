@@ -262,14 +262,8 @@ public class UserController {
         if (CommonUtil.checkParam(file)) {
             return JsonResponseTool.paramErr("未上传文件");
         }
-        Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file);
-        if (map.get("error") == null || map.get("").equals("")) {
-            return JsonResponseTool.failure("");
-        } else {
-            // 返回CODE
 
-        }
-        return null;
+        return userService.excelImport_tx(file);
     }
 
     /**
