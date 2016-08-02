@@ -33,9 +33,6 @@ public class AreaTool implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         redisTemplate = (RedisTemplate) applicationContext.getBean("redisTemplate");
         tAreaMapper = applicationContext.getBean(TAreaMapper.class);
-        if(redisTemplate == null){
-            SysPropertyTool.initProperty();
-        }
     }
 
     /**

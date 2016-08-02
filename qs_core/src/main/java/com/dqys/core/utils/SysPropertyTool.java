@@ -30,9 +30,7 @@ public class SysPropertyTool implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         tSysPropertyMapper = applicationContext.getBean(TSysPropertyMapper.class);
         redisTemplate = (RedisTemplate) applicationContext.getBean("redisTemplate");
-        if(redisTemplate == null){
-            this.initProperty();
-        }
+        this.initProperty(); // 加载数据进redisTemplate
     }
 
     /**
