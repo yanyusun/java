@@ -4,6 +4,7 @@ import com.dqys.business.orm.base.BaseTest;
 import com.dqys.business.orm.mapper.common.SourceInfoMapper;
 import com.dqys.business.orm.pojo.common.SourceInfo;
 import org.junit.Assert;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -14,6 +15,7 @@ public class SourceInfoMapperImplTest extends BaseTest {
     @Autowired
     private SourceInfoMapper sourceInfoMapper;
 
+    @Test
     public void test(){
         SourceInfo sourceInfo = new SourceInfo();
         sourceInfo.setSourceType(1);

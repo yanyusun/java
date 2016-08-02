@@ -1,6 +1,7 @@
 package com.dqys.core.utils;
 
 
+import org.junit.Assert;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -26,9 +27,6 @@ public class NoSQLWithRedisTool implements ApplicationContextAware {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         redisTemplate = (RedisTemplate) applicationContext.getBean("redisTemplate");
-        if(redisTemplate == null){
-            SysPropertyTool.initProperty();
-        }
         /*msgRedisTemplate = (RedisTemplate) applicationContext.getBean("msgRedisTemplate");*/
     }
 
