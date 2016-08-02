@@ -6,6 +6,9 @@ package com.dqys.core.base;
  * 通用的系统级配置
  */
 public class SysProperty {
+    // 默认的分页数据
+    public static final Integer DEFAULT_PAGE = 1;
+    public static final Integer DEFAULT_PAGE_SIZE = 20;
 
     // 控制查询搜索不到数据时填充的限制数据
     public static final Integer NULL_DATA_ID = 0;

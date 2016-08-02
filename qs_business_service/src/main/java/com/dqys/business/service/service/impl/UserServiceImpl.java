@@ -21,6 +21,7 @@ import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.business.service.service.UserService;
 import com.dqys.business.service.utils.excel.UserExcelUtil;
 import com.dqys.business.service.utils.user.UserServiceUtils;
+import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.mapper.facade.TAreaMapper;
 import com.dqys.core.model.JsonResponse;
@@ -137,20 +138,15 @@ public class UserServiceImpl implements UserService {
         tUserQuery.setNameLike(query.getName());
 
         tUserQuery.setIsPaging(true); // 开启分页
-        if(query.getPageCount() != null){
+        if (query.getPageCount() > 1) {
             tUserQuery.setPageSize(query.getPageCount());
-            if(query.getPage() != null && query.getPage() > 1){
-                tUserQuery.setStartPageNum((query.getPage()-1)*query.getPageCount());
-            }else{
-                tUserQuery.setStartPageNum(0);
-            }
-        }else {
-            tUserQuery.setPageSize(20);
-            if(query.getPage() != null && query.getPage() > 1){
-                tUserQuery.setStartPageNum((query.getPage()-1)*20);
-            }else{
-                tUserQuery.setStartPageNum(0);
-            }
+        } else {
+            tUserQuery.setPageSize(SysProperty.DEFAULT_PAGE_SIZE);
+        }
+        if (query.getPage() > 1) {
+            tUserQuery.setStartPageNum((query.getPage() - 1) * query.getPageCount());
+        } else {
+            tUserQuery.setStartPageNum(0);
         }
         List<TUserInfo> tUserInfoList = tUserInfoMapper.queryList(tUserQuery);
         List<UserListDTO> userListDTOList = new ArrayList<>();
@@ -160,7 +156,7 @@ public class UserServiceImpl implements UserService {
             resultMap.put("total", 0);
             return JsonResponseTool.success(resultMap);
         } else {
-            for(TUserInfo tUserInfo : tUserInfoList){
+            for (TUserInfo tUserInfo : tUserInfoList) {
                 userListDTOList.add(_get(tUserInfo));
             }
         }
@@ -321,14 +317,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JsonResponse setPwdBatch(List<Integer> ids) {
-        if(CommonUtil.checkParam(ids)){
+        if (CommonUtil.checkParam(ids)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        if(!CommonUtil.isManage()){
+        if (!CommonUtil.isManage()) {
             return JsonResponseTool.failure("没有权限操作");
         }
         List<String> errList = new ArrayList<>();
-        for(Integer id : ids){
+        for (Integer id : ids) {
             TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(id);
             if (tUserInfo != null) {
                 TUserInfo tUserInfo1 = new TUserInfo();
@@ -340,14 +336,14 @@ public class UserServiceImpl implements UserService {
                     e.printStackTrace();
                 }
                 Integer result = tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo1);
-                if(result < 1){
+                if (result < 1) {
                     String errStr = "用户: " + tUserInfo.getUserName() + " 重设密码失败";
                     errList.add(errStr);
-                }else{
-                    if(tUserInfo.getMobile() != null){
+                } else {
+                    if (tUserInfo.getMobile() != null) {
                         sendMsg(tUserInfo.getMobile());
                     }
-                    if(tUserInfo.getEmail() != null){
+                    if (tUserInfo.getEmail() != null) {
                         sendMsg(tUserInfo.getEmail());
                     }
                 }
@@ -358,11 +354,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JsonResponse setPwd(Integer id, String pwd) {
-        if(CommonUtil.checkParam(id, pwd)){
+        if (CommonUtil.checkParam(id, pwd)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(id);
-        if(tUserInfo == null){
+        if (tUserInfo == null) {
             return JsonResponseTool.failure("参数错误");
         }
         TUserInfo tUserInfo1 = new TUserInfo();
@@ -374,13 +370,13 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
         Integer result = tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo1);
-        if(result < 1){
+        if (result < 1) {
             return JsonResponseTool.failure("设置失败");
-        }else{
-            if(tUserInfo.getMobile() != null){
+        } else {
+            if (tUserInfo.getMobile() != null) {
                 sendMsg(tUserInfo.getMobile());
             }
-            if(tUserInfo.getEmail() != null){
+            if (tUserInfo.getEmail() != null) {
                 sendMsg(tUserInfo.getEmail());
             }
             return JsonResponseTool.success(id);
@@ -419,11 +415,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JsonResponse excelImport_tx(MultipartFile file) {
-        if(CommonUtil.checkParam(file)){
+        if (CommonUtil.checkParam(file)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         CompanyDetailInfo companyDetailInfo = tCompanyInfoMapper.get(UserSession.getCurrent().getUserId());
-        if(companyDetailInfo == null){
+        if (companyDetailInfo == null) {
             return JsonResponseTool.paramErr("您不是管理员,没有权限导入成员");
         }
 
@@ -432,8 +428,8 @@ public class UserServiceImpl implements UserService {
             return JsonResponseTool.failure(map.get("data").toString());
         } else {
             // 返回CODE
-            List<UserFileDTO> userFileDTOList = (List<UserFileDTO>)map.get("userFileDTOs");
-            if(userFileDTOList == null || userFileDTOList.size() == 0){
+            List<UserFileDTO> userFileDTOList = (List<UserFileDTO>) map.get("userFileDTOs");
+            if (userFileDTOList == null || userFileDTOList.size() == 0) {
                 return JsonResponseTool.failure("没有数据添加");
             }
             for (UserFileDTO userFileDTO : userFileDTOList) {
@@ -443,41 +439,41 @@ public class UserServiceImpl implements UserService {
                 // 用户身份信息
                 TUserTag userTag = UserServiceUtils.toUserTag(userFileDTO);
                 userTag.setUserType(companyDetailInfo.getType().byteValue());
-                if(userFileDTO.getJoinAt() != null){
+                if (userFileDTO.getJoinAt() != null) {
                     userTag.setCreateAt(userFileDTO.getJoinAt());
                 }
                 TArea area = areaMapper.getByName(userFileDTO.getDutyArea());
-                if(area != null){
+                if (area != null) {
                     userTag.setDutyArea(area.getId());
                 }
                 OrganizationQuery organizationQuery = new OrganizationQuery();
                 organizationQuery.setCompanyId(companyDetailInfo.getCompanyId());
                 organizationQuery.setName(userFileDTO.getApartment());
                 List<Organization> organizationList = organizationMapper.list(organizationQuery);
-                if(organizationList != null && organizationList.size() > 0){
+                if (organizationList != null && organizationList.size() > 0) {
                     userTag.setApartmentId(organizationList.get(0).getId());
-                }else{
+                } else {
                     Organization organization = new Organization();
                     organization.setType(OrganizationTypeEnum.apartment.name());
                     organization.setName(userFileDTO.getApartment());
                     organization.setCompanyId(companyDetailInfo.getCompanyId());
                     organization.setUserId(companyDetailInfo.getUserId());
                     Integer result = organizationMapper.insert(organization);
-                    if(CommonUtil.checkResult(result)){
+                    if (CommonUtil.checkResult(result)) {
                         return JsonResponseTool.failure("添加部门信息时失败");
-                    }else{
+                    } else {
                         Integer id = organization.getId();
                         userTag.setApartmentId(id);
                     }
                 }
                 Integer userAdd = tUserInfoMapper.insertSelective(userInfo);
-                if(CommonUtil.checkResult(userAdd)){
+                if (CommonUtil.checkResult(userAdd)) {
                     return JsonResponseTool.failure("添加用户信息失败");
                 }
                 Integer userId = userInfo.getId();
                 userTag.setUserId(userId);
                 Integer tagAdd = tUserTagMapper.insertSelective(userTag);
-                if(CommonUtil.checkResult(tagAdd)){
+                if (CommonUtil.checkResult(tagAdd)) {
                     return JsonResponseTool.failure("添加用户信息失败");
                 }
             }
@@ -488,6 +484,7 @@ public class UserServiceImpl implements UserService {
     /**
      * 发送激活邮箱
      * todo 需要做
+     *
      * @param email
      */
     private void sendMail(String email) {
@@ -504,7 +501,7 @@ public class UserServiceImpl implements UserService {
      * 发送短信
      * TODO 需要实现
      */
-    private void sendMsg(String mobile){
+    private void sendMsg(String mobile) {
 //        String msg = "";
 //        // todo 生成发送日志报告
 //        LogManager.getRootLogger().debug(msg);

@@ -43,7 +43,6 @@ public class AreaTool implements ApplicationContextAware {
         for(TArea tArea : tAreas) {
             redisTemplate.boundHashOps(TArea.class.getName()).put(tArea.getId(), tArea);
         }
-
         //省份
         loadAreaByUpper(0);
     }
