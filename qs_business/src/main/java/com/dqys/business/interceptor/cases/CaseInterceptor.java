@@ -1,4 +1,4 @@
-package com.dqys.business.interceptor.company;
+package com.dqys.business.interceptor.cases;
 
 import com.dqys.business.interceptor.base.AuthenticationInterceptor;
 import com.dqys.business.service.exception.bean.UrlException;
@@ -8,16 +8,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by Yvan on 16/7/26.
+ * Created by Yvan on 16/7/27.
  */
-public class NavigationIntegercepter extends AuthenticationInterceptor {
-
-    public static final String API_ADD = "/nav/add";
-    public static final String API_DELETE = "/nav/delete";
-    public static final String API_UPDATE = "/nav/update";
-    public static final String API_GET = "/nav/get";
-    public static final String API_GET_TOP = "/nav/getTop";
-    public static final String API_LIST_BY_ID = "/nav/listById";
+public class CaseInterceptor extends AuthenticationInterceptor {
+    
+    public static final String API_ADD = "/case/add";
+    public static final String API_DIVIDE = "/case/divide";
+    public static final String API_UPDATE = "/case/update";
+    public static final String API_LIST = "/case/list";
+    public static final String API_LIST_CASE = "/case/listCase";
 
 
     @Override
@@ -25,15 +24,13 @@ public class NavigationIntegercepter extends AuthenticationInterceptor {
         String url = request.getRequestURI();
         if (API_ADD.equals(url)) {//待后期完善根据业务号，团队id，操作对象，人员控制权限
             return true;
-        } else if (API_DELETE.equals(url)) {
+        } else if (API_DIVIDE.equals(url)) {
             return true;
         } else if (API_UPDATE.equals(url)) {
             return true;
-        } else if (API_GET.equals(url)) {
+        } else if (API_LIST.equals(url)) {
             return true;
-        } else if (API_GET_TOP.equals(url)) {
-            return true;
-        } else if (API_LIST_BY_ID.equals(url)) {
+        } else if (API_LIST_CASE.equals(url)) {
             return true;
         } else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:" + url);
