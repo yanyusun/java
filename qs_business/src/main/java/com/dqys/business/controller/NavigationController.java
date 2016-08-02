@@ -128,7 +128,7 @@ public class NavigationController {
     public JsonResponse getTop() {
         NavigationQuery navigationQuery = createNavigationQuery();
         if (CommonUtil.checkParam(navigationQuery)) {
-            return JsonResponseTool.failure("用户头信息错误");
+            return JsonResponseTool.failure("未注册用户不具有该权限");
         }
         navigationQuery.setPid(SysProperty.DEFAULT);
         List<NavigationDTO> navigationDTOList = navigationService.queryList(navigationQuery);
@@ -191,52 +191,89 @@ public class NavigationController {
      * 根据用户不同的导航栏搜索选项
      */
     private NavigationQuery createNavigationQuery() {
-        UserInsertDTO userInsertDTO = (UserInsertDTO) userService.get(UserSession.getCurrent().getUserId()).getData();
+        // 本地调试时开启
+        UserInsertDTO userInsertDTO = (UserInsertDTO) userService.get(53).getData();
         if (CommonUtil.checkParam(userInsertDTO)) {
             return null;
         }
-
-        // 本地调试
-//        NavigationQuery navigationQuery = new NavigationQuery();
-//        navigationQuery.setManager(true);
-//        navigationQuery.setPlatform(true);
-
+        // TODO 这边NosqlWithRedisTool 获取不到数据,先以死数据填充后,请后续修正
         NavigationQuery navigationQuery = new NavigationQuery();
         // 平台部分
-        if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW))) {
+        if (userInsertDTO.getUserType().equals(32)) {
             // 律所
             navigationQuery.setLaw(true);
-        } else if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY))) {
+        } else if (userInsertDTO.getUserType().equals(33)) {
             // 中介
             navigationQuery.setAgent(true);
-        } else if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE))) {
+        } else if (userInsertDTO.getUserType().equals(31)) {
             // 催收
             navigationQuery.setCollection(true);
-        } else if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST))) {
+        } else if (userInsertDTO.getUserType().equals(2)) {
             // 委托
             navigationQuery.setEntrust(true);
-        } else if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM))) {
+        } else if (userInsertDTO.getUserType().equals(1)) {
             // 平台
             navigationQuery.setPlatform(true);
-        } else if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_COMMON))) {
+        } else if (userInsertDTO.getUserType().equals(0)) {
             // 普通用户(个人)
             navigationQuery.setPersonal(true);
         } else {
             return null;
         }
         // 角色部分
-        if (userInsertDTO.getRoleId().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.ROLE_MANAGER_KEY))) {
+        if (userInsertDTO.getRoleId().equals(2)) {
             // 管理者
             navigationQuery.setGovernor(true);
-        } else if (userInsertDTO.getRoleId().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.ROLE_ADMINISTRATOR_KEY))) {
+        } else if (userInsertDTO.getRoleId().equals(1)) {
             // 管理员
             navigationQuery.setManager(true);
-        } else if (userInsertDTO.getRoleId().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.ROLE_MANAGER_KEY))) {
+        } else if (userInsertDTO.getRoleId().equals(3)) {
             // 普通员工
             navigationQuery.setEmployee(true);
         } else {
             return null;
         }
+
+//        UserInsertDTO userInsertDTO = (UserInsertDTO) userService.get(UserSession.getCurrent().getUserId()).getData();
+//        if (CommonUtil.checkParam(userInsertDTO)) {
+//            return null;
+//        }
+//        NavigationQuery navigationQuery = new NavigationQuery();
+//        // 平台部分
+//        if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW) + ",")) {
+//            // 律所
+//            navigationQuery.setLaw(true);
+//        } else if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY) + ",")) {
+//            // 中介
+//            navigationQuery.setAgent(true);
+//        } else if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE))) {
+//            // 催收
+//            navigationQuery.setCollection(true);
+//        } else if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST))) {
+//            // 委托
+//            navigationQuery.setEntrust(true);
+//        } else if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM))) {
+//            // 平台
+//            navigationQuery.setPlatform(true);
+//        } else if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_COMMON))) {
+//            // 普通用户(个人)
+//            navigationQuery.setPersonal(true);
+//        } else {
+//            return null;
+//        }
+//        // 角色部分
+//        if (userInsertDTO.getRoleId().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.ROLE_MANAGER_KEY))) {
+//            // 管理者
+//            navigationQuery.setGovernor(true);
+//        } else if (userInsertDTO.getRoleId().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.ROLE_ADMINISTRATOR_KEY))) {
+//            // 管理员
+//            navigationQuery.setManager(true);
+//        } else if (userInsertDTO.getRoleId().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.ROLE_MANAGER_KEY))) {
+//            // 普通员工
+//            navigationQuery.setEmployee(true);
+//        } else {
+//            return null;
+//        }
 
         return navigationQuery;
     }
