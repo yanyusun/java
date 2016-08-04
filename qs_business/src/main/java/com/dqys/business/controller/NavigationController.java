@@ -95,7 +95,7 @@ public class NavigationController {
     }
 
     /**
-     * @api {POST} http://{url}/nav/get 获取导航栏
+     * @api {get} http://{url}/nav/get 获取导航栏
      * @apiName get
      * @apiGroup navigation
      * @apiParam {number} id 导航栏KEY
@@ -117,7 +117,7 @@ public class NavigationController {
     }
 
     /**
-     * @api {POST} http://{url}/nav/getInit 获取初始导航栏
+     * @api {GET} http://{url}/nav/getInit 获取初始导航栏
      * @apiName getInit
      * @apiGroup navigation
      * @apiSuccess {NavigationDTO} data 导航栏数据
@@ -140,7 +140,7 @@ public class NavigationController {
     }
 
     /**
-     * @api {POST} http://{url}/nav/listById 根据导航栏key获取子导航栏
+     * @api {GET} http://{url}/nav/listById 根据导航栏key获取子导航栏
      * @apiName listById
      * @apiGroup navigation
      * @apiParam {number} id 导航栏key

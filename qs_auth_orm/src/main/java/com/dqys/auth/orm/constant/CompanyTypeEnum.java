@@ -19,7 +19,14 @@ public enum  CompanyTypeEnum {
     finance(27, "消费金融公司"),
     auction(28, "拍卖公司"),
     pledge(29, "典当行"),
-    entrust(20, "担保公司");
+    entrust(30, "担保公司"),
+    other(31, "其他"),
+    urge(32, "专业催收公司"),
+    lawyer(33, "律师事务所"),
+    factor(34, "保理公司"),
+    trust(35, "信托公司"),
+    investment(36, "投资公司"),
+    intermediary(37, "中介公司");
 
     private Integer value;
     private String name;

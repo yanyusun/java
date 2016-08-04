@@ -128,7 +128,6 @@ public class UserServiceImpl implements UserService {
             String code = RandomStringUtils.randomAlphanumeric(20) + e.getValue();
             //NoSQLWithRedisTool.sendMailToChannel(tUserInfo.getEmail(), code);     //redis
 
-
             RabbitMQProducerTool.addToMailSendQueue(tUserInfo.getEmail(), code);
             NoSQLWithRedisTool.setValueObject(MAIL_CONFIRM_KEY + tUserInfo.getEmail(), code, 1, TimeUnit.DAYS);
         }

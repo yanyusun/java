@@ -1,8 +1,7 @@
-package com.dqys.wms.init;
+package com.dqys.core.utils;
 
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
-import com.dqys.core.utils.SysPropertyTool;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Component;
  * Created by pan on 16-5-26.
  */
 @Component
-public class MqClient {
+public class EmailClientTool {
 
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = "mail_send_queue", durable = "true"),
