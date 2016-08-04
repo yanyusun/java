@@ -12,43 +12,47 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class CompanyInterceptor extends AuthenticationInterceptor {
 
-    public static final String API_LIST_OGA = "/api/company/listOrganization";
-    public static final String API_ADD_OGA = "/api/company/addOrganization";
-    public static final String API_DELETE_OGA = "/api/company/deleteOrganization";
-    public static final String API_UPDATE_OGA = "/api/company/updateOrganization";
-    public static final String API_GET_OGA = "/api/company/getOrganization";
-    public static final String API_GET_DIS = "/api/company/getDistribution";
-    public static final String API_JOIN_DIS = "/api/company/joinDistribution";
-    public static final String API_INVITE_DIS = "/api/company/inviteDistribution";
-    public static final String API_DESIGN_DIS = "/api/company/designDistribution";
-    public static final String API_EXIST_DIS = "/api/company/exitDistribution";
-    public static final String API_GET_REL = "/api/company/getRelation";
+    public static final String API_LIST_OGA = "listOrganization";
+    public static final String API_ADD_OGA = "addOrganization";
+    public static final String API_DELETE_OGA = "deleteOrganization";
+    public static final String API_UPDATE_OGA = "updateOrganization";
+    public static final String API_GET_OGA = "getOrganization";
+    public static final String API_GET_DIS = "getDistribution";
+    public static final String API_JOIN_DIS = "joinDistribution";
+    public static final String API_INVITE_DIS = "inviteDistribution";
+    public static final String API_DESIGN_DIS = "designDistribution";
+    public static final String API_EXIST_DIS = "exitDistribution";
+    public static final String API_GET_REL = "getRelation";
 
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         String url = request.getRequestURI();
-        if (API_LIST_OGA.equals(url)) {//待后期完善根据业务号，团队id，操作对象，人员控制权限
+        String path = "";
+        if(url != null && url.length() > 0){
+            path = url.substring(url.lastIndexOf("/"), url.length());
+        }
+        if (API_LIST_OGA.equals(path)) {//待后期完善根据业务号，团队id，操作对象，人员控制权限
             return true;
-        } else if (API_ADD_OGA.equals(url)) {
+        } else if (API_ADD_OGA.equals(path)) {
             return true;
-        } else if (API_DELETE_OGA.equals(url)) {
+        } else if (API_DELETE_OGA.equals(path)) {
             return true;
-        } else if (API_UPDATE_OGA.equals(url)) {
+        } else if (API_UPDATE_OGA.equals(path)) {
             return true;
-        } else if (API_GET_OGA.equals(url)) {
+        } else if (API_GET_OGA.equals(path)) {
             return true;
-        } else if (API_GET_DIS.equals(url)) {
+        } else if (API_GET_DIS.equals(path)) {
             return true;
-        } else if (API_JOIN_DIS.equals(url)) {
+        } else if (API_JOIN_DIS.equals(path)) {
             return true;
-        } else if (API_INVITE_DIS.equals(url)) {
+        } else if (API_INVITE_DIS.equals(path)) {
             return true;
-        } else if (API_DESIGN_DIS.equals(url)) {
+        } else if (API_DESIGN_DIS.equals(path)) {
             return true;
-        } else if (API_EXIST_DIS.equals(url)) {
+        } else if (API_EXIST_DIS.equals(path)) {
             return true;
-        } else if (API_GET_REL.equals(url)) {
+        } else if (API_GET_REL.equals(path)) {
             return true;
         } else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:" + url);

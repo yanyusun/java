@@ -12,31 +12,35 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class LenderInterceptor extends AuthenticationInterceptor {
 
-    public static final String API_GET_INIT = "/lender/getInit";
-    public static final String API_ADD = "/lender/add";
-    public static final String API_DELETE = "/lender/delete";
-    public static final String API_UPDATE = "/lender/update";
-    public static final String API_GET = "/lender/get";
-    public static final String API_GET_ALL = "/lender/getLenderAll";
-    public static final String API_LIST = "/lender/list";
+    public static final String API_GET_INIT = "getInit";
+    public static final String API_ADD = "add";
+    public static final String API_DELETE = "delete";
+    public static final String API_UPDATE = "update";
+    public static final String API_GET = "get";
+    public static final String API_GET_ALL = "getLenderAll";
+    public static final String API_LIST = "list";
 
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         String url = request.getRequestURI();
-        if(API_GET_INIT.equals(url)){//待后期完善根据业务号，团队id，操作对象，人员控制权限
+        String path = "";
+        if(url != null && url.length() > 0){
+            path = url.substring(url.lastIndexOf("/"), url.length());
+        }
+        if(API_GET_INIT.equals(path)){//待后期完善根据业务号，团队id，操作对象，人员控制权限
             return true;
-        }else if(API_ADD.equals(url)){
+        }else if(API_ADD.equals(path)){
             return true;
-        }else if(API_DELETE.equals(url)){
+        }else if(API_DELETE.equals(path)){
             return true;
-        }else if(API_UPDATE.equals(url)){
+        }else if(API_UPDATE.equals(path)){
             return true;
-        }else if(API_GET.equals(url)){
+        }else if(API_GET.equals(path)){
             return true;
-        }else if(API_GET_ALL.equals(url)){
+        }else if(API_GET_ALL.equals(path)){
             return true;
-        }else if(API_LIST.equals(url)){
+        }else if(API_LIST.equals(path)){
             return true;
         }else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:"+url);

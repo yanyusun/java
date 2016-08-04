@@ -12,25 +12,29 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class IouInterceptor extends AuthenticationInterceptor {
 
-    public static final String API_ADD = "/iou/add";
-    public static final String API_DELETE = "/iou/delete";
-    public static final String API_UPDATE = "/iou/update";
-    public static final String API_GET = "/iou/get";
-    public static final String API_LIST_LENDER_SELECT = "/iou/listIou";
+    public static final String API_ADD = "add";
+    public static final String API_DELETE = "delete";
+    public static final String API_UPDATE = "update";
+    public static final String API_GET = "get";
+    public static final String API_LIST_LENDER_SELECT = "listIou";
 
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         String url = request.getRequestURI();
-        if(API_ADD.equals(url)){
+        String path = "";
+        if(url != null && url.length() > 0){
+            path = url.substring(url.lastIndexOf("/"), url.length());
+        }
+        if(API_ADD.equals(path)){
             return true;
-        }else if(API_DELETE.equals(url)){
+        }else if(API_DELETE.equals(path)){
             return true;
-        }else if(API_UPDATE.equals(url)){
+        }else if(API_UPDATE.equals(path)){
             return true;
-        }else if(API_GET.equals(url)){
+        }else if(API_GET.equals(path)){
             return true;
-        }else if(API_LIST_LENDER_SELECT.equals(url)){
+        }else if(API_LIST_LENDER_SELECT.equals(path)){
             return true;
         }else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:"+url);

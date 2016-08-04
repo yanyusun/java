@@ -22,15 +22,19 @@ public class CaseInterceptor extends AuthenticationInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         String url = request.getRequestURI();
-        if (API_ADD.equals(url)) {//待后期完善根据业务号，团队id，操作对象，人员控制权限
+        String path = "";
+        if(url != null && url.length() > 0){
+            path = url.substring(url.lastIndexOf("/"), url.length());
+        }
+        if (API_ADD.equals(path)) {//待后期完善根据业务号，团队id，操作对象，人员控制权限
             return true;
-        } else if (API_DIVIDE.equals(url)) {
+        } else if (API_DIVIDE.equals(path)) {
             return true;
-        } else if (API_UPDATE.equals(url)) {
+        } else if (API_UPDATE.equals(path)) {
             return true;
-        } else if (API_LIST.equals(url)) {
+        } else if (API_LIST.equals(path)) {
             return true;
-        } else if (API_LIST_CASE.equals(url)) {
+        } else if (API_LIST_CASE.equals(path)) {
             return true;
         } else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:" + url);
