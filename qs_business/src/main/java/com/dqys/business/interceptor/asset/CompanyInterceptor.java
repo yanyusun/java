@@ -30,7 +30,7 @@ public class CompanyInterceptor extends AuthenticationInterceptor {
         String url = request.getRequestURI();
         String path = "";
         if(url != null && url.length() > 0){
-            path = url.substring(url.lastIndexOf("/"), url.length());
+            path = url.substring(url.lastIndexOf("/") + 1, url.length());
         }
         if (API_LIST_OGA.equals(path)) {//待后期完善根据业务号，团队id，操作对象，人员控制权限
             return true;

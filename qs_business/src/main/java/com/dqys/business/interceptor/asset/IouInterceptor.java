@@ -24,7 +24,7 @@ public class IouInterceptor extends AuthenticationInterceptor {
         String url = request.getRequestURI();
         String path = "";
         if(url != null && url.length() > 0){
-            path = url.substring(url.lastIndexOf("/"), url.length());
+            path = url.substring(url.lastIndexOf("/") + 1, url.length());
         }
         if(API_ADD.equals(path)){
             return true;
