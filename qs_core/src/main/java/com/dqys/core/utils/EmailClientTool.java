@@ -16,13 +16,13 @@ import org.springframework.stereotype.Component;
 /**
  * Created by pan on 16-5-26.
  */
-//@Component
+@Component
 public class EmailClientTool {
 
-   /* @RabbitListener(bindings = @QueueBinding(
+   @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = "mail_send_queue", durable = "true"),
             exchange = @Exchange(value = "mailExchange"))
-    )*/
+    )
     public void sendMailFromMessage(String[] msg) throws Exception {
         sendMail(msg[0], msg[1]);
     }
