@@ -51,17 +51,20 @@ public class MessageController {
             Map<String, Object> map = new HashMap<>();
             map.put("list", MessageUtils.transToMessageDTO(list));
             Message sage = new Message();
-            map.put("total", messageService.selectCount(sage));//总共的记录数目
+//            map.put("total", messageService.selectCount(sage));//总共的记录数目
             sage.setStatus(0);//标记的未读消息
             map.put("totalMes", messageService.selectCount(sage));//全部未读消息数
             sage.setType(MessageEnum.PRODUCT.getValue());
-            map.put("productMes", messageService.selectCount(sage));//"产品消息数
+            map.put("productMes", messageService.selectCount(sage));//"产品未读消息数
             sage.setType(MessageEnum.SAFETY.getValue());
-            map.put("safetyMes", messageService.selectCount(sage));//"安全消息数"
+            map.put("safetyMes", messageService.selectCount(sage));//"安全未读消息数"
             sage.setType(MessageEnum.SERVE.getValue());
-            map.put("serveMes", messageService.selectCount(sage));//"服务消息数"
+            map.put("serveMes", messageService.selectCount(sage));//"服务未读消息数"
             sage.setType(MessageEnum.TASK.getValue());
-            map.put("taskMes", messageService.selectCount(sage));//"任务消息数"
+            map.put("taskMes", messageService.selectCount(sage));//"任务未读消息数"
+            sage.setType(message.getType());
+            sage.setStatus(message.getStatus());
+            map.put("listCount",messageService.selectCount(sage));//条件查询消息数量
             return JsonResponseTool.success(map);
         }
     }
