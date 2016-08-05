@@ -179,7 +179,6 @@
         <property name="retryTemplate" ref="rabbitRetryTemplate" />
         <property name="mandatory" value="true" />
     </bean>
-
     <!-- 邮件确认队列 -->
     <rabbit:queue name="mail_send_queue" durable="true" />
     <rabbit:direct-exchange name="mailExchange" durable="true">
@@ -187,6 +186,21 @@
             <rabbit:binding key="mail_route" queue="mail_send_queue" ></rabbit:binding>
         </rabbit:bindings>
     </rabbit:direct-exchange>
+
+
+
+
+    <rabbit:listener-container connection-factory="rabbitConnectionFactory" acknowledge="auto" task-executor="taskScheduler">
+
+        <!--task-executor="taskExecutor"-->
+
+        <rabbit:listener queues="mail_send_queue" ref="mailMqClient" />
+
+    </rabbit:listener-container>
+    <bean id="mailMqClient" class="com.dqys.core.utils.MailMqClient" />
+
+
+
 
     <!--<rabbit:listener-container connection-factory="rabbitConnectionFactory">
         <rabbit:listener ref="mailClient" method="sendMailFromMessage" queue-names="mail_send_queue" />
@@ -216,7 +230,7 @@
     <rabbit:listener-container connection-factory="rabbitConnectionFactory">
         <rabbit:listener ref="rabbitClinet" method="listen" queue-names="myQueue" />
     </rabbit:listener-container>
-    <bean id="rabbitClient" class="com.dqys.core.utils.RabbitMQClientTool" />-->
+    <bean id="rabbitClinet" class="com.dqys.core.utils.RabbitMQClientTool" />-->
 
 
 
@@ -249,11 +263,11 @@
         <property name="exchange" value="myExchange" />
         <property name="routingKey" value="myRoute" />
         <property name="queue" value="myQueue" />
-    </bean>
+    </bean>-->
+    <!--
+    <rabbit:template id="rabbitTemplate" mandatory="true" connection-factory="rabbitConnectionFactory" retry-template="rabbitRetryTemplate" />
 
-    <rabbit:template id="rabbitTemplate" mandatory="true" connection-factory="rabbitConnectionFactory" retry-template="rabbitRetryTemplate" />-->
-
-    <!--<bean id="rabbitListenerContainerFactory"
+    <bean id="rabbitListenerContainerFactory"
           class="org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory">
         <property name="connectionFactory" ref="rabbitConnectionFactory"/>
         <property name="concurrentConsumers" value="3"/>
