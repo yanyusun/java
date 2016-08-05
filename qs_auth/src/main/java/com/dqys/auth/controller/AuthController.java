@@ -234,7 +234,7 @@ public class AuthController extends BaseApiContorller {
 
             //用户注册
             ServiceResult<UserDTO> userServiceResult = userService.userRegister_tx(userName, mobile, email, pwd);
-            if(!userServiceResult.getFlag()) {
+            if(userServiceResult.getFlag()) {
                 return JsonResponseTool.failure(userServiceResult.getMessage());
             }
 
