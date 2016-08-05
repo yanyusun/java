@@ -229,7 +229,7 @@ public class SysPropertyTool implements ApplicationContextAware {
         loadUserTypeProperty();
         loadRoleProperty();
         loadFileBusinessTypeProperty();
-        AreaTool.loadArea();
+       // AreaTool.loadArea();
     }
 
 
