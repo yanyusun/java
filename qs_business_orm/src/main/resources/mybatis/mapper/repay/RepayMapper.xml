@@ -1,7 +1,38 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.business.orm.mapper.repay.RepayMapper">
-
+    <resultMap id="BaseResultMapRepay" type="com.dqys.business.orm.pojo.repay.Repay">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="damage_date" property="damageDate" jdbcType="DATE"/>
+        <result column="repay_type" property="repayType" jdbcType="INTEGER"/>
+        <result column="oper_user_id" property="operUserId" jdbcType="INTEGER"/>
+        <result column="repay_m" property="repayM" jdbcType="DOUBLE"/>
+        <result column="repay_fid" property="repayFid" jdbcType="INTEGER"/>
+        <result column="repay_way" property="repayWay" jdbcType="INTEGER"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="repay_fid_type" property="repayFidType" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.dqys.business.orm.pojo.repay.Repay" extends="BaseResultMapRepay">
+        <result column="repay_bills" property="repayBills" jdbcType="LONGVARBINARY"/>
+    </resultMap>
+    <resultMap id="BaseResultMapRepayRecord" type="com.dqys.business.orm.pojo.repay.RepayRecord">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="iou_id" property="iouId" jdbcType="INTEGER"/>
+        <result column="repay_id" property="repayId" jdbcType="INTEGER"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="repay_principal" property="repayPrincipal" jdbcType="DOUBLE"/>
+        <result column="repay_interest" property="repayInterest" jdbcType="DOUBLE"/>
+        <result column="repay_fine" property="repayFine" jdbcType="DOUBLE"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+    </resultMap>
     <!--扣除借据中的金额-->
     <update id="repayIou">
         UPDATE bt_iou
@@ -16,7 +47,9 @@
                 accrual_repay=accrual_repay+#{accMoney,jdbcType=DOUBLE},
             </if>
             <if test="penalty !=null">
-                accrual_arrears=accrual_arrears-#{accMoney,jdbcType=DOUBLE},
+                <if test="accMoney !=null">
+                    accrual_arrears=accrual_arrears-#{accMoney,jdbcType=DOUBLE},
+                </if>
                 penalty=penalty-#{penalty,jdbcType=DOUBLE},
                 accrual_repay=accrual_repay+#{penalty,jdbcType=DOUBLE},
             </if>
@@ -28,12 +61,81 @@
         UPDATE bt_lender
         <set>
             version=version+1,
-            accrual=accrual-#{accMoney,jdbcType=DOUBLE},
-            loan=loan-#{priMoney,jdbcType=DOUBLE},
+            <if test="accMoney !=null">
+                accrual=accrual-#{accMoney,jdbcType=DOUBLE},
+            </if>
+            <if test="priMoney !=null">
+                loan=loan-#{priMoney,jdbcType=DOUBLE},
+            </if>
         </set>
         WHERE id=#{lenderId,jdbcType=INTEGER} and version=#{version,jdbcType=INTEGER}
     </update>
-
+    <!--扣除资产包表的金额-->
+    <update id="repayAsset">
+        UPDATE bt_asset
+        <set>
+            version=version+1,
+            <if test="accMoney !=null">
+                accrual=accrual-#{accMoney,jdbcType=DOUBLE},
+            </if>
+            <if test="priMoney !=null">
+                loan=loan-#{priMoney,jdbcType=DOUBLE},
+            </if>
+        </set>
+        WHERE id=#{assetId,jdbcType=INTEGER} and version=#{version,jdbcType=INTEGER}
+    </update>
+    <!--借据中的金额冲正-->
+    <update id="repayIouReversal">
+        UPDATE bt_iou
+        <set>
+            version=version+1,
+            <if test="priMoney !=null">
+                less_corpus=less_corpus+#{priMoney,jdbcType=DOUBLE},
+                loan_repay=loan_repay-#{priMoney,jdbcType=DOUBLE},
+            </if>
+            <if test="accMoney !=null and penalty==null">
+                accrual_arrears=accrual_arrears+#{accMoney,jdbcType=DOUBLE},
+                accrual_repay=accrual_repay-#{accMoney,jdbcType=DOUBLE},
+            </if>
+            <if test="penalty !=null">
+                <if test="accMoney !=null">
+                    accrual_arrears=accrual_arrears+#{accMoney,jdbcType=DOUBLE},
+                </if>
+                penalty=penalty+#{penalty,jdbcType=DOUBLE},
+                accrual_repay=accrual_repay-#{penalty,jdbcType=DOUBLE},
+            </if>
+        </set>
+        WHERE id=#{iouId,jdbcType=INTEGER} and version=#{version,jdbcType=INTEGER}
+    </update>
+    <!--借款人表的金额冲正-->
+    <update id="repayLenderReversal">
+        UPDATE bt_lender
+        <set>
+            version=version+1,
+            <if test="accMoney !=null">
+                accrual=accrual+#{accMoney,jdbcType=DOUBLE},
+            </if>
+            <if test="priMoney !=null">
+                loan=loan+#{priMoney,jdbcType=DOUBLE},
+            </if>
+        </set>
+        WHERE id=#{lenderId,jdbcType=INTEGER} and version=#{version,jdbcType=INTEGER}
+    </update>
+    <!--资产包表的金额冲正-->
+    <update id="repayAssetReversal">
+        UPDATE bt_asset
+        <set>
+            version=version+1,
+            <if test="accMoney !=null">
+                accrual=accrual+#{accMoney,jdbcType=DOUBLE},
+            </if>
+            <if test="priMoney !=null">
+                loan=loan+#{priMoney,jdbcType=DOUBLE},
+            </if>
+        </set>
+        WHERE id=#{assetId,jdbcType=INTEGER} and version=#{version,jdbcType=INTEGER}
+    </update>
+    <!--修改还款记录-->
     <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.repay.Repay">
         update t_repay
         <set>
@@ -45,9 +147,6 @@
             </if>
             <if test="operUserId != null">
                 oper_user_id = #{operUserId,jdbcType=INTEGER},
-            </if>
-            <if test="iouId != null">
-                iou_id = #{iouId,jdbcType=INTEGER},
             </if>
             <if test="repayM != null">
                 repay_m = #{repayM,jdbcType=DOUBLE},
@@ -61,18 +160,8 @@
             <if test="remark != null">
                 remark = #{remark,jdbcType=VARCHAR},
             </if>
-            <if test="version != null">
-                version = #{version,jdbcType=INTEGER},
-            </if>
-            <if test="createAt != null">
-                create_at = #{createAt,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateAt != null">
-                update_at = #{updateAt,jdbcType=TIMESTAMP},
-            </if>
-            <if test="stateflag != null">
-                stateflag = #{stateflag,jdbcType=BIGINT},
-            </if>
+            version =version+1,
+            update_at =now(),
             <if test="repayBills != null">
                 repay_bills = #{repayBills,jdbcType=LONGVARBINARY},
             </if>
@@ -80,23 +169,19 @@
         where id = #{id,jdbcType=INTEGER}
     </update>
     <!--添加还款记录-->
-    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.repay.Repay">
+    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.repay.Repay" keyProperty="id"
+            useGeneratedKeys="true">
         insert into t_repay
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
             </if>
-            <if test="damageDate != null">
-                damage_date,
-            </if>
+            damage_date,
             <if test="repayType != null">
                 repay_type,
             </if>
             <if test="operUserId != null">
                 oper_user_id,
-            </if>
-            <if test="iouId != null">
-                iou_id,
             </if>
             <if test="repayM != null">
                 repay_m,
@@ -110,37 +195,31 @@
             <if test="remark != null">
                 remark,
             </if>
-            <if test="version != null">
-                version,
-            </if>
-            <if test="createAt != null">
-                create_at,
-            </if>
-            <if test="updateAt != null">
-                update_at,
-            </if>
-            <if test="stateflag != null">
-                stateflag,
-            </if>
+            create_at,
+            update_at,
             <if test="repayBills != null">
                 repay_bills,
+            </if>
+            <if test="repayFidType != null">
+                repay_fid_type,
+            </if>
+            <if test="status !=null">
+                status,
+            </if>
+            <if test="repayFidName != null">
+                repay_fid_name,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 #{id,jdbcType=INTEGER},
             </if>
-            <if test="damageDate != null">
-                #{damageDate,jdbcType=DATE},
-            </if>
+            now(),
             <if test="repayType != null">
                 #{repayType,jdbcType=INTEGER},
             </if>
             <if test="operUserId != null">
                 #{operUserId,jdbcType=INTEGER},
-            </if>
-            <if test="iouId != null">
-                #{iouId,jdbcType=INTEGER},
             </if>
             <if test="repayM != null">
                 #{repayM,jdbcType=DOUBLE},
@@ -154,24 +233,81 @@
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},
             </if>
-            <if test="version != null">
-                #{version,jdbcType=INTEGER},
-            </if>
-            <if test="createAt != null">
-                #{createAt,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateAt != null">
-                #{updateAt,jdbcType=TIMESTAMP},
-            </if>
-            <if test="stateflag != null">
-                #{stateflag,jdbcType=BIGINT},
-            </if>
+            now(),
+            now(),
             <if test="repayBills != null">
                 #{repayBills,jdbcType=LONGVARBINARY},
             </if>
+            <if test="repayFidType != null">
+                #{repayFidType,jdbcType=DOUBLE},
+            </if>
+            <if test="status !=null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="repayFidName != null">
+                #{repayFidName,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
-
+    <!--添加还款详细记录-->
+    <insert id="insertRecordSelective" parameterType="com.dqys.business.orm.pojo.repay.RepayRecord" keyProperty="id"
+            useGeneratedKeys="true">
+        insert into t_repay_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="iouId !=null">
+                iou_id,
+            </if>
+            <if test="repayId !=null">
+                repay_id,
+            </if>
+            <if test="repayPrincipal !=null">
+                repay_principal,
+            </if>
+            <if test="repayInterest !=null">
+                repay_interest,
+            </if>
+            <if test="repayFine !=null">
+                repay_fine,
+            </if>
+            <if test="status !=null">
+                status,
+            </if>
+            create_at,
+            update_at,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="iouId !=null">
+                #{iouId,jdbcType=INTEGER},
+            </if>
+            <if test="repayId !=null">
+                #{repayId,jdbcType=INTEGER},
+            </if>
+            <if test="repayPrincipal !=null">
+                #{repayPrincipal,jdbcType=DOUBLE},
+            </if>
+            <if test="repayInterest !=null">
+                #{repayInterest,jdbcType=DOUBLE},
+            </if>
+            <if test="repayFine !=null">
+                #{repayFine,jdbcType=DOUBLE},
+            </if>
+            <if test="status !=null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            now(),
+            now(),
+        </trim>
+    </insert>
+    <!--修改还款详情记录状态-->
+    <update id="updateRecordSelective" parameterType="com.dqys.business.orm.pojo.repay.RepayRecord">
+        update t_repay_record
+        <set>
+            <if test="status !=null">
+                status=#{status,jdbcType=INTEGER}
+            </if>
+        </set>
+        WHERE id=#{id,jdbcType=INTEGER}
+    </update>
     <!--查询借据的业务id-->
     <select id="getBusinessId" resultType="int">
         SELECT bor.business_id from t_business_obj_re bor
@@ -292,5 +428,67 @@
         SELECT * from t_damage_apply tda
         where id=#{id}
     </select>
+    <!--根据借款人获取借据-->
+    <select id="getIouByLenderId" resultType="java.util.Map">
+        SELECT iou.iou_no number,iou.id id from bt_iou iou
+        where iou.lender_id=#{lenderId,jdbcType=INTEGER} and iou.stateflag=0
+    </select>
+    <!--根据借款人获取抵押物-->
+    <select id="getPawnByLenderId" resultType="java.util.Map">
+        SELECT pawn.pawn_no number,pawn.id id from bt_pawn pawn
+        where pawn.lender_id=#{lenderId,jdbcType=INTEGER} and pawn.stateflag=0
+    </select>
+    <!--根据对象类型和对象id获取还款记录信息-->
+    <select id="getRepayRecord" resultMap="BaseResultMapRepayRecord">
+        SELECT rec.* from t_repay rep LEFT JOIN t_repay_record rec
+        ON rec.repay_id=rep.id
+        where rec.status=0 and rep.repay_fid=#{objectId,jdbcType=INTEGER}
+        and rep.repay_fid_type=#{objectType,jdbcType=INTEGER}
+    </select>
+    <select id="getRepayRecordByRepayId"  resultMap="BaseResultMapRepayRecord">
+       SELECT * FROM t_repay_record rec
+       WHERE rec.status=0 and rec.repay_id=#{repayId,jdbcType=INTEGER}
+    </select>
+    <!--查询金额总和-->
+    <select id="getSumMoney" resultType="java.util.Map">
+        <if test="type==1">
+            SELECT (IF(bt.accrual IS null,0,bt.accrual)+IF(bt.loan IS null,0,bt.loan)) total from bt_asset bt
+            where id=#{id}
+        </if>
+        <if test="type==2">
+            SELECT (IF(bt.accrual IS null,0,bt.accrual)+IF(bt.loan IS null,0,bt.loan)) total from bt_lender bt
+            where id=#{id}
+        </if>
+        <if test="type==3">
+            SELECT (IF(bt.less_corpus IS null,0,bt.less_corpus)+IF(bt.accrual_arrears IS
+            null,0,bt.accrual_arrears)+IF(bt.penalty IS null,0,bt.penalty)) total from bt_iou bt
+            where id=#{id}
+        </if>
+    </select>
+    <!--修改还款状态-->
+    <update id="updateRepayStatus">
+        <if test="type==1">
+            UPDATE bt_asset set repay_status=#{repayStatus}
+            where id=#{id}
+        </if>
+        <if test="type==2">
+            UPDATE bt_lender set repay_status=#{repayStatus}
+            where id=#{id}
+        </if>
+        <if test="type==3">
+            UPDATE bt_iou set repay_status=#{repayStatus}
+            where id=#{id}
+        </if>
+    </update>
+
+    <select id="getIouIdByRecord" resultType="int" parameterType="int">
+        SELECT iou_id FROM t_repay_record
+        where repay_id=#{repayId}
+    </select>
+
+    <update id="deleteByRepay"  parameterType="int">
+      UPDATE t_repay set stateflag=now()
+        where id=#{repayId}
+    </update>
 
 </mapper>

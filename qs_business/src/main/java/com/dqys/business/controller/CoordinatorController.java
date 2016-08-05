@@ -3,6 +3,7 @@ package com.dqys.business.controller;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.CoordinatorService;
+import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
@@ -34,13 +35,14 @@ public class CoordinatorController {
      * @api {post} coordinator/list 借款人或是资产包的参与者
      * @apiParam {int} companyId 公司ID
      * @apiParam {int} objectId 对象id
-     * @apiParam {int} type 请求类型（1借款人2资产包）
+     * @apiParam {int} type 请求类型（1借款人2资产包3抵押物）
      * @apiDescription 查询借款人或是资产包信息
      * @apiSampleRequest coordinator/list
      * @apiGroup Coordinator
      * @apiName coordinator/list
      */
     @RequestMapping("/list")
+    @ResponseBody
     public JsonResponse coordinatorList(Integer companyId, Integer objectId, Integer type, HttpServletRequest httpServletRequest) throws Exception {
         Integer userId = ProtocolTool.validateUser(
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
@@ -54,6 +56,8 @@ public class CoordinatorController {
             coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.LENDER.getValue(), userId);//查询借款人团队
         } else if (objectId != null && type == 2) {
             coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);//查询资产包团队
+        } else if (objectId != null && type == 3) {
+            coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.PAWN.getValue(), userId);//查询抵押物
         } else {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -110,8 +114,11 @@ public class CoordinatorController {
             return JsonResponseTool.paramErr("参数错误");
         }
         Map map = coordinatorService.addTeammate(userTeamId, userId, remark, userIds);
-        return JsonResponseTool.success(map);
-
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure("操作失败");
+        }
     }
 
     /**
@@ -133,7 +140,7 @@ public class CoordinatorController {
             Map map = coordinatorService.isAccept(teammateId, status);
             return JsonResponseTool.success(map);
         } else {
-            return JsonResponseTool.paramErr("参数错误");
+            return JsonResponseTool.paramErr("状态参数有误");
         }
 
     }
@@ -156,12 +163,93 @@ public class CoordinatorController {
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
         );
+        userId = 11;
         if (CommonUtil.checkParam(userTeammateId)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         Map map = coordinatorService.addTeammate(userTeammateId, userId);
-        return JsonResponseTool.success(map);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure("操作失败");
+        }
     }
 
+    /**
+     * @api {post} coordinator/auditBusiness 平台业务审核
+     * @apiParam {int} objectId 对象id
+     * @apiParam {int} objectType 对象类型(10资产包11借款人)
+     * @apiParam {int} status 状态（1通过2不通过）
+     * @apiSampleRequest coordinator/auditBusiness
+     * @apiGroup Coordinator
+     * @apiName coordinator/auditBusiness
+     */
+    @RequestMapping("/auditBusiness")
+    @ResponseBody
+    public JsonResponse auditBusiness(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType, @RequestParam("status") Integer status, HttpServletRequest httpServletRequest) throws Exception {
+        if (CommonUtil.checkParam(objectType, objectId, status)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if (objectType != ObjectTypeEnum.LENDER.getValue() && objectType != ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+            return JsonResponseTool.paramErr("对象类型有误");
+        }
+        if (status != 2 && status != 1) {
+            return JsonResponseTool.paramErr("状态有误");
+        }
+        Integer userId = ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+        );
+        Map map = new HashMap<>();
+        coordinatorService.auditBusiness(map, userId, objectId, objectType, status);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure("操作失败");
+        }
+    }
+
+    /**
+     * @api {post} coordinator/isPause 借款人或资产包暂停操作
+     * @apiParam {int} objectId 对象id
+     * @apiParam {int} objectType 对象类型(10资产包11借款人)
+     * @apiParam {int} status 状态（0开启1暂停）
+     * @apiSampleRequest coordinator/isPause
+     * @apiGroup Coordinator
+     * @apiName coordinator/isPause
+     */
+    @RequestMapping("/isPause")
+    @ResponseBody
+    public JsonResponse isPause(Integer objectId, Integer objectType, Integer status, HttpServletRequest httpServletRequest) throws Exception {
+
+        Integer userId = ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+        );
+        Map map = new HashMap<>();
+        if (CommonUtil.checkParam(objectType, objectId, status)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if (objectType != ObjectTypeEnum.LENDER.getValue() && objectType != ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+            return JsonResponseTool.paramErr("对象类型有误");
+        }
+        if (status != 0 && status != 1) {
+            return JsonResponseTool.paramErr("状态有误");
+        }
+        coordinatorService.isPause(map, objectId, objectType, status, userId);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else if (MessageUtils.transMapToString(map, "result").equals("repetition")) {
+            return JsonResponseTool.failure("重复操作");
+        } else {
+            return JsonResponseTool.failure("操作失败");
+        }
+    }
 
 }

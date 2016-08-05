@@ -48,6 +48,9 @@ public class MessageUtils {
     }
 
     public static String transMapToString(Map map, String key) {
+        if(map==null){
+            return  "";
+        }
         return map.get(key) == null ? "" : map.get(key).toString();
     }
 

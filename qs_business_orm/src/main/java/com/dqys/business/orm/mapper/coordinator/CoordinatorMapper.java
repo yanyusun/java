@@ -1,5 +1,7 @@
 package com.dqys.business.orm.mapper.coordinator;
 
+import com.dqys.business.orm.pojo.asset.AssetInfo;
+import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import org.apache.ibatis.annotations.Param;
 
@@ -87,4 +89,62 @@ public interface CoordinatorMapper {
      * @return
      */
     Map getLastLeaveWord(Integer userId);
+
+    /**
+     * 获取业务号id
+     *
+     * @param objectType
+     * @param objectId
+     * @return
+     */
+    Map selectByBusinessId(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId);
+
+    /**
+     * 获取借款人
+     *
+     * @param lenderInfo
+     * @return
+     */
+    List<LenderInfo> selectByLender(LenderInfo lenderInfo);
+
+    /**
+     * 获取借款人信息
+     *
+     * @param objectId
+     * @return
+     */
+    LenderInfo getLenderInfo(Integer objectId);
+
+    /**
+     * 获取资产包信息
+     *
+     * @param objectId
+     * @return
+     */
+    AssetInfo getAssetInfo(Integer objectId);
+
+    /**
+     * 修改借款人信息
+     *
+     * @param lenderInfo
+     * @return
+     */
+    Integer updateLender(LenderInfo lenderInfo);
+
+    /**
+     * 根据借款人获取操作员id
+     * @param objectType
+     * @param objectId
+     * @return
+     */
+    List<Map<String, Object>> getUserIdByObjUserRelToLender(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId);
+
+    /**
+     * 根据资产包获取操作员id
+     * @param objectType
+     * @param objectId
+     * @return
+     */
+    List<Map<String, Object>> getUserIdByObjUserRelToAsset(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId);
+
 }

@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.zcy.ZcyMaintainMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.zcy.ZcyMaintain">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="estates_id" property="estatesId" jdbcType="INTEGER"/>
+        <result column="original_price" property="originalPrice" jdbcType="DOUBLE"/>
+        <result column="market_price" property="marketPrice" jdbcType="DOUBLE"/>
+        <result column="agency_price" property="agencyPrice" jdbcType="DOUBLE"/>
+        <result column="profit_price" property="profitPrice" jdbcType="DOUBLE"/>
+        <result column="remodelings_price" property="remodelingsPrice" jdbcType="DOUBLE"/>
+        <result column="loan_amount" property="loanAmount" jdbcType="DOUBLE"/>
+        <result column="advantage" property="advantage" jdbcType="VARCHAR"/>
+        <result column="adaptability" property="adaptability" jdbcType="VARCHAR"/>
+        <result column="proposition" property="proposition" jdbcType="VARCHAR"/>
+        <result column="bonus_packs" property="bonusPacks" jdbcType="VARCHAR"/>
+        <result column="owner_claim" property="ownerClaim" jdbcType="VARCHAR"/>
+        <result column="warn" property="warn" jdbcType="VARCHAR"/>
+        <result column="replenish" property="replenish" jdbcType="VARCHAR"/>
+        <result column="fulls" property="fulls" jdbcType="VARCHAR"/>
+        <result column="sole" property="sole" jdbcType="VARCHAR"/>
+        <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="owned" property="owned" jdbcType="VARCHAR"/>
+        <result column="house_case" property="houseCase" jdbcType="VARCHAR"/>
+        <result column="decorate_case" property="decorateCase" jdbcType="VARCHAR"/>
+        <result column="decorate_type" property="decorateType" jdbcType="VARCHAR"/>
+        <result column="decorate_time" property="decorateTime" jdbcType="VARCHAR"/>
+        <result column="school_house_number" property="schoolHouseNumber" jdbcType="VARCHAR"/>
+        <result column="keyes" property="keyes" jdbcType="VARCHAR"/>
+        <result column="look_house_time" property="lookHouseTime" jdbcType="VARCHAR"/>
+        <result column="certificate_complete" property="certificateComplete" jdbcType="VARCHAR"/>
+        <result column="equity_num" property="equityNum" jdbcType="VARCHAR"/>
+        <result column="sign" property="sign" jdbcType="VARCHAR"/>
+        <result column="loan" property="loan" jdbcType="VARCHAR"/>
+        <result column="loan_price" property="loanPrice" jdbcType="VARCHAR"/>
+        <result column="in_house" property="inHouse" jdbcType="VARCHAR"/>
+        <result column="give" property="give" jdbcType="VARCHAR"/>
+        <result column="carport" property="carport" jdbcType="VARCHAR"/>
+        <result column="house_occupy" property="houseOccupy" jdbcType="VARCHAR"/>
+        <result column="occupy_time" property="occupyTime" jdbcType="VARCHAR"/>
+        <result column="expect_time" property="expectTime" jdbcType="VARCHAR"/>
+        <result column="full_five" property="fullFive" jdbcType="VARCHAR"/>
+        <result column="pay_way" property="payWay" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, estates_id, original_price, market_price, agency_price, profit_price, remodelings_price, 
+    loan_amount, advantage, adaptability, proposition, bonus_packs, owner_claim, warn, 
+    replenish, fulls, sole, account, owned, house_case, decorate_case, decorate_type,
+    decorate_time, school_house_number, keyes, look_house_time, certificate_complete, equity_num,
+    sign, loan, loan_price, in_house, give, carport, house_occupy, occupy_time, expect_time, 
+    full_five, pay_way, version, create_at, update_at, stateflag
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_zcy_maintain
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+     UPDATE t_zcy_maintain SET stateflag=now()
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.zcy.ZcyMaintain" keyProperty="id"
+            useGeneratedKeys="true">
+    insert into t_zcy_maintain (id, estates_id, original_price, 
+      market_price, agency_price, profit_price, 
+      remodelings_price, loan_amount, advantage, 
+      adaptability, proposition, bonus_packs, 
+      owner_claim, warn, replenish, 
+      fulls, sole, account,
+      owned, house_case, decorate_case, 
+      decorate_type, decorate_time, school_house_number, 
+      keyes, look_house_time, certificate_complete,
+      equity_num, sign, loan, 
+      loan_price, in_house, give, 
+      carport, house_occupy, occupy_time, 
+      expect_time, full_five, pay_way, 
+      version, create_at, update_at, 
+      stateflag)
+    values (#{id,jdbcType=INTEGER}, #{estatesId,jdbcType=INTEGER}, #{originalPrice,jdbcType=DOUBLE}, 
+      #{marketPrice,jdbcType=DOUBLE}, #{agencyPrice,jdbcType=DOUBLE}, #{profitPrice,jdbcType=DOUBLE}, 
+      #{remodelingsPrice,jdbcType=DOUBLE}, #{loanAmount,jdbcType=DOUBLE}, #{advantage,jdbcType=VARCHAR}, 
+      #{adaptability,jdbcType=VARCHAR}, #{proposition,jdbcType=VARCHAR}, #{bonusPacks,jdbcType=VARCHAR}, 
+      #{ownerClaim,jdbcType=VARCHAR}, #{warn,jdbcType=VARCHAR}, #{replenish,jdbcType=VARCHAR}, 
+      #{fulls,jdbcType=VARCHAR}, #{sole,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR},
+      #{owned,jdbcType=VARCHAR}, #{houseCase,jdbcType=VARCHAR}, #{decorateCase,jdbcType=VARCHAR}, 
+      #{decorateType,jdbcType=VARCHAR}, #{decorateTime,jdbcType=VARCHAR}, #{schoolHouseNumber,jdbcType=VARCHAR}, 
+      #{keyes,jdbcType=VARCHAR}, #{lookHouseTime,jdbcType=VARCHAR}, #{certificateComplete,jdbcType=VARCHAR},
+      #{equityNum,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR}, #{loan,jdbcType=VARCHAR}, 
+      #{loanPrice,jdbcType=VARCHAR}, #{inHouse,jdbcType=VARCHAR}, #{give,jdbcType=VARCHAR}, 
+      #{carport,jdbcType=VARCHAR}, #{houseOccupy,jdbcType=VARCHAR}, #{occupyTime,jdbcType=VARCHAR}, 
+      #{expectTime,jdbcType=VARCHAR}, #{fullFive,jdbcType=VARCHAR}, #{payWay,jdbcType=VARCHAR}, 
+      0,now(),now(),
+      0)
+  </insert>
+    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyMaintain" keyProperty="id"
+            useGeneratedKeys="true">
+        insert into t_zcy_maintain
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="estatesId != null">
+                estates_id,
+            </if>
+            <if test="originalPrice != null">
+                original_price,
+            </if>
+            <if test="marketPrice != null">
+                market_price,
+            </if>
+            <if test="agencyPrice != null">
+                agency_price,
+            </if>
+            <if test="profitPrice != null">
+                profit_price,
+            </if>
+            <if test="remodelingsPrice != null">
+                remodelings_price,
+            </if>
+            <if test="loanAmount != null">
+                loan_amount,
+            </if>
+            <if test="advantage != null">
+                advantage,
+            </if>
+            <if test="adaptability != null">
+                adaptability,
+            </if>
+            <if test="proposition != null">
+                proposition,
+            </if>
+            <if test="bonusPacks != null">
+                bonus_packs,
+            </if>
+            <if test="ownerClaim != null">
+                owner_claim,
+            </if>
+            <if test="warn != null">
+                warn,
+            </if>
+            <if test="replenish != null">
+                replenish,
+            </if>
+            <if test="fulls != null">
+                fulls,
+            </if>
+            <if test="sole != null">
+                sole,
+            </if>
+            <if test="account != null">
+                account,
+            </if>
+            <if test="owned != null">
+                owned,
+            </if>
+            <if test="houseCase != null">
+                house_case,
+            </if>
+            <if test="decorateCase != null">
+                decorate_case,
+            </if>
+            <if test="decorateType != null">
+                decorate_type,
+            </if>
+            <if test="decorateTime != null">
+                decorate_time,
+            </if>
+            <if test="schoolHouseNumber != null">
+                school_house_number,
+            </if>
+            <if test="keyes != null">
+                keyes,
+            </if>
+            <if test="lookHouseTime != null">
+                look_house_time,
+            </if>
+            <if test="certificateComplete != null">
+                certificate_complete,
+            </if>
+            <if test="equityNum != null">
+                equity_num,
+            </if>
+            <if test="sign != null">
+                sign,
+            </if>
+            <if test="loan != null">
+                loan,
+            </if>
+            <if test="loanPrice != null">
+                loan_price,
+            </if>
+            <if test="inHouse != null">
+                in_house,
+            </if>
+            <if test="give != null">
+                give,
+            </if>
+            <if test="carport != null">
+                carport,
+            </if>
+            <if test="houseOccupy != null">
+                house_occupy,
+            </if>
+            <if test="occupyTime != null">
+                occupy_time,
+            </if>
+            <if test="expectTime != null">
+                expect_time,
+            </if>
+            <if test="fullFive != null">
+                full_five,
+            </if>
+            <if test="payWay != null">
+                pay_way,
+            </if>
+            create_at,
+            update_at,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="estatesId != null">
+                #{estatesId,jdbcType=INTEGER},
+            </if>
+            <if test="originalPrice != null">
+                #{originalPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="marketPrice != null">
+                #{marketPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="agencyPrice != null">
+                #{agencyPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="profitPrice != null">
+                #{profitPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="remodelingsPrice != null">
+                #{remodelingsPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="loanAmount != null">
+                #{loanAmount,jdbcType=DOUBLE},
+            </if>
+            <if test="advantage != null">
+                #{advantage,jdbcType=VARCHAR},
+            </if>
+            <if test="adaptability != null">
+                #{adaptability,jdbcType=VARCHAR},
+            </if>
+            <if test="proposition != null">
+                #{proposition,jdbcType=VARCHAR},
+            </if>
+            <if test="bonusPacks != null">
+                #{bonusPacks,jdbcType=VARCHAR},
+            </if>
+            <if test="ownerClaim != null">
+                #{ownerClaim,jdbcType=VARCHAR},
+            </if>
+            <if test="warn != null">
+                #{warn,jdbcType=VARCHAR},
+            </if>
+            <if test="replenish != null">
+                #{replenish,jdbcType=VARCHAR},
+            </if>
+            <if test="fulls != null">
+                #{fulls,jdbcType=VARCHAR},
+            </if>
+            <if test="sole != null">
+                #{sole,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null">
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="owned != null">
+                #{owned,jdbcType=VARCHAR},
+            </if>
+            <if test="houseCase != null">
+                #{houseCase,jdbcType=VARCHAR},
+            </if>
+            <if test="decorateCase != null">
+                #{decorateCase,jdbcType=VARCHAR},
+            </if>
+            <if test="decorateType != null">
+                #{decorateType,jdbcType=VARCHAR},
+            </if>
+            <if test="decorateTime != null">
+                #{decorateTime,jdbcType=VARCHAR},
+            </if>
+            <if test="schoolHouseNumber != null">
+                #{schoolHouseNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="keyes != null">
+                #{keyes,jdbcType=VARCHAR},
+            </if>
+            <if test="lookHouseTime != null">
+                #{lookHouseTime,jdbcType=VARCHAR},
+            </if>
+            <if test="certificateComplete != null">
+                #{certificateComplete,jdbcType=VARCHAR},
+            </if>
+            <if test="equityNum != null">
+                #{equityNum,jdbcType=VARCHAR},
+            </if>
+            <if test="sign != null">
+                #{sign,jdbcType=VARCHAR},
+            </if>
+            <if test="loan != null">
+                #{loan,jdbcType=VARCHAR},
+            </if>
+            <if test="loanPrice != null">
+                #{loanPrice,jdbcType=VARCHAR},
+            </if>
+            <if test="inHouse != null">
+                #{inHouse,jdbcType=VARCHAR},
+            </if>
+            <if test="give != null">
+                #{give,jdbcType=VARCHAR},
+            </if>
+            <if test="carport != null">
+                #{carport,jdbcType=VARCHAR},
+            </if>
+            <if test="houseOccupy != null">
+                #{houseOccupy,jdbcType=VARCHAR},
+            </if>
+            <if test="occupyTime != null">
+                #{occupyTime,jdbcType=VARCHAR},
+            </if>
+            <if test="expectTime != null">
+                #{expectTime,jdbcType=VARCHAR},
+            </if>
+            <if test="fullFive != null">
+                #{fullFive,jdbcType=VARCHAR},
+            </if>
+            <if test="payWay != null">
+                #{payWay,jdbcType=VARCHAR},
+            </if>
+            now(),
+            now(),
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyMaintain">
+        update t_zcy_maintain
+        <set>
+            <if test="estatesId != null">
+                estates_id = #{estatesId,jdbcType=INTEGER},
+            </if>
+            <if test="originalPrice != null">
+                original_price = #{originalPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="marketPrice != null">
+                market_price = #{marketPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="agencyPrice != null">
+                agency_price = #{agencyPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="profitPrice != null">
+                profit_price = #{profitPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="remodelingsPrice != null">
+                remodelings_price = #{remodelingsPrice,jdbcType=DOUBLE},
+            </if>
+            <if test="loanAmount != null">
+                loan_amount = #{loanAmount,jdbcType=DOUBLE},
+            </if>
+            <if test="advantage != null">
+                advantage = #{advantage,jdbcType=VARCHAR},
+            </if>
+            <if test="adaptability != null">
+                adaptability = #{adaptability,jdbcType=VARCHAR},
+            </if>
+            <if test="proposition != null">
+                proposition = #{proposition,jdbcType=VARCHAR},
+            </if>
+            <if test="bonusPacks != null">
+                bonus_packs = #{bonusPacks,jdbcType=VARCHAR},
+            </if>
+            <if test="ownerClaim != null">
+                owner_claim = #{ownerClaim,jdbcType=VARCHAR},
+            </if>
+            <if test="warn != null">
+                warn = #{warn,jdbcType=VARCHAR},
+            </if>
+            <if test="replenish != null">
+                replenish = #{replenish,jdbcType=VARCHAR},
+            </if>
+            <if test="fulls != null">
+                fulls = #{fulls,jdbcType=VARCHAR},
+            </if>
+            <if test="sole != null">
+                sole = #{sole,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null">
+                account = #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="owned != null">
+                owned = #{owned,jdbcType=VARCHAR},
+            </if>
+            <if test="houseCase != null">
+                house_case = #{houseCase,jdbcType=VARCHAR},
+            </if>
+            <if test="decorateCase != null">
+                decorate_case = #{decorateCase,jdbcType=VARCHAR},
+            </if>
+            <if test="decorateType != null">
+                decorate_type = #{decorateType,jdbcType=VARCHAR},
+            </if>
+            <if test="decorateTime != null">
+                decorate_time = #{decorateTime,jdbcType=VARCHAR},
+            </if>
+            <if test="schoolHouseNumber != null">
+                school_house_number = #{schoolHouseNumber,jdbcType=VARCHAR},
+            </if>
+            <if test="keyes != null">
+                keyes = #{keyes,jdbcType=VARCHAR},
+            </if>
+            <if test="lookHouseTime != null">
+                look_house_time = #{lookHouseTime,jdbcType=VARCHAR},
+            </if>
+            <if test="certificateComplete != null">
+                certificate_complete = #{certificateComplete,jdbcType=VARCHAR},
+            </if>
+            <if test="equityNum != null">
+                equity_num = #{equityNum,jdbcType=VARCHAR},
+            </if>
+            <if test="sign != null">
+                sign = #{sign,jdbcType=VARCHAR},
+            </if>
+            <if test="loan != null">
+                loan = #{loan,jdbcType=VARCHAR},
+            </if>
+            <if test="loanPrice != null">
+                loan_price = #{loanPrice,jdbcType=VARCHAR},
+            </if>
+            <if test="inHouse != null">
+                in_house = #{inHouse,jdbcType=VARCHAR},
+            </if>
+            <if test="give != null">
+                give = #{give,jdbcType=VARCHAR},
+            </if>
+            <if test="carport != null">
+                carport = #{carport,jdbcType=VARCHAR},
+            </if>
+            <if test="houseOccupy != null">
+                house_occupy = #{houseOccupy,jdbcType=VARCHAR},
+            </if>
+            <if test="occupyTime != null">
+                occupy_time = #{occupyTime,jdbcType=VARCHAR},
+            </if>
+            <if test="expectTime != null">
+                expect_time = #{expectTime,jdbcType=VARCHAR},
+            </if>
+            <if test="fullFive != null">
+                full_five = #{fullFive,jdbcType=VARCHAR},
+            </if>
+            <if test="payWay != null">
+                pay_way = #{payWay,jdbcType=VARCHAR},
+            </if>
+            version = version+1,
+            update_at = now(),
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.zcy.ZcyMaintain">
+    update t_zcy_maintain
+    set estates_id = #{estatesId,jdbcType=INTEGER},
+      original_price = #{originalPrice,jdbcType=DOUBLE},
+      market_price = #{marketPrice,jdbcType=DOUBLE},
+      agency_price = #{agencyPrice,jdbcType=DOUBLE},
+      profit_price = #{profitPrice,jdbcType=DOUBLE},
+      remodelings_price = #{remodelingsPrice,jdbcType=DOUBLE},
+      loan_amount = #{loanAmount,jdbcType=DOUBLE},
+      advantage = #{advantage,jdbcType=VARCHAR},
+      adaptability = #{adaptability,jdbcType=VARCHAR},
+      proposition = #{proposition,jdbcType=VARCHAR},
+      bonus_packs = #{bonusPacks,jdbcType=VARCHAR},
+      owner_claim = #{ownerClaim,jdbcType=VARCHAR},
+      warn = #{warn,jdbcType=VARCHAR},
+      replenish = #{replenish,jdbcType=VARCHAR},
+      fulls = #{fulls,jdbcType=VARCHAR},
+      sole = #{sole,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR},
+      owned = #{owned,jdbcType=VARCHAR},
+      house_case = #{houseCase,jdbcType=VARCHAR},
+      decorate_case = #{decorateCase,jdbcType=VARCHAR},
+      decorate_type = #{decorateType,jdbcType=VARCHAR},
+      decorate_time = #{decorateTime,jdbcType=VARCHAR},
+      school_house_number = #{schoolHouseNumber,jdbcType=VARCHAR},
+      keyes = #{keyes,jdbcType=VARCHAR},
+      look_house_time = #{lookHouseTime,jdbcType=VARCHAR},
+      certificate_complete = #{certificateComplete,jdbcType=VARCHAR},
+      equity_num = #{equityNum,jdbcType=VARCHAR},
+      sign = #{sign,jdbcType=VARCHAR},
+      loan = #{loan,jdbcType=VARCHAR},
+      loan_price = #{loanPrice,jdbcType=VARCHAR},
+      in_house = #{inHouse,jdbcType=VARCHAR},
+      give = #{give,jdbcType=VARCHAR},
+      carport = #{carport,jdbcType=VARCHAR},
+      house_occupy = #{houseOccupy,jdbcType=VARCHAR},
+      occupy_time = #{occupyTime,jdbcType=VARCHAR},
+      expect_time = #{expectTime,jdbcType=VARCHAR},
+      full_five = #{fullFive,jdbcType=VARCHAR},
+      pay_way = #{payWay,jdbcType=VARCHAR},
+      version =version+1,
+      update_at = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.pojo.zcy.ZcyMaintain">
+        select
+        <include refid="Base_Column_List"/>
+        from t_zcy_maintain
+        where  stateflag=0
+        <if test="estatesId !=null">
+            and estates_id=#{estatesId}
+        </if>
+    </select>
+</mapper>

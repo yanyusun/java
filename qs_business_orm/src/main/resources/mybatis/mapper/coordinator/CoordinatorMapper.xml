@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.coordinator.CoordinatorMapper">
+
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.coordinator.team.TeamDTO">
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="type" property="roleType" jdbcType="INTEGER"/>
+        <result column="name" property="teamName" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMapLenderInfo" type="com.dqys.business.orm.pojo.asset.LenderInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="INTEGER"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="asset_id" property="assetId" jdbcType="INTEGER"/>
+        <result column="start_at" property="startAt" jdbcType="TIMESTAMP"/>
+        <result column="end_at" property="endAt" jdbcType="TIMESTAMP"/>
+        <result column="operator" property="operator" jdbcType="INTEGER"/>
+        <result column="accrual" property="accrual" jdbcType="DOUBLE"/>
+        <result column="loan" property="loan" jdbcType="DOUBLE"/>
+        <result column="appraisal" property="appraisal" jdbcType="DOUBLE"/>
+        <result column="loan_type" property="loanType" jdbcType="VARCHAR"/>
+        <result column="loan_mode" property="loanMode" jdbcType="VARCHAR"/>
+        <result column="loan_name" property="loanName" jdbcType="VARCHAR"/>
+        <result column="evaluate_excellent" property="evaluateExcellent" jdbcType="VARCHAR"/>
+        <result column="evaluate_level" property="evaluateLevel" jdbcType="VARCHAR"/>
+        <result column="dispose_mode" property="disposeMode" jdbcType="VARCHAR"/>
+        <result column="tags" property="tags" jdbcType="VARCHAR"/>
+        <result column="urge_type" property="urgeType" jdbcType="VARCHAR"/>
+        <result column="entrust_born_type" property="entrustBornType" jdbcType="VARCHAR"/>
+        <result column="entrust_born" property="entrustBorn" jdbcType="VARCHAR"/>
+        <result column="guarantee_type" property="guaranteeType" jdbcType="VARCHAR"/>
+        <result column="guarantee_mode" property="guaranteeMode" jdbcType="VARCHAR"/>
+        <result column="guarantee_source" property="guaranteeSource" jdbcType="VARCHAR"/>
+        <result column="is_guarantee_connection" property="isGuaranteeConnection" jdbcType="INTEGER"/>
+        <result column="guarentee_economic" property="guarenteeEconomic" jdbcType="VARCHAR"/>
+        <result column="is_lawsuit" property="isLawsuit" jdbcType="INTEGER"/>
+        <result column="is_decision" property="isDecision" jdbcType="INTEGER"/>
+        <result column="real_urge_time" property="realUrgeTime" jdbcType="INTEGER"/>
+        <result column="phone_urge_time" property="phoneUrgeTime" jdbcType="INTEGER"/>
+        <result column="entrust_urge_time" property="entrustUrgeTime" jdbcType="INTEGER"/>
+        <result column="can_contact" property="canContact" jdbcType="INTEGER"/>
+        <result column="can_pay" property="canPay" jdbcType="INTEGER"/>
+        <result column="is_worth" property="isWorth" jdbcType="INTEGER"/>
+        <result column="memo" property="memo" jdbcType="VARCHAR"/>
+        <result column="is_collection" property="isCollection" jdbcType="INTEGER"/>
+        <result column="is_lawyer" property="isLawyer" jdbcType="INTEGER"/>
+        <result column="is_agent" property="isAgent" jdbcType="INTEGER"/>
+        <result column="follow_up_times" property="followUpTime" jdbcType="INTEGER"/>
+        <result column="is_stop" property="isStop" jdbcType="INTEGER"/>
+    </resultMap>
+
+
+    <resultMap id="BaseResultMapAssetInfo" type="com.dqys.business.orm.pojo.asset.AssetInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="INTEGER"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="asset_no" property="assetNo" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="start_at" property="startAt" jdbcType="TIMESTAMP"/>
+        <result column="end_at" property="endAt" jdbcType="TIMESTAMP"/>
+        <result column="operator" property="operator" jdbcType="INTEGER"/>
+        <result column="accrual" property="accrual" jdbcType="DOUBLE"/>
+        <result column="loan" property="loan" jdbcType="DOUBLE"/>
+        <result column="appraisal" property="appraisal" jdbcType="DOUBLE"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="evaluate_excellent" property="evaluateExcellent" jdbcType="VARCHAR"/>
+        <result column="evaluate_level" property="evaluateLevel" jdbcType="VARCHAR"/>
+        <result column="province" property="province" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="INTEGER"/>
+        <result column="district" property="district" jdbcType="INTEGER"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="loan_organization" property="loanOrganization" jdbcType="VARCHAR"/>
+        <result column="loan_organization_district" property="loanOrganizationDistrict" jdbcType="VARCHAR"/>
+        <result column="dispose_mode" property="disposeMode" jdbcType="VARCHAR"/>
+        <result column="tags" property="tags" jdbcType="VARCHAR"/>
+        <result column="isshow" property="isshow" jdbcType="INTEGER"/>
+        <result column="belong" property="belong" jdbcType="INTEGER"/>
+    </resultMap>
+    <!--查询借款人或资产包的团队信息-->
+    <select id="getLenderOrAsset" resultMap="BaseResultMap">
+        SELECT tusi.real_name,bor.name,ttr.user_id,ttr.type
+        from t_teammate_re ttr LEFT JOIN  t_user_tag tust
+        ON tust.user_id=ttr.user_id LEFT JOIN t_user_team tut
+        ON tut.id=ttr.user_team_id LEFT JOIN bt_organization bor
+        ON bor.id=tust.team_id LEFT JOIN t_user_info tusi
+        ON tusi.id=ttr.user_id
+        WHERE tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} and tut.company_id=#{companyId,jdbcType=INTEGER}
+            and ttr.status=1 and ttr.stateflag=0 and tut.stateflag=0
+            and tust.stateflag=0 and bor.stateflag=0
+    </select>
+    <!--获取当前进行的任务总数-->
+    <select id="getTaskOngoing" resultType="java.util.Map">
+        SELECT count(tut.id) ongoing from t_teammate_re ttr LEFT JOIN t_user_team tut
+        ON tut.id=ttr.user_team_id and tut.status=0
+        where ttr.status=1 and (ttr.type=0 or ttr.type=1 )
+          and ttr.user_id=#{userId,jdbcType=INTEGER} and tut.company_id=#{companyId,jdbcType=INTEGER}
+    </select>
+    <!--获取业绩比例(针对个人)-->
+    <select id="getTaskRatio" resultType="java.util.Map">
+        SELECT count(tut.id) finish,count(tut2.id) total
+        from t_teammate_re ttr LEFT JOIN t_user_team tut
+        ON tut.id=ttr.user_team_id and tut.object_type=#{objectType,jdbcType=INTEGER} and tut.status=99 and tut.company_id=#{companyId,jdbcType=INTEGER}
+        LEFT JOIN t_user_team tut2 ON tut2.id=ttr.user_team_id and tut2.object_type=#{objectType,jdbcType=INTEGER} and tut2.company_id=#{companyId,jdbcType=INTEGER}
+        where ttr.`status`=1 and ttr.user_id=#{userId,jdbcType=INTEGER}
+    </select>
+    <!--获取团队人数-->
+    <select id="getPeopleNum" resultType="java.util.Map">
+        SELECT ttr.type,count(*) peopleNum
+        from t_teammate_re ttr LEFT JOIN t_user_team tut
+        ON tut.id=ttr.user_team_id
+        where  ttr.status=1 and ttr.stateflag=0 and tut.stateflag=0
+          and tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} and tut.company_id=#{companyId,jdbcType=INTEGER}
+          GROUP BY ttr.type
+    </select>
+    <!--获取相应的公司-->
+    <select id="companyList" resultType="java.util.Map">
+        SELECT tci.id,tci.company_name from t_company_info tci
+        where tci.id IN (
+        SELECT tut.company_id from t_user_team tut
+	        where tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} GROUP BY tut.company_id )
+    </select>
+    <!--根据公司id获取公司的管理员信息-->
+    <select id="getAdminUser" resultType="java.util.Map">
+        SELECT tui.id,tui.real_name realName,tui.mobile,tui.user_name userName from t_user_info tui LEFT JOIN t_user_tag tust
+        ON tust.user_id=tui.id
+        WHERE tust.stateflag=0 and tust.role_id=1 and tust.is_certified=1
+			and tui.company_id=#{companyId,jdbcType=INTEGER}
+    </select>
+    <!--获取员工公司下的所有员工-->
+    <select id="getCompanyUserList" resultType="java.util.Map">
+        SELECT tci.company_name companyName,tui.company_id companyId,tui.real_name realName,tui.user_name
+        userName,tui.id userId
+        from t_company_info tci LEFT JOIN t_user_info tui
+        ON tui.company_id=tci.id
+        WHERE tci.id in (
+        <if test="companyId !=null">
+            #{companyId,jdbcType=INTEGER}
+        </if>
+        <if test="userId !=null">
+            SELECT tui2.company_id from t_user_info tui2 where tui2.id=#{userId,jdbcType=INTEGER}
+        </if>
+        )
+        <if test="realName !=null ">
+            AND (tui.real_name LIKE CONCAT('%',#{realName,jdbcType=VARCHAR},'%') OR tui.user_name LIKE
+            CONCAT('%',#{realName,jdbcType=VARCHAR},'%'))
+        </if>
+    </select>
+
+    <select id="selectByUserTeamAndMateRe" resultType="java.util.Map">
+        SELECT tut.object_id,tut.object_type,ttr.user_id,ttr.user_team_id from t_user_team tut LEFT JOIN t_teammate_re ttr
+        ON ttr.user_team_id=tut.id
+        where ttr.status=1 and ttr.id=#{teammateId,jdbcType=INTEGER} LIMIT 0,1
+    </select>
+    <!--最后留言时间-->
+    <select id="getLastLeaveWord" resultType="java.util.Map">
+        SELECT DATE_FORMAT(lw.time,'%Y-%m-%d') time from leave_word lw
+          where lw.user_id=#{userId,jdbcType=INTEGER} ORDER BY lw.time desc LIMIT 0,1
+    </select>
+    <!--根据对象类型和对象id获取业务号id-->
+    <select id="selectByBusinessId" resultType="java.util.Map">
+          SELECT bor.business_id from t_business_obj_re bor
+        where bor.object_id=#{objectId} and bor.object_type=#{objectType}
+    </select>
+    <!--条件查询借款人信息-->
+    <select id="selectByLender" parameterType="com.dqys.business.orm.pojo.asset.LenderInfo"
+            resultMap="BaseResultMapLenderInfo">
+        SELECT * from bt_lender len
+        where 1=1
+        <if test="assetId !=null">
+            and len.asset_id=#{assetId}
+        </if>
+    </select>
+    <!--根据id获取借款人信息-->
+    <select id="getLenderInfo" parameterType="java.lang.Integer"
+            resultMap="BaseResultMapLenderInfo">
+        SELECT * from bt_lender
+        where id=#{objectId}
+    </select>
+    <!--根据id获取资产包信息-->
+    <select id="getAssetInfo" parameterType="java.lang.Integer" resultMap="BaseResultMapAssetInfo">
+        SELECT * from bt_asset
+        where id=#{objectId}
+    </select>
+    <!--修改借款人-->
+    <update id="updateLender" parameterType="com.dqys.business.orm.pojo.asset.LenderInfo">
+        UPDATE bt_lender
+        <set>
+            <if test="isStop !=null">
+                is_stop=#{isStop}
+            </if>
+        </set>
+        <where>
+            1=1
+            <if test="assetId !=null">
+                AND asset_id=#{assetId}
+            </if>
+            <if test="id !=null">
+                AND id=#{id}
+            </if>
+        </where>
+    </update>
+
+    <select id="getUserIdByObjUserRelToLender" resultType="java.util.Map">
+            SELECT our.user_id from object_user_relation our
+            where our.status=3 and (our.type=1 or our.type=2)
+            and our.object_type=#{objectType} and our.object_id=#{objectId}
+    </select>
+
+    <select id="getUserIdByObjUserRelToAsset" resultType="java.util.Map">
+       SELECT our.user_id from bt_lender len LEFT JOIN object_user_relation our
+        ON our.object_id=len.id and our.object_type=#{objectType} and our.status=3 and (our.type=1 or our.type=2)
+        where len.asset_id=#{objectId} GROUP BY our.user_id
+    </select>
+</mapper>

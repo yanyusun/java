@@ -3,55 +3,23 @@ package com.dqys.business.orm.pojo.repay;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Repay implements Serializable{
-    private Integer id;
-
-    private Date damageDate;
-
-    private Integer repayType;
-
-    private Integer operUserId;
-
-    private Integer iouId;
-
-    private Double repayM;
-
-    private Integer repayFid;
-
-    private Integer repayWay;
-
-    private String remark;
-
-    private Integer version;
-
-    private Date createAt;
-
-    private Date updateAt;
-
-    private Long stateflag;
-
-    private byte[] repayBills;
-
-    public Repay() {
-    }
-
-    public Repay(Integer id, Date damageDate, Integer repayType, Integer operUserId, Integer iouId, Double repayM, Integer repayFid, Integer repayWay, String remark, Integer version, Date createAt, Date updateAt, Long stateflag, byte[] repayBills) {
-
-        this.id = id;
-        this.damageDate = damageDate;
-        this.repayType = repayType;
-        this.operUserId = operUserId;
-        this.iouId = iouId;
-        this.repayM = repayM;
-        this.repayFid = repayFid;
-        this.repayWay = repayWay;
-        this.remark = remark;
-        this.version = version;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
-        this.stateflag = stateflag;
-        this.repayBills = repayBills;
-    }
+public class Repay implements Serializable {
+    private Integer id;//int(11) NOT NULL AUTO_INCREMENT,
+    private Date damageDate;//date DEFAULT NULL 还款时间,
+    private Integer repayType;//int(11) DEFAULT NULL 还款类型(0还利息1还本金2还利息加本金),
+    private Integer operUserId;//int(11) NOT NULL,
+    private Double repayM;//double(10,2) NOT NULL 还款总金额,
+    private Integer repayFid;//int(11) DEFAULT NULL COMMENT '还款主体',
+    private String repayFidName;// varchar(100) DEFAULT NULL COMMENT '还款主体名称'
+    private Integer repayWay;//int(11) DEFAULT NULL COMMENT '还款方式',
+    private byte[] repayBills;//longblob COMMENT '还款单据图片',
+    private String remark;//varchar(256) DEFAULT NULL COMMENT '备注',
+    private Integer version;//int(11) NOT NULL DEFAULT '0' COMMENT '版本',
+    private Date createAt;//datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    private Date updateAt;//datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+    private Long stateflag;//bigint(22) NOT NULL DEFAULT '0' COMMENT '数据状态：0-可用，非0不可用',
+    private Integer repayFidType;//int(5) DEFAULT NULL COMMENT '还款主体类型（借据或抵押物）',
+    private Integer status;//'状态（0正常，2冲正）',
 
     public Integer getId() {
         return id;
@@ -85,14 +53,6 @@ public class Repay implements Serializable{
         this.operUserId = operUserId;
     }
 
-    public Integer getIouId() {
-        return iouId;
-    }
-
-    public void setIouId(Integer iouId) {
-        this.iouId = iouId;
-    }
-
     public Double getRepayM() {
         return repayM;
     }
@@ -109,12 +69,28 @@ public class Repay implements Serializable{
         this.repayFid = repayFid;
     }
 
+    public String getRepayFidName() {
+        return repayFidName;
+    }
+
+    public void setRepayFidName(String repayFidName) {
+        this.repayFidName = repayFidName;
+    }
+
     public Integer getRepayWay() {
         return repayWay;
     }
 
     public void setRepayWay(Integer repayWay) {
         this.repayWay = repayWay;
+    }
+
+    public byte[] getRepayBills() {
+        return repayBills;
+    }
+
+    public void setRepayBills(byte[] repayBills) {
+        this.repayBills = repayBills;
     }
 
     public String getRemark() {
@@ -157,11 +133,19 @@ public class Repay implements Serializable{
         this.stateflag = stateflag;
     }
 
-    public byte[] getRepayBills() {
-        return repayBills;
+    public Integer getRepayFidType() {
+        return repayFidType;
     }
 
-    public void setRepayBills(byte[] repayBills) {
-        this.repayBills = repayBills;
+    public void setRepayFidType(Integer repayFidType) {
+        this.repayFidType = repayFidType;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

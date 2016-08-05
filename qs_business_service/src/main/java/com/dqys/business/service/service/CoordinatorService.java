@@ -51,5 +51,23 @@ public interface CoordinatorService {
      */
     Map addTeammate(Integer userTeammateId, Integer userId) throws BusinessLogException;
 
+    /**
+     * 平台业务审核
+     * @param map
+     * @param objectId
+     * @param objectType
+     * @param status
+     */
+    void auditBusiness(Map map,Integer userId, Integer objectId, Integer objectType, Integer status) throws BusinessLogException;
+
+    /**
+     * 借款人或资产包暂停操作
+     * @param map
+     * @param objectId
+     * @param objectType
+     * @param status
+     */
+    void isPause(Map map, Integer objectId, Integer objectType, Integer status,Integer userId) throws BusinessLogException;
+
     List<TeamDTO> getLenderOrAsset(Integer companyId, Integer objectId, Integer objectType);
 }

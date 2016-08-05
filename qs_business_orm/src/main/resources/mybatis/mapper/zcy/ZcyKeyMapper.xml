@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.zcy.ZcyKeyMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.zcy.ZcyKey">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="estates_id" property="estatesId" jdbcType="INTEGER"/>
+        <result column="protocol_no" property="protocolNo" jdbcType="VARCHAR"/>
+        <result column="entrust_protocol_time" property="entrustProtocolTime" jdbcType="VARCHAR"/>
+        <result column="entrust_abort_time" property="entrustAbortTime" jdbcType="VARCHAR"/>
+        <result column="key_num" property="keyNum" jdbcType="VARCHAR"/>
+        <result column="key_place" property="keyPlace" jdbcType="VARCHAR"/>
+        <result column="key_follow" property="keyFollow" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, estates_id, protocol_no, entrust_protocol_time, entrust_abort_time, key_num, 
+    key_place, key_follow, version, create_at, update_at, stateflag
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_zcy_key
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+   UPDATE t_zcy_key SET stateflag=now()
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.zcy.ZcyKey" keyProperty="id" useGeneratedKeys="true">
+    insert into t_zcy_key (id, estates_id, protocol_no, 
+      entrust_protocol_time, entrust_abort_time, 
+      key_num, key_place, key_follow, 
+      version, create_at, update_at, 
+      stateflag)
+    values (#{id,jdbcType=INTEGER}, #{estatesId,jdbcType=INTEGER}, #{protocolNo,jdbcType=VARCHAR}, 
+      #{entrustProtocolTime,jdbcType=VARCHAR}, #{entrustAbortTime,jdbcType=VARCHAR}, 
+      #{keyNum,jdbcType=VARCHAR}, #{keyPlace,jdbcType=VARCHAR}, #{keyFollow,jdbcType=VARCHAR}, 
+      0, now(),now(),
+     0)
+  </insert>
+    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyKey" keyProperty="id"
+            useGeneratedKeys="true">
+        insert into t_zcy_key
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="estatesId != null">
+                estates_id,
+            </if>
+            <if test="protocolNo != null">
+                protocol_no,
+            </if>
+            <if test="entrustProtocolTime != null">
+                entrust_protocol_time,
+            </if>
+            <if test="entrustAbortTime != null">
+                entrust_abort_time,
+            </if>
+            <if test="keyNum != null">
+                key_num,
+            </if>
+            <if test="keyPlace != null">
+                key_place,
+            </if>
+            <if test="keyFollow != null">
+                key_follow,
+            </if>
+            create_at,
+            update_at,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="estatesId != null">
+                #{estatesId,jdbcType=INTEGER},
+            </if>
+            <if test="protocolNo != null">
+                #{protocolNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustProtocolTime != null">
+                #{entrustProtocolTime,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustAbortTime != null">
+                #{entrustAbortTime,jdbcType=VARCHAR},
+            </if>
+            <if test="keyNum != null">
+                #{keyNum,jdbcType=VARCHAR},
+            </if>
+            <if test="keyPlace != null">
+                #{keyPlace,jdbcType=VARCHAR},
+            </if>
+            <if test="keyFollow != null">
+                #{keyFollow,jdbcType=VARCHAR},
+            </if>
+            now(),
+            now(),
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyKey">
+        update t_zcy_key
+        <set>
+            <if test="estatesId != null">
+                estates_id = #{estatesId,jdbcType=INTEGER},
+            </if>
+            <if test="protocolNo != null">
+                protocol_no = #{protocolNo,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustProtocolTime != null">
+                entrust_protocol_time = #{entrustProtocolTime,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustAbortTime != null">
+                entrust_abort_time = #{entrustAbortTime,jdbcType=VARCHAR},
+            </if>
+            <if test="keyNum != null">
+                key_num = #{keyNum,jdbcType=VARCHAR},
+            </if>
+            <if test="keyPlace != null">
+                key_place = #{keyPlace,jdbcType=VARCHAR},
+            </if>
+            <if test="keyFollow != null">
+                key_follow = #{keyFollow,jdbcType=VARCHAR},
+            </if>
+            version =version+1,
+            update_at =now(),
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.zcy.ZcyKey">
+    update t_zcy_key
+    set estates_id = #{estatesId,jdbcType=INTEGER},
+      protocol_no = #{protocolNo,jdbcType=VARCHAR},
+      entrust_protocol_time = #{entrustProtocolTime,jdbcType=VARCHAR},
+      entrust_abort_time = #{entrustAbortTime,jdbcType=VARCHAR},
+      key_num = #{keyNum,jdbcType=VARCHAR},
+      key_place = #{keyPlace,jdbcType=VARCHAR},
+      key_follow = #{keyFollow,jdbcType=VARCHAR},
+      version = version+1,
+      update_at = now()
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.pojo.zcy.ZcyKey">
+        select
+        <include refid="Base_Column_List"/>
+        from t_zcy_key
+        where  stateflag=0
+        <if test="estatesId !=null">
+            and estates_id=#{estatesId}
+        </if>
+    </select>
+</mapper>

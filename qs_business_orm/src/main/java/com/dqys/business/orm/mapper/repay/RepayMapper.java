@@ -4,6 +4,7 @@ import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
+import com.dqys.business.orm.pojo.repay.RepayRecord;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -17,7 +18,7 @@ public interface RepayMapper {
     /**
      * 扣除借据金额
      *
-     * @param iouId
+     * @param iouId    借据id
      * @param priMoney 本金金额
      * @param accMoney 利息金额
      * @return
@@ -33,6 +34,47 @@ public interface RepayMapper {
      * @return
      */
     public Integer repayLender(@Param("lenderId") Integer lenderId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney);
+
+    /**
+     * 扣除资产包金额
+     *
+     * @param assetId  资产包id
+     * @param priMoney 本金金额
+     * @param accMoney 利息金额
+     * @return
+     */
+    public Integer repayAsset(@Param("assetId") Integer assetId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney);
+
+    /**
+     * 资产包金额冲正
+     *
+     * @param assetId  资产包id
+     * @param priMoney 本金金额
+     * @param accMoney 利息金额
+     * @return
+     */
+    public Integer repayAssetReversal(@Param("assetId") Integer assetId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney);
+
+    /**
+     * 借款人金额冲正
+     *
+     * @param lenderId 借款人id
+     * @param priMoney 本金金额
+     * @param accMoney 利息金额
+     * @return
+     */
+    public Integer repayLenderReversal(@Param("lenderId") Integer lenderId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney);
+
+    /**
+     * 借据金额冲正
+     *
+     * @param iouId    借据id
+     * @param priMoney 本金金额
+     * @param accMoney 利息金额
+     * @return
+     */
+    public Integer repayIouReversal(@Param("iouId") Integer iouId, @Param("version") Integer version, @Param("priMoney") Double priMoney, @Param("accMoney") Double accMoney, @Param("penalty") Double penalty);
+
 
     /**
      * 修改还款记录
@@ -95,6 +137,7 @@ public interface RepayMapper {
 
     /**
      * 根据id获取延期申请记录
+     *
      * @param id
      * @return
      */
@@ -107,4 +150,77 @@ public interface RepayMapper {
      * @return
      */
     Integer updateDamageApply(DamageApply damageApply);
+
+    /**
+     * 根据借款人获取借据
+     *
+     * @param lenderId
+     * @return
+     */
+    List<Map> getIouByLenderId(Integer lenderId);
+
+    /**
+     * 根据借款人获取抵押物
+     *
+     * @param lenderId
+     * @return
+     */
+    List<Map> getPawnByLenderId(Integer lenderId);
+
+    /**
+     * 根据对象类型和对象id获取还款记录信息
+     *
+     * @param objectId
+     * @param objectType
+     * @return
+     */
+    List<RepayRecord> getRepayRecord(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType);
+
+    /**
+     * 根据还款记录id获取还款详细信息
+     *
+     * @param repayId
+     * @return
+     */
+    List<RepayRecord> getRepayRecordByRepayId(@Param("repayId") Integer repayId);
+
+    /**
+     * 添加还款详细记录
+     *
+     * @param repayRecord
+     * @return
+     */
+    Integer insertRecordSelective(RepayRecord repayRecord);
+
+    /**
+     * 修改还款状态
+     *
+     * @param repayRecord
+     * @return
+     */
+    Integer updateRecordSelective(RepayRecord repayRecord);
+
+    /**
+     * 获取金额
+     *
+     * @param id
+     * @param type
+     * @return
+     */
+    Map getSumMoney(@Param("id") Integer id, @Param("type") Integer type);
+
+    /**
+     * 修改支付状态
+     *
+     * @param id
+     * @param type
+     * @param repayStatus
+     * @return
+     */
+    Integer updateRepayStatus(@Param("id") Integer id, @Param("type") Integer type, @Param("repayStatus") Integer repayStatus);
+
+
+    List<Integer> getIouIdByRecord(Integer repayId);
+
+    Integer deleteByRepay(Integer repayId);
 }
