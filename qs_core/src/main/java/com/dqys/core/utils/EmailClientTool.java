@@ -16,18 +16,18 @@ import org.springframework.stereotype.Component;
 /**
  * Created by pan on 16-5-26.
  */
-@Component
+//@Component
 public class EmailClientTool {
 
-    @RabbitListener(bindings = @QueueBinding(
+   /* @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = "mail_send_queue", durable = "true"),
             exchange = @Exchange(value = "mailExchange"))
-    )
-    public static void sendMailFromMessage(String[] msg) throws Exception {
+    )*/
+    public void sendMailFromMessage(String[] msg) throws Exception {
         sendMail(msg[0], msg[1]);
     }
 
-    private static void sendMail(String to, String msg) {
+    private  void sendMail(String to, String msg) {
         try {
             Email emailClient = new HtmlEmail();
             emailClient.setCharset("UTF-8");
@@ -53,7 +53,7 @@ public class EmailClientTool {
         }
     }
 
-    private static String htmlMailBody(String msg) {
+    private  String htmlMailBody(String msg) {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("<p>欢迎加入多清平台</p><p>以下是的验证链接，<a href=\"http://www.duoqing.com/auth/confirm_mail?key=")
                 .append(msg)
