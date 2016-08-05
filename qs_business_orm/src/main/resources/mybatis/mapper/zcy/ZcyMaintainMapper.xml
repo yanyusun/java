@@ -17,7 +17,7 @@
         <result column="owner_claim" property="ownerClaim" jdbcType="VARCHAR"/>
         <result column="warn" property="warn" jdbcType="VARCHAR"/>
         <result column="replenish" property="replenish" jdbcType="VARCHAR"/>
-        <result column="full" property="full" jdbcType="VARCHAR"/>
+        <result column="fulls" property="fulls" jdbcType="VARCHAR"/>
         <result column="sole" property="sole" jdbcType="VARCHAR"/>
         <result column="account" property="account" jdbcType="VARCHAR"/>
         <result column="owned" property="owned" jdbcType="VARCHAR"/>
@@ -26,7 +26,7 @@
         <result column="decorate_type" property="decorateType" jdbcType="VARCHAR"/>
         <result column="decorate_time" property="decorateTime" jdbcType="VARCHAR"/>
         <result column="school_house_number" property="schoolHouseNumber" jdbcType="VARCHAR"/>
-        <result column="key" property="key" jdbcType="VARCHAR"/>
+        <result column="keyes" property="keyes" jdbcType="VARCHAR"/>
         <result column="look_house_time" property="lookHouseTime" jdbcType="VARCHAR"/>
         <result column="certificate_complete" property="certificateComplete" jdbcType="VARCHAR"/>
         <result column="equity_num" property="equityNum" jdbcType="VARCHAR"/>
@@ -49,8 +49,8 @@
     <sql id="Base_Column_List">
     id, estates_id, original_price, market_price, agency_price, profit_price, remodelings_price, 
     loan_amount, advantage, adaptability, proposition, bonus_packs, owner_claim, warn, 
-    replenish, full, sole, account, owned, house_case, decorate_case, decorate_type, 
-    decorate_time, school_house_number, key, look_house_time, certificate_complete, equity_num, 
+    replenish, fulls, sole, account, owned, house_case, decorate_case, decorate_type,
+    decorate_time, school_house_number, keyes, look_house_time, certificate_complete, equity_num,
     sign, loan, loan_price, in_house, give, carport, house_occupy, occupy_time, expect_time, 
     full_five, pay_way, version, create_at, update_at, stateflag
   </sql>
@@ -71,10 +71,10 @@
       remodelings_price, loan_amount, advantage, 
       adaptability, proposition, bonus_packs, 
       owner_claim, warn, replenish, 
-      full, sole, account, 
+      fulls, sole, account,
       owned, house_case, decorate_case, 
       decorate_type, decorate_time, school_house_number, 
-      key, look_house_time, certificate_complete, 
+      keyes, look_house_time, certificate_complete,
       equity_num, sign, loan, 
       loan_price, in_house, give, 
       carport, house_occupy, occupy_time, 
@@ -86,10 +86,10 @@
       #{remodelingsPrice,jdbcType=DOUBLE}, #{loanAmount,jdbcType=DOUBLE}, #{advantage,jdbcType=VARCHAR}, 
       #{adaptability,jdbcType=VARCHAR}, #{proposition,jdbcType=VARCHAR}, #{bonusPacks,jdbcType=VARCHAR}, 
       #{ownerClaim,jdbcType=VARCHAR}, #{warn,jdbcType=VARCHAR}, #{replenish,jdbcType=VARCHAR}, 
-      #{full,jdbcType=VARCHAR}, #{sole,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, 
+      #{fulls,jdbcType=VARCHAR}, #{sole,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR},
       #{owned,jdbcType=VARCHAR}, #{houseCase,jdbcType=VARCHAR}, #{decorateCase,jdbcType=VARCHAR}, 
       #{decorateType,jdbcType=VARCHAR}, #{decorateTime,jdbcType=VARCHAR}, #{schoolHouseNumber,jdbcType=VARCHAR}, 
-      #{key,jdbcType=VARCHAR}, #{lookHouseTime,jdbcType=VARCHAR}, #{certificateComplete,jdbcType=VARCHAR}, 
+      #{keyes,jdbcType=VARCHAR}, #{lookHouseTime,jdbcType=VARCHAR}, #{certificateComplete,jdbcType=VARCHAR},
       #{equityNum,jdbcType=VARCHAR}, #{sign,jdbcType=VARCHAR}, #{loan,jdbcType=VARCHAR}, 
       #{loanPrice,jdbcType=VARCHAR}, #{inHouse,jdbcType=VARCHAR}, #{give,jdbcType=VARCHAR}, 
       #{carport,jdbcType=VARCHAR}, #{houseOccupy,jdbcType=VARCHAR}, #{occupyTime,jdbcType=VARCHAR}, 
@@ -146,8 +146,8 @@
             <if test="replenish != null">
                 replenish,
             </if>
-            <if test="full != null">
-                full,
+            <if test="fulls != null">
+                fulls,
             </if>
             <if test="sole != null">
                 sole,
@@ -173,8 +173,8 @@
             <if test="schoolHouseNumber != null">
                 school_house_number,
             </if>
-            <if test="key != null">
-                key,
+            <if test="keyes != null">
+                keyes,
             </if>
             <if test="lookHouseTime != null">
                 look_house_time,
@@ -267,8 +267,8 @@
             <if test="replenish != null">
                 #{replenish,jdbcType=VARCHAR},
             </if>
-            <if test="full != null">
-                #{full,jdbcType=VARCHAR},
+            <if test="fulls != null">
+                #{fulls,jdbcType=VARCHAR},
             </if>
             <if test="sole != null">
                 #{sole,jdbcType=VARCHAR},
@@ -294,8 +294,8 @@
             <if test="schoolHouseNumber != null">
                 #{schoolHouseNumber,jdbcType=VARCHAR},
             </if>
-            <if test="key != null">
-                #{key,jdbcType=VARCHAR},
+            <if test="keyes != null">
+                #{keyes,jdbcType=VARCHAR},
             </if>
             <if test="lookHouseTime != null">
                 #{lookHouseTime,jdbcType=VARCHAR},
@@ -388,8 +388,8 @@
             <if test="replenish != null">
                 replenish = #{replenish,jdbcType=VARCHAR},
             </if>
-            <if test="full != null">
-                full = #{full,jdbcType=VARCHAR},
+            <if test="fulls != null">
+                fulls = #{fulls,jdbcType=VARCHAR},
             </if>
             <if test="sole != null">
                 sole = #{sole,jdbcType=VARCHAR},
@@ -415,8 +415,8 @@
             <if test="schoolHouseNumber != null">
                 school_house_number = #{schoolHouseNumber,jdbcType=VARCHAR},
             </if>
-            <if test="key != null">
-                key = #{key,jdbcType=VARCHAR},
+            <if test="keyes != null">
+                keyes = #{keyes,jdbcType=VARCHAR},
             </if>
             <if test="lookHouseTime != null">
                 look_house_time = #{lookHouseTime,jdbcType=VARCHAR},
@@ -481,7 +481,7 @@
       owner_claim = #{ownerClaim,jdbcType=VARCHAR},
       warn = #{warn,jdbcType=VARCHAR},
       replenish = #{replenish,jdbcType=VARCHAR},
-      full = #{full,jdbcType=VARCHAR},
+      fulls = #{fulls,jdbcType=VARCHAR},
       sole = #{sole,jdbcType=VARCHAR},
       account = #{account,jdbcType=VARCHAR},
       owned = #{owned,jdbcType=VARCHAR},
@@ -490,7 +490,7 @@
       decorate_type = #{decorateType,jdbcType=VARCHAR},
       decorate_time = #{decorateTime,jdbcType=VARCHAR},
       school_house_number = #{schoolHouseNumber,jdbcType=VARCHAR},
-      key = #{key,jdbcType=VARCHAR},
+      keyes = #{keyes,jdbcType=VARCHAR},
       look_house_time = #{lookHouseTime,jdbcType=VARCHAR},
       certificate_complete = #{certificateComplete,jdbcType=VARCHAR},
       equity_num = #{equityNum,jdbcType=VARCHAR},

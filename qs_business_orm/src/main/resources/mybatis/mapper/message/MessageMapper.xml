@@ -33,6 +33,7 @@
     <update id="readMessage">
         UPDATE t_message SET status=1
         <where>
+            status !=2 AND
             id IN
             <foreach collection="array" item="ids" index="index" open="(" close=")" separator=",">
                 #{ids}

@@ -55,4 +55,28 @@ public interface RepayService {
      * @return
      */
     Map reversal(Integer objectId, Integer objectType) throws Exception;
+
+    /**
+     * 还款冲正操作
+     *
+     * @param repayId
+     * @return
+     */
+    Map reversal(Integer repayId) throws Exception;
+
+    /**
+     * 修改还款金额
+     *
+     * @param repayId
+     * @param userId
+     * @param objectId
+     * @param objectType
+     * @param repayType
+     * @param repayWay
+     * @param money
+     * @param remark
+     * @param file
+     * @return
+     */
+    void updateRepayMoney(Integer repayId, Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file, Map map) throws Exception;
 }

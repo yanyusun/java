@@ -3,6 +3,7 @@ package com.dqys.business.controller;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.CoordinatorService;
+import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
@@ -41,6 +42,7 @@ public class CoordinatorController {
      * @apiName coordinator/list
      */
     @RequestMapping("/list")
+    @ResponseBody
     public JsonResponse coordinatorList(Integer companyId, Integer objectId, Integer type, HttpServletRequest httpServletRequest) throws Exception {
         Integer userId = ProtocolTool.validateUser(
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
@@ -112,8 +114,11 @@ public class CoordinatorController {
             return JsonResponseTool.paramErr("参数错误");
         }
         Map map = coordinatorService.addTeammate(userTeamId, userId, remark, userIds);
-        return JsonResponseTool.success(map);
-
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure("操作失败");
+        }
     }
 
     /**
@@ -135,7 +140,7 @@ public class CoordinatorController {
             Map map = coordinatorService.isAccept(teammateId, status);
             return JsonResponseTool.success(map);
         } else {
-            return JsonResponseTool.paramErr("参数错误");
+            return JsonResponseTool.paramErr("状态参数有误");
         }
 
     }
@@ -158,11 +163,16 @@ public class CoordinatorController {
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
         );
+        userId = 11;
         if (CommonUtil.checkParam(userTeammateId)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         Map map = coordinatorService.addTeammate(userTeammateId, userId);
-        return JsonResponseTool.success(map);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure("操作失败");
+        }
     }
 
     /**
@@ -180,6 +190,12 @@ public class CoordinatorController {
         if (CommonUtil.checkParam(objectType, objectId, status)) {
             return JsonResponseTool.paramErr("参数错误");
         }
+        if (objectType != ObjectTypeEnum.LENDER.getValue() && objectType != ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+            return JsonResponseTool.paramErr("对象类型有误");
+        }
+        if (status != 2 && status != 1) {
+            return JsonResponseTool.paramErr("状态有误");
+        }
         Integer userId = ProtocolTool.validateUser(
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
@@ -189,7 +205,11 @@ public class CoordinatorController {
         );
         Map map = new HashMap<>();
         coordinatorService.auditBusiness(map, userId, objectId, objectType, status);
-        return JsonResponseTool.success(map);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure("操作失败");
+        }
     }
 
     /**
@@ -216,8 +236,20 @@ public class CoordinatorController {
         if (CommonUtil.checkParam(objectType, objectId, status)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        coordinatorService.isPause(map,objectId,objectType,status,userId);
-        return JsonResponseTool.success(map);
+        if (objectType != ObjectTypeEnum.LENDER.getValue() && objectType != ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+            return JsonResponseTool.paramErr("对象类型有误");
+        }
+        if (status != 0 && status != 1) {
+            return JsonResponseTool.paramErr("状态有误");
+        }
+        coordinatorService.isPause(map, objectId, objectType, status, userId);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else if (MessageUtils.transMapToString(map, "result").equals("repetition")) {
+            return JsonResponseTool.failure("重复操作");
+        } else {
+            return JsonResponseTool.failure("操作失败");
+        }
     }
 
 }

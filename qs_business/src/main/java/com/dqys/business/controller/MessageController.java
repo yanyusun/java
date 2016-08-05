@@ -9,6 +9,7 @@ import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,7 +42,7 @@ public class MessageController {
      */
     @RequestMapping("/pageList")
     @ResponseBody
-    public JsonResponse messageList(MessageQuery messageQuery) {
+    public JsonResponse messageList(@ModelAttribute MessageQuery messageQuery) {
         Message message = MessageUtils.transToMessage(messageQuery);
         List<Message> list = messageService.selectByMessage(message);
         if (list == null) {
@@ -50,7 +51,7 @@ public class MessageController {
             Map<String, Object> map = new HashMap<>();
             map.put("list", MessageUtils.transToMessageDTO(list));
             Message sage = new Message();
-            map.put("total",messageService.selectCount(sage));//总共的记录数目
+            map.put("total", messageService.selectCount(sage));//总共的记录数目
             sage.setStatus(0);//标记的未读消息
             map.put("totalMes", messageService.selectCount(sage));//全部未读消息数
             sage.setType(MessageEnum.PRODUCT.getValue());
@@ -75,8 +76,7 @@ public class MessageController {
      */
     @RequestMapping("/read")
     @ResponseBody
-    public JsonResponse readMessage(Integer... id) {
-
+    public JsonResponse readMessage(@RequestParam("id") Integer... id) {
         Integer result = messageService.readMessage(id);
         if (result == 0) {
             return JsonResponseTool.failure("修改失败");

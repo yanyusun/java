@@ -137,7 +137,7 @@ public interface CoordinatorMapper {
      * @param objectId
      * @return
      */
-    List<Integer> getUserIdByObjUserRelToLender(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId);
+    List<Map<String, Object>> getUserIdByObjUserRelToLender(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId);
 
     /**
      * 根据资产包获取操作员id
@@ -145,6 +145,6 @@ public interface CoordinatorMapper {
      * @param objectId
      * @return
      */
-    List<Integer> getUserIdByObjUserRelToAsset(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId);
+    List<Map<String, Object>> getUserIdByObjUserRelToAsset(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId);
 
 }

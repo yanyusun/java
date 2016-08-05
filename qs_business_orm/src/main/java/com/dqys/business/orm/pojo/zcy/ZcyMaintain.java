@@ -22,7 +22,7 @@ import java.util.Date;
  * @apiParam {string} ownerClaim 业主要求
  * @apiParam {string} warn 特别提醒
  * @apiParam {string} replenish 补充
- * @apiParam {string} full 满几年
+ * @apiParam {string} fulls 满几年
  * @apiParam {string} sole 唯一
  * @apiParam {string} account 户口状况
  * @apiParam {string} owned 是否共有
@@ -31,7 +31,7 @@ import java.util.Date;
  * @apiParam {string} decorateType 装修类型
  * @apiParam {string} decorateTime 装修时间
  * @apiParam {string} schoolHouseNumber 学区房名额
- * @apiParam {string} key 是否能留钥匙
+ * @apiParam {string} keyes 是否能留钥匙
  * @apiParam {string} lookHouseTime 看房时间
  * @apiParam {string} certificateComplete 两证是否齐全
  * @apiParam {string} equityNum 产权共有人数
@@ -78,7 +78,7 @@ public class ZcyMaintain implements Serializable {
 
     private String replenish;// 补充
 
-    private String full;// 满几年
+    private String fulls;// 满几年
 
     private String sole;// 唯一
 
@@ -96,7 +96,7 @@ public class ZcyMaintain implements Serializable {
 
     private String schoolHouseNumber;//学区房名额
 
-    private String key;//是否能留钥匙
+    private String keyes;//是否能留钥匙
 
     private String lookHouseTime;// 看房时间
 
@@ -254,12 +254,12 @@ public class ZcyMaintain implements Serializable {
         this.replenish = replenish;
     }
 
-    public String getFull() {
-        return full;
+    public String getFulls() {
+        return fulls;
     }
 
-    public void setFull(String full) {
-        this.full = full;
+    public void setFulls(String fulls) {
+        this.fulls = fulls;
     }
 
     public String getSole() {
@@ -326,12 +326,12 @@ public class ZcyMaintain implements Serializable {
         this.schoolHouseNumber = schoolHouseNumber;
     }
 
-    public String getKey() {
-        return key;
+    public String getKeyes() {
+        return keyes;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setKeyes(String keyes) {
+        this.keyes = keyes;
     }
 
     public String getLookHouseTime() {

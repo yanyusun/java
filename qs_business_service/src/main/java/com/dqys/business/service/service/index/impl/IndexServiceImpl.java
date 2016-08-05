@@ -49,21 +49,23 @@ public class IndexServiceImpl implements IndexService {
             objectType = ObjectTypeEnum.PAWN.getValue();
         }
         map.put("join", MessageUtils.transMapToInt(indexMapper.getJoinTask(objectType, userId), "count"));//参与的任务
+        int unfinished = 0;
+        int finish = 0;
         if (objectType == ObjectTypeEnum.LENDER.getValue()) {
             Integer count1 = MessageUtils.transMapToInt(indexMapper.getLenderAllotByOneSelfAndCompany(1, objectType, userId), "count");//已完成任务自己或公司分配
             Integer count2 = MessageUtils.transMapToInt(indexMapper.getLenderAllotByTeam(1, objectType, userId), "count");//已完成任务团队分配
-            map.put("finish", count1 + count2);//已完成------------
+            finish = count1 + count2;
             Integer count3 = MessageUtils.transMapToInt(indexMapper.getLenderAllotByOneSelfAndCompany(0, objectType, userId), "count");//正在进行任务自己或公司分配
             Integer count4 = MessageUtils.transMapToInt(indexMapper.getLenderAllotByTeam(0, objectType, userId), "count");//正在进行任务团队分配
-            map.put("unfinished", count3 + count4);//正在进行中------------
-
+            unfinished = count3 + count4;
         } else if (objectType == ObjectTypeEnum.PAWN.getValue()) {
             Integer total = MessageUtils.transMapToInt(indexMapper.getPawnTotalTask(objectType, userId), "count");
             Integer count3 = MessageUtils.transMapToInt(indexMapper.getPawnAllotByOCIsUnfinished(objectType, userId), "count");//正在进行任务自己或公司分配
             Integer count4 = MessageUtils.transMapToInt(indexMapper.getPawnAllotByTeamIsUnfinished(objectType, userId), "count");//正在进行任务团队分配
-            map.put("unfinished", (count3 == null ? 0 : count3) + (count4 == null ? 0 : count4));//正在进行中------------
-            map.put("finish", total - count3 - count4);//已完成------------
+            unfinished = (count3 == null ? 0 : count3) + (count4 == null ? 0 : count4);
+            finish = total - count3 - count4;
         }
-
+        map.put("finish", finish);//已完成------------
+        map.put("unfinished", unfinished);//正在进行中------------
     }
 }

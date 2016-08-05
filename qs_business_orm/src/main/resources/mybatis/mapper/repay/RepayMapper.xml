@@ -438,25 +438,29 @@
         SELECT pawn.pawn_no number,pawn.id id from bt_pawn pawn
         where pawn.lender_id=#{lenderId,jdbcType=INTEGER} and pawn.stateflag=0
     </select>
-    <!--获取还款记录信息-->
+    <!--根据对象类型和对象id获取还款记录信息-->
     <select id="getRepayRecord" resultMap="BaseResultMapRepayRecord">
         SELECT rec.* from t_repay rep LEFT JOIN t_repay_record rec
         ON rec.repay_id=rep.id
         where rec.status=0 and rep.repay_fid=#{objectId,jdbcType=INTEGER}
         and rep.repay_fid_type=#{objectType,jdbcType=INTEGER}
     </select>
+    <select id="getRepayRecordByRepayId"  resultMap="BaseResultMapRepayRecord">
+       SELECT * FROM t_repay_record rec
+       WHERE rec.status=0 and rec.repay_id=#{repayId,jdbcType=INTEGER}
+    </select>
     <!--查询金额总和-->
     <select id="getSumMoney" resultType="java.util.Map">
         <if test="type==1">
-            SELECT SUM(IF(bt.accrual IS null,0,bt.accrual)+IF(bt.loan IS null,0,bt.loan)) total from bt_asset bt
+            SELECT (IF(bt.accrual IS null,0,bt.accrual)+IF(bt.loan IS null,0,bt.loan)) total from bt_asset bt
             where id=#{id}
         </if>
         <if test="type==2">
-            SELECT SUM(IF(bt.accrual IS null,0,bt.accrual)+IF(bt.loan IS null,0,bt.loan)) total from bt_lender bt
+            SELECT (IF(bt.accrual IS null,0,bt.accrual)+IF(bt.loan IS null,0,bt.loan)) total from bt_lender bt
             where id=#{id}
         </if>
         <if test="type==3">
-            SELECT SUM(IF(bt.less_corpus IS null,0,bt.less_corpus)+IF(bt.accrual_arrears IS
+            SELECT (IF(bt.less_corpus IS null,0,bt.less_corpus)+IF(bt.accrual_arrears IS
             null,0,bt.accrual_arrears)+IF(bt.penalty IS null,0,bt.penalty)) total from bt_iou bt
             where id=#{id}
         </if>
@@ -475,6 +479,16 @@
             UPDATE bt_iou set repay_status=#{repayStatus}
             where id=#{id}
         </if>
+    </update>
+
+    <select id="getIouIdByRecord" resultType="int" parameterType="int">
+        SELECT iou_id FROM t_repay_record
+        where repay_id=#{repayId}
+    </select>
+
+    <update id="deleteByRepay"  parameterType="int">
+      UPDATE t_repay set stateflag=now()
+        where id=#{repayId}
     </update>
 
 </mapper>

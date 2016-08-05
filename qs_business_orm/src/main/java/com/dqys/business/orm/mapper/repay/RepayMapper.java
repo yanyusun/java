@@ -157,7 +157,7 @@ public interface RepayMapper {
      * @param lenderId
      * @return
      */
-    Object getIouByLenderId(Integer lenderId);
+    List<Map> getIouByLenderId(Integer lenderId);
 
     /**
      * 根据借款人获取抵押物
@@ -165,16 +165,24 @@ public interface RepayMapper {
      * @param lenderId
      * @return
      */
-    Object getPawnByLenderId(Integer lenderId);
+    List<Map> getPawnByLenderId(Integer lenderId);
 
     /**
-     * 获取还款记录信息
+     * 根据对象类型和对象id获取还款记录信息
      *
      * @param objectId
      * @param objectType
      * @return
      */
     List<RepayRecord> getRepayRecord(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType);
+
+    /**
+     * 根据还款记录id获取还款详细信息
+     *
+     * @param repayId
+     * @return
+     */
+    List<RepayRecord> getRepayRecordByRepayId(@Param("repayId") Integer repayId);
 
     /**
      * 添加还款详细记录
@@ -194,18 +202,25 @@ public interface RepayMapper {
 
     /**
      * 获取金额
+     *
      * @param id
      * @param type
      * @return
      */
-    Map getSumMoney(@Param("id")Integer id,@Param("type") Integer type);
+    Map getSumMoney(@Param("id") Integer id, @Param("type") Integer type);
 
     /**
      * 修改支付状态
+     *
      * @param id
      * @param type
      * @param repayStatus
      * @return
      */
-    Integer updateRepayStatus(@Param("id")Integer id,@Param("type") Integer type,@Param("repayStatus")Integer repayStatus);
+    Integer updateRepayStatus(@Param("id") Integer id, @Param("type") Integer type, @Param("repayStatus") Integer repayStatus);
+
+
+    List<Integer> getIouIdByRecord(Integer repayId);
+
+    Integer deleteByRepay(Integer repayId);
 }

@@ -8,6 +8,7 @@ import com.dqys.core.utils.ProtocolTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -30,8 +31,9 @@ public class IndexController {
      * @apiName index/general
      */
     @RequestMapping("/general")
-    public JsonResponse general(HttpServletRequest httpServletRequest){
-        Map map=new HashMap<>();
+    @ResponseBody
+    public JsonResponse general(HttpServletRequest httpServletRequest) {
+        Map map = new HashMap<>();
         try {
             Integer userId = ProtocolTool.validateUser(
                     httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
@@ -40,8 +42,7 @@ public class IndexController {
                     httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
                     httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
             );
-            userId=11;
-            indexSerice.getStatistic(map,userId);
+            indexSerice.getStatistic(map, userId);
         } catch (Exception e) {
             e.printStackTrace();
         }
