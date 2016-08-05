@@ -188,10 +188,10 @@
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
-    <rabbit:listener-container connection-factory="rabbitConnectionFactory">
+    <!--<rabbit:listener-container connection-factory="rabbitConnectionFactory">
         <rabbit:listener ref="mailClient" method="sendMailFromMessage" queue-names="mail_send_queue" />
     </rabbit:listener-container>
-    <bean id="mailClient" class="com.dqys.core.utils.EmailClientTool" />
+    <bean id="mailClient" class="com.dqys.core.utils.EmailClientTool" />-->
 
 
 
@@ -216,7 +216,7 @@
     <rabbit:listener-container connection-factory="rabbitConnectionFactory">
         <rabbit:listener ref="rabbitClinet" method="listen" queue-names="myQueue" />
     </rabbit:listener-container>
-    <bean id="rabbitClinet" class="com.dqys.core.utils.RabbitMQClientTool" />-->
+    <bean id="rabbitClient" class="com.dqys.core.utils.RabbitMQClientTool" />-->
 
 
 
@@ -249,11 +249,11 @@
         <property name="exchange" value="myExchange" />
         <property name="routingKey" value="myRoute" />
         <property name="queue" value="myQueue" />
-    </bean>-->
-    <!--
-    <rabbit:template id="rabbitTemplate" mandatory="true" connection-factory="rabbitConnectionFactory" retry-template="rabbitRetryTemplate" />
+    </bean>
 
-    <bean id="rabbitListenerContainerFactory"
+    <rabbit:template id="rabbitTemplate" mandatory="true" connection-factory="rabbitConnectionFactory" retry-template="rabbitRetryTemplate" />-->
+
+    <!--<bean id="rabbitListenerContainerFactory"
           class="org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory">
         <property name="connectionFactory" ref="rabbitConnectionFactory"/>
         <property name="concurrentConsumers" value="3"/>

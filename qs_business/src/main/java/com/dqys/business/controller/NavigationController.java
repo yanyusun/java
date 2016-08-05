@@ -192,7 +192,8 @@ public class NavigationController {
      */
     private NavigationQuery createNavigationQuery() {
         // 本地调试时开启
-        UserInsertDTO userInsertDTO = (UserInsertDTO) userService.get(53).getData();
+        UserInsertDTO userInsertDTO = (UserInsertDTO) userService.get(UserSession.getCurrent().getUserId()).getData();
+//        UserInsertDTO userInsertDTO = (UserInsertDTO) userService.get(53).getData();
         if (CommonUtil.checkParam(userInsertDTO)) {
             return null;
         }
