@@ -179,6 +179,7 @@
         <property name="retryTemplate" ref="rabbitRetryTemplate" />
         <property name="mandatory" value="true" />
     </bean>
+
     <!-- 邮件确认队列 -->
     <rabbit:queue name="mail_send_queue" durable="true" />
     <rabbit:direct-exchange name="mailExchange" durable="true">
@@ -186,14 +187,6 @@
             <rabbit:binding key="mail_route" queue="mail_send_queue" ></rabbit:binding>
         </rabbit:bindings>
     </rabbit:direct-exchange>
-
-
-
-
-
-
-
-
 
     <!--<rabbit:listener-container connection-factory="rabbitConnectionFactory">
         <rabbit:listener ref="mailClient" method="sendMailFromMessage" queue-names="mail_send_queue" />
@@ -223,7 +216,7 @@
     <rabbit:listener-container connection-factory="rabbitConnectionFactory">
         <rabbit:listener ref="rabbitClinet" method="listen" queue-names="myQueue" />
     </rabbit:listener-container>
-    <bean id="rabbitClinet" class="com.dqys.core.utils.RabbitMQClientTool" />-->
+    <bean id="rabbitClient" class="com.dqys.core.utils.RabbitMQClientTool" />-->
 
 
 
