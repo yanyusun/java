@@ -63,7 +63,7 @@ public class RabbitMQProducerTool implements ApplicationContextAware {
     }
 
     public static void addToMailSendQueue(String to, String msg) {
-        rabbitTemplate.convertAndSend("mailExchange", "mail_route", new String[] {to, msg});
+        rabbitTemplate.convertAndSend("mailExchange", "mail_online_route", new String[] {to, msg});
     }
 
 
