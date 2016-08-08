@@ -199,7 +199,7 @@ public class AuthController extends BaseApiContorller {
 
             // 验证账号
             ServiceResult<Integer> serviceResult = this.userService.validateUser(userName, mobile, email);
-            if(!serviceResult.getFlag()){
+            if(serviceResult.getFlag()){
                 return JsonResponseTool.failure("账号已经存在");
             }
 
