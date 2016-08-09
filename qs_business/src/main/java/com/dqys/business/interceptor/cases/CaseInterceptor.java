@@ -12,11 +12,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class CaseInterceptor extends AuthenticationInterceptor {
     
-    public static final String API_ADD = "/case/add";
-    public static final String API_DIVIDE = "/case/divide";
-    public static final String API_UPDATE = "/case/update";
-    public static final String API_LIST = "/case/list";
-    public static final String API_LIST_CASE = "/case/listCase";
+    public static final String API_ADD = "add";
+    public static final String API_DIVIDE = "divide";
+    public static final String API_UPDATE = "update";
+    public static final String API_LIST = "list";
+    public static final String API_LIST_CASE = "listCase";
 
 
     @Override
