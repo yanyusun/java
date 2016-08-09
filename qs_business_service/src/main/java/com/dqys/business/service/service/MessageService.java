@@ -20,7 +20,6 @@ public interface MessageService {
      * 标记为已读（单个或是批量）
      *
      * @param ids
-     * @param id
      * @return
      */
     Integer readMessage(Integer[] ids);
@@ -50,4 +49,6 @@ public interface MessageService {
      * @return
      */
     Integer selectCount(Message message);
+
+
 }
