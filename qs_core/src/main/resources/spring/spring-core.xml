@@ -180,10 +180,10 @@
         <property name="mandatory" value="true" />
     </bean>
     <!-- 邮件确认队列 -->
-    <rabbit:queue name="mail_send_queue" durable="true" />
+    <rabbit:queue name="mail_send_queue_online" durable="true" />
     <rabbit:direct-exchange name="mailExchange" durable="true">
         <rabbit:bindings>
-            <rabbit:binding key="mail_route" queue="mail_send_queue" ></rabbit:binding>
+            <rabbit:binding key="mail_online_route" queue="mail_send_queue_online" ></rabbit:binding>
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
@@ -271,6 +271,11 @@
           class="org.springframework.amqp.rabbit.transaction.RabbitTransactionManager">
         <property name="connectionFactory" ref="rabbitConnectionFactory"/>
     </bean>-->
-
+    <bean id="rabbitListenerContainerFactory"
+          class="org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory">
+        <property name="connectionFactory" ref="rabbitConnectionFactory"/>
+        <property name="concurrentConsumers" value="3"/>
+        <property name="maxConcurrentConsumers" value="10"/>
+    </bean>
 
 </beans>

@@ -199,7 +199,7 @@ public class AuthController extends BaseApiContorller {
 
             // 验证账号
             ServiceResult<Integer> serviceResult = this.userService.validateUser(userName, mobile, email);
-            if(!serviceResult.getFlag()){
+            if(serviceResult.getFlag()){
                 return JsonResponseTool.failure("账号已经存在");
             }
 
@@ -500,13 +500,13 @@ public class AuthController extends BaseApiContorller {
      * @apiUse JsonResponse
      */
     @RequestMapping(value = "/send_mail", method = RequestMethod.POST)
-    public Callable<JsonResponse> sendConfirmEmail() {
+    public JsonResponse sendConfirmEmail() {
         Integer uid = UserSession.getCurrent().getUserId();
-        return () -> {
+
             userService.sendConfirmMail(MailVerifyTypeEnum.EMAIL_CONFIRM, uid);
 
             return JsonResponseTool.success(null);
-        };
+
     }
 
     /**
