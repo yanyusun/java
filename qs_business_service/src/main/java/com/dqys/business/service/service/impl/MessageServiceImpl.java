@@ -6,6 +6,7 @@ import com.dqys.business.orm.mapper.message.MessageMapper;
 import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.core.utils.RabbitMQProducerTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +79,7 @@ public class MessageServiceImpl implements MessageService {
         }
         if (mobilePhone != null) {
             //发送短信接口
+            RabbitMQProducerTool.addToSMSSendQueue(mobilePhone.toString(), content);//加入短信队列
         }
         return null;
     }

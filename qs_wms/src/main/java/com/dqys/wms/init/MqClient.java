@@ -28,6 +28,21 @@ public class MqClient {
         sendMail(msg[0], msg[1]);
     }
 
+
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = "sms_send_queue_online", durable = "true"),
+            exchange = @Exchange(value = "smsExchange"))
+    )
+    public static void smsMailFromMessage(String[] msg) throws Exception {
+//        发送短信
+        sendSMS(msg[0], msg[1]);
+    }
+
+    private static void sendSMS(String phone, String msg) {
+        SmsClient smsClient = new SmsClient();
+        smsClient.sendMessage(phone, msg);
+    }
+
     private static void sendMail(String to, String msg) {
         try {
             Email emailClient = new HtmlEmail();
@@ -54,20 +69,20 @@ public class MqClient {
         }
     }
 
-   /* private static String htmlMailBody(String msg) {
+    /* private static String htmlMailBody(String msg) {
+         StringBuffer stringBuffer = new StringBuffer();
+         stringBuffer.append("<p>欢迎加入多清平台</p><p>以下是的验证链接，<a href=\"http://www.duoqing.com/auth/confirm_mail?key=")
+                 .append(msg)
+                 .append("\" target=\"_blank\">请点击确认</a></p>");
+         return stringBuffer.toString();
+     }*/
+    private static String htmlMailBody(String msg) {
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("<p>欢迎加入多清平台</p><p>以下是的验证链接，<a href=\"http://www.duoqing.com/auth/confirm_mail?key=")
+        stringBuffer.append("<p>欢迎加入多清平台</p><p>以下是的验证链接，<a href=\"http://www.iqingsou.com/typeChoose/")
                 .append(msg)
                 .append("\" target=\"_blank\">请点击确认</a></p>");
         return stringBuffer.toString();
-    }*/
-   private static String htmlMailBody(String msg) {
-       StringBuffer stringBuffer = new StringBuffer();
-       stringBuffer.append("<p>欢迎加入多清平台</p><p>以下是的验证链接，<a href=\"http://www.iqingsou.com/typeChoose/")
-               .append(msg)
-               .append("\" target=\"_blank\">请点击确认</a></p>");
-       return stringBuffer.toString();
-   }
+    }
 
 
 }

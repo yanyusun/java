@@ -187,6 +187,14 @@
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
+    <!-- 短信队列 -->
+    <rabbit:queue name="sms_send_queue_online" durable="true" />
+    <rabbit:direct-exchange name="smsExchange" durable="true">
+        <rabbit:bindings>
+            <rabbit:binding key="sms_online_route" queue="sms_send_queue_online" ></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+
 
 
 
