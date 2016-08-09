@@ -94,7 +94,7 @@ public class CoordinatorController {
      * @api {post} coordinator/addTeammate 添加邀请人员
      * @apiParam {int} userTeamId 协作器id
      * @apiParam {string} remark 验证消息
-     * @apiParam {int} userIds 被邀请人的id
+     * @apiParam {int[]} userIds 被邀请人的id
      * @apiDescription 添加邀请人员到参与人关联表
      * @apiSampleRequest coordinator/addTeammate
      * @apiGroup Coordinator
@@ -163,13 +163,14 @@ public class CoordinatorController {
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
         );
-        userId = 11;
         if (CommonUtil.checkParam(userTeammateId)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         Map map = coordinatorService.addTeammate(userTeammateId, userId);
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             return JsonResponseTool.success(map);
+        } else if (MessageUtils.transMapToString(map, "result").equals("exist")) {
+            return JsonResponseTool.failure("已经存在");
         } else {
             return JsonResponseTool.failure("操作失败");
         }

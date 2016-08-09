@@ -16,6 +16,7 @@
         <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="repay_fid_type" property="repayFidType" jdbcType="INTEGER"/>
+        <result column="lender_id" property="lenderId" jdbcType="INTEGER"></result>
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.dqys.business.orm.pojo.repay.Repay" extends="BaseResultMapRepay">
         <result column="repay_bills" property="repayBills" jdbcType="LONGVARBINARY"/>
@@ -209,6 +210,9 @@
             <if test="repayFidName != null">
                 repay_fid_name,
             </if>
+            <if test="lenderId != null">
+                lender_id,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -246,6 +250,9 @@
             </if>
             <if test="repayFidName != null">
                 #{repayFidName,jdbcType=VARCHAR},
+            </if>
+            <if test="lenderId != null">
+                #{lenderId,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
@@ -445,7 +452,7 @@
         where rec.status=0 and rep.repay_fid=#{objectId,jdbcType=INTEGER}
         and rep.repay_fid_type=#{objectType,jdbcType=INTEGER}
     </select>
-    <select id="getRepayRecordByRepayId"  resultMap="BaseResultMapRepayRecord">
+    <select id="getRepayRecordByRepayId" resultMap="BaseResultMapRepayRecord">
        SELECT * FROM t_repay_record rec
        WHERE rec.status=0 and rec.repay_id=#{repayId,jdbcType=INTEGER}
     </select>
@@ -485,10 +492,25 @@
         SELECT iou_id FROM t_repay_record
         where repay_id=#{repayId}
     </select>
-
-    <update id="deleteByRepay"  parameterType="int">
+    <!--删除还款记录（伪删除）-->
+    <update id="deleteByRepay" parameterType="int">
       UPDATE t_repay set stateflag=now()
         where id=#{repayId}
     </update>
+    <!--还款记录列表-->
+    <select id="selectByRepay" resultMap="BaseResultMapRepay" parameterType="com.dqys.business.orm.pojo.repay.Repay">
+        SELECT * from t_repay rep
+        where rep.stateflag=0
+        <if test="repayType !=null">
+            and rep.repay_type=#{repayType}
+        </if>
+        <if test="repayFidType !=null">
+            and rep.repay_fid_type =#{repayFidType}
+        </if>
+        <if test="lenderId !=null">
+            and rep.lender_id =#{lenderId}
+        </if>
+        ORDER BY rep.damage_date DESC
+    </select>
 
 </mapper>

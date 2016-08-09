@@ -1,6 +1,7 @@
 package com.dqys.business.service.service;
 
 import com.dqys.business.orm.pojo.repay.DamageApply;
+import com.dqys.business.orm.pojo.repay.Repay;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
@@ -79,4 +80,12 @@ public interface RepayService {
      * @return
      */
     void updateRepayMoney(Integer repayId, Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file, Map map) throws Exception;
+
+    /**
+     * 还款记录列表
+     *
+     * @param repay
+     * @param map
+     */
+    void getRepayList(Repay repay, Map map);
 }

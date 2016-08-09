@@ -119,8 +119,11 @@ public class RepayServiceImpl implements RepayService {
                 repayRecord.setRepayPrincipal(priMoney);
                 flag = dispose(iou.getLenderId(), iou.getId(), iou.getVersion(), priMoney, null, null);
             } else if (repayType == RepayEnum.TYPE_ACCRUAL.getValue()) {//还利息
-                Double accMoney = iou.getAccrualArrears() > money ? money : iou.getAccrualArrears();
-                repayRecord.setRepayInterest(accMoney);
+                Double accMoney = 0.0;
+                if (iou.getAccrualArrears() != null) {
+                    accMoney = iou.getAccrualArrears() > money ? money : iou.getAccrualArrears();
+                    repayRecord.setRepayInterest(accMoney);
+                }
                 if (iou.getPenalty() != null) {
                     Double penalty = iou.getPenalty() > money ? money : iou.getPenalty();
                     money -= penalty;
@@ -131,8 +134,11 @@ public class RepayServiceImpl implements RepayService {
                     flag = dispose(iou.getLenderId(), iou.getId(), iou.getVersion(), null, accMoney, null);
                 }
             } else if (repayType == RepayEnum.TYPE_A_P.getValue()) {//先还利息再还本金
-                Double accMoney = iou.getAccrualArrears() > money ? money : iou.getAccrualArrears();
-                repayRecord.setRepayInterest(accMoney);
+                Double accMoney = 0.0;
+                if (iou.getAccrualArrears() != null) {
+                    accMoney = iou.getAccrualArrears() > money ? money : iou.getAccrualArrears();
+                    repayRecord.setRepayInterest(accMoney);
+                }
                 if (iou.getPenalty() != null) {
                     Double penalty = iou.getPenalty() > money ? money : iou.getPenalty();
                     money -= penalty;
@@ -381,13 +387,25 @@ public class RepayServiceImpl implements RepayService {
             repayMapper.deleteByRepay(repayId);//删除冲正后的还款记录，重新进行新还款操作
             map = repayMoney(userId, objectId, objectType, repayType, repayWay, money, remark, file);//还款
             if (!MessageUtils.transMapToString(map, "result").equals("yes")) {
-                throw new ArtificialException(map.toString(),1001);
+                throw new ArtificialException(map.toString(), 1001);
 //                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             }
         } else {
             map.put("result", "no");
         }
     }
+
+    @Override
+    public void getRepayList(Repay repay, Map map) {
+        List<Repay> repays = repayMapper.selectByRepay(repay);
+        if (repays.size() > 0) {
+            map.put("result", "yes");
+            map.put("repays", repays);
+        } else {
+            map.put("result", "no");
+        }
+    }
+
 
     /**
      * 还款冲正
