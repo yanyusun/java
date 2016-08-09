@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class MqClient {
 
     @RabbitListener(bindings = @QueueBinding(
-            value = @Queue(value = "mail_send_queue", durable = "true"),
+            value = @Queue(value = "mail_send_queue_online", durable = "true"),
             exchange = @Exchange(value = "mailExchange"))
     )
     public static void sendMailFromMessage(String[] msg) throws Exception {
@@ -54,13 +54,20 @@ public class MqClient {
         }
     }
 
-    private static String htmlMailBody(String msg) {
+   /* private static String htmlMailBody(String msg) {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("<p>欢迎加入多清平台</p><p>以下是的验证链接，<a href=\"http://www.duoqing.com/auth/confirm_mail?key=")
                 .append(msg)
                 .append("\" target=\"_blank\">请点击确认</a></p>");
         return stringBuffer.toString();
-    }
+    }*/
+   private static String htmlMailBody(String msg) {
+       StringBuffer stringBuffer = new StringBuffer();
+       stringBuffer.append("<p>欢迎加入多清平台</p><p>以下是的验证链接，<a href=\"http://www.iqingsou.com/typeChoose/")
+               .append(msg)
+               .append("\" target=\"_blank\">请点击确认</a></p>");
+       return stringBuffer.toString();
+   }
 
 
 }

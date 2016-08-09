@@ -181,10 +181,10 @@
     </bean>
 
     <!-- 邮件确认队列 -->
-    <rabbit:queue name="mail_send_queue" durable="true" />
+    <rabbit:queue name="mail_send_queue_online" durable="true" />
     <rabbit:direct-exchange name="mailExchange" durable="true">
         <rabbit:bindings>
-            <rabbit:binding key="mail_route" queue="mail_send_queue" ></rabbit:binding>
+            <rabbit:binding key="mail_online_route" queue="mail_send_queue_online" ></rabbit:binding>
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
