@@ -223,4 +223,11 @@ public interface RepayMapper {
     List<Integer> getIouIdByRecord(Integer repayId);
 
     Integer deleteByRepay(Integer repayId);
+
+    /**
+     * 获取还款列表
+     * @param repay
+     * @return
+     */
+    List<Repay> selectByRepay(Repay repay);
 }

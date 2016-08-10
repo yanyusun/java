@@ -63,10 +63,12 @@ public class RabbitMQProducerTool implements ApplicationContextAware {
     }
 
     public static void addToMailSendQueue(String to, String msg) {
-        rabbitTemplate.convertAndSend("mailExchange", "mail_online_route", new String[] {to, msg});
+        rabbitTemplate.convertAndSend("mailExchange", "mail_online_route", new String[]{to, msg});
     }
 
-
+    public static void addToSMSSendQueue(String phone, String msg) {
+        rabbitTemplate.convertAndSend("smsExchange", "sms_online_route", new String[]{phone, msg});
+    }
     /*public static void sendTest() throws IOException {
         Message m = MessageBuilder.withBody("aaaatest".getBytes()).build();
         //rabbitTemplate.send(m);

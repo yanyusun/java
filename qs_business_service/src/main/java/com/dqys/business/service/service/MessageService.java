@@ -20,7 +20,6 @@ public interface MessageService {
      * 标记为已读（单个或是批量）
      *
      * @param ids
-     * @param id
      * @return
      */
     Integer readMessage(Integer[] ids);
@@ -58,5 +57,5 @@ public interface MessageService {
      * @param content 短信内容
      * @return
      */
-    Integer sendSMS(Integer receiveUserId,Integer mobilePhone,String content);
+    Integer sendSMS(Integer receiveUserId,String mobilePhone,String content);
 }

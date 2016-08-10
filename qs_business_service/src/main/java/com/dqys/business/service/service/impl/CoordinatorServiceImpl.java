@@ -21,11 +21,9 @@ import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
 import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
-import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
-import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,20 +65,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         UserTeam team = new UserTeam();
         team = userTeamMapper.selectByPrimaryKeySelective(userTeam);
         if (objectType == ObjectTypeEnum.LENDER.getValue()) {//借款人
-            LenderInfo lenderInfo = lenderInfoMapper.get(objectId);
-            if (lenderInfo == null) {
-                map.put("result", "no_lender");
-                return;
-            } else {
-                map.put("accrual", lenderInfo.getAccrual() == null ? 0 : lenderInfo.getAccrual());//总利息
-                map.put("loan", lenderInfo.getLoan() == null ? 0 : lenderInfo.getLoan());//总贷款
-                map.put("appraisal", lenderInfo.getAppraisal() == null ? 0 : lenderInfo.getAppraisal());//抵押物总评估
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(lenderInfo.getEndAt());
-                long nowTime = new Date().getTime();
-                int day = (int) (calendar.getTimeInMillis() - nowTime) / (1000 * 3600 * 24);
-                map.put("dayCount", day > 0 ? day : 0);//逾期天数
-            }
+            LenderInfo lenderInfo = getLenderInfo(map, objectId);
+            if (lenderInfo == null) return;
             if (team == null) {
                 userTeam.setObjectId(lenderInfo.getAssetId());
                 userTeam.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
@@ -91,21 +77,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
         }
         if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {//资产包
-            AssetInfo assetInfo = assetInfoMapper.get(objectId);
-            if (assetInfo == null) {
-                map.put("result", "no_asset");
-                return;
-            } else {
-                map.put("name", assetInfo.getName());//资产包名称
-                map.put("accrual", assetInfo.getAccrual() == null ? 0 : assetInfo.getAccrual());//总利息
-                map.put("loan", assetInfo.getLoan() == null ? 0 : assetInfo.getLoan());//总贷款
-                map.put("appraisal", assetInfo.getAppraisal() == null ? 0 : assetInfo.getAppraisal());//抵押物总评估
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(assetInfo.getEndAt());
-                long nowTime = new Date().getTime();
-                int day = (int) (calendar.getTimeInMillis() - nowTime) / (1000 * 3600 * 24);
-                map.put("dayCount", day > 0 ? day : 0);//逾期天数
-            }
+            if (getAsset(map, objectId)) return;
         }
 
         if (team == null) {//判断是否在t_user_team表中添加了记录，添加了返回信息，没添加的返回id
@@ -132,6 +104,57 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("userTeamId", team.getId());
             map.put("result", "yes");
         }
+    }
+
+    /**
+     * 获取资产包信息
+     *
+     * @param map
+     * @param objectId
+     * @return
+     */
+    private boolean getAsset(Map<String, Object> map, Integer objectId) {
+        AssetInfo assetInfo = assetInfoMapper.get(objectId);
+        if (assetInfo == null) {
+            map.put("result", "no_asset");//资产包不存在
+            return true;
+        } else {
+            map.put("name", assetInfo.getName());//资产包名称
+            map.put("accrual", assetInfo.getAccrual() == null ? 0 : assetInfo.getAccrual());//总利息
+            map.put("loan", assetInfo.getLoan() == null ? 0 : assetInfo.getLoan());//总贷款
+            map.put("appraisal", assetInfo.getAppraisal() == null ? 0 : assetInfo.getAppraisal());//抵押物总评估
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(assetInfo.getEndAt());
+            long nowTime = new Date().getTime();
+            int day = (int) (calendar.getTimeInMillis() - nowTime) / (1000 * 3600 * 24);
+            map.put("dayCount", day > 0 ? day : 0);//逾期天数
+        }
+        return false;
+    }
+
+    /**
+     * 获取借款人信息
+     *
+     * @param map
+     * @param objectId
+     * @return
+     */
+    private LenderInfo getLenderInfo(Map<String, Object> map, Integer objectId) {
+        LenderInfo lenderInfo = lenderInfoMapper.get(objectId);
+        if (lenderInfo == null) {
+            map.put("result", "no_lender");//借款人不存在
+            return null;
+        } else {
+            map.put("accrual", lenderInfo.getAccrual() == null ? 0 : lenderInfo.getAccrual());//总利息
+            map.put("loan", lenderInfo.getLoan() == null ? 0 : lenderInfo.getLoan());//总贷款
+            map.put("appraisal", lenderInfo.getAppraisal() == null ? 0 : lenderInfo.getAppraisal());//抵押物总评估
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(lenderInfo.getEndAt());
+            long nowTime = new Date().getTime();
+            int day = (int) (calendar.getTimeInMillis() - nowTime) / (1000 * 3600 * 24);
+            map.put("dayCount", day > 0 ? day : 0);//逾期天数
+        }
+        return lenderInfo;
     }
 
     @Override
@@ -169,6 +192,16 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         return map;
     }
 
+    /**
+     * 添加参与人信息
+     *
+     * @param userTeamId
+     * @param uid
+     * @param flag
+     * @param businessType
+     * @param joinType
+     * @return
+     */
     private Integer getTeammateFlag(Integer userTeamId, Integer uid, Integer flag, Integer businessType, Integer joinType) {
         List<TeammateRe> users = new ArrayList<>();
         TeammateRe teammateRe = new TeammateRe();
@@ -183,6 +216,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             if (teammateRe1.getStatus() == TeammateReEnum.STATUS_REFUSE.getValue()) {//邀请过的并且以前拒绝过的就修改为待接收状态
                 teammateRe1.setStatus(TeammateReEnum.STATUS_INIT.getValue());
                 flag = teammateReMapper.updateByPrimaryKeySelective(teammateRe1);
+            } else {
+                flag = -1;//已经加入过案组
             }
         } else {
             if (list.size() == 0) {
@@ -240,6 +275,11 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         return map;
     }
 
+    /**
+     * 设定业务id
+     * @param ouRelation
+     * @return
+     */
     private boolean checkExist(OURelation ouRelation) {
         OURelation our = new OURelation();
         our.setObjectId(ouRelation.getObjectId());
@@ -262,6 +302,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         flag = getTeammateFlag(userTeammateId, userId, flag, TeammateReEnum.BUSINESS_TYPE_TASK.getValue(), TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue());
         if (flag > 0) {
             map.put("result", "yes");
+        } else if (flag == -1) {
+            map.put("result", "exist");//已经纯在
         } else {
             map.put("result", "no");
         }
@@ -276,12 +318,16 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         Integer receive_id = 0;//录入人
         if (objectType == ObjectTypeEnum.LENDER.getValue()) {
             LenderInfo len = coordinatorMapper.getLenderInfo(objectId);
-            receive_id = len.getOperator();
+            if (len != null) {
+                receive_id = len.getOperator() == null ? 0 : len.getOperator();
+            }
             operType = LenderEnum.UPDATE_EDIT.getValue();
             text = "借款人审核操作";
         } else if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
             AssetInfo assetInfo = coordinatorMapper.getAssetInfo(objectId);
-            receive_id = assetInfo.getOperator();
+            if (assetInfo != null) {
+                receive_id = assetInfo.getOperator() == null ? 0 : assetInfo.getOperator();
+            }
             operType = AssetPackageEnum.update.getValue();
             text = "资产包审核操作";
         }
@@ -313,6 +359,10 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             lenderInfo.setId(objectId);
             lenderInfo.setIsStop(status);
             LenderInfo lender = lenderInfoMapper.get(objectId);
+            if (lender == null) {
+                map.put("result", "noExist");//不存在记录
+                return;
+            }
             if (lender.getIsStop() == status) {
                 map.put("result", "repetition");//重复操作
                 return;
@@ -326,6 +376,10 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             assetInfo.setId(objectId);
             assetInfo.setIsStop(status);
             AssetInfo asset = assetInfoMapper.get(objectId);
+            if (asset == null) {
+                map.put("result", "noExist");//不存在记录
+                return;
+            }
             if (asset.getIsStop() == status) {
                 map.put("result", "repetition");//重复操作
                 return;
@@ -347,7 +401,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             //发送短信或邮件
             messageService.sendSMS(rec, null, content);
         }
-        map.put("result","yes");
+        map.put("result", "yes");
 //        businessLogService.add(objectId, objectType, operType, text, "", 0, 0);//添加操作日志
     }
 

@@ -37,7 +37,7 @@ public class ZcyController {
      */
     @RequestMapping("/get")
     @ResponseBody
-    public JsonResponse get(Integer id, Integer type) {
+    public JsonResponse get(@RequestParam("id") Integer id, @RequestParam("type") Integer type) {
         Map map = new HashMap<>();
         if (CommonUtil.checkParam(id, type)) {
             return JsonResponseTool.paramErr("参数错误");

@@ -3,6 +3,7 @@ package com.dqys.business.controller;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.repay.RepayEnum;
 import com.dqys.business.orm.pojo.repay.DamageApply;
+import com.dqys.business.orm.pojo.repay.Repay;
 import com.dqys.business.service.service.RepayService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.AuthHeaderEnum;
@@ -27,6 +28,32 @@ import java.util.Map;
 public class RepayController {
     @Autowired
     private RepayService repayService;
+
+    /**
+     * @api {post} repay/repayList 获取还款记录列表
+     * @apiName repay/repayList
+     * @apiSampleRequest repay/repayList
+     * @apiParam {int} repayType 还款类型(0还利息1还本金2还利息加本金)
+     * @apiParam {int} repayFidType 对象类型（1借据2抵押物）
+     * @apiParam {int} lenderId 借款人id
+     * @apiGroup Repay
+     */
+    @RequestMapping("repayList")
+    @ResponseBody
+    public JsonResponse repayList(@RequestParam("repayType") Integer repayType, @RequestParam("repayFidType") Integer repayFidType, @RequestParam("lenderId") Integer lenderId) {
+        Map map = new HashMap<>();
+        Repay repay = new Repay();
+        repay.setRepayType(repayType);
+        repay.setRepayFidType(repayFidType);
+        repay.setLenderId(lenderId);
+        repayService.getRepayList(repay, map);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure("操作失败");
+        }
+    }
+
 
     /**
      * @api {post} repay/getIouAndPawnByLender 根据借款人id获取底下的借据和抵押物
