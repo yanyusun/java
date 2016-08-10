@@ -70,11 +70,11 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Integer sendSMS(Integer receiveUserId, Integer mobilePhone, String content) {
+    public Integer sendSMS(Integer receiveUserId, String mobilePhone, String content) {
         if (mobilePhone == null) {
             TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(receiveUserId);
             if (tUserInfo != null) {
-                mobilePhone = MessageUtils.transStringToInt(tUserInfo.getMobile());
+                mobilePhone =tUserInfo.getMobile();
             }
         }
         if (mobilePhone != null) {
