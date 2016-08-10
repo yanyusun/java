@@ -1,8 +1,10 @@
 package com.dqys.business.service.service;
 
+import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.message.Message;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mkfeng on 2016/7/8.
@@ -44,7 +46,8 @@ public interface MessageService {
     Integer add(String title, String content, Integer sender_id, Integer receive_id, String label, Integer type);
 
     /**
-     *查询消息记录数
+     * 查询消息记录数
+     *
      * @param message
      * @return
      */
@@ -52,10 +55,31 @@ public interface MessageService {
 
     /**
      * 发送短信
+     *
      * @param receiveUserId 接受短信人的用户id(当手机传入为NUll时，根据用户id查询对应手机号发送)
-     * @param mobilePhone 接收人的手机号
-     * @param content 短信内容
+     * @param mobilePhone   接收人的手机号
+     * @param content       短信内容
      * @return
      */
-    Integer sendSMS(Integer receiveUserId,String mobilePhone,String content);
+    Integer sendSMS(Integer receiveUserId, String mobilePhone, String content);
+
+    /**
+     * 根据编号获取短信模版，进行发送
+     *
+     * @param mobilePhone 手机号
+     * @param code        编号
+     * @param content     替换内容
+     * @return
+     */
+    String sendSms(Integer code, String mobilePhone, String... content);
+
+    /**
+     * 团队协作
+     *
+     * @param userTeam 协作器
+     * @param map      发送者信息
+     * @param uid      接收者
+     * @param remark   备注
+     */
+    void sendSmsByTeammate(UserTeam userTeam, Map<String, Object> map, Integer uid, String remark);
 }

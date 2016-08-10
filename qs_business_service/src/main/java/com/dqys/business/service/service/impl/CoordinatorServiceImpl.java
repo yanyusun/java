@@ -169,6 +169,11 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     public Map addTeammate(Integer userTeamId, Integer userId, String remark, Integer[] userIds) throws BusinessLogException {
         Map map = new HashMap<>();
         int num = 0;
+        UserTeam team = new UserTeam();
+        team.setId(userTeamId);
+        userId = 12;
+        UserTeam userTeam = userTeamMapper.selectByPrimaryKeySelective(team);
+        Map userAndCompany = coordinatorMapper.getUserAndCompanyByUserId(userId);
         for (Integer uid : userIds) {
             Integer flag = 0;
             Integer businessType = TeammateReEnum.BUSINESS_TYPE_TASK.getValue();
@@ -179,7 +184,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 Integer result = messageService.add("任务邀请", remark, userId, uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue());//添加消息记录
                 if (result > 0) {
                     //发送短信或是邮件
-                    messageService.sendSMS(uid, null, remark);
+//                    messageService.sendSMS(uid, null, remark);
+                    messageService.sendSmsByTeammate(userTeam, userAndCompany, uid, remark);
                 }
             }
         }
@@ -277,6 +283,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     /**
      * 设定业务id
+     *
      * @param ouRelation
      * @return
      */

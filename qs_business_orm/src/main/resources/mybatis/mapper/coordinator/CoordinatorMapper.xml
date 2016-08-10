@@ -219,4 +219,13 @@
         ON our.object_id=len.id and our.object_type=#{objectType} and our.status=3 and (our.type=1 or our.type=2)
         where len.asset_id=#{objectId} GROUP BY our.user_id
     </select>
+    <!--根据用户id获取相应的用户信息和公司信息-->
+    <select id="getUserAndCompanyByUserId" parameterType="int" resultType="java.util.Map">
+            SELECT tui.id userId,tui.mobile,tui.real_name realName,tut.role_id rold,tut.user_type userType,tci.company_name companyName,tci.type companyType
+            from t_user_info tui LEFT JOIN t_user_tag tut
+            ON tut.user_id=tui.id LEFT JOIN t_company_info tci
+            ON tci.id=tui.company_id
+            WHERE tui.id=#{userId} LIMIT 0,1
+    </select>
+
 </mapper>
