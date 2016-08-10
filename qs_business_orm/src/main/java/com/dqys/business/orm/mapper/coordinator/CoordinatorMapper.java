@@ -133,6 +133,7 @@ public interface CoordinatorMapper {
 
     /**
      * 根据借款人获取操作员id
+     *
      * @param objectType
      * @param objectId
      * @return
@@ -141,10 +142,15 @@ public interface CoordinatorMapper {
 
     /**
      * 根据资产包获取操作员id
+     *
      * @param objectType
      * @param objectId
      * @return
      */
     List<Map<String, Object>> getUserIdByObjUserRelToAsset(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId);
 
+    /**
+     * 根据用户id获取相应的用户信息和公司信息
+     */
+    Map<String, Object> getUserAndCompanyByUserId(Integer userId);
 }

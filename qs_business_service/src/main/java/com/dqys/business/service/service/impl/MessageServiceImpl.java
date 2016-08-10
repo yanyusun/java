@@ -1,16 +1,23 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.message.MessageMapper;
+import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.RabbitMQProducerTool;
+import com.dqys.core.utils.SmsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mkfeng on 2016/7/8.
@@ -22,6 +29,8 @@ public class MessageServiceImpl implements MessageService {
     private MessageMapper messageMapper;
     @Autowired
     private TUserInfoMapper tUserInfoMapper;
+    @Autowired
+    private CoordinatorMapper coordinatorMapper;
 
     @Override
     public List<Message> selectByMessage(Message message) {
@@ -74,13 +83,78 @@ public class MessageServiceImpl implements MessageService {
         if (mobilePhone == null) {
             TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(receiveUserId);
             if (tUserInfo != null) {
-                mobilePhone =tUserInfo.getMobile();
+                mobilePhone = tUserInfo.getMobile();
             }
         }
-        if (mobilePhone != null) {
+        if (FormatValidateTool.checkMobile(mobilePhone.trim())) {
             //发送短信接口
             RabbitMQProducerTool.addToSMSSendQueue(mobilePhone.toString(), content);//加入短信队列
         }
         return null;
     }
+
+    /**
+     * 根据编号获取短信模版，进行发送
+     *
+     * @param mobilePhone 手机号
+     * @param code        编号
+     * @param content     替换内容
+     * @return
+     */
+    @Override
+    public String sendSms(Integer code, String mobilePhone, String... content) {
+        if (!FormatValidateTool.checkMobile(mobilePhone)) {
+            return "error_mobile";
+        } else {
+            String msg = new SmsUtil().getKeyValue(code);
+            if (msg == null && msg == "") {
+                return "error_msg";
+            }
+            for (int i = 0; i < content.length; i++) {
+                msg = msg.replace("{" + i + "}", content[i]);
+            }
+            sendSMS(null, mobilePhone, msg);
+            return "yes";
+        }
+    }
+
+    @Override
+    public void sendSmsByTeammate(UserTeam userTeam, Map<String, Object> map, Integer uid, String remark) {
+        Map user = coordinatorMapper.getUserAndCompanyByUserId(uid);
+        String objectName = "";
+        String objectType = "";
+        if (userTeam != null) {
+            objectType = userTeam.getObjectType() == null ? "" : userTeam.getObjectType().toString();
+            ObjectTypeEnum objectTypeEnum = ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType());
+            if (objectTypeEnum != null) {
+                objectName = objectTypeEnum.getName();
+            }
+        }
+        String mobilePhone = MessageUtils.transMapToString(user, "mobile");//接收者手机号
+        String realName = MessageUtils.transMapToString(user, "realName");//接收者真实姓名
+//以下发送者信息
+        String typeSend = "";//发送者角色类型
+        Integer role = MessageUtils.transMapToInt(user, "rold");
+        if (role == 1) {
+            typeSend = "管理员";
+        } else if (role == 2) {
+            typeSend = "管理者";
+        } else if (role == 3) {
+            typeSend = "普通员工";
+        }
+        String realNameSend = MessageUtils.transMapToString(map, "realName");//发送者真实姓名
+        String companyNameSend = MessageUtils.transMapToString(map, "companyName");//发送者公司名称
+        String companyTypeSend = "";//发送者公司类型
+        CompanyTypeEnum companyTypeEnum = CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(map, "companyType"));
+        if (companyTypeEnum != null) {
+            companyTypeSend = companyTypeEnum.getName();
+        }
+        if (MessageUtils.transMapToString(user, "companyName").equals(MessageUtils.transMapToString(map, "companyName"))) {
+            sendSms(102, mobilePhone, realName, companyNameSend, companyTypeSend, realNameSend, objectType, objectName, remark);
+        } else {
+            sendSms(103, mobilePhone, realName, typeSend, realNameSend, objectType, objectName, remark);
+        }
+    }
+
+
 }
