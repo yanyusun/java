@@ -150,7 +150,7 @@ public class AuthController extends BaseApiContorller {
 
     /**
      * @apiDefine RequestAccount
-     * @apiParam {String} [userName] 账号<三选一必选>
+     * @apiParam {String} [account] 账号<三选一必选>
      * @apiParam {String} [mobile] 手机号<三选一必选>
      * @apiParam {String} [email] 邮箱<三选一必选>
      * @apiParam {String} pwd 密码
@@ -185,7 +185,7 @@ public class AuthController extends BaseApiContorller {
      * @apiSuccess ResponseHeader
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public Callable<JsonResponse> userRegister(@RequestParam(required = false) String userName,
+    public Callable<JsonResponse> userRegister(@RequestParam(required = false) String account,
                                                @RequestParam(required = false) String mobile,
                                                @RequestParam(required = false) String email,
                                                @RequestParam String pwd,
@@ -193,7 +193,7 @@ public class AuthController extends BaseApiContorller {
                                                @RequestParam(required = false) String captcha,
                                                @RequestParam(required = false) String captchaKey) {
         return () -> {
-            if(StringUtils.isBlank(userName) && StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
+            if(StringUtils.isBlank(account) && StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
                 return JsonResponseTool.paramErr("参数无效");
             }
             if(StringUtils.isBlank(captcha) && StringUtils.isBlank(smsCode)) {
@@ -201,7 +201,7 @@ public class AuthController extends BaseApiContorller {
             }
 
             // 验证账号
-            ServiceResult<Integer> serviceResult = this.userService.validateUser(userName, mobile, email);
+            ServiceResult<Integer> serviceResult = this.userService.validateUser(account, mobile, email);
             if(serviceResult.getFlag()){
                 return JsonResponseTool.failure("账号已经存在");
             }
@@ -236,7 +236,7 @@ public class AuthController extends BaseApiContorller {
             }
 
             //用户注册
-            ServiceResult<UserDTO> userServiceResult = userService.userRegister_tx(userName, mobile, email, pwd);
+            ServiceResult<UserDTO> userServiceResult = userService.userRegister_tx(account, mobile, email, pwd);
             if(userServiceResult.getFlag()) {
                 return JsonResponseTool.failure(userServiceResult.getMessage());
             }
