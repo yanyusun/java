@@ -55,4 +55,23 @@ public class ResourceController {
         };
     }
 
+    @RequestMapping(value = "/uploadSource", method = RequestMethod.POST)
+    public Callable<JsonResponse<String>> uploadSource(@RequestParam  String type, MultipartFile file) {
+        Integer userId = UserSession.getCurrent().getUserId();
+        return () -> {
+            String fileName = null;
+            try {
+                fileName = FileTool.saveFileSyncTmp(type, userId, file);
+                if(fileName.startsWith("err:")) {
+                    return JsonResponseTool.failure(fileName);
+                }
+            } catch (IOException e) {
+                return JsonResponseTool.serverErr();
+            }
+
+            return JsonResponseTool.success(fileName);
+        };
+    }
+
+
 }

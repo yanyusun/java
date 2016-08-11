@@ -17,8 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Yvan on 16/7/25.
@@ -169,6 +168,7 @@ public class NavigationController {
      * @return
      */
     private List<NavigationDTO> listChild(Integer id) {
+        // 这样重复调用数据库造成资源的多次请求,
         NavigationQuery navigationQuery = createNavigationQuery();
         navigationQuery.setPid(id);
         List<NavigationDTO> navigationDTOList = navigationService.queryList(navigationQuery);
@@ -184,6 +184,44 @@ public class NavigationController {
         } else {
             return null;
         }
+
+//        // 采用纯数据处理,查全,去顶部菜单栏
+//        NavigationQuery navigationQuery = createNavigationQuery();
+//        List<NavigationDTO> navigationDTOList = navigationService.queryList(navigationQuery);
+//
+//        List<Navigation> navigationList = new ArrayList<>();
+//        Map<Integer, List<Navigation>> navigationDTOMap = new HashMap<>();
+//        Collections.sort(navigationList, (a,b) -> b.getPid().compareTo(a.getPid()));
+//        navigationList.forEach(navigation -> {
+//            if(!navigation.getPid().equals(0)){
+//                // 非顶部导航栏
+//
+//            }
+//        });
+//
+//
+//
+////        navigationDTOList.forEach(navigationDTO1 -> {
+////            if(!navigationDTO1.getKey().equals(0)){
+////                // 非顶部菜单
+////                if)
+////            }
+////        });
+//
+//
+//
+//        List<NavigationDTO> result = new ArrayList<>();
+//        if (navigationDTOList != null && navigationDTOList.size() > 0) {
+//            for (NavigationDTO navigationDTO : navigationDTOList) {
+//                if (navigationDTO.getChild() != null && navigationDTO.getChild()) {
+//                    navigationDTO.setGroup(listChild(navigationDTO.getKey()));
+//                }
+//                result.add(navigationDTO);
+//            }
+//            return result;
+//        } else {
+//            return null;
+//        }
     }
 
 

@@ -48,4 +48,27 @@ public class SmsUtil {
         return properties.getProperty("templateSMS" + code);
     }
 
+    /**
+     * 根据编号获取短信模版，进行发送
+     *
+     * @param mobilePhone 手机号
+     * @param code        编号
+     * @param content     替换内容
+     * @return
+     */
+    public void sendSms(Integer code, String mobilePhone, String... content) {
+        if (FormatValidateTool.checkMobile(mobilePhone)) {
+            String msg = this.getKeyValue(code);
+            if (msg != null && !msg.equals("")) {
+                for (int i = 0; i < content.length; i++) {
+                    msg = msg.replace("{" + i + "}", content[i]);
+                }
+                if (mobilePhone != null && FormatValidateTool.checkMobile(mobilePhone.trim())) {
+                    //发送短信接口
+                    RabbitMQProducerTool.addToSMSSendQueue(mobilePhone.toString(), msg);//加入短信队列
+                }
+            }
+        }
+    }
+
 }

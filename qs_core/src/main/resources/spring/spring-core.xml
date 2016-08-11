@@ -231,7 +231,7 @@
     <rabbit:listener-container connection-factory="rabbitConnectionFactory">
         <rabbit:listener ref="rabbitClinet" method="listen" queue-names="myQueue" />
     </rabbit:listener-container>
-    <bean id="rabbitClinet" class="com.dqys.core.utils.RabbitMQClientTool" />-->
+    <bean id="rabbitClient" class="com.dqys.core.utils.RabbitMQClientTool" />-->
 
 
 
