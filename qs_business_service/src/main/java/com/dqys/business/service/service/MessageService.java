@@ -64,16 +64,6 @@ public interface MessageService {
     Integer sendSMS(Integer receiveUserId, String mobilePhone, String content);
 
     /**
-     * 根据编号获取短信模版，进行发送
-     *
-     * @param mobilePhone 手机号
-     * @param code        编号
-     * @param content     替换内容
-     * @return
-     */
-    String sendSms(Integer code, String mobilePhone, String... content);
-
-    /**
      * 团队协作
      *
      * @param userTeam 协作器

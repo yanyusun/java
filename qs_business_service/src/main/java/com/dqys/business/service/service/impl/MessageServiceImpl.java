@@ -93,31 +93,6 @@ public class MessageServiceImpl implements MessageService {
         return null;
     }
 
-    /**
-     * 根据编号获取短信模版，进行发送
-     *
-     * @param mobilePhone 手机号
-     * @param code        编号
-     * @param content     替换内容
-     * @return
-     */
-    @Override
-    public String sendSms(Integer code, String mobilePhone, String... content) {
-        if (!FormatValidateTool.checkMobile(mobilePhone)) {
-            return "error_mobile";
-        } else {
-            String msg = new SmsUtil().getKeyValue(code);
-            if (msg == null && msg == "") {
-                return "error_msg";
-            }
-            for (int i = 0; i < content.length; i++) {
-                msg = msg.replace("{" + i + "}", content[i]);
-            }
-            sendSMS(null, mobilePhone, msg);
-            return "yes";
-        }
-    }
-
     @Override
     public void sendSmsByTeammate(UserTeam userTeam, Map<String, Object> map, Integer uid, String remark) {
         Map user = coordinatorMapper.getUserAndCompanyByUserId(uid);
@@ -153,6 +128,22 @@ public class MessageServiceImpl implements MessageService {
             sendSms(102, mobilePhone, realName, companyNameSend, companyTypeSend, realNameSend, objectType, objectName, remark);
         } else {
             sendSms(103, mobilePhone, realName, typeSend, realNameSend, objectType, objectName, remark);
+        }
+    }
+
+    private String sendSms(Integer code, String mobilePhone, String... content) {
+        if (!FormatValidateTool.checkMobile(mobilePhone)) {
+            return "error_mobile";
+        } else {
+            String msg = new SmsUtil().getKeyValue(code);
+            if (msg == null && msg == "") {
+                return "error_msg";
+            }
+            for (int i = 0; i < content.length; i++) {
+                msg = msg.replace("{" + i + "}", content[i]);
+            }
+            sendSMS(null, mobilePhone, msg);
+            return "yes";
         }
     }
 

@@ -25,6 +25,13 @@ public class SysProperty {
     public static final Integer STATUS_TRUE = 1;
     public static final Integer STATUS_FALSE = 2;
 
+
+    // 短信模板
+    public static final Integer SMS_VERIFICATION_CODE = 101; // 验证码模板
+    public static final Integer SMS_DISTRIBUTION_CODE = 102; // 分配器邀请模板
+    public static final Integer SMS_COORDINATOR_CODE = 103; // 协作器邀请模板
+
+
     // 官方地址
     public static final String SYS_WEB_DOMAIN = "sys_web_domain"; // 官方网站域名
     public static final String SYS_SOURCE_WEB = "sys_source_domain"; // 资源网站域名

@@ -27,10 +27,7 @@ import com.dqys.core.mapper.facade.TAreaMapper;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.TArea;
 import com.dqys.core.model.UserSession;
-import com.dqys.core.utils.CommonUtil;
-import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.core.utils.NoSQLWithRedisTool;
-import com.dqys.core.utils.SignatureTool;
+import com.dqys.core.utils.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -304,11 +301,11 @@ public class UserServiceImpl implements UserService {
             if (tUserInfo != null) {
                 // 邮件提醒
                 if (tUserInfo.getEmail() != null) {
-                    sendMail(tUserInfo.getEmail());
+                    sendMail(tUserInfo.getEmail(), "");
                 }
                 // 手机号提醒
                 if (tUserInfo.getMobile() != null) {
-                    sendMsg(tUserInfo.getMobile());
+                    sendMsg(tUserInfo.getMobile(), "");
                 }
             }
         }
@@ -341,10 +338,10 @@ public class UserServiceImpl implements UserService {
                     errList.add(errStr);
                 } else {
                     if (tUserInfo.getMobile() != null) {
-                        sendMsg(tUserInfo.getMobile());
+                        sendMsg(tUserInfo.getMobile(), "");
                     }
                     if (tUserInfo.getEmail() != null) {
-                        sendMsg(tUserInfo.getEmail());
+                        sendMsg(tUserInfo.getEmail(), "");
                     }
                 }
             }
@@ -374,10 +371,10 @@ public class UserServiceImpl implements UserService {
             return JsonResponseTool.failure("设置失败");
         } else {
             if (tUserInfo.getMobile() != null) {
-                sendMsg(tUserInfo.getMobile());
+                sendMsg(tUserInfo.getMobile(), "");
             }
             if (tUserInfo.getEmail() != null) {
-                sendMsg(tUserInfo.getEmail());
+                sendMsg(tUserInfo.getEmail(), "");
             }
             return JsonResponseTool.success(id);
         }
@@ -483,27 +480,21 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 发送激活邮箱
-     * todo 需要做
-     *
      * @param email
      */
-    private void sendMail(String email) {
-//        if (email != null) {
-//            String code = RandomStringUtils.randomAlphanumeric(20) + "2";
-//            //NoSQLWithRedisTool.sendMailToChannel(tUserInfo.getEmail(), code);     //redis
-//
-//            RabbitMQProducerTool.addToMailSendQueue(email, code);
-//            NoSQLWithRedisTool.setValueObject("asd" + email, code, 1, TimeUnit.DAYS);
-//        }
+    private void sendMail(String email, String html) {
+        if(!CommonUtil.checkParam(email, html) && !html.equals("") && FormatValidateTool.checkEmail(email)){
+            RabbitMQProducerTool.addToMailSendQueue(email, html);
+        }
     }
 
     /**
      * 发送短信
      * TODO 需要实现
      */
-    private void sendMsg(String mobile) {
-//        String msg = "";
-//        // todo 生成发送日志报告
-//        LogManager.getRootLogger().debug(msg);
+    private void sendMsg(String mobile, String msg) {
+        if(!CommonUtil.checkParam(mobile, msg) && !msg.equals("") && FormatValidateTool.checkPhone(mobile)){
+            RabbitMQProducerTool.addToSMSSendQueue(mobile, msg);
+        }
     }
 }

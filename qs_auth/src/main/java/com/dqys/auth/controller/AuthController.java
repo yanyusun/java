@@ -9,6 +9,7 @@ import com.dqys.auth.service.facade.CompanyService;
 import com.dqys.auth.service.facade.UserService;
 import com.dqys.captcha.service.facade.CaptchaService;
 import com.dqys.core.base.BaseApiContorller;
+import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.ServiceResult;
@@ -99,6 +100,8 @@ public class AuthController extends BaseApiContorller {
             }
 
             // TODO: 16-4-13  发送短信
+            SmsUtil smsUtil = new SmsUtil();
+            smsUtil.sendSms(SysProperty.SMS_VERIFICATION_CODE, mobile, smsCodeResult.getData());
             LogManager.getRootLogger().debug(smsCodeResult.getData());
 
             return JsonResponseTool.success(null);

@@ -42,7 +42,7 @@ public interface NavigationService {
     Integer update(Navigation record);
 
     /**
-     * 根据父级Id查询自相
+     * 根据父级Id查询子项
      * @param query
      * @return
      */

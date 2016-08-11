@@ -5,7 +5,6 @@ import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.business.service.service.CompanyService;
 import com.dqys.business.service.service.UserService;
-import com.dqys.business.service.utils.excel.UserExcelUtil;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -83,7 +82,7 @@ public class UserController {
     }
 
     /**
-     * @api {GET} http://{url}/api/user/listUser 获取公司旗下所有的用户
+     * @api {GET} http://{url}/api/user/listUser 获取公司
      * @apiName listUser
      * @apiGroup User
      * @apiDescription 暂未补充
@@ -307,12 +306,12 @@ public class UserController {
     }
 
     /**
+     * @return
      * @api {POST} http://{url}/api/user/setPwd 重置密码
      * @apiName setPwd
      * @apiGroup User
      * @apiParam {number} id 被操作用户
      * @apiParam {string} pwd 新密码
-     * @return
      */
     @RequestMapping(value = "/setPwd", method = RequestMethod.POST)
     @ResponseBody
@@ -320,7 +319,7 @@ public class UserController {
         if (CommonUtil.checkParam(id, pwd)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        if(pwd.length() < 6){
+        if (pwd.length() < 6) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return userService.setPwd(id, pwd);
