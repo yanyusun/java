@@ -5,8 +5,10 @@ import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.business.service.service.CompanyService;
 import com.dqys.business.service.service.UserService;
+import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.TSysProperty;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
@@ -92,6 +94,9 @@ public class UserController {
     @RequestMapping(value = "/listUser")
     @ResponseBody
     public JsonResponse listUser() {
+
+        TSysProperty property = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM);
+        String reg = property.getPropertyValue();
 
         return null;
     }

@@ -43,22 +43,19 @@ public class AreaController extends BaseApiContorller {
     }
 
     @RequestMapping(path = "/listAll")
-    public Callable<JsonResponse> listAll(){
-        return () -> {
-            List<TArea> tAreaList = AreaTool.listAreaByUpperId(0);
-            if (null == tAreaList || tAreaList.isEmpty()) {
-                return JsonResponseTool.noData();
-            }
+    public JsonResponse listAll() throws Exception{
+        List<TArea> tAreaList = AreaTool.listAreaByUpperId(0);
+        if (null == tAreaList || tAreaList.isEmpty()) {
+            return JsonResponseTool.noData();
+        }
 
-            List<AreaList> result = new ArrayList<>();
-            for (TArea tArea : tAreaList) {
-                AreaList area = toAreaList(tArea);
-                area.setAreaList(listAllChildAreaById(area.getId()));
-                result.add(area);
-            }
-            return JsonResponseTool.success(result);
-//            return JsonResponseTool.success(ApiParseTool.parseApiList(tAreaList, KeyEnum.API_AREA_LIST));
-        };
+        List<AreaList> result = new ArrayList<>();
+        for (TArea tArea : tAreaList) {
+            AreaList area = toAreaList(tArea);
+            area.setAreaList(listAllChildAreaById(area.getId()));
+            result.add(area);
+        }
+        return JsonResponseTool.success(result);
     }
 
 

@@ -4,10 +4,7 @@ import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
-import com.dqys.core.utils.ApiParseTool;
-import com.dqys.core.utils.FileTool;
-import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.core.utils.SysPropertyTool;
+import com.dqys.core.utils.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,6 +54,9 @@ public class ResourceController {
 
     @RequestMapping(value = "/uploadSource", method = RequestMethod.POST)
     public Callable<JsonResponse<String>> uploadSource(@RequestParam  String type, MultipartFile file) {
+        if(CommonUtil.checkParam(type, file)){
+            return null;
+        }
         Integer userId = UserSession.getCurrent().getUserId();
         return () -> {
             String fileName = null;

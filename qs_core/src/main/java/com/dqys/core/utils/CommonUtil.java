@@ -1,14 +1,10 @@
 package com.dqys.core.utils;
 
-import com.dqys.core.base.BasePageDTO;
-import com.dqys.core.base.BasePropertyDTO;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.TSysProperty;
 import com.dqys.core.model.UserSession;
-import com.dqys.core.utils.JsonResponseTool;
-import org.apache.poi.ss.formula.functions.T;
-import sun.swing.BakedArrayList;
 
 import java.util.*;
 
@@ -17,14 +13,14 @@ import java.util.*;
  */
 public class CommonUtil {
 
-    public static final String[] UPLETTER = {"A","B","C","D","E","F","G",
-            "H","I","J","K","L","M","N",
-            "O","P","Q","R","S","T",
-            "U","V","W","X","Y","Z"};
-    public static final String[] LOWERLETTER = {"a","b","c","d","e","f","g",
-            "h","i","j","k","l","m","n",
-            "o","p","q","r","s","t",
-            "u","v","w","x","y","z"};
+    public static final String[] UPLETTER = {"A", "B", "C", "D", "E", "F", "G",
+            "H", "I", "J", "K", "L", "M", "N",
+            "O", "P", "Q", "R", "S", "T",
+            "U", "V", "W", "X", "Y", "Z"};
+    public static final String[] LOWERLETTER = {"a", "b", "c", "d", "e", "f", "g",
+            "h", "i", "j", "k", "l", "m", "n",
+            "o", "p", "q", "r", "s", "t",
+            "u", "v", "w", "x", "y", "z"};
     public static final String[] CNA_UP_CASE_NUMBER = {
             "零", "壹", "贰", "叁", "肆", "伍", "陆", "染", "捌", "玖"
     };
@@ -34,13 +30,14 @@ public class CommonUtil {
 
     /**
      * 检验参数是否为空
+     *
      * @param data
      * @return true 存在空值数据
      */
-    public static boolean checkParam(Object... data){
-        if(data.length > 0){
-            for(Object o : data){
-                if(o == null){
+    public static boolean checkParam(Object... data) {
+        if (data.length > 0) {
+            for (Object o : data) {
+                if (o == null) {
                     return true;
                 }
             }
@@ -50,13 +47,14 @@ public class CommonUtil {
 
     /**
      * 检验参数是否全为空
+     *
      * @param datas
      * @return true 存在不为空数据
      */
-    public static boolean checkNullParam(Object... datas){
-        if(datas.length > 0){
-            for(Object o : datas){
-                if(o != null){
+    public static boolean checkNullParam(Object... datas) {
+        if (datas.length > 0) {
+            for (Object o : datas) {
+                if (o != null) {
                     return true;
                 }
             }
@@ -66,24 +64,26 @@ public class CommonUtil {
 
     /**
      * 通用判断结果是否为空返回消息
+     *
      * @param data
      * @return
      */
-    public static JsonResponse responseBack(Object data){
-        if(data == null || data.equals(0)){
+    public static JsonResponse responseBack(Object data) {
+        if (data == null || data.equals(0)) {
             return JsonResponseTool.failure("操作失败!");
-        }else{
+        } else {
             return JsonResponseTool.success(data);
         }
     }
 
     /**
      * 通用检查返回结果<非空|非空字符串|非0返回值>
+     *
      * @param id
      * @return
      */
-    public static boolean checkResult(Integer id){
-        if(id == null || id.equals("") || id.equals("0")){
+    public static boolean checkResult(Integer id) {
+        if (id == null || id.equals("") || id.equals("0")) {
             return true;
         }
         return false;
@@ -91,11 +91,12 @@ public class CommonUtil {
 
     /**
      * 对数据去重
+     *
      * @param list
      * @return
      */
-    public static List<Integer> exceptMulty(List<Integer> list){
-        if(list == null || list.size() == 0){
+    public static List<Integer> exceptMulty(List<Integer> list) {
+        if (list == null || list.size() == 0) {
             return null;
         }
         List<Integer> result = new ArrayList<>();
@@ -104,7 +105,7 @@ public class CommonUtil {
             set.add(integer);
         });
         Iterator<Integer> iterator = set.iterator();
-        while (iterator.hasNext()){
+        while (iterator.hasNext()) {
             result.add(iterator.next());
         }
         return result;
@@ -112,27 +113,29 @@ public class CommonUtil {
 
     /**
      * 两个表数据提取出不重复的重复数据
+     *
      * @param list
      * @param list2
      * @return
      */
-    public static List<Integer> unionList(List<Integer> list, List<Integer> list2){
-        if(checkParam(list, list2)){
+    public static List<Integer> unionList(List<Integer> list, List<Integer> list2) {
+        if (checkParam(list, list2)) {
             return null;
         }
-        if(list == null || list.size() == 0){
+        if (list == null || list.size() == 0) {
             return exceptMulty(list2);
         }
-        if(list2 == null || list2.size() == 0){
+        if (list2 == null || list2.size() == 0) {
             return exceptMulty(list);
         }
         List<Integer> result = new ArrayList<>();
         list = exceptMulty(list);
         list2 = exceptMulty(list2);
-        for(Integer i : list){
-            for(Integer j : list2){
-                if(i.equals(j)){
-                    result.add(i);break;
+        for (Integer i : list) {
+            for (Integer j : list2) {
+                if (i.equals(j)) {
+                    result.add(i);
+                    break;
                 }
             }
         }
@@ -141,31 +144,32 @@ public class CommonUtil {
 
     /**
      * 两个列表的数据整合到一起,且去重
+     *
      * @param list
      * @param list2
      * @return
      */
-    public static List<Integer> pickList(List<Integer> list, List<Integer> list2){
-        if(checkParam(list, list2)){
+    public static List<Integer> pickList(List<Integer> list, List<Integer> list2) {
+        if (checkParam(list, list2)) {
             return null;
         }
-        if(list == null || list.size() == 0){
+        if (list == null || list.size() == 0) {
             return exceptMulty(list2);
         }
-        if(list2 == null || list2.size() == 0){
+        if (list2 == null || list2.size() == 0) {
             return exceptMulty(list);
         }
         List<Integer> result = new ArrayList<>();
         list = exceptMulty(list);
         list2 = exceptMulty(list2);
-        for(Integer i : list){
+        for (Integer i : list) {
             boolean flag = true;
-            for(Integer j : list2){
-                if(i.equals(j)){
+            for (Integer j : list2) {
+                if (i.equals(j)) {
                     break;
                 }
             }
-            if(flag){
+            if (flag) {
                 result.add(i);
             }
         }
@@ -174,26 +178,28 @@ public class CommonUtil {
 
     /**
      * 以pList为基础,去除pList与cList之间重复的部分
+     *
      * @param pList
      * @param cList
      * @return
      */
-    public static List<Integer> exceptList(List<Integer> pList, List<Integer> cList){
-        if(pList == null || pList.size() == 0){
+    public static List<Integer> exceptList(List<Integer> pList, List<Integer> cList) {
+        if (pList == null || pList.size() == 0) {
             return null;
         }
-        if(cList == null || cList.size() == 0){
+        if (cList == null || cList.size() == 0) {
             return pList;
         }
         List<Integer> result = new ArrayList<>();
-        for(Integer i : pList){
+        for (Integer i : pList) {
             boolean flag = true;
-            for(Integer j : cList){
-                if(i.equals(j)){
-                    flag = false;break;
+            for (Integer j : cList) {
+                if (i.equals(j)) {
+                    flag = false;
+                    break;
                 }
             }
-            if(flag){
+            if (flag) {
                 result.add(i);
             }
         }
@@ -209,11 +215,11 @@ public class CommonUtil {
         String roleStr = UserSession.getCurrent().getRoleId();
         String typeStr = UserSession.getCurrent().getUserType();
 
-//        String reg = NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM);
-//        String reg1 = NoSQLWithRedisTool.getValueObject(KeyEnum.ROLE_ADMINISTRATOR_KEY);
+        TSysProperty property = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM);
+        String reg = property.getPropertyValue();
+        property = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.ROLE_ADMINISTRATOR_KEY);
+        String reg1 = property.getPropertyValue();
         // 这里写死
-        String reg = "1";
-        String reg1 = "1";
 
         if (roleStr.indexOf(reg) > 0
                 && typeStr.indexOf(reg1) > 0) {
@@ -224,18 +230,19 @@ public class CommonUtil {
 
     /**
      * 创建特定位数的数字
+     *
      * @param number
      * @param size
      * @return
      */
-    public static String createStringNumber(Integer number, Integer size){
+    public static String createStringNumber(Integer number, Integer size) {
         StringBuffer result = new StringBuffer();
-        while (number > 0){
+        while (number > 0) {
             Integer suffNum = number % 10;
             number = number / 10;
             result.insert(0, suffNum);
         }
-        while (result.length() < size){
+        while (result.length() < size) {
             result.insert(0, 0);
         }
         return result.toString();
@@ -243,12 +250,13 @@ public class CommonUtil {
 
     /**
      * 将数字单纯转化为大写的数字
+     *
      * @param number
      * @return
      */
-    public static String createCNANumber(Integer number){
+    public static String createCNANumber(Integer number) {
         StringBuffer result = new StringBuffer();
-        while (number > 0){
+        while (number > 0) {
             result.insert(0, CNA_UP_CASE_NUMBER[number % 10]);
             number = number / 10;
         }
@@ -257,14 +265,15 @@ public class CommonUtil {
 
     /**
      * 将数字字符串转化成大写
+     *
      * @param numberStr
      * @return
      */
-    public static String createCNANumber(String numberStr){
+    public static String createCNANumber(String numberStr) {
         StringBuffer result = new StringBuffer();
         Integer index = 0;
-        while (numberStr.length() > index){
-            result.append(CNA_UP_CASE_NUMBER[Integer.valueOf(numberStr.substring(index, index+1))]);
+        while (numberStr.length() > index) {
+            result.append(CNA_UP_CASE_NUMBER[Integer.valueOf(numberStr.substring(index, index + 1))]);
             index++;
         }
         return result.toString();
