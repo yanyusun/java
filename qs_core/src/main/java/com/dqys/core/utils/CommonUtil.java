@@ -217,7 +217,7 @@ public class CommonUtil {
 
         TSysProperty property = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM);
         String reg = property.getPropertyValue();
-        property = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.ROLE_ADMINISTRATOR_KEY);
+        property = SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_ADMINISTRATOR_KEY);
         String reg1 = property.getPropertyValue();
         // 这里写死
 

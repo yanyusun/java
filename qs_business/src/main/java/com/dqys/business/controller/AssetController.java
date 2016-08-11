@@ -224,9 +224,9 @@ public class AssetController {
      * @apiGroup asset
      * @apiParam {number} id  资产包ID
      * @apiParam {LenderDTO} lenderDTO 借款人基础信息
-     * @apiParam {List<ContactDTO>} contactDTOList 联系人集合
-     * @apiParam {List<PawnDTO>} pawnDTOList 抵押物集合
-     * @apiParam {List<IouDTO>} iouDTOList 借据集合
+     * @apiParam {ContactDTO} contactDTOList 联系人集合
+     * @apiParam {PawnDTO} pawnDTOList 抵押物集合
+     * @apiParam {IouDTO} iouDTOList 借据集合
      * @apiUse Iou
      * @apiUse Pawn
      * @apiUse LenderDTO
