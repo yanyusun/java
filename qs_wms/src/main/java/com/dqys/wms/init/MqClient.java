@@ -1,5 +1,7 @@
 package com.dqys.wms.init;
 
+import com.dqys.business.orm.query.businessLog.BusinessLogQuery;
+import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.utils.SysPropertyTool;
@@ -12,6 +14,7 @@ import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,6 +22,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MqClient {
+    @Autowired
+    private static BusinessLogService businessLogService;
 
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = "mail_send_queue_online", durable = "true"),
@@ -36,6 +41,21 @@ public class MqClient {
     public static void smsMailFromMessage(String[] msg) throws Exception {
 //        发送短信
         sendSMS(msg[0], msg[1]);
+    }
+
+    /**
+     *像数据库中添加更进未读信息
+     * @param msg [0]对象id,[1]对像类型,[2]清收阶段
+     * @throws Exception
+     */
+    @RabbitListener(bindings = @QueueBinding(
+            value = @Queue(value = "follow_message_online", durable = "true"),
+            exchange = @Exchange(value = "followMessageExchange"))
+    )
+    public static void setUnreadFollowMessage(String[] msg) throws Exception {
+        // TODO: 16-8-11
+        BusinessLogQuery query = new BusinessLogQuery();
+        businessLogService.list(query);
     }
 
     private static void sendSMS(String phone, String msg) {
@@ -83,6 +103,7 @@ public class MqClient {
                 .append("\" target=\"_blank\">请点击确认</a></p>");
         return stringBuffer.toString();
     }
+
 
 
 }

@@ -69,6 +69,15 @@ public class RabbitMQProducerTool implements ApplicationContextAware {
     public static void addToSMSSendQueue(String phone, String msg) {
         rabbitTemplate.convertAndSend("smsExchange", "sms_online_route", new String[]{phone, msg});
     }
+
+    /**
+     *
+     *像队列中添加未读信息
+     * @param unReadMessage  [0]为被跟进对象id,[1]被跟进对象类型,[2]清收阶段
+     */
+    public static void addToFollowUnReadMessage(String[] unReadMessage){
+        rabbitTemplate.convertAndSend("followMessageExchange", "follow_message_online", unReadMessage);
+    }
     /*public static void sendTest() throws IOException {
         Message m = MessageBuilder.withBody("aaaatest".getBytes()).build();
         //rabbitTemplate.send(m);

@@ -24,6 +24,13 @@
             <artifactId>auth-service</artifactId>
             <version>1.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.dqys</groupId>
+            <artifactId>business-service</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <dependency>
             <groupId>com.dqys</groupId>
             <artifactId>captcha</artifactId>
