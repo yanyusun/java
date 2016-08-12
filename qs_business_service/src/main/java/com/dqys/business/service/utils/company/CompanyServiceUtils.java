@@ -30,9 +30,9 @@ public class CompanyServiceUtils {
 
         companyDTO.setId(companyInfo.getId());
         companyDTO.setName(companyInfo.getCompanyName());
-        companyDTO.setProvince(AreaTool.getAreaById(companyInfo.getProvince()).getName());
-        companyDTO.setCity(AreaTool.getAreaById(companyInfo.getCity()).getName());
-        companyDTO.setDistrict(AreaTool.getAreaById(companyInfo.getArea()).getName());
+        companyDTO.setProvince(AreaTool.getAreaById(companyInfo.getProvince()).getLabel());
+        companyDTO.setCity(AreaTool.getAreaById(companyInfo.getCity()).getLabel());
+        companyDTO.setDistrict(AreaTool.getAreaById(companyInfo.getArea()).getLabel());
 
         return companyDTO;
     }
@@ -128,9 +128,9 @@ public class CompanyServiceUtils {
         companyTeamReDTO.setId(companyTeamRe.getId());
         companyTeamReDTO.setTime(companyTeamRe.getUpdateAt());
         companyTeamReDTO.setAvg(companyDetailInfo.getAvg());
-        companyTeamReDTO.setAddress(AreaTool.getAreaById(companyDetailInfo.getProvince()).getName()
-                + AreaTool.getAreaById(companyDetailInfo.getCity()).getName()
-                + AreaTool.getAreaById(companyDetailInfo.getDistrict()).getName());
+        companyTeamReDTO.setAddress(AreaTool.getAreaById(companyDetailInfo.getProvince()).getLabel()
+                + AreaTool.getAreaById(companyDetailInfo.getCity()).getLabel()
+                + AreaTool.getAreaById(companyDetailInfo.getDistrict()).getLabel());
         companyTeamReDTO.setRate(rate);
         companyTeamReDTO.setContact(companyDetailInfo.getName());
         companyTeamReDTO.setTask(task);

@@ -441,7 +441,7 @@ public class UserServiceImpl implements UserService {
                 }
                 TArea area = areaMapper.getByName(userFileDTO.getDutyArea());
                 if (area != null) {
-                    userTag.setDutyArea(area.getId());
+                    userTag.setDutyArea(area.getValue());
                 }
                 OrganizationQuery organizationQuery = new OrganizationQuery();
                 organizationQuery.setCompanyId(companyDetailInfo.getCompanyId());

@@ -52,7 +52,7 @@ public class AreaController extends BaseApiContorller {
         List<AreaList> result = new ArrayList<>();
         for (TArea tArea : tAreaList) {
             AreaList area = toAreaList(tArea);
-            area.setAreaList(listAllChildAreaById(area.getId()));
+            area.setChildren(listAllChildAreaById(area.getValue()));
             result.add(area);
         }
         return JsonResponseTool.success(result);
@@ -71,7 +71,7 @@ public class AreaController extends BaseApiContorller {
             List<AreaList> result = new ArrayList<>();
             for (TArea tArea : areaList) {
                 AreaList area = toAreaList(tArea);
-                area.setAreaList(listAllChildAreaById(area.getId()));
+                area.setChildren(listAllChildAreaById(area.getValue()));
                 result.add(area);
             }
             return result;
@@ -87,10 +87,10 @@ public class AreaController extends BaseApiContorller {
         }
         AreaList result = new AreaList();
 
-        result.setId(tarea.getId());
+        result.setValue(tarea.getValue());
         result.setIsLeaf(tarea.getIsLeaf());
         result.setLevel(tarea.getLevel());
-        result.setName(tarea.getName());
+        result.setLabel(tarea.getLabel());
         result.setUpper(tarea.getUpper());
 
         return result;

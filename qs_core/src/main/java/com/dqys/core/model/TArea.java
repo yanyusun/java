@@ -3,11 +3,11 @@ package com.dqys.core.model;
 import java.io.Serializable;
 
 public class TArea implements Serializable {
-    private Integer id;
+    private Integer value; // 由原来的id转变
 
     private Integer upper;
 
-    private String name;
+    private String label; // 由原来的name转变
 
     private Integer level;
 
@@ -15,12 +15,24 @@ public class TArea implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
-        return id;
+    public Integer getValue() {
+        return value;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setValue(Integer value) {
+        this.value = value;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public Integer getUpper() {
@@ -29,14 +41,6 @@ public class TArea implements Serializable {
 
     public void setUpper(Integer upper) {
         this.upper = upper;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Integer getLevel() {
