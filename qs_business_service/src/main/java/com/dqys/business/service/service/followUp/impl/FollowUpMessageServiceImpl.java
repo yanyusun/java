@@ -2,6 +2,7 @@ package com.dqys.business.service.service.followUp.impl;
 
 import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
+import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -17,7 +18,8 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService{
     private FollowUpMessageMapper followUpMessageMapper;
 
     @Override
-    public int insert(FollowUpMessage record) {
+    public int insert(FollowUpMessageDTO followUpMessageDTO) {
+
         return followUpMessageMapper.insert(record);
     }
 }

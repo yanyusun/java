@@ -1,12 +1,10 @@
 package com.dqys.business.controller;
 
+import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.core.model.JsonResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Created by yan on 16-8-12.
@@ -25,7 +23,7 @@ public class FollowUpController {
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse add() {
+    public JsonResponse add(@ModelAttribute  FollowUpMessageDTO dto) {
         followUpMessageService.insert()
         return null;
     }
