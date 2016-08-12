@@ -2,9 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.core.mapper.facade.TAreaMapper" >
   <resultMap id="BaseResultMap" type="com.dqys.core.model.TArea" >
-    <id column="id" property="id" jdbcType="INTEGER" />
+    <id column="id" property="value" jdbcType="INTEGER" />
     <result column="upper" property="upper" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="name" property="label" jdbcType="VARCHAR" />
     <result column="level" property="level" jdbcType="BIT" />
     <result column="is_leaf" property="isLeaf" jdbcType="BIT" />
   </resultMap>

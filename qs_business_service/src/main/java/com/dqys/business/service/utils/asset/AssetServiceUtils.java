@@ -165,7 +165,7 @@ public class AssetServiceUtils {
         if(assetInfo.getCity() != null){
             TArea area = AreaTool.getAreaById(assetInfo.getCity());
             if(area != null){
-                assetListDTO.setCity(area.getName());
+                assetListDTO.setCity(area.getLabel());
             }
         }
 

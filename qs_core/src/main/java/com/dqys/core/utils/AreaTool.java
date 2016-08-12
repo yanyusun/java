@@ -41,7 +41,7 @@ public class AreaTool implements ApplicationContextAware {
     public static void loadArea() {
         List<TArea> tAreas = tAreaMapper.selectAll();
         for(TArea tArea : tAreas) {
-            redisTemplate.boundHashOps(TArea.class.getName()).put(tArea.getId(), tArea);
+            redisTemplate.boundHashOps(TArea.class.getName()).put(tArea.getValue(), tArea);
         }
         //省份
         loadAreaByUpper(0);
@@ -55,11 +55,11 @@ public class AreaTool implements ApplicationContextAware {
         if(null != tAreaList && !tAreaList.isEmpty()) {
             List<Integer> ids = new ArrayList<>();
             for(TArea tArea : tAreaList) {
-                ids.add(tArea.getId());
+                ids.add(tArea.getValue());
                 if(tArea.getIsLeaf()) {
                     return;
                 }
-                loadAreaByUpper(tArea.getId());
+                loadAreaByUpper(tArea.getValue());
             }
             redisTemplate.boundValueOps(AREA_RELATION_KEY + upper).set(ids);
         }
@@ -132,7 +132,7 @@ public class AreaTool implements ApplicationContextAware {
         Iterator<TArea> tAreas = tAreaList.iterator();
         while (tAreas.hasNext()) {
             TArea tArea = tAreas.next();
-            if (tArea.getName().contains(nameLike) || getFirstCharFromChinese(tArea.getName()).contains(nameLike)) {
+            if (tArea.getLabel().contains(nameLike) || getFirstCharFromChinese(tArea.getLabel()).contains(nameLike)) {
                 continue;
             }
 

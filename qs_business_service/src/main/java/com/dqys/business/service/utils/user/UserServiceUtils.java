@@ -33,9 +33,9 @@ public class UserServiceUtils {
         userListDTO.setEmail(userInfo.getEmail());
         if (companyInfo != null) {
             userListDTO.setCompany(companyInfo.getCompanyName());
-            userListDTO.setArea(AreaTool.getAreaById(companyInfo.getProvince()).getName()
-                            + AreaTool.getAreaById(companyInfo.getCity()).getName()
-                            + AreaTool.getAreaById(companyInfo.getArea()).getName()
+            userListDTO.setArea(AreaTool.getAreaById(companyInfo.getProvince()).getLabel()
+                            + AreaTool.getAreaById(companyInfo.getCity()).getLabel()
+                            + AreaTool.getAreaById(companyInfo.getArea()).getLabel()
             );
         }
 

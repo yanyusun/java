@@ -10,13 +10,13 @@ import java.util.List;
  */
 public class AreaList extends TArea implements Serializable {
 
-    private List<AreaList> areaList; // 子项
+    private List<AreaList> children; // 子项
 
-    public List<AreaList> getAreaList() {
-        return areaList;
+    public List<AreaList> getChildren() {
+        return children;
     }
 
-    public void setAreaList(List<AreaList> areaList) {
-        this.areaList = areaList;
+    public void setChildren(List<AreaList> children) {
+        this.children = children;
     }
 }
