@@ -9,6 +9,7 @@ import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.asset.PiRelation;
 import com.dqys.business.orm.query.asset.PawnQuery;
+import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.dto.asset.PawnDTO;
@@ -23,6 +24,8 @@ import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created by Yvan on 16/7/12.
@@ -61,28 +64,50 @@ public class PawnServiceImpl implements PawnService {
 
     @Override
     public JsonResponse add_tx(PawnDTO pawnDTO) throws BusinessLogException {
-        if (CommonUtil.checkParam(pawnDTO, pawnDTO.getLenderId())) {
+        if (CommonUtil.checkParam(pawnDTO, pawnDTO.getLenderId(), pawnDTO.getPawnName())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
         // 统计当前借款人已经具有的抵押物数量
-        PawnQuery pawnQuery = new PawnQuery();
-        pawnQuery.setLenderId(pawnDTO.getLenderId());
-        Integer count = pawnInfoMapper.queryCount(pawnQuery);
-        pawnInfo.setPawnNo(PawnServiceUtils.createPawnCode(count));
+        pawnInfo.setPawnNo(PawnServiceUtils.createPawnCode());
         Integer addResult = pawnInfoMapper.insert(pawnInfo);
         if (!CommonUtil.checkResult(addResult)) {
             Integer pawnId = pawnInfo.getId();
             // 添加关联关系
-            if (pawnDTO.getIouIds().length() > 0) {
+            if (pawnDTO.getIouIds() != null && pawnDTO.getIouIds().length() > 0) {
+                // 以Id为关联
                 String[] idStr = pawnDTO.getIouIds().split(",");
                 for (String id : idStr) {
                     IOUInfo iouInfo = iouInfoMapper.get(Integer.valueOf(id));
                     if (iouInfo != null) {
-                        PiRelation piRelation = new PiRelation();
-                        piRelation.setIouId(iouInfo.getId());
-                        piRelation.setPawnId(pawnId);
-                        piRelationMapper.insert(piRelation);
+                        RelationQuery relationQuery = new RelationQuery();
+                        relationQuery.setIouId(Integer.valueOf(id));
+                        relationQuery.setPawnId(pawnId);
+                        List<PiRelation> piRelationList = piRelationMapper.queryList(relationQuery);
+                        if(piRelationList == null || piRelationList.size() == 0){
+                            PiRelation piRelation = new PiRelation();
+                            piRelation.setIouId(iouInfo.getId());
+                            piRelation.setPawnId(pawnId);
+                            piRelationMapper.insert(piRelation);
+                        }
+                    }
+                }
+            }else if(pawnDTO.getIouNames() != null && pawnDTO.getIouNames().length() > 0){
+                // 以名称为关联
+                String[] nameStr = pawnDTO.getIouNames().split(",");
+                for(String name : nameStr){
+                    IOUInfo iouInfo = iouInfoMapper.getByName(pawnDTO.getLenderId(), name);
+                    if(iouInfo != null){
+                        RelationQuery relationQuery = new RelationQuery();
+                        relationQuery.setIouId(iouInfo.getId());
+                        relationQuery.setPawnId(pawnId);
+                        List<PiRelation> piRelationList = piRelationMapper.queryList(relationQuery);
+                        if(piRelationList == null || piRelationList.size() == 0){
+                            PiRelation piRelation = new PiRelation();
+                            piRelation.setIouId(iouInfo.getId());
+                            piRelation.setPawnId(pawnId);
+                            piRelationMapper.insert(piRelation);
+                        }
                     }
                 }
             }

@@ -11,6 +11,7 @@ import java.util.Date;
 public class IOUInfo extends BaseModel implements Serializable {
 
     private String iouNo;  // 编号
+    private String name;  // 名称
     private Integer lenderId;  // 借款人ID
     private String type;  // 借据类型
     private String agency;  // 代理机构
@@ -42,6 +43,15 @@ public class IOUInfo extends BaseModel implements Serializable {
         string += "]";
         return string;
 
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getIouNo() {

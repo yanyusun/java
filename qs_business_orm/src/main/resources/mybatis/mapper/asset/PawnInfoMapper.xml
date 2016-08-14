@@ -24,13 +24,14 @@
     <result column="dispose_status" property="disposeStatus" jdbcType="VARCHAR" />
     <result column="worth" property="worth" jdbcType="DOUBLE" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
   </resultMap>
 
   <!-- 基础字段 -->
   <sql id="Base_Column_List" >
     id, version, create_at, update_at, stateflag, remark, lender_id, pawn_no, amount, type,
     evaluate_excellent, evaluate_level, size, province, city, district, address, pawn_rate,
-    dispose_status, worth, memo
+    dispose_status, worth, memo, name
   </sql>
 
   <sql id="Query_Condition">
@@ -100,6 +101,9 @@
       <if test="memo != null" >
         memo,
       </if>
+      <if test="name != null" >
+        name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -149,6 +153,9 @@
       </if>
       <if test="memo != null" >
         #{memo,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -215,6 +222,9 @@
       <if test="memo != null" >
         memo = #{memo,jdbcType=VARCHAR},
       </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -240,6 +250,13 @@
   <select id="queryCount" parameterType="com.dqys.business.orm.query.asset.PawnQuery" resultMap="BaseResultMap">
     SELECT count(id) from bt_pawn
     <include refid="Query_Condition" />
+  </select>
+
+  <select id="getByName" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM bt_pawn
+    WHERE lender_id = #{lenderId,jdbcType=INTEGER} AND name = #{name,jdbcType=VARCHAR} AND stateflag = 0
   </select>
 
 

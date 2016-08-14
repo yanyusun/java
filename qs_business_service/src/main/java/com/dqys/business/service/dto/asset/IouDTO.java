@@ -19,6 +19,7 @@ import java.util.List;
  * @apiDefine Iou
  * @apiParam {numbder} id 主键
  * @apiParam {numbder} iouNo 编号
+ * @apiParam {string} iouName 借据名称
  * @apiParam {string} type 借据类型
  * @apiParam {string} agency 代理机构
  * @apiParam {date} loanTime 放款时间
@@ -43,12 +44,14 @@ import java.util.List;
  * @apiParam {string} memo 备注
  * @apiParam {number} lenderId 借款基础信息
  * @apiParam {string} pawnIds 抵押物IDs
+ * @apiParam {string} pawnNames 抵押物名称集合
  */
 public class IouDTO {
 
     private Integer id;
 
     private String iouNo;  // 编号
+    private String iouName;  // 借据名称
     private String type;  // 借据类型
     private String agency;  // 代理机构
     private String iouCode;  // 原始借据号
@@ -80,6 +83,7 @@ public class IouDTO {
     private ContactDTO lender;  //借款人信息
 
     private String pawnIds; // 抵押物IDs
+    private String pawnNames; // 抵押物名称集合
 
     public Integer getId() {
         return id;
@@ -303,5 +307,21 @@ public class IouDTO {
 
     public void setLender(ContactDTO lender) {
         this.lender = lender;
+    }
+
+    public String getPawnNames() {
+        return pawnNames;
+    }
+
+    public void setPawnNames(String pawnNames) {
+        this.pawnNames = pawnNames;
+    }
+
+    public String getIouName() {
+        return iouName;
+    }
+
+    public void setIouName(String iouName) {
+        this.iouName = iouName;
     }
 }

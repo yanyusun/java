@@ -4,6 +4,7 @@ import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.query.asset.PawnQuery;
 import com.dqys.core.base.BaseDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -53,5 +54,10 @@ public class PawnInfoMapperImpl extends BaseDao implements PawnInfoMapper {
     @Override
     public Integer queryCount(PawnQuery pawnQuery) {
         return super.getSqlSession().getMapper(PawnInfoMapper.class).queryCount(pawnQuery);
+    }
+
+    @Override
+    public PawnInfo getByName(@Param("lenderId") Integer id, @Param("name") String name) {
+        return super.getSqlSession().getMapper(PawnInfoMapper.class).getByName(id, name);
     }
 }

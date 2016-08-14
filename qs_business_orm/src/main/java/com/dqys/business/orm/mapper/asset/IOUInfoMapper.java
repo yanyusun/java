@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.asset;
 
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.query.asset.IOUQuery;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -67,5 +68,13 @@ public interface IOUInfoMapper {
      * @return
      */
     List<IOUInfo> selectIouInfoByPawnId(Integer objectId);
+
+    /**
+     * 查询特定借款人下的特定名称的借据
+     * @param id
+     * @param name
+     * @return
+     */
+    IOUInfo getByName(@Param("lenderId")Integer id, @Param("name")String name);
 
 }
