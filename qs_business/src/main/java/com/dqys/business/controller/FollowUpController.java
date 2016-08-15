@@ -8,6 +8,7 @@ import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.RabbitMQProducerTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,8 +46,11 @@ public class FollowUpController extends BaseApiContorller {
 
     @RequestMapping(value = "/unread_count", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse unReadCount() {
-        return null;
+    public JsonResponse unReadCount()
+    {
+        String[] unReadMessage = {"1","2","3"};
+        RabbitMQProducerTool.addToFollowUnReadMessage(unReadMessage);
+        return JsonResponseTool.success(null);
     }
 
 }

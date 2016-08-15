@@ -76,7 +76,7 @@ public class RabbitMQProducerTool implements ApplicationContextAware {
      * @param unReadMessage  [0]为被跟进对象id,[1]被跟进对象类型,[2]清收阶段
      */
     public static void addToFollowUnReadMessage(String[] unReadMessage){
-        rabbitTemplate.convertAndSend("followMessageExchange", "follow_message_online", unReadMessage);
+        rabbitTemplate.convertAndSend("followMessageExchange", "fm_online_route", unReadMessage);
     }
     /*public static void sendTest() throws IOException {
         Message m = MessageBuilder.withBody("aaaatest".getBytes()).build();

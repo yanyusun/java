@@ -35,7 +35,7 @@ public class UserController {
 
     @Autowired @Qualifier("b_loginService")
     private UserService userService;
-    @Autowired
+    @Autowired @Qualifier("b_companyService")
     private CompanyService companyService;
 
     /**

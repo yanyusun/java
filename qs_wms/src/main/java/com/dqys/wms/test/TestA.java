@@ -29,5 +29,6 @@ public class TestA extends BaseTest{
         message.setObjectType(22);
         message.setLiquidateStage(12);
         messageMapper.insert(message);
+        System.out.println("!!!!!!");
     }
 }

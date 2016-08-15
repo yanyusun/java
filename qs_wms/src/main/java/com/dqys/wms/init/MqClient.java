@@ -1,5 +1,7 @@
 package com.dqys.wms.init;
 
+import com.dqys.business.orm.pojo.business.Business;
+import com.dqys.business.orm.pojo.businessLog.BusinessLog;
 import com.dqys.business.orm.query.businessLog.BusinessLogQuery;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.core.constant.KeyEnum;
@@ -10,16 +12,26 @@ import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
 import org.apache.logging.log4j.LogManager;
+import org.junit.runner.RunWith;
 import org.springframework.amqp.rabbit.annotation.Exchange;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Created by pan on 16-5-26.
  */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={"/spring/spring-core.xml"})
+@Transactional(transactionManager = "transactionManager")
 @Component
 public class MqClient {
     @Autowired
@@ -52,10 +64,14 @@ public class MqClient {
             value = @Queue(value = "follow_message_online", durable = "true"),
             exchange = @Exchange(value = "followMessageExchange"))
     )
-    public static void setUnreadFollowMessage(String[] msg) throws Exception {
+    /**
+     *
+     */
+    public  void setUnreadFollowMessage(String[] msg) throws Exception {
         // TODO: 16-8-11
         BusinessLogQuery query = new BusinessLogQuery();
-        businessLogService.list(query);
+        //List<BusinessLog> list=businessLogService.list(query);
+        System.out.println("--------->");
     }
 
     private static void sendSMS(String phone, String msg) {
