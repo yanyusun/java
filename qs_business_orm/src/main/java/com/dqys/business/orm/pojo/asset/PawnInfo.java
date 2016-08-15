@@ -8,6 +8,7 @@ public class PawnInfo extends BaseModel implements Serializable {
 
     private Integer lenderId;  // 借款人ID
     private String pawnNo;  // 编号
+    private String name;  // 借据名称
     private Double amount;  // 贷款金额
     private String type;  // 抵押物类型
     private String evaluateExcellent;  // 评优
@@ -21,6 +22,15 @@ public class PawnInfo extends BaseModel implements Serializable {
     private String disposeStatus;  // 处置状态
     private Double worth;  // 价值
     private String memo;  // 备注
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Integer getLenderId() {
         return lenderId;

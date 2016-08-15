@@ -15,7 +15,8 @@ import java.util.List;
  * @apiDefine Pawn
  * @apiParam {number} id 主键
  * @apiParam {number} lenderId 借款人ID
- * @apiParam {string} pawnNo 借款人ID
+ * @apiParam {string} pawnNo 抵押物编号
+ * @apiParam {string} pawnName 抵押物名称
  * @apiParam {number} amount 贷款金额
  * @apiParam {string} type 抵押物类型
  * @apiParam {string} evaluateExcellent 评优
@@ -36,6 +37,7 @@ public class PawnDTO {
     private Integer id;
 
     private String pawnNo;  // 编号
+    private String pawnName;  // 抵押物名称
     private Double amount;  // 贷款金额
     private String type;  // 抵押物雷系
     private String evaluateExcellent;  // 评优
@@ -53,6 +55,7 @@ public class PawnDTO {
     private Integer lenderId;  // 借款人基础信息ID
 
     private String iouIds;
+    private String iouNames; // 借据的名称集合
 
 
     public Integer getId() {
@@ -189,5 +192,21 @@ public class PawnDTO {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public String getPawnName() {
+        return pawnName;
+    }
+
+    public void setPawnName(String pawnName) {
+        this.pawnName = pawnName;
+    }
+
+    public String getIouNames() {
+        return iouNames;
+    }
+
+    public void setIouNames(String iouNames) {
+        this.iouNames = iouNames;
     }
 }

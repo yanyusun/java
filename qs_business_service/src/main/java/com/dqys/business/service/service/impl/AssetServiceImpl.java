@@ -16,6 +16,7 @@ import com.dqys.business.orm.mapper.coordinator.UserTeamMapper;
 import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.query.asset.AssetQuery;
+import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
@@ -70,6 +71,8 @@ public class AssetServiceImpl implements AssetService {
     private BusinessObjReMapper businessObjReMapper;
     @Autowired
     private TUserInfoMapper userInfoMapper;
+    @Autowired
+    private PiRelationMapper piRelationMapper;
 
     @Autowired
     private BusinessLogService businessLogService;
@@ -482,6 +485,12 @@ public class AssetServiceImpl implements AssetService {
             return JsonResponseTool.failure("添加借款人失败");
         }
         Integer lenderId = lenderInfo.getId();
+
+        Map<Integer, String> pawnRelation = new HashMap<>();
+        Map<Integer, String> iouRelation = new HashMap<>();
+        Map<String, Integer> pawnIdMap = new HashMap<>();
+        Map<String, Integer> iouIdMap = new HashMap<>();
+
         // 抵押物信息
         for (PawnDTO pawnDTO : pawnDTOList) {
             pawnDTO.setLenderId(lenderId);
@@ -491,6 +500,8 @@ public class AssetServiceImpl implements AssetService {
                 // 添加失败
                 return JsonResponseTool.failure("添加抵押物失败");
             }
+            pawnRelation.put(pawnInfo.getId(), pawnDTO.getIouNames());
+            pawnIdMap.put(pawnDTO.getPawnName(), pawnInfo.getId());
         }
         // 借据信息
         for (IouDTO iouDTO : iouDTOList) {
@@ -501,7 +512,51 @@ public class AssetServiceImpl implements AssetService {
                 // 添加失败
                 return JsonResponseTool.failure("添加借据失败");
             }
+            iouRelation.put(iouInfo.getId(), iouDTO.getPawnNames());
+            iouIdMap.put(iouDTO.getIouName(), iouInfo.getId());
         }
+        // 抵押物与借据之间的关联关系
+        for(Integer pawnId : pawnRelation.keySet()){
+            if(pawnRelation.get(pawnId) != null && pawnRelation.get(pawnId).length() > 0){
+                String nameArr[] = pawnRelation.get(pawnId).split(",");
+                for(String name : nameArr){
+                    if(iouIdMap.get(name) != null){
+                        RelationQuery relationQuery = new RelationQuery();
+                        relationQuery.setPawnId(pawnId);
+                        relationQuery.setIouId(iouIdMap.get(name));
+                        List<PiRelation> list = piRelationMapper.queryList(relationQuery);
+                        if(list == null || list.size() == 0){
+                            // 防止重复数据
+                            PiRelation piRelation = new PiRelation();
+                            piRelation.setPawnId(pawnId);
+                            piRelation.setIouId(iouIdMap.get(name));
+                            piRelationMapper.insert(piRelation);
+                        }
+                    }
+                }
+            }
+        }
+        for(Integer iouId : iouRelation.keySet()){
+            if(pawnRelation.get(iouId) != null && pawnRelation.get(iouId).length() > 0){
+                String nameArr[] = pawnRelation.get(iouId).split(",");
+                for(String name : nameArr){
+                    if(pawnIdMap.get(name) != null){
+                        RelationQuery relationQuery = new RelationQuery();
+                        relationQuery.setPawnId(pawnIdMap.get(name));
+                        relationQuery.setIouId(iouId);
+                        List<PiRelation> list = piRelationMapper.queryList(relationQuery);
+                        if(list == null || list.size() == 0){
+                            // 防止重复数据
+                            PiRelation piRelation = new PiRelation();
+                            piRelation.setPawnId(pawnIdMap.get(name));
+                            piRelation.setIouId(iouId);
+                            piRelationMapper.insert(piRelation);
+                        }
+                    }
+                }
+            }
+        }
+
         return JsonResponseTool.success(null);
     }
 

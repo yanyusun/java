@@ -3,6 +3,7 @@ package com.dqys.business.orm.mapper.asset;
 
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.query.asset.PawnQuery;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -63,4 +64,12 @@ public interface PawnInfoMapper {
      * @return
      */
     Integer queryCount(PawnQuery pawnQuery);
+
+    /**
+     * 根据特定借款人的特定名称查询抵押物
+     * @param id
+     * @param name
+     * @return
+     */
+    PawnInfo getByName(@Param("lenderId")Integer id, @Param("name")String name);
 }

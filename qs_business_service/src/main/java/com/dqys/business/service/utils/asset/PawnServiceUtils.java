@@ -3,6 +3,7 @@ package com.dqys.business.service.utils.asset;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.service.dto.asset.PawnDTO;
 import com.dqys.core.utils.CommonUtil;
+import com.dqys.core.utils.DateFormatTool;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
@@ -13,16 +14,16 @@ import java.util.List;
  */
 public class PawnServiceUtils {
 
-    public static final String PRE_PAWN_CODE = "抵"; // 格式:抵AXXXXXX
+    public static final String PRE_PAWN_CODE = "DYW"; // 格式:DYW160612XXXX
 
     /**
      * 生成抵押物号
      * @return
      */
-    public static String createPawnCode(Integer count){
+    public static String createPawnCode(){
         return PRE_PAWN_CODE
-                + CommonUtil.UPLETTER[count % 26]
-                + RandomStringUtils.randomNumeric(6);
+                + DateFormatTool.format(DateFormatTool.DATE_FORMAT_6)
+                + RandomStringUtils.randomNumeric(4);
     }
 
     public static String[] initLevel(Integer num){
@@ -54,6 +55,7 @@ public class PawnServiceUtils {
         PawnInfo pawnInfo = new PawnInfo();
 
         pawnInfo.setId(pawnDTO.getId());
+        pawnInfo.setName(pawnDTO.getPawnName());
         pawnInfo.setLenderId(pawnDTO.getLenderId());
         pawnInfo.setPawnNo(pawnDTO.getPawnNo());
         pawnInfo.setAmount(pawnDTO.getAmount());
@@ -93,6 +95,7 @@ public class PawnServiceUtils {
         PawnDTO pawnDTO = new PawnDTO();
 
         pawnDTO.setId(pawnInfo.getId());
+        pawnDTO.setPawnName(pawnInfo.getName());
         pawnDTO.setLenderId(pawnInfo.getLenderId());
         pawnDTO.setPawnNo(pawnInfo.getPawnNo());
         pawnDTO.setAmount(pawnInfo.getAmount());

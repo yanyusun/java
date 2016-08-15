@@ -34,6 +34,7 @@
         <result column="evaluate_excellent" property="evaluateExcellent" jdbcType="VARCHAR"/>
         <result column="evaluate_level" property="evaluateLevel" jdbcType="VARCHAR"/>
         <result column="memo" property="memo" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!-- 基础字段 -->
@@ -41,7 +42,7 @@
     id, version, create_at, update_at, stateflag, remark, iou_no, lender_id, type,
     agency, iou_code, loan_time, loan_attime, amount, pact_rate, outtime_multiple, appropriation_multiple, 
     accrual_repay, loan_repay, level_type, out_days, less_corpus, accrual_arrears, penalty, 
-    arrears, end_at, worth, advance_corpus, evaluate_excellent, evaluate_level, memo
+    arrears, end_at, worth, advance_corpus, evaluate_excellent, evaluate_level, memo, name
   </sql>
 
     <sql id="Query_Condition">
@@ -142,6 +143,9 @@
             <if test="memo != null">
                 memo,
             </if>
+            <if test="name != null">
+                name,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="remark != null">
@@ -221,6 +225,9 @@
             </if>
             <if test="memo != null">
                 #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -317,6 +324,9 @@
             <if test="memo != null">
                 memo = #{memo,jdbcType=VARCHAR},
             </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -351,5 +361,11 @@
     <include refid="Query_Condition" />
   </select>
 
+    <select id="getByName" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM bt_iou
+        WHERE lender_id = #{lenderId,jdbcType=INTEGER} AND name = #{name,jdbcType=VARCHAR} AND stateflag = 0
+    </select>
 
 </mapper>

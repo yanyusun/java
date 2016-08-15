@@ -3,6 +3,7 @@ package com.dqys.business.service.utils.asset;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.core.utils.CommonUtil;
+import com.dqys.core.utils.DateFormatTool;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
@@ -13,14 +14,15 @@ import java.util.List;
  */
 public class IouServiceUtils {
 
-    public static final String MIDDLE_IOU_CODE = "借据"; // 格式:XXX-借01
+    public static final String MIDDLE_IOU_CODE = "JIE"; // 格式:JIE160101XXXX
     /**
      * 生成借据号
-     * @param count
      * @return
      */
-    public static String createIouCode(Integer count){
-        return MIDDLE_IOU_CODE + CommonUtil.createStringNumber(count+1, 2);
+    public static String createIouCode(){
+        return MIDDLE_IOU_CODE
+                + DateFormatTool.format(DateFormatTool.DATE_FORMAT_6)
+                + RandomStringUtils.randomNumeric(4);
     }
 
     public static List<IouDTO> toIouDTO(List<IOUInfo> iouInfoList){
@@ -39,6 +41,7 @@ public class IouServiceUtils {
 
         iouDTO.setId(iouInfo.getId());
         iouDTO.setIouNo(iouInfo.getIouNo());
+        iouDTO.setIouName(iouInfo.getName());
         iouDTO.setLenderId(iouInfo.getLenderId());
         iouDTO.setType(iouInfo.getType());
         iouDTO.setAgency(iouInfo.getAgency());
@@ -93,6 +96,7 @@ public class IouServiceUtils {
 
         iouInfo.setId(iouDTO.getId());
         iouInfo.setIouNo(iouDTO.getIouNo());
+        iouInfo.setName(iouDTO.getIouName());
         iouInfo.setLenderId(iouDTO.getLenderId());
         iouInfo.setType(iouDTO.getType());
         iouInfo.setAgency(iouDTO.getAgency());

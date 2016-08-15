@@ -4,6 +4,7 @@ import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.query.asset.IOUQuery;
 import com.dqys.core.base.BaseDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -57,6 +58,11 @@ public class IOUInfoMapperImpl extends BaseDao implements IOUInfoMapper {
 
     @Override
     public List<IOUInfo> selectIouInfoByPawnId(Integer objectId) {
-        return  super.getSqlSession().getMapper(IOUInfoMapper.class).selectIouInfoByPawnId(objectId);
+        return super.getSqlSession().getMapper(IOUInfoMapper.class).selectIouInfoByPawnId(objectId);
+    }
+
+    @Override
+    public IOUInfo getByName(@Param("lenderId") Integer id, @Param("name") String name) {
+        return super.getSqlSession().getMapper(IOUInfoMapper.class).getByName(id, name);
     }
 }
