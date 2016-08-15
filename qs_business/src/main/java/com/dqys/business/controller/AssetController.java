@@ -232,8 +232,11 @@ public class AssetController {
      * @apiUse LenderDTO
      * @apiUse ContactDTO
      */
-    public JsonResponse addLender(@RequestParam Integer id, @RequestParam List<ContactDTO> contactDTOList,
-                                  @RequestParam List<PawnDTO> pawnDTOList, @RequestParam List<IouDTO> iouDTOList,
+    @RequestMapping(value = "/addLender", method = RequestMethod.POST)
+    public JsonResponse addLender(@RequestParam Integer id,
+                                  @RequestParam List<ContactDTO> contactDTOList,
+                                  @RequestParam List<PawnDTO> pawnDTOList,
+                                  @RequestParam List<IouDTO> iouDTOList,
                                   @ModelAttribute LenderDTO lenderDTO) throws BusinessLogException{
         if(CommonUtil.checkParam(id, lenderDTO, pawnDTOList, contactDTOList, iouDTOList)){
             return JsonResponseTool.paramErr("参数错误");
