@@ -18,8 +18,8 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService{
     private FollowUpMessageMapper followUpMessageMapper;
 
     @Override
-    public int insert(FollowUpMessageDTO followUpMessageDTO) {
+    public int insert(FollowUpMessage followUpMessage) {
 
-        return followUpMessageMapper.insert(record);
+        return followUpMessageMapper.insert(followUpMessage);
     }
 }

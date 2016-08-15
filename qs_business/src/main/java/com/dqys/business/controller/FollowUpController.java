@@ -1,8 +1,13 @@
 package com.dqys.business.controller;
 
+import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
+import com.dqys.business.service.utils.followUp.FollowUpUtil;
+import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.utils.CommonUtil;
+import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping(value = "/follow_up")
-public class FollowUpController {
+public class FollowUpController extends BaseApiContorller {
     @Autowired
     private FollowUpMessageService followUpMessageService;
 
@@ -24,8 +29,18 @@ public class FollowUpController {
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse add(@ModelAttribute  FollowUpMessageDTO dto) {
-        followUpMessageService.insert()
-        return null;
+        if (CommonUtil.checkParam(
+                dto.getObjectId(),dto.getObjectType(),dto.getLiquidateStage()
+        )) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        FollowUpMessage followUpMessage = FollowUpUtil.toFollowUpMessage(dto);
+        if(followUpMessage!=null){
+            followUpMessageService.insert(followUpMessage);
+        }else{
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return JsonResponseTool.noData();
     }
 
     @RequestMapping(value = "/unread_count", method = RequestMethod.GET)
@@ -33,4 +48,5 @@ public class FollowUpController {
     public JsonResponse unReadCount() {
         return null;
     }
+
 }
