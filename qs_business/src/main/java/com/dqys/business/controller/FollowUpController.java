@@ -26,7 +26,7 @@ public class FollowUpController extends BaseApiContorller {
         return null;
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse add(@ModelAttribute  FollowUpMessageDTO dto) {
         if (CommonUtil.checkParam(
@@ -40,7 +40,7 @@ public class FollowUpController extends BaseApiContorller {
         }else{
             return JsonResponseTool.paramErr("参数错误");
         }
-        return JsonResponseTool.noData();
+        return JsonResponseTool.success(null);
     }
 
     @RequestMapping(value = "/unread_count", method = RequestMethod.GET)

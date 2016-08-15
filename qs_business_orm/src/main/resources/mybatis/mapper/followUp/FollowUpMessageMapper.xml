@@ -14,13 +14,13 @@
     <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
     <result column="second_object_id" property="secondObjectId" jdbcType="INTEGER" />
     <result column="second_object_type" property="secondObjectType" jdbcType="INTEGER" />
-    <result column="liquidate stage" property="liquidateStage" jdbcType="INTEGER" />
-    <result column="second_liquidate stage" property="secondLiquidateStage" jdbcType="INTEGER" />
+    <result column="liquidate_stage" property="liquidateStage" jdbcType="INTEGER" />
+    <result column="second_liquidate_stage" property="secondLiquidateStage" jdbcType="INTEGER" />
     <result column="send_status" property="sendStatus" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, object_id, object_type, user_id, team_id, content, version, create_at, update_at, 
-    stateflag, second_object_id, second_object_type, "liquidate stage", "second_liquidate stage", 
+    stateflag, second_object_id, second_object_type, liquidate_stage, second_liquidate stage,
     send_status
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -38,7 +38,7 @@
       user_id, team_id, content, 
       version, create_at, update_at, 
       stateflag, second_object_id, second_object_type, 
-      "liquidate stage", "second_liquidate stage", send_status
+      liquidate_stage, second_liquidate_stage, send_status
       )
     values (#{id,jdbcType=INTEGER}, #{objectId,jdbcType=INTEGER}, #{objectType,jdbcType=INTEGER}, 
       #{userId,jdbcType=INTEGER}, #{teamId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
@@ -87,10 +87,10 @@
         second_object_type,
       </if>
       <if test="liquidateStage != null" >
-        "liquidate stage",
+        liquidate_stage,
       </if>
       <if test="secondLiquidateStage != null" >
-        "second_liquidate stage",
+        ,
       </if>
       <if test="sendStatus != null" >
         send_status,
@@ -181,10 +181,10 @@
         second_object_type = #{secondObjectType,jdbcType=INTEGER},
       </if>
       <if test="liquidateStage != null" >
-        "liquidate stage" = #{liquidateStage,jdbcType=INTEGER},
+        liquidate_stage = #{liquidateStage,jdbcType=INTEGER},
       </if>
       <if test="secondLiquidateStage != null" >
-        "second_liquidate stage" = #{secondLiquidateStage,jdbcType=INTEGER},
+        second_liquidate_stage = #{secondLiquidateStage,jdbcType=INTEGER},
       </if>
       <if test="sendStatus != null" >
         send_status = #{sendStatus,jdbcType=INTEGER},
@@ -205,8 +205,8 @@
       stateflag = #{stateflag,jdbcType=BIGINT},
       second_object_id = #{secondObjectId,jdbcType=INTEGER},
       second_object_type = #{secondObjectType,jdbcType=INTEGER},
-      "liquidate stage" = #{liquidateStage,jdbcType=INTEGER},
-      "second_liquidate stage" = #{secondLiquidateStage,jdbcType=INTEGER},
+      liquidate_stage = #{liquidateStage,jdbcType=INTEGER},
+      second_liquidate_stage = #{secondLiquidateStage,jdbcType=INTEGER},
       send_status = #{sendStatus,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>

@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
  * Created by yan on 16-8-12.
  */
 @Repository
-@Primary
 public class FollowUpMessageMapperImpl extends BaseDao implements FollowUpMessageMapper{
     @Override
     public int deleteByPrimaryKey(Integer id) {

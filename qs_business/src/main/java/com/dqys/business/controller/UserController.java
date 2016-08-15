@@ -14,6 +14,7 @@ import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,7 +33,7 @@ import java.util.Map;
 @RequestMapping(value = "/api/user")
 public class UserController {
 
-    @Autowired
+    @Autowired @Qualifier("b_loginService")
     private UserService userService;
     @Autowired
     private CompanyService companyService;
