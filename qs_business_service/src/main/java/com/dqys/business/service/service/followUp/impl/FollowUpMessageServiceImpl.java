@@ -20,12 +20,14 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService{
 
     @Override
     public int insert(FollowUpMessage followUpMessage) {
-      //  UserSession userSession=UserSession.getCurrent();
-      //  followUpMessage.setUserId(userSession.getUserId());
+        UserSession userSession=UserSession.getCurrent();
+        followUpMessage.setUserId(userSession.getUserId());
         followUpMessage.setUserId(1);
         // TODO: 16-8-15 获取teamid
         int teamId = 0;
         followUpMessage.setTeamId(teamId);
         return followUpMessageMapper.insert(followUpMessage);
     }
+
+
 }

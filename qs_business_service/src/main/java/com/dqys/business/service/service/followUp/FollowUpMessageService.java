@@ -8,4 +8,6 @@ import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
  */
 public interface FollowUpMessageService {
     int insert(FollowUpMessage followUpMessage);
+
+
 }

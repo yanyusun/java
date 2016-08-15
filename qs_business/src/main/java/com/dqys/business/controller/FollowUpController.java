@@ -1,6 +1,7 @@
 package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
+import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.business.service.utils.followUp.FollowUpUtil;
@@ -21,12 +22,22 @@ public class FollowUpController extends BaseApiContorller {
     @Autowired
     private FollowUpMessageService followUpMessageService;
 
+    /***
+     * 查询更进信息,并去除对应阶段的未读数据
+     * @return
+     */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse list() {
+    public JsonResponse list(@ModelAttribute FollowUpMessageQuery followUpMessageQuery) {
+
         return null;
     }
 
+    /**
+     * 增加跟进信息,状态为未发送
+     * @param dto
+     * @return
+     */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse add(@ModelAttribute  FollowUpMessageDTO dto) {
@@ -41,15 +52,21 @@ public class FollowUpController extends BaseApiContorller {
         }else{
             return JsonResponseTool.paramErr("参数错误");
         }
-        return JsonResponseTool.success(null);
+        //向mq中增加未读信息
+        String[] unReadMessage = {dto.getObjectId().toString(),dto.getObjectType().toString(),dto.getLiquidateStage().toString()};
+        RabbitMQProducerTool.addToFollowUnReadMessage(unReadMessage);
+        return JsonResponseTool.success(followUpMessage);
     }
 
+    /**
+     * 查询对象所有阶段的未读留言数量
+     * @return
+     */
     @RequestMapping(value = "/unread_count", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse unReadCount()
     {
-        String[] unReadMessage = {"1","2","3"};
-        RabbitMQProducerTool.addToFollowUnReadMessage(unReadMessage);
+
         return JsonResponseTool.success(null);
     }
 

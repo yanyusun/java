@@ -15,4 +15,6 @@ public interface FollowUpMessageMapper {
     int updateByPrimaryKeySelective(FollowUpMessage record);
 
     int updateByPrimaryKey(FollowUpMessage record);
+
+
 }

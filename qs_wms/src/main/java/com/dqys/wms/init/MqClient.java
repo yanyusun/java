@@ -1,9 +1,8 @@
 package com.dqys.wms.init;
 
-import com.dqys.business.orm.pojo.business.Business;
 import com.dqys.business.orm.pojo.businessLog.BusinessLog;
 import com.dqys.business.orm.query.businessLog.BusinessLogQuery;
-import com.dqys.business.service.service.BusinessLogService;
+import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.utils.SysPropertyTool;
@@ -19,7 +18,6 @@ import org.springframework.amqp.rabbit.annotation.QueueBinding;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +33,7 @@ import java.util.List;
 @Component
 public class MqClient {
     @Autowired
-    private  BusinessLogService businessLogService;
+    private FollowUpMessageService followUpMessageService;
 
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = "mail_send_queue_online", durable = "true"),
@@ -69,9 +67,7 @@ public class MqClient {
      */
     public void setUnreadFollowMessage(String[] msg) throws Exception {
         // TODO: 16-8-11
-        BusinessLogQuery query = new BusinessLogQuery();
-        List<BusinessLog> list=businessLogService.list(query);
-        System.out.println("--------->");
+
     }
 
     private static void sendSMS(String phone, String msg) {
