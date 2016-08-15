@@ -11,8 +11,8 @@ import java.util.Date;
  * @apiParam {string} protocolNo 协议编号
  * @apiParam {number} estatesId 资产信息id
  * @apiParam {string} expressPrice 速卖价格(单位：万)
- * @apiParam {string} entrustAbortTime 速卖委托截止时间
- * @apiParam {string} entrustProtocolTime 速卖委托协议时间
+ * @apiParam {string} entrustAbortTime 速卖委托截止时间(格式：yyyy-MM-dd)
+ * @apiParam {string} entrustProtocolTime 速卖委托协议时间(格式：yyyy-MM-dd)
  * @apiParam {string} entrustDeposit 委托保证金
  * @apiParam {string} expressPeople 速 卖 人
  * @apiParam {string} team 所属团队

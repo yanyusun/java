@@ -31,7 +31,7 @@ import java.util.Date;
  * @apiParam {string} title 标题
  * @apiParam {string} decorateType 装修类型
  * @apiParam {string} decorateCase 装修情况
- * @apiParam {string} decorateTime 装修时间
+ * @apiParam {string} decorateTime 装修时间(格式：yyyy-MM-dd)
  * @apiParam {string} buildType 建筑类型
  * @apiParam {string} houseUse 房屋用途
  * @apiParam {string} houseBelong 房屋权属

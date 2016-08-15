@@ -4,6 +4,7 @@ import com.dqys.business.orm.pojo.zcy.*;
 import com.dqys.business.service.service.ZcyService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
+import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -92,6 +93,9 @@ public class ZcyController {
     @ResponseBody
     public JsonResponse addOwner(@ModelAttribute ZcyOwner zcyOwner, @ModelAttribute List<ZcyOwnerContacts> zcyOwnerContactses) {
         Map map = new HashMap<>();
+        if (CommonUtil.checkParam(zcyOwner.getEstatesId())) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
         map = zcyService.addOwner(zcyOwner, zcyOwnerContactses);
         return JsonResponseTool.success(map);
     }
@@ -109,6 +113,9 @@ public class ZcyController {
     @ResponseBody
     public JsonResponse addMaintain(@ModelAttribute ZcyMaintain zcyMaintain, @ModelAttribute List<ZcyMaintainOther> zcyMaintainOthers, @ModelAttribute List<ZcyMaintainTax> zcyMaintainTaxes) {
         Map map = new HashMap<>();
+        if (CommonUtil.checkParam(zcyMaintain.getEstatesId())) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
         map = zcyService.addMaintain(zcyMaintain, zcyMaintainOthers, zcyMaintainTaxes);
         return JsonResponseTool.success(map);
     }
@@ -124,6 +131,9 @@ public class ZcyController {
     @ResponseBody
     public JsonResponse addKey(@ModelAttribute ZcyKey zcyKey) {
         Map map = new HashMap<>();
+        if (CommonUtil.checkParam(zcyKey.getEstatesId())) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
         map = zcyService.addKey(zcyKey);
         return JsonResponseTool.success(map);
     }
@@ -139,6 +149,9 @@ public class ZcyController {
     @ResponseBody
     public JsonResponse addExpress(@ModelAttribute ZcyExpress zcyExpress) {
         Map map = new HashMap<>();
+        if (CommonUtil.checkParam(zcyExpress.getEstatesId())) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
         map = zcyService.addExpress(zcyExpress);
         return JsonResponseTool.success(map);
     }
