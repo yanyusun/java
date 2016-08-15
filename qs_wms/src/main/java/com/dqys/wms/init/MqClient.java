@@ -35,7 +35,7 @@ import java.util.List;
 @Component
 public class MqClient {
     @Autowired
-    private static BusinessLogService businessLogService;
+    private  BusinessLogService businessLogService;
 
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = "mail_send_queue_online", durable = "true"),
@@ -67,10 +67,10 @@ public class MqClient {
     /**
      *
      */
-    public  void setUnreadFollowMessage(String[] msg) throws Exception {
+    public void setUnreadFollowMessage(String[] msg) throws Exception {
         // TODO: 16-8-11
         BusinessLogQuery query = new BusinessLogQuery();
-        //List<BusinessLog> list=businessLogService.list(query);
+        List<BusinessLog> list=businessLogService.list(query);
         System.out.println("--------->");
     }
 
