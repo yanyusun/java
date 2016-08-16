@@ -3,6 +3,7 @@ package com.dqys.business.orm.mapper.followUp;
 
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,4 +22,5 @@ public interface FollowUpMessageMapper {
 
     List<FollowUpMessage> list(FollowUpMessageQuery query);
 
+    Integer getTeamId(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType, @Param("userId") Integer userId);
 }

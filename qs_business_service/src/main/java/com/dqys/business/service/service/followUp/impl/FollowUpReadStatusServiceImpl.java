@@ -23,7 +23,7 @@ public class FollowUpReadStatusServiceImpl implements FollowUpReadStatusService 
     @Override
     public int insert(FollowUpReadstatus record) {
         //// TODO: 16-8-16
-        return 0;
+        return followUpReadstatusMapper.insert(record);
     }
 
     @Override
@@ -35,11 +35,13 @@ public class FollowUpReadStatusServiceImpl implements FollowUpReadStatusService 
          *1.查找object_user_relation表中关联的所有userid
          *
          */
-        List<Integer> userIdList=null;
+        List<Integer> userIdList = null;
+        userIdList = followUpReadstatusMapper.selectByUseridList();
         //循环调用
-        for(Integer userid :  userIdList){
+        for (Integer userid : userIdList) {
             //生成
-            FollowUpReadstatus record=new FollowUpReadstatus();
+            FollowUpReadstatus record = new FollowUpReadstatus();
+            record.setUserId(userid);
             insert(record);
         }
 
@@ -48,14 +50,14 @@ public class FollowUpReadStatusServiceImpl implements FollowUpReadStatusService 
     @Override
     public void cancelUnread(int objectId, int objectType, int liquidateStage) {
         // TODO: 16-8-16 完成该接口 mkf del
-
+        followUpReadstatusMapper.deleteByOOL(objectId, objectType, liquidateStage);
     }
 
     @Override
-    public Map<String, String> getCountMap(int ObjectId, int ObjectType) {
-        UserSession userSession=UserSession.getCurrent();
-        int userId=userSession.getUserId();
+    public Map<String, String> getCountMap(int objectId, int objectType) {
+        UserSession userSession = UserSession.getCurrent();
+        int userId = userSession.getUserId();
         // TODO: 16-8-16 mkf 查询
-        return null;
+        return followUpReadstatusMapper.getCountMap(objectId,objectType,userId);
     }
 }

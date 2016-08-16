@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Service
 @Primary
-public class FollowUpMessageServiceImpl implements FollowUpMessageService{
+public class FollowUpMessageServiceImpl implements FollowUpMessageService {
     @Autowired
     private FollowUpMessageMapper followUpMessageMapper;
 
@@ -28,19 +28,22 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService{
 
     @Override
     public int insert(FollowUpMessage followUpMessage) {
-        UserSession userSession=UserSession.getCurrent();
+        UserSession userSession = UserSession.getCurrent();
         followUpMessage.setUserId(userSession.getUserId());
         followUpMessage.setUserId(1);
         // TODO: 16-8-15 获取teamid mkf
         int teamId = 0;
+        Integer teamid = followUpMessageMapper.getTeamId(followUpMessage.getObjectId(), followUpMessage.getObjectType(), followUpMessage.getUserId());
+        if (teamid != null) {
+            teamId = teamid;
+        }
         followUpMessage.setTeamId(teamId);
-        int re=followUpMessageMapper.insert(followUpMessage);
+        int re = followUpMessageMapper.insert(followUpMessage);
         //向mq中增加未读信息
-        String[] unReadMessage = {followUpMessage.getObjectId().toString(),followUpMessage.getObjectType().toString(),followUpMessage.getLiquidateStage().toString()};
+        String[] unReadMessage = {followUpMessage.getObjectId().toString(), followUpMessage.getObjectType().toString(), followUpMessage.getLiquidateStage().toString()};
         RabbitMQProducerTool.addToFollowUnReadMessage(unReadMessage);
         return re;
     }
-
 
 
     @Override
@@ -50,7 +53,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService{
 
     @Override
     public List<FollowUpMessage> listAndCancelUnread(FollowUpMessageQuery followUpMessageQuery) {
-        followUpReadStatusService.cancelUnread(followUpMessageQuery.getObjectId(),followUpMessageQuery.getObjectType(),followUpMessageQuery.getLiquidateStage());
+        followUpReadStatusService.cancelUnread(followUpMessageQuery.getObjectId(), followUpMessageQuery.getObjectType(), followUpMessageQuery.getLiquidateStage());
         return list(followUpMessageQuery);
     }
 

@@ -7,6 +7,7 @@ import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.query.businessLog.BusinessLogQuery;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import com.dqys.core.base.BaseDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -16,10 +17,10 @@ import java.util.List;
  * Created by yan on 16-8-12.
  */
 @Repository
-public class FollowUpMessageMapperImpl extends BaseDao implements FollowUpMessageMapper{
+public class FollowUpMessageMapperImpl extends BaseDao implements FollowUpMessageMapper {
     @Override
     public int deleteByPrimaryKey(Integer id) {
-        return 0;
+        return super.getSqlSession().getMapper(FollowUpMessageMapper.class).deleteByPrimaryKey(id);
     }
 
     @Override
@@ -33,22 +34,27 @@ public class FollowUpMessageMapperImpl extends BaseDao implements FollowUpMessag
     }
 
     @Override
+    public Integer getTeamId(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType, @Param("userId") Integer userId) {
+        return super.getSqlSession().getMapper(FollowUpMessageMapper.class).getTeamId(objectId, objectType, userId);
+    }
+
+    @Override
     public int insertSelective(FollowUpMessage record) {
-        return 0;
+        return super.getSqlSession().getMapper(FollowUpMessageMapper.class).insertSelective(record);
     }
 
     @Override
     public FollowUpMessage selectByPrimaryKey(Integer id) {
-        return null;
+        return super.getSqlSession().getMapper(FollowUpMessageMapper.class).selectByPrimaryKey(id);
     }
 
     @Override
     public int updateByPrimaryKeySelective(FollowUpMessage record) {
-        return 0;
+        return super.getSqlSession().getMapper(FollowUpMessageMapper.class).updateByPrimaryKeySelective(record);
     }
 
     @Override
     public int updateByPrimaryKey(FollowUpMessage record) {
-        return 0;
+        return super.getSqlSession().getMapper(FollowUpMessageMapper.class).updateByPrimaryKey(record);
     }
 }

@@ -1,125 +1,136 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dqys.business.orm.mapper.followUp.FollowUpReadstatusMapper" >
-  <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="object_id" property="objectId" jdbcType="INTEGER" />
-    <result column="object_type" property="objectType" jdbcType="INTEGER" />
-    <result column="moment" property="moment" jdbcType="INTEGER" />
-    <result column="version" property="version" jdbcType="INTEGER" />
-    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
-    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
-    <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.dqys.business.orm.mapper.followUp.FollowUpReadstatusMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="object_id" property="objectId" jdbcType="INTEGER"/>
+        <result column="object_type" property="objectType" jdbcType="INTEGER"/>
+        <result column="moment" property="moment" jdbcType="INTEGER"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, object_id, object_type, moment, has_read_num, version, create_at, update_at, 
-    stateflag
+    stateflag,user_id
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from t_follow_up_readstatus
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_follow_up_readstatus
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from t_follow_up_readstatus
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus" >
-    insert into t_follow_up_readstatus (id, object_id, object_type, 
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus">
+    insert into t_follow_up_readstatus (id, user_id,object_id, object_type,
       moment, version,
       create_at, update_at, stateflag
       )
-    values (#{id,jdbcType=INTEGER}, #{objectId,jdbcType=INTEGER}, #{objectType,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER},  #{userId,jdbcType=INTEGER},#{objectId,jdbcType=INTEGER}, #{objectType,jdbcType=INTEGER},
       #{moment,jdbcType=INTEGER}, #{version,jdbcType=INTEGER},
       #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, #{stateflag,jdbcType=BIGINT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus" >
-    insert into t_follow_up_readstatus
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="objectId != null" >
-        object_id,
-      </if>
-      <if test="objectType != null" >
-        object_type,
-      </if>
-      <if test="moment != null" >
-        moment,
-      </if>
-      <if test="version != null" >
-        version,
-      </if>
-      <if test="createAt != null" >
-        create_at,
-      </if>
-      <if test="updateAt != null" >
-        update_at,
-      </if>
-      <if test="stateflag != null" >
-        stateflag,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="objectId != null" >
-        #{objectId,jdbcType=INTEGER},
-      </if>
-      <if test="objectType != null" >
-        #{objectType,jdbcType=INTEGER},
-      </if>
-      <if test="moment != null" >
-        #{moment,jdbcType=INTEGER},
-      </if>
-      <if test="version != null" >
-        #{version,jdbcType=INTEGER},
-      </if>
-      <if test="createAt != null" >
-        #{createAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateAt != null" >
-        #{updateAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="stateflag != null" >
-        #{stateflag,jdbcType=BIGINT},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus" >
+    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus">
+        insert into t_follow_up_readstatus
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="objectId != null">
+                object_id,
+            </if>
+            <if test="objectType != null">
+                object_type,
+            </if>
+            <if test="moment != null">
+                moment,
+            </if>
+            <if test="version != null">
+                version,
+            </if>
+            <if test="createAt != null">
+                create_at,
+            </if>
+            <if test="updateAt != null">
+                update_at,
+            </if>
+            <if test="stateflag != null">
+                stateflag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="objectId != null">
+                #{objectId,jdbcType=INTEGER},
+            </if>
+            <if test="objectType != null">
+                #{objectType,jdbcType=INTEGER},
+            </if>
+            <if test="moment != null">
+                #{moment,jdbcType=INTEGER},
+            </if>
+            <if test="version != null">
+                #{version,jdbcType=INTEGER},
+            </if>
+            <if test="createAt != null">
+                #{createAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateAt != null">
+                #{updateAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="stateflag != null">
+                #{stateflag,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus">
+        update t_follow_up_readstatus
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="objectId != null">
+                object_id = #{objectId,jdbcType=INTEGER},
+            </if>
+            <if test="objectType != null">
+                object_type = #{objectType,jdbcType=INTEGER},
+            </if>
+            <if test="moment != null">
+                moment = #{moment,jdbcType=INTEGER},
+            </if>
+            <if test="version != null">
+                version = #{version,jdbcType=INTEGER},
+            </if>
+            <if test="createAt != null">
+                create_at = #{createAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateAt != null">
+                update_at = #{updateAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="stateflag != null">
+                stateflag = #{stateflag,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus">
     update t_follow_up_readstatus
-    <set >
-      <if test="objectId != null" >
-        object_id = #{objectId,jdbcType=INTEGER},
-      </if>
-      <if test="objectType != null" >
-        object_type = #{objectType,jdbcType=INTEGER},
-      </if>
-      <if test="moment != null" >
-        moment = #{moment,jdbcType=INTEGER},
-      </if>
-      <if test="version != null" >
-        version = #{version,jdbcType=INTEGER},
-      </if>
-      <if test="createAt != null" >
-        create_at = #{createAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateAt != null" >
-        update_at = #{updateAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="stateflag != null" >
-        stateflag = #{stateflag,jdbcType=BIGINT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus" >
-    update t_follow_up_readstatus
-    set object_id = #{objectId,jdbcType=INTEGER},
+    set user_id = #{userId,jdbcType=INTEGER},
+      object_id = #{objectId,jdbcType=INTEGER},
       object_type = #{objectType,jdbcType=INTEGER},
       moment = #{moment,jdbcType=INTEGER},
       version = #{version,jdbcType=INTEGER},
@@ -128,4 +139,21 @@
       stateflag = #{stateflag,jdbcType=BIGINT}
     where id = #{id,jdbcType=INTEGER}
   </update>
+    <!--获取表object_user_relation 的userid-->
+    <select id="selectByUseridList" resultType="java.lang.Integer">
+        SELECT our.user_id from object_user_relation our
+          GROUP BY our.user_id
+    </select>
+
+    <delete id="deleteByOOL">
+            DELETE  from t_follow_up_readstatus
+            WHERE object_id=#{objectId,jdbcType=INTEGER} and object_type=#{objectType,jdbcType=INTEGER} and moment=#{liquidateStage,jdbcType=INTEGER}
+    </delete>
+
+    <select id="" resultType="java.util.Map">
+      SELECT fur.moment,COUNT(*) count from t_follow_up_readstatus fur
+        WHERE fur.object_id=#{objectId,jdbcType=INTEGER} and fur.object_type=#{objectType,jdbcType=INTEGER} and fur.user_id=#{userId,jdbcType=INTEGER}
+        GROUP BY fur.moment
+    </select>
+
 </mapper>
