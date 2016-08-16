@@ -12,6 +12,27 @@ import java.util.List;
 public interface FollowUpMessageService {
     int insert(FollowUpMessage followUpMessage);
 
+    /**
+     * 查询跟进信息
+     * @param followUpMessageQuery
+     * @return
+     */
     List<FollowUpMessage> list(FollowUpMessageQuery followUpMessageQuery);
+
+    /**
+     * 取消未读
+     * @param objectId 对象id
+     * @param objectType 对象类型
+     * @param liquidateStage 对象阶段
+     */
+    void cancelUnread(int objectId,int objectType,int liquidateStage);
+
+    /**
+     * 查询跟进并取消未读
+     * @param followUpMessageQuery
+     * @return
+     */
+    List<FollowUpMessage> listAndCancelUnread(FollowUpMessageQuery followUpMessageQuery);
+
 
 }

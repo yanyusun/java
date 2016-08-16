@@ -6,6 +6,7 @@ import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.core.model.UserSession;
+import com.dqys.core.utils.RabbitMQProducerTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -29,11 +30,30 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService{
         // TODO: 16-8-15 获取teamid
         int teamId = 0;
         followUpMessage.setTeamId(teamId);
-        return followUpMessageMapper.insert(followUpMessage);
+        int re=followUpMessageMapper.insert(followUpMessage);
+        //向mq中增加未读信息
+        String[] unReadMessage = {followUpMessage.getObjectId().toString(),followUpMessage.getObjectType().toString(),followUpMessage.getLiquidateStage().toString()};
+        RabbitMQProducerTool.addToFollowUnReadMessage(unReadMessage);
+        return re;
     }
+
+
 
     @Override
     public List<FollowUpMessage> list(FollowUpMessageQuery followUpMessageQuery) {
         return followUpMessageMapper.list(followUpMessageQuery);
     }
+
+    @Override
+    public void cancelUnread(int objectId, int objectType, int liquidateStage) {
+        // TODO: 16-8-16 完成该接口
+
+    }
+
+    @Override
+    public List<FollowUpMessage> listAndCancelUnread(FollowUpMessageQuery followUpMessageQuery) {
+        cancelUnread(followUpMessageQuery.getObjectId(),followUpMessageQuery.getObjectType(),followUpMessageQuery.getLiquidateStage());
+        return list(followUpMessageQuery);
+    }
+
 }

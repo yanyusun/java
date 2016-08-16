@@ -32,7 +32,7 @@ public class FollowUpController extends BaseApiContorller {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse list(@ModelAttribute FollowUpMessageQuery followUpMessageQuery) {
-        List<FollowUpMessage> list=followUpMessageService.list(followUpMessageQuery);
+        List<FollowUpMessage> list=followUpMessageService.listAndCancelUnread(followUpMessageQuery);
         return JsonResponseTool.success(list);
     }
 
@@ -55,9 +55,6 @@ public class FollowUpController extends BaseApiContorller {
         }else{
             return JsonResponseTool.paramErr("参数错误");
         }
-        //向mq中增加未读信息
-        String[] unReadMessage = {dto.getObjectId().toString(),dto.getObjectType().toString(),dto.getLiquidateStage().toString()};
-        RabbitMQProducerTool.addToFollowUnReadMessage(unReadMessage);
         return JsonResponseTool.success(followUpMessage);
     }
 

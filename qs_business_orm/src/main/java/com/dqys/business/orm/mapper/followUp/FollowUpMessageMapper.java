@@ -1,7 +1,6 @@
 package com.dqys.business.orm.mapper.followUp;
 
 
-import com.dqys.business.orm.pojo.businessLog.BusinessLog;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 

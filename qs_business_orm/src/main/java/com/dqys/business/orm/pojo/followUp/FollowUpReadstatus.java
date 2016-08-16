@@ -11,8 +11,6 @@ public class FollowUpReadstatus {
 
     private Integer moment;
 
-    private Integer hasReadNum;
-
     private Integer version;
 
     private Date createAt;
@@ -51,14 +49,6 @@ public class FollowUpReadstatus {
 
     public void setMoment(Integer moment) {
         this.moment = moment;
-    }
-
-    public Integer getHasReadNum() {
-        return hasReadNum;
-    }
-
-    public void setHasReadNum(Integer hasReadNum) {
-        this.hasReadNum = hasReadNum;
     }
 
     public Integer getVersion() {

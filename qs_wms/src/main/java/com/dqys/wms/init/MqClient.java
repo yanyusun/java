@@ -3,6 +3,7 @@ package com.dqys.wms.init;
 import com.dqys.business.orm.pojo.businessLog.BusinessLog;
 import com.dqys.business.orm.query.businessLog.BusinessLogQuery;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
+import com.dqys.business.service.service.followUp.FollowUpReadStatus;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.utils.SysPropertyTool;
@@ -33,7 +34,7 @@ import java.util.List;
 @Component
 public class MqClient {
     @Autowired
-    private FollowUpMessageService followUpMessageService;
+    private FollowUpReadStatus followUpReadStatus;
 
     @RabbitListener(bindings = @QueueBinding(
             value = @Queue(value = "mail_send_queue_online", durable = "true"),
@@ -67,7 +68,7 @@ public class MqClient {
      */
     public void setUnreadFollowMessage(String[] msg) throws Exception {
         // TODO: 16-8-11
-
+        followUpReadStatus.addUnReadMessage(msg);
     }
 
     private static void sendSMS(String phone, String msg) {
