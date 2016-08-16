@@ -23,4 +23,11 @@ public interface FollowUpMessageMapper {
     List<FollowUpMessage> list(FollowUpMessageQuery query);
 
     Integer getTeamId(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType, @Param("userId") Integer userId);
+    /**
+     * 查询跟进信息列表,级联用户与所在公司
+     * @param query
+     * @return
+     */
+    List<FollowUpMessage> getlistWithUserAndTeam(FollowUpMessageQuery query);
+
 }

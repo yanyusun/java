@@ -57,4 +57,9 @@ public class FollowUpMessageMapperImpl extends BaseDao implements FollowUpMessag
     public int updateByPrimaryKey(FollowUpMessage record) {
         return super.getSqlSession().getMapper(FollowUpMessageMapper.class).updateByPrimaryKey(record);
     }
+
+    @Override
+    public List<FollowUpMessage> getlistWithUserAndTeam(FollowUpMessageQuery query) {
+        return super.getSqlSession().getMapper(FollowUpMessageMapper.class).getlistWithUserAndTeam(query);
+    }
 }

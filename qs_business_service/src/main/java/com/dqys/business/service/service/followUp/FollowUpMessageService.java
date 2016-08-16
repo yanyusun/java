@@ -19,6 +19,12 @@ public interface FollowUpMessageService {
      */
     List<FollowUpMessage> list(FollowUpMessageQuery followUpMessageQuery);
 
+    /**
+     * 查询跟进信息,级联公司与用户
+    * @param followUpMessageQuery
+    * @return
+            */
+    List<FollowUpMessage> getlistWithUserAndTeam(FollowUpMessageQuery followUpMessageQuery);
 
 
     /**

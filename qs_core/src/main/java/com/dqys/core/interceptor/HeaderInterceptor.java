@@ -24,13 +24,13 @@ public class HeaderInterceptor extends BaseInterceptor {
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
         );
 
-        if(0 == userId) {
-            httpServletResponse.setCharacterEncoding("utf-8");
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.writeValue(httpServletResponse.getWriter(), JsonResponseTool.authFailure(null));
-            httpServletResponse.getWriter().close();
-            return false;
-        }
+//        if(0 == userId) {
+//            httpServletResponse.setCharacterEncoding("utf-8");
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            objectMapper.writeValue(httpServletResponse.getWriter(), JsonResponseTool.authFailure(null));
+//            httpServletResponse.getWriter().close();
+//            return false;
+//        }
 
         return true;
     }
