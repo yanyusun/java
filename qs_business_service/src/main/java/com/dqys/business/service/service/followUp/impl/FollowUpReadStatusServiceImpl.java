@@ -1,9 +1,13 @@
 package com.dqys.business.service.service.followUp.impl;
 
 import com.dqys.business.orm.mapper.followUp.FollowUpReadstatusMapper;
+import com.dqys.business.orm.mapper.followUp.impl.FollowUpMessageMapperImpl;
+import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.pojo.followUp.FollowUpReadstatus;
 import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
+import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.model.UserSession;
+import org.aspectj.bridge.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -19,6 +23,9 @@ import java.util.Map;
 public class FollowUpReadStatusServiceImpl implements FollowUpReadStatusService {
     @Autowired
     private FollowUpReadstatusMapper followUpReadstatusMapper;
+
+    @Autowired
+    private FollowUpMessageMapperImpl followUpMessageMapper;
 
     @Override
     public int insert(FollowUpReadstatus record) {
@@ -42,7 +49,16 @@ public class FollowUpReadStatusServiceImpl implements FollowUpReadStatusService 
             //生成
             FollowUpReadstatus record = new FollowUpReadstatus();
             record.setUserId(userid);
+            record.setObjectId(MessageUtils.transStringToInt(msg[0]));
+            record.setObjectType(MessageUtils.transStringToInt(msg[1]));
+            record.setMoment(MessageUtils.transStringToInt(msg[2]));
             insert(record);
+            FollowUpMessage followUpMessage = new FollowUpMessage();
+            followUpMessage.setObjectType(record.getObjectType());
+            followUpMessage.setObjectId(record.getObjectId());
+            followUpMessage.setUserId(record.getUserId());
+            followUpMessage.setSendStatus(1);
+            followUpMessageMapper.updateBySendStatus(followUpMessage);
         }
 
     }
@@ -58,6 +74,6 @@ public class FollowUpReadStatusServiceImpl implements FollowUpReadStatusService 
         UserSession userSession = UserSession.getCurrent();
         int userId = userSession.getUserId();
         // TODO: 16-8-16 mkf 查询
-        return followUpReadstatusMapper.getCountMap(objectId,objectType,userId);
+        return followUpReadstatusMapper.getCountMap(objectId, objectType, userId);
     }
 }

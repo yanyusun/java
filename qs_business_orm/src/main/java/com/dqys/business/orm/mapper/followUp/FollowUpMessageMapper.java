@@ -30,4 +30,5 @@ public interface FollowUpMessageMapper {
      */
     List<FollowUpMessage> getlistWithUserAndTeam(FollowUpMessageQuery query);
 
+    void updateBySendStatus(FollowUpMessage followUpMessage);
 }
