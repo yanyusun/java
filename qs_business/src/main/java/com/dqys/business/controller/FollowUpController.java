@@ -10,8 +10,11 @@ import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.RabbitMQProducerTool;
+import org.apache.xmlbeans.impl.xb.xsdschema.ListDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Created by yan on 16-8-12.
@@ -29,8 +32,8 @@ public class FollowUpController extends BaseApiContorller {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse list(@ModelAttribute FollowUpMessageQuery followUpMessageQuery) {
-
-        return null;
+        List<FollowUpMessage> list=followUpMessageService.list(followUpMessageQuery);
+        return JsonResponseTool.success(list);
     }
 
     /**

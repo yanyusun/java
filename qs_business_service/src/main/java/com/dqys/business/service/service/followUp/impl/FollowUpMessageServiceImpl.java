@@ -2,12 +2,15 @@ package com.dqys.business.service.service.followUp.impl;
 
 import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
+import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.core.model.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by yan on 16-8-12.
@@ -29,5 +32,8 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService{
         return followUpMessageMapper.insert(followUpMessage);
     }
 
-
+    @Override
+    public List<FollowUpMessage> list(FollowUpMessageQuery followUpMessageQuery) {
+        return followUpMessageMapper.list(followUpMessageQuery);
+    }
 }

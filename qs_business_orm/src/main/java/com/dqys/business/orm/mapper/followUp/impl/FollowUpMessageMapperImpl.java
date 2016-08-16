@@ -1,10 +1,16 @@
 package com.dqys.business.orm.mapper.followUp.impl;
 
+import com.dqys.business.orm.mapper.businessLog.BusinessLogMapper;
 import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
+import com.dqys.business.orm.pojo.businessLog.BusinessLog;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
+import com.dqys.business.orm.query.businessLog.BusinessLogQuery;
+import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import com.dqys.core.base.BaseDao;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created by yan on 16-8-12.
@@ -19,6 +25,11 @@ public class FollowUpMessageMapperImpl extends BaseDao implements FollowUpMessag
     @Override
     public int insert(FollowUpMessage record) {
         return super.getSqlSession().getMapper(FollowUpMessageMapper.class).insert(record);
+    }
+
+    @Override
+    public List<FollowUpMessage> list(FollowUpMessageQuery query) {
+        return super.getSqlSession().getMapper(FollowUpMessageMapper.class).list(query);
     }
 
     @Override

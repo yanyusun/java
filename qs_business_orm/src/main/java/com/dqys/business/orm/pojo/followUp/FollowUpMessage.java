@@ -1,5 +1,7 @@
 package com.dqys.business.orm.pojo.followUp;
 
+import org.apache.xmlbeans.impl.xb.xsdschema.Public;
+
 import java.util.Date;
 
 public class FollowUpMessage {
@@ -152,4 +154,7 @@ public class FollowUpMessage {
     public void setSendStatus(Integer sendStatus) {
         this.sendStatus = sendStatus;
     }
+
+    //userInfoyu与团队
+   // Public
 }
