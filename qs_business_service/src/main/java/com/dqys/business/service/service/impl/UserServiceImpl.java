@@ -42,7 +42,7 @@ import java.util.Map;
 /**
  * Created by Yvan on 16/6/29.
  */
-@Repository
+@Repository("b_loginService")
 @Primary
 public class UserServiceImpl implements UserService {
 

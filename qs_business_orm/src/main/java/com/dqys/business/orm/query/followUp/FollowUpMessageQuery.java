@@ -1,32 +1,38 @@
-package com.dqys.business.orm.pojo.followUp;
+package com.dqys.business.orm.query.followUp;
 
-import com.dqys.auth.orm.pojo.TCompanyInfo;
-import com.dqys.auth.orm.pojo.TUserInfo;
-import com.dqys.business.orm.pojo.coordinator.TeammateRe;
-import com.dqys.business.orm.pojo.coordinator.UserTeam;
+import com.dqys.core.base.BaseQuery;
 
-import java.util.Date;
+/**
+ * Created by yan on 16-8-15.
+ *
+ * @apiDefine FollowUpMessageQuery
+ * @apiParam {number} [id] id
+ * @apiParam {number} [objectId] 对象id
+ * @apiParam {number} [objectType] 对象类型
+ * @apiParam {number} [teamId] 团队id
+ * @apiParam {string} [content] 内容
+ * @apiParam {number} [secondObjectId] 二级对象id
+ * @apiParam {number} [secondObjectType] 二级对象类型
+ * @apiParam {number} [liquidateStage] 请搜阶段
+ * @apiParam {number} [secondLiquidateStage] 二级清收阶段
+ * @apiParam {number} [sendStatus] 发送状态
+ * @apiParam {boolean} [isPaging] 是否分页0分页，1不分页
+ * @apiParam {number} [startPageNum] 当前分页
+ * @apiParam {number} [pageSize] 分页大小
+ * @apiParam {date} [createAt] 创建时间
+ */
 
-public class FollowUpMessage {
+public class FollowUpMessageQuery extends BaseQuery {
+
     private Integer id;
 
     private Integer objectId;
 
     private Integer objectType;
 
-    private Integer userId;
-
     private Integer teamId;
 
     private String content;
-
-    private Integer version;
-
-    private Date createAt;
-
-    private Date updateAt;
-
-    private Long stateflag;
 
     private Integer secondObjectId;
 
@@ -38,17 +44,12 @@ public class FollowUpMessage {
 
     private Integer sendStatus;
 
-    private TUserInfo userInfo;
-
-    private TeammateRe teammateRe;
-
-    //private UserTeam userTeam;
-    private TCompanyInfo companyInfo;
-
+    @Override
     public Integer getId() {
         return id;
     }
 
+    @Override
     public void setId(Integer id) {
         this.id = id;
     }
@@ -69,14 +70,6 @@ public class FollowUpMessage {
         this.objectType = objectType;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
     public Integer getTeamId() {
         return teamId;
     }
@@ -91,38 +84,6 @@ public class FollowUpMessage {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
-    public Date getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
-    }
-
-    public Date getUpdateAt() {
-        return updateAt;
-    }
-
-    public void setUpdateAt(Date updateAt) {
-        this.updateAt = updateAt;
-    }
-
-    public Long getStateflag() {
-        return stateflag;
-    }
-
-    public void setStateflag(Long stateflag) {
-        this.stateflag = stateflag;
     }
 
     public Integer getSecondObjectId() {
@@ -163,37 +124,5 @@ public class FollowUpMessage {
 
     public void setSendStatus(Integer sendStatus) {
         this.sendStatus = sendStatus;
-    }
-
-    public TUserInfo getUserInfo() {
-        return userInfo;
-    }
-
-    public void setUserInfo(TUserInfo userInfo) {
-        this.userInfo = userInfo;
-    }
-
-    public TeammateRe getTeammateRe() {
-        return teammateRe;
-    }
-
-    public void setTeammateRe(TeammateRe teammateRe) {
-        this.teammateRe = teammateRe;
-    }
-
-    /*public UserTeam getUserTeam() {
-        return userTeam;
-    }
-
-    public void setUserTeam(UserTeam userTeam) {
-        this.userTeam = userTeam;
-    }*/
-
-    public TCompanyInfo getCompanyInfo() {
-        return companyInfo;
-    }
-
-    public void setCompanyInfo(TCompanyInfo companyInfo) {
-        this.companyInfo = companyInfo;
     }
 }

@@ -6,7 +6,6 @@
     <result column="object_id" property="objectId" jdbcType="INTEGER" />
     <result column="object_type" property="objectType" jdbcType="INTEGER" />
     <result column="moment" property="moment" jdbcType="INTEGER" />
-    <result column="has_read_num" property="hasReadNum" jdbcType="INTEGER" />
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
     <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
@@ -28,11 +27,11 @@
   </delete>
   <insert id="insert" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus" >
     insert into t_follow_up_readstatus (id, object_id, object_type, 
-      moment, has_read_num, version, 
+      moment, version,
       create_at, update_at, stateflag
       )
     values (#{id,jdbcType=INTEGER}, #{objectId,jdbcType=INTEGER}, #{objectType,jdbcType=INTEGER}, 
-      #{moment,jdbcType=INTEGER}, #{hasReadNum,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, 
+      #{moment,jdbcType=INTEGER}, #{version,jdbcType=INTEGER},
       #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, #{stateflag,jdbcType=BIGINT}
       )
   </insert>
@@ -50,9 +49,6 @@
       </if>
       <if test="moment != null" >
         moment,
-      </if>
-      <if test="hasReadNum != null" >
-        has_read_num,
       </if>
       <if test="version != null" >
         version,
@@ -80,9 +76,6 @@
       <if test="moment != null" >
         #{moment,jdbcType=INTEGER},
       </if>
-      <if test="hasReadNum != null" >
-        #{hasReadNum,jdbcType=INTEGER},
-      </if>
       <if test="version != null" >
         #{version,jdbcType=INTEGER},
       </if>
@@ -109,9 +102,6 @@
       <if test="moment != null" >
         moment = #{moment,jdbcType=INTEGER},
       </if>
-      <if test="hasReadNum != null" >
-        has_read_num = #{hasReadNum,jdbcType=INTEGER},
-      </if>
       <if test="version != null" >
         version = #{version,jdbcType=INTEGER},
       </if>
@@ -132,7 +122,6 @@
     set object_id = #{objectId,jdbcType=INTEGER},
       object_type = #{objectType,jdbcType=INTEGER},
       moment = #{moment,jdbcType=INTEGER},
-      has_read_num = #{hasReadNum,jdbcType=INTEGER},
       version = #{version,jdbcType=INTEGER},
       create_at = #{createAt,jdbcType=TIMESTAMP},
       update_at = #{updateAt,jdbcType=TIMESTAMP},

@@ -30,6 +30,11 @@
             <type>test-jar</type>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.dqys</groupId>
+            <artifactId>auth-orm</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <build>
