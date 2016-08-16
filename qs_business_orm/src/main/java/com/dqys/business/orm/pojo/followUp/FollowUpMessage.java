@@ -1,6 +1,9 @@
 package com.dqys.business.orm.pojo.followUp;
 
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
+import com.dqys.auth.orm.pojo.TCompanyInfo;
+import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.business.orm.pojo.coordinator.TeammateRe;
+import com.dqys.business.orm.pojo.coordinator.UserTeam;
 
 import java.util.Date;
 
@@ -34,6 +37,13 @@ public class FollowUpMessage {
     private Integer secondLiquidateStage;
 
     private Integer sendStatus;
+
+    private TUserInfo userInfo;
+
+    private TeammateRe teammateRe;
+
+    //private UserTeam userTeam;
+    private TCompanyInfo companyInfo;
 
     public Integer getId() {
         return id;
@@ -155,6 +165,35 @@ public class FollowUpMessage {
         this.sendStatus = sendStatus;
     }
 
-    //userInfoyu与团队
-   // Public
+    public TUserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(TUserInfo userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    public TeammateRe getTeammateRe() {
+        return teammateRe;
+    }
+
+    public void setTeammateRe(TeammateRe teammateRe) {
+        this.teammateRe = teammateRe;
+    }
+
+    /*public UserTeam getUserTeam() {
+        return userTeam;
+    }
+
+    public void setUserTeam(UserTeam userTeam) {
+        this.userTeam = userTeam;
+    }*/
+
+    public TCompanyInfo getCompanyInfo() {
+        return companyInfo;
+    }
+
+    public void setCompanyInfo(TCompanyInfo companyInfo) {
+        this.companyInfo = companyInfo;
+    }
 }

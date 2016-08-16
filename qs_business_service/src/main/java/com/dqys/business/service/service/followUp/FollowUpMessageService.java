@@ -19,13 +19,7 @@ public interface FollowUpMessageService {
      */
     List<FollowUpMessage> list(FollowUpMessageQuery followUpMessageQuery);
 
-    /**
-     * 取消未读
-     * @param objectId 对象id
-     * @param objectType 对象类型
-     * @param liquidateStage 对象阶段
-     */
-    void cancelUnread(int objectId,int objectType,int liquidateStage);
+
 
     /**
      * 查询跟进并取消未读

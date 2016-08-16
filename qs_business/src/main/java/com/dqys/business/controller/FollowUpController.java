@@ -4,17 +4,17 @@ import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
+import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
 import com.dqys.business.service.utils.followUp.FollowUpUtil;
 import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.core.utils.RabbitMQProducerTool;
-import org.apache.xmlbeans.impl.xb.xsdschema.ListDocument;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yan on 16-8-12.
@@ -25,6 +25,8 @@ public class FollowUpController extends BaseApiContorller {
     @Autowired
     private FollowUpMessageService followUpMessageService;
 
+    @Autowired
+    private FollowUpReadStatusService followUpReadStatusService;
     /***
      * 查询更进信息,并去除对应阶段的未读数据
      * @return
@@ -60,14 +62,15 @@ public class FollowUpController extends BaseApiContorller {
 
     /**
      * 查询对象所有阶段的未读留言数量
+     * @param对象id
      * @return
      */
     @RequestMapping(value = "/unread_count", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse unReadCount()
+    public JsonResponse unReadCount(int objectId,int objectType)
     {
-
-        return JsonResponseTool.success(null);
+        Map<String,String> countMap=followUpReadStatusService.getCountMap(objectId,objectType);
+        return JsonResponseTool.success(countMap);
     }
 
 }
