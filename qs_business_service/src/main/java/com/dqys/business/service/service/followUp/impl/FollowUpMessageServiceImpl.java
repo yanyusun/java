@@ -3,7 +3,6 @@ package com.dqys.business.service.service.followUp.impl;
 import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
-import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
 import com.dqys.core.model.UserSession;
@@ -49,9 +48,14 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService{
     }
 
     @Override
+    public List<FollowUpMessage> getlistWithUserAndTeam(FollowUpMessageQuery followUpMessageQuery) {
+        return followUpMessageMapper.getlistWithUserAndTeam(followUpMessageQuery);
+    }
+
+    @Override
     public List<FollowUpMessage> listAndCancelUnread(FollowUpMessageQuery followUpMessageQuery) {
-        followUpReadStatusService.cancelUnread(followUpMessageQuery.getObjectId(),followUpMessageQuery.getObjectType(),followUpMessageQuery.getLiquidateStage());
-        return list(followUpMessageQuery);
+        //followUpReadStatusService.cancelUnread(followUpMessageQuery.getObjectId(),followUpMessageQuery.getObjectType(),followUpMessageQuery.getLiquidateStage());
+        return getlistWithUserAndTeam(followUpMessageQuery);
     }
 
 }

@@ -21,4 +21,11 @@ public interface FollowUpMessageMapper {
 
     List<FollowUpMessage> list(FollowUpMessageQuery query);
 
+    /**
+     * 查询跟进信息列表,级联用户与所在公司
+     * @param query
+     * @return
+     */
+    List<FollowUpMessage> getlistWithUserAndTeam(FollowUpMessageQuery query);
+
 }

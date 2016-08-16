@@ -28,8 +28,37 @@ public class FollowUpController extends BaseApiContorller {
     @Autowired
     private FollowUpReadStatusService followUpReadStatusService;
     /***
-     * 查询更进信息,并去除对应阶段的未读数据
-     * @return
+     * @api {GET} http://{url}/follow_up/list 查询更进信息,并去除对应阶段的未读数据
+     * @apiName list
+     * @apiGroup followUp
+     * @apiUse FollowUpMessageQuery
+     * @apiSuccessExample {json} Data-Response:
+     * {
+            "code": 2000,
+            "msg": "成功",
+            "data": [
+                {
+                "id": 1,
+                "objectId": null,
+                "objectType": null,
+                "userId": null,
+                "teamId": null,
+                "content": null,
+                "version": null,
+                "createAt": null,
+                "updateAt": null,
+                "stateflag": null,
+                "secondObjectId": null,
+                "secondObjectType": null,
+                "liquidateStage": 1,
+                "secondLiquidateStage": null,
+                "sendStatus": null,
+                "userInfo": null,
+                "teammateRe": null,
+                "companyInfo": null
+                }
+            ]
+        }
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
@@ -39,9 +68,11 @@ public class FollowUpController extends BaseApiContorller {
     }
 
     /**
+     *
+     *
      * 增加跟进信息,状态为未发送
-     * @param dto
-     * @return
+     *
+     *
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
