@@ -195,6 +195,17 @@
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
+    <!--更进信息队列-->
+    <rabbit:queue name="follow_message_online" durable="true" />
+    <rabbit:direct-exchange name="followMessageExchange" durable="true">
+        <rabbit:bindings>
+            <rabbit:binding key="fm_online_route" queue="follow_message_online" ></rabbit:binding>
+        </rabbit:bindings>
+    </rabbit:direct-exchange>
+
+
+
+
 
 
 

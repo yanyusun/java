@@ -47,7 +47,7 @@ import java.util.List;
 /**
  * Created by Yvan on 16/6/30.
  */
-@Repository
+@Repository("b_companyService")
 @Primary
 public class CompanyServiceImpl implements CompanyService {
 

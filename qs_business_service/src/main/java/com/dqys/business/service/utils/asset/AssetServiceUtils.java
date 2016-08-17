@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by Yvan on 16/6/16.
  */
-public class AssetServiceUtils {
+public class  AssetServiceUtils {
 
     public static final String PRE_ASSET_CODE = "QS"; // 格式:QS160612XXXX
 

@@ -15,6 +15,7 @@ import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,7 +33,7 @@ public class AssetController {
     private AssetService assetService;
     @Autowired
     private LenderService lenderService;
-    @Autowired
+    @Autowired @Qualifier("b_loginService")
     private UserService userService;
 
     /**

@@ -1,44 +1,59 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper" >
-  <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.followUp.FollowUpMessage" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="object_id" property="objectId" jdbcType="INTEGER" />
-    <result column="object_type" property="objectType" jdbcType="INTEGER" />
-    <result column="user_id" property="userId" jdbcType="INTEGER" />
-    <result column="team_id" property="teamId" jdbcType="INTEGER" />
-    <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="version" property="version" jdbcType="INTEGER" />
-    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
-    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
-    <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
-    <result column="second_object_id" property="secondObjectId" jdbcType="INTEGER" />
-    <result column="second_object_type" property="secondObjectType" jdbcType="INTEGER" />
-    <result column="liquidate stage" property="liquidateStage" jdbcType="INTEGER" />
-    <result column="second_liquidate stage" property="secondLiquidateStage" jdbcType="INTEGER" />
-    <result column="send_status" property="sendStatus" jdbcType="INTEGER" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.followUp.FollowUpMessage">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="object_id" property="objectId" jdbcType="INTEGER"/>
+        <result column="object_type" property="objectType" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="team_id" property="teamId" jdbcType="INTEGER"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+        <result column="second_object_id" property="secondObjectId" jdbcType="INTEGER"/>
+        <result column="second_object_type" property="secondObjectType" jdbcType="INTEGER"/>
+        <result column="liquidate_stage" property="liquidateStage" jdbcType="INTEGER"/>
+        <result column="second_liquidate_stage" property="secondLiquidateStage" jdbcType="INTEGER"/>
+        <result column="send_status" property="sendStatus" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="MessageWithUserAndTeam" type="com.dqys.business.orm.pojo.followUp.FollowUpMessage"
+               extends="BaseResultMap">
+        <association property="userInfo" javaType="com.dqys.auth.orm.pojo.TUserInfo">
+            <result column="user_name" property="userName"/>
+            <result column="sex" property="sex"/>
+        </association>
+        <association property="teammateRe" javaType="com.dqys.business.orm.pojo.coordinator.TeammateRe">
+            <result column="type" property="type"/>
+        </association>
+        <association property="companyInfo" javaType="com.dqys.auth.orm.pojo.TCompanyInfo">
+            <result column="company_name" property="companyName"/>
+        </association>
+    </resultMap>
+
+    <sql id="Base_Column_List">
     id, object_id, object_type, user_id, team_id, content, version, create_at, update_at, 
-    stateflag, second_object_id, second_object_type, "liquidate stage", "second_liquidate stage", 
+    stateflag, second_object_id, second_object_type, liquidate_stage, second_liquidate stage,
     send_status
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from t_follow_up_message
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_follow_up_message
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from t_follow_up_message
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage" >
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage">
     insert into t_follow_up_message (id, object_id, object_type, 
       user_id, team_id, content, 
       version, create_at, update_at, 
       stateflag, second_object_id, second_object_type, 
-      "liquidate stage", "second_liquidate stage", send_status
+      liquidate_stage, second_liquidate_stage, send_status
       )
     values (#{id,jdbcType=INTEGER}, #{objectId,jdbcType=INTEGER}, #{objectType,jdbcType=INTEGER}, 
       #{userId,jdbcType=INTEGER}, #{teamId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
@@ -47,152 +62,152 @@
       #{liquidateStage,jdbcType=INTEGER}, #{secondLiquidateStage,jdbcType=INTEGER}, #{sendStatus,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage" >
-    insert into t_follow_up_message
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="objectId != null" >
-        object_id,
-      </if>
-      <if test="objectType != null" >
-        object_type,
-      </if>
-      <if test="userId != null" >
-        user_id,
-      </if>
-      <if test="teamId != null" >
-        team_id,
-      </if>
-      <if test="content != null" >
-        content,
-      </if>
-      <if test="version != null" >
-        version,
-      </if>
-      <if test="createAt != null" >
-        create_at,
-      </if>
-      <if test="updateAt != null" >
-        update_at,
-      </if>
-      <if test="stateflag != null" >
-        stateflag,
-      </if>
-      <if test="secondObjectId != null" >
-        second_object_id,
-      </if>
-      <if test="secondObjectType != null" >
-        second_object_type,
-      </if>
-      <if test="liquidateStage != null" >
-        "liquidate stage",
-      </if>
-      <if test="secondLiquidateStage != null" >
-        "second_liquidate stage",
-      </if>
-      <if test="sendStatus != null" >
-        send_status,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="objectId != null" >
-        #{objectId,jdbcType=INTEGER},
-      </if>
-      <if test="objectType != null" >
-        #{objectType,jdbcType=INTEGER},
-      </if>
-      <if test="userId != null" >
-        #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="teamId != null" >
-        #{teamId,jdbcType=INTEGER},
-      </if>
-      <if test="content != null" >
-        #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="version != null" >
-        #{version,jdbcType=INTEGER},
-      </if>
-      <if test="createAt != null" >
-        #{createAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateAt != null" >
-        #{updateAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="stateflag != null" >
-        #{stateflag,jdbcType=BIGINT},
-      </if>
-      <if test="secondObjectId != null" >
-        #{secondObjectId,jdbcType=INTEGER},
-      </if>
-      <if test="secondObjectType != null" >
-        #{secondObjectType,jdbcType=INTEGER},
-      </if>
-      <if test="liquidateStage != null" >
-        #{liquidateStage,jdbcType=INTEGER},
-      </if>
-      <if test="secondLiquidateStage != null" >
-        #{secondLiquidateStage,jdbcType=INTEGER},
-      </if>
-      <if test="sendStatus != null" >
-        #{sendStatus,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage" >
-    update t_follow_up_message
-    <set >
-      <if test="objectId != null" >
-        object_id = #{objectId,jdbcType=INTEGER},
-      </if>
-      <if test="objectType != null" >
-        object_type = #{objectType,jdbcType=INTEGER},
-      </if>
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="teamId != null" >
-        team_id = #{teamId,jdbcType=INTEGER},
-      </if>
-      <if test="content != null" >
-        content = #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="version != null" >
-        version = #{version,jdbcType=INTEGER},
-      </if>
-      <if test="createAt != null" >
-        create_at = #{createAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateAt != null" >
-        update_at = #{updateAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="stateflag != null" >
-        stateflag = #{stateflag,jdbcType=BIGINT},
-      </if>
-      <if test="secondObjectId != null" >
-        second_object_id = #{secondObjectId,jdbcType=INTEGER},
-      </if>
-      <if test="secondObjectType != null" >
-        second_object_type = #{secondObjectType,jdbcType=INTEGER},
-      </if>
-      <if test="liquidateStage != null" >
-        "liquidate stage" = #{liquidateStage,jdbcType=INTEGER},
-      </if>
-      <if test="secondLiquidateStage != null" >
-        "second_liquidate stage" = #{secondLiquidateStage,jdbcType=INTEGER},
-      </if>
-      <if test="sendStatus != null" >
-        send_status = #{sendStatus,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage" >
+    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage">
+        insert into t_follow_up_message
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="objectId != null">
+                object_id,
+            </if>
+            <if test="objectType != null">
+                object_type,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="teamId != null">
+                team_id,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="version != null">
+                version,
+            </if>
+            <if test="createAt != null">
+                create_at,
+            </if>
+            <if test="updateAt != null">
+                update_at,
+            </if>
+            <if test="stateflag != null">
+                stateflag,
+            </if>
+            <if test="secondObjectId != null">
+                second_object_id,
+            </if>
+            <if test="secondObjectType != null">
+                second_object_type,
+            </if>
+            <if test="liquidateStage != null">
+                liquidate_stage,
+            </if>
+            <if test="secondLiquidateStage != null">
+                ,
+            </if>
+            <if test="sendStatus != null">
+                send_status,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="objectId != null">
+                #{objectId,jdbcType=INTEGER},
+            </if>
+            <if test="objectType != null">
+                #{objectType,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="teamId != null">
+                #{teamId,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="version != null">
+                #{version,jdbcType=INTEGER},
+            </if>
+            <if test="createAt != null">
+                #{createAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateAt != null">
+                #{updateAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="stateflag != null">
+                #{stateflag,jdbcType=BIGINT},
+            </if>
+            <if test="secondObjectId != null">
+                #{secondObjectId,jdbcType=INTEGER},
+            </if>
+            <if test="secondObjectType != null">
+                #{secondObjectType,jdbcType=INTEGER},
+            </if>
+            <if test="liquidateStage != null">
+                #{liquidateStage,jdbcType=INTEGER},
+            </if>
+            <if test="secondLiquidateStage != null">
+                #{secondLiquidateStage,jdbcType=INTEGER},
+            </if>
+            <if test="sendStatus != null">
+                #{sendStatus,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage">
+        update t_follow_up_message
+        <set>
+            <if test="objectId != null">
+                object_id = #{objectId,jdbcType=INTEGER},
+            </if>
+            <if test="objectType != null">
+                object_type = #{objectType,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="teamId != null">
+                team_id = #{teamId,jdbcType=INTEGER},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="version != null">
+                version = #{version,jdbcType=INTEGER},
+            </if>
+            <if test="createAt != null">
+                create_at = #{createAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateAt != null">
+                update_at = #{updateAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="stateflag != null">
+                stateflag = #{stateflag,jdbcType=BIGINT},
+            </if>
+            <if test="secondObjectId != null">
+                second_object_id = #{secondObjectId,jdbcType=INTEGER},
+            </if>
+            <if test="secondObjectType != null">
+                second_object_type = #{secondObjectType,jdbcType=INTEGER},
+            </if>
+            <if test="liquidateStage != null">
+                liquidate_stage = #{liquidateStage,jdbcType=INTEGER},
+            </if>
+            <if test="secondLiquidateStage != null">
+                second_liquidate_stage = #{secondLiquidateStage,jdbcType=INTEGER},
+            </if>
+            <if test="sendStatus != null">
+                send_status = #{sendStatus,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage">
     update t_follow_up_message
     set object_id = #{objectId,jdbcType=INTEGER},
       object_type = #{objectType,jdbcType=INTEGER},
@@ -205,9 +220,36 @@
       stateflag = #{stateflag,jdbcType=BIGINT},
       second_object_id = #{secondObjectId,jdbcType=INTEGER},
       second_object_type = #{secondObjectType,jdbcType=INTEGER},
-      "liquidate stage" = #{liquidateStage,jdbcType=INTEGER},
-      "second_liquidate stage" = #{secondLiquidateStage,jdbcType=INTEGER},
+      liquidate_stage = #{liquidateStage,jdbcType=INTEGER},
+      second_liquidate_stage = #{secondLiquidateStage,jdbcType=INTEGER},
       send_status = #{sendStatus,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+    <select id="getTeamId" resultType="java.lang.Integer">
+    SELECT ttr.id from t_user_team tut LEFT JOIN t_teammate_re ttr
+    ON ttr.user_team_id=tut.id
+    WHERE tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} and ttr.user_id=#{userId,jdbcType=INTEGER}
+  </select>
+
+    <!--查询跟进信息列表,级联用户与所在公司-->
+    <select id="getlistWithUserAndTeam" resultMap="MessageWithUserAndTeam"
+            parameterType="com.dqys.business.orm.query.followUp.FollowUpMessageQuery">
+        SELECT m.id,m.content,m.create_at,m.liquidate_stage,u.user_name,u.sex,c.company_name
+        FROM t_follow_up_message m
+        LEFT JOIN t_user_info u ON m.user_id = u.id
+        LEFT JOIN t_company_info c on u.company_id =c.id
+        WHERE 1=1
+        <if test="liquidateStage != null">
+            AND m.liquidate_stage = #{liquidateStage,jdbcType=INTEGER}
+        </if>
+        <if test="secondLiquidateStage != null">
+            AND m.second_liquidate_stage = #{secondLiquidateStage,jdbcType=INTEGER}
+        </if>
+        ORDER BY u.create_at
+    </select>
+
+    <update id="updateBySendStatus" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage">
+        UPDATE t_follow_up_message SET  send_status=#{sendStatus} WHERE object_id=#{objectId} and object_type=#{objectType} and user_id=#{userId}
+    </update>
 </mapper>

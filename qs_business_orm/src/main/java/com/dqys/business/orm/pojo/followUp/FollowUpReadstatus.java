@@ -5,13 +5,13 @@ import java.util.Date;
 public class FollowUpReadstatus {
     private Integer id;
 
+    private Integer userId;
+
     private Integer objectId;
 
     private Integer objectType;
 
     private Integer moment;
-
-    private Integer hasReadNum;
 
     private Integer version;
 
@@ -53,14 +53,6 @@ public class FollowUpReadstatus {
         this.moment = moment;
     }
 
-    public Integer getHasReadNum() {
-        return hasReadNum;
-    }
-
-    public void setHasReadNum(Integer hasReadNum) {
-        this.hasReadNum = hasReadNum;
-    }
-
     public Integer getVersion() {
         return version;
     }
@@ -92,4 +84,13 @@ public class FollowUpReadstatus {
     public void setStateflag(Long stateflag) {
         this.stateflag = stateflag;
     }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
 }

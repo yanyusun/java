@@ -29,7 +29,7 @@ public class CaptchaServiceImpl implements CaptchaService {
     private static final String SUB_RETRY= "retry";
     private static final int KEY_EXPIRE = 60;
 
-    @Autowired
+    @Autowired(required = false)
     private DefaultKaptcha captchaProducer;
 
 
