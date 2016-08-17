@@ -31,15 +31,11 @@ public class FollowUpReadStatusServiceImpl implements FollowUpReadStatusService 
 
     @Override
     public int insert(FollowUpReadstatus record) {
-        //// TODO: 16-8-16
         return followUpReadstatusMapper.insert(record);
     }
 
     @Override
     public void addUnReadMessage(String[] msg) {
-
-        // TODO: 16-8-11 mkf
-
         /**
          *1.查找object_user_relation表中关联的所有userid
          *
@@ -67,21 +63,15 @@ public class FollowUpReadStatusServiceImpl implements FollowUpReadStatusService 
 
     @Override
     public void cancelUnread(int objectId, int objectType, int liquidateStage) {
-        // TODO: 16-8-16 完成该接口 mkf del
         UserSession userSession = UserSession.getCurrent();
-        //int userId = userSession.getUserId();
-        // TODO: 16-8-17 测试
-        int userId = 12;
+        int userId = userSession.getUserId();
         followUpReadstatusMapper.deleteByOOL(objectId, objectType, liquidateStage,userId);
     }
 
     @Override
     public List<Map<String, String>> getCountMap(int objectId, int objectType) {
         UserSession userSession = UserSession.getCurrent();
-        //int userId = userSession.getUserId();
-        // TODO: 16-8-17 测试
-        int userId = 12;
-        // TODO: 16-8-16 mkf 查询
+        int userId = userSession.getUserId();
         return followUpReadstatusMapper.getCountMap(objectId, objectType, userId);
     }
 }
