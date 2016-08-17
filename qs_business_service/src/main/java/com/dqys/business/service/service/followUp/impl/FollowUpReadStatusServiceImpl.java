@@ -8,6 +8,7 @@ import com.dqys.business.orm.pojo.followUp.FollowUpReadstatus;
 import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.model.UserSession;
+import com.sun.org.apache.xalan.internal.xsltc.util.IntegerArray;
 import org.aspectj.bridge.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -44,7 +45,7 @@ public class FollowUpReadStatusServiceImpl implements FollowUpReadStatusService 
          *
          */
         List<Integer> userIdList = null;
-        userIdList = followUpReadstatusMapper.selectByUseridList();
+        userIdList = followUpReadstatusMapper.selectByUseridList(Integer.parseInt(msg[0]),Integer.parseInt(msg[1]));
         //循环调用
         for (Integer userid : userIdList) {
             //生成
@@ -67,13 +68,19 @@ public class FollowUpReadStatusServiceImpl implements FollowUpReadStatusService 
     @Override
     public void cancelUnread(int objectId, int objectType, int liquidateStage) {
         // TODO: 16-8-16 完成该接口 mkf del
-        followUpReadstatusMapper.deleteByOOL(objectId, objectType, liquidateStage);
+        UserSession userSession = UserSession.getCurrent();
+        //int userId = userSession.getUserId();
+        // TODO: 16-8-17 测试
+        int userId = 12;
+        followUpReadstatusMapper.deleteByOOL(objectId, objectType, liquidateStage,userId);
     }
 
     @Override
-    public Map<String, String> getCountMap(int objectId, int objectType) {
+    public List<Map<String, String>> getCountMap(int objectId, int objectType) {
         UserSession userSession = UserSession.getCurrent();
-        int userId = userSession.getUserId();
+        //int userId = userSession.getUserId();
+        // TODO: 16-8-17 测试
+        int userId = 12;
         // TODO: 16-8-16 mkf 查询
         return followUpReadstatusMapper.getCountMap(objectId, objectType, userId);
     }

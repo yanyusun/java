@@ -25,7 +25,7 @@ public interface FollowUpReadstatusMapper {
      *
      * @return
      */
-    List<Integer> selectByUseridList();
+    List<Integer> selectByUseridList(@Param("objectId") int objectId, @Param("objectType") int objectType);
 
     /**
      * 条件删除表t_follow_up_readstatus的记录
@@ -34,7 +34,7 @@ public interface FollowUpReadstatusMapper {
      * @param objectType
      * @param liquidateStage
      */
-    void deleteByOOL(@Param("objectId") int objectId, @Param("objectType") int objectType, @Param("liquidateStage") int liquidateStage);
+    void deleteByOOL(@Param("objectId") int objectId, @Param("objectType") int objectType, @Param("liquidateStage") int liquidateStage,@Param("user_id") int userId);
 
-    Map<String, String> getCountMap(@Param("objectId") int objectId, @Param("objectType") int objectType, @Param("userId") int userId);
+    List<Map<String, String>> getCountMap(@Param("objectId") int objectId, @Param("objectType") int objectType, @Param("userId") int userId);
 }

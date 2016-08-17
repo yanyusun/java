@@ -46,17 +46,17 @@ public class FollowUpReadstatusMapperImp extends BaseDao implements FollowUpRead
     }
 
     @Override
-    public List<Integer> selectByUseridList() {
-        return super.getSqlSession().getMapper(FollowUpReadstatusMapper.class).selectByUseridList();
+    public List<Integer> selectByUseridList(@Param("objectId") int objectId, @Param("objectType") int objectType) {
+        return super.getSqlSession().getMapper(FollowUpReadstatusMapper.class).selectByUseridList(objectId,objectType);
     }
 
     @Override
-    public void deleteByOOL(@Param("objectId") int objectId, @Param("objectType") int objectType, @Param("liquidateStage") int liquidateStage) {
-        super.getSqlSession().getMapper(FollowUpReadstatusMapper.class).deleteByOOL(objectId, objectType, liquidateStage);
+    public void deleteByOOL(@Param("objectId") int objectId, @Param("objectType") int objectType, @Param("liquidateStage") int liquidateStage, @Param("user_id") int userId) {
+        super.getSqlSession().getMapper(FollowUpReadstatusMapper.class).deleteByOOL(objectId, objectType, liquidateStage,userId);
     }
 
     @Override
-    public Map<String, String> getCountMap(@Param("objectId") int objectId, @Param("objectType") int objectType, @Param("userId") int userId) {
+    public List<Map<String, String>>getCountMap(@Param("objectId") int objectId, @Param("objectType") int objectType, @Param("userId") int userId) {
         return  super.getSqlSession().getMapper(FollowUpReadstatusMapper.class).getCountMap(objectId, objectType, userId);
     }
 

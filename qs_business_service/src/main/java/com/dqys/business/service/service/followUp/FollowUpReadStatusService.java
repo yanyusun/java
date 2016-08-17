@@ -24,7 +24,7 @@ public interface FollowUpReadStatusService {
      * @param ObjectId 对象类型
      * @return
      */
-    Map<String,String> getCountMap(int ObjectId,int ObjectType);
+    List<Map<String,String>> getCountMap(int ObjectId,int ObjectType);
 
     /**
      * 取消未读

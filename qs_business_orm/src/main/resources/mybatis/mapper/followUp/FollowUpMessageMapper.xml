@@ -229,7 +229,7 @@
     <select id="getTeamId" resultType="java.lang.Integer">
     SELECT ttr.id from t_user_team tut LEFT JOIN t_teammate_re ttr
     ON ttr.user_team_id=tut.id
-    WHERE tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{ObjectType,jdbcType=INTEGER} and ttr.user_id=#{userId,jdbcType=INTEGER} LIMIT 0,1
+    WHERE tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} and ttr.user_id=#{userId,jdbcType=INTEGER}
   </select>
 
     <!--查询跟进信息列表,级联用户与所在公司-->

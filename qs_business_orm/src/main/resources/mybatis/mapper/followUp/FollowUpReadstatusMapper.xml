@@ -140,14 +140,15 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
     <!--获取表object_user_relation 的userid-->
-    <select id="selectByUseridList" resultType="java.lang.Integer">
+    <select id="selectByUseridList" resultType="java.lang.Integer" >
         SELECT our.user_id from object_user_relation our
+        WHERE our.object_type = #{objectType,jdbcType=INTEGER} AND our.object_id=#{objectId,jdbcType=INTEGER}
           GROUP BY our.user_id
     </select>
 
     <delete id="deleteByOOL">
             DELETE  from t_follow_up_readstatus
-            WHERE object_id=#{objectId,jdbcType=INTEGER} and object_type=#{objectType,jdbcType=INTEGER} and moment=#{liquidateStage,jdbcType=INTEGER}
+            WHERE object_id=#{objectId,jdbcType=INTEGER} and object_type=#{objectType,jdbcType=INTEGER} and moment=#{liquidateStage,jdbcType=INTEGER} AND  user_id=#{userId,jdbcType=INTEGER}
     </delete>
 
     <select id="getCountMap" resultType="java.util.Map">

@@ -71,7 +71,35 @@ public class FollowUpController extends BaseApiContorller {
     }
 
     /**
-     * 增加跟进信息,状态为未发送
+     * @api {GET} http://{url}/follow_up/add 增加跟进信息,状态为未发送
+     * @apiName add
+     * @apiGroup followUp
+     * @apiUse FollowUpMessageDTO
+     * @apiSuccessExample {json} Data-Response:
+     *{
+        "code": 2000,
+        "msg": "成功",
+        "data": {
+        "id": null,
+        "objectId": 111,
+        "objectType": 111,
+        "userId": 1,
+        "teamId": 0,
+        "content": "111",
+        "version": null,
+        "createAt": null,
+        "updateAt": null,
+        "stateflag": null,
+        "secondObjectId": null,
+        "secondObjectType": 111,
+        "liquidateStage": 111,
+        "secondLiquidateStage": 111,
+        "sendStatus": null,
+        "userInfo": null,
+        "teammateRe": null,
+        "companyInfo": null
+        }
+        }
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
@@ -89,15 +117,31 @@ public class FollowUpController extends BaseApiContorller {
     }
 
     /**
-     * 查询对象所有阶段的未读留言数量
-     *
-     * @return
-     * @param对象id
+     * @api {GET} http://{url}/follow_up/add 增加跟进信息,状态为未发送
+     * @apiName list
+     * @apiGroup followUp
+     * @apiParam {number} objectId 对象id
+     * @apiParam {number} objectType 对象类型
+     * @apiSuccessExample {json} Data-Response:
+     *  {
+            "code": 2000,
+            "msg": "成功",
+            "data": [
+            {
+            "count": 2,
+            "moment": 111
+            },
+            {
+            "count": 1,
+            "moment": 222
+            }
+            ]
+            }
      */
     @RequestMapping(value = "/unread_count", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse unReadCount(int objectId, int objectType) {
-        Map<String, String> countMap = followUpReadStatusService.getCountMap(objectId, objectType);
+        List<Map<String, String>> countMap = followUpReadStatusService.getCountMap(objectId, objectType);
         return JsonResponseTool.success(countMap);
     }
 
