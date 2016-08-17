@@ -1,10 +1,9 @@
 package com.dqys.business.controller;
 
 import com.dqys.auth.orm.constant.CompanyTypeEnum;
-import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.constant.asset.LenderTypeEnum;
-import com.dqys.business.service.dto.asset.ContactDTO;
-import com.dqys.business.service.dto.asset.LenderDTO;
+import com.dqys.business.service.constant.asset.ObjectTabEnum;
+import com.dqys.business.service.dto.asset.LenderInsertDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.LenderListQuery;
 import com.dqys.business.service.service.LenderService;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -78,7 +76,7 @@ public class LenderController {
     }
 
     /**
-     * @api {get} http://{url}/lender/add 新增借款人
+     * @api {post} http://{url}/lender/add 新增借款人
      * @apiName add
      * @apiGroup lender
      * @apiParam {LenderDTO} lenderDTO 借款人基础信息
@@ -87,15 +85,14 @@ public class LenderController {
      * @apiUse ContactDTO
      * @apiSuccess {number} data 增加后的数据ID
      */
-    @RequestMapping(value = "/add")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse add(
-            @ModelAttribute List<ContactDTO> contactDTOs,
-            @ModelAttribute LenderDTO lenderDTO) throws BusinessLogException {
-        if (CommonUtil.checkParam(contactDTOs, lenderDTO)) {
+    public JsonResponse add(@ModelAttribute LenderInsertDTO lenderInsertDTO) throws BusinessLogException {
+        if (CommonUtil.checkParam(lenderInsertDTO, lenderInsertDTO.getLenderDTO(),
+                lenderInsertDTO.getContactDTOList().get(0))) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return lenderService.add_tx(contactDTOs, lenderDTO);
+        return lenderService.add_tx(lenderInsertDTO.getContactDTOList(), lenderInsertDTO.getLenderDTO());
     }
 
     /**
@@ -125,13 +122,12 @@ public class LenderController {
      */
     @RequestMapping(value = "/update")
     @ResponseBody
-    public JsonResponse updateLenderRelation(@ModelAttribute List<ContactDTO> contactDTOs,
-                                             @ModelAttribute LenderDTO lenderDTO) throws BusinessLogException {
+    public JsonResponse updateLenderRelation(@ModelAttribute LenderInsertDTO lenderInsertDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(
-                contactDTOs, lenderDTO, lenderDTO.getId())) {
+                lenderInsertDTO, lenderInsertDTO.getLenderDTO(), lenderInsertDTO.getLenderDTO().getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return lenderService.update_tx(contactDTOs, lenderDTO);
+        return lenderService.update_tx(lenderInsertDTO.getContactDTOList(), lenderInsertDTO.getLenderDTO());
     }
 
     /**

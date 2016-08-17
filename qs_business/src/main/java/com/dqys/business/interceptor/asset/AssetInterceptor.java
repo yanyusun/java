@@ -24,7 +24,6 @@ public class AssetInterceptor extends AuthenticationInterceptor {
     public static final String API_ASSIGNED_BATCH = "assignedBatch";
     public static final String API_ADD_LENDER = "addLender";
 
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         String url = request.getRequestURI();

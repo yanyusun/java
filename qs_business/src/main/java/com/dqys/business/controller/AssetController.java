@@ -3,12 +3,13 @@ package com.dqys.business.controller;
 import com.dqys.business.service.constant.asset.AssetTypeEnum;
 import com.dqys.business.service.constant.asset.ExcellentTypeEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
-import com.dqys.business.service.dto.asset.*;
+import com.dqys.business.service.dto.asset.AssetDTO;
+import com.dqys.business.service.dto.asset.AssetLenderInsertDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.AssetListQuery;
-import com.dqys.business.service.service.*;
-import com.dqys.business.service.utils.asset.AssetServiceUtils;
-import com.dqys.business.service.utils.asset.IouServiceUtils;
+import com.dqys.business.service.service.AssetService;
+import com.dqys.business.service.service.LenderService;
+import com.dqys.business.service.service.UserService;
 import com.dqys.business.service.utils.asset.PawnServiceUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
@@ -18,9 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -156,7 +155,7 @@ public class AssetController {
     @ResponseBody
     public JsonResponse addLenders(@RequestParam(required = true) Integer id,
                                    @RequestParam(required = true) MultipartFile file) throws BusinessLogException {
-        if(CommonUtil.checkParam(id, file)){
+        if (CommonUtil.checkParam(id, file)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return assetService.excelImport_tx(id, file);
@@ -190,7 +189,7 @@ public class AssetController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public JsonResponse list(@ModelAttribute AssetListQuery assetListQuery, @RequestParam(required = true) Integer nav) {
-        if(ObjectTabEnum.getObjectTabEnum(nav) == null){
+        if (ObjectTabEnum.getObjectTabEnum(nav) == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return assetService.pageList(assetListQuery, nav);
@@ -207,7 +206,7 @@ public class AssetController {
      */
     @RequestMapping(value = "/assignedBatch")
     @ResponseBody
-    public JsonResponse assignedBatch(@PathVariable String ids, @PathVariable Integer id) throws BusinessLogException {
+    public JsonResponse assignedBatch(@RequestParam("ids") String ids, @RequestParam("id") Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(ids, id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -234,15 +233,18 @@ public class AssetController {
      * @apiUse ContactDTO
      */
     @RequestMapping(value = "/addLender", method = RequestMethod.POST)
-    public JsonResponse addLender(@RequestParam Integer id,
-                                  @ModelAttribute List<ContactDTO> contactDTOList,
-                                  @ModelAttribute List<PawnDTO> pawnDTOList,
-                                  @ModelAttribute List<IouDTO> iouDTOList,
-                                  @ModelAttribute LenderDTO lenderDTO) throws BusinessLogException{
-        if(CommonUtil.checkParam(id, lenderDTO, pawnDTOList, contactDTOList, iouDTOList)){
+    public JsonResponse addLender(@ModelAttribute AssetLenderInsertDTO assetLenderInsertDTO) throws BusinessLogException {
+        if (CommonUtil.checkParam(assetLenderInsertDTO, assetLenderInsertDTO.getId(),
+                assetLenderInsertDTO.getLenderDTO(), assetLenderInsertDTO.getContactDTOList())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return assetService.addLender_tx(id, contactDTOList, lenderDTO, pawnDTOList, iouDTOList);
+
+        return assetService.addLender_tx(assetLenderInsertDTO.getId(),
+                assetLenderInsertDTO.getContactDTOList(),
+                assetLenderInsertDTO.getLenderDTO(),
+                assetLenderInsertDTO.getPawnDTOList(),
+                assetLenderInsertDTO.getIouDTOList());
+
     }
 
 }
