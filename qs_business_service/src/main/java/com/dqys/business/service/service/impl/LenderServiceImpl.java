@@ -310,9 +310,6 @@ public class LenderServiceImpl implements LenderService {
             return JsonResponseTool.failure("添加失败");
         }
         Integer lenderId = lenderInfo.getId();
-        // 添加历史记录
-        businessLogService.add(lenderId, ObjectTypeEnum.LENDER.getValue(), LenderEnum.ADD.getValue(),
-                "", "", 0, 0);
         // 增加借款人相关联系人的身份信息
         for (ContactDTO contactDTO : contactDTOList) {
             contactDTO.setMode(ObjectTypeEnum.LENDER.getValue().toString());
@@ -330,6 +327,9 @@ public class LenderServiceImpl implements LenderService {
             businessService.addServiceObject(ObjectTypeEnum.LENDER.getValue(), lenderId,
                     ObjectTypeEnum.ASSETPACKAGE.getValue(), lenderDTO.getAssetId());
         }
+        // 添加历史记录
+        businessLogService.add(lenderId, ObjectTypeEnum.LENDER.getValue(), LenderEnum.ADD.getValue(),
+                "", "", 0, 0);
         return JsonResponseTool.success(lenderId);
     }
 
