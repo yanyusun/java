@@ -11,8 +11,10 @@ import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -63,7 +65,7 @@ public class FollowUpController extends BaseApiContorller {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse list(@ModelAttribute FollowUpMessageQuery followUpMessageQuery) {
+    public JsonResponse list(FollowUpMessageQuery followUpMessageQuery) {
         List<FollowUpMessage> list = followUpMessageService.listAndCancelUnread(followUpMessageQuery);
         return JsonResponseTool.success(list);
     }
@@ -73,13 +75,11 @@ public class FollowUpController extends BaseApiContorller {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse add(@ModelAttribute FollowUpMessageDTO dto) {
-        if (CommonUtil.checkParam(
-                dto.getObjectId(), dto.getObjectType(), dto.getLiquidateStage()
-        )) {
+    public JsonResponse add(FollowUpMessageDTO followUpMessageDTO) {
+        if (followUpMessageDTO.getObjectId()==null||followUpMessageDTO.getObjectType()==null||followUpMessageDTO.getLiquidateStage()==null) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        FollowUpMessage followUpMessage = FollowUpUtil.toFollowUpMessage(dto);
+        FollowUpMessage followUpMessage = FollowUpUtil.toFollowUpMessage(followUpMessageDTO);
         if (followUpMessage != null) {
             followUpMessageService.insert(followUpMessage);
         } else {

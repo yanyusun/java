@@ -1,7 +1,5 @@
 package com.dqys.business.service.dto.followUp;
 
-import java.util.Date;
-
 /**
  * Created by yan on 16-8-12.
  *

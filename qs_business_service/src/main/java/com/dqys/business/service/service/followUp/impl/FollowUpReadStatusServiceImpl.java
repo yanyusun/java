@@ -1,5 +1,6 @@
 package com.dqys.business.service.service.followUp.impl;
 
+import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
 import com.dqys.business.orm.mapper.followUp.FollowUpReadstatusMapper;
 import com.dqys.business.orm.mapper.followUp.impl.FollowUpMessageMapperImpl;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
@@ -25,7 +26,7 @@ public class FollowUpReadStatusServiceImpl implements FollowUpReadStatusService 
     private FollowUpReadstatusMapper followUpReadstatusMapper;
 
     @Autowired
-    private FollowUpMessageMapperImpl followUpMessageMapper;
+    private FollowUpMessageMapper followUpMessageMapper;
 
     @Override
     public int insert(FollowUpReadstatus record) {

@@ -58,7 +58,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
 
     @Override
     public List<FollowUpMessage> listAndCancelUnread(FollowUpMessageQuery followUpMessageQuery) {
-        //followUpReadStatusService.cancelUnread(followUpMessageQuery.getObjectId(),followUpMessageQuery.getObjectType(),followUpMessageQuery.getLiquidateStage());
+        followUpReadStatusService.cancelUnread(followUpMessageQuery.getObjectId(),followUpMessageQuery.getObjectType(),followUpMessageQuery.getLiquidateStage());
         return getlistWithUserAndTeam(followUpMessageQuery);
     }
 

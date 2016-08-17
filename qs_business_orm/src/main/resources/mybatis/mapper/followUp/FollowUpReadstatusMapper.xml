@@ -150,7 +150,7 @@
             WHERE object_id=#{objectId,jdbcType=INTEGER} and object_type=#{objectType,jdbcType=INTEGER} and moment=#{liquidateStage,jdbcType=INTEGER}
     </delete>
 
-    <select id="" resultType="java.util.Map">
+    <select id="getCountMap" resultType="java.util.Map">
       SELECT fur.moment,COUNT(*) count from t_follow_up_readstatus fur
         WHERE fur.object_id=#{objectId,jdbcType=INTEGER} and fur.object_type=#{objectType,jdbcType=INTEGER} and fur.user_id=#{userId,jdbcType=INTEGER}
         GROUP BY fur.moment
