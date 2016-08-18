@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * Created by Yvan on 16/7/11.
  */
@@ -51,6 +53,21 @@ public class IouController {
             return JsonResponseTool.paramErr("参数错误");
         }
         return iouService.add_tx(iouDTO);
+    }
+
+    /**
+     * @api {post} http://{url}/iou/add 新增借据
+     * @apiName add
+     * @apiGroup iou
+     * @apiUse Iou
+     */
+    @RequestMapping(value = "/listAdd", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse add(@ModelAttribute List<IouDTO> iouDTO) throws BusinessLogException{
+        if (CommonUtil.checkParam(iouDTO)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return iouService.listAdd(iouDTO);
     }
 
     /**

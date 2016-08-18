@@ -21,6 +21,7 @@ import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.IouService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.business.service.utils.asset.IouServiceUtils;
+import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
@@ -126,6 +127,20 @@ public class IouServiceImpl implements IouService {
         }else{
             return JsonResponseTool.failure("增加失败");
         }
+    }
+
+    @Override
+    public JsonResponse listAdd(List<IouDTO> iouDTOList) throws BusinessLogException {
+        if(CommonUtil.checkParam(iouDTOList) || iouDTOList.size() == 0){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        for (IouDTO iouDTO : iouDTOList) {
+            JsonResponse response = add_tx(iouDTO);
+            if(!response.getCode().equals(ResponseCodeEnum.SUCCESS.getValue())){
+                return JsonResponseTool.failure("新增失败");
+            }
+        }
+        return JsonResponseTool.success(null);
     }
 
     @Override

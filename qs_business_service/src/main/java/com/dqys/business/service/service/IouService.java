@@ -4,6 +4,8 @@ import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.core.model.JsonResponse;
 
+import java.util.List;
+
 /**
  * Created by Yvan on 16/7/12.
  */
@@ -24,6 +26,14 @@ public interface IouService {
      * @return
      */
     JsonResponse add_tx(IouDTO iouDTO) throws BusinessLogException;
+
+    /**
+     * 新增
+     *
+     * @param iouDTOList
+     * @return
+     */
+    JsonResponse listAdd(List<IouDTO> iouDTOList) throws BusinessLogException;
 
     /**
      * 修改
@@ -48,4 +58,6 @@ public interface IouService {
      * @return
      */
     JsonResponse listIouByLenderId(Integer id);
+
+
 }

@@ -1,6 +1,5 @@
 package com.dqys.business.service.service;
 
-import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.service.dto.asset.PawnDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.core.model.JsonResponse;
@@ -52,6 +51,14 @@ public interface PawnService {
      * @return
      */
     JsonResponse listPawnByLenderId(Integer lenderId);
+
+    /**
+     * 批量增加抵押物
+     *
+     * @param pawnDTOList
+     * @return
+     */
+    JsonResponse listAdd(List<PawnDTO> pawnDTOList) throws BusinessLogException;
 
 
 //

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * Created by Yvan on 16/7/12.
  */
@@ -29,7 +31,7 @@ public class PawnController {
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public JsonResponse delete(@RequestParam Integer id) throws BusinessLogException{
+    public JsonResponse delete(@RequestParam Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -50,6 +52,21 @@ public class PawnController {
             return JsonResponseTool.paramErr("参数错误");
         }
         return pawnService.add_tx(pawnDTO);
+    }
+
+    /**
+     * @api {post} http://{url}/pawn/listAdd 增加抵押物信息(多条)
+     * @apiName listAdd
+     * @apiGroup pawn
+     * @apiUse Pawn
+     */
+    @RequestMapping(value = "/listAdd", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse add(@ModelAttribute List<PawnDTO> pawnDTO) throws BusinessLogException {
+        if (CommonUtil.checkParam(pawnDTO) || pawnDTO.size() == 0) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return pawnService.listAdd(pawnDTO);
     }
 
     /**

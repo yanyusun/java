@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 public class PawnInterceptor extends AuthenticationInterceptor {
 
     public static final String API_ADD = "add";
+    public static final String API_LIST_ADD = "listAdd";
     public static final String API_DELETE = "delete";
     public static final String API_UPDATE = "update";
     public static final String API_GET = "get";
@@ -27,6 +28,8 @@ public class PawnInterceptor extends AuthenticationInterceptor {
             path = url.substring(url.lastIndexOf("/") + 1, url.length());
         }
         if(API_ADD.equals(path)){
+            return true;
+        }else if(API_LIST_ADD.equals(path)){
             return true;
         }else if(API_DELETE.equals(path)){
             return true;

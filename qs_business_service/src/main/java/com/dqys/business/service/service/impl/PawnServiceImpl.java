@@ -18,6 +18,7 @@ import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.PawnService;
 import com.dqys.business.service.utils.asset.PawnServiceUtils;
+import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
@@ -121,6 +122,20 @@ public class PawnServiceImpl implements PawnService {
         } else {
             return JsonResponseTool.failure("增加失败");
         }
+    }
+
+    @Override
+    public JsonResponse listAdd(List<PawnDTO> pawnDTOList) throws BusinessLogException {
+        if(CommonUtil.checkParam(pawnDTOList)){
+            return JsonResponseTool.failure("参数错误");
+        }
+        for (PawnDTO pawnDTO : pawnDTOList) {
+            JsonResponse response = add_tx(pawnDTO);
+            if(!response.getCode().equals(ResponseCodeEnum.SUCCESS.getValue())){
+                return JsonResponseTool.failure("添加失败");
+            }
+        }
+        return JsonResponseTool.success(null);
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.dqys.business.service.utils.asset;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.service.constant.asset.AssetTypeEnum;
+import com.dqys.business.service.constant.asset.ExcellentTypeEnum;
 import com.dqys.business.service.constant.asset.LenderTypeEnum;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.core.base.SysProperty;
@@ -199,7 +200,7 @@ public class  AssetServiceUtils {
         assetLenderDTO.setId(lenderInfo.getId());
         assetLenderDTO.setType(LenderTypeEnum.lender.getName());
         assetLenderDTO.setBorn(lenderInfo.getEntrustBornType() + "-" + lenderInfo.getEntrustBorn());
-        assetLenderDTO.setExcellent(LenderTypeEnum.getLenderTypeEnum(lenderInfo.getEvaluateExcellent()).getName());
+        assetLenderDTO.setExcellent(ExcellentTypeEnum.getExcellentTypeEnum(lenderInfo.getEvaluateExcellent()).getName());
         assetLenderDTO.setLevel(lenderInfo.getEvaluateLevel());
         assetLenderDTO.setDispose(lenderInfo.getDisposeMode());
         assetLenderDTO.setTag(lenderInfo.getTags());

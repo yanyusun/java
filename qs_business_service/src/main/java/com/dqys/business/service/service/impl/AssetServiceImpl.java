@@ -220,15 +220,14 @@ public class AssetServiceImpl implements AssetService {
         List<LenderInfo> lenderInfoList = lenderInfoMapper.listByAssetId(id);
         List<AssetLenderDTO> assetLenderDTOList = AssetServiceUtils.toAssetLenderDTO(lenderInfoList);
         if (assetLenderDTOList != null) {
-            Iterator<AssetLenderDTO> iterator = assetLenderDTOList.iterator();
-            while (iterator.hasNext()) {
-                iterator.next().setAssetName(assetInfo.getName()); // 设置资产包名称
+            for (int i = 0; i < assetLenderDTOList.size(); i++) {
+                assetLenderDTOList.get(i).setAssetName(assetInfo.getName());
                 ContactInfo contactInfo = contactInfoMapper.getByModel(
                         ObjectTypeEnum.LENDER.getValue().toString(),
                         ContactTypeEnum.LENDER.getValue(),
-                        iterator.next().getId());
+                        assetLenderDTOList.get(i).getId());
                 if (contactInfo != null) {
-                    iterator.next().setName(contactInfo.getName()); // 设置资产包名称
+                    assetLenderDTOList.get(i).setName(contactInfo.getName()); // 设置资产包名称
                 }
             }
         }
