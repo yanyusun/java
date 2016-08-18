@@ -1,13 +1,10 @@
 package com.dqys.business.controller;
 
-import com.dqys.business.orm.pojo.zcy.*;
+import com.dqys.business.orm.pojo.zcy.ZcyModule;
 import com.dqys.business.service.service.ZcyService;
-import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
-import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.JsonResponseTool;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,10 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -69,6 +63,8 @@ public class ZcyController {
 
     /**
      * @api {post} zcy/addEstates 添加资产信息
+     * @apiParam {ZcyEstatesAddress} zcyEstatesAddressList 资产信息房产地址集合
+     * @apiParam {ZcyEstatesFacility} zcyEstatesFacilities 标签集合
      * @apiUse ZcyEstates
      * @apiUse ZcyEstatesAddress
      * @apiUse ZcyEstatesFacility
@@ -86,6 +82,7 @@ public class ZcyController {
 
     /**
      * @api {post} zcy/addOwner 添加业主信息
+     * @apiParam {ZcyOwnerContacts} zcyOwnerContactses 业主信息联系方式集合
      * @apiUse ZcyOwner
      * @apiUse ZcyOwnerContacts
      * @apiSampleRequest zcy/addOwner
@@ -124,6 +121,8 @@ public class ZcyController {
 
     /**
      * @api {post} zcy/addMaintain 添加维护信息
+     * @apiParam {ZcyMaintainOther} zcyMaintainOthers 维护信息标签集合
+     * @apiParam {ZcyMaintainTax} zcyMaintainTaxes 维护信息税收集合
      * @apiUse ZcyMaintain
      * @apiUse ZcyMaintainOther
      * @apiUse ZcyMaintainTax

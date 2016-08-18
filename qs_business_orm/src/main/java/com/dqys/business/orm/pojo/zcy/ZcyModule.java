@@ -10,16 +10,16 @@ import java.util.List;
  */
 
 public class ZcyModule implements Serializable {
-    private ZcyEstates zcyEstates;
-    private List<ZcyEstatesAddress> zcyEstatesAddressList;
-    private List<ZcyEstatesFacility> zcyEstatesFacilities;
-    private ZcyOwner zcyOwner;
-    private List<ZcyOwnerContacts> zcyOwnerContactses;
-    private ZcyMaintain zcyMaintain;
-    private List<ZcyMaintainOther> zcyMaintainOthers;
-    private List<ZcyMaintainTax> zcyMaintainTaxes;
-    private ZcyKey zcyKey;
-    private ZcyExpress zcyExpress;
+    private ZcyEstates zcyEstates;//资产信息
+    private List<ZcyEstatesAddress> zcyEstatesAddressList;//资产信息房产地址集合
+    private List<ZcyEstatesFacility> zcyEstatesFacilities;//资产信息标签集合
+    private ZcyOwner zcyOwner;//业主信息
+    private List<ZcyOwnerContacts> zcyOwnerContactses;//业主信息联系方式
+    private ZcyMaintain zcyMaintain;//维护信息
+    private List<ZcyMaintainOther> zcyMaintainOthers;//维护信息标签集合
+    private List<ZcyMaintainTax> zcyMaintainTaxes;//维护信息税收集合
+    private ZcyKey zcyKey;//钥匙信息
+    private ZcyExpress zcyExpress;//速卖信息
 
     public ZcyEstates getZcyEstates() {
         return zcyEstates;
