@@ -52,38 +52,5 @@ public class ResourceController {
         };
     }
 
-    /**
-     * 多类型文件长传
-     * @param file 上传的文件
-     * @return
-     */
-    @RequestMapping(value = "/uploadSource", method = RequestMethod.POST)
-    public JsonResponse uploadSource(MultipartFile file) {
-        if(CommonUtil.checkParam(file)){
-            return JsonResponseTool.paramErr("参数错误");
-        }
-
-        Integer userId = UserSession.getCurrent().getUserId();
-        Integer status = UserSession.getCurrent().getStatus();
-        if(CommonUtil.checkParam(userId)){
-            return JsonResponseTool.failure("请先登录");
-        }
-        if(status <= 0){
-            return JsonResponseTool.failure("当前用户暂无上传权限");
-        }
-
-        String fileName = null;
-        try {
-            fileName = FileTool.saveFileTmp(userId, file);
-            if(fileName.startsWith("err:")) {
-                return JsonResponseTool.failure(fileName);
-            }
-        } catch (IOException e) {
-            return JsonResponseTool.serverErr();
-        }
-
-        return JsonResponseTool.success(fileName);
-    }
-
 
 }

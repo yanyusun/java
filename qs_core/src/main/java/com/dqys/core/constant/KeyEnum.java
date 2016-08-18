@@ -42,10 +42,10 @@ public class KeyEnum {
     public static final String API_AREA_LIST = "api_area_list";
 
     /* 文件上传格式限制配置 */
-    public static final String UPLOAD_PERMIT_IMG = "upload_permit_img"; // 图片格式
-    public static final String UPLOAD_PERMIT_OFFICE = "upload_permit_office"; // 办公文件
-    public static final String UPLOAD_PERMIT_AUDIO = "upload_permit_sound"; // 音频
-    public static final String UPLOAD_PERMIT_VIDEO = "upload_permit_video"; // 视频
+    public static final String UPLOAD_PERMIT_IMG = "2"; // 图片格式
+    public static final String UPLOAD_PERMIT_OFFICE = "3"; // 办公文件
+    public static final String UPLOAD_PERMIT_AUDIO = "4"; // 音频
+    public static final String UPLOAD_PERMIT_VIDEO = "5"; // 视频
 
 
     /* 创蓝短信账号配置key */

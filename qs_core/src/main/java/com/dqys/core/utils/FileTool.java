@@ -84,60 +84,6 @@ public class FileTool implements ApplicationContextAware {
     }
 
     /**
-     * 保存临时文件(新)
-     * @param userId 当前操作用户
-     * @param multipartFile
-     * @return 返回保存的文件名称
-     * @throws IOException
-     */
-    public static String saveFileTmp(Integer userId, MultipartFile multipartFile) throws IOException {
-        //验证允许上传的业务类型 或者 文件是否为空
-        if(null == multipartFile || multipartFile.isEmpty()) {
-            return "err:上传的文件为空";
-        }
-        // 验证上传限制
-        String fileName = multipartFile.getOriginalFilename();
-        String fileType = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-        if(fileType == null || fileType.length() == 0){
-            return "err:暂不支持该文件类型";
-        }
-        // 获取系统文件的配置
-        List<TSysProperty> propertyList = SysPropertyTool.getProperty(SysPropertyTypeEnum.FILE_BUSINESS_TYPE);
-        Iterator iterator = propertyList.iterator();
-        boolean flag = false;
-        while (iterator.hasNext()){
-            TSysProperty property = (TSysProperty) iterator.next();
-            if(property.getPropertyValue().indexOf(fileType) > 0){
-                flag = true;break;
-            }
-        }
-        if(!flag){
-            return "err:暂不支持该文件类型";
-        }
-        // 保存文件
-        long curTime = System.currentTimeMillis();
-        String saveName = "file_" + userId + "_" + curTime + "." + fileType; // 命名格式 tmp_1_123131132.file
-        String savePath = SysPropertyTool.getProperty(
-                SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue()
-                + "/temp/" + "file/" + userId + "/";
-        File dirTmp = new File(savePath);
-        if(!dirTmp.exists()) {
-            dirTmp.mkdirs();
-        }
-        File fileTmp = new File(savePath + saveName);
-        if(fileTmp.exists()) {
-            fileTmp.delete();
-        }
-        fileTmp.createNewFile();
-        FileUtils.copyInputStreamToFile(multipartFile.getInputStream(), fileTmp);
-        // 添加删除定时器
-        addDeleteScheduler(fileTmp, new Date(curTime + Long.decode(
-                SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_TMP_DEL_TIMER_KEY).getPropertyValue())
-                * 3600 * 1000));
-        return saveName;
-    }
-
-    /**
      * 保存文件(对外封闭)
      * @param fileName
      */
