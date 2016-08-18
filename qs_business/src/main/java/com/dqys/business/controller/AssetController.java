@@ -17,7 +17,6 @@ import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -149,12 +148,12 @@ public class AssetController {
      * @apiName excelIn
      * @apiGroup asset
      * @apiParam {number} id 公司ID
-     * @apiParam {file} file excel文件
+     * @apiParam {string} file excel文件
      */
     @RequestMapping(value = "/excelIn")
     @ResponseBody
     public JsonResponse addLenders(@RequestParam(required = true) Integer id,
-                                   @RequestParam(required = true) MultipartFile file) throws BusinessLogException {
+                                   @RequestParam(required = true) String file) throws BusinessLogException {
         if (CommonUtil.checkParam(id, file)) {
             return JsonResponseTool.paramErr("参数错误");
         }

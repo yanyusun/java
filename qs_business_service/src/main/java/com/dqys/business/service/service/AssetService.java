@@ -5,7 +5,6 @@ import com.dqys.business.service.dto.asset.*;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.core.model.JsonResponse;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -79,6 +78,7 @@ public interface AssetService {
 
     /**
      * 整合添加资产包借款人
+     *
      * @param id
      * @param contactDTOList
      * @param lenderDTO
@@ -96,6 +96,6 @@ public interface AssetService {
      * @param file
      * @return
      */
-    JsonResponse excelImport_tx(Integer id, MultipartFile file) throws BusinessLogException;
+    JsonResponse excelImport_tx(Integer id, String file) throws BusinessLogException;
 
 }

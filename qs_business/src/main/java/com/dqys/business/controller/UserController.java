@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,9 +32,11 @@ import java.util.Map;
 @RequestMapping(value = "/api/user")
 public class UserController {
 
-    @Autowired @Qualifier("b_loginService")
+    @Autowired
+    @Qualifier("b_loginService")
     private UserService userService;
-    @Autowired @Qualifier("b_companyService")
+    @Autowired
+    @Qualifier("b_companyService")
     private CompanyService companyService;
 
     /**
@@ -259,11 +260,11 @@ public class UserController {
      * @api {GET} http://{url}/api/user/userExcel 成员信息excel导入
      * @apiName userExcel
      * @apiGroup User
-     * @apiParam {file} file 上传的excel文件
+     * @apiParam {String} file 上传的excel文件
      */
     @RequestMapping(value = "/userExcel")
     @ResponseBody
-    public JsonResponse userExcel(@RequestParam MultipartFile file) {
+    public JsonResponse userExcel(@RequestParam String file) {
         if (CommonUtil.checkParam(file)) {
             return JsonResponseTool.paramErr("未上传文件");
         }

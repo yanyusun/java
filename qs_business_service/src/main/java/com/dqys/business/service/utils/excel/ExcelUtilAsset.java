@@ -24,13 +24,18 @@ public class ExcelUtilAsset {
     /**
      * 资产包表格文件的上传
      */
-    public static Map<String, Object> uploadExcel(MultipartFile file) {
+    public static Map<String, Object> uploadExcel(String fileName) {
         Map<String, Object> map = new HashMap<String, Object>();
-        String type = SysPropertyTypeEnum.FILE_BUSINESS_TYPE.getValue().toString();
-        Integer userId = 0;
+        String[] name = fileName.split("_");
+        if(name.length != 3){
+            map.put("result", "error");
+            map.put("data", "文件解析错误");
+            return map;
+        }
+        String type = name[0];
+        Integer userId = Integer.valueOf(name[1]);
         try {
-            // 临时保存上传文件
-            String fileName = FileTool.saveFileSyncTmp(type, userId, file);//上传保存文件
+            // 临时文件地址
             String path = SysPropertyTool.getProperty(
                     SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue()
                     + "/temp/" + type + "/" + userId + "/";

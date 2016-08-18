@@ -572,7 +572,7 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public JsonResponse excelImport_tx(Integer id, MultipartFile file) throws BusinessLogException {
+    public JsonResponse excelImport_tx(Integer id, String file) throws BusinessLogException {
         if (CommonUtil.checkParam(id, file)) {
             return JsonResponseTool.paramErr("参数错误");
         }

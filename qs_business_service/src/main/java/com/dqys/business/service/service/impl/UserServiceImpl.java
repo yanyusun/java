@@ -411,7 +411,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JsonResponse excelImport_tx(MultipartFile file) {
+    public JsonResponse excelImport_tx(String file) {
         if (CommonUtil.checkParam(file)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -490,7 +490,6 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 发送短信
-     * TODO 需要实现
      */
     private void sendMsg(String mobile, String msg) {
         if(!CommonUtil.checkParam(mobile, msg) && !msg.equals("") && FormatValidateTool.checkPhone(mobile)){
