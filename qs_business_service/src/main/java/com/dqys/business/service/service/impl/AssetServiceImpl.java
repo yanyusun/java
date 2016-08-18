@@ -473,7 +473,7 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public JsonResponse addLender_tx(Integer id, List<ContactDTO> contactDTOList, LenderDTO lenderDTO,
                                      List<PawnDTO> pawnDTOList, List<IouDTO> iouDTOList) throws BusinessLogException {
-        if (CommonUtil.checkParam(id, contactDTOList, lenderDTO, pawnDTOList, iouDTOList)) {
+        if (CommonUtil.checkParam(id, contactDTOList, lenderDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         // 借款人信息
@@ -485,6 +485,17 @@ public class AssetServiceImpl implements AssetService {
             return JsonResponseTool.failure("添加借款人失败");
         }
         Integer lenderId = lenderInfo.getId();
+
+        // 添加借款人的联系人信息
+        for (ContactDTO contactDTO : contactDTOList) {
+            contactDTO.setMode(ObjectTypeEnum.LENDER.getValue().toString());
+            contactDTO.setModeId(lenderId);
+            result = contactInfoMapper.insert(LenderServiceUtils.toContactInfo(contactDTO));
+            if (CommonUtil.checkResult(result)) {
+                // todo 联系人增加失败,请处理
+
+            }
+        }
 
         Map<Integer, String> pawnRelation = new HashMap<>();
         Map<Integer, String> iouRelation = new HashMap<>();

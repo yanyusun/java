@@ -32,10 +32,10 @@ public class ResourceController {
         Integer userId = UserSession.getCurrent().getUserId();
         Integer status = UserSession.getCurrent().getStatus();
         return () -> {
-//            //正常状态的用户才能上传
-//            if(status.intValue() <= 0) {
-//                return JsonResponseTool.authFailure("账户已禁用");
-//            }
+            //正常状态的用户才能上传
+            if(status.intValue() <= 0) {
+                return JsonResponseTool.authFailure("该账户暂无权限");
+            }
 
 
             String fileName = null;
@@ -52,25 +52,37 @@ public class ResourceController {
         };
     }
 
+    /**
+     * 多类型文件长传
+     * @param file 上传的文件
+     * @return
+     */
     @RequestMapping(value = "/uploadSource", method = RequestMethod.POST)
-    public Callable<JsonResponse<String>> uploadSource(@RequestParam  String type, MultipartFile file) {
-        if(CommonUtil.checkParam(type, file)){
-            return null;
+    public JsonResponse uploadSource(MultipartFile file) {
+        if(CommonUtil.checkParam(file)){
+            return JsonResponseTool.paramErr("参数错误");
         }
-        Integer userId = UserSession.getCurrent().getUserId();
-        return () -> {
-            String fileName = null;
-            try {
-                fileName = FileTool.saveFileSyncTmp(type, userId, file);
-                if(fileName.startsWith("err:")) {
-                    return JsonResponseTool.failure(fileName);
-                }
-            } catch (IOException e) {
-                return JsonResponseTool.serverErr();
-            }
 
-            return JsonResponseTool.success(fileName);
-        };
+        Integer userId = UserSession.getCurrent().getUserId();
+        Integer status = UserSession.getCurrent().getStatus();
+        if(CommonUtil.checkParam(userId)){
+            return JsonResponseTool.failure("请先登录");
+        }
+        if(status <= 0){
+            return JsonResponseTool.failure("当前用户暂无上传权限");
+        }
+
+        String fileName = null;
+        try {
+            fileName = FileTool.saveFileTmp(userId, file);
+            if(fileName.startsWith("err:")) {
+                return JsonResponseTool.failure(fileName);
+            }
+        } catch (IOException e) {
+            return JsonResponseTool.serverErr();
+        }
+
+        return JsonResponseTool.success(fileName);
     }
 
 
