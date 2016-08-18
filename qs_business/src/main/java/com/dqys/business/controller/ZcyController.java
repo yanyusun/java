@@ -2,10 +2,12 @@ package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.zcy.*;
 import com.dqys.business.service.service.ZcyService;
+import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.JsonResponseTool;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,10 +78,9 @@ public class ZcyController {
      */
     @RequestMapping("/addEstates")
     @ResponseBody
-    public JsonResponse addEstates(@ModelAttribute ZcyEstates zcyEstates, @ModelAttribute List<ZcyEstatesAddress> zcyEstatesAddressList,
-                                   @ModelAttribute List<ZcyEstatesFacility> zcyEstatesFacilities) {
+    public JsonResponse addEstates(@ModelAttribute ZcyModule zcyModule) {
         Map map = new HashMap<>();
-        map = zcyService.addEstates(zcyEstates, zcyEstatesAddressList, zcyEstatesFacilities);
+        map = zcyService.addEstates(zcyModule.getZcyEstates(), zcyModule.getZcyEstatesAddressList(), zcyModule.getZcyEstatesFacilities());
         return JsonResponseTool.success(map);
     }
 
@@ -91,12 +94,31 @@ public class ZcyController {
      */
     @RequestMapping("/addOwner")
     @ResponseBody
-    public JsonResponse addOwner(@ModelAttribute ZcyOwner zcyOwner, @ModelAttribute List<ZcyOwnerContacts> zcyOwnerContactses) {
+    public JsonResponse addOwner(@ModelAttribute ZcyModule zcyModule) {
         Map map = new HashMap<>();
-        if (CommonUtil.checkParam(zcyOwner.getEstatesId())) {
+        if (CommonUtil.checkParam(zcyModule.getZcyOwner().getEstatesId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        map = zcyService.addOwner(zcyOwner, zcyOwnerContactses);
+        /*
+        List<ZcyOwnerContacts> zcyOwnerContactses = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            List<Map<String, Object>> list = objectMapper.readValue(ownerContacts, List.class);
+            for (int i = 0; i < list.size(); i++) {
+                Map con = list.get(i);
+                ZcyOwnerContacts zcyOwnerContacts = new ZcyOwnerContacts();
+                zcyOwnerContacts.setName(MessageUtils.transMapToString(con, "name"));
+                zcyOwnerContacts.setEmail(MessageUtils.transMapToString(con, "email"));
+                zcyOwnerContacts.setPhone(MessageUtils.transMapToString(con, "phone"));
+                zcyOwnerContacts.setPhoneType(MessageUtils.transMapToString(con, "phoneType"));
+                zcyOwnerContacts.setSex(MessageUtils.transMapToString(con, "sex"));
+                zcyOwnerContacts.setType(MessageUtils.transMapToString(con, "type"));
+                zcyOwnerContactses.add(zcyOwnerContacts);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        map = zcyService.addOwner(zcyModule.getZcyOwner(), zcyModule.getZcyOwnerContactses());
         return JsonResponseTool.success(map);
     }
 
@@ -111,12 +133,12 @@ public class ZcyController {
      */
     @RequestMapping("/addMaintain")
     @ResponseBody
-    public JsonResponse addMaintain(@ModelAttribute ZcyMaintain zcyMaintain, @ModelAttribute List<ZcyMaintainOther> zcyMaintainOthers, @ModelAttribute List<ZcyMaintainTax> zcyMaintainTaxes) {
+    public JsonResponse addMaintain(@ModelAttribute ZcyModule zcyModule) {
         Map map = new HashMap<>();
-        if (CommonUtil.checkParam(zcyMaintain.getEstatesId())) {
+        if (CommonUtil.checkParam(zcyModule.getZcyMaintain().getEstatesId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        map = zcyService.addMaintain(zcyMaintain, zcyMaintainOthers, zcyMaintainTaxes);
+        map = zcyService.addMaintain(zcyModule.getZcyMaintain(), zcyModule.getZcyMaintainOthers(), zcyModule.getZcyMaintainTaxes());
         return JsonResponseTool.success(map);
     }
 
@@ -129,12 +151,12 @@ public class ZcyController {
      */
     @RequestMapping("/addKey")
     @ResponseBody
-    public JsonResponse addKey(@ModelAttribute ZcyKey zcyKey) {
+    public JsonResponse addKey(@ModelAttribute ZcyModule zcyModule) {
         Map map = new HashMap<>();
-        if (CommonUtil.checkParam(zcyKey.getEstatesId())) {
+        if (CommonUtil.checkParam(zcyModule.getZcyKey().getEstatesId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        map = zcyService.addKey(zcyKey);
+        map = zcyService.addKey(zcyModule.getZcyKey());
         return JsonResponseTool.success(map);
     }
 
@@ -147,12 +169,12 @@ public class ZcyController {
      */
     @RequestMapping("/addExpress")
     @ResponseBody
-    public JsonResponse addExpress(@ModelAttribute ZcyExpress zcyExpress) {
+    public JsonResponse addExpress(@ModelAttribute ZcyModule zcyModule) {
         Map map = new HashMap<>();
-        if (CommonUtil.checkParam(zcyExpress.getEstatesId())) {
+        if (CommonUtil.checkParam(zcyModule.getZcyExpress().getEstatesId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        map = zcyService.addExpress(zcyExpress);
+        map = zcyService.addExpress(zcyModule.getZcyExpress());
         return JsonResponseTool.success(map);
     }
 
