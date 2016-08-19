@@ -84,7 +84,7 @@ public class FileTool implements ApplicationContextAware {
     }
 
     /**
-     * 保存文件(对外封闭)
+     * 保存文件
      * @param fileName
      */
     public static boolean saveFileSync(String fileName) throws IOException {
@@ -110,7 +110,7 @@ public class FileTool implements ApplicationContextAware {
      * @return
      * @throws IOException
      */
-    public static boolean saveOpenSource(String fileName) throws IOException{
+    /*public static boolean saveOpenSource(String fileName) throws IOException{
         String[] strs = fileName.split("_");
         if(strs.length != 3) {
             return false;
@@ -125,7 +125,7 @@ public class FileTool implements ApplicationContextAware {
         FileUtils.moveFile(srcFile, destFile);
 
         return true;
-    }
+    }*/
 
     /**
      * 文件定时删除
@@ -137,5 +137,30 @@ public class FileTool implements ApplicationContextAware {
             file.delete();
         }, date);
     }
-
+    /**
+     *
+     * @param fileName 文件名
+     * @param isTmpFile 是否是临时文件
+     * @return 上传的文件
+     */
+    public static File getFile(String fileName,Boolean isTmpFile) {
+        String[] strs = fileName.split("_");
+        File file = null;
+        if (strs.length != 3) {//返回图片未找到文件
+            file= new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS,
+                    KeyEnum.SYS_FILE_PIC_NOTFIND_PATH).getPropertyValue());
+        }
+        if(isTmpFile){//返回临时文件
+            file = new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/"
+                    + strs[0] + "/" + strs[1] + "/" + fileName);
+        }else{//返回被长时间保存的文件
+            file=new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_OPEN_PATH_KEY).getPropertyValue() + "/" +
+                    strs[0] + "/" + strs[1] + "/" + fileName);
+        }
+        if (!file.exists()) {//返回图片未找到文件
+            file= new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS,
+                    KeyEnum.SYS_FILE_PIC_NOTFIND_PATH).getPropertyValue());
+        }
+        return file;
+    }
 }
