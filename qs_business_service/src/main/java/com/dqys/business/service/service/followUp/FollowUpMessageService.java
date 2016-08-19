@@ -10,6 +10,11 @@ import java.util.List;
  * Created by yan on 16-8-11.
  */
 public interface FollowUpMessageService {
+    /**
+     * 增加跟进信息并且增加跟进次数
+     * @param followUpMessage
+     * @return
+     */
     int insert(FollowUpMessage followUpMessage);
 
     /**
