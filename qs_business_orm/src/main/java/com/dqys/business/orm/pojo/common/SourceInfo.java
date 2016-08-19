@@ -6,20 +6,11 @@ import java.io.Serializable;
 
 public class SourceInfo extends BaseModel implements Serializable {
 
-    private Integer sourceType; // 资源类型
     private Integer navId; // 资源分类ID
     private String code; // 资源编号
     private Integer lenderId; // 借款人
     private Integer show; // 展示在外网(1)
     private Integer watermark; // 水印(1)
-
-    public Integer getSourceType() {
-        return sourceType;
-    }
-
-    public void setSourceType(Integer sourceType) {
-        this.sourceType = sourceType;
-    }
 
     public Integer getNavId() {
         return navId;

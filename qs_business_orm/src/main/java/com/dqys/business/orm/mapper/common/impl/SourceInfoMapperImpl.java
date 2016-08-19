@@ -3,6 +3,7 @@ package com.dqys.business.orm.mapper.common.impl;
 import com.dqys.business.orm.mapper.common.SourceInfoMapper;
 import com.dqys.business.orm.pojo.common.SourceInfo;
 import com.dqys.core.base.BaseDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -31,5 +32,10 @@ public class SourceInfoMapperImpl extends BaseDao implements SourceInfoMapper {
     @Override
     public Integer update(SourceInfo record) {
         return super.getSqlSession().getMapper(SourceInfoMapper.class).update(record);
+    }
+
+    @Override
+    public SourceInfo getByNavIdAndLenderId(@Param("navId") Integer navId, @Param("lenderId") Integer lenderId) {
+        return super.getSqlSession().getMapper(SourceInfoMapper.class).getByNavIdAndLenderId(navId, lenderId);
     }
 }

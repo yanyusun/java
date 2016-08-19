@@ -505,6 +505,7 @@ public class AssetServiceImpl implements AssetService {
         for (PawnDTO pawnDTO : pawnDTOList) {
             pawnDTO.setLenderId(lenderId);
             PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
+            pawnInfo.setPawnNo(PawnServiceUtils.createPawnCode());
             result = pawnInfoMapper.insert(pawnInfo);
             if (CommonUtil.checkResult(result)) {
                 // 添加失败
@@ -517,6 +518,7 @@ public class AssetServiceImpl implements AssetService {
         for (IouDTO iouDTO : iouDTOList) {
             iouDTO.setLenderId(lenderId);
             IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
+            iouInfo.setIouNo(IouServiceUtils.createIouCode());
             result = iouInfoMapper.insert(iouInfo);
             if (CommonUtil.checkResult(result)) {
                 // 添加失败

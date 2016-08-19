@@ -18,7 +18,6 @@ public class SourceInfoMapperImplTest extends BaseTest {
     @Test
     public void test(){
         SourceInfo sourceInfo = new SourceInfo();
-        sourceInfo.setSourceType(1);
         sourceInfo.setNavId(1);
         sourceInfo.setCode("code" + 1);
         sourceInfo.setLenderId(1);
