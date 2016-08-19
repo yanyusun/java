@@ -1,6 +1,7 @@
 package com.dqys.business.orm.mapper.common;
 
 import com.dqys.business.orm.pojo.common.SourceInfo;
+import org.apache.ibatis.annotations.Param;
 
 public interface SourceInfoMapper {
 
@@ -35,5 +36,13 @@ public interface SourceInfoMapper {
      * @return
      */
     Integer update(SourceInfo record);
+
+    /**
+     * 根据借款人ID查询当前分类的资源数据
+     * @param navId
+     * @param lenderId
+     * @return
+     */
+    SourceInfo getByNavIdAndLenderId(@Param("navId")Integer navId, @Param("lenderId")Integer lenderId);
 
 }

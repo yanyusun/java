@@ -9,7 +9,6 @@
     <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
     <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="source_type" property="sourceType" jdbcType="INTEGER" />
     <result column="nav_id" property="navId" jdbcType="INTEGER" />
     <result column="code" property="code" jdbcType="VARCHAR" />
     <result column="lender_id" property="lenderId" jdbcType="INTEGER" />
@@ -18,7 +17,7 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, version, create_at, update_at, stateflag, remark, source_type, nav_id, code,
+    id, version, create_at, update_at, stateflag, remark, nav_id, code,
     lender_id, isshow, watermark
   </sql>
 
@@ -40,9 +39,6 @@
       <if test="remark != null" >
         remark,
       </if>
-      <if test="sourceType != null" >
-        source_type,
-      </if>
       <if test="navId != null" >
         nav_id,
       </if>
@@ -62,9 +58,6 @@
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="sourceType != null" >
-        #{sourceType,jdbcType=INTEGER},
       </if>
       <if test="navId != null" >
         #{navId,jdbcType=INTEGER},
@@ -90,9 +83,6 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="sourceType != null" >
-        source_type = #{sourceType,jdbcType=INTEGER},
-      </if>
       <if test="navId != null" >
         nav_id = #{navId,jdbcType=INTEGER},
       </if>
@@ -111,5 +101,13 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <select id="getByNavIdAndLenderId" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    from bt_source_info
+    WHERE
+    stateflag = 0 AND lender_id = #{lenderId,jdbcType=INTEGER} AND nav_id = #{navId,jdbcType=INTEGER}
+  </select>
 
 </mapper>

@@ -233,6 +233,7 @@ public class LenderServiceUtils {
     public static ContactDTO toContactDTO(ContactInfo contactInfo) {
         ContactDTO contactDTO = new ContactDTO();
 
+        contactDTO.setId(contactInfo.getId());
         contactDTO.setMode(contactInfo.getMode());
         contactDTO.setModeId(contactInfo.getModeId());
         contactDTO.setName(contactInfo.getName());
