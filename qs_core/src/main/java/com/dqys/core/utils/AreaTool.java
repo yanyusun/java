@@ -75,6 +75,20 @@ public class AreaTool implements ApplicationContextAware {
      */
     public static String validateArea(Integer province, Integer city, Integer area) {
 
+        if(null == NoSQLWithRedisTool.getHashObject(TArea.class.getName(), province)) {
+            return "省份无效";
+        }
+        if(null == NoSQLWithRedisTool.getHashObject(TArea.class.getName(), city) || !String.valueOf(city).startsWith(String.valueOf(province))) {
+            return "地市无效";
+        }
+        if(null == NoSQLWithRedisTool.getHashObject(TArea.class.getName(), area) || !String.valueOf(area).startsWith(String.valueOf(city))) {
+            return "区县无效";
+        }
+
+        return null;
+    }
+   /* public static String validateArea(Integer province, Integer city, Integer area) {
+
         if(null == NoSQLWithRedisTool.getHashObject(TArea.class.getName(), String.valueOf(province))) {
             return "省份无效";
         }
@@ -86,7 +100,7 @@ public class AreaTool implements ApplicationContextAware {
         }
 
         return null;
-    }
+    }*/
 
     /**
      * 根据ID获取区域
