@@ -1,6 +1,7 @@
 package com.dqys.business.controller;
 
 import com.dqys.business.service.dto.cases.CaseDTO;
+import com.dqys.business.service.dto.cases.CaseDTOList;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.cases.CaseService;
 import com.dqys.core.model.JsonResponse;
@@ -47,6 +48,30 @@ public class CaseController {
             return JsonResponseTool.success(result);
         }
     }
+
+
+    /**
+     * @api {post} http://{url}/case/listAdd 批量创建案件信息
+     * @apiName listAdd
+     * @apiGroup case
+     * @apiParam {objectList} caseDTOList 参考创建案件信息
+     */
+    @RequestMapping(value = "/listAdd",method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse listAdd(@ModelAttribute CaseDTOList caseDTOList) throws BusinessLogException {
+        if (CommonUtil.checkParam(caseDTOList, caseDTOList.getCaseDTOListList())) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        Integer result = caseService.listAdd(caseDTOList);
+        if (CommonUtil.checkResult(result)) {
+            return JsonResponseTool.failure("增加失败");
+        } else {
+            return JsonResponseTool.success(null);
+        }
+    }
+
+
+
 
     /**
      * @api {post} http://{url}/case/update 修改案件信息

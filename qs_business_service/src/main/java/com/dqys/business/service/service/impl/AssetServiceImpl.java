@@ -19,6 +19,9 @@ import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
+import com.dqys.business.service.constant.ObjectEnum.IouEnum;
+import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
+import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.dto.asset.*;
@@ -92,11 +95,11 @@ public class AssetServiceImpl implements AssetService {
             // 增加业务数据
             Integer serviceObjectId = businessService.addServiceObject(ObjectTypeEnum.ASSETPACKAGE.getValue(), id, null, null);
             if (CommonUtil.checkResult(serviceObjectId)) {
-                // 增加业务数据失败,记录
+                // todo 增加业务数据失败,记录
 
             }
             // 增加操作记录
-            businessLogService.add(id, ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.add.getValue(),
+            businessLogService.add(id, ObjectTypeEnum.ASSETPACKAGE.getValue(), ObjectLogEnum.add.getValue(),
                     "", assetDTO.getMemo(), 0, 0);
             return JsonResponseTool.success(id);
         } else {
@@ -495,6 +498,12 @@ public class AssetServiceImpl implements AssetService {
 
             }
         }
+        // 添加业务
+        businessService.addServiceObject(ObjectTypeEnum.LENDER.getValue(), lenderId,
+                ObjectTypeEnum.ASSETPACKAGE.getValue(), lenderDTO.getAssetId());
+        // 添加历史记录
+        businessLogService.add(lenderId, ObjectTypeEnum.LENDER.getValue(), ObjectLogEnum.add.getValue(),
+                "", "", 0, 0);
 
         Map<Integer, String> pawnRelation = new HashMap<>();
         Map<Integer, String> iouRelation = new HashMap<>();
@@ -511,6 +520,11 @@ public class AssetServiceImpl implements AssetService {
                 // 添加失败
                 return JsonResponseTool.failure("添加抵押物失败");
             }
+            businessService.addServiceObject(ObjectTypeEnum.PAWN.getValue(), pawnInfo.getId(),
+                    ObjectTypeEnum.LENDER.getValue(), pawnDTO.getLenderId());
+            // 增加操作记录
+            businessLogService.add(pawnInfo.getId(), ObjectTypeEnum.PAWN.getValue(), ObjectLogEnum.add.getValue(),
+                    "", pawnDTO.getMemo(), 0, 0);
             pawnRelation.put(pawnInfo.getId(), pawnDTO.getIouNames());
             pawnIdMap.put(pawnDTO.getPawnName(), pawnInfo.getId());
         }
@@ -524,6 +538,12 @@ public class AssetServiceImpl implements AssetService {
                 // 添加失败
                 return JsonResponseTool.failure("添加借据失败");
             }
+            // 添加业务
+            businessService.addServiceObject(ObjectTypeEnum.IOU.getValue(), iouInfo.getId(),
+                    ObjectTypeEnum.LENDER.getValue(), iouDTO.getLenderId());
+            // 添加操作记录
+            businessLogService.add(iouInfo.getId(), ObjectTypeEnum.IOU.getValue(), ObjectLogEnum.add.getValue(),
+                    "", iouDTO.getMemo(), 0, 0);
             iouRelation.put(iouInfo.getId(), iouDTO.getPawnNames());
             iouIdMap.put(iouDTO.getIouName(), iouInfo.getId());
         }
@@ -597,6 +617,12 @@ public class AssetServiceImpl implements AssetService {
             if (CommonUtil.checkResult(result)) {
                 return JsonResponseTool.failure("增加借款人基础信息失败");
             }
+            // 添加业务
+            businessService.addServiceObject(ObjectTypeEnum.LENDER.getValue(), lenderInfo.getId(),
+                    ObjectTypeEnum.ASSETPACKAGE.getValue(), lenderDTO.getAssetId());
+            // 添加历史记录
+            businessLogService.add(lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue(), ObjectLogEnum.add.getValue(),
+                    "", "", 0, 0);
             idMap.put(lenderDTO.getId(), lenderInfo.getId());
         }
         // 增加借款人的相关联系人
@@ -623,6 +649,11 @@ public class AssetServiceImpl implements AssetService {
             if (CommonUtil.checkResult(result)) {
                 return JsonResponseTool.failure("增加抵押物信息失败");
             }
+            businessService.addServiceObject(ObjectTypeEnum.PAWN.getValue(), pawnInfo.getId(),
+                    ObjectTypeEnum.LENDER.getValue(), pawnDTO.getLenderId());
+            // 增加操作记录
+            businessLogService.add(pawnInfo.getId(), ObjectTypeEnum.PAWN.getValue(), ObjectLogEnum.add.getValue(),
+                    "", pawnDTO.getMemo(), 0, 0);
         }
         // 增加借据
         for (IouDTO iouDTO : iouDTOList) {
@@ -635,6 +666,12 @@ public class AssetServiceImpl implements AssetService {
             if (CommonUtil.checkResult(result)) {
                 return JsonResponseTool.failure("增加借据信息失败");
             }
+            // 添加业务
+            businessService.addServiceObject(ObjectTypeEnum.IOU.getValue(), iouInfo.getId(),
+                    ObjectTypeEnum.LENDER.getValue(), iouDTO.getLenderId());
+            // 添加操作记录
+            businessLogService.add(iouInfo.getId(), ObjectTypeEnum.IOU.getValue(), ObjectLogEnum.add.getValue(),
+                    "", iouDTO.getMemo(), 0, 0);
         }
         return JsonResponseTool.success(null);
     }

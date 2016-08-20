@@ -1,19 +1,15 @@
 package com.dqys.business.controller;
 
-import com.dqys.business.orm.pojo.asset.ContactInfo;
-import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.service.dto.asset.IouDTO;
+import com.dqys.business.service.dto.asset.IouDTOList;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.IouService;
-import com.dqys.business.service.service.LenderService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Created by Yvan on 16/7/11.
@@ -33,7 +29,7 @@ public class IouController {
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public JsonResponse delete(@RequestParam Integer id) throws BusinessLogException{
+    public JsonResponse delete(@RequestParam Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -48,7 +44,7 @@ public class IouController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse add(@ModelAttribute IouDTO iouDTO) throws BusinessLogException{
+    public JsonResponse add(@ModelAttribute IouDTO iouDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(iouDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -56,18 +52,18 @@ public class IouController {
     }
 
     /**
-     * @api {post} http://{url}/iou/add 新增借据
-     * @apiName add
+     * @api {post} http://{url}/iou/listAdd 新增借据
+     * @apiName listAdd
      * @apiGroup iou
-     * @apiUse Iou
+     * @apiParam {objectData} iouDTOList 参考新增借据
      */
     @RequestMapping(value = "/listAdd", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse add(@ModelAttribute List<IouDTO> iouDTO) throws BusinessLogException{
-        if (CommonUtil.checkParam(iouDTO)) {
+    public JsonResponse add(@ModelAttribute IouDTOList iouDTOList) throws BusinessLogException {
+        if (CommonUtil.checkParam(iouDTOList, iouDTOList.getIouDTOList()) || iouDTOList.getIouDTOList().size() == 0) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return iouService.listAdd(iouDTO);
+        return iouService.listAdd(iouDTOList.getIouDTOList());
     }
 
     /**
@@ -79,7 +75,7 @@ public class IouController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse update(@ModelAttribute IouDTO iouDTO) throws BusinessLogException{
+    public JsonResponse update(@ModelAttribute IouDTO iouDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(iouDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }

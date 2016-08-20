@@ -26,6 +26,7 @@ import com.dqys.business.orm.query.asset.*;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.orm.query.coordinator.UserTeamQuery;
 import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
+import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.dto.asset.ContactDTO;
@@ -328,7 +329,7 @@ public class LenderServiceImpl implements LenderService {
                     ObjectTypeEnum.ASSETPACKAGE.getValue(), lenderDTO.getAssetId());
         }
         // 添加历史记录
-        businessLogService.add(lenderId, ObjectTypeEnum.LENDER.getValue(), LenderEnum.ADD.getValue(),
+        businessLogService.add(lenderId, ObjectTypeEnum.LENDER.getValue(), ObjectLogEnum.add.getValue(),
                 "", "", 0, 0);
         return JsonResponseTool.success(lenderId);
     }

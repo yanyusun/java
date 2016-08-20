@@ -13,6 +13,7 @@ import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.dto.cases.CaseCourtDTO;
 import com.dqys.business.service.dto.cases.CaseDTO;
+import com.dqys.business.service.dto.cases.CaseDTOList;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.BusinessService;
@@ -117,6 +118,21 @@ public class CaseServiceImpl implements CaseService {
         // 增加操作记录
         businessLogService.add(caseId, ObjectTypeEnum.CASE.getValue(), ObjectLogEnum.add.getValue(), "", "", 0, 0);
         return caseId;
+    }
+
+    @Override
+    public Integer listAdd(CaseDTOList caseDTOList) throws BusinessLogException  {
+        if(CommonUtil.checkParam(caseDTOList, caseDTOList.getCaseDTOListList())
+                || caseDTOList.getCaseDTOListList().size() == 0){
+            return null;
+        }
+        for (CaseDTO caseDTO : caseDTOList.getCaseDTOListList()) {
+            Integer add = add_tx(caseDTO);
+            if(add == null){
+                return null;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -228,7 +244,7 @@ public class CaseServiceImpl implements CaseService {
         }else{
             index = index - 1;
         }
-        CaseInfo caseInfo = caseInfoMapper.getByLender(id,index);
+        CaseInfo caseInfo = caseInfoMapper.getByLender(id, index);
         if(caseInfo == null){
             return null;
         }
