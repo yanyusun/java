@@ -6,6 +6,8 @@ import com.dqys.core.base.BaseDao;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by Yvan on 16/7/29.
  */
@@ -31,5 +33,10 @@ public class SourceSourceMapperImpl extends BaseDao implements SourceSourceMappe
     @Override
     public Integer update(SourceSource record) {
         return super.getSqlSession().getMapper(SourceSourceMapper.class).update(record);
+    }
+
+    @Override
+    public List<SourceSource> listBySourceId(Integer id) {
+        return super.getSqlSession().getMapper(SourceSourceMapper.class).listBySourceId(id);
     }
 }

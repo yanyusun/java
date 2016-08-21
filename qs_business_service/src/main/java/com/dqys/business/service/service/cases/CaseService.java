@@ -1,6 +1,7 @@
 package com.dqys.business.service.service.cases;
 
 import com.dqys.business.service.dto.cases.CaseDTO;
+import com.dqys.business.service.dto.cases.CaseDTOList;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
@@ -72,5 +73,12 @@ public interface CaseService {
      * @return
      */
     CaseDTO getByCase(@Param("id")Integer id, @Param("index")Integer index);
+
+    /**
+     * 批量增加案件信息
+     * @param caseDTOList
+     * @return
+     */
+    Integer listAdd(CaseDTOList caseDTOList) throws BusinessLogException;
 
 }

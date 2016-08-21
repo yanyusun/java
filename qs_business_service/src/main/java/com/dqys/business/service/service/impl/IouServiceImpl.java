@@ -14,6 +14,7 @@ import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.query.asset.IOUQuery;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.IouEnum;
+import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
@@ -121,7 +122,7 @@ public class IouServiceImpl implements IouService {
             businessService.addServiceObject(ObjectTypeEnum.IOU.getValue(), iouId,
                     ObjectTypeEnum.LENDER.getValue(), iouDTO.getLenderId());
             // 添加操作记录
-            businessLogService.add(iouId, ObjectTypeEnum.IOU.getValue(), IouEnum.ADD.getValue(),
+            businessLogService.add(iouId, ObjectTypeEnum.IOU.getValue(), ObjectLogEnum.add.getValue(),
                     "", iouDTO.getMemo(), 0, 0);
             return JsonResponseTool.success(iouId);
         }else{

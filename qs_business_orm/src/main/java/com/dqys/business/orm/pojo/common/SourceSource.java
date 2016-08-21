@@ -10,6 +10,15 @@ public class SourceSource implements Serializable {
     private String name; // 资源名称
     private String fileType; // 资源类型(png,jpeg,mp3等等)
     private String memo; // 资源介绍等
+    private Long stateflag; // 数据状态
+
+    public Long getStateflag() {
+        return stateflag;
+    }
+
+    public void setStateflag(Long stateflag) {
+        this.stateflag = stateflag;
+    }
 
     public Integer getId() {
         return id;

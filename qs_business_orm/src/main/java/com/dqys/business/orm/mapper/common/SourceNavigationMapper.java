@@ -1,6 +1,9 @@
 package com.dqys.business.orm.mapper.common;
 
 import com.dqys.business.orm.pojo.common.SourceNavigation;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface SourceNavigationMapper {
     /**
@@ -34,5 +37,12 @@ public interface SourceNavigationMapper {
      * @return
      */
     Integer update(SourceNavigation record);
+
+    /**
+     * 获取借款人的可视化资料实勘分类列表
+     * @return
+     */
+    List<SourceNavigation> listByTypeAndLenderId(@Param("lenderId") Integer lenderId, @Param("type")Integer type);
+
 
 }

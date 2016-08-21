@@ -2,6 +2,8 @@ package com.dqys.business.orm.mapper.common;
 
 import com.dqys.business.orm.pojo.common.SourceSource;
 
+import java.util.List;
+
 public interface SourceSourceMapper {
 
     /**
@@ -35,5 +37,12 @@ public interface SourceSourceMapper {
      * @return
      */
     Integer update(SourceSource record);
+
+    /**
+     * 根据资源信息获取文件信息
+     * @param id
+     * @return
+     */
+    List<SourceSource> listBySourceId(Integer id);
 
 }

@@ -1,6 +1,7 @@
 package com.dqys.business.controller;
 
 import com.dqys.business.service.dto.asset.PawnDTO;
+import com.dqys.business.service.dto.asset.PawnDTOList;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.PawnService;
 import com.dqys.core.model.JsonResponse;
@@ -58,15 +59,15 @@ public class PawnController {
      * @api {post} http://{url}/pawn/listAdd 增加抵押物信息(多条)
      * @apiName listAdd
      * @apiGroup pawn
-     * @apiUse Pawn
+     * @apiParam {objectList} pawnDTOList 参考增加抵押物信息
      */
     @RequestMapping(value = "/listAdd", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse add(@ModelAttribute List<PawnDTO> pawnDTO) throws BusinessLogException {
-        if (CommonUtil.checkParam(pawnDTO) || pawnDTO.size() == 0) {
+    public JsonResponse add(@ModelAttribute PawnDTOList pawnDTOList) throws BusinessLogException {
+        if (CommonUtil.checkParam(pawnDTOList, pawnDTOList.getPawnDTOList()) || pawnDTOList.getPawnDTOList().size() == 0) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return pawnService.listAdd(pawnDTO);
+        return pawnService.listAdd(pawnDTOList.getPawnDTOList());
     }
 
     /**
