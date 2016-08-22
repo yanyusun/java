@@ -52,4 +52,13 @@ public interface TeammateReMapper {
      */
     List<Integer> listObjectIdByJoinType(@Param("type")Integer type, @Param("userId")Integer userId,
                                      @Param("joinType")Integer joinType);
+
+    /**
+     *
+     * @param objectType
+     * @param userId
+     * @param objectId
+     * @return
+     */
+    TeammateRe selectByObjectAndUser(@Param("objectType")Integer objectType, @Param("objectId")Integer objectId,@Param("userId")Integer userId);
 }

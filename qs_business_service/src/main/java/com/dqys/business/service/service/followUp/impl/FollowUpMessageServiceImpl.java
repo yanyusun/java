@@ -1,12 +1,19 @@
 package com.dqys.business.service.service.followUp.impl;
 
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.constant.coordinator.OURelationEnum;
+import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
+import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
+import com.dqys.business.orm.mapper.coordinator.OURelationMapper;
+import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
+import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.coordinator.OURelation;
+import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
-import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
 import com.dqys.core.model.UserSession;
@@ -15,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,10 +40,29 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
     @Autowired
     private LenderInfoMapper lenderInfoMapper;
 
+    @Autowired
+    private TeammateReMapper teammateReMapper;
+
+    @Autowired
+    private OURelationMapper ouRelationMapper;
+
+    @Autowired
+    private AssetInfoMapper assetInfoMapper;
+
     @Override
     public int insert(FollowUpMessage followUpMessage) {
+        Date curDate=new Date();
         UserSession userSession = UserSession.getCurrent();
         followUpMessage.setUserId(userSession.getUserId());
+        OURelation ouRelation =new OURelation();
+        ouRelation.setUserId(userSession.getUserId());
+        ouRelation.setObjectType(followUpMessage.getObjectType());
+        ouRelation.setObjectId(followUpMessage.getObjectId());
+        ouRelationMapper.selectBySelective(ouRelation);
+        if(ouRelation.getStatus()!= OURelationEnum.STATUS_FOLLOW.getValue()){//如果未跟进修改为已跟进
+            ouRelation.setStatus(OURelationEnum.STATUS_FOLLOW.getValue());
+            ouRelationMapper.updateByPrimaryKey(ouRelation);
+        }
         int teamId = 0;
         Integer teamid = followUpMessageMapper.getTeamId(followUpMessage.getObjectId(), followUpMessage.getObjectType(), followUpMessage.getUserId());
         if (teamid != null) {
@@ -45,10 +72,40 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
         int re = followUpMessageMapper.insert(followUpMessage);
         if(followUpMessage.getObjectType()== ObjectTypeEnum.LENDER.getValue()){//如果一级跟进对象是借款人, 增加跟进次数
             LenderInfo lenderInfo=lenderInfoMapper.get(followUpMessage.getObjectId());
-            // TODO: 16-8-19 是否是借款人的所诉人
-            //// TODO: 16-8-19  增加借款的催收次数与资产包的跟进次数
-            if(null==lenderInfo.getAssetId()||0==lenderInfo.getAssetId()){//没有资产包的借款人只增加借款人跟进次数
-                //// TODO: 16-8-19 查询是否是资产包的所属人
+            /* 增加借款人跟进次数 */
+            lenderInfo.setFollowUpDate(curDate);
+            int followtime=1;
+            if(lenderInfo.getFollowUpTime()!=null){
+                followtime=lenderInfo.getFollowUpTime()+1;
+            }
+            lenderInfo.setFollowUpTime(followtime);
+            TeammateRe teammateRe=teammateReMapper.selectByObjectAndUser(ObjectTypeEnum.LENDER.getValue(),followUpMessage.getObjectId(),userSession.getUserId());
+            if(teammateRe!=null&&teammateRe.getType()== TeammateReEnum.TYPE_AUXILIARY.getValue()){//如果是所属人增加所属人跟进次数
+                lenderInfo.setBelongFollowTime(curDate);
+                int belongFollowUpTime=1;
+                if(lenderInfo.getBelongFollowTimes()!=null&&lenderInfo.getBelongFollowTimes()!=0){
+                    belongFollowUpTime=lenderInfo.getBelongFollowTimes()+1;
+                }
+                lenderInfo.setBelongFollowTimes(belongFollowUpTime);
+            }
+            lenderInfoMapper.update(lenderInfo);
+            if(null!=lenderInfo.getAssetId()&&0!=lenderInfo.getAssetId()){//如果有关联的资产包
+                AssetInfo assetInfo=assetInfoMapper.get(lenderInfo.getAssetId());
+                assetInfo.setFollowUpTime(curDate);
+                int afollowtime=1;
+                if(assetInfo.getFollowUpTimes()!=null){
+                    afollowtime=assetInfo.getFollowUpTimes()+1;
+                }
+                assetInfo.setFollowUpTimes(afollowtime);
+                TeammateRe aTeammateRe=teammateReMapper.selectByObjectAndUser(ObjectTypeEnum.ASSETPACKAGE.getValue(),followUpMessage.getObjectId(),userSession.getUserId());
+                if(aTeammateRe!=null&teammateRe.getType()==TeammateReEnum.TYPE_AUXILIARY.getValue()){//如果是所属人增加所属人跟进次数
+                    assetInfo.setBelongUpTime(curDate);
+                    int aBelongFollowUpTime=1;
+                    if(assetInfo.getBelongUpTimes()!=null&&lenderInfo.getBelongFollowTimes()!=0){
+                        aBelongFollowUpTime=lenderInfo.getBelongFollowTimes()+1;
+                    }
+                    assetInfo.setFollowUpTimes(aBelongFollowUpTime);
+                }
             }
         }
         //向mq中增加未读信息
