@@ -113,6 +113,36 @@ public class ZcyEstates implements Serializable {
 
     private String content;//内容
 
+    private String operator;//录入人员
+
+    private Integer objecId;//对象id
+
+    private Integer objectType;//对象类型
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    public Integer getObjecId() {
+        return objecId;
+    }
+
+    public void setObjecId(Integer objecId) {
+        this.objecId = objecId;
+    }
+
+    public Integer getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(Integer objectType) {
+        this.objectType = objectType;
+    }
+
     public Integer getId() {
         return id;
     }

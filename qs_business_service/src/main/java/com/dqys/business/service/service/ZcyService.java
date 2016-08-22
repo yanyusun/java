@@ -1,6 +1,7 @@
 package com.dqys.business.service.service;
 
 import com.dqys.business.orm.pojo.zcy.*;
+import com.dqys.business.orm.query.coordinator.ZcyListQuery;
 
 import java.util.List;
 import java.util.Map;
@@ -90,6 +91,9 @@ public interface ZcyService {
      * @return
      */
     Map addExpress(ZcyExpress zcyExpress);
-
+    /**
+     * 中介抵押物待接收
+     */
+    Map awaitReceive(Integer userId,ZcyListQuery zcyListQuery);
 
 }

@@ -19,6 +19,9 @@
         <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
         <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
         <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+        <result column="operator" property="operator" jdbcType="VARCHAR"/>
+        <result column="objec_id" property="objecId" jdbcType="INTEGER"/>
+        <result column="object_type" property="objectType" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, estates_id, province, city, area, road, plot_name, building_no, element, floor, 
@@ -41,13 +44,13 @@
       building_no, element, floor, 
       floor_total, doorplate, img_url, 
       version, create_at, update_at, 
-      stateflag)
+      stateflag,operator,objec_id,object_type)
     values (#{id,jdbcType=INTEGER}, #{estatesId,jdbcType=INTEGER}, #{province,jdbcType=VARCHAR}, 
       #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{road,jdbcType=VARCHAR}, #{plotName,jdbcType=VARCHAR}, 
       #{buildingNo,jdbcType=VARCHAR}, #{element,jdbcType=VARCHAR}, #{floor,jdbcType=VARCHAR}, 
       #{floorTotal,jdbcType=VARCHAR}, #{doorplate,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
       0, now(),now(),
-      0)
+      0,#{operator,jdbcType=VARCHAR},#{objectId,jdbcType=INTEGER},#{objectType,jdbcType=INTEGER})
   </insert>
     <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstatesAddress" keyProperty="id"
             useGeneratedKeys="true">
@@ -94,6 +97,15 @@
             </if>
             create_at,
             update_at,
+            <if test="operator != null">
+                operator,
+            </if>
+            <if test="objectId != null">
+                object_id,
+            </if>
+            <if test="objectType != null">
+                object_type,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -137,6 +149,15 @@
             </if>
             now(),
             now(),
+            <if test="operator != null">
+                #{operator,jdbcType=VARCHAR},
+            </if>
+            <if test="objectId != null">
+                #{objectId,jdbcType=INTEGER},
+            </if>
+            <if test="objectType != null">
+                #{objectType,jdbcType=INTEGER},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstatesAddress">
@@ -180,6 +201,15 @@
             </if>
             version =version+1,
             update_at = now(),
+            <if test="operator != null">
+                operator=#{operator,jdbcType=VARCHAR},
+            </if>
+            <if test="objectId != null">
+                object_id=#{objectId,jdbcType=INTEGER},
+            </if>
+            <if test="objectType != null">
+                object_type=#{objectType,jdbcType=INTEGER},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -202,11 +232,12 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
     <!--根据资产信息id获取地址信息-->
-    <select id="selectBySelective"  parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstatesAddress" resultMap="BaseResultMap">
+    <select id="selectBySelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstatesAddress"
+            resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_zcy_estates_address
-        where  stateflag=0
+        where stateflag=0
         <if test="estatesId !=null">
             and estates_id=#{estatesId}
         </if>

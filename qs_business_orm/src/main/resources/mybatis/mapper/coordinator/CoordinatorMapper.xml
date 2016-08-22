@@ -227,5 +227,54 @@
             ON tci.id=tui.company_id
             WHERE tui.id=#{userId} LIMIT 0,1
     </select>
+    <!--根据对象类型，用户id，状态 获取对应的状态的对象id-->
+    <select id="getObjectIdList" resultType="java.lang.Integer">
+        (SELECT tct.object_id from t_company_team tct LEFT JOIN t_company_team_re tcr
+        ON tcr.company_team_id=tct.id and tcr.status=#{status} AND tct.object_type=#{objectType}
+        WHERE tcr.accepter_id=#{userId})
+        UNION
+        (SELECT tut.object_id from t_user_team tut LEFT JOIN t_teammate_re ttr
+        ON ttr.user_team_id=tut.id and ttr.status=#{status} AND tut.object_type=#{objectType}
+        WHERE ttr.user_id=#{userId})
+    </select>
+    <!--获取姓名-->
+    <select id="getRealName" resultType="java.util.Map">
+        SELECT ttr.user_id,tui.real_name FROM t_user_team tut LEFT JOIN t_teammate_re ttr
+            ON ttr.user_team_id=tut.id LEFT JOIN t_user_info tui
+            ON tui.id=ttr.user_id
+            where tut.object_id=#{objectId} and tut.object_type=#{objectType} and ttr.type=#{type}
+    </select>
+    <!--资产源待分配-->
+    <select id="selectByZCYListPage" resultType="com.dqys.business.orm.pojo.zcy.dto.ZcyPawnDTO">
+        SELECT tze.id estatesId,tze.object_id
+        pawnId,tze.orientation,CONCAT(tze.house_s,'-',tze.house_t,'-',tze.house_c,'-',house_w) houseType,
+        tze.selling_price priceTotal,tzk.id keyId,tze.title,tze.acreage ,tzo.entrust_protocol_time entrustTime
+        from t_zcy_estates tze LEFT JOIN t_zcy_owner tzo
+        ON tzo.estates_id=tze.id LEFT JOIN t_zcy_maintain tzm
+        ON tzm.estates_id=tze.id LEFT JOIN t_zcy_key tzk
+        ON tzk.estates_id=tze.id LEFT JOIN t_zcy_express tzex
+        ON tzex.estates_id=tze.id
+        <where>
+            tze.stateflag=0
+        </where>
+        LIMIT #{zcyListQuery.startPage},#{zcyListQuery.pageCount}
+    </select>
+    <select id="selectByZCYListPageCount" resultType="java.lang.Integer"
+            parameterType="com.dqys.business.orm.query.coordinator.ZcyListQuery">
+        SELECT count(*)
+        from t_zcy_estates tze LEFT JOIN t_zcy_owner tzo
+        ON tzo.estates_id=tze.id LEFT JOIN t_zcy_maintain tzm
+        ON tzm.estates_id=tze.id LEFT JOIN t_zcy_key tzk
+        ON tzk.estates_id=tze.id LEFT JOIN t_zcy_express tzex
+        ON tzex.estates_id=tze.id
+        <where>
+            tze.stateflag=0
+        </where>
+    </select>
+
+    <select id="findLabel" resultType="java.util.Map">
+        SELECT zef.type,zef.name,zef.code from t_zcy_estates_facility zef
+          where zef.estates_id=#{estatesId} and (zef.type=0 or zef.type=1)
+    </select>
 
 </mapper>

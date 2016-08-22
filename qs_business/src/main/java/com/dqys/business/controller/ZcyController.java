@@ -1,10 +1,13 @@
 package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.zcy.ZcyModule;
+import com.dqys.business.orm.query.coordinator.ZcyListQuery;
 import com.dqys.business.service.service.ZcyService;
+import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.ProtocolTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -177,4 +181,31 @@ public class ZcyController {
         return JsonResponseTool.success(map);
     }
 
+    /**
+     * @api {post} zcy/awaitReceive 中介抵押物
+     * @apiUse ZcyListQuery
+     * @apiSampleRequest zcy/awaitReceive
+     * @apiGroup ZCY
+     * @apiName zcy/awaitReceive
+     */
+    @RequestMapping("/awaitReceive")
+    @ResponseBody
+    public JsonResponse awaitReceive(@ModelAttribute ZcyListQuery zcyListQuery, HttpServletRequest httpServletRequest) throws Exception {
+        Integer userId = ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+        );
+        Map map = new HashMap<>();
+        if (zcyListQuery.getStatus() != 0 && zcyListQuery.getStatus() != 1) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if (zcyListQuery.getPage() < 0) {
+            zcyListQuery.setPage(0);
+        }
+        map = zcyService.awaitReceive(userId, zcyListQuery);
+        return JsonResponseTool.success(map);
+    }
 }
