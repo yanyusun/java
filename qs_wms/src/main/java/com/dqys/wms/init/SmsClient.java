@@ -51,10 +51,11 @@ public class SmsClient {
         return null;
     }
 
-//    public static void main(String[] args){
-//        SmsClient smsClient = new SmsClient();
-//        smsClient.sendMessage2("13067821621", "这只是一个测试短信发送");
-//
-//    }
+   /*public static void main(String[] args){
+      SmsClient smsClient = new SmsClient();
+       smsClient.sendMessage("13575716050", "【清搜网】这只是一个测试短信发送");
+
+
+   }*/
 
 }
