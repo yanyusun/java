@@ -22,6 +22,14 @@ import java.util.List;
  */
 public class CompanyServiceUtils {
 
+    public static List<CompanyDTO> toCompanyDTO(List<TCompanyInfo> companyInfos){
+        List<CompanyDTO> companyDTOList = new ArrayList<>();
+        companyInfos.forEach(companyInfo -> {
+            companyDTOList.add(toCompanyDTO(companyInfo));
+        });
+        return companyDTOList;
+    }
+
     public static CompanyDTO toCompanyDTO(TCompanyInfo companyInfo){
         if(companyInfo == null){
             return null;

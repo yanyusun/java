@@ -15,11 +15,13 @@ public class CaseCourt extends BaseModel implements Serializable {
     private String tel; // 座机
     private String other; // 其他联系方式
     private String memo; // 备注
+    private String otherLawyer; // 其他法官
 
     public String toCheckObject(){
         String s = "{";
         s += "#id:" + caseId + "#法院:" + court + "#案号:" + code + "#法官:" + lawyer + "#性别:" + gender
-                + "#手机:" + mobile + "#座机:" + tel + "#其他:" + other + "#备注:" + memo;
+                + "#手机:" + mobile + "#座机:" + tel + "#其他:" + other + "#备注:" + memo
+                + "#其他法官:" + otherLawyer;
         s += "}";
         return s;
     }
@@ -95,5 +97,13 @@ public class CaseCourt extends BaseModel implements Serializable {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public String getOtherLawyer() {
+        return otherLawyer;
+    }
+
+    public void setOtherLawyer(String otherLawyer) {
+        this.otherLawyer = otherLawyer;
     }
 }

@@ -11,6 +11,7 @@ import java.util.Date;
 public class CaseInfo extends BaseModel implements Serializable {
 
     private String caseNo; // 编号(显示)
+    private String name; // 名称
     private Integer pId; // 父级案件ID
     private String type; // 案件类型(0母案件,1子案件)
     private Integer pawnId;  // 抵押物ID
@@ -288,5 +289,13 @@ public class CaseInfo extends BaseModel implements Serializable {
 
     public void setAttachmentMemo(String attachmentMemo) {
         this.attachmentMemo = attachmentMemo;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

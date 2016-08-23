@@ -79,8 +79,7 @@ public class CaseServiceImpl implements CaseService {
             return null;
         }
         // 创建案件的编号
-        Integer count = caseInfoMapper.countByLender(pawnInfo.getLenderId());
-        caseInfo.setCaseNo(CaseServiceUtils.createCaseNo(count));
+        caseInfo.setCaseNo(CaseServiceUtils.createCaseNo());
         // 增加案件基础信息
         Integer result = caseInfoMapper.insert(caseInfo);
         if (CommonUtil.checkResult(result)) {

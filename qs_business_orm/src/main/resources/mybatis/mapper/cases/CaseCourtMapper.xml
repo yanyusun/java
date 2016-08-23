@@ -18,11 +18,12 @@
     <result column="tel" property="tel" jdbcType="VARCHAR" />
     <result column="other" property="other" jdbcType="VARCHAR" />
     <result column="memo" property="memo" jdbcType="LONGVARCHAR" />
+    <result column="other_lawyer" property="otherLawyer" jdbcType="LONGVARCHAR" />
   </resultMap>
 
   <sql id="Base_Column_List" >
     id, version, create_at, update_at, stateflag, remark, case_id, court, code, lawyer, 
-    gender, mobile, tel, other, memo
+    gender, mobile, tel, other, memo, other_lawyer
   </sql>
 
   <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -70,6 +71,9 @@
       <if test="memo != null" >
         memo,
       </if>
+      <if test="otherLawyer != null" >
+        other_lawyer,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -101,6 +105,9 @@
       </if>
       <if test="memo != null" >
         #{memo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="otherLawyer != null" >
+        #{otherLawyer,jdbcType=LONGVARCHAR},
       </if>
     </trim>
   </insert>
@@ -139,6 +146,9 @@
       </if>
       <if test="memo != null" >
         memo = #{memo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="otherLawyer != null" >
+        other_lawyer = #{otherLawyer,jdbcType=LONGVARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

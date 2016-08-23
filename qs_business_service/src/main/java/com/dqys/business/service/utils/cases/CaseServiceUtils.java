@@ -18,10 +18,11 @@ import java.util.Random;
  */
 public class CaseServiceUtils {
 
-    public static final String CASE_NO = "案件";
-    public static String createCaseNo(Integer count){
-        return CASE_NO + CommonUtil.createCNANumber(count.toString())
-                + DateFormatTool.format(DateFormatTool.DATE_FORMAT_6) + RandomStringUtils.randomNumeric(4);
+    public static final String CASE_NO = "AJ";
+    public static String createCaseNo(){
+        return CASE_NO
+                + DateFormatTool.format(DateFormatTool.DATE_FORMAT_6)
+                + RandomStringUtils.randomNumeric(4);
     }
 
     public static CaseInfo toCaseInfo(CaseDTO caseDTO){
@@ -32,6 +33,7 @@ public class CaseServiceUtils {
 
         caseInfo.setId(caseDTO.getId());
         caseInfo.setpId(caseDTO.getpId());
+        caseInfo.setName(caseDTO.getCaseName());
         caseInfo.setType(caseDTO.getType());
         caseInfo.setPawnId(caseDTO.getPawnId());
         caseInfo.setPlaintiff(caseDTO.getPlaintiff());
@@ -81,6 +83,7 @@ public class CaseServiceUtils {
         caseCourt.setTel(caseCourtDTO.getTel());
         caseCourt.setOther(caseCourtDTO.getOther());
         caseCourt.setGender(caseCourtDTO.getGender());
+        caseCourt.setOtherLawyer(caseCourtDTO.getOtherLawyer());
 
         return caseCourt;
     }
@@ -92,6 +95,7 @@ public class CaseServiceUtils {
         caseDTO.setId(caseInfo.getId());
         caseDTO.setpId(caseInfo.getpId());
         caseDTO.setType(caseInfo.getType());
+        caseDTO.setCaseName(caseInfo.getName());
         caseDTO.setPawnId(caseInfo.getPawnId());
         caseDTO.setPlaintiff(caseInfo.getPlaintiff());
         caseDTO.setDefendant(caseInfo.getDefendant());
@@ -153,6 +157,7 @@ public class CaseServiceUtils {
         caseCourtDTO.setTel(caseCourt.getTel());
         caseCourtDTO.setOther(caseCourt.getOther());
         caseCourtDTO.setGender(caseCourt.getGender());
+        caseCourtDTO.setOtherLawyer(caseCourt.getOtherLawyer());
 
         return caseCourtDTO;
     }

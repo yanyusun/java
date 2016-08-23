@@ -61,6 +61,12 @@ public class CompanyServiceImpl implements CompanyService {
     private TUserInfoMapper userInfoMapper;
 
     @Override
+    public List<CompanyDTO> listByType(Integer type) {
+        List<TCompanyInfo> companyInfoList = companyInfoMapper.listByType(type);
+        return CompanyServiceUtils.toCompanyDTO(companyInfoList);
+    }
+
+    @Override
     public JsonResponse listOrganization(Integer companyId, OrganizationTypeEnum organizationTypeEnum) {
         OrganizationQuery organizationQuery = new OrganizationQuery();
 

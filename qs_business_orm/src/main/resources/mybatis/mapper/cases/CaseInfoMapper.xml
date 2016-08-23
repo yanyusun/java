@@ -40,6 +40,7 @@
     <result column="lawsuit_memo" property="lawsuitMemo" jdbcType="LONGVARCHAR" />
     <result column="attachment_memo" property="attachmentMemo" jdbcType="LONGVARCHAR" />
     <result column="preservation_memo" property="preservationMemo" jdbcType="LONGVARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
   </resultMap>
 
   <!-- 基础字段 -->
@@ -49,7 +50,7 @@
     evaluate_level, lawsuit_amount, lawsuit_corpus, lawsuit_accrual, attachment_status,
     attachment_date, attachment_court, attachment_time, is_preservation, preservation_start,
     preservation_end, is_first, first_attachment_court, preservation_court, first_attachment_code,
-    first_attachment_date, memo, lawsuit_memo, attachment_memo, preservation_memo
+    first_attachment_date, memo, lawsuit_memo, attachment_memo, preservation_memo, name
   </sql>
 
   <!-- 逻辑删除-->
@@ -158,6 +159,9 @@
       <if test="attachmentMemo != null" >
         attachment_memo,
       </if>
+      <if test="name != null" >
+        name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -255,6 +259,9 @@
       </if>
       <if test="attachmentMemo != null" >
         #{attachmentMemo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -360,6 +367,9 @@
       </if>
       <if test="attachmentMemo != null" >
         attachment_memo = #{attachmentMemo,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

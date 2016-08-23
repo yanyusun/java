@@ -19,5 +19,17 @@ public interface TCompanyInfoMapper {
 
     List<TCompanyInfo> queryList(CompanyQuery query);
 
+    /**
+     * 根据用户信息获取公司详情
+     * @param id
+     * @return
+     */
     CompanyDetailInfo get(Integer id);
+
+    /**
+     * 根据公司类型获取公司列表
+     * @param type
+     * @return
+     */
+    List<TCompanyInfo> listByType(Integer type);
 }

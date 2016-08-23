@@ -34,6 +34,21 @@ public class CompanyController {
     private DistributionService distributionService;
 
     /**
+     * @api {GET} http://{url}/api/company/listCompany 查看特定类型的公司
+     * @apiName listCompany
+     * @apiGroup organization
+     * @apiParam {number} [type] 公司类型
+     * @apiSuccess {companyDTO} data 公司信息集合
+     * @apiUse companyDTO
+     */
+    @RequestMapping(value = "/listCompany")
+    @ResponseBody
+    public JsonResponse listCompany(@RequestParam(required = false) Integer type){
+        return CommonUtil.responseBack(companyService.listByType(type));
+    }
+
+
+    /**
      * @api {GET} http://{url}/api/company/listOrganization 查看组织列表(部门|团队)
      * @apiName listOrganization
      * @apiGroup organization

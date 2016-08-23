@@ -75,4 +75,11 @@ public interface CompanyService {
      */
     List<CompanyRelationDTO> getListRelation(Integer companyId);
 
+    /**
+     * 通过公司类型获取公司
+     * @param type
+     * @return
+     */
+    List<CompanyDTO> listByType(Integer type);
+
 }

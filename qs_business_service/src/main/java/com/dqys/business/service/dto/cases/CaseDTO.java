@@ -55,6 +55,7 @@ public class CaseDTO {
 
     // 基础信息
     private String caseNo; // 编号(显示)
+    private String caseName; // 案件名称(显示)
     private Integer id; // 主键ID
     private Integer pId; // 父级案件ID
     private String type; // 案件类型(0母案件,1子案件)
@@ -388,5 +389,13 @@ public class CaseDTO {
 
     public void setCourtDTOList(List<CaseCourtDTO> courtDTOList) {
         this.courtDTOList = courtDTOList;
+    }
+
+    public String getCaseName() {
+        return caseName;
+    }
+
+    public void setCaseName(String caseName) {
+        this.caseName = caseName;
     }
 }

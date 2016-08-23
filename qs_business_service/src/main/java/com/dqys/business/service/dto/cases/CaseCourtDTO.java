@@ -32,6 +32,7 @@ public class CaseCourtDTO {
     private String mobile; // 手机
     private String tel; // 座机
     private String other; // 其他联系方式
+    private String otherLawyer; // 其他联系方式
 
     public Integer getId() {
         return id;
@@ -111,5 +112,13 @@ public class CaseCourtDTO {
 
     public void setOther(String other) {
         this.other = other;
+    }
+
+    public String getOtherLawyer() {
+        return otherLawyer;
+    }
+
+    public void setOtherLawyer(String otherLawyer) {
+        this.otherLawyer = otherLawyer;
     }
 }

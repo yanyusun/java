@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class CompanyInterceptor extends AuthenticationInterceptor {
 
+    public static final String API_LIST_COMPANY = "listCompany";
     public static final String API_LIST_OGA = "listOrganization";
     public static final String API_ADD_OGA = "addOrganization";
     public static final String API_DELETE_OGA = "deleteOrganization";
@@ -32,7 +33,9 @@ public class CompanyInterceptor extends AuthenticationInterceptor {
         if(url != null && url.length() > 0){
             path = url.substring(url.lastIndexOf("/") + 1, url.length());
         }
-        if (API_LIST_OGA.equals(path)) {//待后期完善根据业务号，团队id，操作对象，人员控制权限
+        if (API_LIST_COMPANY.equals(path)) {//待后期完善根据业务号，团队id，操作对象，人员控制权限
+            return true;
+        } else if (API_LIST_OGA.equals(path)) {//待后期完善根据业务号，团队id，操作对象，人员控制权限
             return true;
         } else if (API_ADD_OGA.equals(path)) {
             return true;
