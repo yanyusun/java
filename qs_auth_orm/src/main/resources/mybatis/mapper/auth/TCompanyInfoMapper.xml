@@ -237,15 +237,15 @@
       res.company_id = tci.id AND tci.stateflag = 0 AND tci.id = #{id,jdbcType=INTEGER};
   </select>
 
-  <select id="listByType" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+  <select id="listByType" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List" />
     FROM t_company_info where id in (
       SELECT company_id FROM t_user_info where id in (
         SELECT user_id from t_user_tag
         WHERE role_id = 1 AND stateflag = 0
-        <if test="type != null">
-          AND user_type = #{type,jdbcType=INTEGER}
+        <if test="typeId != null">
+          AND user_type = #{typeId,jdbcType=INTEGER}
         </if>
       )
     )

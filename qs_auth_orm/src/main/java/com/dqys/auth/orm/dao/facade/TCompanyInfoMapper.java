@@ -3,6 +3,7 @@ package com.dqys.auth.orm.dao.facade;
 import com.dqys.auth.orm.pojo.CompanyDetailInfo;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.query.CompanyQuery;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -31,5 +32,5 @@ public interface TCompanyInfoMapper {
      * @param type
      * @return
      */
-    List<TCompanyInfo> listByType(Integer type);
+    List<TCompanyInfo> listByType(@Param("typeId")Integer type);
 }

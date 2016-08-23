@@ -121,11 +121,11 @@ public class CaseServiceImpl implements CaseService {
 
     @Override
     public Integer listAdd(CaseDTOList caseDTOList) throws BusinessLogException  {
-        if(CommonUtil.checkParam(caseDTOList, caseDTOList.getCaseDTOListList())
-                || caseDTOList.getCaseDTOListList().size() == 0){
+        if(CommonUtil.checkParam(caseDTOList, caseDTOList.getCaseDTOList())
+                || caseDTOList.getCaseDTOList().size() == 0){
             return null;
         }
-        for (CaseDTO caseDTO : caseDTOList.getCaseDTOListList()) {
+        for (CaseDTO caseDTO : caseDTOList.getCaseDTOList()) {
             Integer add = add_tx(caseDTO);
             if(add == null){
                 return null;

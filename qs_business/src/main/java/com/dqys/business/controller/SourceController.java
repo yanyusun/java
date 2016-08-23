@@ -8,7 +8,6 @@ import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Created by Yvan on 16/8/1.
@@ -38,7 +37,7 @@ public class SourceController {
     }
 
     /**
-     * @api {get} http://{url}/source/addNavigation 增加分类
+     * @api {post} http://{url}/source/addNavigation 增加分类
      * @apiName addNavigation
      * @apiGroup source
      * @apiParam {object} sourceNavigation 同listNavigation
@@ -75,7 +74,7 @@ public class SourceController {
     }
 
     /**
-     * @api {get} http://{url}/source/add 增加资源
+     * @api {post} http://{url}/source/add 增加资源
      * @apiName add
      * @apiGroup source
      * @apiParam {object} sourceInfoDTO git地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/common/SourceInfoDTO.java
@@ -102,7 +101,7 @@ public class SourceController {
      * @apiParam {number} lenderId 借款人Id
      * @apiParam {number} navId 分类ID
      */
-    @RequestMapping(value = "/get", method = RequestMethod.POST)
+    @RequestMapping(value = "/get")
     public JsonResponse get(@RequestParam Integer lenderId, @RequestParam Integer navId) {
         if (CommonUtil.checkParam(navId, lenderId)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -116,7 +115,7 @@ public class SourceController {
     }
 
     /**
-     * @api {get} http://{url}/source/update 修改资源信息
+     * @api {post} http://{url}/source/update 修改资源信息
      * @apiName update
      * @apiGroup source
      * @apiParam {object} sourceInfoDTO 参考新增资源信息

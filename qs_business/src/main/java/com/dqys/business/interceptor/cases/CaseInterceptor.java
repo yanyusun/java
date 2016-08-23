@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 public class CaseInterceptor extends AuthenticationInterceptor {
     
     public static final String API_ADD = "add";
+    public static final String API_LIST_ADD = "listAdd";
     public static final String API_DIVIDE = "divide";
     public static final String API_UPDATE = "update";
     public static final String API_LIST = "list";
@@ -29,6 +30,8 @@ public class CaseInterceptor extends AuthenticationInterceptor {
         if (API_ADD.equals(path)) {//待后期完善根据业务号，团队id，操作对象，人员控制权限
             return true;
         } else if (API_DIVIDE.equals(path)) {
+            return true;
+        } else if (API_LIST_ADD.equals(path)) {
             return true;
         } else if (API_UPDATE.equals(path)) {
             return true;
