@@ -63,6 +63,54 @@ public class CommonUtil {
     }
 
     /**
+     * 判断数组中是否存在某字符
+     * @param arr 目标数组
+     * @param str 字符
+     * @return true 数组中存在该字符
+     */
+    public static boolean isExist(String[] arr, String str){
+        if(arr == null || arr.length == 0 || str == null || str.equals("")){
+            return false;
+        }
+        for (String s : arr) {
+            if(s.equals(str)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 初始化评级
+     * @param num
+     * @return
+     */
+    public static String[] initLevel(Integer num){
+        return CommonUtil.UPLETTER.toString().substring(0,num).split(",");
+    }
+
+    /**
+     * 判断是否金额格式(2位小数)
+     * @param num 金额
+     * @return true 符合金额格式
+     */
+    public static boolean isMoneyFormat(Double num){
+        Double number = num * 1000;
+        if(number % 10 > 0){
+            return false;
+        }
+        return true;
+    }
+
+//    public static void main(String[] args){
+//        Double a = 100.2;
+//        Double b = 100.22;
+//        Double c = 100.233;
+//        System.out.println("a:" + isMoneyFormat(a) + " b:" + isMoneyFormat(a) + " c:" + isMoneyFormat(c));
+//
+//    }
+
+    /**
      * 通用判断结果是否为空返回消息
      *
      * @param data
@@ -219,7 +267,6 @@ public class CommonUtil {
         String reg = property.getPropertyValue();
         property = SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_ADMINISTRATOR_KEY);
         String reg1 = property.getPropertyValue();
-        // 这里写死
 
         if (roleStr.indexOf(reg) > 0
                 && typeStr.indexOf(reg1) > 0) {

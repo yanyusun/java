@@ -19,15 +19,15 @@ import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
-import com.dqys.business.service.constant.ObjectEnum.IouEnum;
-import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
 import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.dto.asset.*;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.AssetListQuery;
-import com.dqys.business.service.service.*;
+import com.dqys.business.service.service.AssetService;
+import com.dqys.business.service.service.BusinessLogService;
+import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.business.service.utils.asset.IouServiceUtils;
 import com.dqys.business.service.utils.asset.LenderServiceUtils;
@@ -41,7 +41,6 @@ import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 
@@ -548,16 +547,16 @@ public class AssetServiceImpl implements AssetService {
             iouIdMap.put(iouDTO.getIouName(), iouInfo.getId());
         }
         // 抵押物与借据之间的关联关系
-        for(Integer pawnId : pawnRelation.keySet()){
-            if(pawnRelation.get(pawnId) != null && pawnRelation.get(pawnId).length() > 0){
+        for (Integer pawnId : pawnRelation.keySet()) {
+            if (pawnRelation.get(pawnId) != null && pawnRelation.get(pawnId).length() > 0) {
                 String nameArr[] = pawnRelation.get(pawnId).split(",");
-                for(String name : nameArr){
-                    if(iouIdMap.get(name) != null){
+                for (String name : nameArr) {
+                    if (iouIdMap.get(name) != null) {
                         RelationQuery relationQuery = new RelationQuery();
                         relationQuery.setPawnId(pawnId);
                         relationQuery.setIouId(iouIdMap.get(name));
                         List<PiRelation> list = piRelationMapper.queryList(relationQuery);
-                        if(list == null || list.size() == 0){
+                        if (list == null || list.size() == 0) {
                             // 防止重复数据
                             PiRelation piRelation = new PiRelation();
                             piRelation.setPawnId(pawnId);
@@ -568,16 +567,16 @@ public class AssetServiceImpl implements AssetService {
                 }
             }
         }
-        for(Integer iouId : iouRelation.keySet()){
-            if(pawnRelation.get(iouId) != null && pawnRelation.get(iouId).length() > 0){
+        for (Integer iouId : iouRelation.keySet()) {
+            if (pawnRelation.get(iouId) != null && pawnRelation.get(iouId).length() > 0) {
                 String nameArr[] = pawnRelation.get(iouId).split(",");
-                for(String name : nameArr){
-                    if(pawnIdMap.get(name) != null){
+                for (String name : nameArr) {
+                    if (pawnIdMap.get(name) != null) {
                         RelationQuery relationQuery = new RelationQuery();
                         relationQuery.setPawnId(pawnIdMap.get(name));
                         relationQuery.setIouId(iouId);
                         List<PiRelation> list = piRelationMapper.queryList(relationQuery);
-                        if(list == null || list.size() == 0){
+                        if (list == null || list.size() == 0) {
                             // 防止重复数据
                             PiRelation piRelation = new PiRelation();
                             piRelation.setPawnId(pawnIdMap.get(name));

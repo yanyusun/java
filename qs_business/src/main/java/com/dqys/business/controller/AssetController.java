@@ -10,7 +10,8 @@ import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.business.service.service.AssetService;
 import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.service.UserService;
-import com.dqys.business.service.utils.asset.PawnServiceUtils;
+import com.dqys.business.service.utils.asset.AssetServiceUtils;
+import com.dqys.business.service.utils.asset.LenderServiceUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
@@ -32,7 +33,8 @@ public class AssetController {
     private AssetService assetService;
     @Autowired
     private LenderService lenderService;
-    @Autowired @Qualifier("b_loginService")
+    @Autowired
+    @Qualifier("b_loginService")
     private UserService userService;
 
     /**
@@ -47,13 +49,12 @@ public class AssetController {
      * @apiSuccess {string} level 评级
      */
     @RequestMapping(value = "/getInit")
-    @ResponseBody
     public JsonResponse getInit() {
         Map<String, Object> resultMap = new HashMap<>();
 
         resultMap.put("assetType", AssetTypeEnum.list()); // 资产包种类
         resultMap.put("excellent", ExcellentTypeEnum.list()); // 评优
-        resultMap.put("level", PawnServiceUtils.initLevel(8)); // 评级
+        resultMap.put("level", CommonUtil.initLevel(8)); // 评级
 
         return JsonResponseTool.success(resultMap);
     }
@@ -66,12 +67,10 @@ public class AssetController {
      * @apiSuccess {number} data 新增的ID
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    @ResponseBody
     public JsonResponse add(@ModelAttribute AssetDTO assetDTO) throws BusinessLogException {
-        if (CommonUtil.checkParam(assetDTO, assetDTO.getType(), assetDTO.getStartAt(),
-                assetDTO.getEndAt(), assetDTO.getAccrual(), assetDTO.getLoan(),
-                assetDTO.getAppraisal())) {
-            return JsonResponseTool.paramErr("参数错误");
+        String checkParam = AssetServiceUtils.checkAssetData(assetDTO);
+        if (checkParam != null) {
+            return JsonResponseTool.paramErr(checkParam);
         }
         return assetService.add_tx(assetDTO);
     }
@@ -83,7 +82,6 @@ public class AssetController {
      * @apiParam {number} id 资产包ID
      */
     @RequestMapping(value = "/delete")
-    @ResponseBody
     public JsonResponse delete(Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -99,9 +97,12 @@ public class AssetController {
      * @apiSuccess {number} data 修改的ID
      */
     @RequestMapping(value = "/update")
-    @ResponseBody
     public JsonResponse update(@ModelAttribute AssetDTO assetDTO) throws BusinessLogException {
-        if (CommonUtil.checkParam(assetDTO, assetDTO.getId())) {
+        String checkParam = AssetServiceUtils.checkAssetData(assetDTO);
+        if (checkParam != null) {
+            return JsonResponseTool.paramErr(checkParam);
+        }
+        if (assetDTO.getId() == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return assetService.updateById_tx(assetDTO);
@@ -117,7 +118,6 @@ public class AssetController {
      * @apiUse AssetDTO
      */
     @RequestMapping(value = "/get")
-    @ResponseBody
     public JsonResponse get(@RequestParam Integer id) {
         if (id == null) {
             return JsonResponseTool.paramErr("参数错误");
@@ -135,7 +135,6 @@ public class AssetController {
      * @apiUse LenderListDTO
      */
     @RequestMapping(value = "/listLenderSelect")
-    @ResponseBody
     public JsonResponse listLenderSelect(@RequestParam(required = true) Integer id) {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -151,7 +150,6 @@ public class AssetController {
      * @apiParam {string} file excel文件
      */
     @RequestMapping(value = "/excelIn")
-    @ResponseBody
     public JsonResponse addLenders(@RequestParam(required = true) Integer id,
                                    @RequestParam(required = true) String file) throws BusinessLogException {
         if (CommonUtil.checkParam(id, file)) {
@@ -167,7 +165,6 @@ public class AssetController {
      * @apiParam {number} id 资产包ID
      */
     @RequestMapping(value = "/listLender")
-    @ResponseBody
     public JsonResponse listLender(@RequestParam(required = true) Integer id) {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -186,7 +183,6 @@ public class AssetController {
      * @apiUse AssetDTO
      */
     @RequestMapping(value = "/list")
-    @ResponseBody
     public JsonResponse list(@ModelAttribute AssetListQuery assetListQuery, @RequestParam(required = true) Integer nav) {
         if (ObjectTabEnum.getObjectTabEnum(nav) == null) {
             return JsonResponseTool.paramErr("参数错误");
@@ -204,7 +200,6 @@ public class AssetController {
      * @apiParam {number} id  被分配者ID
      */
     @RequestMapping(value = "/assignedBatch")
-    @ResponseBody
     public JsonResponse assignedBatch(@RequestParam("ids") String ids, @RequestParam("id") Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(ids, id)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -237,13 +232,20 @@ public class AssetController {
                 assetLenderInsertDTO.getLenderDTO(), assetLenderInsertDTO.getContactDTOList())) {
             return JsonResponseTool.paramErr("参数错误");
         }
+        String data = LenderServiceUtils.checkData(assetLenderInsertDTO.getLenderDTO());
+        if (data != null) {
+            return JsonResponseTool.paramErr(data);
+        }
+        data = LenderServiceUtils.checkData(assetLenderInsertDTO.getContactDTOList());
+        if (data != null) {
+            return JsonResponseTool.paramErr(data);
+        }
 
         return assetService.addLender_tx(assetLenderInsertDTO.getId(),
                 assetLenderInsertDTO.getContactDTOList(),
                 assetLenderInsertDTO.getLenderDTO(),
                 assetLenderInsertDTO.getPawnDTOList(),
                 assetLenderInsertDTO.getIouDTOList());
-
     }
 
 }

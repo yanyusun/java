@@ -240,4 +240,31 @@ public class  AssetServiceUtils {
         }
     }
 
+    public static String checkAssetData(AssetDTO assetDTO){
+        if (CommonUtil.checkParam(assetDTO,
+                assetDTO.getType(), assetDTO.getStartAt(), assetDTO.getEndAt(),
+                assetDTO.getAccrual(), assetDTO.getLoan(), assetDTO.getAppraisal(),
+                assetDTO.getName(), assetDTO.getEvaluateExcellent(), assetDTO.getEvaluateLevel(),
+                assetDTO.getProvince(), assetDTO.getCity(), assetDTO.getDistrict(),
+                assetDTO.getAddress(), assetDTO.getLoanOrganization(), assetDTO.getLoanOrganizationDistrict(),
+                assetDTO.getDisposeMode())) {
+            return "存在非法参数";
+        }
+        if(ExcellentTypeEnum.getExcellentTypeEnum(assetDTO.getEvaluateExcellent()) == null){
+            return "评优类型参数错误";
+        }
+        if(!CommonUtil.isExist(CommonUtil.UPLETTER, assetDTO.getEvaluateLevel())){
+            return "评级参数错误";
+        }
+        if(!CommonUtil.isMoneyFormat(assetDTO.getAccrual())
+                && !CommonUtil.isMoneyFormat(assetDTO.getLoan())
+                && !CommonUtil.isMoneyFormat(assetDTO.getAppraisal())){
+            return "存在非法金额参数";
+        }
+        if(AreaTool.validateArea(assetDTO.getProvince(), assetDTO.getCity(), assetDTO.getDistrict()) != null){
+            return "地区错误";
+        }
+        return null;
+    }
+
 }

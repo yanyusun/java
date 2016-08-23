@@ -26,10 +26,6 @@ public class PawnServiceUtils {
                 + RandomStringUtils.randomNumeric(4);
     }
 
-    public static String[] initLevel(Integer num){
-        return CommonUtil.UPLETTER.toString().substring(0,num).split(",");
-    }
-
     /**
      * 量化转换抵押物DTO成DAO
      * @param pawnDTOList

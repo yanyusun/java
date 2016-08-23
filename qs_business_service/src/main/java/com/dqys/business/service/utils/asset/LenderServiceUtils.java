@@ -3,9 +3,9 @@ package com.dqys.business.service.utils.asset;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.orm.query.asset.LenderQuery;
+import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
 import com.dqys.business.service.dto.asset.LenderListDTO;
@@ -256,21 +256,21 @@ public class LenderServiceUtils {
         return contactDTO;
     }
 
-    public static LenderQuery toLenderQuery(LenderQuery lenderQuery, LenderListQuery lenderListQuery){
-        if(lenderQuery.getId() == null && lenderListQuery.getId() != null){
+    public static LenderQuery toLenderQuery(LenderQuery lenderQuery, LenderListQuery lenderListQuery) {
+        if (lenderQuery.getId() == null && lenderListQuery.getId() != null) {
             lenderQuery.setId(lenderListQuery.getId());
         }
-        if(lenderListQuery.getIsOutTime() != null){
+        if (lenderListQuery.getIsOutTime() != null) {
             lenderQuery.setIsOutTime(true);
         }
-        if(lenderListQuery.getIsOwn().equals(1)){
-            if(lenderQuery.getOperator() != null && !lenderQuery.getOperator().equals(UserSession.getCurrent().getUserId())){
+        if (lenderListQuery.getIsOwn().equals(1)) {
+            if (lenderQuery.getOperator() != null && !lenderQuery.getOperator().equals(UserSession.getCurrent().getUserId())) {
                 lenderQuery.setOperator(0);
-            }else {
+            } else {
                 lenderQuery.setOperator(UserSession.getCurrent().getUserId());
             }
         }
-        if(lenderListQuery.getIsAsset().equals(1)){
+        if (lenderListQuery.getIsAsset().equals(1)) {
             lenderQuery.setIsAsset(true);
         }
         lenderQuery.setCanContact(lenderListQuery.getCanContact());
@@ -280,7 +280,7 @@ public class LenderServiceUtils {
         return lenderQuery;
     }
 
-    public static LenderListDTO toLenderListDTO(LenderInfo lenderInfo, ContactInfo contactInfo, List<TeamDTO> teamDTOList){
+    public static LenderListDTO toLenderListDTO(LenderInfo lenderInfo, ContactInfo contactInfo, List<TeamDTO> teamDTOList) {
         LenderListDTO lenderListDTO = new LenderListDTO();
 
         lenderListDTO.setAvg(contactInfo.getAvg());
@@ -298,10 +298,10 @@ public class LenderServiceUtils {
         lenderListDTO.setEvaluateLevel(lenderInfo.getEvaluateLevel());
         Calendar calendar = Calendar.getInstance();
         lenderListDTO.setSourceType(lenderInfo.getEntrustBornType());// 来源类型
-        if(calendar.getTime().compareTo(lenderInfo.getEndAt()) > 0){
+        if (calendar.getTime().compareTo(lenderInfo.getEndAt()) > 0) {
             // 逾期
             lenderListDTO.setLessDay(0);
-        }else{
+        } else {
             long timeMirr = lenderInfo.getEndAt().getTime() - calendar.getTime().getTime();
             lenderListDTO.setLessDay(Integer.parseInt(String.valueOf(timeMirr / 24 / 3600 / 1000)));
         }
@@ -309,7 +309,7 @@ public class LenderServiceUtils {
         lenderListDTO.setFollowTime(lenderInfo.getFollowUpTime());
         lenderListDTO.setMemo(lenderInfo.getMemo());
         lenderListDTO.setCoordinator(teamDTOList);
-        if(teamDTOList != null && teamDTOList.size() > 0){
+        if (teamDTOList != null && teamDTOList.size() > 0) {
             teamDTOList.forEach(teamDTO -> {
                 if (teamDTO.getRoleType().equals(TeammateReEnum.TYPE_AUXILIARY.getValue())) {
                     lenderListDTO.setBelongId(teamDTO.getUserId());
@@ -319,22 +319,66 @@ public class LenderServiceUtils {
         }
 
         lenderListDTO.setManageTime(lenderInfo.getBelongFollowTimes());// 所属人催收次数
-        if(lenderInfo.getIsCollection().equals(SysProperty.BOOLEAN_TRUE) &&
-                lenderInfo.getIsLawsuit().equals(SysProperty.BOOLEAN_TRUE)){
+        if (lenderInfo.getIsCollection().equals(SysProperty.BOOLEAN_TRUE) &&
+                lenderInfo.getIsLawsuit().equals(SysProperty.BOOLEAN_TRUE)) {
             lenderListDTO.setStatus("常规催收司法化解同时进行");// 化解状态
-        }else if(lenderInfo.getIsLawsuit().equals(SysProperty.BOOLEAN_TRUE)){
+        } else if (lenderInfo.getIsLawsuit().equals(SysProperty.BOOLEAN_TRUE)) {
             lenderListDTO.setStatus("司法化解");
-        }else if(lenderInfo.getIsAgent().equals(SysProperty.BOOLEAN_TRUE)){
+        } else if (lenderInfo.getIsAgent().equals(SysProperty.BOOLEAN_TRUE)) {
             lenderListDTO.setStatus("市场处置");
-        }else if(lenderInfo.getIsCollection().equals(SysProperty.BOOLEAN_TRUE)){
+        } else if (lenderInfo.getIsCollection().equals(SysProperty.BOOLEAN_TRUE)) {
             lenderListDTO.setStatus("常规催收");
-        }else{
+        } else {
             lenderListDTO.setStatus(null);
         }
 
         lenderListDTO.setMessage(null);// 消息
 
         return lenderListDTO;
+    }
+
+    public static String checkData(LenderDTO lenderDTO) {
+        if (CommonUtil.checkParam(lenderDTO,
+                lenderDTO.getStartAt(), lenderDTO.getEndAt(), lenderDTO.getAccrual(),
+                lenderDTO.getLoan(), lenderDTO.getAppraisal(), lenderDTO.getLoanType(),
+                lenderDTO.getLoanMode(), lenderDTO.getLoanName(), lenderDTO.getEvaluateExcellent(),
+                lenderDTO.getEvaluateLevel(), lenderDTO.getDisposeMode(), lenderDTO.getUrgeType(),
+                lenderDTO.getEntrustBorn(), lenderDTO.getEntrustBornType(), lenderDTO.getIsGuaranteeConnection(),
+                lenderDTO.getIsLawsuit(), lenderDTO.getIsDecision(), lenderDTO.getCanContact(),
+                lenderDTO.getCanPay(), lenderDTO.getIsWorth()
+        )) {
+            return "参数错误";
+        }
+        if (!CommonUtil.isMoneyFormat(lenderDTO.getAccrual()) && !CommonUtil.isMoneyFormat(lenderDTO.getLoan())
+                && !CommonUtil.isMoneyFormat(lenderDTO.getAppraisal())) {
+            return "存在非法金额参数";
+        }
+        return null;
+    }
+
+    public static String checkData(List<ContactDTO> contactDTOList) {
+        if (CommonUtil.checkParam(contactDTOList) || contactDTOList.size() == 0) {
+            return "联系人信息丢失";
+        }
+        for (ContactDTO contactDTO : contactDTOList) {
+            String data = checkData(contactDTO);
+            if (data != null) {
+                return data;
+            }
+        }
+        return null;
+    }
+
+    public static String checkData(ContactDTO contactDTO) {
+        if (CommonUtil.checkParam(contactDTO,
+                contactDTO.getName(), contactDTO.getType(), contactDTO.getIdcard(),
+                contactDTO.getMobile())) {
+            return "参数缺失";
+        }
+        if (ContactTypeEnum.getContactTypeEnum(contactDTO.getType()) == null) {
+            return "联系人类型不正确";
+        }
+        return null;
     }
 
 }
