@@ -59,7 +59,7 @@ public class CaseController {
     @RequestMapping(value = "/listAdd",method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse listAdd(@ModelAttribute CaseDTOList caseDTOList) throws BusinessLogException {
-        if (CommonUtil.checkParam(caseDTOList, caseDTOList.getCaseDTOListList())) {
+        if (CommonUtil.checkParam(caseDTOList) || caseDTOList.getCaseDTOList().size() == 0) {
             return JsonResponseTool.paramErr("参数错误");
         }
         Integer result = caseService.listAdd(caseDTOList);
@@ -69,9 +69,6 @@ public class CaseController {
             return JsonResponseTool.success(null);
         }
     }
-
-
-
 
     /**
      * @api {post} http://{url}/case/update 修改案件信息

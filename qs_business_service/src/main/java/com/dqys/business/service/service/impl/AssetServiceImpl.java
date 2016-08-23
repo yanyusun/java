@@ -23,6 +23,7 @@ import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.dto.asset.*;
+import com.dqys.business.service.dto.excel.ExcelMessage;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.business.service.service.AssetService;
@@ -598,7 +599,19 @@ public class AssetServiceImpl implements AssetService {
         }
         Map<String, Object> map = ExcelUtilAsset.uploadExcel(file);
         if (map.get("result").equals("error")) {
-            return JsonResponseTool.failure(map.get("data").toString());
+            List<ExcelMessage> error = (List<ExcelMessage>)map.get("data");
+            String errMsg = "[";
+            for (ExcelMessage excelMessage : error) {
+                errMsg += "{"
+                        + "index:" + excelMessage.getIndex()
+                        + ",excelName:" + excelMessage.getExcelName()
+                        + ",site:" + excelMessage.getSite()
+                        + ",fields:" + excelMessage.getFields()
+                        + ",problem:" + excelMessage.getProblem()
+                        + "}";
+            }
+            errMsg += "]";
+            return JsonResponseTool.failure(errMsg);
         }
         List<ContactDTO> contactDTOList = (List<ContactDTO>) map.get("contactDTOs");
         List<LenderDTO> lenderDTOList = (List<LenderDTO>) map.get("lenderDTOs");

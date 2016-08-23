@@ -7,13 +7,13 @@ import java.util.List;
  */
 public class CaseDTOList {
 
-    private List<CaseDTO> caseDTOListList;
+    private List<CaseDTO> caseDTOList;
 
-    public List<CaseDTO> getCaseDTOListList() {
-        return caseDTOListList;
+    public List<CaseDTO> getCaseDTOList() {
+        return caseDTOList;
     }
 
-    public void setCaseDTOListList(List<CaseDTO> caseDTOListList) {
-        this.caseDTOListList = caseDTOListList;
+    public void setCaseDTOList(List<CaseDTO> caseDTOList) {
+        this.caseDTOList = caseDTOList;
     }
 }

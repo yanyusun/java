@@ -77,9 +77,9 @@ public interface CompanyService {
 
     /**
      * 通过公司类型获取公司
-     * @param type
+     * @param typeId
      * @return
      */
-    List<CompanyDTO> listByType(Integer type);
+    List<CompanyDTO> listByType(Integer typeId);
 
 }

@@ -54,7 +54,7 @@ public class FileTool implements ApplicationContextAware {
         //验证业务类型对应的文件类型
         if(null != multipartFile && !multipartFile.isEmpty()) {
             String endfix = multipartFile.getOriginalFilename().substring(
-                    multipartFile.getOriginalFilename().indexOf(".")+1, multipartFile.getOriginalFilename().length());
+                    multipartFile.getOriginalFilename().lastIndexOf(".")+1, multipartFile.getOriginalFilename().length());
             if(0 > tSysProperty.getPropertyValue().indexOf(endfix)) {
                 return "err:不支持的文件类型";
             }

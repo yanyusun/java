@@ -5,6 +5,7 @@ import com.dqys.auth.orm.pojo.CompanyDetailInfo;
 import com.dqys.auth.orm.query.CompanyQuery;
 import com.dqys.core.base.BaseDao;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -52,7 +53,7 @@ public class TCompanyInfoMapperImpl extends BaseDao implements TCompanyInfoMappe
     }
 
     @Override
-    public List<TCompanyInfo> listByType(Integer type) {
+    public List<TCompanyInfo> listByType(@Param("typeId")Integer type) {
         return super.getSqlSession().getMapper(TCompanyInfoMapper.class).listByType(type);
     }
 }
