@@ -412,6 +412,9 @@
             <if test="status != null">
                 status=#{status},
             </if>
+            <if test="damage_date != null">
+                damage_date=#{damage_date},
+            </if>
         </set>
         WHERE id=#{id}
     </update>
@@ -428,6 +431,9 @@
         </if>
         <if test="status !=null">
             and status=#{status}
+        </if>
+        <if test="apply_user_id !=null">
+            and apply_user_id=#{apply_user_id}
         </if>
     </select>
     <select id="getDamageApply" parameterType="int"

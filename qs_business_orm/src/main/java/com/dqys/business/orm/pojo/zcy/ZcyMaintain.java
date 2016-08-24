@@ -29,7 +29,7 @@ import java.util.Date;
  * @apiParam {string} houseCase 房屋状况
  * @apiParam {string} decorateCase 装修状况
  * @apiParam {string} decorateType 装修类型
- * @apiParam {string} decorateTime 装修时间
+ * @apiParam {string} decorateTime 装修时间(格式：yyyy-MM-dd)
  * @apiParam {string} schoolHouseNumber 学区房名额
  * @apiParam {string} keyes 是否能留钥匙
  * @apiParam {string} lookHouseTime 看房时间

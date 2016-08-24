@@ -10,8 +10,8 @@ import java.util.Date;
  * @apiParam {number} id
  * @apiParam {number} estatesId 资产信息id
  * @apiParam {string} protocolNo 协议编号
- * @apiParam {string} entrustProtocolTime 委托协议时间
- * @apiParam {string} entrustAbortTime 委托截止时间
+ * @apiParam {string} entrustProtocolTime 委托协议时间(格式：yyyy-MM-dd)
+ * @apiParam {string} entrustAbortTime 委托截止时间(格式：yyyy-MM-dd)
  * @apiParam {string} keyNum 钥匙套数
  * @apiParam {string} keyPlace 钥匙存放位置
  * @apiParam {string} keyFollow 钥匙跟进
@@ -23,9 +23,9 @@ public class ZcyKey implements Serializable {
 
     private String protocolNo;//协议编号
 
-    private String entrustProtocolTime;//委托协议时间
+    private String entrustProtocolTime;//委托协议时间(格式：yyyy-MM-dd)
 
-    private String entrustAbortTime;//委托截止时间
+    private String entrustAbortTime;//委托截止时间(格式：yyyy-MM-dd)
 
     private String keyNum;//钥匙套数
 

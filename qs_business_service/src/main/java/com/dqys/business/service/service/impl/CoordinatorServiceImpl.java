@@ -1,5 +1,7 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.CoordinatorEnum;
@@ -26,6 +28,7 @@ import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.core.utils.SmsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +58,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     private BusinessLogService businessLogService;
     @Autowired
     private RepayMapper repayMapper;
+    @Autowired
+    private TUserInfoMapper tUserInfoMapper;
 
     @Override
     public void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType, Integer userid) {
@@ -308,6 +313,19 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         Integer flag = 0;
         flag = getTeammateFlag(userTeammateId, userId, flag, TeammateReEnum.BUSINESS_TYPE_TASK.getValue(), TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue());
         if (flag > 0) {
+            UserTeam userTeam = new UserTeam();
+            userTeam.setId(userTeammateId);
+            UserTeam userT = userTeamMapper.selectByPrimaryKeySelective(userTeam);//团队信息
+            if (userT != null) {
+                TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(userT.getMangerId());//接受者
+                TUserInfo sendUser = tUserInfoMapper.selectByPrimaryKey(userId);//请求者
+                String content = "";//消息内容
+                if (tUserInfo != null && sendUser != null) {
+                    SmsUtil smsUtil = new SmsUtil();
+                    content = smsUtil.sendSms(104, tUserInfo.getMobile(), tUserInfo.getRealName(), sendUser.getRealName(), userT.getObjectType().toString(), ObjectTypeEnum.getObjectTypeEnum(userT.getObjectType()).getName());//发送短信
+                }
+                messageService.add("主动加入", content, userId, userT.getMangerId(), "", MessageEnum.SERVE.getValue());
+            }
             map.put("result", "yes");
         } else if (flag == -1) {
             map.put("result", "exist");//已经纯在

@@ -4,6 +4,8 @@ package com.dqys.business.orm.mapper.asset;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.query.asset.PawnQuery;
 import org.apache.ibatis.annotations.Param;
+import com.dqys.business.orm.query.coordinator.ZcyListQuery;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,6 +19,7 @@ public interface PawnInfoMapper {
 
     /**
      * 新增
+     *
      * @param record
      * @return
      */
@@ -24,6 +27,7 @@ public interface PawnInfoMapper {
 
     /**
      * 获取单个实例
+     *
      * @param id
      * @return
      */
@@ -31,6 +35,7 @@ public interface PawnInfoMapper {
 
     /**
      * 修改
+     *
      * @param record
      * @return
      */
@@ -38,12 +43,14 @@ public interface PawnInfoMapper {
 
     /**
      * 统计
+     *
      * @return
      */
     Integer count();
 
     /**
      * 根据借款人查看抵押物
+     *
      * @param lenderId
      * @return
      */
@@ -53,6 +60,7 @@ public interface PawnInfoMapper {
 
     /**
      * 多条件查询抵押物
+     *
      * @param pawnQuery
      * @return
      */
@@ -60,6 +68,7 @@ public interface PawnInfoMapper {
 
     /**
      * 多条件统计
+     *
      * @param pawnQuery
      * @return
      */
@@ -72,4 +81,9 @@ public interface PawnInfoMapper {
      * @return
      */
     PawnInfo getByName(@Param("lenderId")Integer id, @Param("name")String name);
+
+    //    <!--中介抵押物-->
+    List<PawnInfo> pawnListPage(@Param("zcyListQuery") ZcyListQuery zcyListQuery);
+
+    Integer pawnListPageCount(@Param("zcyListQuery") ZcyListQuery zcyListQuery);
 }

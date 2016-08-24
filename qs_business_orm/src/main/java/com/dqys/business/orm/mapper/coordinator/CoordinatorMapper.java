@@ -1,8 +1,11 @@
 package com.dqys.business.orm.mapper.coordinator;
 
+import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
+import com.dqys.business.orm.pojo.zcy.dto.ZcyPawnDTO;
+import com.dqys.business.orm.query.coordinator.ZcyListQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -153,4 +156,37 @@ public interface CoordinatorMapper {
      * 根据用户id获取相应的用户信息和公司信息
      */
     Map<String, Object> getUserAndCompanyByUserId(Integer userId);
+
+    /**
+     * 根据对象类型，用户id，状态 获取对应的状态的对象id
+     *
+     * @param objectType
+     * @param userId
+     * @param status
+     * @return
+     */
+    List<Integer> getObjectIdList(@Param("objectType") Integer objectType, @Param("userId") Integer userId, @Param("status") Integer status);
+
+    Map<String, Object> getRealName(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId, @Param("type") Integer type);
+
+    /**
+     * 资产源信息
+     *
+     * @param value
+     * @param id
+     * @return
+     */
+    List<ZcyPawnDTO> selectByZCYListPage(@Param("zcyListQuery") ZcyListQuery zcyListQuery);
+
+    Integer selectByZCYListPageCount(@Param("zcyListQuery") ZcyListQuery zcyListQuery);
+
+    /**
+     * 获取资产信息标签
+     *
+     * @param estatesId
+     * @return
+     */
+    List<Map<String, Object>> findLabel(Integer estatesId);
+
+
 }

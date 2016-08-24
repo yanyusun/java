@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dqys.business.orm.mapper.asset.PawnInfoMapper" >
+<mapper namespace="com.dqys.business.orm.mapper.asset.PawnInfoMapper">
 
   <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.asset.PawnInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
@@ -26,6 +26,7 @@
     <result column="memo" property="memo" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
   </resultMap>
+
 
   <!-- 基础字段 -->
   <sql id="Base_Column_List" >
@@ -160,13 +161,13 @@
     </trim>
   </insert>
 
-  <!-- 获取单个实例 -->
-  <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
-    <include refid="Base_Column_List" />
-    from bt_pawn
-    where id = #{id,jdbcType=INTEGER}
-  </select>
+    <!-- 获取单个实例 -->
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from bt_pawn
+        where id = #{id,jdbcType=INTEGER}
+    </select>
 
   <!-- 修改 -->
   <update id="update" parameterType="com.dqys.business.orm.pojo.asset.PawnInfo" >
@@ -229,28 +230,47 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <!-- 统计 -->
-  <select id="count" resultType="java.lang.Integer">
+
+    <!-- 统计 -->
+    <select id="count" resultType="java.lang.Integer">
     SELECT count(*) FROM bt_pawn where stateflag = 0
   </select>
 
-  <!-- 借款人下的所有抵押物 -->
-  <select id="listByLenderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <!-- 借款人下的所有抵押物 -->
+    <select id="listByLenderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT * FROM bt_pawn where stateflag = 0 AND lender_id = #{lenderId,jdbcType=INTEGER}
   </select>
 
-  <!-- 多条件查询抵押物 -->
-  <select id="queryList" parameterType="com.dqys.business.orm.query.asset.PawnQuery" resultMap="BaseResultMap">
-    SELECT * from bt_pawn
-    <include refid="Query_Condition" />
-    ORDER by id desc
-  </select>
+    <!-- 多条件查询抵押物 -->
+    <select id="queryList" parameterType="com.dqys.business.orm.query.asset.PawnQuery" resultMap="BaseResultMap">
+        SELECT * from bt_pawn
+        <include refid="Query_Condition"/>
+        ORDER by id desc
+    </select>
 
-  <!-- 多条件统计抵押物 -->
-  <select id="queryCount" parameterType="com.dqys.business.orm.query.asset.PawnQuery" resultMap="BaseResultMap">
-    SELECT count(id) from bt_pawn
-    <include refid="Query_Condition" />
-  </select>
+    <!-- 多条件统计抵押物 -->
+    <select id="queryCount" parameterType="com.dqys.business.orm.query.asset.PawnQuery" resultMap="BaseResultMap">
+        SELECT count(id) from bt_pawn
+        <include refid="Query_Condition"/>
+    </select>
+
+    <!--中介抵押物-->
+    <select id="pawnListPage" resultMap="BaseResultMap">
+        SELECT * from bt_pawn pawn where pawn.stateflag=0 and pawn.id IN
+        <foreach collection="zcyListQuery.objectIdList" index="index" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+        ORDER BY pawn.create_at DESC LIMIT
+        #{zcyListQuery.startPage,jdbcType=INTEGER},#{zcyListQuery.pageCount,jdbcType=INTEGER}
+    </select>
+    <select id="pawnListPageCount" resultType="java.lang.Integer">
+        SELECT count(*) from bt_pawn pawn where pawn.stateflag=0 and pawn.id IN
+        <foreach collection="zcyListQuery.objectIdList" index="index" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+        ORDER BY pawn.create_at DESC
+    </select>
+
 
   <select id="getByName" resultMap="BaseResultMap">
     SELECT

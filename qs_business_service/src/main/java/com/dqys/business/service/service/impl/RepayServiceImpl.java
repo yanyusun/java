@@ -5,10 +5,12 @@ import com.dqys.business.orm.constant.repay.RepayEnum;
 import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
+import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.repay.RepayMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
 import com.dqys.business.orm.pojo.repay.RepayRecord;
@@ -52,6 +54,9 @@ public class RepayServiceImpl implements RepayService {
 
     @Autowired
     private BusinessLogService businessLogService;
+
+    @Autowired
+    private PawnInfoMapper pawnInfoMapper;
 
     @Override
     public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
@@ -99,7 +104,9 @@ public class RepayServiceImpl implements RepayService {
 //            repay.setRepayBills(bytes);
 //        }
         repay.setRepayM(money);
+        setRepayLenderId(repay);
         repayMapper.insertSelective(repay);
+        map.put("repayId", repay.getId());
         //对还款金额进行操作
         boolean flag = false;
         for (IOUInfo iou : ious) {
@@ -173,6 +180,22 @@ public class RepayServiceImpl implements RepayService {
         }
         map.put("result", "yes");
         return map;
+    }
+
+    /**
+     * 根据对象id和对象类型
+     * 设置还款记录中的借款人id
+     *
+     * @param repay
+     */
+    private void setRepayLenderId(Repay repay) {
+        if (repay.getRepayFidType() == RepayEnum.OBJECT_IOU.getValue()) {
+            IOUInfo iouInfo = iouInfoMapper.get(repay.getRepayFid());
+            repay.setLenderId(iouInfo.getLenderId());
+        } else if (repay.getRepayFidType() == RepayEnum.OBJECT_PAWN.getValue()) {
+            PawnInfo pawnInfo = pawnInfoMapper.get(repay.getRepayFid());
+            repay.setLenderId(pawnInfo.getLenderId());
+        }
     }
 
     /**
@@ -278,13 +301,29 @@ public class RepayServiceImpl implements RepayService {
 
     @Override
     public void postpone(DamageApply damageApply, Map map) {
-        setDamage(damageApply);
-        Integer num = repayMapper.addDamageApply(damageApply);
+        DamageApply damageApply1 = new DamageApply();
+        damageApply1.setStatus(0);
+        damageApply1.setApply_object_id(damageApply.getApply_object_id());
+        damageApply1.setObject_type(damageApply.getObject_type());
+        damageApply1.setApply_user_id(damageApply.getApply_user_id());
+        List<DamageApply> damages = repayMapper.selectByDamageApply(damageApply1);
+        Integer num = 0;
+        if (damages.size() > 0) {
+            //修改申请记录
+            DamageApply damage = damages.get(0);
+            damage.setDamage_date(damageApply.getDamage_date());
+            num = repayMapper.updateDamageApply(damage);
+        } else {
+            //添加申请记录
+            setDamage(damageApply);
+            num = repayMapper.addDamageApply(damageApply);
+        }
         if (num > 0) {
             map.put("result", "yes");
         } else {
             map.put("result", "no");
         }
+
     }
 
     @Override
@@ -380,7 +419,8 @@ public class RepayServiceImpl implements RepayService {
     }
 
     @Override
-    public void updateRepayMoney(Integer repayId, Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file, Map map) throws Exception {
+    public Map updateRepayMoney(Integer repayId, Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
+        Map map = new HashMap<>();
         Map reversal = reversal(repayId);//冲正
         if (MessageUtils.transMapToString(reversal, "result").equals("yes")) {
             setBusinessStatus(repayMapper.getIouIdByRecord(repayId));//设置业务状态
@@ -393,6 +433,7 @@ public class RepayServiceImpl implements RepayService {
         } else {
             map.put("result", "no");
         }
+        return map;
     }
 
     @Override
@@ -454,11 +495,12 @@ public class RepayServiceImpl implements RepayService {
         damageApply1.setApply_object_id(damageApply.getApply_object_id());
         damageApply1.setObject_type(damageApply.getObject_type());
         List<DamageApply> damages = repayMapper.selectByDamageApply(damageApply1);
-        if (damages.size() > 0) {
+        if (damages.size() > 0) {//设置申请延期类型(0原始9后续)
             damageApply.setDamage_type(9);
         } else {
             damageApply.setDamage_type(0);
         }
     }
+
 
 }

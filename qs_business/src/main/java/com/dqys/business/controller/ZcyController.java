@@ -1,10 +1,13 @@
 package com.dqys.business.controller;
 
-import com.dqys.business.orm.pojo.zcy.*;
+import com.dqys.business.orm.pojo.zcy.ZcyModule;
+import com.dqys.business.orm.query.coordinator.ZcyListQuery;
 import com.dqys.business.service.service.ZcyService;
+import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.ProtocolTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -12,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -64,6 +67,8 @@ public class ZcyController {
 
     /**
      * @api {post} zcy/addEstates 添加资产信息
+     * @apiParam {ZcyEstatesAddress} zcyEstatesAddressList 资产信息房产地址集合
+     * @apiParam {ZcyEstatesFacility} zcyEstatesFacilities 标签集合
      * @apiUse ZcyEstates
      * @apiUse ZcyEstatesAddress
      * @apiUse ZcyEstatesFacility
@@ -73,15 +78,15 @@ public class ZcyController {
      */
     @RequestMapping("/addEstates")
     @ResponseBody
-    public JsonResponse addEstates(@ModelAttribute ZcyEstates zcyEstates, @ModelAttribute List<ZcyEstatesAddress> zcyEstatesAddressList,
-                                   @ModelAttribute List<ZcyEstatesFacility> zcyEstatesFacilities) {
+    public JsonResponse addEstates(@ModelAttribute ZcyModule zcyModule) {
         Map map = new HashMap<>();
-        map = zcyService.addEstates(zcyEstates, zcyEstatesAddressList, zcyEstatesFacilities);
+        map = zcyService.addEstates(zcyModule.getZcyEstates(), zcyModule.getZcyEstatesAddressList(), zcyModule.getZcyEstatesFacilities());
         return JsonResponseTool.success(map);
     }
 
     /**
      * @api {post} zcy/addOwner 添加业主信息
+     * @apiParam {ZcyOwnerContacts} zcyOwnerContactses 业主信息联系方式集合
      * @apiUse ZcyOwner
      * @apiUse ZcyOwnerContacts
      * @apiSampleRequest zcy/addOwner
@@ -90,14 +95,38 @@ public class ZcyController {
      */
     @RequestMapping("/addOwner")
     @ResponseBody
-    public JsonResponse addOwner(@ModelAttribute ZcyOwner zcyOwner, @ModelAttribute List<ZcyOwnerContacts> zcyOwnerContactses) {
+    public JsonResponse addOwner(@ModelAttribute ZcyModule zcyModule) {
         Map map = new HashMap<>();
-        map = zcyService.addOwner(zcyOwner, zcyOwnerContactses);
+        if (CommonUtil.checkParam(zcyModule.getZcyOwner().getEstatesId())) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        /*
+        List<ZcyOwnerContacts> zcyOwnerContactses = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            List<Map<String, Object>> list = objectMapper.readValue(ownerContacts, List.class);
+            for (int i = 0; i < list.size(); i++) {
+                Map con = list.get(i);
+                ZcyOwnerContacts zcyOwnerContacts = new ZcyOwnerContacts();
+                zcyOwnerContacts.setName(MessageUtils.transMapToString(con, "name"));
+                zcyOwnerContacts.setEmail(MessageUtils.transMapToString(con, "email"));
+                zcyOwnerContacts.setPhone(MessageUtils.transMapToString(con, "phone"));
+                zcyOwnerContacts.setPhoneType(MessageUtils.transMapToString(con, "phoneType"));
+                zcyOwnerContacts.setSex(MessageUtils.transMapToString(con, "sex"));
+                zcyOwnerContacts.setType(MessageUtils.transMapToString(con, "type"));
+                zcyOwnerContactses.add(zcyOwnerContacts);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        map = zcyService.addOwner(zcyModule.getZcyOwner(), zcyModule.getZcyOwnerContactses());
         return JsonResponseTool.success(map);
     }
 
     /**
      * @api {post} zcy/addMaintain 添加维护信息
+     * @apiParam {ZcyMaintainOther} zcyMaintainOthers 维护信息标签集合
+     * @apiParam {ZcyMaintainTax} zcyMaintainTaxes 维护信息税收集合
      * @apiUse ZcyMaintain
      * @apiUse ZcyMaintainOther
      * @apiUse ZcyMaintainTax
@@ -107,9 +136,12 @@ public class ZcyController {
      */
     @RequestMapping("/addMaintain")
     @ResponseBody
-    public JsonResponse addMaintain(@ModelAttribute ZcyMaintain zcyMaintain, @ModelAttribute List<ZcyMaintainOther> zcyMaintainOthers, @ModelAttribute List<ZcyMaintainTax> zcyMaintainTaxes) {
+    public JsonResponse addMaintain(@ModelAttribute ZcyModule zcyModule) {
         Map map = new HashMap<>();
-        map = zcyService.addMaintain(zcyMaintain, zcyMaintainOthers, zcyMaintainTaxes);
+        if (CommonUtil.checkParam(zcyModule.getZcyMaintain().getEstatesId())) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        map = zcyService.addMaintain(zcyModule.getZcyMaintain(), zcyModule.getZcyMaintainOthers(), zcyModule.getZcyMaintainTaxes());
         return JsonResponseTool.success(map);
     }
 
@@ -122,9 +154,12 @@ public class ZcyController {
      */
     @RequestMapping("/addKey")
     @ResponseBody
-    public JsonResponse addKey(@ModelAttribute ZcyKey zcyKey) {
+    public JsonResponse addKey(@ModelAttribute ZcyModule zcyModule) {
         Map map = new HashMap<>();
-        map = zcyService.addKey(zcyKey);
+        if (CommonUtil.checkParam(zcyModule.getZcyKey().getEstatesId())) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        map = zcyService.addKey(zcyModule.getZcyKey());
         return JsonResponseTool.success(map);
     }
 
@@ -137,10 +172,40 @@ public class ZcyController {
      */
     @RequestMapping("/addExpress")
     @ResponseBody
-    public JsonResponse addExpress(@ModelAttribute ZcyExpress zcyExpress) {
+    public JsonResponse addExpress(@ModelAttribute ZcyModule zcyModule) {
         Map map = new HashMap<>();
-        map = zcyService.addExpress(zcyExpress);
+        if (CommonUtil.checkParam(zcyModule.getZcyExpress().getEstatesId())) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        map = zcyService.addExpress(zcyModule.getZcyExpress());
         return JsonResponseTool.success(map);
     }
 
+    /**
+     * @api {post} zcy/awaitReceive 中介抵押物
+     * @apiUse ZcyListQuery
+     * @apiSampleRequest zcy/awaitReceive
+     * @apiGroup ZCY
+     * @apiName zcy/awaitReceive
+     */
+    @RequestMapping("/awaitReceive")
+    @ResponseBody
+    public JsonResponse awaitReceive(@ModelAttribute ZcyListQuery zcyListQuery, HttpServletRequest httpServletRequest) throws Exception {
+        Integer userId = ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+        );
+        Map map = new HashMap<>();
+        if (zcyListQuery.getStatus() != 0 && zcyListQuery.getStatus() != 1) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if (zcyListQuery.getPage() < 0) {
+            zcyListQuery.setPage(0);
+        }
+        map = zcyService.awaitReceive(userId, zcyListQuery);
+        return JsonResponseTool.success(map);
+    }
 }
