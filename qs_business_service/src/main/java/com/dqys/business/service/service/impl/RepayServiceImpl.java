@@ -23,6 +23,7 @@ import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.service.RepayService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.SmsEnum;
+import com.dqys.core.utils.DateFormatTool;
 import com.dqys.core.utils.SmsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -314,31 +315,36 @@ public class RepayServiceImpl implements RepayService {
         List<DamageApply> damages = repayMapper.selectByDamageApply(damageApply1);
         Integer num = 0;
         Integer id = 0;
+        String damage_date = "";
+        String original_time = "";
         if (damages.size() > 0) {
             //修改申请记录
             DamageApply damage = damages.get(0);
             damage.setDamage_date(damageApply.getDamage_date());
             num = repayMapper.updateDamageApply(damage);
             id = damage.getId();
+            damage_date = DateFormatTool.format(damage.getDamage_date(), DateFormatTool.DATE_FORMAT_10_REG1);
+            original_time = DateFormatTool.format(damage.getOriginal_time(), DateFormatTool.DATE_FORMAT_10_REG1);
         } else {
             //添加申请记录
-            setDamage(damageApply);
+            setDamage(damageApply);//设置
             num = repayMapper.addDamageApply(damageApply);
         }
         if (num > 0) {
             id = damageApply.getId();
-            SmsUtil smsUtil = new SmsUtil();//发送短信通知
-            Integer code = SmsEnum.POSTPONE_APPLY.getValue();
-            Map userC = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getEaxm_user_id());//接收者
-            Map oper = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getApply_user_id());//发送者
-            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
-                    MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "realName"), damageApply.getObject_type() + "", ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName());
-            messageService.add("延期申请", content, damageApply.getApply_user_id(), damageApply.getEaxm_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE.getValue(), "applyId=" + id);
-            map.put("result", "yes");
-        } else {
-            map.put("result", "no");
+            damage_date = DateFormatTool.format(damageApply.getDamage_date(), DateFormatTool.DATE_FORMAT_10_REG1);
+            original_time = DateFormatTool.format(damageApply.getOriginal_time(), DateFormatTool.DATE_FORMAT_10_REG1);
         }
 
+        SmsUtil smsUtil = new SmsUtil();//发送短信通知
+        Integer code = SmsEnum.POSTPONE_APPLY.getValue();
+        Map userC = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getEaxm_user_id());//接收者
+        Map oper = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getApply_user_id());//发送者
+        String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
+                MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "realName"), damageApply.getObject_type() + "",
+                ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName(), damage_date, original_time);
+        messageService.add("延期申请", content, damageApply.getApply_user_id(), damageApply.getEaxm_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE.getValue(), "applyId=" + id);
+        map.put("result", "yes");
     }
 
     @Override
@@ -502,6 +508,11 @@ public class RepayServiceImpl implements RepayService {
         return false;
     }
 
+    /**
+     * 给延期申请对象赋值
+     *
+     * @param damageApply
+     */
     private void setDamage(DamageApply damageApply) {
         if (damageApply.getObject_type() == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
             AssetInfo assetInfo = assetInfoMapper.get(damageApply.getApply_object_id());

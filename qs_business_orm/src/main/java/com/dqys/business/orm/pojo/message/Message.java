@@ -1,7 +1,5 @@
 package com.dqys.business.orm.pojo.message;
 
-import com.dqys.core.base.BasePageDTO;
-import com.dqys.core.base.BasePagination;
 import com.dqys.core.base.BaseQuery;
 
 import java.io.Serializable;
@@ -21,13 +19,13 @@ public class Message extends BaseQuery implements Serializable {
     private Integer type;//int(2) NOT NULL COMMENT '消息类型(0任务1产品2安全3服务)',
     private Integer status;//int(2) NOT NULL COMMENT '消息状态(0未读1已读2删除)',
     private Integer businessType;//int(2) NOT NULL COMMENT '业务类型：具体就看MessageBTEnum枚举'',
-    private Integer operUrl;//int(2) NOT NULL COMMENT '操作地址'',
+    private String operUrl;//int(2) NOT NULL COMMENT '操作地址'',
 
-    public Integer getOperUrl() {
+    public String getOperUrl() {
         return operUrl;
     }
 
-    public void setOperUrl(Integer operUrl) {
+    public void setOperUrl(String operUrl) {
         this.operUrl = operUrl;
     }
 

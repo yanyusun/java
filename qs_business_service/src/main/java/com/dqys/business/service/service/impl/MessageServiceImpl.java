@@ -60,7 +60,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Integer add(String title, String content, Integer sender_id, Integer receive_id, String label, Integer type, Integer businessType) {
+    public Integer add(String title, String content, Integer sender_id, Integer receive_id, String label, Integer type, Integer businessType, String operUrl) {
         if (title.equals("") || sender_id == null || receive_id == null || type == null) {
             return 0;
         } else {
@@ -73,6 +73,7 @@ public class MessageServiceImpl implements MessageService {
             message.setTitle(title);
             message.setType(type);
             message.setBusinessType(businessType);
+            message.setOperUrl(operUrl);
             return messageMapper.add(message);
         }
 
