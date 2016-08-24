@@ -115,7 +115,7 @@ public class ZcyEstates implements Serializable {
 
     private String operator;//录入人员
 
-    private Integer objecId;//对象id
+    private Integer objectId;//对象id
 
     private Integer objectType;//对象类型
 
@@ -127,12 +127,12 @@ public class ZcyEstates implements Serializable {
         this.operator = operator;
     }
 
-    public Integer getObjecId() {
-        return objecId;
+    public Integer getObjectId() {
+        return objectId;
     }
 
-    public void setObjecId(Integer objecId) {
-        this.objecId = objecId;
+    public void setObjectId(Integer objectId) {
+        this.objectId = objectId;
     }
 
     public Integer getObjectType() {

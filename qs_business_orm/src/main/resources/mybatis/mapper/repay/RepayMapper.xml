@@ -337,7 +337,7 @@
         UPDATE business set status=#{status,jdbcType=INTEGER} WHERE id=#{id,jdbcType=INTEGER}
     </update>
     <!--添加延期申请记录-->
-    <insert id="addDamageApply" parameterType="com.dqys.business.orm.pojo.repay.DamageApply">
+    <insert id="addDamageApply" parameterType="com.dqys.business.orm.pojo.repay.DamageApply" keyProperty="id" useGeneratedKeys="true">
         insert into t_damage_apply
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">

@@ -132,7 +132,7 @@ public class ZcyServiceImpl implements ZcyService {
     }
 
     @Override
-    public Map  addEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> address, List<ZcyEstatesFacility> facilities) {
+    public Map addEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> address, List<ZcyEstatesFacility> facilities) {
         Map map = new HashMap<>();
         Integer result = 0;
         if (zcyEstates.getId() == null) {
@@ -143,13 +143,17 @@ public class ZcyServiceImpl implements ZcyService {
             zcyEstatesFacilityMapper.deleteByPrimaryKey(zcyEstates.getId());
         }
         if (result > 0) {
-            for (ZcyEstatesAddress addr : address) {
-                addr.setEstatesId(zcyEstates.getId());
-                zcyEstatesAddressMapper.insertSelective(addr);
+            if (address != null) {
+                for (ZcyEstatesAddress addr : address) {
+                    addr.setEstatesId(zcyEstates.getId());
+                    zcyEstatesAddressMapper.insertSelective(addr);
+                }
             }
-            for (ZcyEstatesFacility fac : facilities) {
-                fac.setEstatesId(zcyEstates.getId());
-                zcyEstatesFacilityMapper.insertSelective(fac);
+            if (facilities != null) {
+                for (ZcyEstatesFacility fac : facilities) {
+                    fac.setEstatesId(zcyEstates.getId());
+                    zcyEstatesFacilityMapper.insertSelective(fac);
+                }
             }
             map.put("result", "yes");
             map.put("estatesId", zcyEstates.getId());

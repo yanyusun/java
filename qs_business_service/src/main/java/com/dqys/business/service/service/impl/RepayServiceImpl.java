@@ -6,6 +6,7 @@ import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
+import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.repay.RepayMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
@@ -14,6 +15,7 @@ import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
 import com.dqys.business.orm.pojo.repay.RepayRecord;
+import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
 import com.dqys.business.service.exception.bean.ArtificialException;
@@ -21,6 +23,8 @@ import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.service.RepayService;
 import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.core.constant.SmsEnum;
+import com.dqys.core.utils.SmsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -57,6 +61,9 @@ public class RepayServiceImpl implements RepayService {
 
     @Autowired
     private PawnInfoMapper pawnInfoMapper;
+
+    @Autowired
+    private CoordinatorMapper coordinatorMapper;
 
     @Override
     public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
@@ -308,17 +315,27 @@ public class RepayServiceImpl implements RepayService {
         damageApply1.setApply_user_id(damageApply.getApply_user_id());
         List<DamageApply> damages = repayMapper.selectByDamageApply(damageApply1);
         Integer num = 0;
+        Integer id = 0;
         if (damages.size() > 0) {
             //修改申请记录
             DamageApply damage = damages.get(0);
             damage.setDamage_date(damageApply.getDamage_date());
             num = repayMapper.updateDamageApply(damage);
+            id = damage.getId();
         } else {
             //添加申请记录
             setDamage(damageApply);
             num = repayMapper.addDamageApply(damageApply);
         }
         if (num > 0) {
+            id = damageApply.getId();
+            SmsUtil smsUtil = new SmsUtil();//发送短信通知
+            Integer code = SmsEnum.POSTPONE_APPLY.getValue();
+            Map userC = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getEaxm_user_id());//接收者
+            Map oper = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getApply_user_id());//发送者
+            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
+                    MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "realName"), damageApply.getObject_type() + "", ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName());
+            messageService.add("延期申请", content, damageApply.getApply_user_id(), damageApply.getEaxm_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE.getValue(), "applyId=" + id);
             map.put("result", "yes");
         } else {
             map.put("result", "no");
@@ -347,32 +364,36 @@ public class RepayServiceImpl implements RepayService {
         Integer num = repayMapper.updateDamageApply(damageApply);//修改审核状态
         if (num > 0) {
             Integer result = 0;
-            if (damageApply.getObject_type() == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
-                AssetInfo assetInfo = new AssetInfo();
-                assetInfo.setId(damageApply.getApply_object_id());
-                assetInfo.setEndAt(damageApply.getDamage_date());
-                result = assetInfoMapper.update(assetInfo);
-                businessLogService.add(assetInfo.getId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.update.getValue(), "延期申请审核操作", "", 0, 0);//操作日志
-            }
-            if (damageApply.getObject_type() == ObjectTypeEnum.LENDER.getValue()) {
-                LenderInfo lenderInfo = new LenderInfo();
-                lenderInfo.setId(damageApply.getApply_object_id());
-                lenderInfo.setEndAt(damageApply.getDamage_date());
-                result = lenderInfoMapper.update(lenderInfo);
+            if (statuas == 1) {
+                if (damageApply.getObject_type() == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+                    AssetInfo assetInfo = new AssetInfo();
+                    assetInfo.setId(damageApply.getApply_object_id());
+                    assetInfo.setEndAt(damageApply.getDamage_date());
+                    result = assetInfoMapper.update(assetInfo);
+//                businessLogService.add(assetInfo.getId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.update.getValue(), "延期申请审核操作", "", 0, 0);//操作日志
+                }
+                if (damageApply.getObject_type() == ObjectTypeEnum.LENDER.getValue()) {
+                    LenderInfo lenderInfo = new LenderInfo();
+                    lenderInfo.setId(damageApply.getApply_object_id());
+                    lenderInfo.setEndAt(damageApply.getDamage_date());
+                    result = lenderInfoMapper.update(lenderInfo);
 //                businessLogService.add(lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue(), LenderEnum.UPDATE_EDIT.getValue(), "延期申请审核操作", "", 0, 0);//操作日志
+                }
             }
-            if (result > 0) {
-                //添加通知消息记录
-                String content = "您的延期审核" + (statuas == 1 ? "通过！" : "不通过！");
-                messageService.add("延期审核结果", content, damageApply.getEaxm_user_id(), damageApply.getApply_user_id(), "", MessageEnum.PRODUCT.getValue());
-                //发送短信或邮件
-                messageService.sendSMS(damageApply.getApply_user_id(), null, content);
+            //添加通知消息记录
+            SmsUtil smsUtil = new SmsUtil();//发送短信通知
+            Integer code = 0;
+            if (statuas == 1) {
+                code = SmsEnum.POSTPONE_AUDIT_YES.getValue();
             } else {
-                throw new Exception();
+                code = SmsEnum.POSTPONE_AUDIT_NO.getValue();
             }
+            Map userC = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getApply_user_id());
+            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), "");
+            messageService.add("延期审核结果", content, damageApply.getEaxm_user_id(), damageApply.getApply_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE.getValue(), "");
             map.put("result", "yes");
         } else {
-            map.put("result", "no");//审核修改失败
+            map.put("result", "no");
         }
     }
 
@@ -419,7 +440,8 @@ public class RepayServiceImpl implements RepayService {
     }
 
     @Override
-    public Map updateRepayMoney(Integer repayId, Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
+    public Map updateRepayMoney(Integer repayId, Integer userId, Integer objectId, Integer objectType, Integer
+            repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
         Map map = new HashMap<>();
         Map reversal = reversal(repayId);//冲正
         if (MessageUtils.transMapToString(reversal, "result").equals("yes")) {
@@ -454,6 +476,7 @@ public class RepayServiceImpl implements RepayService {
      * @param re
      * @return
      */
+
     private boolean reversalDispose(RepayRecord re) {
         IOUInfo iouInfo = iouInfoMapper.get(re.getIouId());
         int result = repayMapper.repayIouReversal(iouInfo.getId(), iouInfo.getVersion(), re.getRepayPrincipal(), re.getRepayInterest(), re.getRepayFine());
