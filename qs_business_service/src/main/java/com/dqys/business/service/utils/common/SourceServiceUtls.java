@@ -17,7 +17,7 @@ public class SourceServiceUtls {
 
     public static List<SelectDTOList> toSelect(List<SourceNavigation> navigationList) {
         // 降序排列
-        Collections.sort(navigationList, (a, b) -> b.getPid().compareTo(a.getPid()));
+        Collections.sort(navigationList, (a, b) -> a.getPid().compareTo(b.getPid()));
 
         List<SelectDTOList> result = new ArrayList<>();
         Map<Integer, List<SelectDTOList>> map = new HashMap<>();
@@ -46,10 +46,10 @@ public class SourceServiceUtls {
 
     public static void addChildren(List<SelectDTOList> pList, Map<Integer, List<SelectDTOList>> map) {
         for (int i = 0; i < pList.size(); i++) {
-            if (map.get(pList.get(i).getKey()) != null) {
-                List<SelectDTOList> result = map.get(pList.get(i).getKey());
-                addChildren(result, map);
+            if (map.get(Integer.valueOf(pList.get(i).getKey())) != null) {
+                List<SelectDTOList> result = map.get(Integer.valueOf(pList.get(i).getKey()));
                 pList.get(i).setChildren(result);
+                addChildren(pList.get(i).getChildren(), map);
             }
         }
     }
@@ -186,4 +186,5 @@ public class SourceServiceUtls {
 
         return sourceDTO;
     }
+
 }

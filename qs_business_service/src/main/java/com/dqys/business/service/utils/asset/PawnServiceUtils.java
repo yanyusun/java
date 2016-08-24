@@ -110,4 +110,21 @@ public class PawnServiceUtils {
 
         return pawnDTO;
     }
+
+    public static String checkData(PawnDTO pawnDTO){
+        if(CommonUtil.checkParam(pawnDTO,
+                pawnDTO.getPawnName(), pawnDTO.getAmount(), pawnDTO.getType(),
+                pawnDTO.getEvaluateExcellent(), pawnDTO.getEvaluateLevel(), pawnDTO.getSize(),
+                pawnDTO.getProvince(), pawnDTO.getCity(), pawnDTO.getDistrict(),
+                pawnDTO.getAddress(), pawnDTO.getPawnRate(), pawnDTO.getWorth(),
+                pawnDTO.getDisposeStatus(), pawnDTO.getLenderId())){
+            return "参数错误";
+        }
+        if(!CommonUtil.isMoneyFormat(pawnDTO.getAmount(), pawnDTO.getPawnRate(), pawnDTO.getWorth())){
+            return "存在非正常金额";
+        }
+
+        return null;
+    }
+
 }

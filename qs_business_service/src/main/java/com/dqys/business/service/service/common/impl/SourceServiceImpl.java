@@ -40,7 +40,7 @@ public class SourceServiceImpl implements SourceService {
             return null;
         }
         List<SourceNavigation> navigationList = sourceNavigationMapper.listByTypeAndLenderId(lenderId, type);
-        return null;
+        return SourceServiceUtls.toSelect(navigationList);
     }
 
     @Override

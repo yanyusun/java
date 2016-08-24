@@ -91,13 +91,18 @@ public class CommonUtil {
 
     /**
      * 判断是否金额格式(2位小数)
-     * @param num 金额
+     * @param numArr 金额
      * @return true 符合金额格式
      */
-    public static boolean isMoneyFormat(Double num){
-        Double number = num * 1000;
-        if(number % 10 > 0){
+    public static boolean isMoneyFormat(Double... numArr){
+        if(numArr == null || numArr.length == 0){
             return false;
+        }
+        for (Double num : numArr) {
+            Double number = num * 1000;
+            if(number % 10 > 0){
+                return false;
+            }
         }
         return true;
     }
