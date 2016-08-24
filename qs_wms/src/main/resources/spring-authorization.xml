@@ -4,9 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.1.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <mvc:interceptors>
+    <!--<mvc:interceptors>
         <mvc:interceptor>
-            <!--默认全部需要登录身份-->
             <mvc:mapping path="/**"/>
 
             <mvc:exclude-mapping path="/login"/>
@@ -14,7 +13,7 @@
             <mvc:exclude-mapping path="/html/*"/>
             <bean class="com.dqys.wms.interceptor.WMSInterceptor"/>
         </mvc:interceptor>
-    </mvc:interceptors>
+    </mvc:interceptors>-->
 
     <mvc:resources mapping="/html/**" location="/html/"/>
 </beans>
