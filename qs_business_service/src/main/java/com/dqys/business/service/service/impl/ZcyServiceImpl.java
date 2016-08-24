@@ -132,7 +132,7 @@ public class ZcyServiceImpl implements ZcyService {
     }
 
     @Override
-    public Map addEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> address, List<ZcyEstatesFacility> facilities) {
+    public Map  addEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> address, List<ZcyEstatesFacility> facilities) {
         Map map = new HashMap<>();
         Integer result = 0;
         if (zcyEstates.getId() == null) {

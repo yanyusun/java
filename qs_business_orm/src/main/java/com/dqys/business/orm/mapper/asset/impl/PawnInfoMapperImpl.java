@@ -61,7 +61,7 @@ public class PawnInfoMapperImpl extends BaseDao implements PawnInfoMapper {
     public PawnInfo getByName(@Param("lenderId") Integer id, @Param("name") String name) {
         return super.getSqlSession().getMapper(PawnInfoMapper.class).getByName(id, name);
     }
-}
+
 
     @Override
     public List<PawnInfo> pawnListPage(@Param("zcyListQuery") ZcyListQuery zcyListQuery) {
