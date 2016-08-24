@@ -7,6 +7,7 @@ import com.dqys.business.service.dto.asset.LenderInsertDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.LenderListQuery;
 import com.dqys.business.service.service.LenderService;
+import com.dqys.business.service.utils.asset.LenderServiceUtils;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
@@ -92,6 +93,14 @@ public class LenderController {
                 lenderInsertDTO.getContactDTOList().get(0))) {
             return JsonResponseTool.paramErr("参数错误");
         }
+        String data = LenderServiceUtils.checkData(lenderInsertDTO.getLenderDTO());
+        if(data != null){
+            return JsonResponseTool.paramErr(data);
+        }
+        data = LenderServiceUtils.checkData(lenderInsertDTO.getContactDTOList());
+        if(data != null){
+            return JsonResponseTool.paramErr(data);
+        }
         return lenderService.add_tx(lenderInsertDTO.getContactDTOList(), lenderInsertDTO.getLenderDTO());
     }
 
@@ -124,8 +133,17 @@ public class LenderController {
     @ResponseBody
     public JsonResponse updateLenderRelation(@ModelAttribute LenderInsertDTO lenderInsertDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(
-                lenderInsertDTO, lenderInsertDTO.getLenderDTO(), lenderInsertDTO.getLenderDTO().getId())) {
+                lenderInsertDTO, lenderInsertDTO.getLenderDTO(), lenderInsertDTO.getLenderDTO().getId(),
+                lenderInsertDTO.getLenderDTO().getId())) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        String data = LenderServiceUtils.checkData(lenderInsertDTO.getLenderDTO());
+        if(data != null){
+            return JsonResponseTool.paramErr(data);
+        }
+        data = LenderServiceUtils.checkData(lenderInsertDTO.getContactDTOList());
+        if(data != null){
+            return JsonResponseTool.paramErr(data);
         }
         return lenderService.update_tx(lenderInsertDTO.getContactDTOList(), lenderInsertDTO.getLenderDTO());
     }

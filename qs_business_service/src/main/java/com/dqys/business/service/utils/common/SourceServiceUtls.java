@@ -58,7 +58,7 @@ public class SourceServiceUtls {
         SelectDTOList selectDTOList = new SelectDTOList();
 
         selectDTOList.setKey(sourceNavigation.getId().toString());
-        selectDTOList.setValue(sourceNavigation.getName());
+        selectDTOList.setTitle(sourceNavigation.getName());
 
         return selectDTOList;
     }

@@ -34,6 +34,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -192,6 +193,12 @@ public class UserServiceImpl implements UserService {
             // 密码初始化
             userInfo.setPassword(SignatureTool.md5Encode(INIT_PASSSWORD, null));
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            // 保存头像信息
+            FileTool.saveFileSync(data.getAvg());
+        } catch (IOException e) {
             e.printStackTrace();
         }
         Integer result = tUserInfoMapper.insertSelective(userInfo);

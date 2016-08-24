@@ -256,9 +256,7 @@ public class  AssetServiceUtils {
         if(!CommonUtil.isExist(CommonUtil.UPLETTER, assetDTO.getEvaluateLevel())){
             return "评级参数错误";
         }
-        if(!CommonUtil.isMoneyFormat(assetDTO.getAccrual())
-                && !CommonUtil.isMoneyFormat(assetDTO.getLoan())
-                && !CommonUtil.isMoneyFormat(assetDTO.getAppraisal())){
+        if(!CommonUtil.isMoneyFormat(assetDTO.getAccrual(), assetDTO.getLoan(), assetDTO.getAppraisal())){
             return "存在非法金额参数";
         }
         if(AreaTool.validateArea(assetDTO.getProvince(), assetDTO.getCity(), assetDTO.getDistrict()) != null){

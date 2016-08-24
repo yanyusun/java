@@ -17,7 +17,6 @@ import com.dqys.business.orm.pojo.repay.Repay;
 import com.dqys.business.orm.pojo.repay.RepayRecord;
 import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
-import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
 import com.dqys.business.service.exception.bean.ArtificialException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.MessageService;
@@ -27,7 +26,6 @@ import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.utils.SmsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
