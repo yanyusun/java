@@ -389,7 +389,9 @@ public class RepayServiceImpl implements RepayService {
                 code = SmsEnum.POSTPONE_AUDIT_NO.getValue();
             }
             Map userC = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getApply_user_id());
-            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), "");
+            Map oper = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getEaxm_user_id());
+            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
+                    MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "realName"), damageApply.getObject_type() + "", ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName());
             messageService.add("延期审核结果", content, damageApply.getEaxm_user_id(), damageApply.getApply_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE.getValue(), "");
             map.put("result", "yes");
         } else {
