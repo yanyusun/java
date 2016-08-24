@@ -37,6 +37,9 @@
         <result column="metro" property="metro" jdbcType="VARCHAR"/>
         <result column="school_house" property="schoolHouse" jdbcType="VARCHAR"/>
         <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="operator" property="operator" jdbcType="VARCHAR"/>
+        <result column="objec_id" property="objecId" jdbcType="INTEGER"/>
+        <result column="object_type" property="objectType" jdbcType="INTEGER"/>
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.dqys.business.orm.pojo.zcy.ZcyEstates" extends="BaseResultMap">
         <result column="content" property="content" jdbcType="LONGVARCHAR"/>
@@ -46,7 +49,7 @@
     house_w, house_remark, quota, acreage, selling_price, decade, property, orientation, 
     guide_price, guide_remark, house_remarkv, decorate_price, tenement_price, facility, 
     internal_number, title, decorate_type, decorate_case, decorate_time, build_type, 
-    house_belong, house_use, heating_way, metro, school_house, version
+    house_belong, house_use, heating_way, metro, school_house, version,operator,object_id,object_type
   </sql>
     <sql id="Blob_Column_List">
     content
@@ -63,7 +66,8 @@
     UPDATE t_zcy_estates SET stateflag=now()
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates" keyProperty="id" useGeneratedKeys="true">
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates" keyProperty="id"
+            useGeneratedKeys="true">
     insert into t_zcy_estates (id, create_at, update_at, 
       stateflag, annotation, replenish, 
       house_s, house_t, house_c, 
@@ -75,7 +79,7 @@
       title, decorate_type, decorate_case, 
       decorate_time, build_type, house_belong, 
       house_use, heating_way, metro, 
-      school_house, version, content
+      school_house, version, content,operator,objec_id,object_type
       )
     values (#{id,jdbcType=INTEGER}, now(), now(),
       0, #{annotation,jdbcType=VARCHAR}, #{replenish,jdbcType=VARCHAR},
@@ -88,10 +92,11 @@
       #{title,jdbcType=VARCHAR}, #{decorateType,jdbcType=VARCHAR}, #{decorateCase,jdbcType=VARCHAR}, 
       #{decorateTime,jdbcType=VARCHAR}, #{buildType,jdbcType=VARCHAR}, #{houseBelong,jdbcType=VARCHAR}, 
       #{houseUse,jdbcType=VARCHAR}, #{heatingWay,jdbcType=VARCHAR}, #{metro,jdbcType=VARCHAR}, 
-      #{schoolHouse,jdbcType=VARCHAR}, 0, #{content,jdbcType=LONGVARCHAR}
+      #{schoolHouse,jdbcType=VARCHAR}, 0,#{operator,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR},#{objectId,jdbcType=INTEGER},#{objectType,jdbcType=INTEGER}
       )
   </insert>
-    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates" keyProperty="id" useGeneratedKeys="true" >
+    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates" keyProperty="id"
+            useGeneratedKeys="true">
         insert into t_zcy_estates
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -191,6 +196,15 @@
             </if>
             <if test="content != null">
                 content,
+            </if>
+            <if test="operator != null">
+                operator,
+            </if>
+            <if test="objectId != null">
+                object_id,
+            </if>
+            <if test="objectType != null">
+                object_type,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -295,6 +309,15 @@
             <if test="content != null">
                 #{content,jdbcType=LONGVARCHAR},
             </if>
+            <if test="operator != null">
+                #{operator,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="objectId != null">
+                #{objectId,jdbcType=INTEGER},
+            </if>
+            <if test="objectType != null">
+                #{objectType,jdbcType=INTEGER},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates">
@@ -395,6 +418,15 @@
             <if test="content != null">
                 content = #{content,jdbcType=LONGVARCHAR},
             </if>
+            <if test="operator != null">
+                operator = #{operator,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="objectId != null">
+                object_id=#{objectId,jdbcType=INTEGER},
+            </if>
+            <if test="objectType != null">
+                object_type=#{objectType,jdbcType=INTEGER},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -474,13 +506,14 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-    <select id="selectBySelective" resultMap="ResultMapWithBLOBs" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates">
+    <select id="selectBySelective" resultMap="ResultMapWithBLOBs"
+            parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates">
         select
         <include refid="Base_Column_List"/>
         ,
         <include refid="Blob_Column_List"/>
         from t_zcy_estates
-        where  stateflag=0
+        where stateflag=0
     </select>
 
 </mapper>

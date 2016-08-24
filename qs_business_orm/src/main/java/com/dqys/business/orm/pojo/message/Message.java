@@ -20,6 +20,24 @@ public class Message extends BaseQuery implements Serializable {
     private String sendTime;//datetime NOT NULL COMMENT '发送时间',
     private Integer type;//int(2) NOT NULL COMMENT '消息类型(0任务1产品2安全3服务)',
     private Integer status;//int(2) NOT NULL COMMENT '消息状态(0未读1已读2删除)',
+    private Integer businessType;//int(2) NOT NULL COMMENT '业务类型：具体就看MessageBTEnum枚举'',
+    private Integer operUrl;//int(2) NOT NULL COMMENT '操作地址'',
+
+    public Integer getOperUrl() {
+        return operUrl;
+    }
+
+    public void setOperUrl(Integer operUrl) {
+        this.operUrl = operUrl;
+    }
+
+    public Integer getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(Integer businessType) {
+        this.businessType = businessType;
+    }
 
     public Integer getId() {
         return id;
