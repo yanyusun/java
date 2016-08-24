@@ -39,7 +39,7 @@ public class PawnDTO {
     private String pawnNo;  // 编号
     private String pawnName;  // 抵押物名称
     private Double amount;  // 贷款金额
-    private String type;  // 抵押物雷系
+    private String type;  // 抵押物类型
     private String evaluateExcellent;  // 评优
     private String evaluateLevel;  // 评级
     private String size;  // 规模大小
