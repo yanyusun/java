@@ -111,7 +111,7 @@ public class SourceServiceImpl implements SourceService {
             return null;
         }
         SourceInfo sourceInfo = sourceInfoMapper.getByNavIdAndLenderId(navId, lenderId);
-        if(CommonUtil.checkParam(sourceInfo, sourceInfo.getId())){
+        if(sourceInfo == null){
             return null;
         }
         Integer sourceId = sourceInfo.getId();

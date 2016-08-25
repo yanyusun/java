@@ -99,7 +99,6 @@ public class AuthController extends BaseApiContorller {
                 return JsonResponseTool.failure(smsCodeResult.getMessage());
             }
 
-            // TODO: 16-4-13  发送短信
             SmsUtil smsUtil = new SmsUtil();
             smsUtil.sendSms(SysProperty.SMS_VERIFICATION_CODE, mobile, smsCodeResult.getData());
             LogManager.getRootLogger().debug(smsCodeResult.getData());
