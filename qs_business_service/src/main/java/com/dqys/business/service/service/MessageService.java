@@ -35,15 +35,17 @@ public interface MessageService {
     Integer del(Integer[] ids);
 
     /**
-     * @param title      标题
-     * @param content    内容
-     * @param sender_id  发送者id
-     * @param receive_id 接受者id
-     * @param label      标签
-     * @param type       消息类型(0任务1产品2安全3服务)
+     * @param title        标题
+     * @param content      内容
+     * @param sender_id    发送者id
+     * @param receive_id   接受者id
+     * @param label        标签
+     * @param type         消息类型(0任务1产品2安全3服务)
+     * @param businessType 业务类型(0任务1产品2安全3服务)
+     * @param operUrl      操作地址参数
      * @return
      */
-    Integer add(String title, String content, Integer sender_id, Integer receive_id, String label, Integer type);
+    Integer add(String title, String content, Integer sender_id, Integer receive_id, String label, Integer type, Integer businessType, String operUrl);
 
     /**
      * 查询消息记录数

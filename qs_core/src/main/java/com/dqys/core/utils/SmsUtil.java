@@ -56,7 +56,7 @@ public class SmsUtil {
      * @param content     替换内容
      * @return
      */
-    public void sendSms(Integer code, String mobilePhone, String... content) {
+    public String sendSms(Integer code, String mobilePhone, String... content) {
         if (FormatValidateTool.checkMobile(mobilePhone)) {
             String msg = this.getKeyValue(code);
             if (msg != null && !msg.equals("")) {
@@ -68,6 +68,9 @@ public class SmsUtil {
                     RabbitMQProducerTool.addToSMSSendQueue(mobilePhone.toString(), msg);//加入短信队列
                 }
             }
+            return msg;
+        } else {
+            return "";
         }
     }
 

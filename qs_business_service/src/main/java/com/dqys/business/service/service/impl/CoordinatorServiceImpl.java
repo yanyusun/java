@@ -1,5 +1,7 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.CoordinatorEnum;
@@ -18,6 +20,7 @@ import com.dqys.business.orm.pojo.coordinator.OURelation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
+import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
 import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
@@ -26,6 +29,8 @@ import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.core.constant.SmsEnum;
+import com.dqys.core.utils.SmsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +60,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     private BusinessLogService businessLogService;
     @Autowired
     private RepayMapper repayMapper;
+    @Autowired
+    private TUserInfoMapper tUserInfoMapper;
 
     @Override
     public void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType, Integer userid) {
@@ -171,20 +178,21 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         int num = 0;
         UserTeam team = new UserTeam();
         team.setId(userTeamId);
-        userId = 12;
         UserTeam userTeam = userTeamMapper.selectByPrimaryKeySelective(team);
         Map userAndCompany = coordinatorMapper.getUserAndCompanyByUserId(userId);
         for (Integer uid : userIds) {
             Integer flag = 0;
-            Integer businessType = TeammateReEnum.BUSINESS_TYPE_TASK.getValue();
-            Integer joinType = TeammateReEnum.JOIN_TYPE_PASSIVITY.getValue();
-            flag = getTeammateFlag(userTeamId, uid, flag, businessType, joinType);//添加参与人
+            TeammateRe teammateRe = new TeammateRe();
+            teammateRe.setUserId(userId);
+            teammateRe.setUserTeamId(userTeamId);
+            teammateRe.setJoinType(TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue());
+            teammateRe.setBusinessType(TeammateReEnum.BUSINESS_TYPE_TASK.getValue());
+            flag = getTeammateFlag(teammateRe);//添加参与人
             if (flag > 0) {
                 num++;
-                Integer result = messageService.add("任务邀请", remark, userId, uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue());//添加消息记录
+                Integer result = messageService.add("任务邀请", remark, userId, uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.INSIDE.getValue(), "teammateId=" + teammateRe.getId());//添加消息记录
                 if (result > 0) {
                     //发送短信或是邮件
-//                    messageService.sendSMS(uid, null, remark);
                     messageService.sendSmsByTeammate(userTeam, userAndCompany, uid, remark);
                 }
             }
@@ -201,19 +209,12 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     /**
      * 添加参与人信息
      *
-     * @param userTeamId
-     * @param uid
-     * @param flag
-     * @param businessType
-     * @param joinType
      * @return
      */
-    private Integer getTeammateFlag(Integer userTeamId, Integer uid, Integer flag, Integer businessType, Integer joinType) {
+    private Integer getTeammateFlag(TeammateRe teammateRe) {
+        Integer flag = 0;
         List<TeammateRe> users = new ArrayList<>();
-        TeammateRe teammateRe = new TeammateRe();
-        teammateRe.setUserTeamId(userTeamId);
         List<TeammateRe> list = teammateReMapper.selectSelective(teammateRe);//查询用于判断人员类别的定位
-        teammateRe.setUserId(uid);
         if (list.size() > 0) {
             users = teammateReMapper.selectSelective(teammateRe);//查询用于判断人员加入过这个协作器没有
         }
@@ -233,8 +234,6 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             } else {
                 teammateRe.setType(TeammateReEnum.TYPE_PARTICIPATION.getValue());
             }
-            teammateRe.setBusinessType(businessType);
-            teammateRe.setJoinType(joinType);
             teammateRe.setStatus(ObjectAcceptTypeEnum.init.getValue());
             flag = teammateReMapper.insertSelective(teammateRe);//添加参与人
         }
@@ -306,8 +305,26 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     public Map addTeammate(Integer userTeammateId, Integer userId) throws BusinessLogException {
         Map map = new HashMap<>();
         Integer flag = 0;
-        flag = getTeammateFlag(userTeammateId, userId, flag, TeammateReEnum.BUSINESS_TYPE_TASK.getValue(), TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue());
+        TeammateRe teammateRe = new TeammateRe();
+        teammateRe.setUserId(userId);
+        teammateRe.setUserTeamId(userTeammateId);
+        teammateRe.setJoinType(TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue());
+        teammateRe.setBusinessType(TeammateReEnum.BUSINESS_TYPE_TASK.getValue());
+        flag = getTeammateFlag(teammateRe);
         if (flag > 0) {
+            UserTeam userTeam = new UserTeam();
+            userTeam.setId(userTeammateId);
+            UserTeam userT = userTeamMapper.selectByPrimaryKeySelective(userTeam);//团队信息
+            if (userT != null) {
+                TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(userT.getMangerId());//接受者
+                TUserInfo sendUser = tUserInfoMapper.selectByPrimaryKey(userId);//请求者
+                String content = "";//消息内容
+                if (tUserInfo != null && sendUser != null) {
+                    SmsUtil smsUtil = new SmsUtil();
+                    content = smsUtil.sendSms(SmsEnum.INITIATIVE_JOIN.getValue(), tUserInfo.getMobile(), tUserInfo.getRealName(), sendUser.getRealName(), userT.getObjectType().toString(), ObjectTypeEnum.getObjectTypeEnum(userT.getObjectType()).getName());//发送短信
+                }
+                messageService.add("主动加入", content, userId, userT.getMangerId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INITIATIVE.getValue(), "teammateId=" + teammateRe.getId());
+            }
             map.put("result", "yes");
         } else if (flag == -1) {
             map.put("result", "exist");//已经纯在
@@ -345,10 +362,16 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         if (buinessIds.size() > 0) {
             Integer result = repayMapper.updateBusinessStatus(buinessIds.get(0), status);
             if (result > 0) {
-                String content = "您的审核" + (status == 1 ? "通过" : "不通过");
-                messageService.add("审核结果", content, userId, receive_id, "", MessageEnum.SERVE.getValue());//添加通知消息
-                //发送短信或邮件
-                messageService.sendSMS(receive_id, null, content);
+                SmsUtil smsUtil = new SmsUtil();//发送短信通知
+                Integer code = 0;
+                if (status == 1) {
+                    code = SmsEnum.BUSINESS_AUDIT_YES.getValue();
+                } else {
+                    code = SmsEnum.BUSINESS_AUDIT_NO.getValue();
+                }
+                Map userC = coordinatorMapper.getUserAndCompanyByUserId(receive_id);
+                String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), objectType + "", ObjectTypeEnum.getObjectTypeEnum(objectType).getName());
+                messageService.add("业务审核结果", content, userId, receive_id, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS.getValue(), "");//添加通知消息
                 map.put("result", "yes");
                 return;
             }
@@ -358,8 +381,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public void isPause(Map map, Integer objectId, Integer objectType, Integer status, Integer userId) throws BusinessLogException {
-        Integer operType = 0;
-        String text = "";
+        Integer operType = 0;//操作类型
         List<Map<String, Object>> receive_ids = new ArrayList<>();
         LenderInfo lenderInfo = new LenderInfo();
         if (objectType == ObjectTypeEnum.LENDER.getValue()) {
@@ -376,7 +398,6 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
             coordinatorMapper.updateLender(lenderInfo);//借款人暂停后开启
             operType = LenderEnum.UPDATE_EDIT.getValue();
-            text = "借款人暂停操作";
             receive_ids = coordinatorMapper.getUserIdByObjUserRelToLender(objectType, objectId);
         } else if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
             AssetInfo assetInfo = new AssetInfo();
@@ -398,15 +419,22 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
             ;
             operType = AssetPackageEnum.update.getValue();
-            text = "资产包暂停操作";
             receive_ids = coordinatorMapper.getUserIdByObjUserRelToAsset(objectType, objectId);//被通知人员
         }
-        String content = "对暂停操作进行了" + (status == 0 ? "关闭" : "开启");
+        Integer code = 0;
+        if (status == 1) {
+            code = SmsEnum.BUSINESS_PAUSE.getValue();//开启暂停
+        } else {
+            code = SmsEnum.BUSINESS_OPEN.getValue();//关闭暂停
+        }
+        SmsUtil smsUtil = new SmsUtil();//发送短信通知
         for (Map receive_id : receive_ids) {
             Integer rec = MessageUtils.transMapToInt(receive_id, "user_id");
-            messageService.add(text, content, userId, rec, "", MessageEnum.SERVE.getValue());//添加通知消息
-            //发送短信或邮件
-            messageService.sendSMS(rec, null, content);
+            Map userC = coordinatorMapper.getUserAndCompanyByUserId(rec);
+            Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);
+            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
+                    MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "realName"), objectType + "", ObjectTypeEnum.getObjectTypeEnum(objectType).getName());
+            messageService.add("暂停操作", content, userId, rec, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS_PAUSE.getValue(), "");//添加通知消息
         }
         map.put("result", "yes");
 //        businessLogService.add(objectId, objectType, operType, text, "", 0, 0);//添加操作日志
@@ -433,7 +461,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
      * @param objectType
      * @return(finish,total,ongoing)
      */
-    private Map<String, Object> getTaskCount(Integer companyId, Integer userId, Integer objectType) {
+    @Override
+    public Map<String, Object> getTaskCount(Integer companyId, Integer userId, Integer objectType) {
         Map<String, Object> map = coordinatorMapper.getTaskRatio(companyId, userId, objectType);//业绩比例
         Map<String, Object> map2 = coordinatorMapper.getTaskOngoing(companyId, userId, objectType);//获取当前进行的任务数
         map.put("ongoing", map2.get("ongoing"));

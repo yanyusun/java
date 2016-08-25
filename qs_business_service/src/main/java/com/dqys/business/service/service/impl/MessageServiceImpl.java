@@ -10,9 +10,13 @@ import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.SmsEnum;
+import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.RabbitMQProducerTool;
 import com.dqys.core.utils.SmsUtil;
+import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +60,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Integer add(String title, String content, Integer sender_id, Integer receive_id, String label, Integer type) {
+    public Integer add(String title, String content, Integer sender_id, Integer receive_id, String label, Integer type, Integer businessType, String operUrl) {
         if (title.equals("") || sender_id == null || receive_id == null || type == null) {
             return 0;
         } else {
@@ -68,6 +72,8 @@ public class MessageServiceImpl implements MessageService {
             message.setStatus(0);
             message.setTitle(title);
             message.setType(type);
+            message.setBusinessType(businessType);
+            message.setOperUrl(operUrl);
             return messageMapper.add(message);
         }
 
@@ -86,7 +92,7 @@ public class MessageServiceImpl implements MessageService {
                 mobilePhone = tUserInfo.getMobile();
             }
         }
-        if (FormatValidateTool.checkMobile(mobilePhone.trim())) {
+        if (mobilePhone != null && FormatValidateTool.checkMobile(mobilePhone.trim())) {
             //发送短信接口
             RabbitMQProducerTool.addToSMSSendQueue(mobilePhone.toString(), content);//加入短信队列
         }
@@ -110,11 +116,11 @@ public class MessageServiceImpl implements MessageService {
 //以下发送者信息
         String typeSend = "";//发送者角色类型
         Integer role = MessageUtils.transMapToInt(user, "rold");
-        if (role == 1) {
+        if (role.toString().equals(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_ADMINISTRATOR_KEY).getPropertyValue())) {
             typeSend = "管理员";
-        } else if (role == 2) {
+        } else if (role.toString().equals(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_MANAGER_KEY).getPropertyValue())) {
             typeSend = "管理者";
-        } else if (role == 3) {
+        } else if (role.toString().equals(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_EMPLOYEE).getPropertyValue())) {
             typeSend = "普通员工";
         }
         String realNameSend = MessageUtils.transMapToString(map, "realName");//发送者真实姓名
@@ -125,9 +131,9 @@ public class MessageServiceImpl implements MessageService {
             companyTypeSend = companyTypeEnum.getName();
         }
         if (MessageUtils.transMapToString(user, "companyName").equals(MessageUtils.transMapToString(map, "companyName"))) {
-            sendSms(102, mobilePhone, realName, companyNameSend, companyTypeSend, realNameSend, objectType, objectName, remark);
+            sendSms(SmsEnum.INVITE_COORDINATOR.getValue(), mobilePhone, realName, companyNameSend, companyTypeSend, realNameSend, objectType, objectName, remark);
         } else {
-            sendSms(103, mobilePhone, realName, typeSend, realNameSend, objectType, objectName, remark);
+            sendSms(SmsEnum.INVITE_DISTRIBUTOR.getValue(), mobilePhone, realName, typeSend, realNameSend, objectType, objectName, remark);
         }
     }
 

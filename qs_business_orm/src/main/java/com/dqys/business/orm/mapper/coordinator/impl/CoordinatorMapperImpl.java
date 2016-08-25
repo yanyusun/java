@@ -4,6 +4,8 @@ import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
+import com.dqys.business.orm.pojo.zcy.dto.ZcyPawnDTO;
+import com.dqys.business.orm.query.coordinator.ZcyListQuery;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -100,4 +102,31 @@ public class CoordinatorMapperImpl extends BaseDao implements CoordinatorMapper 
     public Map<String, Object> getUserAndCompanyByUserId(Integer userId) {
         return super.getSqlSession().getMapper(CoordinatorMapper.class).getUserAndCompanyByUserId(userId);
     }
+
+    @Override
+    public List<Integer> getObjectIdList(@Param("objectType") Integer objectType, @Param("userId") Integer userId, @Param("status") Integer status) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).getObjectIdList(objectType, userId, status);
+    }
+
+    @Override
+    public Map<String, Object> getRealName(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId, @Param("type") Integer type) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).getRealName(objectType, objectId, type);
+    }
+
+    @Override
+    public List<ZcyPawnDTO> selectByZCYListPage(@Param("zcyListQuery") ZcyListQuery zcyListQuery) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).selectByZCYListPage(zcyListQuery);
+    }
+
+    @Override
+    public Integer selectByZCYListPageCount(@Param("zcyListQuery") ZcyListQuery zcyListQuery) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).selectByZCYListPageCount(zcyListQuery);
+    }
+
+    @Override
+    public List<Map<String, Object>> findLabel(Integer estatesId) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).findLabel(estatesId);
+    }
+
+
 }

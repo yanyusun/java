@@ -31,7 +31,7 @@ import java.util.Date;
  * @apiParam {string} title 标题
  * @apiParam {string} decorateType 装修类型
  * @apiParam {string} decorateCase 装修情况
- * @apiParam {string} decorateTime 装修时间
+ * @apiParam {string} decorateTime 装修时间(格式：yyyy-MM-dd)
  * @apiParam {string} buildType 建筑类型
  * @apiParam {string} houseUse 房屋用途
  * @apiParam {string} houseBelong 房屋权属
@@ -112,6 +112,36 @@ public class ZcyEstates implements Serializable {
     private Integer version;
 
     private String content;//内容
+
+    private String operator;//录入人员
+
+    private Integer objectId;//对象id
+
+    private Integer objectType;//对象类型
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    public Integer getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(Integer objectId) {
+        this.objectId = objectId;
+    }
+
+    public Integer getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(Integer objectType) {
+        this.objectType = objectType;
+    }
 
     public Integer getId() {
         return id;

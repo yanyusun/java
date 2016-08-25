@@ -94,6 +94,7 @@
             </if>
             create_at,
             update_at,
+
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -202,11 +203,12 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
     <!--根据资产信息id获取地址信息-->
-    <select id="selectBySelective"  parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstatesAddress" resultMap="BaseResultMap">
+    <select id="selectBySelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstatesAddress"
+            resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from t_zcy_estates_address
-        where  stateflag=0
+        where stateflag=0
         <if test="estatesId !=null">
             and estates_id=#{estatesId}
         </if>

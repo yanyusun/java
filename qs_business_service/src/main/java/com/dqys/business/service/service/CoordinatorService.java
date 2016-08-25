@@ -4,7 +4,6 @@ import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 
 import java.util.List;
-
 import java.util.Map;
 
 /**
@@ -37,6 +36,7 @@ public interface CoordinatorService {
 
     /**
      * 是否同意邀请
+     *
      * @param teammateId
      * @param status
      * @return
@@ -45,6 +45,7 @@ public interface CoordinatorService {
 
     /**
      * 主动加入案组
+     *
      * @param userTeammateId
      * @param userId
      * @return
@@ -53,21 +54,41 @@ public interface CoordinatorService {
 
     /**
      * 平台业务审核
+     *
      * @param map
      * @param objectId
      * @param objectType
      * @param status
      */
-    void auditBusiness(Map map,Integer userId, Integer objectId, Integer objectType, Integer status) throws BusinessLogException;
+    void auditBusiness(Map map, Integer userId, Integer objectId, Integer objectType, Integer status) throws BusinessLogException;
 
     /**
      * 借款人或资产包暂停操作
+     *
      * @param map
      * @param objectId
      * @param objectType
      * @param status
      */
-    void isPause(Map map, Integer objectId, Integer objectType, Integer status,Integer userId) throws BusinessLogException;
+    void isPause(Map map, Integer objectId, Integer objectType, Integer status, Integer userId) throws BusinessLogException;
 
+    /**
+     * 获取借款人或是资产包的团队信息
+     *
+     * @param companyId
+     * @param objectId
+     * @param objectType
+     * @return
+     */
     List<TeamDTO> getLenderOrAsset(Integer companyId, Integer objectId, Integer objectType);
+
+    /**
+     * 获取任务业绩比例和进行任务数
+     *
+     * @param companyId
+     * @param userId
+     * @param objectType
+     * @return (进行任务数：ongoing 完成数：finish 总数：total)
+     */
+    Map<String, Object> getTaskCount(Integer companyId, Integer userId, Integer objectType);
 }

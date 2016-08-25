@@ -13,14 +13,14 @@
             </if>
         </where>
     </sql>
-<!--查询记录数量-->
+    <!--查询记录数量-->
     <select id="selectCount" parameterType="com.dqys.business.orm.pojo.message.Message"
             resultType="int">
         SELECT count(*) amount
         from t_message t
         <include refid="WHERE_QUERY"/>
     </select>
-<!--分页查询列表-->
+    <!--分页查询列表-->
     <select id="selectByMessage" parameterType="com.dqys.business.orm.pojo.message.Message"
             resultType="com.dqys.business.orm.pojo.message.Message">
         SELECT t.id,t.content,t.label,t.receive_id receiveId ,t.sender_id senderId
@@ -29,7 +29,7 @@
         <include refid="WHERE_QUERY"/>
         LIMIT #{startPageNum},#{pageSize}
     </select>
-<!--标记为已读-->
+    <!--标记为已读-->
     <update id="readMessage">
         UPDATE t_message SET status=1
         <where>
@@ -40,7 +40,7 @@
             </foreach>
         </where>
     </update>
-<!--删除消息-->
+    <!--删除消息-->
     <update id="del">
         UPDATE t_message SET status=2
         <where>
@@ -50,7 +50,7 @@
             </foreach>
         </where>
     </update>
-<!--添加消息-->
+    <!--添加消息-->
     <insert id="add" parameterType="com.dqys.business.orm.pojo.message.Message">
         INSERT INTO t_message
         <trim prefix="(" suffix=")">
@@ -72,6 +72,12 @@
             <if test="type !=null">
                 type,
             </if>
+            <if test="businessType !=null">
+                business_type,
+            </if>
+            <if test="operUrl !=null">
+                oper_url,
+            </if>
             status,send_time
         </trim>
         <trim prefix=" values(" suffix=")">
@@ -92,6 +98,12 @@
             </if>
             <if test="type !=null">
                 #{type},
+            </if>
+            <if test="businessType !=null">
+                #{businessType},
+            </if>
+            <if test="operUrl !=null">
+                #{operUrl},
             </if>
             0,now()
         </trim>

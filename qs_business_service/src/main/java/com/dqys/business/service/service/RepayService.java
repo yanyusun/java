@@ -79,7 +79,7 @@ public interface RepayService {
      * @param file
      * @return
      */
-    void updateRepayMoney(Integer repayId, Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file, Map map) throws Exception;
+    Map updateRepayMoney(Integer repayId, Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception;
 
     /**
      * 还款记录列表

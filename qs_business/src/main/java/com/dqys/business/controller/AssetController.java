@@ -11,7 +11,9 @@ import com.dqys.business.service.service.AssetService;
 import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.service.UserService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
+import com.dqys.business.service.utils.asset.IouServiceUtils;
 import com.dqys.business.service.utils.asset.LenderServiceUtils;
+import com.dqys.business.service.utils.asset.PawnServiceUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
@@ -240,7 +242,18 @@ public class AssetController {
         if (data != null) {
             return JsonResponseTool.paramErr(data);
         }
-
+        if(assetLenderInsertDTO.getPawnDTOList() != null && assetLenderInsertDTO.getPawnDTOList().size() > 0){
+            data = PawnServiceUtils.checkData(assetLenderInsertDTO.getPawnDTOList());
+            if(data != null){
+                return JsonResponseTool.paramErr(data);
+            }
+        }
+        if(assetLenderInsertDTO.getIouDTOList() != null && assetLenderInsertDTO.getIouDTOList().size() > 0){
+            data = IouServiceUtils.checkData(assetLenderInsertDTO.getIouDTOList());
+            if(data != null){
+                return JsonResponseTool.paramErr(data);
+            }
+        }
         return assetService.addLender_tx(assetLenderInsertDTO.getId(),
                 assetLenderInsertDTO.getContactDTOList(),
                 assetLenderInsertDTO.getLenderDTO(),

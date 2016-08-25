@@ -11,8 +11,8 @@ import java.util.Date;
  * @apiParam {number} estatesId 资产信息id
  * @apiParam {double} sellPrice 出售价格(单位：万）
  * @apiParam {double} ownerPrice 业主净得价(单位：万)
- * @apiParam {string} entrustProtocolTime 委托协议时间
- * @apiParam {string} entrustAbortTime 委托截止时间
+ * @apiParam {string} entrustProtocolTime 委托协议时间(格式：yyyy-MM-dd)
+ * @apiParam {string} entrustAbortTime 委托截止时间(格式：yyyy-MM-dd)
  * @apiParam {string} annotationName 注释名称
  * @apiParam {string} annotationContent 注释内容
  * @apiParam {string} ownerNumber 业主编号

@@ -2,6 +2,7 @@ package com.dqys.business.service.utils.asset;
 
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.service.dto.asset.PawnDTO;
+import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.DateFormatTool;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -110,4 +111,37 @@ public class PawnServiceUtils {
 
         return pawnDTO;
     }
+
+    public static String checkData(PawnDTO pawnDTO){
+        if(CommonUtil.checkParam(pawnDTO,
+                pawnDTO.getPawnName(), pawnDTO.getAmount(), pawnDTO.getType(),
+                pawnDTO.getEvaluateExcellent(), pawnDTO.getEvaluateLevel(), pawnDTO.getSize(),
+                pawnDTO.getProvince(), pawnDTO.getCity(), pawnDTO.getDistrict(),
+                pawnDTO.getAddress(), pawnDTO.getPawnRate(), pawnDTO.getWorth(),
+                pawnDTO.getDisposeStatus(), pawnDTO.getLenderId())){
+            return "参数错误";
+        }
+        if(!CommonUtil.isMoneyFormat(pawnDTO.getAmount(), pawnDTO.getPawnRate(), pawnDTO.getWorth())){
+            return "存在非法金额参数";
+        }
+        String areaData = AreaTool.validateArea(pawnDTO.getProvince(), pawnDTO.getCity(), pawnDTO.getDistrict());
+        if(areaData != null){
+            return areaData;
+        }
+        return null;
+    }
+
+    public static String checkData(List<PawnDTO> pawnDTOList){
+        if(CommonUtil.checkParam(pawnDTOList) || pawnDTOList.size() == 0){
+            return "抵押物参数错误";
+        }
+        for (PawnDTO pawnDTO : pawnDTOList) {
+            String data = checkData(pawnDTO);
+            if(data != null){
+                return data;
+            }
+        }
+        return null;
+    }
+
 }

@@ -119,7 +119,7 @@ public class RepayController {
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
         );
-        repayService.updateRepayMoney(repayId, userId, objectId, objectType, repayType, repayWay, money, remark, file, map);
+        map = repayService.updateRepayMoney(repayId, userId, objectId, objectType, repayType, repayWay, money, remark, file);
         return JsonResponseTool.success(map);
     }
 
@@ -235,7 +235,7 @@ public class RepayController {
         if (CommonUtil.checkParam(objectId, objectType, postponeTime)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        if (!FormatValidateTool.isDate(postponeTime)) {
+        if (!postponeTime.matches("[1,2,3]\\d{3}[-](([0]?[1-9])|([1][0,1,2]))[-](([0]?[1-9])|([1,2][0-9])|([3][0,1]))")) {
             return JsonResponseTool.paramErr("日期格式错误");
         }
         if (objectType != ObjectTypeEnum.ASSETPACKAGE.getValue() && objectType != ObjectTypeEnum.LENDER.getValue()) {

@@ -87,14 +87,15 @@ public class CaseServiceImpl implements CaseService {
         }
         Integer caseId = caseInfo.getId();
         // 法院信息
-        caseDTO.getCourtDTOList().forEach(caseCourtDTO -> {
+        for (CaseCourtDTO caseCourtDTO : caseDTO.getCourtDTOList()) {
             CaseCourt caseCourt = CaseServiceUtils.toCaseCourt(caseCourtDTO);
             caseCourt.setCaseId(caseId);
             Integer courtAdd = caseCourtMapper.insert(caseCourt);
             if (CommonUtil.checkParam(courtAdd)) {
-                // TODO 增加法院信息失败
+                // 增加法院信息失败
+                return null;
             }
-        });
+        }
 
         // 案件与借据
         String[] idStr = caseDTO.getIouIds().split(",");
