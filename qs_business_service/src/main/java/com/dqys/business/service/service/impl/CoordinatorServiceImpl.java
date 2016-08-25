@@ -190,7 +190,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             flag = getTeammateFlag(teammateRe);//添加参与人
             if (flag > 0) {
                 num++;
-                Integer result = messageService.add("任务邀请", remark, userId, uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.INSIDE.getValue(),"teammateId="+teammateRe.getId());//添加消息记录
+                Integer result = messageService.add("任务邀请", remark, userId, uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.INSIDE.getValue(), "teammateId=" + teammateRe.getId());//添加消息记录
                 if (result > 0) {
                     //发送短信或是邮件
                     messageService.sendSmsByTeammate(userTeam, userAndCompany, uid, remark);
@@ -323,7 +323,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                     SmsUtil smsUtil = new SmsUtil();
                     content = smsUtil.sendSms(SmsEnum.INITIATIVE_JOIN.getValue(), tUserInfo.getMobile(), tUserInfo.getRealName(), sendUser.getRealName(), userT.getObjectType().toString(), ObjectTypeEnum.getObjectTypeEnum(userT.getObjectType()).getName());//发送短信
                 }
-                messageService.add("主动加入", content, userId, userT.getMangerId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INITIATIVE.getValue(),"teammateId="+teammateRe.getId());
+                messageService.add("主动加入", content, userId, userT.getMangerId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INITIATIVE.getValue(), "teammateId=" + teammateRe.getId());
             }
             map.put("result", "yes");
         } else if (flag == -1) {
@@ -371,7 +371,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 }
                 Map userC = coordinatorMapper.getUserAndCompanyByUserId(receive_id);
                 String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), objectType + "", ObjectTypeEnum.getObjectTypeEnum(objectType).getName());
-                messageService.add("业务审核结果", content, userId, receive_id, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS.getValue(),"");//添加通知消息
+                messageService.add("业务审核结果", content, userId, receive_id, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS.getValue(), "");//添加通知消息
                 map.put("result", "yes");
                 return;
             }
@@ -434,7 +434,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);
             String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
                     MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "realName"), objectType + "", ObjectTypeEnum.getObjectTypeEnum(objectType).getName());
-            messageService.add("暂停操作", content, userId, rec, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS_PAUSE.getValue(),"");//添加通知消息
+            messageService.add("暂停操作", content, userId, rec, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS_PAUSE.getValue(), "");//添加通知消息
         }
         map.put("result", "yes");
 //        businessLogService.add(objectId, objectType, operType, text, "", 0, 0);//添加操作日志
@@ -461,7 +461,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
      * @param objectType
      * @return(finish,total,ongoing)
      */
-    private Map<String, Object> getTaskCount(Integer companyId, Integer userId, Integer objectType) {
+    @Override
+    public Map<String, Object> getTaskCount(Integer companyId, Integer userId, Integer objectType) {
         Map<String, Object> map = coordinatorMapper.getTaskRatio(companyId, userId, objectType);//业绩比例
         Map<String, Object> map2 = coordinatorMapper.getTaskOngoing(companyId, userId, objectType);//获取当前进行的任务数
         map.put("ongoing", map2.get("ongoing"));
