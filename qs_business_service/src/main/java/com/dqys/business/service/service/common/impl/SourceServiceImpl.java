@@ -158,6 +158,7 @@ public class SourceServiceImpl implements SourceService {
             if(isExit){
                 // 说明该文件已经被删除了
                 sourceSourceMapper.deleteByPrimaryKey(sourceSource.getId());
+                flag = true;
             }
         }
         for (SourceSource sourceSource : sourceSources) {
