@@ -181,8 +181,7 @@ public class CompanyController {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.success("参数错误");
         }
-        return CommonUtil.responseBack(
-                distributionService.joinDistribution_tx(id, ObjectBusinessTypeEnum.join.getValue(), null));
+        return CommonUtil.responseBack(distributionService.joinDistribution(id));
     }
 
     /**
@@ -191,24 +190,17 @@ public class CompanyController {
      * @apiGroup distribution
      * @apiParam {number} id 分配器ID
      * @apiParam {number} companyId 公司ID
-     * @apiParam {string} [text] 邀请内容
      * @apiSuccess {number} id
      */
     @RequestMapping(value = "/inviteDistribution")
     @ResponseBody
     public JsonResponse inviteDistribution(@RequestParam(required = true) Integer id,
-                                           @RequestParam(required = true) Integer companyId,
-                                           @RequestParam(required = false) String text) throws BusinessLogException{
+                                           @RequestParam(required = true) Integer companyId) throws BusinessLogException{
         if (CommonUtil.checkParam(companyId, id)) {
             return JsonResponseTool.success("参数错误");
         }
-        if(UserSession.getCurrent().getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM))){
-            // 平台
-            return CommonUtil.responseBack(distributionService.joinDistribution_tx(id, ObjectBusinessTypeEnum.platform.getValue(), text));
-        }else{
-            // 机构
-            return CommonUtil.responseBack(distributionService.joinDistribution_tx(id, ObjectBusinessTypeEnum.mechanism.getValue(), text));
-        }
+        return CommonUtil.responseBack(distributionService.inviteDistribution(
+                id, companyId));
     }
 
     /**
@@ -216,7 +208,7 @@ public class CompanyController {
      * @apiName designDistribution
      * @apiGroup distribution
      * @apiParam {number} id 被邀请ID
-     * @apiParam {number} type 操作类型(接收1|拒绝2)
+     * @apiParam {number} type 操作类型(接收1|拒绝0)
      * @apiSuccess {number} id
      */
     @RequestMapping(value = "/designDistribution")
@@ -226,8 +218,9 @@ public class CompanyController {
         if (CommonUtil.checkParam(id, type)) {
             return JsonResponseTool.success("参数错误");
         }
-        if(ObjectAcceptTypeEnum.getObjectAcceptTypeEnum(type) == null){
-            return JsonResponseTool.paramErr("操作类型参数错误");
+        if(!type.equals(ObjectAcceptTypeEnum.accept.getValue())){
+            // 如果不是接受状态,全部设置为拒绝
+            type = ObjectAcceptTypeEnum.refuse.getValue();
         }
         return CommonUtil.responseBack(distributionService.updateDistribution_tx(id, type));
     }

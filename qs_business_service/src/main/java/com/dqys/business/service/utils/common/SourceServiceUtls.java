@@ -145,6 +145,7 @@ public class SourceServiceUtls {
         sourceInfoDTO.setIsshow(sourceInfo.getShow());
         sourceInfoDTO.setWatermark(sourceInfo.getWatermark());
         sourceInfoDTO.setSourceDTOList(toSourceDTOList(sourceList));
+        sourceInfoDTO.setOpen(sourceInfo.getOpen());
 
         return sourceInfoDTO;
     }
