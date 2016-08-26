@@ -8,12 +8,14 @@ public enum MessageBTEnum {
     INITIATIVE(1, "主动加入"),
     COMPANY_BETWEEN(2, "公司间邀请"),
     POSTPONE(3, "延期申请操作"),
-    BUSINESS(4, "平台业务审核操作"),
-    BUSINESS_PAUSE(5, "业务暂停操作"),;
+    BUSINESS(4, "平台业务审核结果"),
+    BUSINESS_PAUSE(5, "业务暂停操作"),
+    POSTPONE_AUDIT(7, "延期申请审核结果"),;
+
     private Integer value;
     private String name;
 
-    public String get(Integer value) {
+    public static String get(Integer value) {
         for (MessageBTEnum mess : MessageBTEnum.values()) {
             if (mess.getValue().equals(value)) {
                 return mess.getName();

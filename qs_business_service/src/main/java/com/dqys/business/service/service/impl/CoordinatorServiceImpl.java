@@ -179,6 +179,10 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         UserTeam team = new UserTeam();
         team.setId(userTeamId);
         UserTeam userTeam = userTeamMapper.selectByPrimaryKeySelective(team);
+        String title = "未知";
+        if (userTeam != null) {
+            title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.INSIDE.getValue());
+        }
         Map userAndCompany = coordinatorMapper.getUserAndCompanyByUserId(userId);
         for (Integer uid : userIds) {
             Integer flag = 0;
@@ -190,9 +194,9 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             flag = getTeammateFlag(teammateRe);//添加参与人
             if (flag > 0) {
                 num++;
-                Integer result = messageService.add("任务邀请", remark, userId, uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.INSIDE.getValue(), "teammateId=" + teammateRe.getId());//添加消息记录
+                Integer result = messageService.add(title, remark, userId, uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.INSIDE.getValue(), "teammateId=" + teammateRe.getId());//添加消息记录
                 if (result > 0) {
-                    //发送短信或是邮件
+                    //发送短信
                     messageService.sendSmsByTeammate(userTeam, userAndCompany, uid, remark);
                 }
             }
@@ -241,41 +245,60 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     }
 
     @Override
-    public Map isAccept(Integer teammateId, Integer status) throws BusinessLogException {
+    public Map isAccept(Integer teammateId, Integer status, Integer userId) throws BusinessLogException {
 //        businessLogService.add(teammateId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.UPDATE_COMMON_USER.getValue(), "被邀请人同意或拒绝", "", 0, 0);
         Map<String, Object> map = new HashMap<>();
-        TeammateRe teammateRe = new TeammateRe();
-        teammateRe.setId(teammateId);
+        TeammateRe teammateRe = teammateReMapper.selectByPrimaryKey(teammateId);
+        if (teammateRe == null) {
+            map.put("result", "no_exist");
+            return map;
+        }
+        if (teammateRe.getUserId() != userId) {
+            UserTeam userTeam = new UserTeam();
+            userTeam.setId(teammateRe.getUserTeamId());
+            UserTeam userT = userTeamMapper.selectByPrimaryKeySelective(userTeam);
+            if (userT == null) {
+                map.put("result", "no_exist");//不存在
+                return map;
+            }
+            if (userT.getMangerId() != userId) {
+                map.put("result", "no_authority");//没有权限
+                return map;
+            }
+        }
         teammateRe.setStatus(status);
         Integer result = teammateReMapper.updateByPrimaryKeySelective(teammateRe);
-        if (status == 1) {
-            if (result > 0) {
-                Map userTeammate = coordinatorMapper.selectByUserTeamAndMateRe(teammateId);
-                OURelation ouRelation = new OURelation();
-                ouRelation.setStatus(OURelationEnum.STATUS_ACCEPT.getValue());
-                ouRelation.setType(OURelationEnum.TYPE_ALLOCATION_TEAM.getValue());
-                ouRelation.setObjectType(MessageUtils.transMapToInt(userTeammate, "object_type"));
-                ouRelation.setObjectId(MessageUtils.transMapToInt(userTeammate, "object_id"));
-                ouRelation.setUserId(MessageUtils.transMapToInt(userTeammate, "user_id"));
-                ouRelation.setEmployerId(MessageUtils.transMapToInt(userTeammate, "user_team_id"));
-                if (checkExist(ouRelation)) {
-                    ouRelationMapper.insertSelective(ouRelation);
-                }
-                //如果是资产包，还需要加入资产包下的借款人
-                if (ouRelation.getObjectType() == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
-                    LenderInfo lenderInfo = new LenderInfo();
-                    lenderInfo.setAssetId(ouRelation.getObjectId());
-                    List<LenderInfo> lends = coordinatorMapper.selectByLender(lenderInfo);
-                    for (LenderInfo len : lends) {
-                        ouRelation.setObjectId(len.getId());
-                        ouRelation.setObjectType(ObjectTypeEnum.LENDER.getValue());
-                        if (checkExist(ouRelation)) {
-                            ouRelationMapper.insertSelective(ouRelation);
-                        }
+        if (status == 1 && result > 0) {
+            Map userTeammate = coordinatorMapper.selectByUserTeamAndMateRe(teammateId);//查询团队中的协作器信息
+            OURelation ouRelation = new OURelation();
+            ouRelation.setStatus(OURelationEnum.STATUS_ACCEPT.getValue());
+            ouRelation.setType(OURelationEnum.TYPE_ALLOCATION_TEAM.getValue());
+            ouRelation.setObjectType(MessageUtils.transMapToInt(userTeammate, "object_type"));
+            ouRelation.setObjectId(MessageUtils.transMapToInt(userTeammate, "object_id"));
+            ouRelation.setUserId(MessageUtils.transMapToInt(userTeammate, "user_id"));
+            ouRelation.setEmployerId(MessageUtils.transMapToInt(userTeammate, "user_team_id"));
+            if (checkExist(ouRelation)) {
+                ouRelationMapper.insertSelective(ouRelation);
+            }
+            //如果是资产包，还需要加入资产包下的借款人
+            if (ouRelation.getObjectType() == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+                LenderInfo lenderInfo = new LenderInfo();
+                lenderInfo.setAssetId(ouRelation.getObjectId());
+                List<LenderInfo> lends = coordinatorMapper.selectByLender(lenderInfo);
+                for (LenderInfo len : lends) {
+                    ouRelation.setObjectId(len.getId());
+                    ouRelation.setObjectType(ObjectTypeEnum.LENDER.getValue());
+                    if (checkExist(ouRelation)) {
+                        ouRelationMapper.insertSelective(ouRelation);
                     }
                 }
             }
+            //发送消息
             map.put("result", "yes");
+        } else if (status == 2 && result > 0) {
+            map.put("result", "yes");
+        } else {
+            map.put("result", "no");
         }
         return map;
     }
@@ -322,8 +345,9 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 if (tUserInfo != null && sendUser != null) {
                     SmsUtil smsUtil = new SmsUtil();
                     content = smsUtil.sendSms(SmsEnum.INITIATIVE_JOIN.getValue(), tUserInfo.getMobile(), tUserInfo.getRealName(), sendUser.getRealName(), userT.getObjectType().toString(), ObjectTypeEnum.getObjectTypeEnum(userT.getObjectType()).getName());//发送短信
+                    String title = getMessageTitle(userT.getObjectId(), userT.getObjectType(), MessageBTEnum.INITIATIVE.getValue());
+                    messageService.add(title, content, userId, userT.getMangerId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INITIATIVE.getValue(), "teammateId=" + teammateRe.getId());
                 }
-                messageService.add("主动加入", content, userId, userT.getMangerId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INITIATIVE.getValue(), "teammateId=" + teammateRe.getId());
             }
             map.put("result", "yes");
         } else if (flag == -1) {
@@ -371,7 +395,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 }
                 Map userC = coordinatorMapper.getUserAndCompanyByUserId(receive_id);
                 String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), objectType + "", ObjectTypeEnum.getObjectTypeEnum(objectType).getName());
-                messageService.add("业务审核结果", content, userId, receive_id, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS.getValue(), "");//添加通知消息
+                String title = getMessageTitle(objectId, objectType, MessageBTEnum.BUSINESS.getValue());
+                messageService.add(title, content, userId, receive_id, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS.getValue(), "");//添加通知消息
                 map.put("result", "yes");
                 return;
             }
@@ -434,7 +459,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);
             String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
                     MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "realName"), objectType + "", ObjectTypeEnum.getObjectTypeEnum(objectType).getName());
-            messageService.add("暂停操作", content, userId, rec, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS_PAUSE.getValue(), "");//添加通知消息
+            String title = getMessageTitle(objectId, objectType, MessageBTEnum.BUSINESS_PAUSE.getValue());
+            messageService.add(title, content, userId, rec, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS_PAUSE.getValue(), "");//添加通知消息
         }
         map.put("result", "yes");
 //        businessLogService.add(objectId, objectType, operType, text, "", 0, 0);//添加操作日志
@@ -467,6 +493,30 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         Map<String, Object> map2 = coordinatorMapper.getTaskOngoing(companyId, userId, objectType);//获取当前进行的任务数
         map.put("ongoing", map2.get("ongoing"));
         return map;
+    }
+
+    @Override
+    public Map<String, Object> getObjectProperty(Integer objectId, Integer objectType) {
+        Map<String, Object> map = new HashMap<>();
+        String objectNo = "";//对象编号
+        if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+            AssetInfo assetInfo = assetInfoMapper.get(objectId);
+            objectNo = assetInfo.getAssetNo();
+        }
+        if (objectType == ObjectTypeEnum.LENDER.getValue()) {
+            LenderInfo lenderInfo = lenderInfoMapper.get(objectId);
+            objectNo = lenderInfo.getLenderNo();
+        }
+        map.put("objectNo", objectNo);
+        return map;
+    }
+
+    @Override
+    public String getMessageTitle(Integer objectId, Integer objectType, Integer businessType) {
+        String title = ObjectTypeEnum.getObjectTypeEnum(objectType).getName();//标题：对象类型+对象名称+业务类型
+        title += MessageUtils.transMapToString(getObjectProperty(objectId, objectType), "objectNo");//对象名称编号
+        title += MessageBTEnum.get(businessType);
+        return title;
     }
 
     /**
