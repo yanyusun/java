@@ -4,7 +4,6 @@ import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.message.Message;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by mkfeng on 2016/7/8.
