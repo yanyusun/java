@@ -9,10 +9,12 @@ import com.dqys.business.service.query.asset.LenderListQuery;
 import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.utils.asset.LenderServiceUtils;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.NoSQLWithRedisTool;
+import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -47,9 +49,18 @@ public class LenderController {
         resultMap.put("lenderType", LenderTypeEnum.list());
         resultMap.put("companyType", CompanyTypeEnum.list());
         Map<Integer, String> accountType = new HashMap<>();
-        accountType.put(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY), "市场处置"); // 中介
-        accountType.put(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW), "司法化解"); // 律所
-        accountType.put(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE), "常规催收"); // 催收
+        accountType.put(Integer.valueOf(
+                SysPropertyTool.getProperty(
+                        SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
+                        .getPropertyValue()), "市场处置"); // 中介
+        accountType.put(Integer.valueOf(
+                SysPropertyTool.getProperty(
+                        SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
+                        .getPropertyValue()), "司法化解"); // 律所
+        accountType.put(Integer.valueOf(
+                SysPropertyTool.getProperty(
+                        SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                        .getPropertyValue()), "常规催收"); // 催收
         accountType.put(0, "常规催收司法化解同时进行");
         resultMap.put("accountType", accountType);
 

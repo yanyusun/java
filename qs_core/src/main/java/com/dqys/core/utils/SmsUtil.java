@@ -74,4 +74,21 @@ public class SmsUtil {
         }
     }
 
+    /**
+     * 根据编号获取短信模版
+     *
+     * @param code        编号
+     * @param content     替换内容
+     * @return
+     */
+    public String getSendContent(Integer code, String... content){
+        String msg = this.getKeyValue(code);
+        if (msg != null && !msg.equals("")) {
+            for (int i = 0; i < content.length; i++) {
+                msg = msg.replace("{" + i + "}", content[i]);
+            }
+        }
+        return msg;
+    }
+
 }

@@ -116,7 +116,7 @@ public class SourceController {
      * @apiParam {object} sourceInfoDTO 参考新增资源信息
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public JsonResponse get(@ModelAttribute SourceInfoDTO sourceInfoDTO) {
+    public JsonResponse update(@ModelAttribute SourceInfoDTO sourceInfoDTO) {
         if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getLenderId(), sourceInfoDTO.getNavId(),
                 sourceInfoDTO.getCode())) {
             return JsonResponseTool.paramErr("参数错误");

@@ -23,6 +23,7 @@ import com.dqys.business.service.utils.excel.UserExcelUtil;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.mapper.facade.TAreaMapper;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.TArea;
@@ -74,15 +75,36 @@ public class UserServiceImpl implements UserService {
                 List<Integer> userTypes = new ArrayList<>();
                 if (query.getType().equals(1)) {
                     // 企业
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY)); // 中介
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST)); // 委托方
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE)); // 催收方
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW)); // 律所
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM)); // 平台
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
+                                    .getPropertyValue())); // 中介
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_ENTRUST)
+                                    .getPropertyValue())); // 委托方
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                                    .getPropertyValue())); // 催收方
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
+                                    .getPropertyValue())); // 律所
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM)
+                                    .getPropertyValue())); // 平台
                 } else {
                     // 个人
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST)); // 委托方
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_COMMON)); // 用户
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_ENTRUST)
+                                    .getPropertyValue())); // 委托方
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_COMMON)
+                                    .getPropertyValue())); // 用户
                 }
                 tUserTagQuery.setUserTypes(userTypes);
             }
@@ -306,13 +328,10 @@ public class UserServiceImpl implements UserService {
         for (Integer id : ids) {
             TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(id);
             if (tUserInfo != null) {
-                // 邮件提醒
-                if (tUserInfo.getEmail() != null) {
-                    sendMail(tUserInfo.getEmail(), "");
-                }
                 // 手机号提醒
                 if (tUserInfo.getMobile() != null) {
-                    sendMsg(tUserInfo.getMobile(), "");
+                    // TODO 设置消息体
+                    RabbitMQProducerTool.addToSMSSendQueue(tUserInfo.getMobile(), "消息提请内容,请设置");
                 }
             }
         }
@@ -343,13 +362,6 @@ public class UserServiceImpl implements UserService {
                 if (result < 1) {
                     String errStr = "用户: " + tUserInfo.getUserName() + " 重设密码失败";
                     errList.add(errStr);
-                } else {
-                    if (tUserInfo.getMobile() != null) {
-                        sendMsg(tUserInfo.getMobile(), "");
-                    }
-                    if (tUserInfo.getEmail() != null) {
-                        sendMsg(tUserInfo.getEmail(), "");
-                    }
                 }
             }
         }
@@ -377,12 +389,6 @@ public class UserServiceImpl implements UserService {
         if (result < 1) {
             return JsonResponseTool.failure("设置失败");
         } else {
-            if (tUserInfo.getMobile() != null) {
-                sendMsg(tUserInfo.getMobile(), "");
-            }
-            if (tUserInfo.getEmail() != null) {
-                sendMsg(tUserInfo.getEmail(), "");
-            }
             return JsonResponseTool.success(id);
         }
     }
@@ -485,22 +491,4 @@ public class UserServiceImpl implements UserService {
         return JsonResponseTool.success("添加成功");
     }
 
-    /**
-     * 发送激活邮箱
-     * @param email
-     */
-    private void sendMail(String email, String html) {
-        if(!CommonUtil.checkParam(email, html) && !html.equals("") && FormatValidateTool.checkEmail(email)){
-            RabbitMQProducerTool.addToMailSendQueue(email, html);
-        }
-    }
-
-    /**
-     * 发送短信
-     */
-    private void sendMsg(String mobile, String msg) {
-        if(!CommonUtil.checkParam(mobile, msg) && !msg.equals("") && FormatValidateTool.checkPhone(mobile)){
-            RabbitMQProducerTool.addToSMSSendQueue(mobile, msg);
-        }
-    }
 }
