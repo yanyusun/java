@@ -9,7 +9,7 @@
             <mvc:mapping path="/**"/>
             <bean class="com.dqys.core.interceptor.CrossOriginIntercetpor"/>
         </mvc:interceptor>
-      <!-- <mvc:interceptor>
+     <!-- <mvc:interceptor>
 
             <mvc:mapping path="/**"/>
 

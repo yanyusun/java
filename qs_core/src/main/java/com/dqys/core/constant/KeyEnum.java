@@ -21,6 +21,7 @@ public class KeyEnum {
     public static final String SYS_TMP_DEL_TIMER_KEY = "sys_file_tmp_del_timer";        //临时文件自动删除时间 hour
     public static final String SYS_AUTH_URL_KEY = "sys_auth_url";       //权限URL
     public static final String SYS_FILE_PIC_NOTFIND_PATH = "sys_file_error_pic_path"; //找不到图片时所显示的图片的路劲
+    public static final String SYS_FILE_PIC_ERROR_FILENAME = "sys_file_error_pic_path"; //找不到图片时所显示的图片的路劲
 
     /* 用户类型key */
     public static final String U_TYPE_COMMON = "u_type_common_user"; // 普通用户
