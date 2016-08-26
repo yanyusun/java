@@ -23,6 +23,7 @@ import com.dqys.business.service.utils.excel.UserExcelUtil;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.mapper.facade.TAreaMapper;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.TArea;
@@ -74,15 +75,36 @@ public class UserServiceImpl implements UserService {
                 List<Integer> userTypes = new ArrayList<>();
                 if (query.getType().equals(1)) {
                     // 企业
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY)); // 中介
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST)); // 委托方
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE)); // 催收方
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW)); // 律所
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM)); // 平台
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
+                                    .getPropertyValue())); // 中介
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_ENTRUST)
+                                    .getPropertyValue())); // 委托方
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                                    .getPropertyValue())); // 催收方
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
+                                    .getPropertyValue())); // 律所
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM)
+                                    .getPropertyValue())); // 平台
                 } else {
                     // 个人
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST)); // 委托方
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_COMMON)); // 用户
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_ENTRUST)
+                                    .getPropertyValue())); // 委托方
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_COMMON)
+                                    .getPropertyValue())); // 用户
                 }
                 tUserTagQuery.setUserTypes(userTypes);
             }

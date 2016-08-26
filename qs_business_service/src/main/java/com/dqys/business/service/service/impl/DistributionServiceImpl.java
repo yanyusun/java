@@ -146,9 +146,15 @@ public class DistributionServiceImpl implements DistributionService {
         distributionDTO.setId(companyTeam.getId());
         companyTeamReList.forEach(companyTeamRe -> {
             CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(companyTeamRe.getId());
-            if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM))) {
+            if (companyDetailInfo.getType().equals(Integer.valueOf(
+                    SysPropertyTool.getProperty(
+                            SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM)
+                            .getPropertyValue()))) {
                 distributionDTO.setPlatformNum(distributionDTO.getPlatformNum() + 1); // 平台方
-            } else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST))) {
+            } else if (companyDetailInfo.getType().equals(Integer.valueOf(
+                    SysPropertyTool.getProperty(
+                            SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_ENTRUST)
+                            .getPropertyValue()))) {
                 distributionDTO.setMechanismNum(distributionDTO.getMechanismNum() + 1); // 机构方
             } else {
                 distributionDTO.setDisposeNum(distributionDTO.getDisposeNum() + 1); // 处置方
@@ -465,6 +471,15 @@ public class DistributionServiceImpl implements DistributionService {
                 messageMapper.add(message);
             }
 
+            Integer lawType = Integer.valueOf(
+                    SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
+                            .getPropertyValue());
+            Integer urgeType = Integer.valueOf(
+                    SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                            .getPropertyValue());
+            Integer intermediaryType = Integer.valueOf(
+                    SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                            .getPropertyValue());
             // 判断是否为接收邀请
             if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
                 if (companyTeam != null) {
@@ -472,19 +487,19 @@ public class DistributionServiceImpl implements DistributionService {
                         // 借款人类型
                         CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(companyTeamRe.getAcceptCompanyId());
                         if (companyDetailInfo != null) {
-                            if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW))) {
+                            if (companyDetailInfo.getType().equals(lawType)) {
                                 // 律所
                                 LenderInfo lenderInfo = new LenderInfo();
                                 lenderInfo.setId(companyTeam.getObjectId());
                                 lenderInfo.setIsLawyer(SysProperty.BOOLEAN_TRUE);
                                 lenderInfoMapper.update(lenderInfo);
-                            } else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE))) {
+                            } else if (companyDetailInfo.getType().equals(urgeType)) {
                                 // 催收
                                 LenderInfo lenderInfo = new LenderInfo();
                                 lenderInfo.setId(companyTeam.getObjectId());
                                 lenderInfo.setIsCollection(SysProperty.BOOLEAN_TRUE);
                                 lenderInfoMapper.update(lenderInfo);
-                            } else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY))) {
+                            } else if (companyDetailInfo.getType().equals(intermediaryType)) {
                                 // 中介
                                 LenderInfo lenderInfo = new LenderInfo();
                                 lenderInfo.setId(companyTeam.getObjectId());
@@ -498,19 +513,19 @@ public class DistributionServiceImpl implements DistributionService {
                         // 资产包类型
                         CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(companyTeamRe.getAcceptCompanyId());
                         if (companyDetailInfo != null) {
-                            if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW))) {
+                            if (companyDetailInfo.getType().equals(lawType)) {
                                 // 律所
                                 AssetInfo assetInfo = new AssetInfo();
                                 assetInfo.setId(companyTeam.getObjectId());
                                 assetInfo.setIsLawyer(SysProperty.BOOLEAN_TRUE);
                                 assetInfoMapper.update(assetInfo);
-                            } else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE))) {
+                            } else if (companyDetailInfo.getType().equals(urgeType)) {
                                 // 催收
                                 AssetInfo assetInfo = new AssetInfo();
                                 assetInfo.setId(companyTeam.getObjectId());
                                 assetInfo.setIsCollection(SysProperty.BOOLEAN_TRUE);
                                 assetInfoMapper.update(assetInfo);
-                            } else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY))) {
+                            } else if (companyDetailInfo.getType().equals(intermediaryType)) {
                                 // 中介
                                 AssetInfo assetInfo = new AssetInfo();
                                 assetInfo.setId(companyTeam.getObjectId());
@@ -565,21 +580,30 @@ public class DistributionServiceImpl implements DistributionService {
             // 去除介入信息
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
             if (companyTeam != null) {
+                Integer lawType = Integer.valueOf(
+                        SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
+                                .getPropertyValue());
+                Integer urgeType = Integer.valueOf(
+                        SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                                .getPropertyValue());
+                Integer intermediaryType = Integer.valueOf(
+                        SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                                .getPropertyValue());
                 if (companyTeam.getObjectType().equals(ObjectTypeEnum.LENDER.getValue())) {
                     // 借款人类型
-                    if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW))) {
+                    if (companyDetailInfo.getType().equals(lawType)) {
                         // 律所
                         LenderInfo lenderInfo = new LenderInfo();
                         lenderInfo.setId(companyTeam.getObjectId());
                         lenderInfo.setIsLawyer(SysProperty.BOOLEAN_FALSE);
                         lenderInfoMapper.update(lenderInfo);
-                    } else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE))) {
+                    } else if (companyDetailInfo.getType().equals(urgeType)) {
                         // 催收
                         LenderInfo lenderInfo = new LenderInfo();
                         lenderInfo.setId(companyTeam.getObjectId());
                         lenderInfo.setIsCollection(SysProperty.BOOLEAN_FALSE);
                         lenderInfoMapper.update(lenderInfo);
-                    } else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY))) {
+                    } else if (companyDetailInfo.getType().equals(intermediaryType)) {
                         // 中介
                         LenderInfo lenderInfo = new LenderInfo();
                         lenderInfo.setId(companyTeam.getObjectId());
@@ -589,19 +613,19 @@ public class DistributionServiceImpl implements DistributionService {
                 } else if (companyTeam.getObjectType().equals(ObjectTypeEnum.ASSETPACKAGE.getValue())) {
                     // 资产包类型
                     if (companyDetailInfo != null) {
-                        if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW))) {
+                        if (companyDetailInfo.getType().equals(lawType)) {
                             // 律所
                             AssetInfo assetInfo = new AssetInfo();
                             assetInfo.setId(companyTeam.getObjectId());
                             assetInfo.setIsLawyer(SysProperty.BOOLEAN_FALSE);
                             assetInfoMapper.update(assetInfo);
-                        } else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE))) {
+                        } else if (companyDetailInfo.getType().equals(urgeType)) {
                             // 催收
                             AssetInfo assetInfo = new AssetInfo();
                             assetInfo.setId(companyTeam.getObjectId());
                             assetInfo.setIsCollection(SysProperty.BOOLEAN_FALSE);
                             assetInfoMapper.update(assetInfo);
-                        } else if (companyDetailInfo.getType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY))) {
+                        } else if (companyDetailInfo.getType().equals(intermediaryType)) {
                             // 中介
                             AssetInfo assetInfo = new AssetInfo();
                             assetInfo.setId(companyTeam.getObjectId());
