@@ -9,7 +9,8 @@ public enum MessageBTEnum {
     COMPANY_BETWEEN(2, "公司间邀请"),
     POSTPONE(3, "延期申请操作"),
     BUSINESS(4, "平台业务审核操作"),
-    BUSINESS_PAUSE(5, "业务暂停操作"),;
+    BUSINESS_PAUSE(5, "业务暂停操作"),
+    COMPANY_JOIN(6, "主动加入分配器");
     private Integer value;
     private String name;
 

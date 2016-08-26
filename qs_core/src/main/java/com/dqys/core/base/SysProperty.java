@@ -27,9 +27,32 @@ public class SysProperty {
 
 
     // 短信模板
-    public static final Integer SMS_VERIFICATION_CODE = 101; // 验证码模板
-    public static final Integer SMS_DISTRIBUTION_CODE = 102; // 分配器邀请模板
-    public static final Integer SMS_COORDINATOR_CODE = 103; // 协作器邀请模板
+    public static final Integer SMS_VERIFICATION_CODE = 101; // 验证码
+
+    public static final Integer SMS_DISTRIBUTION_INVITE_CODE = 102; // 分配器邀请加入
+    public static final Integer SMS_DISTRIBUTION_PASS_CODE = 114; // 分配器接收邀请
+    public static final Integer SMS_DISTRIBUTION_REFUSE_CODE = 115; // 分配器拒绝邀请
+    public static final Integer SMS_DISTRIBUTION_JOIN_CODE = 117; // 分配器申请加入
+    public static final Integer SMS_DISTRIBUTION_JOIN_REFUSE_CODE = 118; // 分配器拒绝申请
+    public static final Integer SMS_DISTRIBUTION_JOIN_PASS_CODE = 119; // 分配器同意申请
+
+    public static final Integer SMS_COORDINATOR_INVITE_CODE = 103; // 协作器邀请加入
+    public static final Integer SMS_COORDINATOR_PASS_CODE = 112; // 协作器接收邀请
+    public static final Integer SMS_COORDINATOR_REFUSE_CODE = 113; // 协作器拒绝邀请
+    public static final Integer SMS_COORDINATOR_JOIN_CODE = 104; // 协作器申请加入
+    public static final Integer SMS_COORDINATOR_JOIN_REFUSE_CODE = 120; // 协作器拒绝申请
+    public static final Integer SMS_COORDINATOR_JOIN_PASS_CODE = 121; // 协作器同意申请
+
+    public static final Integer SMS_CHECK_PASS_CODE = 105; // 平台审核通过
+    public static final Integer SMS_CHECK_REFUSE_CODE = 106; // 平台审核不通过
+
+    public static final Integer SMS_STOP_CODE = 107; // 公司暂停清收工作
+    public static final Integer SMS_START_CODE = 108; // 公司开启清收工作
+    public static final Integer SMS_OUT_CODE = 116; // 移除工作
+
+    public static final Integer SMS_GET_LATE_CODE = 109; // 申请延期
+    public static final Integer SMS_PASS_LATE_CODE = 110; // 通过延期
+    public static final Integer SMS_REFUSE_LATE_CODE = 111; // 驳回延期
 
 
     // 官方地址

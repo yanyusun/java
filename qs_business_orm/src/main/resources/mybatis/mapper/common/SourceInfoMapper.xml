@@ -8,17 +8,18 @@
     <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
     <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
     <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="remark" property="memo" jdbcType="VARCHAR" />
     <result column="nav_id" property="navId" jdbcType="INTEGER" />
     <result column="code" property="code" jdbcType="VARCHAR" />
     <result column="lender_id" property="lenderId" jdbcType="INTEGER" />
     <result column="isshow" property="show" jdbcType="INTEGER" />
+    <result column="open" property="open" jdbcType="INTEGER" />
     <result column="watermark" property="watermark" jdbcType="INTEGER" />
   </resultMap>
 
   <sql id="Base_Column_List" >
     id, version, create_at, update_at, stateflag, remark, nav_id, code,
-    lender_id, isshow, watermark
+    lender_id, isshow, watermark, open
   </sql>
 
   <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -36,7 +37,7 @@
   <insert id="insert" parameterType="com.dqys.business.orm.pojo.common.SourceInfo" useGeneratedKeys="true" keyProperty="id">
     insert into bt_source_info
     <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="remark != null" >
+      <if test="memo != null" >
         remark,
       </if>
       <if test="navId != null" >
@@ -56,7 +57,7 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="remark != null" >
+      <if test="memo != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
       <if test="navId != null" >
@@ -80,8 +81,8 @@
   <update id="update" parameterType="com.dqys.business.orm.pojo.common.SourceInfo" >
     update bt_source_info
     <set >
-      <if test="remark != null" >
-        remark = #{remark,jdbcType=VARCHAR},
+      <if test="memo != null" >
+        remark = #{memo,jdbcType=VARCHAR},
       </if>
       <if test="navId != null" >
         nav_id = #{navId,jdbcType=INTEGER},

@@ -70,7 +70,7 @@ public interface UserService {
     JsonResponse statusBatch(String ids, Integer id);
 
     /**
-     * 发送激活提醒信息
+     * 发送激活提醒信息(暂时不用)
      *
      * @param ids
      * @return

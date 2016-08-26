@@ -273,7 +273,7 @@ public class UserController {
     }
 
     /**
-     * @api {GET} http://{url}/api/user/sendMsg 消息提醒
+     * @api {GET} http://{url}/api/user/sendMsg 消息提醒(暂时废除)
      * @apiName sendMsg
      * @apiGroup User
      * @apiParam {string} ids 操作用户ID集合,","分隔

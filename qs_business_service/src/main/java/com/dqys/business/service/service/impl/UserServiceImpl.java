@@ -306,13 +306,10 @@ public class UserServiceImpl implements UserService {
         for (Integer id : ids) {
             TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(id);
             if (tUserInfo != null) {
-                // 邮件提醒
-                if (tUserInfo.getEmail() != null) {
-                    sendMail(tUserInfo.getEmail(), "");
-                }
                 // 手机号提醒
                 if (tUserInfo.getMobile() != null) {
-                    sendMsg(tUserInfo.getMobile(), "");
+                    // TODO 设置消息体
+                    RabbitMQProducerTool.addToSMSSendQueue(tUserInfo.getMobile(), "消息提请内容,请设置");
                 }
             }
         }
@@ -343,13 +340,6 @@ public class UserServiceImpl implements UserService {
                 if (result < 1) {
                     String errStr = "用户: " + tUserInfo.getUserName() + " 重设密码失败";
                     errList.add(errStr);
-                } else {
-                    if (tUserInfo.getMobile() != null) {
-                        sendMsg(tUserInfo.getMobile(), "");
-                    }
-                    if (tUserInfo.getEmail() != null) {
-                        sendMsg(tUserInfo.getEmail(), "");
-                    }
                 }
             }
         }
@@ -377,12 +367,6 @@ public class UserServiceImpl implements UserService {
         if (result < 1) {
             return JsonResponseTool.failure("设置失败");
         } else {
-            if (tUserInfo.getMobile() != null) {
-                sendMsg(tUserInfo.getMobile(), "");
-            }
-            if (tUserInfo.getEmail() != null) {
-                sendMsg(tUserInfo.getEmail(), "");
-            }
             return JsonResponseTool.success(id);
         }
     }
@@ -485,22 +469,4 @@ public class UserServiceImpl implements UserService {
         return JsonResponseTool.success("添加成功");
     }
 
-    /**
-     * 发送激活邮箱
-     * @param email
-     */
-    private void sendMail(String email, String html) {
-        if(!CommonUtil.checkParam(email, html) && !html.equals("") && FormatValidateTool.checkEmail(email)){
-            RabbitMQProducerTool.addToMailSendQueue(email, html);
-        }
-    }
-
-    /**
-     * 发送短信
-     */
-    private void sendMsg(String mobile, String msg) {
-        if(!CommonUtil.checkParam(mobile, msg) && !msg.equals("") && FormatValidateTool.checkPhone(mobile)){
-            RabbitMQProducerTool.addToSMSSendQueue(mobile, msg);
-        }
-    }
 }

@@ -11,6 +11,7 @@ public class SourceInfo extends BaseModel implements Serializable {
     private Integer lenderId; // 借款人
     private Integer show; // 展示在外网(1)
     private Integer watermark; // 水印(1)
+    private Integer open; // 是否开放性资源(1)
 
     public Integer getNavId() {
         return navId;
@@ -50,5 +51,13 @@ public class SourceInfo extends BaseModel implements Serializable {
 
     public void setWatermark(Integer watermark) {
         this.watermark = watermark;
+    }
+
+    public Integer getOpen() {
+        return open;
+    }
+
+    public void setOpen(Integer open) {
+        this.open = open;
     }
 }

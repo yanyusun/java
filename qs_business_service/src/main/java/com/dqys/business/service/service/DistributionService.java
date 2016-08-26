@@ -21,11 +21,18 @@ public interface DistributionService {
     /**
      * 加入分配器
      * @param id 分配器ID
-     * @param type 加入类型(邀请|被邀请)
-     * @param text 邀请内容
      * @return
      */
-    Integer joinDistribution_tx(Integer id, Integer type, String text) throws BusinessLogException;
+    Integer joinDistribution(Integer id) throws BusinessLogException;
+
+    /**
+     * 邀请加入分配器
+     * @param id 分配器ID
+     * @param companyId 被邀请公司ID
+     * @return
+     * @throws BusinessLogException
+     */
+    Integer inviteDistribution(Integer id, Integer companyId) throws BusinessLogException;
 
     /**
      * 修改分配器(同意加入|拒绝加入)
