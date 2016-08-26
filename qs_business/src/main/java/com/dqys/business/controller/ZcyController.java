@@ -182,7 +182,7 @@ public class ZcyController {
     }
 
     /**
-     * @api {post} zcy/awaitReceive 中介抵押物
+     * @api {post} zcy/awaitReceive 资产源列表
      * @apiUse ZcyListQuery
      * @apiSampleRequest zcy/awaitReceive
      * @apiGroup ZCY
@@ -199,9 +199,6 @@ public class ZcyController {
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
         );
         Map map = new HashMap<>();
-        if (zcyListQuery.getStatus() != 0 && zcyListQuery.getStatus() != 1) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
         if (zcyListQuery.getPage() < 0) {
             zcyListQuery.setPage(0);
         }

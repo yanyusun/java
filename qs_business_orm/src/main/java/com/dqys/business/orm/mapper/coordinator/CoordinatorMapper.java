@@ -173,8 +173,6 @@ public interface CoordinatorMapper {
     /**
      * 资产源信息
      *
-     * @param value
-     * @param id
      * @return
      */
     List<ZcyPawnDTO> selectByZCYListPage(@Param("zcyListQuery") ZcyListQuery zcyListQuery);
