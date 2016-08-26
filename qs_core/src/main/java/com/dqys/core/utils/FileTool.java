@@ -146,15 +146,14 @@ public class FileTool implements ApplicationContextAware {
     public static File getFile(String fileName,Boolean isTmpFile) {
         String[] strs = fileName.split("_");
         File file = null;
-        if (strs.length != 3) {//返回图片未找到文件
-            return file= new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS,
-                    KeyEnum.SYS_FILE_PIC_NOTFIND_PATH).getPropertyValue());
-        }
-        if(isTmpFile){//返回临时文件
+        if (strs.length != 3) {//文件名称错误
+            file= new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS,
+                    KeyEnum.SYS_FILE_PIC_ERROR_FILENAME).getPropertyValue());
+        }else if (isTmpFile){//返回临时文件
             file = new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/temp/"
                     + strs[0] + "/" + strs[1] + "/" + fileName);
         }else{//返回被长时间保存的文件
-            file=new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_OPEN_PATH_KEY).getPropertyValue() + "/" +
+            file = new File(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue() + "/" +
                     strs[0] + "/" + strs[1] + "/" + fileName);
         }
         if (!file.exists()) {//返回图片未找到文件
