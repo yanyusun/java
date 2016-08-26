@@ -4,10 +4,11 @@ import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
+import com.dqys.core.base.BaseModel;
 
 import java.util.Date;
 
-public class FollowUpMessage {
+public class FollowUpMessage  extends BaseModel {
     private Integer id;
 
     private Integer objectId;

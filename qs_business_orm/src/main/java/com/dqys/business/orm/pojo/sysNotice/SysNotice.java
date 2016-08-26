@@ -1,8 +1,10 @@
 package com.dqys.business.orm.pojo.sysNotice;
 
+import com.dqys.core.base.BaseModel;
+
 import java.util.Date;
 
-public class SysNotice {
+public class SysNotice  extends BaseModel {
     private Integer id;
 
     private String title;
