@@ -151,6 +151,14 @@ public class SourceServiceImpl implements SourceService {
                         if(!CommonUtil.checkResult(update)){
                             flag = true;
                         }
+                        if(!source.getPath().equals(sourceSource.getPath())){
+                            // 上传文件不一样,从新保存
+                            try {
+                                FileTool.saveFileSync(source.getPath());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         break;
                     }
                 }
@@ -166,6 +174,11 @@ public class SourceServiceImpl implements SourceService {
                 Integer add = sourceSourceMapper.insert(sourceSource);
                 if(!CommonUtil.checkResult(add)){
                     flag = true;
+                }
+                try {
+                    FileTool.saveFileSync(sourceSource.getPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
