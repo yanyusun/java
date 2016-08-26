@@ -82,6 +82,10 @@ public class SourceServiceImpl implements SourceService {
                 sourceInfoDTO.getLenderId(), sourceInfoDTO.getSourceDTOList())){
             return null;
         }
+        SourceInfo data = sourceInfoMapper.getByNavIdAndLenderId(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId());
+        if(data != null){
+            return null;
+        }
         SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO);
         if(sourceInfo == null){
             return null;
