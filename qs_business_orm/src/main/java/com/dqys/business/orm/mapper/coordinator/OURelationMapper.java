@@ -9,10 +9,9 @@ public interface OURelationMapper {
     /**
      * 删除 操作人员被操作事物关系
      *
-     * @param id
      * @return
      */
-    Integer deleteByPrimaryKey(Integer id);
+    Integer deleteByPrimaryKey(OURelation record);
 
     /**
      * 添加操作人员被操作事物关系

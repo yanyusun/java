@@ -121,6 +121,26 @@ public class ZcyEstates implements Serializable {
 
     private String houseNo;//编号
 
+    private Integer status;//状态
+
+    private Integer companyId;//公司id
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
+    }
+
     public String getHouseNo() {
         return houseNo;
     }

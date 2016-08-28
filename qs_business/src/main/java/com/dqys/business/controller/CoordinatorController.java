@@ -1,11 +1,12 @@
 package com.dqys.business.controller;
 
+import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
-import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.ProtocolTool;
@@ -201,7 +202,7 @@ public class CoordinatorController {
         if (objectType != ObjectTypeEnum.LENDER.getValue() && objectType != ObjectTypeEnum.ASSETPACKAGE.getValue()) {
             return JsonResponseTool.paramErr("对象类型有误");
         }
-        if (status != 2 && status != 1) {
+        if (status != BusinessStatusEnum.platform_pass.getValue() && status != BusinessStatusEnum.platform_refuse.getValue()) {
             return JsonResponseTool.paramErr("状态有误");
         }
         Integer userId = ProtocolTool.validateUser(
@@ -257,6 +258,46 @@ public class CoordinatorController {
             return JsonResponseTool.failure("重复操作");
         } else {
             return JsonResponseTool.failure("操作失败");
+        }
+    }
+
+    /**
+     * @api {post} coordinator/delUser 协作器删除参与人（暂时）
+     * @apiParam {int} teamUserId 原参与处置的人userId
+     * @apiParam {int} userTeamId 团队协作器id
+     * @apiParam {int} status 状态（0同意1拒绝）
+     * @apiParam {int} substitutionUid 替补人userId
+     * @apiSampleRequest coordinator/delUser
+     * @apiGroup Coordinator
+     * @apiName coordinator/delUser
+     */
+    @RequestMapping("/delUser")
+    @ResponseBody
+    public JsonResponse deleteTeammatUser(@RequestParam("teamUserId") Integer teamUserId, @RequestParam("userTeamId") Integer userTeamId,
+                                          @RequestParam("status") Integer status, @RequestParam("substitutionUid") Integer substitutionUid, HttpServletRequest httpServletRequest) throws Exception {
+        Integer userId = ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+        );
+        userId = 12;
+        Map map = new HashMap<>();
+        if (CommonUtil.checkParam(teamUserId, userTeamId)) {
+            return JsonResponseTool.paramErr("参数有误");
+        }
+        if (status != null && substitutionUid != null) {
+            if (status != 0 && status != 1) {
+                return JsonResponseTool.paramErr("状态有误");
+            }
+            status += 1;
+        }
+        map = coordinatorService.deleteTeammatUser(userId, teamUserId, userTeamId, status, substitutionUid);
+        if (map.get("result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
         }
     }
 

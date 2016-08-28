@@ -105,4 +105,16 @@ public interface CoordinatorService {
      * 获取消息列表标题（规则：对象类型+对象名称+业务类型）
      */
     public String getMessageTitle(Integer objectId, Integer objectType, Integer businessType);
+
+    /**
+     * 删除协作器人员
+     *
+     * @param userId
+     * @param teamUserId
+     * @param userTeamId
+     * @param status
+     * @param substitutionUid
+     * @return
+     */
+    Map deleteTeammatUser(Integer userId, Integer teamUserId, Integer userTeamId, Integer status, Integer substitutionUid) throws Exception;
 }

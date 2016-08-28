@@ -3,9 +3,12 @@ package com.dqys.business.controller;
 import com.dqys.business.orm.pojo.zcy.ZcyModule;
 import com.dqys.business.orm.query.coordinator.ZcyListQuery;
 import com.dqys.business.service.service.ZcyService;
+import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
+import com.dqys.core.utils.DateFormatTool;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.ProtocolTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -78,9 +82,15 @@ public class ZcyController {
      */
     @RequestMapping("/addEstates")
     @ResponseBody
-    public JsonResponse addEstates(@ModelAttribute ZcyModule zcyModule) {
+    public JsonResponse addEstates(@ModelAttribute ZcyModule zcyModule, HttpServletRequest httpServletRequest) throws Exception {
+        Integer userId = UserSession.getCurrent().getUserId();
         Map map = new HashMap<>();
-        map = zcyService.addEstates(zcyModule.getZcyEstates(), zcyModule.getZcyEstatesAddressList(), zcyModule.getZcyEstatesFacilities());
+        zcyModule.getZcyEstates().setOperator(userId.toString());
+        //验证对象格式
+        map = zcyService.verifyEstates(zcyModule.getZcyEstates(), zcyModule.getZcyEstatesAddressList(), zcyModule.getZcyEstatesFacilities());
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            map = zcyService.addEstates(zcyModule.getZcyEstates(), zcyModule.getZcyEstatesAddressList(), zcyModule.getZcyEstatesFacilities());
+        }
         return JsonResponseTool.success(map);
     }
 
@@ -119,7 +129,10 @@ public class ZcyController {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
-        map = zcyService.addOwner(zcyModule.getZcyOwner(), zcyModule.getZcyOwnerContactses());
+        map = zcyService.verifyOwner(zcyModule.getZcyOwner(), zcyModule.getZcyOwnerContactses());
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            map = zcyService.addOwner(zcyModule.getZcyOwner(), zcyModule.getZcyOwnerContactses());
+        }
         return JsonResponseTool.success(map);
     }
 
@@ -141,7 +154,10 @@ public class ZcyController {
         if (CommonUtil.checkParam(zcyModule.getZcyMaintain().getEstatesId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        map = zcyService.addMaintain(zcyModule.getZcyMaintain(), zcyModule.getZcyMaintainOthers(), zcyModule.getZcyMaintainTaxes());
+        map = zcyService.verifyMaintain(zcyModule.getZcyMaintain(), zcyModule.getZcyMaintainOthers(), zcyModule.getZcyMaintainTaxes());
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            map = zcyService.addMaintain(zcyModule.getZcyMaintain(), zcyModule.getZcyMaintainOthers(), zcyModule.getZcyMaintainTaxes());
+        }
         return JsonResponseTool.success(map);
     }
 
@@ -159,7 +175,10 @@ public class ZcyController {
         if (CommonUtil.checkParam(zcyModule.getZcyKey().getEstatesId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        map = zcyService.addKey(zcyModule.getZcyKey());
+        map = zcyService.verifyKey(zcyModule.getZcyKey());
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            map = zcyService.addKey(zcyModule.getZcyKey());
+        }
         return JsonResponseTool.success(map);
     }
 
@@ -177,7 +196,10 @@ public class ZcyController {
         if (CommonUtil.checkParam(zcyModule.getZcyExpress().getEstatesId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        map = zcyService.addExpress(zcyModule.getZcyExpress());
+        map = zcyService.verifyExpress(zcyModule.getZcyExpress());
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            map = zcyService.addExpress(zcyModule.getZcyExpress());
+        }
         return JsonResponseTool.success(map);
     }
 
@@ -190,7 +212,8 @@ public class ZcyController {
      */
     @RequestMapping("/awaitReceive")
     @ResponseBody
-    public JsonResponse awaitReceive(@ModelAttribute ZcyListQuery zcyListQuery, HttpServletRequest httpServletRequest) throws Exception {
+    public JsonResponse awaitReceive(@ModelAttribute ZcyListQuery zcyListQuery, HttpServletRequest
+            httpServletRequest) throws Exception {
         Integer userId = ProtocolTool.validateUser(
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),

@@ -41,6 +41,8 @@
         <result column="objec_id" property="objecId" jdbcType="INTEGER"/>
         <result column="object_type" property="objectType" jdbcType="INTEGER"/>
         <result column="house_no" property="houseNo" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="company_id" property="companyId" jdbcType="INTEGER"/>
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.dqys.business.orm.pojo.zcy.ZcyEstates" extends="BaseResultMap">
         <result column="content" property="content" jdbcType="LONGVARCHAR"/>
@@ -51,7 +53,7 @@
     guide_price, guide_remark, house_remarkv, decorate_price, tenement_price, facility, 
     internal_number, title, decorate_type, decorate_case, decorate_time, build_type, 
     house_belong, house_use, heating_way, metro, school_house, version,operator,object_id,object_type,
-    house_no
+    house_no,company_id,status
   </sql>
     <sql id="Blob_Column_List">
     content
@@ -82,7 +84,7 @@
       decorate_time, build_type, house_belong, 
       house_use, heating_way, metro, 
       school_house, version, content,operator,objec_id,object_type,
-      house_no
+      house_no,company_id
       )
     values (#{id,jdbcType=INTEGER}, now(), now(),
       0, #{annotation,jdbcType=VARCHAR}, #{replenish,jdbcType=VARCHAR},
@@ -96,7 +98,7 @@
       #{decorateTime,jdbcType=VARCHAR}, #{buildType,jdbcType=VARCHAR}, #{houseBelong,jdbcType=VARCHAR}, 
       #{houseUse,jdbcType=VARCHAR}, #{heatingWay,jdbcType=VARCHAR}, #{metro,jdbcType=VARCHAR}, 
       #{schoolHouse,jdbcType=VARCHAR}, 0,#{operator,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR},#{objectId,jdbcType=INTEGER},#{objectType,jdbcType=INTEGER},
-      #{houseNo,jdbcType=VARCHAR}
+      #{houseNo,jdbcType=VARCHAR},#{companyId,jdbcType=INTEGER}
       )
   </insert>
     <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates" keyProperty="id"
@@ -213,6 +215,9 @@
             <if test="houseNo != null">
                 house_no,
             </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -327,6 +332,9 @@
             </if>
             <if test="houseNo != null">
                 #{houseNo,jdbcType=VARCHAR},
+            </if>
+            <if test="companyId != null">
+                #{companyId,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
