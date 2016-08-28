@@ -234,7 +234,7 @@
       ON
         tui.id = tut.user_id AND tui.stateflag = 0 AND tut.role_id = 1) res
     ON
-      res.company_id = tci.id AND tci.stateflag = 0 AND tci.id = #{id,jdbcType=INTEGER};
+      res.company_id = tci.id AND tci.stateflag = 0 AND res.id = #{id,jdbcType=INTEGER};
   </select>
 
   <select id="listByType" resultMap="BaseResultMap">
