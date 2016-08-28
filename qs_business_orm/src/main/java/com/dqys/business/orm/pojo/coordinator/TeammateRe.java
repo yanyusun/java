@@ -5,15 +5,15 @@ import java.util.Date;
 public class TeammateRe {
     private Integer id;
 
-    private Integer userTeamId;
+    private Integer userTeamId; // 协作器ID
 
-    private Integer userId;
+    private Integer userId; // 人员ID
 
-    private Integer type;
+    private Integer type; // 人员类型(管理员|所属人|参与人)
 
-    private Integer status;
+    private Integer status; //状态协作类型
 
-    private Integer joinType;
+    private Integer joinType; // 协作类型
 
     private Integer version;
 

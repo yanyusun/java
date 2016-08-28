@@ -37,6 +37,7 @@
     <result column="is_agent" property="isAgent" jdbcType="INTEGER" />
     <result column="is_lawyer" property="isLawyer" jdbcType="INTEGER" />
     <result column="is_stop" property="isStop" jdbcType="INTEGER" />
+    <result column="repay_status" property="repayStatus" jdbcType="INTEGER" />
   </resultMap>
 
   <sql id="Base_Column_List" >
@@ -44,7 +45,7 @@
     end_at, operator, accrual, loan, appraisal, name, evaluate_excellent, evaluate_level, province,
     city, district, address, loan_organization, loan_organization_district, dispose_mode,
     tags, isshow, follow_up_time, follow_up_times, belong_up_time, belong_up_times, is_collection,
-    is_lawyer, is_stop, is_agent
+    is_lawyer, is_stop, is_agent, repay_status
   </sql>
 
   <sql id="Query_Condition">
@@ -66,6 +67,9 @@
       </if>
       <if test="code != null">
         AND asset_no = #{code,jdbcType=VARCHAR}
+      </if>
+      <if test="repayStatus != null">
+        AND repay_status = #{repayStatus,jdbcType=VARCHAR}
       </if>
 
       <if test="startAt != null">
@@ -182,6 +186,9 @@
       <if test="isStop != null" >
         is_stop,
       </if>
+      <if test="repayStatus != null" >
+        repay_status,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -270,6 +277,9 @@
       </if>
       <if test="isStop != null" >
         #{isStop,jdbcType=INTEGER},
+      </if>
+      <if test="repayStatus != null" >
+        #{repayStatus,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -374,6 +384,9 @@
       </if>
       <if test="isStop != null" >
         is_stop = #{isStop,jdbcType=INTEGER},
+      </if>
+      <if test="repayStatus != null" >
+        repay_status = #{repayStatus,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER} AND stateflag = 0

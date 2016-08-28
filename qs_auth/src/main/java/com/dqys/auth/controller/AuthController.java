@@ -199,12 +199,6 @@ public class AuthController extends BaseApiContorller {
                 return JsonResponseTool.paramErr("验证码无效");
             }
 
-            // 验证账号
-            ServiceResult<Integer> serviceResult = this.userService.validateUser(account, mobile, email);
-            if(serviceResult.getFlag()){
-                return JsonResponseTool.failure("账号已经存在");
-            }
-
             //验证手机
             if(StringUtils.isNotBlank(mobile)) {
                 if(!FormatValidateTool.checkMobile(mobile)) {

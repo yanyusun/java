@@ -5,8 +5,10 @@ import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.constant.business.BusinessRelationEnum;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
+import com.dqys.business.orm.constant.business.ObjectUserStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.constant.coordinator.OURelationEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
 import com.dqys.business.orm.mapper.asset.*;
 import com.dqys.business.orm.mapper.business.BusinessObjReMapper;
@@ -20,6 +22,7 @@ import com.dqys.business.orm.pojo.asset.ContactInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
+import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.orm.query.asset.*;
@@ -504,18 +507,64 @@ public class LenderServiceImpl implements LenderService {
             }
             lenderQuery.setOperator(UserSession.getCurrent().getUserId());
         } else if (ObjectTabEnum.handling_urge.getValue().equals(tab)) {
-            // 催收的正在处置
-            List<Integer> ids = companyTeamReMapper.listObjectIdByTypeAndManager(
-                    ObjectTypeEnum.LENDER.getValue(),
-                    ObjectAcceptTypeEnum.accept.getValue(),
-                    UserSession.getCurrent().getUserId()
-            );
-            if (ids == null || ids.size() == 0) {
-                //  找不到数据,填充0数据限制
-                lenderQuery.setId(SysProperty.NULL_DATA_ID);
-            } else {
-                lenderQuery.setIds(ids);
-            }
+            // 正在处置
+//            List<Integer> ids = companyTeamReMapper.listObjectIdByTypeAndManager(
+//                    ObjectTypeEnum.LENDER.getValue(),
+//                    ObjectAcceptTypeEnum.accept.getValue(),
+//                    UserSession.getCurrent().getUserId()
+//            );
+//            if (ids == null || ids.size() == 0) {
+//                //  找不到数据,填充0数据限制
+//                lenderQuery.setId(SysProperty.NULL_DATA_ID);
+//            } else {
+//                lenderQuery.setIds(ids);
+//            }
+            // 自己分配
+            ObjectUserRelationQuery query = new ObjectUserRelationQuery();
+            query.setType(BusinessRelationEnum.own.getValue()); // 自己分配
+            List<ObjectUserRelation> mine = objectUserRelationMapper.list(query);
+            List<Integer> mineIds = new ArrayList<>();
+            mine.forEach(objectUserRelation -> {
+                mineIds.add(objectUserRelation.getObjectId());
+            });
+            // 公司分配
+            query.setType(BusinessRelationEnum.company.getValue()); // 公司分配
+            List<ObjectUserRelation> company = objectUserRelationMapper.list(query);
+            List<Integer> companyIds = new ArrayList<>();
+            company.forEach(objectUserRelation -> {
+                companyIds.add(objectUserRelation.getObjectId());
+            });
+            // 团队分配
+            query.setType(BusinessRelationEnum.team.getValue());
+            List<ObjectUserRelation> team = objectUserRelationMapper.list(query);
+            List<Integer> teamIds = new ArrayList<>();
+            team.forEach(objectUserRelation -> {
+                teamIds.add(objectUserRelation.getObjectId());
+            });
+            TeammateRe teammateRe = new TeammateRe();
+            teammateRe.setType(TeammateReEnum.TYPE_ADMIN.getValue()); // 管理员创建的
+            List<TeammateRe> adminList = teammateReMapper.selectSelective(teammateRe);
+            List<Integer> adminIds = new ArrayList<>();
+            adminList.forEach(teammateRe1 -> {
+                UserTeam userTeam = userTeamMapper.get(teammateRe1.getUserTeamId());
+                if(userTeam != null){
+                    adminIds.add(userTeam.getObjectId());
+                }
+            });
+            teammateRe.setType(TeammateReEnum.TYPE_ADMIN.getValue()); // 管理员创建的
+            List<TeammateRe> managerList = teammateReMapper.selectSelective(teammateRe);
+            List<Integer> managerIds = new ArrayList<>();
+            managerList.forEach(teammateRe1 -> {
+                UserTeam userTeam = userTeamMapper.get(teammateRe1.getUserTeamId());
+                if (userTeam != null) {
+                    managerIds.add(userTeam.getObjectId());
+                }
+            });
+            List<Integer> result = CommonUtil.pickList(mineIds, companyIds);
+            List<Integer> teamateIds = CommonUtil.pickList(adminIds, managerIds);
+            result = CommonUtil.pickList(result, CommonUtil.unionList(teamateIds, teamateIds));
+            lenderQuery.setIds(result);
+            lenderQuery.setRepayStatus(SysProperty.BOOLEAN_FALSE);
         } else if (ObjectTabEnum.focus.getValue().equals(tab)) {
             // 聚焦
 

@@ -204,9 +204,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public TCompanyInfo getCompanyByUserId(Integer id) {
+        if(id == null){
+            return null;
+        }
+        TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(id);
+        if(userInfo == null){
+            return null;
+        }
+        return tCompanyInfoMapper.selectByPrimaryKey(userInfo.getCompanyId());
+    }
+
+    @Override
     public JsonResponse add(UserInsertDTO data) {
         if (data == null) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        TCompanyInfo companyInfo = getCompanyByUserId(UserSession.getCurrent().getUserId());
+        if(companyInfo == null){
+            return JsonResponseTool.paramErr("当前用户存在数据异常");
         }
         TUserInfo userInfo = UserServiceUtils.toTUserInfo(data);
         // 掩码初始化
@@ -222,6 +238,11 @@ public class UserServiceImpl implements UserService {
             FileTool.saveFileSync(data.getAvg());
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        if(data.getCompanyId() != null && CommonUtil.isManage()){
+            userInfo.setCompanyId(data.getCompanyId());
+        }else{
+            userInfo.setCompanyId(companyInfo.getId());
         }
         Integer result = tUserInfoMapper.insertSelective(userInfo);
         if (result != null && result > 0) {
