@@ -18,6 +18,7 @@ public class LenderQuery extends BaseQuery {
     private Integer operator; // 操作人
     private Integer isWorth; // 资不抵债
     private Integer entrustId; // 委托来源
+    private Integer repayStatus; // 还款状态
 
     private List<Integer> ids; // id集合
     private List<Integer> exceptIds; // id集合之外的id都符合条件
@@ -204,5 +205,13 @@ public class LenderQuery extends BaseQuery {
 
     public void setBelongFollowDate(Date belongFollowDate) {
         this.belongFollowDate = belongFollowDate;
+    }
+
+    public Integer getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(Integer repayStatus) {
+        this.repayStatus = repayStatus;
     }
 }

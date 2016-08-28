@@ -14,6 +14,7 @@ import com.dqys.business.orm.mapper.company.OrganizationMapper;
 import com.dqys.business.orm.pojo.company.Organization;
 import com.dqys.business.orm.query.company.OrganizationQuery;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
+import com.dqys.business.service.dto.excel.ExcelMessage;
 import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;
@@ -204,9 +205,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public TCompanyInfo getCompanyByUserId(Integer id) {
+        if(id == null){
+            return null;
+        }
+        TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(id);
+        if(userInfo == null){
+            return null;
+        }
+        return tCompanyInfoMapper.selectByPrimaryKey(userInfo.getCompanyId());
+    }
+
+    @Override
     public JsonResponse add(UserInsertDTO data) {
         if (data == null) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        TCompanyInfo companyInfo = getCompanyByUserId(UserSession.getCurrent().getUserId());
+        if(companyInfo == null){
+            return JsonResponseTool.paramErr("当前用户存在数据异常");
         }
         TUserInfo userInfo = UserServiceUtils.toTUserInfo(data);
         // 掩码初始化
@@ -222,6 +239,11 @@ public class UserServiceImpl implements UserService {
             FileTool.saveFileSync(data.getAvg());
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        if(data.getCompanyId() != null && CommonUtil.isManage()){
+            userInfo.setCompanyId(data.getCompanyId());
+        }else{
+            userInfo.setCompanyId(companyInfo.getId());
         }
         Integer result = tUserInfoMapper.insertSelective(userInfo);
         if (result != null && result > 0) {
@@ -435,7 +457,19 @@ public class UserServiceImpl implements UserService {
 
         Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file);
         if (map.get("result") == null || map.get("result").equals("error")) {
-            return JsonResponseTool.failure(map.get("data").toString());
+            List<ExcelMessage> error = (List<ExcelMessage>)map.get("data");
+            String errMsg = "[";
+            for (ExcelMessage excelMessage : error) {
+                errMsg += "{"
+                        + "index:" + excelMessage.getIndex()
+                        + ",excelName:" + excelMessage.getExcelName()
+                        + ",site:" + excelMessage.getSite()
+                        + ",fields:" + excelMessage.getFields()
+                        + ",problem:" + excelMessage.getProblem()
+                        + "}";
+            }
+            errMsg += "]";
+            return JsonResponseTool.failure(errMsg);
         } else {
             // 返回CODE
             List<UserFileDTO> userFileDTOList = (List<UserFileDTO>) map.get("userFileDTOs");

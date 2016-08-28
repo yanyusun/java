@@ -71,6 +71,7 @@ public class  AssetServiceUtils {
         assetInfo.setLoanOrganizationDistrict(assetDTO.getLoanOrganizationDistrict());
         assetInfo.setTags(assetDTO.getTags());
         assetInfo.setIsshow(assetDTO.getIsshow());
+        assetInfo.setRepayStatus(assetDTO.getRepayStatus());
 
         return assetInfo;
     }
@@ -120,6 +121,7 @@ public class  AssetServiceUtils {
         assetDTO.setLoanOrganizationDistrict(assetInfo.getLoanOrganizationDistrict());
         assetDTO.setTags(assetInfo.getTags());
         assetDTO.setIsshow(assetInfo.getIsshow());
+        assetDTO.setRepayStatus(assetInfo.getRepayStatus());
 
         return assetDTO;
     }

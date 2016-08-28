@@ -40,6 +40,7 @@ public class LenderInfo extends BaseModel implements Serializable {
     private Integer canPay;  // 债务方是否能偿还
     private Integer isWorth;  // 抵押物是否能覆盖债务
     private String memo;  // 备注
+    private Integer repayStatus;  // 还款
 
     private Integer isCollection; // 催收介入
     private Integer isLawyer; // 律所介入
@@ -69,6 +70,15 @@ public class LenderInfo extends BaseModel implements Serializable {
                 + ",isWorth:" + isWorth + ",memo:" + memo;
         string += "]";
         return string;
+    }
+
+
+    public Integer getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(Integer repayStatus) {
+        this.repayStatus = repayStatus;
     }
 
     public Date getStartAt() {
