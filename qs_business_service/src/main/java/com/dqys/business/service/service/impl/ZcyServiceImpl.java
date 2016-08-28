@@ -1,5 +1,7 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
@@ -46,6 +48,8 @@ public class ZcyServiceImpl implements ZcyService {
     private CoordinatorMapper coordinatorMapper;
     @Autowired
     private PawnInfoMapper pawnInfoMapper;
+    @Autowired
+    private TUserInfoMapper tUserInfoMapper;
 
     @Override
     public Map getEstates(Integer id) {
@@ -134,6 +138,12 @@ public class ZcyServiceImpl implements ZcyService {
         Map map = new HashMap<>();
         Integer result = 0;
         if (zcyEstates.getId() == null) {
+            String houseNo = "ZCY" + DateFormatTool.format(new Date(), "yyyyMMddHHmmssS");//房源编号
+            zcyEstates.setHouseNo(houseNo);
+            TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(MessageUtils.transStringToInt(zcyEstates.getOperator()));
+            if (tUserInfo != null) {
+                zcyEstates.setCompanyId(tUserInfo.getCompanyId());
+            }
             result = zcyEstatesMapper.insertSelective(zcyEstates);
         } else {
             result = zcyEstatesMapper.updateByPrimaryKeySelective(zcyEstates);
@@ -145,6 +155,7 @@ public class ZcyServiceImpl implements ZcyService {
                 for (ZcyEstatesAddress addr : address) {
                     addr.setEstatesId(zcyEstates.getId());
                     zcyEstatesAddressMapper.insertSelective(addr);
+                    break;
                 }
             }
             if (facilities != null) {
@@ -310,6 +321,46 @@ public class ZcyServiceImpl implements ZcyService {
         }
         map.put("zcyPawnDTOs", zcyPawnDTOs);
         map.put("count", count);
+        map.put("result", "yes");
+        return map;
+    }
+
+    @Override
+    public Map verifyEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> zcyEstatesAddressList, List<ZcyEstatesFacility> zcyEstatesFacilities) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("result", "yes");
+        return map;
+    }
+
+    @Override
+    public Map verifyOwner(ZcyOwner zcyOwner, List<ZcyOwnerContacts> zcyOwnerContactses) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("result", "yes");
+        return map;
+    }
+
+    @Override
+    public Map verifyMaintain(ZcyMaintain zcyMaintain, List<ZcyMaintainOther> zcyMaintainOthers, List<ZcyMaintainTax> zcyMaintainTaxes) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("result", "yes");
+        return map;
+    }
+
+    @Override
+    public Map verifyKey(ZcyKey zcyKey) {
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("result", "yes");
+        return map;
+    }
+
+    @Override
+    public Map verifyExpress(ZcyExpress zcyExpress) {
+        Map<String, Object> map = new HashMap<>();
+
         map.put("result", "yes");
         return map;
     }

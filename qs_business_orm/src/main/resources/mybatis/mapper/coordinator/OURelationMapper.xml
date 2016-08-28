@@ -20,10 +20,31 @@
         from object_user_relation
         where id = #{id,jdbcType=INTEGER}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from object_user_relation
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
+    <delete id="deleteByPrimaryKey" parameterType="com.dqys.business.orm.pojo.coordinator.OURelation">
+        delete from object_user_relation
+        where stateflag=0
+        <if test="id !=null">
+            and id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="employerId !=null">
+            and employer_id = #{employerId,jdbcType=INTEGER}
+        </if>
+        <if test="businessId !=null">
+            and business_id = #{businessId,jdbcType=INTEGER}
+        </if>
+        <if test="type !=null">
+            and type = #{type,jdbcType=INTEGER}
+        </if>
+        <if test="userId !=null">
+            and user_id = #{userId,jdbcType=INTEGER}
+        </if>
+        <if test="objectType !=null">
+            and object_type = #{objectType,jdbcType=INTEGER}
+        </if>
+        <if test="objectId !=null">
+            and object_id = #{objectId,jdbcType=INTEGER}
+        </if>
+    </delete>
     <insert id="insert" parameterType="com.dqys.business.orm.pojo.coordinator.OURelation" useGeneratedKeys="true"
             keyProperty="id">
     insert into object_user_relation (id, object_type, object_id, 
@@ -127,8 +148,9 @@
       business_id = #{businessId,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-<!--条件查询操作人与事物关系-->
-    <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.pojo.coordinator.OURelation">
+    <!--条件查询操作人与事物关系-->
+    <select id="selectBySelective" resultMap="BaseResultMap"
+            parameterType="com.dqys.business.orm.pojo.coordinator.OURelation">
         select
         <include refid="Base_Column_List"/>
         from object_user_relation

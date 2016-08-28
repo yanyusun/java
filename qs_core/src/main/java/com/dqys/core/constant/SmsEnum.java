@@ -14,7 +14,10 @@ public enum SmsEnum {
     BUSINESS_OPEN(108, "平台业务开启"),//平台业务开启
     POSTPONE_APPLY(109, "延期申请"),//延期申请
     POSTPONE_AUDIT_YES(110, "延期申请审核成功"),
-    POSTPONE_AUDIT_NO(111, "延期申请审核失败"),;
+    POSTPONE_AUDIT_NO(111, "延期申请审核失败"),
+    REPLACE_CONTACTS(112, "联系人替换"),
+    REPLACE(113, "被替换"),
+    ;
     private Integer value;
     private String name;
 

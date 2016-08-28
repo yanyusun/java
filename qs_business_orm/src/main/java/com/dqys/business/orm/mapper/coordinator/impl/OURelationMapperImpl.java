@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 public class OURelationMapperImpl extends BaseDao implements OURelationMapper {
     @Override
-    public Integer deleteByPrimaryKey(Integer id) {
-        return super.getSqlSession().getMapper(OURelationMapper.class).deleteByPrimaryKey(id);
+    public Integer deleteByPrimaryKey(OURelation record) {
+        return super.getSqlSession().getMapper(OURelationMapper.class).deleteByPrimaryKey(record);
     }
 
     @Override

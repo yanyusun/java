@@ -1,5 +1,6 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.repay.RepayEnum;
 import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
@@ -220,9 +221,9 @@ public class RepayServiceImpl implements RepayService {
             Double penMoney = MessageUtils.transMapToDou(iouMap, "penMoney");
             Integer num = 0;
             if ((lessMoney == null || lessMoney == 0) && (accMoney == null || accMoney == 0) && (penMoney == null || penMoney == 0)) {
-                num = repayMapper.updateBusinessStatus(id, 100);//状态改为已完成
+                num = repayMapper.updateBusinessStatus(id, BusinessStatusEnum.end.getValue());//状态改为已完成
             } else {
-                num = repayMapper.updateBusinessStatus(id, 0);//状态改为进行中
+                num = repayMapper.updateBusinessStatus(id, BusinessStatusEnum.platform_pass.getValue());//状态改为审核通过
             }
             if (num == 0) {
                 throw new Exception();
