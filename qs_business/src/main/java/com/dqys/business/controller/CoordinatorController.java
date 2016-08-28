@@ -132,12 +132,19 @@ public class CoordinatorController {
      */
     @RequestMapping("/isAccept")
     @ResponseBody
-    public JsonResponse isAccept(Integer teammateId, Integer status) throws BusinessLogException {
+    public JsonResponse isAccept(Integer teammateId, Integer status, HttpServletRequest httpServletRequest) throws Exception {
+        Integer userId = ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+        );
         if (CommonUtil.checkParam(teammateId, status)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         if (status == 1 || status == 2) {
-            Map map = coordinatorService.isAccept(teammateId, status);
+            Map map = coordinatorService.isAccept(teammateId, status, userId);
             return JsonResponseTool.success(map);
         } else {
             return JsonResponseTool.paramErr("状态参数有误");

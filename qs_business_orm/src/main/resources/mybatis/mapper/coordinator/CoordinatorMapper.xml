@@ -244,18 +244,141 @@
             ON tui.id=ttr.user_id
             where tut.object_id=#{objectId} and tut.object_type=#{objectType} and ttr.type=#{type}
     </select>
-    <!--资产源待分配-->
+    <!--资产源列表-->
+    <sql id="ZCY_WhERE">
+        <if test="zcyListQuery.facilityList != null and zcyListQuery.facilityList.size>0">
+            AND tze.id IN (SELECT tzef.estates_id from t_zcy_estates_facility tzef where tzef.stateflag=0 and
+            <foreach collection="zcyListQuery.facilityList" separator=" or " index="index" item="str" open="("
+                     close=")">
+                tzef.name=#{str}
+            </foreach>
+            )
+        </if>
+        <if test="zcyListQuery.orientationList != null  and zcyListQuery.orientationList.size>0">
+            AND
+            <foreach collection="zcyListQuery.orientationList" separator=" or " item="str" index="index" open="("
+                     close=")">
+                tze.orientation=#{str}
+            </foreach>
+        </if>
+        <if test="(zcyListQuery.startPriceTotal !=null and zcyListQuery.startPriceTotal !='') or (zcyListQuery.endPriceTotal !=null and zcyListQuery.endPriceTotal !='')">
+            AND (
+            <if test="(zcyListQuery.startPriceTotal !=null and zcyListQuery.startPriceTotal !='')">
+                #{zcyListQuery.startPriceTotal} &lt; = tze.selling_price
+            </if>
+            <if test="(zcyListQuery.endPriceTotal !=null and zcyListQuery.endPriceTotal !='')">
+                <if test="(zcyListQuery.startPriceTotal !=null and zcyListQuery.startPriceTotal !='')">
+                    AND
+                </if>
+                tze.selling_price &lt; = #{zcyListQuery.endPriceTotal}
+            </if>
+            )
+        </if>
+        <if test="(zcyListQuery.startDecade !=null and zcyListQuery.startDecade !='') or (zcyListQuery.endDecade !=null and zcyListQuery.endDecade !='')">
+            AND (
+            <if test="(zcyListQuery.startDecade !=null and zcyListQuery.startDecade !='')">
+                #{zcyListQuery.startDecade} &lt; = tze.decade
+            </if>
+            <if test="(zcyListQuery.endDecade !=null and zcyListQuery.endDecade !='')">
+                <if test="(zcyListQuery.startDecade !=null and zcyListQuery.startDecade !='')">
+                    AND
+                </if>
+                tze.decade &lt; = #{zcyListQuery.endDecade}
+            </if>
+            )
+        </if>
+        <if test="(zcyListQuery.startFloor !=null and zcyListQuery.startFloor !='') or (zcyListQuery.endFloor !=null and zcyListQuery.endFloor !='')">
+            AND (
+            <if test="(zcyListQuery.startFloor !=null and zcyListQuery.startFloor !='')">
+                #{zcyListQuery.startFloor} &lt; = tzea.floor
+            </if>
+            <if test="(zcyListQuery.endFloor !=null and zcyListQuery.endFloor !='')">
+                <if test="(zcyListQuery.startFloor !=null and zcyListQuery.startFloor !='')">
+                    AND
+                </if>
+                tzea.floor &lt; = #{zcyListQuery.endFloor}
+            </if>
+            )
+        </if>
+        <if test="(zcyListQuery.startAcreage !=null and zcyListQuery.startAcreage !='') or (zcyListQuery.endAcreage !=null and zcyListQuery.endAcreage !='')">
+            AND (
+            <if test="(zcyListQuery.startAcreage !=null and zcyListQuery.startAcreage !='')">
+                #{zcyListQuery.startAcreage} &lt; = tze.acreage
+            </if>
+            <if test="(zcyListQuery.endAcreage !=null and zcyListQuery.endAcreage !='')">
+                <if test="(zcyListQuery.startAcreage !=null and zcyListQuery.startAcreage !='')">
+                    AND
+                </if>
+                tze.acreage &lt; = #{zcyListQuery.endAcreage}
+            </if>
+            )
+        </if>
+        <if test="(zcyListQuery.startEntrust !=null and zcyListQuery.startEntrust !='') or (zcyListQuery.endEntrust !=null and zcyListQuery.endEntrust !='')">
+            AND (
+            <if test="(zcyListQuery.startEntrust !=null and zcyListQuery.startEntrust !='')">
+                #{zcyListQuery.startEntrust} &lt; = tzo.entrust_protocol_time
+            </if>
+            <if test="(zcyListQuery.endEntrust !=null and zcyListQuery.endEntrust !='')">
+                <if test="(zcyListQuery.startEntrust !=null and zcyListQuery.startEntrust !='')">
+                    AND
+                </if>
+                tzo.entrust_protocol_time &lt; = #{zcyListQuery.endEntrust}
+            </if>
+            )
+        </if>
+        <if test="zcyListQuery.houses != null and zcyListQuery.houses != ''">
+            AND tzea.plot_name LIKE CONCAT('%',#{zcyListQuery.houses},'%')
+        </if>
+        <if test="zcyListQuery.buildingNo != null and zcyListQuery.buildingNo != ''">
+            AND tzea.building_no=#{zcyListQuery.buildingNo}
+        </if>
+        <if test="(zcyListQuery.houseS !=null and zcyListQuery.houseS !='') or (zcyListQuery.houseT !=null and zcyListQuery.houseT !='')">
+            AND (
+            <if test="(zcyListQuery.houseS !=null and zcyListQuery.houseS !='')">
+                tze.house_s=#{zcyListQuery.houseS}
+            </if>
+            <if test="(zcyListQuery.houseT !=null and zcyListQuery.houseT !='')">
+                <if test="(zcyListQuery.houseS !=null and zcyListQuery.houseS !='')">
+                    AND
+                </if>
+                tze.house_t = #{zcyListQuery.houseT}
+            </if>
+            )
+        </if>
+        <if test="zcyListQuery.houseNo != null and zcyListQuery.houseNo != ''">
+            AND tze.house_no LIKE CONCAT('%',#{zcyListQuery.houseNo},'%')
+        </if>
+        <if test="zcyListQuery.houseBelong != null and zcyListQuery.houseBelong != ''">
+            AND tze.house_belong=#{zcyListQuery.houseBelong}
+        </if>
+        <if test="zcyListQuery.buildType != null and zcyListQuery.buildType != ''">
+            AND tze.build_type=#{zcyListQuery.buildType}
+        </if>
+        <if test="zcyListQuery.houseUse != null and zcyListQuery.houseUse != ''">
+            AND tze.house_use=#{zcyListQuery.houseUse}
+        </if>
+        <if test="zcyListQuery.houseCase != null and zcyListQuery.houseCase != ''">
+            AND tzm.house_case=#{zcyListQuery.houseCase}
+        </if>
+    </sql>
     <select id="selectByZCYListPage" resultType="com.dqys.business.orm.pojo.zcy.dto.ZcyPawnDTO">
         SELECT tze.id estatesId,tze.object_id
-        pawnId,tze.orientation,CONCAT(tze.house_s,'-',tze.house_t,'-',tze.house_c,'-',house_w) houseType,
-        tze.selling_price priceTotal,tzk.id keyId,tze.title,tze.acreage ,tzo.entrust_protocol_time entrustTime
+        pawnId,tze.orientation,CONCAT(tze.house_s,'-',tze.house_t,'-',tze.house_c,'-',house_w) houseType,tze.house_no
+        houseNo,
+        tze.selling_price priceTotal,tze.guide_price priceUnit,tzk.id keyId,tze.acreage
+        ,DATE_FORMAT(tzo.entrust_protocol_time,'%Y-%m-%d') entrustTime,
+        tzea.plot_name title,CONCAT(tzea.floor,' (',tze.replenish,'/',tzea.floor_total,')') floor,
+        CONCAT(tzea.province,tzea.city,tzea.area,tzea.road,tzea.plot_name,tzea.building_no,tzea.element,tzea.floor)
+        place
         from t_zcy_estates tze LEFT JOIN t_zcy_owner tzo
         ON tzo.estates_id=tze.id LEFT JOIN t_zcy_maintain tzm
         ON tzm.estates_id=tze.id LEFT JOIN t_zcy_key tzk
         ON tzk.estates_id=tze.id LEFT JOIN t_zcy_express tzex
-        ON tzex.estates_id=tze.id
+        ON tzex.estates_id=tze.id LEFT JOIN t_zcy_estates_address tzea
+        ON tzea.estates_id=tze.id
         <where>
             tze.stateflag=0
+            <include refid="ZCY_WhERE"/>
         </where>
         LIMIT #{zcyListQuery.startPage},#{zcyListQuery.pageCount}
     </select>
@@ -266,9 +389,11 @@
         ON tzo.estates_id=tze.id LEFT JOIN t_zcy_maintain tzm
         ON tzm.estates_id=tze.id LEFT JOIN t_zcy_key tzk
         ON tzk.estates_id=tze.id LEFT JOIN t_zcy_express tzex
-        ON tzex.estates_id=tze.id
+        ON tzex.estates_id=tze.id LEFT JOIN t_zcy_estates_address tzea
+        ON tzea.estates_id=tze.id
         <where>
             tze.stateflag=0
+            <include refid="ZCY_WhERE"/>
         </where>
     </select>
 

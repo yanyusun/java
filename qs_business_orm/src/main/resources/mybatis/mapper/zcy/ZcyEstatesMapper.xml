@@ -40,16 +40,18 @@
         <result column="operator" property="operator" jdbcType="VARCHAR"/>
         <result column="objec_id" property="objecId" jdbcType="INTEGER"/>
         <result column="object_type" property="objectType" jdbcType="INTEGER"/>
+        <result column="house_no" property="houseNo" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.dqys.business.orm.pojo.zcy.ZcyEstates" extends="BaseResultMap">
         <result column="content" property="content" jdbcType="LONGVARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, create_at, update_at, stateflag, annotation, replenish, house_s, house_t, house_c, 
-    house_w, house_remark, quota, acreage, selling_price, decade, property, orientation, 
+    house_w, house_remark, quota, acreage, selling_price, DATE_FORMAT(decade,'%Y-%m-%d') decade, property, orientation,
     guide_price, guide_remark, house_remarkv, decorate_price, tenement_price, facility, 
     internal_number, title, decorate_type, decorate_case, decorate_time, build_type, 
-    house_belong, house_use, heating_way, metro, school_house, version,operator,object_id,object_type
+    house_belong, house_use, heating_way, metro, school_house, version,operator,object_id,object_type,
+    house_no
   </sql>
     <sql id="Blob_Column_List">
     content
@@ -79,7 +81,8 @@
       title, decorate_type, decorate_case, 
       decorate_time, build_type, house_belong, 
       house_use, heating_way, metro, 
-      school_house, version, content,operator,objec_id,object_type
+      school_house, version, content,operator,objec_id,object_type,
+      house_no
       )
     values (#{id,jdbcType=INTEGER}, now(), now(),
       0, #{annotation,jdbcType=VARCHAR}, #{replenish,jdbcType=VARCHAR},
@@ -92,7 +95,8 @@
       #{title,jdbcType=VARCHAR}, #{decorateType,jdbcType=VARCHAR}, #{decorateCase,jdbcType=VARCHAR}, 
       #{decorateTime,jdbcType=VARCHAR}, #{buildType,jdbcType=VARCHAR}, #{houseBelong,jdbcType=VARCHAR}, 
       #{houseUse,jdbcType=VARCHAR}, #{heatingWay,jdbcType=VARCHAR}, #{metro,jdbcType=VARCHAR}, 
-      #{schoolHouse,jdbcType=VARCHAR}, 0,#{operator,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR},#{objectId,jdbcType=INTEGER},#{objectType,jdbcType=INTEGER}
+      #{schoolHouse,jdbcType=VARCHAR}, 0,#{operator,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR},#{objectId,jdbcType=INTEGER},#{objectType,jdbcType=INTEGER},
+      #{houseNo,jdbcType=VARCHAR}
       )
   </insert>
     <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates" keyProperty="id"
@@ -206,6 +210,9 @@
             <if test="objectType != null">
                 object_type,
             </if>
+            <if test="houseNo != null">
+                house_no,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -317,6 +324,9 @@
             </if>
             <if test="objectType != null">
                 #{objectType,jdbcType=INTEGER},
+            </if>
+            <if test="houseNo != null">
+                #{houseNo,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>

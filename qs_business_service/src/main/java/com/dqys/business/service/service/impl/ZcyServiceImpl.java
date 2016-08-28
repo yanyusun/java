@@ -10,13 +10,11 @@ import com.dqys.business.orm.query.coordinator.ZcyListQuery;
 import com.dqys.business.orm.pojo.zcy.dto.ZcyPawnDTO;
 import com.dqys.business.service.service.ZcyService;
 import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.core.utils.DateFormatTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by mkfeng on 2016/7/27.
@@ -270,21 +268,24 @@ public class ZcyServiceImpl implements ZcyService {
         Integer count = 0;
         if (zcyListQuery.getStatus() == 0) {//待接收
             List<Integer> objectIdList = coordinatorMapper.getObjectIdList(ObjectTypeEnum.PAWN.getValue(), userId, zcyListQuery.getStatus());
-            zcyListQuery.setObjectIdList(objectIdList);
-            count = pawnInfoMapper.pawnListPageCount(zcyListQuery);
-            List<PawnInfo> pawnList = null;
-            if (count > (zcyListQuery.getPage() * zcyListQuery.getPageCount())) {
-                zcyListQuery.setStartPage(zcyListQuery.getPage() * zcyListQuery.getPageCount());
-                pawnList = pawnInfoMapper.pawnListPage(zcyListQuery);
-            }
-            for (PawnInfo pawn : pawnList) {
-                ZcyPawnDTO dto = new ZcyPawnDTO();
-                dto.setPawnId(pawn.getId());
-                dto.setPawnNo(pawn.getPawnNo());
-                dto.setPriceTotal((pawn.getWorth() / 10000) + "");
-                dto.setAcreage(pawn.getSize());
-                dto.setMaintaining(MessageUtils.transMapToString(coordinatorMapper.getRealName(ObjectTypeEnum.PAWN.getValue(), pawn.getId(), 1), "real_name"));
-                zcyPawnDTOs.add(dto);
+            if (objectIdList.size() > 0) {
+                zcyListQuery.setObjectIdList(objectIdList);
+                count = pawnInfoMapper.pawnListPageCount(zcyListQuery);
+                List<PawnInfo> pawnList = null;
+                if (count > (zcyListQuery.getPage() * zcyListQuery.getPageCount())) {
+                    zcyListQuery.setStartPage(zcyListQuery.getPage() * zcyListQuery.getPageCount());
+                    pawnList = pawnInfoMapper.pawnListPage(zcyListQuery);
+                }
+
+                for (PawnInfo pawn : pawnList) {
+                    ZcyPawnDTO dto = new ZcyPawnDTO();
+                    dto.setPawnId(pawn.getId());
+                    dto.setHouseNo(pawn.getPawnNo());
+                    dto.setPriceTotal((pawn.getWorth() / 10000) + "");
+                    dto.setAcreage(pawn.getSize());
+                    dto.setMaintaining(MessageUtils.transMapToString(coordinatorMapper.getRealName(ObjectTypeEnum.PAWN.getValue(), pawn.getId(), 1), "real_name"));
+                    zcyPawnDTOs.add(dto);
+                }
             }
         }
         if (zcyListQuery.getStatus() == 1) {//待分配
@@ -293,9 +294,18 @@ public class ZcyServiceImpl implements ZcyService {
             zcyPawnDTOs = coordinatorMapper.selectByZCYListPage(zcyListQuery);
             for (ZcyPawnDTO dto : zcyPawnDTOs) {
                 if (dto.getPawnId() != null) {
-                    dto.setMaintaining(MessageUtils.transMapToString(coordinatorMapper.getRealName(ObjectTypeEnum.PAWN.getValue(), dto.getPawnId(), 1), "real_name"));
+                    dto.setMaintaining(MessageUtils.transMapToString(coordinatorMapper.getRealName(ObjectTypeEnum.PAWN.getValue(), dto.getPawnId(), 1), "real_name"));//维护人
                 }
-                dto.setLabel(coordinatorMapper.findLabel(dto.getEstatesId()));
+                dto.setLabel(coordinatorMapper.findLabel(dto.getEstatesId()));//标签
+                Integer timeCount = 0;//计算挂牌天数
+                if (dto.getEntrustTime() != null) {
+                    String dateTime = dto.getEntrustTime();
+                    if (dateTime.matches(DateFormatTool.DATE_FORMAT_10_REG1)) {
+                        long start = DateFormatTool.parse(dateTime, DateFormatTool.DATE_FORMAT_10_REG1).getTime();
+                        timeCount = (int) (new Date().getTime() - start) / (1000 * 3600 * 24);
+                    }
+                }
+                dto.setHangShingle(timeCount.toString());
             }
         }
         map.put("zcyPawnDTOs", zcyPawnDTOs);

@@ -12,7 +12,7 @@ public class ZcyPawnDTO implements Serializable {
     private Integer estatesId;//资产信息id
     private Integer keyId;// 钥匙信息id
     private String title;//标题
-    private String pawnNo;//编号
+    private String houseNo;//编号
     private String place;//位置
     private List<Map<String, Object>> label;//标签
     private String houseType;//户型
@@ -79,12 +79,12 @@ public class ZcyPawnDTO implements Serializable {
         this.title = title;
     }
 
-    public String getPawnNo() {
-        return pawnNo;
+    public String getHouseNo() {
+        return houseNo;
     }
 
-    public void setPawnNo(String pawnNo) {
-        this.pawnNo = pawnNo;
+    public void setHouseNo(String houseNo) {
+        this.houseNo = houseNo;
     }
 
     public String getPlace() {

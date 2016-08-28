@@ -119,6 +119,16 @@ public class ZcyEstates implements Serializable {
 
     private Integer objectType;//对象类型
 
+    private String houseNo;//编号
+
+    public String getHouseNo() {
+        return houseNo;
+    }
+
+    public void setHouseNo(String houseNo) {
+        this.houseNo = houseNo;
+    }
+
     public String getOperator() {
         return operator;
     }
