@@ -85,7 +85,8 @@
       title, decorate_type, decorate_case, 
       decorate_time, build_type, house_belong, 
       house_use, heating_way, metro, 
-      school_house, version, content,operator,objec_id,object_type,entrust_type,
+      school_house, version, content,operator,
+      objec_id,object_type,entrust_type,
       house_no,company_id
       )
     values (#{id,jdbcType=INTEGER}, now(), now(),
@@ -99,8 +100,9 @@
       #{title,jdbcType=VARCHAR}, #{decorateType,jdbcType=VARCHAR}, #{decorateCase,jdbcType=VARCHAR}, 
       #{decorateTime,jdbcType=VARCHAR}, #{buildType,jdbcType=VARCHAR}, #{houseBelong,jdbcType=VARCHAR}, 
       #{houseUse,jdbcType=VARCHAR}, #{heatingWay,jdbcType=VARCHAR}, #{metro,jdbcType=VARCHAR}, 
-      #{schoolHouse,jdbcType=VARCHAR}, 0,#{operator,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR},#{objectId,jdbcType=INTEGER},#{objectType,jdbcType=INTEGER},
-      #{entrustType,jdbcType=LONGVARCHAR}, #{houseNo,jdbcType=VARCHAR},#{companyId,jdbcType=INTEGER}
+      #{schoolHouse,jdbcType=VARCHAR}, 0, #{content,jdbcType=LONGVARCHAR},#{operator,jdbcType=VARCHAR},
+      #{objectId,jdbcType=INTEGER},#{objectType,jdbcType=INTEGER},#{entrustType,jdbcType=LONGVARCHAR},
+       #{houseNo,jdbcType=VARCHAR},#{companyId,jdbcType=INTEGER}
       )
   </insert>
     <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates" keyProperty="id"
@@ -449,6 +451,9 @@
             version = version+1,
             <if test="content != null">
                 content = #{content,jdbcType=LONGVARCHAR},
+            </if>
+            <if test="deck != null">
+                deck = #{deck,jdbcType=VARCHAR},
             </if>
             <if test="entrustType != null">
                 entrust_type = #{entrustType,jdbcType=VARCHAR},
