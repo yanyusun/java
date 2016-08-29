@@ -544,12 +544,12 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             return map;
         }
         if (status == null && substitutionUid == null) {//删除协作器联系人
-            code = teamDel(userId, teamUserId, userTeamId, substitutionUid);
+            code = teamDel(userId, teamUserId, userTeamId, status, substitutionUid);
         } else if (status != null && substitutionUid != null) {//替换协作器联系人
             if (userId.equals(substitutionUid)) {
-                code = teamDel(userId, teamUserId, userTeamId, substitutionUid);//删除联系人
+                code = teamDel(userId, teamUserId, userTeamId, status, substitutionUid);//删除联系人
                 if ("200".equals(code.get("code")) && status == 1) {
-                    teamDel(userId, substitutionUid, userTeamId, null);//如果替换人在该团队已经存在，那么先删除之后
+                    teamDel(userId, substitutionUid, userTeamId, null, null);//如果替换人在该团队已经存在，那么先删除之后
                     TeammateRe teammateRe = (TeammateRe) code.get("teammateRe");
                     teammateRe.setId(null);
                     teammateRe.setUserId(substitutionUid);
@@ -569,7 +569,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                     }
                 }
             } else {
-                map.put("result", "no");
+                map.put("result", "no_self");
+                map.put("msg", "不正确的访问");
             }
         } else if (status == null && substitutionUid != null) {//发送短信通知替补的人
             SmsUtil smsUtil = new SmsUtil();//发送短信通知
@@ -580,6 +581,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             String title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.REPLACE_CONTACTS.getValue());
             String url = "?teamUserId=" + teamUserId + "&userTeamId=" + userTeamId + "&substitutionUid=" + substitutionUid;
             messageService.add(title, content, userId, substitutionUid, "", MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE_CONTACTS.getValue(), url);//添加通知消息
+            map.put("result", "yes");
         } else {
             map.put("result", "no_par");
             map.put("msg", "参数错误");
@@ -595,22 +597,29 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             } else if ("500".equals(code.get("code"))) {
                 map.put("result", "no_tiBu");
                 map.put("msg", "需要替补人");
+            } else if ("502".equals(code.get("code"))) {
+                map.put("result", "no_lowRank");
+                map.put("msg", "下级不能删除上级");
+            } else if ("503".equals(code.get("code"))) {
+                map.put("result", "no_delRepeat");
+                map.put("msg", "不能重复删除");
             }
         }
         return map;
     }
 
-    private Map teamDel(Integer userId, Integer teamUserId, Integer userTeamId, Integer substitutionUid) {
+    private Map teamDel(Integer userId, Integer teamUserId, Integer userTeamId, Integer status, Integer substitutionUid) {
         Map map = new HashMap<>();
         TeammateRe teammateRe = new TeammateRe();
         teammateRe.setUserId(teamUserId);
         teammateRe.setUserTeamId(userTeamId);
         List<TeammateRe> list = teammateReMapper.selectSelective(teammateRe);//团队中用户
+        teammateRe.setUserId(userId);
         List<TeammateRe> list1 = teammateReMapper.selectSelective(teammateRe);//操作用户
         if (list.size() > 0 && list1.size() > 0) {
             TeammateRe team = list.get(0);
             TeammateRe oper = list1.get(0);
-            if (oper.getType() > team.getType()) {
+            if (status == null && substitutionUid == null && oper.getType() > team.getType()) {
                 map.put("code", "502");//下级不能删除上级
                 return map;
             }
@@ -619,11 +628,17 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 map.put("code", "500");//需要有人替补
                 return map;
             }
+            if (team.getStatus().equals(TeammateReEnum.STATUS_DELETE.getValue())) {
+                map.put("code", "503");//不能重复删除
+                return map;
+            }
             team.setStatus(TeammateReEnum.STATUS_DELETE.getValue());
             Integer result = teammateReMapper.updateByPrimaryKey(team);
+            teammateReMapper.deleteByPrimaryKey(team.getId());
             OURelation ouRelation = new OURelation();
             ouRelation.setUserId(teamUserId);
             ouRelation.setEmployerId(userTeamId);
+            ouRelation.setType(OURelationEnum.TYPE_ALLOCATION_TEAM.getValue());
             Integer result1 = ouRelationMapper.deleteByPrimaryKey(ouRelation);
             if (result > 0 && result1 > 0) {
                 map.put("code", "200");//成功
