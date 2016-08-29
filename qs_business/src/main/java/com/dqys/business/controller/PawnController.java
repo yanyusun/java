@@ -4,6 +4,7 @@ import com.dqys.business.service.dto.asset.PawnDTO;
 import com.dqys.business.service.dto.asset.PawnDTOList;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.PawnService;
+import com.dqys.business.service.utils.asset.PawnServiceUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
@@ -49,8 +50,9 @@ public class PawnController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse add(@ModelAttribute PawnDTO pawnDTO) throws BusinessLogException {
-        if (CommonUtil.checkParam(pawnDTO)) {
-            return JsonResponseTool.paramErr("参数错误");
+        String data = PawnServiceUtils.checkData(pawnDTO);
+        if(data != null){
+            return JsonResponseTool.paramErr(data);
         }
         return pawnService.add_tx(pawnDTO);
     }
@@ -67,6 +69,10 @@ public class PawnController {
         if (CommonUtil.checkParam(pawnDTOList, pawnDTOList.getPawnDTOList()) || pawnDTOList.getPawnDTOList().size() == 0) {
             return JsonResponseTool.paramErr("参数错误");
         }
+        String data = PawnServiceUtils.checkData(pawnDTOList.getPawnDTOList());
+        if(data != null){
+            return JsonResponseTool.paramErr(data);
+        }
         return pawnService.listAdd(pawnDTOList.getPawnDTOList());
     }
 
@@ -80,8 +86,12 @@ public class PawnController {
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse update(@ModelAttribute PawnDTO pawnDTO) throws BusinessLogException {
-        if (CommonUtil.checkParam(pawnDTO)) {
+        if (CommonUtil.checkParam(pawnDTO, pawnDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        String data = PawnServiceUtils.checkData(pawnDTO);
+        if(data != null){
+            return JsonResponseTool.paramErr(data);
         }
         return pawnService.update_tx(pawnDTO);
     }

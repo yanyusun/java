@@ -16,6 +16,7 @@ public class AssetQuery extends BaseQuery {
     private Integer areaId; // 区域ID
     private Integer operator; // 操作人
     private String code; // 资产包编号
+    private Integer repayStatus; // 还款
 
     private Date startAt; // 开始时间
     private Date endAt; // 结束时间
@@ -114,4 +115,11 @@ public class AssetQuery extends BaseQuery {
         this.stateflag = stateflag;
     }
 
+    public Integer getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(Integer repayStatus) {
+        this.repayStatus = repayStatus;
+    }
 }

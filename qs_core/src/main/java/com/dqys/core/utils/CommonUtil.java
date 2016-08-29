@@ -165,7 +165,7 @@ public class CommonUtil {
     }
 
     /**
-     * 两个表数据提取出不重复的重复数据
+     * 提取两张表同样的数据
      *
      * @param list
      * @param list2
@@ -196,7 +196,7 @@ public class CommonUtil {
     }
 
     /**
-     * 两个列表的数据整合到一起,且去重
+     * 两张表整合成一个不重复的表
      *
      * @param list
      * @param list2
@@ -212,21 +212,21 @@ public class CommonUtil {
         if (list2 == null || list2.size() == 0) {
             return exceptMulty(list);
         }
-        List<Integer> result = new ArrayList<>();
         list = exceptMulty(list);
         list2 = exceptMulty(list2);
-        for (Integer i : list) {
+        for (Integer i : list2) {
             boolean flag = true;
-            for (Integer j : list2) {
+            for (Integer j : list) {
                 if (i.equals(j)) {
+                    flag = false;
                     break;
                 }
             }
             if (flag) {
-                result.add(i);
+                list.add(i);
             }
         }
-        return result;
+        return list;
     }
 
     /**

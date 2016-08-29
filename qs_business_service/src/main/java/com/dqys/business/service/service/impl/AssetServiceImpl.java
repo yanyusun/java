@@ -15,6 +15,8 @@ import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.coordinator.UserTeamMapper;
 import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
+import com.dqys.business.orm.pojo.coordinator.TeammateRe;
+import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
@@ -35,6 +37,7 @@ import com.dqys.business.service.utils.asset.LenderServiceUtils;
 import com.dqys.business.service.utils.asset.PawnServiceUtils;
 import com.dqys.business.service.utils.excel.ExcelUtilAsset;
 import com.dqys.core.base.SysProperty;
+import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
@@ -275,19 +278,65 @@ public class AssetServiceImpl implements AssetService {
                 assetQuery.setExceptIds(ids);
             }
             assetQuery.setOperator(UserSession.getCurrent().getUserId());
-        } else if (ObjectTabEnum.handling_urge.getValue().equals(type)) {
-            // 催收的正在处置
-            List<Integer> ids = companyTeamReMapper.listObjectIdByTypeAndManager(
-                    ObjectTypeEnum.LENDER.getValue(),
-                    ObjectAcceptTypeEnum.accept.getValue(),
-                    UserSession.getCurrent().getUserId()
-            );
-            if (ids == null || ids.size() == 0) {
-                //  找不到数据,填充0数据限制
-                assetQuery.setId(SysProperty.NULL_DATA_ID);
-            } else {
-                assetQuery.setIds(ids);
-            }
+        } else if (ObjectTabEnum.handling_urge.getValue().equals(type) || ObjectTabEnum.gongingOn.getValue().equals(type)) {
+            // 正在处置
+//            List<Integer> ids = companyTeamReMapper.listObjectIdByTypeAndManager(
+//                    ObjectTypeEnum.LENDER.getValue(),
+//                    ObjectAcceptTypeEnum.accept.getValue(),
+//                    UserSession.getCurrent().getUserId()
+//            );
+//            if (ids == null || ids.size() == 0) {
+//                //  找不到数据,填充0数据限制
+//                assetQuery.setId(SysProperty.NULL_DATA_ID);
+//            } else {
+//                assetQuery.setIds(ids);
+//            }
+            // 自己分配
+            ObjectUserRelationQuery query = new ObjectUserRelationQuery();
+            query.setType(BusinessRelationEnum.own.getValue()); // 自己分配
+            List<ObjectUserRelation> mine = objectUserRelationMapper.list(query);
+            List<Integer> mineIds = new ArrayList<>();
+            mine.forEach(objectUserRelation -> {
+                mineIds.add(objectUserRelation.getObjectId());
+            });
+            // 公司分配
+            query.setType(BusinessRelationEnum.company.getValue()); // 公司分配
+            List<ObjectUserRelation> company = objectUserRelationMapper.list(query);
+            List<Integer> companyIds = new ArrayList<>();
+            company.forEach(objectUserRelation -> {
+                companyIds.add(objectUserRelation.getObjectId());
+            });
+            // 团队分配
+            query.setType(BusinessRelationEnum.team.getValue());
+            List<ObjectUserRelation> team = objectUserRelationMapper.list(query);
+            List<Integer> teamIds = new ArrayList<>();
+            team.forEach(objectUserRelation -> {
+                teamIds.add(objectUserRelation.getObjectId());
+            });
+            TeammateRe teammateRe = new TeammateRe();
+            teammateRe.setType(TeammateReEnum.TYPE_ADMIN.getValue()); // 管理员创建的
+            List<TeammateRe> adminList = teammateReMapper.selectSelective(teammateRe);
+            List<Integer> adminIds = new ArrayList<>();
+            adminList.forEach(teammateRe1 -> {
+                UserTeam userTeam = userTeamMapper.get(teammateRe1.getUserTeamId());
+                if(userTeam != null){
+                    adminIds.add(userTeam.getObjectId());
+                }
+            });
+            teammateRe.setType(TeammateReEnum.TYPE_ADMIN.getValue()); // 管理员创建的
+            List<TeammateRe> managerList = teammateReMapper.selectSelective(teammateRe);
+            List<Integer> managerIds = new ArrayList<>();
+            managerList.forEach(teammateRe1 -> {
+                UserTeam userTeam = userTeamMapper.get(teammateRe1.getUserTeamId());
+                if (userTeam != null) {
+                    managerIds.add(userTeam.getObjectId());
+                }
+            });
+            List<Integer> result = CommonUtil.pickList(mineIds, companyIds);
+            List<Integer> teamateIds = CommonUtil.pickList(adminIds, managerIds);
+            result = CommonUtil.pickList(result, CommonUtil.unionList(teamateIds, teamateIds));
+            assetQuery.setIds(result);
+            assetQuery.setRepayStatus(SysProperty.BOOLEAN_FALSE);
         } else if (ObjectTabEnum.focus.getValue().equals(type)) {
             // 聚焦
 
@@ -600,18 +649,24 @@ public class AssetServiceImpl implements AssetService {
         Map<String, Object> map = ExcelUtilAsset.uploadExcel(file);
         if (map.get("result").equals("error")) {
             List<ExcelMessage> error = (List<ExcelMessage>)map.get("data");
-            String errMsg = "[";
-            for (ExcelMessage excelMessage : error) {
-                errMsg += "{"
-                        + "index:" + excelMessage.getIndex()
-                        + ",excelName:" + excelMessage.getExcelName()
-                        + ",site:" + excelMessage.getSite()
-                        + ",fields:" + excelMessage.getFields()
-                        + ",problem:" + excelMessage.getProblem()
-                        + "}";
-            }
-            errMsg += "]";
-            return JsonResponseTool.failure(errMsg);
+            JsonResponse jsonResponse = new JsonResponse();
+            jsonResponse.setCode(ResponseCodeEnum.FAILURE.getValue());
+            jsonResponse.setMsg("格式内容出错");
+            jsonResponse.setData(error);
+            return jsonResponse;
+//            List<ExcelMessage> error = (List<ExcelMessage>)map.get("data");
+//            String errMsg = "[";
+//            for (ExcelMessage excelMessage : error) {
+//                errMsg += "{"
+//                        + "index:" + excelMessage.getIndex()
+//                        + ",excelName:" + excelMessage.getExcelName()
+//                        + ",site:" + excelMessage.getSite()
+//                        + ",fields:" + excelMessage.getFields()
+//                        + ",problem:" + excelMessage.getProblem()
+//                        + "}";
+//            }
+//            errMsg += "]";
+//            return JsonResponseTool.failure(errMsg);
         }
         List<ContactDTO> contactDTOList = (List<ContactDTO>) map.get("contactDTOs");
         List<LenderDTO> lenderDTOList = (List<LenderDTO>) map.get("lenderDTOs");

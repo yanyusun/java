@@ -8,11 +8,12 @@ public enum MessageBTEnum {
     INITIATIVE(1, "主动加入"),
     COMPANY_BETWEEN(2, "公司间邀请"),
     POSTPONE(3, "延期申请操作"),
-    BUSINESS(4, "平台业务审核结果"),
+    BUSINESS(4, "平台业务审核操作"),
     BUSINESS_PAUSE(5, "业务暂停操作"),
+    COMPANY_JOIN(6, "主动加入分配器"),
     POSTPONE_AUDIT(7, "延期申请审核结果"),
     REPLACE_CONTACTS(8, "替换联系人"),
-    REPLACE(9, "被替换联系人"),;
+    REPLACE(9, "被替换联系人");
 
     private Integer value;
     private String name;

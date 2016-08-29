@@ -14,6 +14,7 @@ import com.dqys.business.orm.mapper.company.OrganizationMapper;
 import com.dqys.business.orm.pojo.company.Organization;
 import com.dqys.business.orm.query.company.OrganizationQuery;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
+import com.dqys.business.service.dto.excel.ExcelMessage;
 import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;
@@ -23,6 +24,8 @@ import com.dqys.business.service.utils.excel.UserExcelUtil;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.ResponseCodeEnum;
+import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.mapper.facade.TAreaMapper;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.TArea;
@@ -32,8 +35,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,15 +76,36 @@ public class UserServiceImpl implements UserService {
                 List<Integer> userTypes = new ArrayList<>();
                 if (query.getType().equals(1)) {
                     // 企业
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY)); // 中介
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST)); // 委托方
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE)); // 催收方
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW)); // 律所
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM)); // 平台
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
+                                    .getPropertyValue())); // 中介
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_ENTRUST)
+                                    .getPropertyValue())); // 委托方
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                                    .getPropertyValue())); // 催收方
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
+                                    .getPropertyValue())); // 律所
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM)
+                                    .getPropertyValue())); // 平台
                 } else {
                     // 个人
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST)); // 委托方
-                    userTypes.add(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_COMMON)); // 用户
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_ENTRUST)
+                                    .getPropertyValue())); // 委托方
+                    userTypes.add(Integer.valueOf(
+                            SysPropertyTool.getProperty(
+                                    SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_COMMON)
+                                    .getPropertyValue())); // 用户
                 }
                 tUserTagQuery.setUserTypes(userTypes);
             }
@@ -181,9 +205,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public TCompanyInfo getCompanyByUserId(Integer id) {
+        if(id == null){
+            return null;
+        }
+        TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(id);
+        if(userInfo == null){
+            return null;
+        }
+        return tCompanyInfoMapper.selectByPrimaryKey(userInfo.getCompanyId());
+    }
+
+    @Override
     public JsonResponse add(UserInsertDTO data) {
         if (data == null) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        TCompanyInfo companyInfo = getCompanyByUserId(UserSession.getCurrent().getUserId());
+        if(companyInfo == null){
+            return JsonResponseTool.paramErr("当前用户存在数据异常");
         }
         TUserInfo userInfo = UserServiceUtils.toTUserInfo(data);
         // 掩码初始化
@@ -193,6 +233,17 @@ public class UserServiceImpl implements UserService {
             userInfo.setPassword(SignatureTool.md5Encode(INIT_PASSSWORD, null));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        try {
+            // 保存头像信息
+            FileTool.saveFileSync(data.getAvg());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if(data.getCompanyId() != null && CommonUtil.isManage()){
+            userInfo.setCompanyId(data.getCompanyId());
+        }else{
+            userInfo.setCompanyId(companyInfo.getId());
         }
         Integer result = tUserInfoMapper.insertSelective(userInfo);
         if (result != null && result > 0) {
@@ -299,13 +350,10 @@ public class UserServiceImpl implements UserService {
         for (Integer id : ids) {
             TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(id);
             if (tUserInfo != null) {
-                // 邮件提醒
-                if (tUserInfo.getEmail() != null) {
-                    sendMail(tUserInfo.getEmail(), "");
-                }
                 // 手机号提醒
                 if (tUserInfo.getMobile() != null) {
-                    sendMsg(tUserInfo.getMobile(), "");
+                    // TODO 设置消息体
+                    RabbitMQProducerTool.addToSMSSendQueue(tUserInfo.getMobile(), "消息提请内容,请设置");
                 }
             }
         }
@@ -336,13 +384,6 @@ public class UserServiceImpl implements UserService {
                 if (result < 1) {
                     String errStr = "用户: " + tUserInfo.getUserName() + " 重设密码失败";
                     errList.add(errStr);
-                } else {
-                    if (tUserInfo.getMobile() != null) {
-                        sendMsg(tUserInfo.getMobile(), "");
-                    }
-                    if (tUserInfo.getEmail() != null) {
-                        sendMsg(tUserInfo.getEmail(), "");
-                    }
                 }
             }
         }
@@ -370,12 +411,6 @@ public class UserServiceImpl implements UserService {
         if (result < 1) {
             return JsonResponseTool.failure("设置失败");
         } else {
-            if (tUserInfo.getMobile() != null) {
-                sendMsg(tUserInfo.getMobile(), "");
-            }
-            if (tUserInfo.getEmail() != null) {
-                sendMsg(tUserInfo.getEmail(), "");
-            }
             return JsonResponseTool.success(id);
         }
     }
@@ -415,14 +450,19 @@ public class UserServiceImpl implements UserService {
         if (CommonUtil.checkParam(file)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        CompanyDetailInfo companyDetailInfo = tCompanyInfoMapper.get(UserSession.getCurrent().getUserId());
+        CompanyDetailInfo companyDetailInfo = tCompanyInfoMapper.getDetailByUserId(UserSession.getCurrent().getUserId());
         if (companyDetailInfo == null) {
             return JsonResponseTool.paramErr("您不是管理员,没有权限导入成员");
         }
 
         Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file);
         if (map.get("result") == null || map.get("result").equals("error")) {
-            return JsonResponseTool.failure(map.get("data").toString());
+            List<ExcelMessage> error = (List<ExcelMessage>)map.get("data");
+            JsonResponse jsonResponse = new JsonResponse();
+            jsonResponse.setCode(ResponseCodeEnum.FAILURE.getValue());
+            jsonResponse.setMsg("格式内容出错");
+            jsonResponse.setData(error);
+            return jsonResponse;
         } else {
             // 返回CODE
             List<UserFileDTO> userFileDTOList = (List<UserFileDTO>) map.get("userFileDTOs");
@@ -478,22 +518,4 @@ public class UserServiceImpl implements UserService {
         return JsonResponseTool.success("添加成功");
     }
 
-    /**
-     * 发送激活邮箱
-     * @param email
-     */
-    private void sendMail(String email, String html) {
-        if(!CommonUtil.checkParam(email, html) && !html.equals("") && FormatValidateTool.checkEmail(email)){
-            RabbitMQProducerTool.addToMailSendQueue(email, html);
-        }
-    }
-
-    /**
-     * 发送短信
-     */
-    private void sendMsg(String mobile, String msg) {
-        if(!CommonUtil.checkParam(mobile, msg) && !msg.equals("") && FormatValidateTool.checkPhone(mobile)){
-            RabbitMQProducerTool.addToSMSSendQueue(mobile, msg);
-        }
-    }
 }

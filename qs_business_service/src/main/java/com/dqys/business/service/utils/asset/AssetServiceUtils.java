@@ -71,6 +71,7 @@ public class  AssetServiceUtils {
         assetInfo.setLoanOrganizationDistrict(assetDTO.getLoanOrganizationDistrict());
         assetInfo.setTags(assetDTO.getTags());
         assetInfo.setIsshow(assetDTO.getIsshow());
+        assetInfo.setRepayStatus(assetDTO.getRepayStatus());
 
         return assetInfo;
     }
@@ -120,6 +121,7 @@ public class  AssetServiceUtils {
         assetDTO.setLoanOrganizationDistrict(assetInfo.getLoanOrganizationDistrict());
         assetDTO.setTags(assetInfo.getTags());
         assetDTO.setIsshow(assetInfo.getIsshow());
+        assetDTO.setRepayStatus(assetInfo.getRepayStatus());
 
         return assetDTO;
     }
@@ -256,9 +258,7 @@ public class  AssetServiceUtils {
         if(!CommonUtil.isExist(CommonUtil.UPLETTER, assetDTO.getEvaluateLevel())){
             return "评级参数错误";
         }
-        if(!CommonUtil.isMoneyFormat(assetDTO.getAccrual())
-                && !CommonUtil.isMoneyFormat(assetDTO.getLoan())
-                && !CommonUtil.isMoneyFormat(assetDTO.getAppraisal())){
+        if(!CommonUtil.isMoneyFormat(assetDTO.getAccrual(), assetDTO.getLoan(), assetDTO.getAppraisal())){
             return "存在非法金额参数";
         }
         if(AreaTool.validateArea(assetDTO.getProvince(), assetDTO.getCity(), assetDTO.getDistrict()) != null){

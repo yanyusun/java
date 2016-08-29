@@ -1,6 +1,7 @@
 package com.dqys.business.service.utils.asset;
 
 import com.dqys.business.orm.pojo.asset.IOUInfo;
+import com.dqys.business.service.constant.asset.ExcellentTypeEnum;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.DateFormatTool;
@@ -124,4 +125,45 @@ public class IouServiceUtils {
 
         return iouInfo;
     }
+
+    public static String checkData(IouDTO iouDTO){
+        if(CommonUtil.checkParam(iouDTO,
+                iouDTO.getIouName(), iouDTO.getType(), iouDTO.getAgency(),
+                iouDTO.getIouCode(), iouDTO.getLoanTime(), iouDTO.getLoanAtTime(),
+                iouDTO.getAmount(), iouDTO.getPactRate(), iouDTO.getOuttimeMultiple(),
+                iouDTO.getAppropriationMultiple(), iouDTO.getAccrualRepay(), iouDTO.getLoanRepay(),
+                iouDTO.getLevelType(), iouDTO.getLessCorpus(), iouDTO.getAccrualArrears(),
+                iouDTO.getPenalty(), iouDTO.getArrears(), iouDTO.getEndAt(),
+                iouDTO.getWorth(), iouDTO.getAdvanceCorpus(), iouDTO.getEvaluateExcellent(),
+                iouDTO.getEvaluateLevel(), iouDTO.getLenderId())){
+            return "参数错误";
+        }
+        if(!CommonUtil.isMoneyFormat(iouDTO.getAmount(), iouDTO.getPactRate(), iouDTO.getOuttimeMultiple(),
+                iouDTO.getAccrualRepay(), iouDTO.getLoanRepay(), iouDTO.getLessCorpus(),
+                iouDTO.getAccrualArrears(), iouDTO.getPenalty(), iouDTO.getArrears(),
+                iouDTO.getWorth(), iouDTO.getAdvanceCorpus())){
+            return "存在非法金额参数";
+        }
+        if(ExcellentTypeEnum.getExcellentTypeEnum(iouDTO.getEvaluateExcellent()) == null){
+            return "评优参数错误";
+        }
+        if(!CommonUtil.isExist(CommonUtil.UPLETTER, iouDTO.getEvaluateLevel())){
+            return "评级参数错误";
+        }
+        return null;
+    }
+
+    public static String checkData(List<IouDTO> iouDTOList){
+        if(CommonUtil.checkParam(iouDTOList) || iouDTOList.size() == 0){
+            return "借据信息为空";
+        }
+        for (IouDTO iouDTO : iouDTOList) {
+            String data = checkData(iouDTO);
+            if(data != null){
+                return data;
+            }
+        }
+        return null;
+    }
+
 }

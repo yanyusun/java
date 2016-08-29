@@ -178,6 +178,22 @@ public class IouServiceImpl implements IouService {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
+        IOUInfo iouInfo = iouInfoMapper.get(id);
+        if (iouInfo == null) {
+            return JsonResponseTool.failure("找不到信息");
+        }
+        IouDTO iouDTO = IouServiceUtils.toIouDTO(iouInfo);
+        RelationQuery relationQuery = new RelationQuery();
+        relationQuery.setIouId(iouDTO.getId());
+        List<PiRelation> piRelationList = piRelationMapper.queryList(relationQuery);
+        piRelationList.forEach(piRelation -> {
+            PawnInfo pawnInfo = pawnInfoMapper.get(piRelation.getPawnId());
+            if(iouDTO.getPawnNames() == null || iouDTO.getPawnNames().equals("")){
+                iouDTO.setPawnNames(pawnInfo.getName());
+            }else{
+                iouDTO.setPawnNames(iouDTO.getPawnNames() + "," + pawnInfo.getName());
+            }
+        });
         return CommonUtil.responseBack(iouInfoMapper.get(id));
     }
 

@@ -119,6 +119,7 @@ public class LenderDTO {
     private Integer canPay;  // 债务方是否能偿还
     private Integer isWorth;  // 抵押物是否能覆盖债务
     private String memo;  // 备注
+    private Integer repayStatus;  // 还款
 
     private Integer operatorId;  // 操作人Id
     private Integer assetId; // 资产包ID
@@ -126,6 +127,14 @@ public class LenderDTO {
     private String name; // 借款人姓名
     private Integer sex; // 借款人性别
     private String lenderNo; // 借款人编号
+
+    public Integer getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(Integer repayStatus) {
+        this.repayStatus = repayStatus;
+    }
 
     public Integer getOperatorId() {
         return operatorId;

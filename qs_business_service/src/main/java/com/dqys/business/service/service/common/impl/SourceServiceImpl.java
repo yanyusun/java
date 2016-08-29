@@ -82,6 +82,10 @@ public class SourceServiceImpl implements SourceService {
                 sourceInfoDTO.getLenderId(), sourceInfoDTO.getSourceDTOList())){
             return null;
         }
+        SourceInfo data = sourceInfoMapper.getByNavIdAndLenderId(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId());
+        if(data != null){
+            return null;
+        }
         SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO);
         if(sourceInfo == null){
             return null;
@@ -111,7 +115,7 @@ public class SourceServiceImpl implements SourceService {
             return null;
         }
         SourceInfo sourceInfo = sourceInfoMapper.getByNavIdAndLenderId(navId, lenderId);
-        if(CommonUtil.checkParam(sourceInfo, sourceInfo.getId())){
+        if(sourceInfo == null){
             return null;
         }
         Integer sourceId = sourceInfo.getId();
@@ -147,6 +151,14 @@ public class SourceServiceImpl implements SourceService {
                         if(!CommonUtil.checkResult(update)){
                             flag = true;
                         }
+                        if(!source.getPath().equals(sourceSource.getPath())){
+                            // 上传文件不一样,从新保存
+                            try {
+                                FileTool.saveFileSync(source.getPath());
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
                         break;
                     }
                 }
@@ -154,6 +166,7 @@ public class SourceServiceImpl implements SourceService {
             if(isExit){
                 // 说明该文件已经被删除了
                 sourceSourceMapper.deleteByPrimaryKey(sourceSource.getId());
+                flag = true;
             }
         }
         for (SourceSource sourceSource : sourceSources) {
@@ -161,6 +174,11 @@ public class SourceServiceImpl implements SourceService {
                 Integer add = sourceSourceMapper.insert(sourceSource);
                 if(!CommonUtil.checkResult(add)){
                     flag = true;
+                }
+                try {
+                    FileTool.saveFileSync(sourceSource.getPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }

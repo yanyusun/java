@@ -75,6 +75,7 @@ public class LenderServiceUtils {
         lenderInfo.setCanPay(lenderDTO.getCanPay());
         lenderInfo.setIsWorth(lenderDTO.getIsWorth());
         lenderInfo.setMemo(lenderDTO.getMemo());
+        lenderInfo.setRepayStatus(lenderDTO.getRepayStatus());
 
         return lenderInfo;
     }
@@ -186,6 +187,7 @@ public class LenderServiceUtils {
         lenderDTO.setCanPay(lenderInfo.getCanPay());
         lenderDTO.setIsWorth(lenderInfo.getIsWorth());
         lenderDTO.setMemo(lenderInfo.getMemo());
+        lenderDTO.setRepayStatus(lenderInfo.getRepayStatus());
 
         return lenderDTO;
     }

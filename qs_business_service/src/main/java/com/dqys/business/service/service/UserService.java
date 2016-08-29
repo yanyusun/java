@@ -1,5 +1,6 @@
 package com.dqys.business.service.service;
 
+import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.core.model.JsonResponse;
@@ -70,7 +71,7 @@ public interface UserService {
     JsonResponse statusBatch(String ids, Integer id);
 
     /**
-     * 发送激活提醒信息
+     * 发送激活提醒信息(暂时不用)
      *
      * @param ids
      * @return
@@ -101,4 +102,11 @@ public interface UserService {
      * @return
      */
     JsonResponse excelImport_tx(String file);
+
+    /**
+     * 根据当前用户查出公司
+     * @param id
+     * @return
+     */
+    TCompanyInfo getCompanyByUserId(Integer id);
 }

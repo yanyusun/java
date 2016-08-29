@@ -4,6 +4,7 @@ import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.dto.asset.IouDTOList;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.IouService;
+import com.dqys.business.service.utils.asset.IouServiceUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
@@ -45,8 +46,9 @@ public class IouController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse add(@ModelAttribute IouDTO iouDTO) throws BusinessLogException {
-        if (CommonUtil.checkParam(iouDTO)) {
-            return JsonResponseTool.paramErr("参数错误");
+        String data = IouServiceUtils.checkData(iouDTO);
+        if(data != null){
+            return JsonResponseTool.paramErr(data);
         }
         return iouService.add_tx(iouDTO);
     }
@@ -63,6 +65,10 @@ public class IouController {
         if (CommonUtil.checkParam(iouDTOList, iouDTOList.getIouDTOList()) || iouDTOList.getIouDTOList().size() == 0) {
             return JsonResponseTool.paramErr("参数错误");
         }
+        String data = IouServiceUtils.checkData(iouDTOList.getIouDTOList());
+        if(data != null){
+            return JsonResponseTool.paramErr(data);
+        }
         return iouService.listAdd(iouDTOList.getIouDTOList());
     }
 
@@ -76,8 +82,12 @@ public class IouController {
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse update(@ModelAttribute IouDTO iouDTO) throws BusinessLogException {
-        if (CommonUtil.checkParam(iouDTO)) {
-            return JsonResponseTool.paramErr("参数错误");
+        String data = IouServiceUtils.checkData(iouDTO);
+        if(data != null){
+            return JsonResponseTool.paramErr(data);
+        }
+        if(iouDTO.getId() == null){
+            return JsonResponseTool.paramErr("参数错误,找不到该借据");
         }
         return iouService.update_tx(iouDTO);
     }

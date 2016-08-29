@@ -28,6 +28,8 @@ public interface UserTeamMapper {
 
     UserTeam selectByPrimaryKeySelective(UserTeam userTeam);
 
+    UserTeam get(Integer id);
+
     /**
      * 修改公司内成员协作器表数据
      *

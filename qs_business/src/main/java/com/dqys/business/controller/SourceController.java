@@ -106,12 +106,7 @@ public class SourceController {
         if (CommonUtil.checkParam(navId, lenderId)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        SourceInfoDTO sourceInfoDTO = sourceService.getSource(navId, lenderId);
-        if(sourceInfoDTO == null){
-            return JsonResponseTool.failure("获取失败");
-        }else{
-            return JsonResponseTool.success(sourceInfoDTO);
-        }
+        return JsonResponseTool.success(sourceService.getSource(navId, lenderId));
     }
 
     /**
@@ -121,7 +116,7 @@ public class SourceController {
      * @apiParam {object} sourceInfoDTO 参考新增资源信息
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-    public JsonResponse get(@ModelAttribute SourceInfoDTO sourceInfoDTO) {
+    public JsonResponse update(@ModelAttribute SourceInfoDTO sourceInfoDTO) {
         if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getLenderId(), sourceInfoDTO.getNavId(),
                 sourceInfoDTO.getCode())) {
             return JsonResponseTool.paramErr("参数错误");

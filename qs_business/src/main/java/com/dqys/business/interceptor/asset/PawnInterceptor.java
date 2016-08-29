@@ -17,7 +17,7 @@ public class PawnInterceptor extends AuthenticationInterceptor {
     public static final String API_DELETE = "delete";
     public static final String API_UPDATE = "update";
     public static final String API_GET = "get";
-    public static final String API_LIST = "listPawn";
+    public static final String API_LIST_PAWN = "listPawn";
 
 
     @Override
@@ -37,7 +37,7 @@ public class PawnInterceptor extends AuthenticationInterceptor {
             return true;
         }else if(API_GET.equals(path)){
             return true;
-        }else if(API_LIST.equals(path)){
+        }else if(API_LIST_PAWN.equals(path)){
             return true;
         }else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:"+url);

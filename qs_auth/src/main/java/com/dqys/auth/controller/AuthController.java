@@ -99,7 +99,6 @@ public class AuthController extends BaseApiContorller {
                 return JsonResponseTool.failure(smsCodeResult.getMessage());
             }
 
-            // TODO: 16-4-13  发送短信
             SmsUtil smsUtil = new SmsUtil();
             smsUtil.sendSms(SysProperty.SMS_VERIFICATION_CODE, mobile, smsCodeResult.getData());
             LogManager.getRootLogger().debug(smsCodeResult.getData());
@@ -200,12 +199,6 @@ public class AuthController extends BaseApiContorller {
                 return JsonResponseTool.paramErr("验证码无效");
             }
 
-            // 验证账号
-            ServiceResult<Integer> serviceResult = this.userService.validateUser(account, mobile, email);
-            if(serviceResult.getFlag()){
-                return JsonResponseTool.failure("账号已经存在");
-            }
-
             //验证手机
             if(StringUtils.isNotBlank(mobile)) {
                 if(!FormatValidateTool.checkMobile(mobile)) {
@@ -237,7 +230,7 @@ public class AuthController extends BaseApiContorller {
 
             //用户注册
             ServiceResult<UserDTO> userServiceResult = userService.userRegister_tx(account, mobile, email, pwd);
-            if(userServiceResult.getFlag()) {
+            if(!userServiceResult.getFlag()) {
                 return JsonResponseTool.failure(userServiceResult.getMessage());
             }
 

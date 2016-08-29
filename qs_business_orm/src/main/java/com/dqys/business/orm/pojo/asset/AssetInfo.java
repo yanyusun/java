@@ -40,6 +40,8 @@ public class AssetInfo extends BaseModel implements Serializable {
     private Integer isAgent;
     private Integer isStop;
 
+    private Integer repayStatus; // 还款(1已还款)
+
     @Override
     public String toString() {
         String string = "Asset:[";
@@ -52,6 +54,14 @@ public class AssetInfo extends BaseModel implements Serializable {
                 + ",tags:" + tags + ",isshow:" + isshow;
         string += "]";
         return string;
+    }
+
+    public Integer getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(Integer repayStatus) {
+        this.repayStatus = repayStatus;
     }
 
     public String getAssetNo() {

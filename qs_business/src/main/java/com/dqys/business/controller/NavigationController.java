@@ -83,7 +83,7 @@ public class NavigationController {
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse update(@ModelAttribute Navigation navigation) {
-        if (CommonUtil.checkParam(navigation, navigation.getId())) {
+        if (CommonUtil.checkParam(navigation, navigation.getId(), navigation.getName())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         Integer result = navigationService.update(navigation);

@@ -120,7 +120,7 @@ public class UserController {
     public JsonResponse getListInit() {
         Map resultMap = new HashMap<>();
 
-        resultMap.put("companyInfo", companyService.get(UserSession.getCurrent().getUserId())); // 公司信息
+        resultMap.put("companyInfo", userService.getCompanyByUserId(UserSession.getCurrent().getUserId())); // 公司信息
         resultMap.put("userStatus", UserStatusTypeEnum.listUserStatusTypeEnum()); // 用户状态
         resultMap.put("userType", SysPropertyTool.toPropertyDTO(
                 SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE))); //账号类型
@@ -156,7 +156,7 @@ public class UserController {
     public JsonResponse add(@ModelAttribute UserInsertDTO userInsertDTO) {
         if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getUserName(),
                 userInsertDTO.getRealName(), userInsertDTO.getSex(), userInsertDTO.getAccount(),
-                userInsertDTO.getDuty(), userInsertDTO.getWechat(), userInsertDTO.getMobile(),
+                userInsertDTO.getDuty(), userInsertDTO.getMobile(),
                 userInsertDTO.getEmail(), userInsertDTO.getApartmentId(), userInsertDTO.getOccupation(),
                 userInsertDTO.getAreaId(), userInsertDTO.getRoleId(), userInsertDTO.getUserType())) {
             return JsonResponseTool.paramErr("参数错误");
@@ -273,7 +273,7 @@ public class UserController {
     }
 
     /**
-     * @api {GET} http://{url}/api/user/sendMsg 消息提醒
+     * @api {GET} http://{url}/api/user/sendMsg 消息提醒(暂时废除)
      * @apiName sendMsg
      * @apiGroup User
      * @apiParam {string} ids 操作用户ID集合,","分隔
