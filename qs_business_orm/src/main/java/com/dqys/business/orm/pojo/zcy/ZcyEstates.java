@@ -15,6 +15,7 @@ import java.util.Date;
  * @apiParam {string} houseC 户型（厨）
  * @apiParam {string} houseW  户型（卫）
  * @apiParam {string} houseRemark 户型备注
+ * @apiParam {string} deck 层面
  * @apiParam {string} quota 限购',
  * @apiParam {string} acreage 面积
  * @apiParam {double} sellingPrice 平台售价(单位：万)
@@ -23,7 +24,7 @@ import java.util.Date;
  * @apiParam {string} orientation 朝向
  * @apiParam {double} guidePrice 过户指导价
  * @apiParam {string} guideRemark 过户指导价备注
- * @apiParam {string} houseRemarkv 户型备注
+ * @apiParam {string} entrustType 委托类型
  * @apiParam {double} decoratePrice 装修费用
  * @apiParam {double} tenementPrice 物业费
  * @apiParam {string} facility 嫌恶设施
@@ -63,6 +64,8 @@ public class ZcyEstates implements Serializable {
 
     private String houseRemark;//户型备注
 
+    private String deck;//层面
+
     private String quota;//限购',
 
     private String acreage;//面积
@@ -79,7 +82,7 @@ public class ZcyEstates implements Serializable {
 
     private String guideRemark;//过户指导价备注
 
-    private String houseRemarkv;//'户型备注
+    private String entrustType;//委托类型
 
     private Double decoratePrice;//装修费用
 
@@ -325,14 +328,6 @@ public class ZcyEstates implements Serializable {
         this.guideRemark = guideRemark;
     }
 
-    public String getHouseRemarkv() {
-        return houseRemarkv;
-    }
-
-    public void setHouseRemarkv(String houseRemarkv) {
-        this.houseRemarkv = houseRemarkv;
-    }
-
     public Double getDecoratePrice() {
         return decoratePrice;
     }
@@ -459,5 +454,13 @@ public class ZcyEstates implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getDeck() {
+        return deck;
+    }
+
+    public void setDeck(String deck) {
+        this.deck = deck;
     }
 }
