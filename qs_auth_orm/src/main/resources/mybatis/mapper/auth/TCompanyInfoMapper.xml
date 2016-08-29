@@ -228,7 +228,7 @@
       res.id as user_id,res.avg,res.user_name as name,res.phone,res.user_type as type
     from t_company_info tci
     INNER JOIN
-      (SELECT tui.id,avg,user_name,mobile as phone,tui.company_id,tut.user_type
+      (SELECT tui.id as id,avg,user_name,mobile as phone,tui.company_id,tut.user_type
       FROM t_user_info tui
       INNER JOIN t_user_tag tut
       ON
