@@ -39,6 +39,7 @@ public interface TeammateReMapper {
 
     /**
      * 条件查询
+     *
      * @param teammateRe
      * @return
      */
@@ -46,19 +47,21 @@ public interface TeammateReMapper {
 
     /**
      * 查询出当前用户创建的所有的特定参与的特定类型对象id
+     *
      * @param type
      * @param userId
      * @return
      */
-    List<Integer> listObjectIdByJoinType(@Param("type")Integer type, @Param("userId")Integer userId,
-                                     @Param("joinType")Integer joinType);
+    List<Integer> listObjectIdByJoinType(@Param("type") Integer type, @Param("userId") Integer userId,
+                                         @Param("joinType") Integer joinType);
 
     /**
-     *
      * @param objectType
      * @param userId
      * @param objectId
      * @return
      */
-    TeammateRe selectByObjectAndUser(@Param("objectType")Integer objectType, @Param("objectId")Integer objectId,@Param("userId")Integer userId);
+    TeammateRe selectByObjectAndUser(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId, @Param("userId") Integer userId);
+
+    Integer deleteByUserTeamId(@Param("userTeamIds") List<Integer> userTeamIds);
 }

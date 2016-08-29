@@ -165,4 +165,13 @@
             and user_id=#{userId}
         </if>
     </select>
+    <!--物理删除业务表-->
+    <delete id="deleteByUserTeamId">
+        DELETE FROM object_user_relation
+        WHERE stateflag=0 and type=1 and employer_id IN
+        <foreach collection="userTeamIds" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
 </mapper>

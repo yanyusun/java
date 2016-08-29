@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.coordinator;
 
 
 import com.dqys.business.orm.pojo.coordinator.OURelation;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -24,7 +25,8 @@ public interface OURelationMapper {
     Integer insertSelective(OURelation record);
 
     OURelation selectByPrimaryKey(Integer id);
-//    <!--条件查询操作人与事物关系-->
+
+    //    <!--条件查询操作人与事物关系-->
     List<OURelation> selectBySelective(OURelation record);
 
     /**
@@ -36,4 +38,12 @@ public interface OURelationMapper {
     Integer updateByPrimaryKeySelective(OURelation record);
 
     Integer updateByPrimaryKey(OURelation record);
+
+    /**
+     * 物理删除业务表
+     *
+     * @param userTeamsIds
+     * @return
+     */
+    Integer deleteByUserTeamId(@Param("userTeamIds") List<Integer> userTeamIds);
 }

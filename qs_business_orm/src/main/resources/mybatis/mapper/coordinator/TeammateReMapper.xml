@@ -137,16 +137,16 @@
         <include refid="Base_Column_List"/>
         from t_teammate_re
         <where>
-         stateflag=0
-        <if test="userTeamId !=null">
-          AND user_team_id=#{userTeamId,jdbcType=INTEGER}
-        </if>
-        <if test="type !=null">
-            AND type=#{type,jdbcType=INTEGER}
-        </if>
-        <if test="userId !=null">
-            AND user_id=#{userId,jdbcType=INTEGER}
-        </if>
+            stateflag=0
+            <if test="userTeamId !=null">
+                AND user_team_id=#{userTeamId,jdbcType=INTEGER}
+            </if>
+            <if test="type !=null">
+                AND type=#{type,jdbcType=INTEGER}
+            </if>
+            <if test="userId !=null">
+                AND user_id=#{userId,jdbcType=INTEGER}
+            </if>
         </where>
     </select>
 
@@ -164,5 +164,13 @@
       and tre.user_team_id=ore.employer_id
       and ore.type =1  and tre.user_id =#{userId,jdbcType=INTEGER}
     </select>
+    <!--删除协作器的团队-->
+    <update id="deleteByUserTeamId">
+        UPDATE t_teammate_re ttr set ttr.status=99,ttr.stateflag=now()
+        WHERE ttr.user_team_id IN
+        <foreach collection="userTeamIds" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 
 </mapper>

@@ -3,6 +3,7 @@ package com.dqys.business.controller;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.service.service.CoordinatorService;
+import com.dqys.business.service.utils.excel.ExcelUtilAsset;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.JsonResponse;
@@ -282,7 +283,7 @@ public class CoordinatorController {
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
         );
-        userId = 12;
+        coordinatorService.delCoordinator(12);
         Map map = new HashMap<>();
         if (CommonUtil.checkParam(teamUserId, userTeamId)) {
             return JsonResponseTool.paramErr("参数有误");

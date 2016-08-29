@@ -28,6 +28,10 @@ public interface UserTeamMapper {
 
     UserTeam selectByPrimaryKeySelective(UserTeam userTeam);
 
+    List<Integer> selectByCompany(Integer companyId);
+
+    Integer deleteByCompany(Integer companyId);
+
     UserTeam get(Integer id);
 
     /**
@@ -42,16 +46,18 @@ public interface UserTeamMapper {
 
     /**
      * 根据协作器成员的操作人以及操作状态搜索所有的协作器对象ID
+     *
      * @param id
      * @param status
      * @param type
      * @return
      */
     List<Integer> selectByOperatorAndStatus(
-            @Param("id") Integer id, @Param("status") Integer status, @Param("type")Integer type);
+            @Param("id") Integer id, @Param("status") Integer status, @Param("type") Integer type);
 
     /**
      * 根据对像类型和对象ID查询协作器
+     *
      * @param id
      * @param type
      * @return
@@ -60,6 +66,7 @@ public interface UserTeamMapper {
 
     /**
      * 条件遍历
+     *
      * @param userTeamQuery
      * @return
      */

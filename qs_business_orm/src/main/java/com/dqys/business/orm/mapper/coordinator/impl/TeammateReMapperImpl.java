@@ -55,7 +55,12 @@ public class TeammateReMapperImpl extends BaseDao implements TeammateReMapper {
     }
 
     @Override
-    public TeammateRe selectByObjectAndUser(@Param("objectType") Integer objectType,  @Param("objectId") Integer objectId,@Param("userId") Integer userId) {
-        return super.getSqlSession().getMapper(TeammateReMapper.class).selectByObjectAndUser(objectType,objectId,userId);
+    public TeammateRe selectByObjectAndUser(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId, @Param("userId") Integer userId) {
+        return super.getSqlSession().getMapper(TeammateReMapper.class).selectByObjectAndUser(objectType, objectId, userId);
+    }
+
+    @Override
+    public Integer deleteByUserTeamId(@Param("userTeamIds") List<Integer> userTeamIds) {
+        return super.getSqlSession().getMapper(TeammateReMapper.class).deleteByUserTeamId(userTeamIds);
     }
 }

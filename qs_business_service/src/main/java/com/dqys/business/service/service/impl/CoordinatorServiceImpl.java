@@ -608,6 +608,21 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         return map;
     }
 
+    @Override
+    public String delCoordinator(Integer companyId) {
+        List<Integer> userTeamIds = userTeamMapper.selectByCompany(companyId);//协作器id集合
+        if (userTeamIds.size() > 0) {
+            teammateReMapper.deleteByUserTeamId(userTeamIds);//删除团队
+            ouRelationMapper.deleteByUserTeamId(userTeamIds);//删除业务表
+            userTeamMapper.deleteByCompany(companyId);//删除协作器
+            return "yes";
+        } else {
+            return "no";
+        }
+
+    }
+
+
     private Map teamDel(Integer userId, Integer teamUserId, Integer userTeamId, Integer status, Integer substitutionUid) {
         Map map = new HashMap<>();
         TeammateRe teammateRe = new TeammateRe();

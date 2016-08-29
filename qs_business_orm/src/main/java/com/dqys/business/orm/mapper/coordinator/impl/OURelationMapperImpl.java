@@ -3,6 +3,7 @@ package com.dqys.business.orm.mapper.coordinator.impl;
 import com.dqys.business.orm.mapper.coordinator.OURelationMapper;
 import com.dqys.business.orm.pojo.coordinator.OURelation;
 import com.dqys.core.base.BaseDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -45,5 +46,10 @@ public class OURelationMapperImpl extends BaseDao implements OURelationMapper {
     @Override
     public Integer updateByPrimaryKey(OURelation record) {
         return super.getSqlSession().getMapper(OURelationMapper.class).updateByPrimaryKey(record);
+    }
+
+    @Override
+    public Integer deleteByUserTeamId(@Param("userTeamIds") List<Integer> userTeamIds) {
+        return super.getSqlSession().getMapper(OURelationMapper.class).deleteByUserTeamId(userTeamIds);
     }
 }
