@@ -37,6 +37,7 @@ import com.dqys.business.service.utils.asset.LenderServiceUtils;
 import com.dqys.business.service.utils.asset.PawnServiceUtils;
 import com.dqys.business.service.utils.excel.ExcelUtilAsset;
 import com.dqys.core.base.SysProperty;
+import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
@@ -648,18 +649,24 @@ public class AssetServiceImpl implements AssetService {
         Map<String, Object> map = ExcelUtilAsset.uploadExcel(file);
         if (map.get("result").equals("error")) {
             List<ExcelMessage> error = (List<ExcelMessage>)map.get("data");
-            String errMsg = "[";
-            for (ExcelMessage excelMessage : error) {
-                errMsg += "{"
-                        + "index:" + excelMessage.getIndex()
-                        + ",excelName:" + excelMessage.getExcelName()
-                        + ",site:" + excelMessage.getSite()
-                        + ",fields:" + excelMessage.getFields()
-                        + ",problem:" + excelMessage.getProblem()
-                        + "}";
-            }
-            errMsg += "]";
-            return JsonResponseTool.failure(errMsg);
+            JsonResponse jsonResponse = new JsonResponse();
+            jsonResponse.setCode(ResponseCodeEnum.FAILURE.getValue());
+            jsonResponse.setMsg("格式内容出错");
+            jsonResponse.setData(error);
+            return jsonResponse;
+//            List<ExcelMessage> error = (List<ExcelMessage>)map.get("data");
+//            String errMsg = "[";
+//            for (ExcelMessage excelMessage : error) {
+//                errMsg += "{"
+//                        + "index:" + excelMessage.getIndex()
+//                        + ",excelName:" + excelMessage.getExcelName()
+//                        + ",site:" + excelMessage.getSite()
+//                        + ",fields:" + excelMessage.getFields()
+//                        + ",problem:" + excelMessage.getProblem()
+//                        + "}";
+//            }
+//            errMsg += "]";
+//            return JsonResponseTool.failure(errMsg);
         }
         List<ContactDTO> contactDTOList = (List<ContactDTO>) map.get("contactDTOs");
         List<LenderDTO> lenderDTOList = (List<LenderDTO>) map.get("lenderDTOs");
