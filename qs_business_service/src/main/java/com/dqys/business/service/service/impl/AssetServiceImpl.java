@@ -277,7 +277,7 @@ public class AssetServiceImpl implements AssetService {
                 assetQuery.setExceptIds(ids);
             }
             assetQuery.setOperator(UserSession.getCurrent().getUserId());
-        } else if (ObjectTabEnum.handling_urge.getValue().equals(type)) {
+        } else if (ObjectTabEnum.handling_urge.getValue().equals(type) || ObjectTabEnum.gongingOn.getValue().equals(type)) {
             // 正在处置
 //            List<Integer> ids = companyTeamReMapper.listObjectIdByTypeAndManager(
 //                    ObjectTypeEnum.LENDER.getValue(),
