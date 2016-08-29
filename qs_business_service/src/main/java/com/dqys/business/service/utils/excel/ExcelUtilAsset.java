@@ -142,11 +142,11 @@ public class ExcelUtilAsset {
             if (transMapToString(l, "var9").equals("")) {//*担保方式
                 placeByExcel(error, name, i, 9, transMapToString(map, "var9"), "不能为空");
             }
-            if (!transMapToString(l, "var9").equals("") && transMapToString(l, "var10").equals("")) {//*公司担保
+            if (transMapToString(l, "var9").equals("公司担保") && transMapToString(l, "var10").equals("")) {//*公司担保
                 placeByExcel(error, name, i, 10, transMapToString(map, "var10"), "不能为空");
             }
             if (transMapToString(l, "var9").equals("公司担保") && transMapToString(l, "var10").equals("抵押") && transMapToString(l, "var11").equals("")) {//*抵押
-                placeByExcel(error, name, i, 11, transMapToString(map, "var1"), "不能为空");
+                placeByExcel(error, name, i, 11, transMapToString(map, "var11"), "不能为空");
             }
             if (transMapToString(l, "var9").equals("公司担保") && transMapToString(l, "var10").equals("质押") && transMapToString(l, "var12").equals("")) {//*质押
                 placeByExcel(error, name, i, 12, transMapToString(map, "var12"), "不能为空");
@@ -210,7 +210,7 @@ public class ExcelUtilAsset {
             if (transMapToString(l, "var1").equals("")) {//*关系
                 placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "不能为空");
             }
-            if (!transMapToString(l, "var1").equals("") && FormatValidateTool.isNumeric(transMapToString(l, "var1").split("-")[0])) {//*关系
+            if (!transMapToString(l, "var1").equals("") && !FormatValidateTool.isNumeric(transMapToString(l, "var1").split("-")[0])) {//*关系
                 placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "格式错误");
             }
             if (transMapToString(l, "var2").equals("")) {//*所属原始借据（号）
@@ -262,7 +262,7 @@ public class ExcelUtilAsset {
             if (transMapToString(l, "var1").equals("")) {//*关系
                 placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "不能为空");
             }
-            if (!transMapToString(l, "var1").equals("") && FormatValidateTool.isNumeric(transMapToString(l, "var1").split("-")[0])) {//*关系
+            if (!transMapToString(l, "var1").equals("") && !FormatValidateTool.isNumeric(transMapToString(l, "var1").split("-")[0])) {//*关系
                 placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "格式错误");
             }
             if (transMapToString(l, "var2").equals("")) {//*原始借据（号）
