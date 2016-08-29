@@ -31,6 +31,8 @@ public enum ObjectTabEnum {
     refuse(17, "已驳回"),
     task(15, "我的任务"),
     stop(18, "暂停"),
+    gongingOn(19, "正在进行"),
+    myUrge(20, "我的催收")
     ;
 
     private Integer value;

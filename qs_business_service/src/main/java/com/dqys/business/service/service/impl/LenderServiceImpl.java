@@ -506,7 +506,7 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setExceptIds(ids);
             }
             lenderQuery.setOperator(UserSession.getCurrent().getUserId());
-        } else if (ObjectTabEnum.handling_urge.getValue().equals(tab)) {
+        } else if (ObjectTabEnum.handling_urge.getValue().equals(tab) || ObjectTabEnum.gongingOn.getValue().equals(tab)) {
             // 正在处置
 //            List<Integer> ids = companyTeamReMapper.listObjectIdByTypeAndManager(
 //                    ObjectTypeEnum.LENDER.getValue(),

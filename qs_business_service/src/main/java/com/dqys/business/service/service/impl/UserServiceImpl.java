@@ -450,7 +450,7 @@ public class UserServiceImpl implements UserService {
         if (CommonUtil.checkParam(file)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        CompanyDetailInfo companyDetailInfo = tCompanyInfoMapper.get(UserSession.getCurrent().getUserId());
+        CompanyDetailInfo companyDetailInfo = tCompanyInfoMapper.getDetailByUserId(UserSession.getCurrent().getUserId());
         if (companyDetailInfo == null) {
             return JsonResponseTool.paramErr("您不是管理员,没有权限导入成员");
         }

@@ -25,7 +25,14 @@ public interface TCompanyInfoMapper {
      * @param id
      * @return
      */
-    CompanyDetailInfo get(Integer id);
+    CompanyDetailInfo getDetailByCompanyId(Integer id);
+
+    /**
+     * 根据用户Id获取公司详情
+     * @param id
+     * @return
+     */
+    CompanyDetailInfo getDetailByUserId(Integer id);
 
     /**
      * 根据公司类型获取公司列表

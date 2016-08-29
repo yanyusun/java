@@ -145,7 +145,7 @@ public class DistributionServiceImpl implements DistributionService {
         DistributionDTO distributionDTO = new DistributionDTO();
         distributionDTO.setId(companyTeam.getId());
         companyTeamReList.forEach(companyTeamRe -> {
-            CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(companyTeamRe.getId());
+            CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(companyTeamRe.getAcceptCompanyId());
             if (companyDetailInfo.getType().equals(Integer.valueOf(
                     SysPropertyTool.getProperty(
                             SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM)
@@ -179,7 +179,7 @@ public class DistributionServiceImpl implements DistributionService {
             if (userInfo == null || userInfo.getCompanyId() == null) {
                 return null; // 用户不存在
             }
-            CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(userInfo.getCompanyId());
+            CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(userInfo.getCompanyId());
             if (companyDetailInfo == null) {
                 return null; // 公司不存在
             }
@@ -277,7 +277,7 @@ public class DistributionServiceImpl implements DistributionService {
         if (userInfo == null || userInfo.getCompanyId() == null) {
             return null; // 用户不存在
         }
-        CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(userInfo.getCompanyId());
+        CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(userInfo.getCompanyId());
         if (companyDetailInfo == null) {
             return null; // 公司不存在
         }
@@ -302,7 +302,7 @@ public class DistributionServiceImpl implements DistributionService {
             return null;
         }
 
-        CompanyDetailInfo companyDetailInfo1 = companyInfoMapper.get(companyId); // 被邀请公司信息
+        CompanyDetailInfo companyDetailInfo1 = companyInfoMapper.getDetailByCompanyId(companyId); // 被邀请公司信息
         if(companyDetailInfo1 == null){
             return null; // 找不到目标公司
         }
@@ -441,7 +441,7 @@ public class DistributionServiceImpl implements DistributionService {
                     || ObjectBusinessTypeEnum.platform.getValue().equals(companyTeamRe.getType())){
                 // 发送短信提醒
                 TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeam.getSenderId()); // 创建人信息
-                CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(userInfo.getCompanyId()); // 被邀请公司信息
+                CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(userInfo.getCompanyId()); // 被邀请公司信息
                 TSysProperty property = SysPropertyTool.getProperty(
                         SysPropertyTypeEnum.USER_TYPE, companyDetailInfo.getType().toString()); // 公司类型
                 SmsUtil smsUtil = new SmsUtil();
@@ -485,7 +485,7 @@ public class DistributionServiceImpl implements DistributionService {
                 if (companyTeam != null) {
                     if (companyTeam.getObjectType().equals(ObjectTypeEnum.LENDER.getValue())) {
                         // 借款人类型
-                        CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(companyTeamRe.getAcceptCompanyId());
+                        CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(companyTeamRe.getAcceptCompanyId());
                         if (companyDetailInfo != null) {
                             if (companyDetailInfo.getType().equals(lawType)) {
                                 // 律所
@@ -511,7 +511,7 @@ public class DistributionServiceImpl implements DistributionService {
                         createObjectUserRelation(companyTeam);
                     } else if (companyTeam.getObjectType().equals(ObjectTypeEnum.ASSETPACKAGE.getValue())) {
                         // 资产包类型
-                        CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(companyTeamRe.getAcceptCompanyId());
+                        CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(companyTeamRe.getAcceptCompanyId());
                         if (companyDetailInfo != null) {
                             if (companyDetailInfo.getType().equals(lawType)) {
                                 // 律所
@@ -566,7 +566,7 @@ public class DistributionServiceImpl implements DistributionService {
             return null;
         }
         // 校验是否是该公司的管理员
-        CompanyDetailInfo companyDetailInfo = companyInfoMapper.get(companyTeamRe.getAcceptCompanyId());
+        CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(companyTeamRe.getAcceptCompanyId());
         if (companyDetailInfo == null || !companyDetailInfo.getUserId().equals(UserSession.getCurrent().getUserId())) {
             return null;
         }

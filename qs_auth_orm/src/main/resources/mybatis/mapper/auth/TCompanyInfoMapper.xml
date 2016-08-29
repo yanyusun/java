@@ -223,7 +223,8 @@
     </if>
   </select>
 
-  <select id="get" parameterType="java.lang.Integer" resultMap="CompanyDetailMap">
+  <!-- 根据公司ID获取详情 -->
+  <select id="getDetailByCompanyId" parameterType="java.lang.Integer" resultMap="CompanyDetailMap">
     SELECT tci.id as id,create_at,company_name,province,city,area,is_auth,address,type as company_type,
       res.id as user_id,res.avg,res.user_name as name,res.phone,res.user_type as type
     from t_company_info tci
@@ -234,7 +235,24 @@
       ON
         tui.id = tut.user_id AND tui.stateflag = 0 AND tut.role_id = 1) res
     ON
-      res.company_id = tci.id AND tci.stateflag = 0 AND res.id = #{id,jdbcType=INTEGER};
+      res.company_id = tci.id AND tci.stateflag = 0 AND tci.id = #{id,jdbcType=INTEGER};
+  </select>
+
+  <!-- 根据用户ID获取详情 -->
+  <select id="getDetailByUserId" parameterType="java.lang.Integer" resultMap="CompanyDetailMap">
+    SELECT tci.id as id,create_at,company_name,province,city,area,is_auth,address,type as company_type,
+      res.id as user_id,res.avg,res.user_name as name,res.phone,res.user_type as type
+    from t_company_info tci
+    INNER JOIN
+      (SELECT tui.id as id,avg,user_name,mobile as phone,tui.company_id,tut.user_type
+      FROM t_user_info tui
+      INNER JOIN t_user_tag tut
+      ON
+        tui.id = tut.user_id AND tui.stateflag = 0 AND tut.role_id = 1) res
+    ON
+      res.company_id = tci.id AND tci.stateflag = 0 AND tci.id in (
+        SELECT company_id FROM t_user_info WHERE id = #{id,jdbcType=INTEGER}
+      );
   </select>
 
   <select id="listByType" resultMap="BaseResultMap">
