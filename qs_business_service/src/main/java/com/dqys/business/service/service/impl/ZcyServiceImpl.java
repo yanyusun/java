@@ -8,10 +8,11 @@ import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.zcy.*;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.zcy.*;
-import com.dqys.business.orm.query.coordinator.ZcyListQuery;
 import com.dqys.business.orm.pojo.zcy.dto.ZcyPawnDTO;
+import com.dqys.business.orm.query.coordinator.ZcyListQuery;
 import com.dqys.business.service.service.ZcyService;
 import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.DateFormatTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -133,13 +134,24 @@ public class ZcyServiceImpl implements ZcyService {
         return map;
     }
 
+    private String getHouseNo() {
+        ZcyEstates estates = new ZcyEstates();
+        while (true) {
+            String houseNo = "ZC" + DateFormatTool.format(new Date(), "yyMM") + CommonUtil.getRandomNum(10000);//资产编号
+            estates.setHouseNo(houseNo);
+            List<ZcyEstates> estateses = zcyEstatesMapper.selectBySelective(estates);
+            if (estateses.size() == 0) {
+                return houseNo;
+            }
+        }
+    }
+
     @Override
     public Map addEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> address, List<ZcyEstatesFacility> facilities) {
         Map map = new HashMap<>();
         Integer result = 0;
         if (zcyEstates.getId() == null) {
-            String houseNo = "ZCY" + DateFormatTool.format(new Date(), "yyyyMMddHHmmssS");//房源编号
-            zcyEstates.setHouseNo(houseNo);
+            zcyEstates.setHouseNo(getHouseNo());
             TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(MessageUtils.transStringToInt(zcyEstates.getOperator()));
             if (tUserInfo != null) {
                 zcyEstates.setCompanyId(tUserInfo.getCompanyId());

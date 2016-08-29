@@ -64,16 +64,17 @@ public class CommonUtil {
 
     /**
      * 判断数组中是否存在某字符
+     *
      * @param arr 目标数组
      * @param str 字符
      * @return true 数组中存在该字符
      */
-    public static boolean isExist(String[] arr, String str){
-        if(arr == null || arr.length == 0 || str == null || str.equals("")){
+    public static boolean isExist(String[] arr, String str) {
+        if (arr == null || arr.length == 0 || str == null || str.equals("")) {
             return false;
         }
         for (String s : arr) {
-            if(s.equals(str)){
+            if (s.equals(str)) {
                 return true;
             }
         }
@@ -82,25 +83,27 @@ public class CommonUtil {
 
     /**
      * 初始化评级
+     *
      * @param num
      * @return
      */
-    public static String[] initLevel(Integer num){
-        return CommonUtil.UPLETTER.toString().substring(0,num).split(",");
+    public static String[] initLevel(Integer num) {
+        return CommonUtil.UPLETTER.toString().substring(0, num).split(",");
     }
 
     /**
      * 判断是否金额格式(2位小数)
+     *
      * @param numArr 金额
      * @return true 符合金额格式
      */
-    public static boolean isMoneyFormat(Double... numArr){
-        if(numArr == null || numArr.length == 0){
+    public static boolean isMoneyFormat(Double... numArr) {
+        if (numArr == null || numArr.length == 0) {
             return false;
         }
         for (Double num : numArr) {
             Double number = num * 1000;
-            if(number % 10 > 0){
+            if (number % 10 > 0) {
                 return false;
             }
         }
@@ -331,6 +334,11 @@ public class CommonUtil {
         return result.toString();
     }
 
+    public static Integer getRandomNum(Integer maxNum) {
+        Random random = new Random();
+        Integer num = random.nextInt(maxNum);
+        return num;
+    }
 
 //    public static void main(String[] a){
 //
