@@ -1,19 +1,15 @@
 package com.dqys.business.controller;
 
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
-import com.dqys.business.orm.constant.company.ObjectBusinessTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
 import com.dqys.business.service.dto.company.OrganizationInsertDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.CompanyService;
 import com.dqys.business.service.service.DistributionService;
-import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.model.JsonResponse;
-import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.core.utils.NoSQLWithRedisTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -59,7 +55,8 @@ public class CompanyController {
      */
     @RequestMapping(value = "/listOrganization")
     @ResponseBody
-    public JsonResponse listTeam(@RequestParam(required = true) Integer companyId, @RequestParam(required = true) String type) {
+    public JsonResponse listTeam(@RequestParam(required = true) Integer companyId,
+                                 @RequestParam(required = true) String type) {
         if (CommonUtil.checkParam(companyId)) {
             return JsonResponseTool.paramErr("参数错误");
         }

@@ -1,7 +1,5 @@
 package com.dqys.business.service.constant;
 
-import com.dqys.business.orm.pojo.company.Organization;
-
 /**
  * Created by Yvan on 16/6/27.
  */

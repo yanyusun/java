@@ -24,6 +24,7 @@ import com.dqys.business.service.utils.excel.UserExcelUtil;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.mapper.facade.TAreaMapper;
 import com.dqys.core.model.JsonResponse;
@@ -34,7 +35,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -458,18 +458,11 @@ public class UserServiceImpl implements UserService {
         Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file);
         if (map.get("result") == null || map.get("result").equals("error")) {
             List<ExcelMessage> error = (List<ExcelMessage>)map.get("data");
-            String errMsg = "[";
-            for (ExcelMessage excelMessage : error) {
-                errMsg += "{"
-                        + "index:" + excelMessage.getIndex()
-                        + ",excelName:" + excelMessage.getExcelName()
-                        + ",site:" + excelMessage.getSite()
-                        + ",fields:" + excelMessage.getFields()
-                        + ",problem:" + excelMessage.getProblem()
-                        + "}";
-            }
-            errMsg += "]";
-            return JsonResponseTool.failure(errMsg);
+            JsonResponse jsonResponse = new JsonResponse();
+            jsonResponse.setCode(ResponseCodeEnum.FAILURE.getValue());
+            jsonResponse.setMsg("格式内容出错");
+            jsonResponse.setData(error);
+            return jsonResponse;
         } else {
             // 返回CODE
             List<UserFileDTO> userFileDTOList = (List<UserFileDTO>) map.get("userFileDTOs");
