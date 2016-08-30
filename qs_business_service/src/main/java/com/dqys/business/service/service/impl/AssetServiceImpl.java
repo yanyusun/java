@@ -679,8 +679,8 @@ public class AssetServiceImpl implements AssetService {
         Map<Integer, Integer> idMap = new HashMap<>();
         // 增加借款人基础信息
         for (LenderDTO lenderDTO : lenderDTOList) {
+            lenderDTO.setAssetId(id);
             LenderInfo lenderInfo = LenderServiceUtils.toLenderInfo(lenderDTO);
-            lenderInfo.setAssetId(id);
             Integer result = lenderInfoMapper.insert(lenderInfo);
             if (CommonUtil.checkResult(result)) {
                 return JsonResponseTool.failure("增加借款人基础信息失败");
