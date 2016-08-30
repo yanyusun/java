@@ -101,7 +101,7 @@ public interface UserService {
      * @param file
      * @return
      */
-    JsonResponse excelImport_tx(String file);
+    JsonResponse excelImport_tx(String file) throws Exception;
 
     /**
      * 根据当前用户查出公司
