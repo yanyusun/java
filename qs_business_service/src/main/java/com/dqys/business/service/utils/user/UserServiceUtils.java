@@ -9,11 +9,13 @@ import com.dqys.business.service.dto.user.UserListDTO;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
+import org.apache.commons.lang3.RandomStringUtils;
 
 /**
  * Created by Yvan on 16/6/29.
  */
 public class UserServiceUtils {
+
 
     public static UserListDTO toUserListDTO(TUserInfo userInfo, TCompanyInfo companyInfo) {
         if (CommonUtil.checkParam(userInfo, userInfo.getId())) {
@@ -126,6 +128,7 @@ public class UserServiceUtils {
         userInfo.setQQ(userFileDTO.getQq());
         userInfo.setCreateAt(userFileDTO.getJoinAt());
         userInfo.setRemark(userFileDTO.getRemark());
+        userInfo.setSalt(RandomStringUtils.randomAlphabetic(6));
 
         return userInfo;
     }

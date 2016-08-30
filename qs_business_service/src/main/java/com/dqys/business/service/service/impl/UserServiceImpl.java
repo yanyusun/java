@@ -206,11 +206,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TCompanyInfo getCompanyByUserId(Integer id) {
-        if(id == null){
+        if (id == null) {
             return null;
         }
         TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(id);
-        if(userInfo == null){
+        if (userInfo == null) {
             return null;
         }
         return tCompanyInfoMapper.selectByPrimaryKey(userInfo.getCompanyId());
@@ -222,7 +222,7 @@ public class UserServiceImpl implements UserService {
             return JsonResponseTool.paramErr("参数错误");
         }
         TCompanyInfo companyInfo = getCompanyByUserId(UserSession.getCurrent().getUserId());
-        if(companyInfo == null){
+        if (companyInfo == null) {
             return JsonResponseTool.paramErr("当前用户存在数据异常");
         }
         TUserInfo userInfo = UserServiceUtils.toTUserInfo(data);
@@ -240,9 +240,9 @@ public class UserServiceImpl implements UserService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if(data.getCompanyId() != null && CommonUtil.isManage()){
+        if (data.getCompanyId() != null && CommonUtil.isManage()) {
             userInfo.setCompanyId(data.getCompanyId());
-        }else{
+        } else {
             userInfo.setCompanyId(companyInfo.getId());
         }
         Integer result = tUserInfoMapper.insertSelective(userInfo);
@@ -446,7 +446,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JsonResponse excelImport_tx(String file) {
+    public JsonResponse excelImport_tx(String file) throws Exception {
         if (CommonUtil.checkParam(file)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -457,7 +457,7 @@ public class UserServiceImpl implements UserService {
 
         Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file);
         if (map.get("result") == null || map.get("result").equals("error")) {
-            List<ExcelMessage> error = (List<ExcelMessage>)map.get("data");
+            List<ExcelMessage> error = (List<ExcelMessage>) map.get("data");
             JsonResponse jsonResponse = new JsonResponse();
             jsonResponse.setCode(ResponseCodeEnum.FAILURE.getValue());
             jsonResponse.setMsg("格式内容出错");
@@ -473,6 +473,7 @@ public class UserServiceImpl implements UserService {
                 // 用户基础信息
                 TUserInfo userInfo = UserServiceUtils.toUserInfo(userFileDTO);
                 userInfo.setCompanyId(companyDetailInfo.getCompanyId());
+                userInfo.setPassword(SignatureTool.md5Encode(SignatureTool.md5Encode("12345678", "utf-8") + userInfo.getSalt(), "utf-8"));//默认密码
                 // 用户身份信息
                 TUserTag userTag = UserServiceUtils.toUserTag(userFileDTO);
                 userTag.setUserType(companyDetailInfo.getType().byteValue());
