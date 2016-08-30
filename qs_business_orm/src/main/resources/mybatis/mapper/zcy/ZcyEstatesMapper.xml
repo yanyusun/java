@@ -554,16 +554,16 @@
         <include refid="Blob_Column_List"/>
         from t_zcy_estates
         where stateflag=0
-        <if test="houseNo != null　&& houseNo != ''">
+        <if test="houseNo != null　and houseNo != ''">
             AND house_no=#{houseNo,jdbcType=VARCHAR}
         </if>
-        <if test="companyId != null　&& companyId != ''">
+        <if test="companyId != null and companyId != ''">
             AND company_id=#{companyId,jdbcType=INTEGER}
         </if>
-        <if test="operator != null　&& operator != ''">
+        <if test="operator != null　and operator != ''">
             AND operator=#{operator,jdbcType=VARCHAR}
         </if>
-        <if test="status != null　&& status != ''">
+        <if test="status != null　and status != ''">
             AND status=#{status,jdbcType=INTEGER}
         </if>
     </select>
