@@ -51,8 +51,8 @@ public class ExcelUtilAsset {
                 map.put("data", error);
             } else {
                 //文件格式都正确的就处理表格
-                map.put("result", "ok");
                 map = disposeExcele(list0, list1, list2, list3);
+                map.put("result", "ok");
             }
         } catch (Exception e) {
             e.printStackTrace();
