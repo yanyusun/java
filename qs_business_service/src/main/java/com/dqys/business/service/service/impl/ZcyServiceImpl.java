@@ -10,6 +10,10 @@ import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.zcy.*;
 import com.dqys.business.orm.pojo.zcy.dto.ZcyPawnDTO;
 import com.dqys.business.orm.query.coordinator.ZcyListQuery;
+import com.dqys.business.service.constant.ObjectLogEnum;
+import com.dqys.business.service.exception.bean.BusinessLogException;
+import com.dqys.business.service.service.BusinessLogService;
+import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.ZcyService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.utils.CommonUtil;
@@ -51,6 +55,10 @@ public class ZcyServiceImpl implements ZcyService {
     private PawnInfoMapper pawnInfoMapper;
     @Autowired
     private TUserInfoMapper tUserInfoMapper;
+    @Autowired
+    private BusinessService businessService;
+    @Autowired
+    private BusinessLogService businessLogService;
 
     @Override
     public Map getEstates(Integer id) {
@@ -147,7 +155,7 @@ public class ZcyServiceImpl implements ZcyService {
     }
 
     @Override
-    public Map addEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> address, List<ZcyEstatesFacility> facilities) {
+    public Map addEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> address, List<ZcyEstatesFacility> facilities) throws BusinessLogException {
         Map map = new HashMap<>();
         Integer result = 0;
         if (zcyEstates.getId() == null) {
@@ -157,6 +165,10 @@ public class ZcyServiceImpl implements ZcyService {
                 zcyEstates.setCompanyId(tUserInfo.getCompanyId());
             }
             result = zcyEstatesMapper.insertSelective(zcyEstates);
+            if (result > 0) {
+                businessService.addServiceObject(ObjectTypeEnum.ASSETSOURCE.getValue(), zcyEstates.getId(), null, null);//添加业务对象
+                businessLogService.add(zcyEstates.getId(), ObjectTypeEnum.ASSETSOURCE.getValue(), ObjectLogEnum.add.getValue(), "", "", 0, 0);//添加操作日志
+            }
         } else {
             result = zcyEstatesMapper.updateByPrimaryKeySelective(zcyEstates);
             zcyEstatesAddressMapper.deleteByPrimaryKey(zcyEstates.getId());

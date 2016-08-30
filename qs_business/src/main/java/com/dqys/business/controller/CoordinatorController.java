@@ -2,7 +2,9 @@ package com.dqys.business.controller;
 
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.service.service.AssetService;
 import com.dqys.business.service.service.CoordinatorService;
+import com.dqys.business.service.service.impl.AssetServiceImpl;
 import com.dqys.business.service.utils.excel.ExcelUtilAsset;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.AuthHeaderEnum;
@@ -31,6 +33,8 @@ public class CoordinatorController {
 
     @Autowired
     private CoordinatorService coordinatorService;
+    @Autowired
+    private AssetService assetService;
 
 
     /**
@@ -283,7 +287,6 @@ public class CoordinatorController {
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
                 httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
         );
-        coordinatorService.delCoordinator(12);
         Map map = new HashMap<>();
         if (CommonUtil.checkParam(teamUserId, userTeamId)) {
             return JsonResponseTool.paramErr("参数有误");
