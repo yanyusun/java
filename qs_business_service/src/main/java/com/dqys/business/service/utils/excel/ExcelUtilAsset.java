@@ -26,19 +26,20 @@ public class ExcelUtilAsset {
      */
     public static Map<String, Object> uploadExcel(String fileName) {
         Map<String, Object> map = new HashMap<String, Object>();
-        String[] name = fileName.split("_");
-        if(name.length != 3){
-            map.put("result", "error");
-            map.put("data", "文件解析错误");
-            return map;
-        }
-        String type = name[0];
-        Integer userId = Integer.valueOf(name[1]);
+//        String[] name = fileName.split("_");
+//        if(name.length != 3){
+//            map.put("result", "error");
+//            map.put("data", "文件解析错误");
+//            return map;
+//        }
+//        String type = name[0];
+//        Integer userId = Integer.valueOf(name[1]);
         try {
             // 临时文件地址
-            String path = SysPropertyTool.getProperty(
-                    SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue()
-                    + "/temp/" + type + "/" + userId + "/";
+//            String path = SysPropertyTool.getProperty(
+//                    SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue()
+//                    + "/temp/" + type + "/" + userId + "/";
+            String path = "F://";
             List<Map<String, Object>> list0 = ExcelTool.readExcelForList(path, fileName, 0, 0, 0);//借款人
             List<Map<String, Object>> list1 = ExcelTool.readExcelForList(path, fileName, 0, 0, 1);//抵押物
             List<Map<String, Object>> list2 = ExcelTool.readExcelForList(path, fileName, 0, 0, 2);//借据
