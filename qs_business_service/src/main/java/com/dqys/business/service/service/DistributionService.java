@@ -11,12 +11,14 @@ import com.dqys.business.service.exception.bean.BusinessLogException;
 public interface DistributionService {
 
     /**
-     * 获取分配器列表(没有分配器则创建分配器)
+     * 获取分配器
      * @param type
      * @param id
      * @return
      */
     DistributionDTO getDistribution_tx(Integer type, Integer id) throws BusinessLogException;
+
+    Integer addDistribution(Integer type, Integer id) throws BusinessLogException;
 
     /**
      * 加入分配器
