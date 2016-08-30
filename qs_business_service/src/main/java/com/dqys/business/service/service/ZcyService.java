@@ -2,6 +2,7 @@ package com.dqys.business.service.service;
 
 import com.dqys.business.orm.pojo.zcy.*;
 import com.dqys.business.orm.query.coordinator.ZcyListQuery;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 
 import java.util.List;
 import java.util.Map;
@@ -58,7 +59,7 @@ public interface ZcyService {
      * @param facilities
      * @return
      */
-    Map addEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> address, List<ZcyEstatesFacility> facilities);
+    Map addEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> address, List<ZcyEstatesFacility> facilities) throws BusinessLogException;
 
     /**
      * 添加业主信息

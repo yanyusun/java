@@ -49,6 +49,8 @@ public class BusinessServiceImpl implements BusinessService {
                     business.setType(BusinessTypeEnum.lender.getValue());
                 }else if(type.equals(ObjectTypeEnum.CASE.getValue())){
                     business.setType(BusinessTypeEnum.law.getValue());
+                }else if(type.equals(ObjectTypeEnum.ASSETSOURCE.getValue())){
+                    business.setType(BusinessTypeEnum.source.getValue());
                 }else{
                     // 创建业务失败,业务类型不对
                     return null;
