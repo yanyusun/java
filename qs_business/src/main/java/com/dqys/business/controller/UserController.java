@@ -264,7 +264,7 @@ public class UserController {
      */
     @RequestMapping(value = "/userExcel")
     @ResponseBody
-    public JsonResponse userExcel(@RequestParam String file) {
+    public JsonResponse userExcel(@RequestParam String file) throws Exception {
         if (CommonUtil.checkParam(file)) {
             return JsonResponseTool.paramErr("未上传文件");
         }
