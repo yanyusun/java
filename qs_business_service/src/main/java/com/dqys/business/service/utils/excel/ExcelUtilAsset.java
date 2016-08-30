@@ -56,6 +56,7 @@ public class ExcelUtilAsset {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            map.put("result", "exception");
         }
         return map;
     }
