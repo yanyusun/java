@@ -135,12 +135,12 @@
           #{i}
         </foreach>
       </if>
-      <if test="withIds != null">
-        OR id in
-        <foreach collection="withIds" item="i" open="(" close=")" separator=",">
-          #{i}
-        </foreach>
-      </if>
+      <!--<if test="withIds != null">-->
+        <!--OR id in-->
+        <!--<foreach collection="withIds" item="i" open="(" close=")" separator=",">-->
+          <!--#{i}-->
+        <!--</foreach>-->
+      <!--</if>-->
 
     </where>
   </sql>
@@ -567,7 +567,7 @@
   </select>
   
   <select id="queryCount" resultType="java.lang.Integer" parameterType="com.dqys.business.orm.query.asset.LenderQuery">
-    SELECT COUNT (id) FROM bt_lender
+    SELECT COUNT(id) FROM bt_lender
     <include refid="Query_Condition" />
   </select>
   
