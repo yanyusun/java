@@ -7,10 +7,11 @@ import java.util.List;
 
 /**
  * Created by Yvan on 16/7/11.
+ *
  * @apiDefine ExcellentTypeEnum
  * @apiSuccessExample {json} ExcellentTypeEnum:
  * {
- *
+ * <p/>
  * }
  * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/constant/asset/AssetTypeEnum.java
  */
@@ -24,14 +25,14 @@ public enum ExcellentTypeEnum {
 
     private String name; // 名称
 
-    ExcellentTypeEnum(String name){
+    ExcellentTypeEnum(String name) {
         this.name = name;
     }
 
-    public static ExcellentTypeEnum getExcellentTypeEnum(String name){
-        if(name != null){
-            for(ExcellentTypeEnum excellentTypeEnum : ExcellentTypeEnum.values()){
-                if(excellentTypeEnum.name().equals(name)){
+    public static ExcellentTypeEnum getExcellentTypeEnum(String name) {
+        if (name != null) {
+            for (ExcellentTypeEnum excellentTypeEnum : ExcellentTypeEnum.values()) {
+                if (excellentTypeEnum.name().equals(name)) {
                     return excellentTypeEnum;
                 }
             }
@@ -39,10 +40,19 @@ public enum ExcellentTypeEnum {
         return null;
     }
 
-    public static List<BaseSelectonDTO> list(){
+    public static String getEnum(String name) {
+        for (ExcellentTypeEnum excellentTypeEnum : ExcellentTypeEnum.values()) {
+            if (excellentTypeEnum.getName().equals(name)) {
+                return excellentTypeEnum.name();
+            }
+        }
+        return null;
+    }
+
+    public static List<BaseSelectonDTO> list() {
         List<BaseSelectonDTO> selectonDTOList = new ArrayList<>();
 
-        for(ExcellentTypeEnum excellentTypeEnum : ExcellentTypeEnum.values()){
+        for (ExcellentTypeEnum excellentTypeEnum : ExcellentTypeEnum.values()) {
             BaseSelectonDTO baseSelectonDTO = new BaseSelectonDTO();
             baseSelectonDTO.setKey(excellentTypeEnum.name());
             baseSelectonDTO.setValue(excellentTypeEnum.getName());

@@ -1,6 +1,7 @@
 package com.dqys.business.service.utils.excel;
 
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
+import com.dqys.business.service.constant.asset.ExcellentTypeEnum;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
@@ -8,8 +9,10 @@ import com.dqys.business.service.dto.asset.PawnDTO;
 import com.dqys.business.service.dto.excel.ExcelMessage;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
-import com.dqys.core.utils.*;
-import org.springframework.web.multipart.MultipartFile;
+import com.dqys.core.utils.DateFormatTool;
+import com.dqys.core.utils.ExcelTool;
+import com.dqys.core.utils.FormatValidateTool;
+import com.dqys.core.utils.SysPropertyTool;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -27,7 +30,7 @@ public class ExcelUtilAsset {
     public static Map<String, Object> uploadExcel(String fileName) {
         Map<String, Object> map = new HashMap<String, Object>();
         String[] name = fileName.split("_");
-        if(name.length != 3){
+        if (name.length != 3) {
             map.put("result", "error");
             map.put("data", "文件解析错误");
             return map;
@@ -471,15 +474,15 @@ public class ExcelUtilAsset {
             }
             ContactDTO contactDTO = new ContactDTO();
             contactDTO.setId(transStringToInteger(transMapToString(map3, "var0")));
-            contactDTO.setType(ContactTypeEnum.getContactTypeEnumValue(transMapToString(map3, "var1")));
-            contactDTO.setName(transMapToString(map3, "var2"));
-            contactDTO.setIdcard(transMapToString(map3, "var3"));
-            contactDTO.setMobile(transMapToString(map3, "var4"));
-            contactDTO.setHomeTel(transMapToString(map3, "var5"));
-            contactDTO.setOfficeTel(transMapToString(map3, "var6"));
-            contactDTO.setEmail(transMapToString(map3, "var7"));
-            contactDTO.setCompany(transMapToString(map3, "var11"));
-            contactDTO.setMemo(transMapToString(map3, "var12"));
+            contactDTO.setType(ContactTypeEnum.getContactTypeEnumValue(transMapToString(map3, "var1")));//联系人类型
+            contactDTO.setName(transMapToString(map3, "var2"));// 姓名
+            contactDTO.setIdcard(transMapToString(map3, "var3"));// 身份证
+            contactDTO.setMobile(transMapToString(map3, "var4"));// 手机号
+            contactDTO.setHomeTel(transMapToString(map3, "var5")); // 家庭电话
+            contactDTO.setOfficeTel(transMapToString(map3, "var6")); // 办公电话
+            contactDTO.setEmail(transMapToString(map3, "var7"));// 电子邮件
+            contactDTO.setCompany(transMapToString(map3, "var11")); // 公司
+            contactDTO.setMemo(transMapToString(map3, "var12"));// 备注
             contactDTOs.add(contactDTO);
         }
     }
@@ -492,27 +495,27 @@ public class ExcelUtilAsset {
             }
             IouDTO iouDTO = new IouDTO();
             iouDTO.setId(transStringToInteger(transMapToString(map2, "var1").split("-")[0]));
-            iouDTO.setIouCode(transMapToString(map2, "var2"));
-            iouDTO.setType(transMapToString(map2, "var3"));
-            iouDTO.setAgency(transMapToString(map2, "var4"));
-            iouDTO.setLoanTime(DateFormatTool.parse(transMapToString(map2, "var5"), DateFormatTool.DATE_FORMAT_10_REG2));
-            iouDTO.setLoanAtTime(DateFormatTool.parse(transMapToString(map2, "var6"), DateFormatTool.DATE_FORMAT_10_REG2));
-            iouDTO.setAmount(transStringToDouble(transMapToString(map2, "var7")));
-            iouDTO.setPactRate(transStringToDouble(transMapToString(map2, "var8").replace("%", "")));
-            iouDTO.setOuttimeMultiple(transStringToDouble(transMapToString(map2, "var9")));
-            iouDTO.setAppropriationMultiple(transMapToString(map2, "var10"));
-            iouDTO.setAccrualRepay(transStringToDouble(transMapToString(map2, "var11")));
-            iouDTO.setLoanRepay(transStringToDouble(transMapToString(map2, "var12")));
-            iouDTO.setLevelType(transMapToString(map2, "var13"));
-            iouDTO.setOutDays(transStringToInteger(transMapToString(map2, "var14")));
-            iouDTO.setLessCorpus(transStringToDouble(transMapToString(map2, "var15")));
-            iouDTO.setAccrualArrears(transStringToDouble(transMapToString(map2, "var16")));
-            iouDTO.setPenalty(transStringToDouble(transMapToString(map2, "var17")));
-            iouDTO.setArrears(transStringToDouble(transMapToString(map2, "var18")));
-            iouDTO.setEndAt(DateFormatTool.parse(transMapToString(map2, "var19"), DateFormatTool.DATE_FORMAT_10_REG2));
-            iouDTO.setWorth(transStringToDouble(transMapToString(map2, "var20")));
-            iouDTO.setAdvanceCorpus(transStringToDouble(transMapToString(map2, "var21")));
-            iouDTO.setPawnIds(transMapToString(map2, "var22"));
+            iouDTO.setIouCode(transMapToString(map2, "var2"));//原始借据号
+            iouDTO.setType(transMapToString(map2, "var3"));// 借据类型
+            iouDTO.setAgency(transMapToString(map2, "var4")); // 代理机构
+            iouDTO.setLoanTime(DateFormatTool.parse(transMapToString(map2, "var5"), DateFormatTool.DATE_FORMAT_10_REG2));// 放款时间
+            iouDTO.setLoanAtTime(DateFormatTool.parse(transMapToString(map2, "var6"), DateFormatTool.DATE_FORMAT_10_REG2));// 到款时间
+            iouDTO.setAmount(transStringToDouble(transMapToString(map2, "var7"))); // 金额
+            iouDTO.setPactRate(transStringToDouble(transMapToString(map2, "var8").replace("%", "")));// 合同利率
+            iouDTO.setOuttimeMultiple(transStringToDouble(transMapToString(map2, "var9")));// 逾期倍数
+            iouDTO.setAppropriationMultiple(transMapToString(map2, "var10"));// 挪用倍数
+            iouDTO.setAccrualRepay(transStringToDouble(transMapToString(map2, "var11")));// 已还利息金额
+            iouDTO.setLoanRepay(transStringToDouble(transMapToString(map2, "var12")));// 已还贷款金额
+            iouDTO.setLevelType(transMapToString(map2, "var13"));// 5级分类
+            iouDTO.setOutDays(transStringToInteger(transMapToString(map2, "var14")));// 逾期天数
+            iouDTO.setLessCorpus(transStringToDouble(transMapToString(map2, "var15")));// 剩余本金
+            iouDTO.setAccrualArrears(transStringToDouble(transMapToString(map2, "var16"))); // 拖欠利息
+            iouDTO.setPenalty(transStringToDouble(transMapToString(map2, "var17"))); // 拖欠利息
+            iouDTO.setArrears(transStringToDouble(transMapToString(map2, "var18"))); // 欠款合计
+            iouDTO.setEndAt(DateFormatTool.parse(transMapToString(map2, "var19"), DateFormatTool.DATE_FORMAT_10_REG2));// 欠款截止日期
+            iouDTO.setWorth(transStringToDouble(transMapToString(map2, "var20")));// 价值
+            iouDTO.setAdvanceCorpus(transStringToDouble(transMapToString(map2, "var21")));// 提前偿还本金
+            iouDTO.setPawnIds(transMapToString(map2, "var22"));// 抵押物IDs
             iouDTOs.add(iouDTO);
         }
     }
@@ -525,15 +528,15 @@ public class ExcelUtilAsset {
             }
             PawnDTO pawnDTO = new PawnDTO();
             pawnDTO.setId(transStringToInteger(transMapToString(map1, "var1").split("-")[0]));
-            pawnDTO.setAmount(transStringToDouble(transMapToString(map1, "var3")));
-            pawnDTO.setType(transMapToString(map1, "var4"));
-            pawnDTO.setSize(transMapToString(map1, "var5"));
-            pawnDTO.setPawnRate(transStringToDouble(transMapToString(map1, "var6").replace("%", "")));
-            pawnDTO.setAddress(transMapToString(map1, "var7"));
-            pawnDTO.setDisposeStatus(transMapToString(map1, "var8"));
-            pawnDTO.setWorth(transStringToDouble(transMapToString(map1, "var9")));
-            pawnDTO.setIouIds(transMapToString(map1, "var10"));
-            pawnDTO.setMemo(transMapToString(map1, "var11"));
+            pawnDTO.setAmount(transStringToDouble(transMapToString(map1, "var3")));//贷款金额
+            pawnDTO.setType(transMapToString(map1, "var4"));// 抵押物类型
+            pawnDTO.setSize(transMapToString(map1, "var5"));// 规模大小
+            pawnDTO.setPawnRate(transStringToDouble(transMapToString(map1, "var6").replace("%", "")));// 抵押率
+            pawnDTO.setAddress(transMapToString(map1, "var7"));//*抵押物中 详细地址
+            pawnDTO.setDisposeStatus(transMapToString(map1, "var8")); // 处置状态
+            pawnDTO.setWorth(transStringToDouble(transMapToString(map1, "var9")));// 价值
+            pawnDTO.setIouIds(transMapToString(map1, "var10"));//*抵押物中的借据
+            pawnDTO.setMemo(transMapToString(map1, "var11"));// 备注
             pawnDTOs.add(pawnDTO);
         }
     }
@@ -545,24 +548,24 @@ public class ExcelUtilAsset {
                 continue;
             }
             LenderDTO lenderDTO = new LenderDTO();
-            lenderDTO.setId(transStringToInteger(transMapToString(map0, "var0")));
-            lenderDTO.setEvaluateExcellent(transMapToString(map0, "var5"));
-            lenderDTO.setEvaluateLevel(transMapToString(map0, "var6"));
-            lenderDTO.setDisposeMode(transMapToString(map0, "var7"));
-            lenderDTO.setTags(transMapToString(map0, "var8"));
-            lenderDTO.setGuaranteeType(transMapToString(map0, "var9").equals("公司担保") == true ? "公司" : "个人");
-            lenderDTO.setGuaranteeMode(transMapToString(map0, "var10"));
-            lenderDTO.setGuaranteeSource(lenderDTO.getGuaranteeMode().equals("") == true ? "" : lenderDTO.getGuaranteeMode().equals("抵押") == true ? transMapToString(map0, "var11") : transMapToString(map0, "var12"));
-            lenderDTO.setIsGuaranteeConnection(transMapToString(map0, "var13").equals("是") == true ? 1 : 0);
-            lenderDTO.setGuaranteeEconomic(transMapToString(map0, "var14"));
-            lenderDTO.setIsWorth(transMapToString(map0, "var15").equals("否") == true ? 0 : transMapToString(map0, "var15").equals("能") == true ? 1 : 2);
-            lenderDTO.setIsLawsuit(transMapToString(map0, "var16").equals("未诉讼") == true ? 0 : transMapToString(map0, "var16").equals("已诉讼") == true ? 1 : 2);
-            lenderDTO.setIsDecision(transMapToString(map0, "var17").equals("未判决") == true ? 0 : transMapToString(map0, "var17").equals("已判决") == true ? 1 : 2);
-            lenderDTO.setRealUrgeTime(transStringToInteger(transMapToString(map0, "var18")));
-            lenderDTO.setPhoneUrgeTime(transStringToInteger(transMapToString(map0, "var19")));
-            lenderDTO.setEntrustUrgeTime(transStringToInteger(transMapToString(map0, "var20")));
-            lenderDTO.setCanContact(transMapToString(map0, "var21").equals("是") == true ? 1 : 0);
-            lenderDTO.setCanPay(transMapToString(map0, "var22").equals("是") == true ? 1 : 0);
+            lenderDTO.setId(transStringToInteger(transMapToString(map0, "var0")));//序号
+            lenderDTO.setEvaluateExcellent(ExcellentTypeEnum.getEnum(transMapToString(map0, "var5")));//评优
+            lenderDTO.setEvaluateLevel(transMapToString(map0, "var6"));//评级
+            lenderDTO.setDisposeMode(transMapToString(map0, "var7"));//个性处置
+            lenderDTO.setTags(transMapToString(map0, "var8"));//标签
+            lenderDTO.setGuaranteeType(transMapToString(map0, "var9").equals("公司担保") == true ? "公司" : "个人");//担保方式
+            lenderDTO.setGuaranteeMode(transMapToString(map0, "var10"));//公司担保
+            lenderDTO.setGuaranteeSource(lenderDTO.getGuaranteeMode().equals("") == true ? "" : lenderDTO.getGuaranteeMode().equals("抵押") == true ? transMapToString(map0, "var11") : transMapToString(map0, "var12"));// 担保源
+            lenderDTO.setIsGuaranteeConnection(transMapToString(map0, "var13").equals("是") == true ? 1 : 0);//担保人是否能联系
+            lenderDTO.setGuaranteeEconomic(transMapToString(map0, "var14"));//担保人经济状况
+            lenderDTO.setIsWorth(transMapToString(map0, "var15").equals("否") == true ? 0 : transMapToString(map0, "var15").equals("能") == true ? 1 : 2);//抵押物是否能覆盖债务
+            lenderDTO.setIsLawsuit(transMapToString(map0, "var16").equals("未诉讼") == true ? 0 : transMapToString(map0, "var16").equals("已诉讼") == true ? 1 : 2);//诉讼与否
+            lenderDTO.setIsDecision(transMapToString(map0, "var17").equals("未判决") == true ? 0 : transMapToString(map0, "var17").equals("已判决") == true ? 1 : 2);// 判决与否
+            lenderDTO.setRealUrgeTime(transStringToInteger(transMapToString(map0, "var18")));//实地催收次数
+            lenderDTO.setPhoneUrgeTime(transStringToInteger(transMapToString(map0, "var19")));//电话催收次数
+            lenderDTO.setEntrustUrgeTime(transStringToInteger(transMapToString(map0, "var20")));//委托催收次数
+            lenderDTO.setCanContact(transMapToString(map0, "var21").equals("是") == true ? 1 : 0);//债务方是否能正常联系
+            lenderDTO.setCanPay(transMapToString(map0, "var22").equals("是") == true ? 1 : 0);//债务方是否能偿还
             lenderDTOs.add(lenderDTO);
         }
     }

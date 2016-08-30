@@ -4,8 +4,10 @@ import com.dqys.business.service.dto.excel.ExcelMessage;
 import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
-import com.dqys.core.utils.*;
-import org.springframework.web.multipart.MultipartFile;
+import com.dqys.core.utils.DateFormatTool;
+import com.dqys.core.utils.ExcelTool;
+import com.dqys.core.utils.FormatValidateTool;
+import com.dqys.core.utils.SysPropertyTool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,7 +29,7 @@ public class UserExcelUtil {
     public static Map<String, Object> upLoadUserExcel(String fileName) {
         Map<String, Object> map = new HashMap<String, Object>();
         String name[] = fileName.split("_");
-        if(name.length != 3){
+        if (name.length != 3) {
             map.put("result", "error");
             map.put("data", "文件解析错误");
             return map;
@@ -73,26 +75,26 @@ public class UserExcelUtil {
                 continue;
             }
             UserFileDTO userFileDTO = new UserFileDTO();
-            userFileDTO.setRealName(transMapToString(map0, "var1"));
-            userFileDTO.setUserName(transMapToString(map0, "var2"));
-            userFileDTO.setSex(transMapToString(map0, "var3").equals("男") == true ? 1 : 0);
-            userFileDTO.setAccount(transMapToString(map0, "var4"));
-            userFileDTO.setWechat(transMapToString(map0, "var5"));
-            userFileDTO.setQq(transMapToString(map0, "var6"));
-            userFileDTO.setOfficeTel(transMapToString(map0, "var7"));
-            userFileDTO.setMobile(transMapToString(map0, "var8"));
-            userFileDTO.setEmail(transMapToString(map0, "var9"));
-            userFileDTO.setApartment(transMapToString(map0, "var10"));
-            userFileDTO.setOccupation(transMapToString(map0, "var11"));
-            userFileDTO.setDuty(transMapToString(map0, "var12"));
-            userFileDTO.setDutyMark(transMapToString(map0, "var13"));
-            userFileDTO.setDutyArea(transMapToString(map0, "var14"));
-            userFileDTO.setRole(transMapToString(map0, "var15").equals("管理员") == true ? 1 : transMapToString(map0, "var15").equals("管理者") == true ? 2 : 3);
-            userFileDTO.setYear(transStringToInteger(transMapToString(map0, "var16")));
+            userFileDTO.setRealName(transMapToString(map0, "var1"));//真实姓名
+            userFileDTO.setUserName(transMapToString(map0, "var2"));//用户昵称
+            userFileDTO.setSex(transMapToString(map0, "var3").equals("男") == true ? 1 : 0);//性别
+            userFileDTO.setAccount(transMapToString(map0, "var4")); //账号
+            userFileDTO.setWechat(transMapToString(map0, "var5")); //微信
+            userFileDTO.setQq(transMapToString(map0, "var6"));//QQ
+            userFileDTO.setOfficeTel(transMapToString(map0, "var7"));//办公电话
+            userFileDTO.setMobile(transMapToString(map0, "var8"));//手机号
+            userFileDTO.setEmail(transMapToString(map0, "var9"));//邮箱
+            userFileDTO.setApartment(transMapToString(map0, "var10"));// 部门
+            userFileDTO.setOccupation(transMapToString(map0, "var11"));// 职位
+            userFileDTO.setDuty(transMapToString(map0, "var12"));//职责名称
+            userFileDTO.setDutyMark(transMapToString(map0, "var13"));//职责介绍
+            userFileDTO.setDutyArea(transMapToString(map0, "var14"));//负责区域
+            userFileDTO.setRole(transMapToString(map0, "var15").equals("管理员") == true ? 1 : transMapToString(map0, "var15").equals("管理者") == true ? 2 : 3);//角色
+            userFileDTO.setYear(transStringToInteger(transMapToString(map0, "var16")));// 职业年限
             if (!transMapToString(map0, "var17").equals("")) {
-                userFileDTO.setJoinAt(DateFormatTool.parse(transMapToString(map0, "var17"), DateFormatTool.DATE_FORMAT_10_REG2));
+                userFileDTO.setJoinAt(DateFormatTool.parse(transMapToString(map0, "var17"), DateFormatTool.DATE_FORMAT_10_REG2)); //入职时间
             }
-            userFileDTO.setRemark(transMapToString(map0, "var19"));
+            userFileDTO.setRemark(transMapToString(map0, "var19"));//备注
             userFileDTOs.add(userFileDTO);
         }
     }
