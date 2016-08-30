@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class LenderServiceUtils {
 
-    public static final String PRE_LENDER_CODE = "JKR"; // 格式:JKR160612XXXX
+    public static final String PRE_LENDER_CODE = "BO"; // 格式:JKR160612XXXX
 
     public static String createLenderNo() {
         return PRE_LENDER_CODE

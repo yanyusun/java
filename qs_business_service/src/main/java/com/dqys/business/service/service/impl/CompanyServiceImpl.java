@@ -108,7 +108,12 @@ public class CompanyServiceImpl implements CompanyService {
             return JsonResponseTool.paramErr("参数错误");
         }
         Organization organization = CompanyServiceUtils.toOrganization(organizationInsertDTO);
-        return CommonUtil.responseBack(organizationMapper.insert(organization));
+        Integer result = organizationMapper.insert(organization);
+        if(CommonUtil.checkResult(result)){
+            return JsonResponseTool.failure("添加失败");
+        }else{
+            return JsonResponseTool.success(organization.getId());
+        }
     }
 
     @Override

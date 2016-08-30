@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class PawnServiceUtils {
 
-    public static final String PRE_PAWN_CODE = "DYW"; // 格式:DYW160612XXXX
+    public static final String PRE_PAWN_CODE = "CO"; // 格式:DYW160612XXXX
 
     /**
      * 生成抵押物号

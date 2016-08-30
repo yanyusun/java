@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class IouServiceUtils {
 
-    public static final String MIDDLE_IOU_CODE = "JIE"; // 格式:JIE160101XXXX
+    public static final String MIDDLE_IOU_CODE = "IO"; // 格式:JIE160101XXXX
     /**
      * 生成借据号
      * @return
