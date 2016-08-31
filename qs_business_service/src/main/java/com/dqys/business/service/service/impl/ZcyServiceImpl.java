@@ -18,6 +18,7 @@ import com.dqys.business.service.service.ZcyService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.DateFormatTool;
+import com.dqys.core.utils.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -159,7 +160,11 @@ public class ZcyServiceImpl implements ZcyService {
         Map map = new HashMap<>();
         Integer result = 0;
         if (zcyEstates.getId() == null) {
-            zcyEstates.setHouseNo(getHouseNo());
+            String codeNo = RandomUtil.getCode(RandomUtil.ESTATES_CODE);//缓存中取编号
+            if (codeNo == null) {
+                codeNo = getHouseNo();
+            }
+            zcyEstates.setHouseNo(codeNo);
             TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(MessageUtils.transStringToInt(zcyEstates.getOperator()));
             if (tUserInfo != null) {
                 zcyEstates.setCompanyId(tUserInfo.getCompanyId());
