@@ -24,9 +24,9 @@ public class RandomUtil {
     private static Integer codePlaces = 4;//随机位数的个数
 
     public static String createRandomNum(String time) {
-//        if (!FormatValidateTool.isDate(time)) {
-//            return "error_time";
-//        }
+        if (!time.matches("\\d{" + timeFormat.length() + "}")) {
+            return "error_time";
+        }
         List<String> assetList = setCodeList(ASSET_CODE + time);
         List<String> caseList = setCodeList(CASE_CODE + time);
         List<String> iouList = setCodeList(IOU_CODE + time);
