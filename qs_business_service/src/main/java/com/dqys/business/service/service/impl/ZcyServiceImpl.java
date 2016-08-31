@@ -145,7 +145,7 @@ public class ZcyServiceImpl implements ZcyService {
 
     private String getHouseNo() {
         ZcyEstates estates = new ZcyEstates();
-        while (true) {
+        for (int i = 0; i < 5; i++) {
             String houseNo = "ZC" + DateFormatTool.format(new Date(), "yyMM") + CommonUtil.getRandomNum(10000);//资产编号
             estates.setHouseNo(houseNo);
             List<ZcyEstates> estateses = zcyEstatesMapper.selectBySelective(estates);
@@ -153,7 +153,9 @@ public class ZcyServiceImpl implements ZcyService {
                 return houseNo;
             }
         }
+        return null;
     }
+
 
     @Override
     public Map addEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> address, List<ZcyEstatesFacility> facilities) throws BusinessLogException {
