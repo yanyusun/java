@@ -26,6 +26,16 @@ public class AssetQuery extends BaseQuery {
 
     private boolean outTime; // 超时
     private boolean takePart; // 处置方加入
+    private boolean isStop; // 暂停
+
+
+    public boolean isStop() {
+        return isStop;
+    }
+
+    public void setIsStop(boolean isStop) {
+        this.isStop = isStop;
+    }
 
     public boolean isTakePart() {
         return takePart;

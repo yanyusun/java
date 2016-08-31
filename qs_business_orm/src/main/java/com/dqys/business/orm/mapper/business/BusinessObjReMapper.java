@@ -45,4 +45,12 @@ public interface BusinessObjReMapper {
      */
     List<Integer> listIdByTypeIdStatusUser(@Param("type")Integer type, @Param("status")Integer status, @Param("userId") Integer userId);
 
+    /**
+     * 通过对象类型,id,以及业务中的审核状态查询对象ID
+     * @param type 对象类型
+     * @param status 业务状态
+     * @return
+     */
+    List<Integer> listIdByTypeIdStatus(@Param("type")Integer type, @Param("status")Integer status);
+
 }

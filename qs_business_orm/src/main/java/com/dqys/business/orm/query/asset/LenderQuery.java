@@ -37,7 +37,16 @@ public class LenderQuery extends BaseQuery {
     private boolean isAgent; // 中介
     private boolean isLawyer; // 律所
     private boolean isTakePart; // 是否其他方参与(处置方任何一方都算)
+    private boolean isStop; // 是否其他方参与(处置方任何一方都算)
 
+
+    public boolean isStop() {
+        return isStop;
+    }
+
+    public void setIsStop(boolean isStop) {
+        this.isStop = isStop;
+    }
 
     public Integer getEntrustId() {
         return entrustId;

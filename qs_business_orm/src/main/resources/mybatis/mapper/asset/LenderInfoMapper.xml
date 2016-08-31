@@ -115,6 +115,9 @@
       <if test="isNotAsset">
         AND asset_id is NULL
       </if>
+      <if test="isStop">
+        AND is_stop > 0
+      </if>
       <if test="isTakePart">
         AND (is_collection == 1 OR is_lawyer == 1 OR is_agent == 1)
       </if>
