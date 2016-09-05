@@ -18,6 +18,7 @@ public class LenderQuery extends BaseQuery {
     private Integer operator; // 操作人
     private Integer isWorth; // 资不抵债
     private Integer entrustId; // 委托来源
+    private Integer repayStatus; // 还款状态
 
     private List<Integer> ids; // id集合
     private List<Integer> exceptIds; // id集合之外的id都符合条件
@@ -36,7 +37,16 @@ public class LenderQuery extends BaseQuery {
     private boolean isAgent; // 中介
     private boolean isLawyer; // 律所
     private boolean isTakePart; // 是否其他方参与(处置方任何一方都算)
+    private boolean isStop; // 是否其他方参与(处置方任何一方都算)
 
+
+    public boolean isStop() {
+        return isStop;
+    }
+
+    public void setIsStop(boolean isStop) {
+        this.isStop = isStop;
+    }
 
     public Integer getEntrustId() {
         return entrustId;
@@ -204,5 +214,13 @@ public class LenderQuery extends BaseQuery {
 
     public void setBelongFollowDate(Date belongFollowDate) {
         this.belongFollowDate = belongFollowDate;
+    }
+
+    public Integer getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(Integer repayStatus) {
+        this.repayStatus = repayStatus;
     }
 }

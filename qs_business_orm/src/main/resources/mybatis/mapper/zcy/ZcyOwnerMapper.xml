@@ -21,7 +21,7 @@
         <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, estates_id, sell_price, owner_price, entrust_protocol_time, entrust_abort_time, 
+    id, estates_id, sell_price, owner_price, DATE_FORMAT(entrust_protocol_time,'%Y-%m-%d') entrust_protocol_time,DATE_FORMAT(entrust_abort_time,'%Y-%m-%d') entrust_abort_time,
     annotation_name, annotation_content, owner_number, entrust_source, entrust_detail, 
     owner_mariage, special_house, version, create_at, update_at, stateflag
   </sql>

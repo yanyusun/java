@@ -14,6 +14,7 @@ import com.dqys.business.orm.mapper.company.OrganizationMapper;
 import com.dqys.business.orm.pojo.company.Organization;
 import com.dqys.business.orm.query.company.OrganizationQuery;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
+import com.dqys.business.service.dto.excel.ExcelMessage;
 import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;
@@ -23,6 +24,7 @@ import com.dqys.business.service.utils.excel.UserExcelUtil;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.mapper.facade.TAreaMapper;
 import com.dqys.core.model.JsonResponse;
@@ -33,7 +35,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -204,9 +205,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public TCompanyInfo getCompanyByUserId(Integer id) {
+        if (id == null) {
+            return null;
+        }
+        TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(id);
+        if (userInfo == null) {
+            return null;
+        }
+        return tCompanyInfoMapper.selectByPrimaryKey(userInfo.getCompanyId());
+    }
+
+    @Override
     public JsonResponse add(UserInsertDTO data) {
         if (data == null) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        TCompanyInfo companyInfo = getCompanyByUserId(UserSession.getCurrent().getUserId());
+        if (companyInfo == null) {
+            return JsonResponseTool.paramErr("当前用户存在数据异常");
         }
         TUserInfo userInfo = UserServiceUtils.toTUserInfo(data);
         // 掩码初始化
@@ -222,6 +239,11 @@ public class UserServiceImpl implements UserService {
             FileTool.saveFileSync(data.getAvg());
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        if (data.getCompanyId() != null && CommonUtil.isManage()) {
+            userInfo.setCompanyId(data.getCompanyId());
+        } else {
+            userInfo.setCompanyId(companyInfo.getId());
         }
         Integer result = tUserInfoMapper.insertSelective(userInfo);
         if (result != null && result > 0) {
@@ -424,18 +446,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JsonResponse excelImport_tx(String file) {
+    public JsonResponse excelImport_tx(String file) throws Exception {
         if (CommonUtil.checkParam(file)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        CompanyDetailInfo companyDetailInfo = tCompanyInfoMapper.get(UserSession.getCurrent().getUserId());
+        CompanyDetailInfo companyDetailInfo = tCompanyInfoMapper.getDetailByUserId(UserSession.getCurrent().getUserId());
         if (companyDetailInfo == null) {
             return JsonResponseTool.paramErr("您不是管理员,没有权限导入成员");
         }
 
         Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file);
         if (map.get("result") == null || map.get("result").equals("error")) {
-            return JsonResponseTool.failure(map.get("data").toString());
+            List<ExcelMessage> error = (List<ExcelMessage>) map.get("data");
+            JsonResponse jsonResponse = new JsonResponse();
+            jsonResponse.setCode(ResponseCodeEnum.FAILURE.getValue());
+            jsonResponse.setMsg("格式内容出错");
+            jsonResponse.setData(error);
+            return jsonResponse;
         } else {
             // 返回CODE
             List<UserFileDTO> userFileDTOList = (List<UserFileDTO>) map.get("userFileDTOs");
@@ -446,6 +473,7 @@ public class UserServiceImpl implements UserService {
                 // 用户基础信息
                 TUserInfo userInfo = UserServiceUtils.toUserInfo(userFileDTO);
                 userInfo.setCompanyId(companyDetailInfo.getCompanyId());
+                userInfo.setPassword(SignatureTool.md5Encode(SignatureTool.md5Encode("12345678", "utf-8") + userInfo.getSalt(), "utf-8"));//默认密码
                 // 用户身份信息
                 TUserTag userTag = UserServiceUtils.toUserTag(userFileDTO);
                 userTag.setUserType(companyDetailInfo.getType().byteValue());

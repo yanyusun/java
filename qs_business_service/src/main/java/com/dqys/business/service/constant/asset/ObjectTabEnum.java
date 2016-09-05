@@ -29,7 +29,10 @@ public enum ObjectTabEnum {
     new48h(14, "48H 新"),
     handling_entrust(16, "处置中"),
     refuse(17, "已驳回"),
-    task(15, "我的任务")
+    task(15, "我的任务"),
+    stop(18, "暂停"),
+    gongingOn(19, "正在进行"),
+    myUrge(20, "我的催收")
     ;
 
     private Integer value;

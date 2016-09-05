@@ -48,6 +48,7 @@
     <result column="is_stop" property="isStop" jdbcType="INTEGER" />
     <result column="belong_follow_time" property="belongFollowTime" jdbcType="TIMESTAMP" />
     <result column="belong_follow_times" property="belongFollowTimes" jdbcType="INTEGER" />
+    <result column="repay_status" property="repayStatus" jdbcType="INTEGER" />
   </resultMap>
 
   <!-- 基础字段 -->
@@ -57,7 +58,7 @@
     dispose_mode, tags, urge_type, entrust_born_type, entrust_born, guarantee_type, guarantee_mode,
     guarantee_source, is_guarantee_connection, guarentee_economic, is_lawsuit, is_decision, real_urge_time,
     phone_urge_time, entrust_urge_time, can_contact, can_pay, is_worth, memo, is_collection, is_lawyer,
-    is_agent, follow_up_times, is_stop, follow_up_time, belong_follow_time, belong_follow_times
+    is_agent, follow_up_times, is_stop, follow_up_time, belong_follow_time, belong_follow_times, repay_status
   </sql>
 
   <sql id="Query_Condition">
@@ -79,6 +80,9 @@
       </if>
       <if test="entrustId != null">
         AND entrust_born = #{entrustId,jdbcType=INTEGER}
+      </if>
+      <if test="repayStatus != null">
+        AND repay_status = #{repayStatus,jdbcType=INTEGER}
       </if>
 
 
@@ -111,6 +115,9 @@
       <if test="isNotAsset">
         AND asset_id is NULL
       </if>
+      <if test="isStop">
+        AND is_stop > 0
+      </if>
       <if test="isTakePart">
         AND (is_collection == 1 OR is_lawyer == 1 OR is_agent == 1)
       </if>
@@ -131,12 +138,12 @@
           #{i}
         </foreach>
       </if>
-      <if test="withIds != null">
-        OR id in
-        <foreach collection="withIds" item="i" open="(" close=")" separator=",">
-          #{i}
-        </foreach>
-      </if>
+      <!--<if test="withIds != null">-->
+        <!--OR id in-->
+        <!--<foreach collection="withIds" item="i" open="(" close=")" separator=",">-->
+          <!--#{i}-->
+        <!--</foreach>-->
+      <!--</if>-->
 
     </where>
   </sql>
@@ -271,6 +278,9 @@
       <if test="belongFollowTimes != null" >
         belong_follow_times,
       </if>
+      <if test="repayStatus != null" >
+        repay_status,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -392,6 +402,9 @@
       </if>
       <if test="belongFollowTimes != null" >
         #{belongFollowTimes,jdbcType=INTEGER},
+      </if>
+      <if test="repayStatus != null" >
+        #{repayStatus,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -537,6 +550,9 @@
       <if test="belongFollowTimes != null" >
         belong_follow_times = #{belongFollowTimes,jdbcType=TIMESTAMP},
       </if>
+      <if test="repayStatus != null" >
+        repay_status = #{repayStatus,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -554,7 +570,7 @@
   </select>
   
   <select id="queryCount" resultType="java.lang.Integer" parameterType="com.dqys.business.orm.query.asset.LenderQuery">
-    SELECT COUNT (id) FROM bt_lender
+    SELECT COUNT(id) FROM bt_lender
     <include refid="Query_Condition" />
   </select>
   

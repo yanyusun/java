@@ -64,5 +64,11 @@
     ) AND stateflag = 0
   </select>
 
+  <select id="listIdByTypeIdStatus" resultType="java.lang.Integer">
+    SELECT object_id FROM t_business_obj_re WHERE object_type = #{type,jdbcType=INTEGER} AND business_id in (
+      SELECT id FROM business WHERE status = #{status,jdbcType=INTEGER} AND stateflag = 0
+    ) AND stateflag = 0
+  </select>
+
 
 </mapper>

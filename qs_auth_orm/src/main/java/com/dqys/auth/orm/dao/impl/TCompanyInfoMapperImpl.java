@@ -48,8 +48,13 @@ public class TCompanyInfoMapperImpl extends BaseDao implements TCompanyInfoMappe
     }
 
     @Override
-    public CompanyDetailInfo get(Integer id) {
-        return super.getSqlSession().getMapper(TCompanyInfoMapper.class).get(id);
+    public CompanyDetailInfo getDetailByCompanyId(Integer id) {
+        return super.getSqlSession().getMapper(TCompanyInfoMapper.class).getDetailByCompanyId(id);
+    }
+
+    @Override
+    public CompanyDetailInfo getDetailByUserId(Integer id) {
+        return super.getSqlSession().getMapper(TCompanyInfoMapper.class).getDetailByUserId(id);
     }
 
     @Override

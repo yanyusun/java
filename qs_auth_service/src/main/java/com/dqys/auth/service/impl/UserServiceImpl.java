@@ -189,7 +189,8 @@ public class UserServiceImpl implements UserService {
 
         TUserTagQuery query = new TUserTagQuery();
         query.setUserId(tUserInfo.getId());
-        query.setUserType(userType);
+        // TODO: 16-8-29 按照目前的设计一个人员只拥有一种角色,因此暂时注释掉userType
+        //query.setUserType(userType);
         List<TUserTag> tUserTags = this.tUserTagMapper.selectByQuery(query);
         if (null == tUserTags || tUserTags.isEmpty()) {
             //add

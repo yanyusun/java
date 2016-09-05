@@ -22,29 +22,29 @@
   </sql>
 
     <sql id="Query_Condition">
-      <where> 1=1
-          <if test="id != null">
-              AND id = #{id,jdbcType=INTEGER}
-          </if>
-          <if test="companyId != null">
-              AND company_id = #{companyId,jdbcType=INTEGER}
-          </if>
-          <if test="mangerId != null">
-              AND manager_id = #{mangerId,jdbcType=INTEGER}
-          </if>
-          <if test="status != null">
-              AND status = #{status,jdbcType=INTEGER}
-          </if>
-          <if test="ctreaterId != null">
-              AND ctreater_id = #{ctreaterId,jdbcType=INTEGER}
-          </if>
-          <if test="objectId != null">
-              AND object_id = #{objectId,jdbcType=INTEGER}
-          </if>
-          <if test="objectType != null">
-              AND object_type = #{objectType,jdbcType=INTEGER}
-          </if>
-      </where>
+        <where>1=1
+            <if test="id != null">
+                AND id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="companyId != null">
+                AND company_id = #{companyId,jdbcType=INTEGER}
+            </if>
+            <if test="mangerId != null">
+                AND manager_id = #{mangerId,jdbcType=INTEGER}
+            </if>
+            <if test="status != null">
+                AND status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="ctreaterId != null">
+                AND ctreater_id = #{ctreaterId,jdbcType=INTEGER}
+            </if>
+            <if test="objectId != null">
+                AND object_id = #{objectId,jdbcType=INTEGER}
+            </if>
+            <if test="objectType != null">
+                AND object_type = #{objectType,jdbcType=INTEGER}
+            </if>
+        </where>
     </sql>
 
 
@@ -75,6 +75,12 @@
     update t_user_team set stateflag=now()
     where id = #{id,jdbcType=INTEGER}
   </delete>
+    <select id="get" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from t_user_team
+        WHERE id = #{id,jdbcType=INTEGER} AND stateflag = 0
+    </select>
     <insert id="insert" parameterType="com.dqys.business.orm.pojo.coordinator.UserTeam" useGeneratedKeys="true"
             keyProperty="id">
     insert into t_user_team (id, create_at, remark, 
@@ -194,10 +200,10 @@
   </update>
 
     <!--<select id="selectByOperatorAndStatus">-->
-        <!--SELECT object_id FROM t_user_team where object_type = #{type,jdbcType=INTEGER} AND id IN (-->
-        <!--SELECT user_team_id from t_teammate_re-->
-        <!--where stateflag = 0 AND ctreater_id = #{id,jdbcType=INTEGER} AND status = #{status,jdbcType=INTEGER}-->
-        <!--) AND stateflag = 0-->
+    <!--SELECT object_id FROM t_user_team where object_type = #{type,jdbcType=INTEGER} AND id IN (-->
+    <!--SELECT user_team_id from t_teammate_re-->
+    <!--where stateflag = 0 AND ctreater_id = #{id,jdbcType=INTEGER} AND status = #{status,jdbcType=INTEGER}-->
+    <!--) AND stateflag = 0-->
     <!--</select>-->
 
     <select id="selectByOperatorAndStatus" resultType="java.lang.Integer">
@@ -212,19 +218,32 @@
     </select>
 
     <select id="getByObject" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM t_user_team WHERE stateflag = 0 AND object_type = #{type,jdbcType=INTEGER} AND object_id = #{id,jdbcType=INTEGER}
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_user_team WHERE stateflag = 0 AND object_type = #{type,jdbcType=INTEGER} AND object_id =
+        #{id,jdbcType=INTEGER}
     </select>
 
-    <select id="queryList" parameterType="com.dqys.business.orm.query.coordinator.UserTeamQuery" resultMap="BaseResultMap">
+    <select id="queryList" parameterType="com.dqys.business.orm.query.coordinator.UserTeamQuery"
+            resultMap="BaseResultMap">
         SELECT
-        <include refid="Base_Column_List" />
+        <include refid="Base_Column_List"/>
         from t_user_team
-        <include refid="Query_Condition" />
+        <include refid="Query_Condition"/>
         ORDER BY id DESC
         <if test="isPaging">
             limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
         </if>
     </select>
+
+    <select id="selectByCompany" parameterType="java.lang.Integer" resultType="int">
+      SELECT tut.id from t_user_team tut
+      WHERE tut.stateflag=0 AND tut.company_id=#{companyId,jdbcType=INTEGER}
+    </select>
+
+    <update id="deleteByCompany" parameterType="int">
+        UPDATE t_user_team tut SET tut.stateflag=now()
+        WHERE tut.company_id=#{companyId,jdbcType=INTEGER}
+    </update>
 
 </mapper>

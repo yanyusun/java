@@ -1,5 +1,6 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.repay.RepayEnum;
 import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
@@ -19,6 +20,7 @@ import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.exception.bean.ArtificialException;
 import com.dqys.business.service.service.BusinessLogService;
+import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.service.RepayService;
 import com.dqys.business.service.utils.message.MessageUtils;
@@ -63,6 +65,9 @@ public class RepayServiceImpl implements RepayService {
 
     @Autowired
     private CoordinatorMapper coordinatorMapper;
+
+    @Autowired
+    private CoordinatorService coordinatorService;
 
     @Override
     public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
@@ -216,9 +221,9 @@ public class RepayServiceImpl implements RepayService {
             Double penMoney = MessageUtils.transMapToDou(iouMap, "penMoney");
             Integer num = 0;
             if ((lessMoney == null || lessMoney == 0) && (accMoney == null || accMoney == 0) && (penMoney == null || penMoney == 0)) {
-                num = repayMapper.updateBusinessStatus(id, 100);//状态改为已完成
+                num = repayMapper.updateBusinessStatus(id, BusinessStatusEnum.end.getValue());//状态改为已完成
             } else {
-                num = repayMapper.updateBusinessStatus(id, 0);//状态改为进行中
+                num = repayMapper.updateBusinessStatus(id, BusinessStatusEnum.platform_pass.getValue());//状态改为审核通过
             }
             if (num == 0) {
                 throw new Exception();
@@ -343,7 +348,8 @@ public class RepayServiceImpl implements RepayService {
         String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
                 MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "realName"), damageApply.getObject_type() + "",
                 ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName(), damage_date, original_time);
-        messageService.add("延期申请", content, damageApply.getApply_user_id(), damageApply.getEaxm_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE.getValue(), "applyId=" + id);
+        String title = coordinatorService.getMessageTitle(damageApply.getApply_object_id(), damageApply.getObject_type(), MessageBTEnum.POSTPONE.getValue());
+        messageService.add(title, content, damageApply.getApply_user_id(), damageApply.getEaxm_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE.getValue(), "?applyId=" + id);
         map.put("result", "yes");
     }
 
@@ -396,7 +402,8 @@ public class RepayServiceImpl implements RepayService {
             Map oper = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getEaxm_user_id());
             String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
                     MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "realName"), damageApply.getObject_type() + "", ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName());
-            messageService.add("延期审核结果", content, damageApply.getEaxm_user_id(), damageApply.getApply_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE.getValue(), "");
+            String title = coordinatorService.getMessageTitle(damageApply.getApply_object_id(), damageApply.getObject_type(), MessageBTEnum.POSTPONE_AUDIT.getValue());
+            messageService.add(title, content, damageApply.getEaxm_user_id(), damageApply.getApply_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE_AUDIT.getValue(), "");
             map.put("result", "yes");
         } else {
             map.put("result", "no");

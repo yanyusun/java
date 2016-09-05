@@ -8,6 +8,7 @@
         <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
         <result column="annotation" property="annotation" jdbcType="VARCHAR"/>
         <result column="replenish" property="replenish" jdbcType="VARCHAR"/>
+        <result column="deck" property="deck" jdbcType="VARCHAR"/>
         <result column="house_s" property="houseS" jdbcType="VARCHAR"/>
         <result column="house_t" property="houseT" jdbcType="VARCHAR"/>
         <result column="house_c" property="houseC" jdbcType="VARCHAR"/>
@@ -40,16 +41,21 @@
         <result column="operator" property="operator" jdbcType="VARCHAR"/>
         <result column="objec_id" property="objecId" jdbcType="INTEGER"/>
         <result column="object_type" property="objectType" jdbcType="INTEGER"/>
+        <result column="house_no" property="houseNo" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="company_id" property="companyId" jdbcType="INTEGER"/>
+        <result column="entrust_type" property="entrustType" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.dqys.business.orm.pojo.zcy.ZcyEstates" extends="BaseResultMap">
         <result column="content" property="content" jdbcType="LONGVARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, create_at, update_at, stateflag, annotation, replenish, house_s, house_t, house_c, 
-    house_w, house_remark, quota, acreage, selling_price, decade, property, orientation, 
+    id, create_at, update_at, stateflag, annotation,deck, replenish, house_s, house_t, house_c,
+    house_w, house_remark, quota, acreage, selling_price, DATE_FORMAT(decade,'%Y-%m-%d') decade, property, orientation,
     guide_price, guide_remark, house_remarkv, decorate_price, tenement_price, facility, 
     internal_number, title, decorate_type, decorate_case, decorate_time, build_type, 
-    house_belong, house_use, heating_way, metro, school_house, version,operator,object_id,object_type
+    house_belong, house_use, heating_way, metro, school_house, version,entrust_type,operator,object_id,object_type,
+    house_no,company_id,status
   </sql>
     <sql id="Blob_Column_List">
     content
@@ -69,7 +75,7 @@
     <insert id="insert" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates" keyProperty="id"
             useGeneratedKeys="true">
     insert into t_zcy_estates (id, create_at, update_at, 
-      stateflag, annotation, replenish, 
+      stateflag, annotation, replenish, deck
       house_s, house_t, house_c, 
       house_w, house_remark, quota, 
       acreage, selling_price, decade, 
@@ -79,10 +85,12 @@
       title, decorate_type, decorate_case, 
       decorate_time, build_type, house_belong, 
       house_use, heating_way, metro, 
-      school_house, version, content,operator,objec_id,object_type
+      school_house, version, content,operator,
+      objec_id,object_type,entrust_type,
+      house_no,company_id
       )
     values (#{id,jdbcType=INTEGER}, now(), now(),
-      0, #{annotation,jdbcType=VARCHAR}, #{replenish,jdbcType=VARCHAR},
+      0, #{annotation,jdbcType=VARCHAR}, #{replenish,jdbcType=VARCHAR},#{deck,jdbcType=VARCHAR}
       #{houseS,jdbcType=VARCHAR}, #{houseT,jdbcType=VARCHAR}, #{houseC,jdbcType=VARCHAR}, 
       #{houseW,jdbcType=VARCHAR}, #{houseRemark,jdbcType=VARCHAR}, #{quota,jdbcType=VARCHAR}, 
       #{acreage,jdbcType=VARCHAR}, #{sellingPrice,jdbcType=DOUBLE}, #{decade,jdbcType=VARCHAR}, 
@@ -92,7 +100,9 @@
       #{title,jdbcType=VARCHAR}, #{decorateType,jdbcType=VARCHAR}, #{decorateCase,jdbcType=VARCHAR}, 
       #{decorateTime,jdbcType=VARCHAR}, #{buildType,jdbcType=VARCHAR}, #{houseBelong,jdbcType=VARCHAR}, 
       #{houseUse,jdbcType=VARCHAR}, #{heatingWay,jdbcType=VARCHAR}, #{metro,jdbcType=VARCHAR}, 
-      #{schoolHouse,jdbcType=VARCHAR}, 0,#{operator,jdbcType=VARCHAR}, #{content,jdbcType=LONGVARCHAR},#{objectId,jdbcType=INTEGER},#{objectType,jdbcType=INTEGER}
+      #{schoolHouse,jdbcType=VARCHAR}, 0, #{content,jdbcType=LONGVARCHAR},#{operator,jdbcType=VARCHAR},
+      #{objectId,jdbcType=INTEGER},#{objectType,jdbcType=INTEGER},#{entrustType,jdbcType=LONGVARCHAR},
+       #{houseNo,jdbcType=VARCHAR},#{companyId,jdbcType=INTEGER}
       )
   </insert>
     <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.zcy.ZcyEstates" keyProperty="id"
@@ -197,6 +207,12 @@
             <if test="content != null">
                 content,
             </if>
+            <if test="deck != null">
+                deck,
+            </if>
+            <if test="entrustType != null">
+                entrust_type,
+            </if>
             <if test="operator != null">
                 operator,
             </if>
@@ -205,6 +221,12 @@
             </if>
             <if test="objectType != null">
                 object_type,
+            </if>
+            <if test="houseNo != null">
+                house_no,
+            </if>
+            <if test="companyId != null">
+                company_id,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -309,6 +331,12 @@
             <if test="content != null">
                 #{content,jdbcType=LONGVARCHAR},
             </if>
+            <if test="deck != null">
+                #{deck,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustType != null">
+                #{entrustType,jdbcType=VARCHAR},
+            </if>
             <if test="operator != null">
                 #{operator,jdbcType=LONGVARCHAR},
             </if>
@@ -317,6 +345,12 @@
             </if>
             <if test="objectType != null">
                 #{objectType,jdbcType=INTEGER},
+            </if>
+            <if test="houseNo != null">
+                #{houseNo,jdbcType=VARCHAR},
+            </if>
+            <if test="companyId != null">
+                #{companyId,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
@@ -418,6 +452,12 @@
             <if test="content != null">
                 content = #{content,jdbcType=LONGVARCHAR},
             </if>
+            <if test="deck != null">
+                deck = #{deck,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustType != null">
+                entrust_type = #{entrustType,jdbcType=VARCHAR},
+            </if>
             <if test="operator != null">
                 operator = #{operator,jdbcType=LONGVARCHAR},
             </if>
@@ -514,6 +554,18 @@
         <include refid="Blob_Column_List"/>
         from t_zcy_estates
         where stateflag=0
+        <if test="houseNo != null　and houseNo != ''">
+            AND house_no=#{houseNo,jdbcType=VARCHAR}
+        </if>
+        <if test="companyId != null and companyId != ''">
+            AND company_id=#{companyId,jdbcType=INTEGER}
+        </if>
+        <if test="operator != null　and operator != ''">
+            AND operator=#{operator,jdbcType=VARCHAR}
+        </if>
+        <if test="status != null　and status != ''">
+            AND status=#{status,jdbcType=INTEGER}
+        </if>
     </select>
 
 </mapper>

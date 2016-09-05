@@ -87,10 +87,19 @@ public class AssetDTO {
     private String tags;  //  标签
     private Integer isshow;  // 是否展示外网
     private String memo;  // 备注
+    private Integer repayStatus; // 还款
 
     private Integer operatorId; // 操作人ID
     private UserDTO operator; // 操作人
 
+
+    public Integer getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(Integer repayStatus) {
+        this.repayStatus = repayStatus;
+    }
 
     public String getAssetNo() {
         return assetNo;

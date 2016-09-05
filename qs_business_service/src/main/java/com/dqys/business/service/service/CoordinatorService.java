@@ -41,7 +41,7 @@ public interface CoordinatorService {
      * @param status
      * @return
      */
-    Map isAccept(Integer teammateId, Integer status) throws BusinessLogException;
+    Map isAccept(Integer teammateId, Integer status, Integer userId) throws BusinessLogException;
 
     /**
      * 主动加入案组
@@ -91,4 +91,38 @@ public interface CoordinatorService {
      * @return (进行任务数：ongoing 完成数：finish 总数：total)
      */
     Map<String, Object> getTaskCount(Integer companyId, Integer userId, Integer objectType);
+
+    /**
+     * 获取对像属性
+     *
+     * @param objectId
+     * @param objectType
+     * @return (对象编号 objectNo)
+     */
+    Map<String, Object> getObjectProperty(Integer objectId, Integer objectType);
+
+    /**
+     * 获取消息列表标题（规则：对象类型+对象名称+业务类型）
+     */
+    public String getMessageTitle(Integer objectId, Integer objectType, Integer businessType);
+
+    /**
+     * 删除协作器人员
+     *
+     * @param userId
+     * @param teamUserId
+     * @param userTeamId
+     * @param status
+     * @param substitutionUid
+     * @return
+     */
+    Map deleteTeammatUser(Integer userId, Integer teamUserId, Integer userTeamId, Integer status, Integer substitutionUid) throws Exception;
+
+    /**
+     * 删除该公司下所有的协作器
+     *
+     * @param companyId
+     * @return
+     */
+    String delCoordinator(Integer companyId);
 }

@@ -4,6 +4,7 @@ import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.utils.SysPropertyTool;
+import com.dqys.wms.constant.MqClientEnum;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
@@ -24,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by pan on 16-5-26.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"/spring/spring-core.xml"})
+@ContextConfiguration(locations = {"/spring/spring-core.xml"})
 @Transactional(transactionManager = "transactionManager")
 @Component
 public class MqClient {
@@ -50,7 +51,8 @@ public class MqClient {
     }
 
     /**
-     *像数据库中添加更进未读信息
+     * 像数据库中添加更进未读信息
+     *
      * @param msg [0]对象id,[1]对像类型,[2]清收阶段
      * @throws Exception
      */
@@ -87,7 +89,7 @@ public class MqClient {
 
             emailClient.addTo(to);
             emailClient.setSubject("多清平台帐号验证邮件");
-            emailClient.setMsg(htmlMailBody(msg));
+            emailClient.setMsg(htmlMailBody(msg, to));
             emailClient.send();
         } catch (EmailException e) {
             e.printStackTrace();
@@ -104,14 +106,43 @@ public class MqClient {
                  .append("\" target=\"_blank\">请点击确认</a></p>");
          return stringBuffer.toString();
      }*/
-    private static String htmlMailBody(String msg) {
+    private static String htmlMailBody(String msg, String mail) {
         StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("<p>欢迎加入多清平台</p><p>以下是的验证链接，<a href=\"http://www.iqingsou.com/typeChoose/")
-                .append(msg)
+        stringBuffer.append("<p>欢迎加入多清平台</p><p>以下是的验证链接，<a href=\"")
+                .append(MqClientEnum.EMAIL_URL.getName() + msg)
                 .append("\" target=\"_blank\">请点击确认</a></p>");
-        return stringBuffer.toString();
-    }
 
+        String str = "<p>\n" +
+                "    您好！\n" +
+                "</p>\n" +
+                "<p>\n" +
+                "    <span style=\"color: rgb(51, 51, 51);\">感谢您注册清搜公众平台。</span>\n" +
+                "</p>\n" +
+                "<p>\n" +
+                "    <span style=\"color: rgb(51, 51, 51);\">您的登陆邮箱为：</span><span style=\"color: rgb(0, 162, 202);\">" + mail + "</span><span style=\"color: rgb(51, 51, 51);\">。请点击一下链接激活账号：</span>\n" +
+                "</p>\n" +
+                "<p>\n" +
+                "    <span style=\"color: rgb(51, 51, 51);\"><a href=\"" + MqClientEnum.EMAIL_URL.getName() + msg + "\" target=\"_blank\">请点击确认</a></span>\n" +
+                "</p>\n" +
+                "<p>\n" +
+                "</p>\n" +
+                "<p>\n" +
+                "    如果以上链接无法点击，请将上面的地址复制到您的浏览器（如IE）的地址栏进入清搜公众平台。（该链接4小时内有效，48小时候需要重新注册）\n" +
+                "</p>\n" +
+                "<p>\n" +
+                "</p>\n" +
+                "<p>\n" +
+                "    清搜产品经理\n" +
+                "</p>\n" +
+                "<p>\n" +
+                "    lbw@iqingsou.com\n" +
+                "</p>\n" +
+                "<p>\n" +
+                "    <br/>\n" +
+                "</p>";
+
+        return str;
+    }
 
 
 }

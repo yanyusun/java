@@ -18,6 +18,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ import java.util.List;
  */
 public class LenderServiceUtils {
 
-    public static final String PRE_LENDER_CODE = "JKR"; // 格式:JKR160612XXXX
+    public static final String PRE_LENDER_CODE = "BO"; // 格式:JKR160612XXXX
 
     public static String createLenderNo() {
         return PRE_LENDER_CODE
@@ -75,6 +76,7 @@ public class LenderServiceUtils {
         lenderInfo.setCanPay(lenderDTO.getCanPay());
         lenderInfo.setIsWorth(lenderDTO.getIsWorth());
         lenderInfo.setMemo(lenderDTO.getMemo());
+        lenderInfo.setRepayStatus(lenderDTO.getRepayStatus());
 
         return lenderInfo;
     }
@@ -186,6 +188,7 @@ public class LenderServiceUtils {
         lenderDTO.setCanPay(lenderInfo.getCanPay());
         lenderDTO.setIsWorth(lenderInfo.getIsWorth());
         lenderDTO.setMemo(lenderInfo.getMemo());
+        lenderDTO.setRepayStatus(lenderInfo.getRepayStatus());
 
         return lenderDTO;
     }
@@ -263,14 +266,14 @@ public class LenderServiceUtils {
         if (lenderListQuery.getIsOutTime() != null) {
             lenderQuery.setIsOutTime(true);
         }
-        if (lenderListQuery.getIsOwn().equals(1)) {
-            if (lenderQuery.getOperator() != null && !lenderQuery.getOperator().equals(UserSession.getCurrent().getUserId())) {
+        if ("1".equals(lenderListQuery.getIsOwn())) {
+            if (lenderQuery.getOperator() != null && !UserSession.getCurrent().getUserId().equals(lenderQuery.getOperator())) {
                 lenderQuery.setOperator(0);
             } else {
                 lenderQuery.setOperator(UserSession.getCurrent().getUserId());
             }
         }
-        if (lenderListQuery.getIsAsset().equals(1)) {
+        if ("1".equals(lenderListQuery.getIsAsset())) {
             lenderQuery.setIsAsset(true);
         }
         lenderQuery.setCanContact(lenderListQuery.getCanContact());
@@ -282,12 +285,13 @@ public class LenderServiceUtils {
 
     public static LenderListDTO toLenderListDTO(LenderInfo lenderInfo, ContactInfo contactInfo, List<TeamDTO> teamDTOList) {
         LenderListDTO lenderListDTO = new LenderListDTO();
-
-        lenderListDTO.setAvg(contactInfo.getAvg());
-        lenderListDTO.setName(contactInfo.getName());
-        lenderListDTO.setSex(contactInfo.getGender());
-        lenderListDTO.setAvg(contactInfo.getAvg());
-        lenderListDTO.setPhone(contactInfo.getMobile());
+        if (contactInfo != null) {
+            lenderListDTO.setAvg(contactInfo.getAvg());
+            lenderListDTO.setName(contactInfo.getName());
+            lenderListDTO.setSex(contactInfo.getGender());
+            lenderListDTO.setAvg(contactInfo.getAvg());
+            lenderListDTO.setPhone(contactInfo.getMobile());
+        }
         lenderListDTO.setLenderId(lenderInfo.getId());
         lenderListDTO.setCode(lenderInfo.getLenderNo());
         lenderListDTO.setAccrual(lenderInfo.getAccrual());
@@ -298,6 +302,9 @@ public class LenderServiceUtils {
         lenderListDTO.setEvaluateLevel(lenderInfo.getEvaluateLevel());
         Calendar calendar = Calendar.getInstance();
         lenderListDTO.setSourceType(lenderInfo.getEntrustBornType());// 来源类型
+        if (lenderInfo.getEndAt() == null) {
+            lenderInfo.setEndAt(new Date());
+        }
         if (calendar.getTime().compareTo(lenderInfo.getEndAt()) > 0) {
             // 逾期
             lenderListDTO.setLessDay(0);
@@ -311,7 +318,7 @@ public class LenderServiceUtils {
         lenderListDTO.setCoordinator(teamDTOList);
         if (teamDTOList != null && teamDTOList.size() > 0) {
             teamDTOList.forEach(teamDTO -> {
-                if (teamDTO.getRoleType().equals(TeammateReEnum.TYPE_AUXILIARY.getValue())) {
+                if (TeammateReEnum.TYPE_AUXILIARY.getValue().equals(teamDTO.getRoleType())) {
                     lenderListDTO.setBelongId(teamDTO.getUserId());
                     lenderListDTO.setBelongName(teamDTO.getRealName());
                 }
@@ -319,14 +326,14 @@ public class LenderServiceUtils {
         }
 
         lenderListDTO.setManageTime(lenderInfo.getBelongFollowTimes());// 所属人催收次数
-        if (lenderInfo.getIsCollection().equals(SysProperty.BOOLEAN_TRUE) &&
-                lenderInfo.getIsLawsuit().equals(SysProperty.BOOLEAN_TRUE)) {
+        if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsCollection()) &&
+                SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsLawsuit())) {
             lenderListDTO.setStatus("常规催收司法化解同时进行");// 化解状态
-        } else if (lenderInfo.getIsLawsuit().equals(SysProperty.BOOLEAN_TRUE)) {
+        } else if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsLawsuit())) {
             lenderListDTO.setStatus("司法化解");
-        } else if (lenderInfo.getIsAgent().equals(SysProperty.BOOLEAN_TRUE)) {
+        } else if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsAgent())) {
             lenderListDTO.setStatus("市场处置");
-        } else if (lenderInfo.getIsCollection().equals(SysProperty.BOOLEAN_TRUE)) {
+        } else if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsCollection())) {
             lenderListDTO.setStatus("常规催收");
         } else {
             lenderListDTO.setStatus(null);

@@ -2,6 +2,7 @@ package com.dqys.business.service.service;
 
 import com.dqys.business.orm.pojo.zcy.*;
 import com.dqys.business.orm.query.coordinator.ZcyListQuery;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 
 import java.util.List;
 import java.util.Map;
@@ -58,7 +59,7 @@ public interface ZcyService {
      * @param facilities
      * @return
      */
-    Map addEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> address, List<ZcyEstatesFacility> facilities);
+    Map addEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> address, List<ZcyEstatesFacility> facilities) throws BusinessLogException;
 
     /**
      * 添加业主信息
@@ -71,15 +72,17 @@ public interface ZcyService {
 
     /**
      * 添加维护信息
+     *
      * @param zcyMaintain
      * @param others
      * @param taxes
      * @return
      */
-    Map addMaintain(ZcyMaintain zcyMaintain,List<ZcyMaintainOther> others,List<ZcyMaintainTax> taxes);
+    Map addMaintain(ZcyMaintain zcyMaintain, List<ZcyMaintainOther> others, List<ZcyMaintainTax> taxes);
 
     /**
      * 添加钥匙信息
+     *
      * @param zcyKey
      * @return
      */
@@ -87,13 +90,39 @@ public interface ZcyService {
 
     /**
      * 添加速卖信息
+     *
      * @param zcyExpress
      * @return
      */
     Map addExpress(ZcyExpress zcyExpress);
+
     /**
      * 中介抵押物待接收
      */
-    Map awaitReceive(Integer userId,ZcyListQuery zcyListQuery);
+    Map awaitReceive(Integer userId, ZcyListQuery zcyListQuery);
 
+    /**
+     * 验证资产信息的字段信息
+     */
+    Map verifyEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> zcyEstatesAddressList, List<ZcyEstatesFacility> zcyEstatesFacilities);
+
+    /**
+     * 验证业主信息的字段信息
+     */
+    Map verifyOwner(ZcyOwner zcyOwner, List<ZcyOwnerContacts> zcyOwnerContactses);
+
+    /**
+     * 验证维护信息的字段信息
+     */
+    Map verifyMaintain(ZcyMaintain zcyMaintain, List<ZcyMaintainOther> zcyMaintainOthers, List<ZcyMaintainTax> zcyMaintainTaxes);
+
+    /**
+     * 验证钥匙信息的字段信息
+     */
+    Map verifyKey(ZcyKey zcyKey);
+
+    /**
+     * 验证速卖信息的字段信息
+     */
+    Map verifyExpress(ZcyExpress zcyExpress);
 }

@@ -17,6 +17,7 @@ public class IouInterceptor extends AuthenticationInterceptor {
     public static final String API_UPDATE = "update";
     public static final String API_GET = "get";
     public static final String API_LIST_LENDER_SELECT = "listIou";
+    public static final String API_LIST_ADD = "listAdd";
 
 
     @Override
@@ -27,6 +28,8 @@ public class IouInterceptor extends AuthenticationInterceptor {
             path = url.substring(url.lastIndexOf("/") + 1, url.length());
         }
         if(API_ADD.equals(path)){
+            return true;
+        }else if(API_LIST_ADD.equals(path)){
             return true;
         }else if(API_DELETE.equals(path)){
             return true;

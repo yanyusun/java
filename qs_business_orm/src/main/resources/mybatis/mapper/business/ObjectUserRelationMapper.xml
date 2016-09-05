@@ -64,7 +64,7 @@
     select
     <include refid="Base_Column_List" />
     from object_user_relation
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </select>
 
   <insert id="insert" parameterType="com.dqys.business.orm.pojo.business.ObjectUserRelation"  useGeneratedKeys="true" keyProperty="id">
