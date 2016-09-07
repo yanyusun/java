@@ -150,11 +150,29 @@
     <bean id="cacheRedisTemplate" class="org.springframework.data.redis.core.RedisTemplate"
           p:connectionFactory-ref="cacheJedisConnectionFactory">
     </bean>
-    <bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager"
-          c:redisOperations-ref="cacheRedisTemplate"/>
+    <!--<bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager"
+          c:redisOperations-ref="cacheRedisTemplate"/>-->
+
+
+
+    <!-- 自定义CacheManager，实现缓存有效期可配置 -->
+    <bean name="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
+        <constructor-arg name="redisOperations" ref="cacheRedisTemplate"/>
+        <constructor-arg name="cacheNames">
+            <set>
+                <value>sys_notice_cache</value>
+            </set>
+        </constructor-arg>
+        <!-- 缓存有效期-->
+        <property name="expires">
+            <map>
+                <entry key="sys_notice_cache" value="86400"/>
+            </map>
+        </property>
+    </bean>
+    <rabbit:annotation-driven/>
 
     <!-- rabbitmq -->
-    <rabbit:annotation-driven/>
     <bean id="rabbitConnectionFactory"
           class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory">
         <constructor-arg name="hostname" value="${rabbitmq.host}"/>
