@@ -112,7 +112,7 @@ public class SysNoticeController extends BaseApiContorller {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse add(SysNoticeDTO sysNoticeDTO) {
+    public JsonResponse add(SysNoticeDTO sysNoticeDTO) throws Exception{
         SysNotice sysNotice = SysNoticeUtil.toSysNotice(sysNoticeDTO);
         sysNoticeService.insert(sysNotice);
         return JsonResponseTool.success(sysNotice);
@@ -144,7 +144,7 @@ public class SysNoticeController extends BaseApiContorller {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse update(SysNoticeDTO sysNoticeDTO) {
+    public JsonResponse update(SysNoticeDTO sysNoticeDTO) throws Exception{
         SysNotice sysNotice = SysNoticeUtil.toSysNotice(sysNoticeDTO);
         sysNoticeService.updateByPrimaryKeySelective(sysNotice);
         return JsonResponseTool.success(sysNotice);
