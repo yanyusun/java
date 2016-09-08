@@ -23,6 +23,9 @@ public class DistributionDTO {
     private Integer mechanismNum = 0; // 机构数量
     private Integer disposeNum = 0; // 处置方数量
 
+    private List<CompanyTeamReDTO> companyTeamReDTOList; // 分配器成员
+
+
     public Integer getId() {
         return id;
     }
@@ -30,8 +33,6 @@ public class DistributionDTO {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    private List<CompanyTeamReDTO> companyTeamReDTOList; // 分配器成员
 
     public Integer getPlatformNum() {
         return platformNum;

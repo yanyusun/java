@@ -23,6 +23,33 @@ public class PawnInfo extends BaseModel implements Serializable {
     private Double worth;  // 价值
     private String memo;  // 备注
 
+    private Integer onCollection; // 正在常规催收
+    private Integer onLawyer; // 正在司法化解
+    private Integer onAgent; // 正在市场处置
+
+    public Integer getOnCollection() {
+        return onCollection;
+    }
+
+    public void setOnCollection(Integer onCollection) {
+        this.onCollection = onCollection;
+    }
+
+    public Integer getOnLawyer() {
+        return onLawyer;
+    }
+
+    public void setOnLawyer(Integer onLawyer) {
+        this.onLawyer = onLawyer;
+    }
+
+    public Integer getOnAgent() {
+        return onAgent;
+    }
+
+    public void setOnAgent(Integer onAgent) {
+        this.onAgent = onAgent;
+    }
 
     public String getName() {
         return name;

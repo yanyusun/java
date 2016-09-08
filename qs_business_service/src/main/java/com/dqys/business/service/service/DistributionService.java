@@ -18,6 +18,13 @@ public interface DistributionService {
      */
     DistributionDTO getDistribution_tx(Integer type, Integer id) throws BusinessLogException;
 
+    /**
+     * 创建分配器
+     * @param type
+     * @param id
+     * @return
+     * @throws BusinessLogException
+     */
     Integer addDistribution(Integer type, Integer id) throws BusinessLogException;
 
     /**
@@ -50,4 +57,7 @@ public interface DistributionService {
      * @return
      */
     Integer exitDistribution_tx(Integer id) throws BusinessLogException;
+
+
+
 }

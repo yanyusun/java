@@ -6,11 +6,21 @@ package com.dqys.business.orm.pojo.common;
  */
 public class Announcement {
 
+    private Integer id;
+
     private String ids; // 被授权人ID
     private String content; // 正文(富文本)
     private String cover; // 封面图片
     private Integer isCover; // 封面图片显示在正文中
     private String mark; // 摘要
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getIds() {
         return ids;

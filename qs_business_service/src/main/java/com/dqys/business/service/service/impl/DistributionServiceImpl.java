@@ -3,7 +3,6 @@ package com.dqys.business.service.service.impl;
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.CompanyDetailInfo;
-import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.constant.business.BusinessRelationEnum;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
@@ -15,6 +14,7 @@ import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.business.BusinessMapper;
 import com.dqys.business.orm.mapper.business.BusinessObjReMapper;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
+import com.dqys.business.orm.mapper.company.CompanyRelationMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.mapper.message.MessageMapper;
@@ -23,6 +23,7 @@ import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.business.Business;
 import com.dqys.business.orm.pojo.business.BusinessObjRe;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
+import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
 import com.dqys.business.orm.pojo.message.Message;
@@ -46,7 +47,6 @@ import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.TSysProperty;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
-import com.dqys.core.utils.NoSQLWithRedisTool;
 import com.dqys.core.utils.SmsUtil;
 import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,6 +85,8 @@ public class DistributionServiceImpl implements DistributionService {
     private BusinessMapper businessMapper;
     @Autowired
     private BusinessObjReMapper businessObjReMapper;
+    @Autowired
+    private CompanyRelationMapper companyRelationMapper;
 
     @Autowired
     private BusinessLogService businessLogService;
@@ -144,11 +146,11 @@ public class DistributionServiceImpl implements DistributionService {
         }
         // 判断该对象是否审核
         BusinessObjRe businessObjRe = businessObjReMapper.getByObject(type, id);
-        if(businessObjRe == null){
+        if (businessObjRe == null) {
             return null;
         }
         Business business = businessMapper.get(businessObjRe.getBusinessId());
-        if(!business.getStatus().equals(BusinessStatusEnum.platform_pass)){
+        if (!business.getStatus().equals(BusinessStatusEnum.platform_pass)) {
             return null; // 当前对象还未审核通过
         }
         // 查询分配器
@@ -179,7 +181,6 @@ public class DistributionServiceImpl implements DistributionService {
                 return null;
             }
             Integer teamId = companyTeam.getId();
-            companyTeam = companyTeamMapper.get(teamId);
             // 添加操作记录
             businessLogService.add(teamId, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.add.getValue(),
                     "", "", 0, 0);
@@ -207,7 +208,7 @@ public class DistributionServiceImpl implements DistributionService {
 
     @Override
     public Integer joinDistribution(Integer id) throws BusinessLogException {
-        if(id != null){
+        if (id != null) {
             TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
             if (userInfo == null || userInfo.getCompanyId() == null) {
                 return null; // 用户不存在
@@ -224,7 +225,7 @@ public class DistributionServiceImpl implements DistributionService {
             CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
             companyTeamReQuery.setTeamId(id);
             List<CompanyTeamRe> countList = companyTeamReMapper.queryList(companyTeamReQuery);
-            if(countList != null && countList.size() > 5){
+            if (countList != null && countList.size() > 5) {
                 // 获取不到数据或已经超过5个参与
                 return null;
             }
@@ -241,6 +242,8 @@ public class DistributionServiceImpl implements DistributionService {
             companyTeamRe.setStatus(ObjectAcceptTypeEnum.init.getValue());
             companyTeamRe.setType(ObjectBusinessTypeEnum.join.getValue());
             companyTeamRe.setAccepterId(userInfo.getId());
+            companyTeamRe.setRoleType(companyDetailInfo.getType());
+            companyTeamRe.setRequesterId(companyDetailInfo.getCompanyId());
             Integer result = companyTeamReMapper.insert(companyTeamRe);
             if (CommonUtil.checkResult(result)) {
                 return null;
@@ -265,21 +268,21 @@ public class DistributionServiceImpl implements DistributionService {
                 smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_CODE, creator.getMobile(), msg);
                 // 添加消息
                 String code = ""; // 对象编号
-                if(ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())){
+                if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
                     AssetInfo assetInfo = assetInfoMapper.get(companyTeam.getObjectId());
-                    if(assetInfo != null){
+                    if (assetInfo != null) {
                         code = assetInfo.getAssetNo();
                     }
-                }else if(ObjectTypeEnum.LENDER.getValue().equals(companyTeam.getObjectType())){
+                } else if (ObjectTypeEnum.LENDER.getValue().equals(companyTeam.getObjectType())) {
                     LenderInfo lenderInfo = lenderInfoMapper.get(companyTeam.getObjectId());
-                    if(lenderInfo != null){
+                    if (lenderInfo != null) {
                         code = lenderInfo.getLenderNo();
                     }
                 }
                 Message message = new Message();
                 message.setTitle(MessageEnum.TASK.getName() + " > "
-                        + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
-                        + code
+                                + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
+                                + code
                 ); // 业务类型 对象类型 对象编号
                 message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_JOIN_CODE, msg));
                 message.setSenderId(userInfo.getId());
@@ -299,10 +302,10 @@ public class DistributionServiceImpl implements DistributionService {
 
     @Override
     public Integer inviteDistribution(Integer id, Integer companyId) throws BusinessLogException {
-        if(CommonUtil.checkParam(id, companyId)){
+        if (CommonUtil.checkParam(id, companyId)) {
             return null;
         }
-        if(!CommonUtil.isManage()){
+        if (!CommonUtil.isManage()) {
             return null; // 不是平台管理员
         }
         CompanyTeam companyTeam = companyTeamMapper.get(id);
@@ -318,15 +321,15 @@ public class DistributionServiceImpl implements DistributionService {
             return null; // 公司不存在
         }
         Integer type = ObjectBusinessTypeEnum.platform.getValue(); // 默认平台
-        if(!companyDetailInfo.getCompanyType().equals(
-                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM).getPropertyValue())){
+        if (!companyDetailInfo.getCompanyType().equals(
+                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM).getPropertyValue())) {
             type = ObjectBusinessTypeEnum.mechanism.getValue(); // 机构分配
         }
 
         CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
         companyTeamReQuery.setTeamId(id);
         List<CompanyTeamRe> countList = companyTeamReMapper.queryList(companyTeamReQuery);
-        if(countList != null && countList.size() > 5){
+        if (countList != null && countList.size() > 5) {
             // 获取不到数据或已经超过5个参与
             return null;
         }
@@ -339,7 +342,7 @@ public class DistributionServiceImpl implements DistributionService {
         }
 
         CompanyDetailInfo companyDetailInfo1 = companyInfoMapper.getDetailByCompanyId(companyId); // 被邀请公司信息
-        if(companyDetailInfo1 == null){
+        if (companyDetailInfo1 == null) {
             return null; // 找不到目标公司
         }
 
@@ -349,6 +352,8 @@ public class DistributionServiceImpl implements DistributionService {
         companyTeamRe.setStatus(ObjectAcceptTypeEnum.init.getValue());
         companyTeamRe.setType(type);
         companyTeamRe.setAccepterId(companyDetailInfo1.getUserId());
+        companyTeamRe.setRoleType(companyDetailInfo.getType());
+        companyTeamRe.setRequesterId(companyDetailInfo.getCompanyId());
         Integer result = companyTeamReMapper.insert(companyTeamRe);
         if (CommonUtil.checkResult(result)) {
             return null;
@@ -372,14 +377,14 @@ public class DistributionServiceImpl implements DistributionService {
             smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_INVITE_CODE, companyDetailInfo1.getPhone(), msg);
             // 添加消息
             String code = ""; // 对象编号
-            if(ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())){
+            if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
                 AssetInfo assetInfo = assetInfoMapper.get(companyTeam.getObjectId());
-                if(assetInfo != null){
+                if (assetInfo != null) {
                     code = assetInfo.getAssetNo();
                 }
-            }else if(ObjectTypeEnum.LENDER.getValue().equals(companyTeam.getObjectType())){
+            } else if (ObjectTypeEnum.LENDER.getValue().equals(companyTeam.getObjectType())) {
                 LenderInfo lenderInfo = lenderInfoMapper.get(companyTeam.getObjectId());
-                if(lenderInfo != null){
+                if (lenderInfo != null) {
                     code = lenderInfo.getLenderNo();
                 }
             }
@@ -431,18 +436,18 @@ public class DistributionServiceImpl implements DistributionService {
             // 提醒消息
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId()); // 分配器信息
             String code = ""; // 对象编号
-            if(ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())){
+            if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
                 AssetInfo assetInfo = assetInfoMapper.get(companyTeam.getObjectId());
-                if(assetInfo != null){
+                if (assetInfo != null) {
                     code = assetInfo.getAssetNo();
                 }
-            }else if(ObjectTypeEnum.LENDER.getValue().equals(companyTeam.getObjectType())){
+            } else if (ObjectTypeEnum.LENDER.getValue().equals(companyTeam.getObjectType())) {
                 LenderInfo lenderInfo = lenderInfoMapper.get(companyTeam.getObjectId());
-                if(lenderInfo != null){
+                if (lenderInfo != null) {
                     code = lenderInfo.getLenderNo();
                 }
             }
-            if(ObjectBusinessTypeEnum.join.getValue().equals(companyTeamRe.getType())){
+            if (ObjectBusinessTypeEnum.join.getValue().equals(companyTeamRe.getType())) {
                 // 发送短信提醒
                 TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeamRe.getAccepterId()); // 申请人信息
                 SmsUtil smsUtil = new SmsUtil();
@@ -453,10 +458,10 @@ public class DistributionServiceImpl implements DistributionService {
                         companyTeam.getObjectId().toString()
                 };
                 Message message = new Message();
-                if(status.equals(ObjectAcceptTypeEnum.accept.getValue())){
+                if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
                     smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_PASS_CODE, creator.getMobile(), msg);
                     message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_JOIN_PASS_CODE, msg));
-                }else{
+                } else {
                     smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_REFUSE_CODE, creator.getMobile(), msg);
                     message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_JOIN_REFUSE_CODE, msg));
                 }
@@ -473,8 +478,8 @@ public class DistributionServiceImpl implements DistributionService {
                 message.setBusinessType(MessageBTEnum.COMPANY_JOIN.getValue());
                 message.setOperUrl(null);
                 messageMapper.add(message);
-            }else if(ObjectBusinessTypeEnum.mechanism.getValue().equals(companyTeamRe.getType())
-                    || ObjectBusinessTypeEnum.platform.getValue().equals(companyTeamRe.getType())){
+            } else if (ObjectBusinessTypeEnum.mechanism.getValue().equals(companyTeamRe.getType())
+                    || ObjectBusinessTypeEnum.platform.getValue().equals(companyTeamRe.getType())) {
                 // 发送短信提醒
                 TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeam.getSenderId()); // 创建人信息
                 CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(userInfo.getCompanyId()); // 被邀请公司信息
@@ -490,10 +495,10 @@ public class DistributionServiceImpl implements DistributionService {
                         companyTeam.getObjectId().toString()
                 };
                 Message message = new Message();
-                if(status.equals(ObjectAcceptTypeEnum.accept.getValue())){
+                if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
                     smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_PASS_CODE, creator.getMobile(), msg);
                     message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_PASS_CODE, msg));
-                }else{
+                } else {
                     smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_REFUSE_CODE, creator.getMobile(), msg);
                     message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_REFUSE_CODE, msg));
                 }
@@ -519,7 +524,14 @@ public class DistributionServiceImpl implements DistributionService {
             // 判断是否为接收邀请,是则添加对象关系和实体类的标识
             if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
                 if (companyTeam != null) {
+                    // 添加公司之间的关系
+                    TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeam.getSenderId());
                     CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(companyTeamRe.getAcceptCompanyId());
+                    CompanyRelation companyRelation = new CompanyRelation();
+                    companyRelation.setCompanyAId(creator.getCompanyId());
+                    companyRelation.setCompanyBId(companyTeamRe.getAcceptCompanyId());
+                    companyRelationMapper.insert(companyRelation);
+
                     if (companyTeam.getObjectType().equals(ObjectTypeEnum.LENDER.getValue())) {
                         // 借款人类型
                         if (companyDetailInfo != null) {
@@ -595,7 +607,7 @@ public class DistributionServiceImpl implements DistributionService {
         if (id == null) {
             return null;
         }
-        if(!CommonUtil.isManage()){
+        if (!CommonUtil.isManage()) {
             return null;
         }
         // 存在该分配数据
@@ -629,14 +641,14 @@ public class DistributionServiceImpl implements DistributionService {
             message.setContent(smsUtil.getSendContent(SysProperty.SMS_OUT_CODE, msg));
             // 添加消息
             String code = ""; // 对象编号
-            if(ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())){
+            if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
                 AssetInfo assetInfo = assetInfoMapper.get(companyTeam.getObjectId());
-                if(assetInfo != null){
+                if (assetInfo != null) {
                     code = assetInfo.getAssetNo();
                 }
-            }else if(ObjectTypeEnum.LENDER.getValue().equals(companyTeam.getObjectType())){
+            } else if (ObjectTypeEnum.LENDER.getValue().equals(companyTeam.getObjectType())) {
                 LenderInfo lenderInfo = lenderInfoMapper.get(companyTeam.getObjectId());
-                if(lenderInfo != null){
+                if (lenderInfo != null) {
                     code = lenderInfo.getLenderNo();
                 }
             }
@@ -665,6 +677,8 @@ public class DistributionServiceImpl implements DistributionService {
                 relationList.forEach(objectUserRelation -> {
                     objectUserRelationMapper.deleteByPrimaryKey(objectUserRelation.getId());
                 });
+                // todo 这里资产包情况需要修复一下
+
 
                 Integer lawType = Integer.valueOf(
                         SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
@@ -732,6 +746,7 @@ public class DistributionServiceImpl implements DistributionService {
         objectUserRelation.setObjectId(companyTeam.getObjectId());
         objectUserRelation.setUserId(userId); // 只有管理员才可以接收
         objectUserRelation.setType(BusinessRelationEnum.company.getValue());
+        objectUserRelation.setVisibleType(SysProperty.BOOLEAN_TRUE); // 可见
         Integer result = objectUserRelationMapper.insert(objectUserRelation);
         if (result == null) {
             // 添加事物关系失败

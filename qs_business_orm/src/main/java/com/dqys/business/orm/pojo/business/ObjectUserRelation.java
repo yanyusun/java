@@ -23,6 +23,16 @@ public class ObjectUserRelation {
     private Date createAt; // 创建时间
     private Date updateAt; // 修改时间
 
+    private Integer visibleType; // 可见类型
+
+    public Integer getVisibleType() {
+        return visibleType;
+    }
+
+    public void setVisibleType(Integer visibleType) {
+        this.visibleType = visibleType;
+    }
+
     public Integer getId() {
         return id;
     }

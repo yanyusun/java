@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * <p/>
  * 公司&组织架构管理
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/company")
 public class CompanyController {
 
@@ -38,7 +38,6 @@ public class CompanyController {
      * @apiUse companyDTO
      */
     @RequestMapping(value = "/listCompany")
-    @ResponseBody
     public JsonResponse listCompany(@RequestParam(required = false) Integer type){
         return CommonUtil.responseBack(companyService.listByType(type));
     }
@@ -54,7 +53,6 @@ public class CompanyController {
      * @apiUse OrganizationDTO
      */
     @RequestMapping(value = "/listOrganization")
-    @ResponseBody
     public JsonResponse listTeam(@RequestParam(required = true) Integer companyId,
                                  @RequestParam(required = true) String type) {
         if (CommonUtil.checkParam(companyId)) {
@@ -75,7 +73,6 @@ public class CompanyController {
      * @apiSuccess {number} data 新增的ID
      */
     @RequestMapping(value = "/addOrganization", method = RequestMethod.POST)
-    @ResponseBody
     public JsonResponse addOrganization(@ModelAttribute OrganizationInsertDTO organizationInsertDTO) {
         if (CommonUtil.checkParam(organizationInsertDTO, organizationInsertDTO.getType(), organizationInsertDTO.getName(),
                 organizationInsertDTO.getCompanyId())) {
@@ -95,7 +92,6 @@ public class CompanyController {
      * @apiSuccess {number} data 修改后的ID
      */
     @RequestMapping(value = "/updateOrganization", method = RequestMethod.POST)
-    @ResponseBody
     public JsonResponse updateOrganization(@ModelAttribute OrganizationInsertDTO organizationInsertDTO) {
         if (CommonUtil.checkParam(organizationInsertDTO, organizationInsertDTO.getType(), organizationInsertDTO.getName(),
                 organizationInsertDTO.getCompanyId())) {
@@ -114,7 +110,6 @@ public class CompanyController {
      * @apiParam {number} id 组织ID
      */
     @RequestMapping(value = "/deleteOrganization")
-    @ResponseBody
     public JsonResponse addOrganization(@RequestParam(required = true) Integer id) {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -132,7 +127,6 @@ public class CompanyController {
      * @apiUse OrganizationDTO
      */
     @RequestMapping(value = "/getOrganization")
-    @ResponseBody
     public JsonResponse getOrganization(@RequestParam(required = true) String type,
                                         @RequestParam(required = true) Integer id) {
         if (CommonUtil.checkParam(type, id)) {
@@ -152,7 +146,6 @@ public class CompanyController {
      * @apiParam {number} id 分配对象ID
      */
     @RequestMapping(value = "/getDistribution")
-    @ResponseBody
     public JsonResponse getDistribution(@RequestParam(required = true) Integer type,
                                         @RequestParam(required = true) Integer id) throws BusinessLogException{
         if (CommonUtil.checkParam(type, id)) {
@@ -173,7 +166,6 @@ public class CompanyController {
      * @apiSuccess {number} id
      */
     @RequestMapping(value = "/joinDistribution")
-    @ResponseBody
     public JsonResponse joinDistribution(@RequestParam(required = true) Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.success("参数错误");
@@ -190,7 +182,6 @@ public class CompanyController {
      * @apiSuccess {number} id
      */
     @RequestMapping(value = "/inviteDistribution")
-    @ResponseBody
     public JsonResponse inviteDistribution(@RequestParam(required = true) Integer id,
                                            @RequestParam(required = true) Integer companyId) throws BusinessLogException{
         if (CommonUtil.checkParam(companyId, id)) {
@@ -205,34 +196,31 @@ public class CompanyController {
      * @apiName designDistribution
      * @apiGroup distribution
      * @apiParam {number} id 被邀请ID
-     * @apiParam {number} type 操作类型(接收1|拒绝0)
+     * @apiParam {number} status 操作类型(接收1|拒绝0)
      * @apiSuccess {number} id
      */
     @RequestMapping(value = "/designDistribution")
-    @ResponseBody
     public JsonResponse designDistribution(@RequestParam(required = true) Integer id,
-                                           @RequestParam(required = true) Integer type) throws BusinessLogException {
-        if (CommonUtil.checkParam(id, type)) {
+                                           @RequestParam(required = true) Integer status) throws BusinessLogException {
+        if (CommonUtil.checkParam(id, status)) {
             return JsonResponseTool.success("参数错误");
         }
-        if(!type.equals(ObjectAcceptTypeEnum.accept.getValue())){
+        if(!status.equals(ObjectAcceptTypeEnum.accept.getValue())){
             // 如果不是接受状态,全部设置为拒绝
-            type = ObjectAcceptTypeEnum.refuse.getValue();
+            status = ObjectAcceptTypeEnum.refuse.getValue();
         }
-        return CommonUtil.responseBack(distributionService.updateDistribution_tx(id, type));
+        return CommonUtil.responseBack(distributionService.updateDistribution_tx(id, status));
     }
 
 
     /**
-     * @return
      * @api {get} http://{url}/api/company/exitDistribution 退出分配器
      * @apiName exitDistribution
      * @apiGroup distribution 分配器
-     * @apiParam type
-     * @apiParam id
+     * @apiParam {number} type 类型
+     * @apiParam {number} data
      */
     @RequestMapping(value = "/exitDistribution")
-    @ResponseBody
     public JsonResponse exitDistribution(@RequestParam(required = true) Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.success("参数错误");
@@ -241,17 +229,15 @@ public class CompanyController {
     }
 
     /**
-     * @return
      * @api {get} http://{url}/api/company/getRelation 获取公司间合作关系
      * @apiName getRelation
      * @apiGroup companyRelation
-     * @apiParam type
-     * @apiParam id
+     * @apiParam {number} type
+     * @apiParam {number} id
      * @apiUse DistributionDTO
      * @apiUse CompanyTeamReDTO
      */
     @RequestMapping(value = "/getRelation")
-    @ResponseBody
     public JsonResponse getRelation(@RequestParam(required = true) Integer id) {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.success("参数错误");
@@ -259,5 +245,33 @@ public class CompanyController {
         return JsonResponseTool.success(companyService.getListRelation(id));
     }
 
+    /**
+     * @api {get} http://{url}/api/company/listByService 根据业务类型获取公司
+     * @apiName listByService
+     * @apiGroup companyRelation
+     * @apiParam {number} type 业务流转类型(催收1,处置2,司法3,催收处置4,催收司法5,全6)
+     */
+    @RequestMapping(value = "/listByService")
+    public JsonResponse listCompanyByServiceType(Integer type){
+        if(type == null || type < 1){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return JsonResponseTool.success(companyService.listCompanyByServiceType(type));
+    }
+
+    /**
+     * @api {get} http://{url}/api/company/listRelationByService 根据业务类型获取公司联系关系
+     * @apiName listRelationByService
+     * @apiGroup companyRelation
+     * @apiParam type 业务流转类型(催收1,处置2,司法3,催收处置4,催收司法5,全6)
+     * @apiParam id 公司ID
+     */
+    @RequestMapping(value = "/listRelationByService")
+    public JsonResponse listRelationByServiceType(@RequestParam("type")Integer type, @RequestParam(required = false)Integer id){
+        if(type == null || type < 1){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return JsonResponseTool.success(companyService.listRelationByServiceType(type, id));
+    }
 
 }

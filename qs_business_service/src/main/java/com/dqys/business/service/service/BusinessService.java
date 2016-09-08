@@ -5,7 +5,7 @@ import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 
 /**
  * Created by Yvan on 16/7/15.
- * 企业级应用服务层
+ * 企业级应用服务层&业务流转
  */
 public interface BusinessService {
 
@@ -32,5 +32,14 @@ public interface BusinessService {
      * @return
      */
     Integer updateObjectUser_tx(ObjectUserRelation objectUserRelation);
+
+    /**
+     * 添加公司接受业务流转数据
+     * @param type 对象类型
+     * @param id 对象ID
+     * @param distributionId 分配器ID
+     * @param businessType 业务类型
+     */
+    Integer addBusinessService(Integer type, Integer id, Integer distributionId, Integer businessType);
 
 }
