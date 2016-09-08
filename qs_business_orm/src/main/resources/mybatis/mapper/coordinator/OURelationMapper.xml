@@ -10,9 +10,10 @@
         <result column="type" property="type" jdbcType="INTEGER"/>
         <result column="employer_id" property="employerId" jdbcType="INTEGER"/>
         <result column="business_id" property="businessId" jdbcType="INTEGER"/>
+        <result column="visible_type" property="visibleType" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, object_type, object_id, user_id, status, type, employer_id, business_id
+    id, object_type, object_id, user_id, status, type, employer_id, business_id,visible_type
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -82,6 +83,9 @@
             <if test="businessId != null">
                 business_id,
             </if>
+            <if test="visibleType != null">
+                visible_type,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -108,6 +112,9 @@
             <if test="businessId != null">
                 #{businessId,jdbcType=INTEGER},
             </if>
+            <if test="visibleType != null">
+                #{visibleType,jdbcType=INTEGER},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.coordinator.OURelation">
@@ -133,6 +140,9 @@
             </if>
             <if test="businessId != null">
                 business_id = #{businessId,jdbcType=INTEGER},
+            </if>
+            <if test="visibleType != null">
+                visible_type = #{visibleType,jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -173,5 +183,11 @@
             #{id}
         </foreach>
     </delete>
+    <!--查询公司业务流转关系-->
+    <select id="findByOURelation" resultMap="BaseResultMap">
+        SELECT our.* from  object_user_relation our
+        where our.visible_type=1 and our.type=3 and our.user_id=#{userId,jdbcType=INTEGER}
+        AND our.employer_id IN (SELECT ct.id from t_company_team ct where ct.object_type=#{objectType,jdbcType=INTEGER})
+    </select>
 
 </mapper>

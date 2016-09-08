@@ -12,6 +12,7 @@ import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
+import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.mapper.cases.CaseInfoMapper;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.coordinator.OURelationMapper;
@@ -23,12 +24,14 @@ import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
+import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.cases.CaseInfo;
 import com.dqys.business.orm.pojo.coordinator.OURelation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.orm.pojo.zcy.ZcyEstates;
+import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
@@ -80,6 +83,9 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     @Autowired
     private RepayMapper repayMapper;
 
+    @Autowired
+    private ObjectUserRelationMapper objectUserRelationMapper;
+
 
     @Override
     public void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType, Integer userid) {
@@ -111,6 +117,18 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             Integer mangerId = MessageUtils.transMapToInt(adminUser, "id");
             userTeam.setMangerId(mangerId == null ? userid : mangerId);
             userTeam.setCtreaterId(userid);
+            //查询操作人员被操作事物关系
+            ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
+            objectUserRelationQuery.setUserId(userid);
+            objectUserRelationQuery.setObjectType(objectType);
+            objectUserRelationQuery.setType(3);//业务流转类型
+            List<ObjectUserRelation> list = objectUserRelationMapper.list(objectUserRelationQuery);
+            for (ObjectUserRelation obj : list) {
+                if (obj.getVisibleType() != null && obj.getVisibleType() == 1) {
+                    userTeam.setObjectOperStatus(1);//设置对象可操作状态
+                    break;
+                }
+            }
             userTeamMapper.insertSelective(userTeam);//添加公司内成员协作器
             map.put("userTeamId", userTeam.getId());
             map.put("result", "yes_add");
@@ -282,6 +300,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         our.setObjectId(ouRelation.getObjectId());
         our.setObjectType(ouRelation.getObjectType());
         our.setUserId(ouRelation.getUserId());
+        our.setType(ouRelation.getType());
         List<OURelation> list = ouRelationMapper.selectBySelective(our);
         if (list.size() == 0) {
             Map map = coordinatorMapper.selectByBusinessId(ouRelation.getObjectType(), ouRelation.getObjectId());
@@ -301,10 +320,11 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("result", "no_exist");
             return map;
         }
+        UserTeam userT = null;
         if (teammateRe.getUserId() != userId) {
             UserTeam userTeam = new UserTeam();
             userTeam.setId(teammateRe.getUserTeamId());
-            UserTeam userT = userTeamMapper.selectByPrimaryKeySelective(userTeam);
+            userT = userTeamMapper.selectByPrimaryKeySelective(userTeam);
             if (userT == null) {
                 map.put("result", "no_exist");//不存在
                 return map;
@@ -319,10 +339,18 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         if (status == 1 && result > 0) {
             Map userTeammate = coordinatorMapper.selectByUserTeamAndMateRe(teammateId);//查询团队中的协作器信息
             OURelation ouRelation = new OURelation();
-            ouRelation.setStatus(OURelationEnum.STATUS_ACCEPT.getValue());
+            String object_oper_status = MessageUtils.transMapToString(userTeammate, "object_oper_status");
+            if ("1".equals(object_oper_status)) {
+                List<OURelation> list = ouRelationMapper.findByOURelation(userT.getMangerId(), userT.getObjectType());
+                if (list.size() > 0) {
+                    ouRelation = list.get(0);
+                }
+            } else {
+                ouRelation.setStatus(OURelationEnum.STATUS_ACCEPT.getValue());
+                ouRelation.setObjectType(MessageUtils.transMapToInt(userTeammate, "object_type"));
+                ouRelation.setObjectId(MessageUtils.transMapToInt(userTeammate, "object_id"));
+            }
             ouRelation.setType(OURelationEnum.TYPE_ALLOCATION_TEAM.getValue());
-            ouRelation.setObjectType(MessageUtils.transMapToInt(userTeammate, "object_type"));
-            ouRelation.setObjectId(MessageUtils.transMapToInt(userTeammate, "object_id"));
             ouRelation.setUserId(MessageUtils.transMapToInt(userTeammate, "user_id"));
             ouRelation.setEmployerId(MessageUtils.transMapToInt(userTeammate, "user_team_id"));
             if (checkExist(ouRelation)) {

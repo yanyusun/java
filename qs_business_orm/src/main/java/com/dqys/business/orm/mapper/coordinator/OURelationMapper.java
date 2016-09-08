@@ -46,4 +46,7 @@ public interface OURelationMapper {
      * @return
      */
     Integer deleteByUserTeamId(@Param("userTeamIds") List<Integer> userTeamIds);
+
+    //    查询公司业务流转关系-
+    List<OURelation> findByOURelation(@Param("userId") Integer userId, @Param("objectType") Integer objectType);
 }

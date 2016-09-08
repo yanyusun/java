@@ -155,9 +155,9 @@
     </select>
 
     <select id="selectByUserTeamAndMateRe" resultType="java.util.Map">
-        SELECT tut.object_id,tut.object_type,ttr.user_id,ttr.user_team_id from t_user_team tut LEFT JOIN t_teammate_re ttr
+        SELECT tut.object_id,tut.object_type,ttr.user_id,ttr.user_team_id,tut.object_oper_status from t_user_team tut LEFT JOIN t_teammate_re ttr
         ON ttr.user_team_id=tut.id
-        where ttr.status=1 and ttr.id=#{teammateId,jdbcType=INTEGER} LIMIT 0,1
+        where tut.stateflag=0 and ttr.status=1 and ttr.id=#{teammateId,jdbcType=INTEGER} LIMIT 0,1
     </select>
     <!--最后留言时间-->
     <select id="getLastLeaveWord" resultType="java.util.Map">
@@ -401,5 +401,7 @@
         SELECT zef.type,zef.name,zef.code from t_zcy_estates_facility zef
           where zef.estates_id=#{estatesId} and (zef.type=0 or zef.type=1)
     </select>
+
+
 
 </mapper>

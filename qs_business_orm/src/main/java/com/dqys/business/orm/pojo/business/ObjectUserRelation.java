@@ -20,8 +20,20 @@ public class ObjectUserRelation {
     private Integer businessId; // 业务ID
 
     private Integer stateflag; // 数据状态
+
     private Date createAt; // 创建时间
+
     private Date updateAt; // 修改时间
+
+    private Integer visibleType;//可见类型:0该对象可见该对象关联的对象也可见1该对象可见
+
+    public Integer getVisibleType() {
+        return visibleType;
+    }
+
+    public void setVisibleType(Integer visibleType) {
+        this.visibleType = visibleType;
+    }
 
     public Integer getId() {
         return id;
