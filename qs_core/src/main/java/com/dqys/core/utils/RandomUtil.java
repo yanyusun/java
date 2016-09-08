@@ -78,11 +78,11 @@ public class RandomUtil {
     }
 
     public static void main(String[] args) {
-//        System.out.println(createRandomNum("1609"));
-        MybatisRedisCache mybatisRedisCache = new MybatisRedisCache();
-        List<String> list = (List<String>) mybatisRedisCache.getObject(ASSET_CODE + "1608");
-        System.out.println(list);
-        System.out.println(getCode(ASSET_CODE));
+     //   System.out.println(createRandomNum("1609"));
+//        MybatisRedisCache mybatisRedisCache = new MybatisRedisCache();
+//        List<String> list = (List<String>) mybatisRedisCache.getObject(ASSET_CODE + "1608");
+//        System.out.println(list);
+//        System.out.println(getCode(ASSET_CODE));
 
     }
 
