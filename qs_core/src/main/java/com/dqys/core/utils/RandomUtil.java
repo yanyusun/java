@@ -78,7 +78,7 @@ public class RandomUtil {
     }
 
     public static void main(String[] args) {
-//        System.out.println(createRandomNum("1608"));
+//        System.out.println(createRandomNum("1609"));
         MybatisRedisCache mybatisRedisCache = new MybatisRedisCache();
         List<String> list = (List<String>) mybatisRedisCache.getObject(ASSET_CODE + "1608");
         System.out.println(list);
