@@ -74,4 +74,32 @@ public interface MessageService {
      * @param remark   备注
      */
     void sendSmsByTeammate(UserTeam userTeam, Map<String, Object> map, Integer uid, String remark);
+
+    /**
+     * 业务流转请求短信通知
+     *
+     * @param objectId   对象id
+     * @param objectType 对象类型
+     * @param flowId     流转对象id
+     * @param flowType   流转对象类型
+     * @param operation  流转操作
+     * @param userId     操作人id
+     * @return
+     */
+    String businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer userId, String operUrl);
+
+    /**
+     * 流转结果
+     *
+     * @param objectId
+     * @param objectType
+     * @param flowId
+     * @param flowType
+     * @param operation
+     * @param sendUserId
+     * @param receiveUserId
+     * @param status
+     * @return
+     */
+    String businessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer sendUserId, Integer receiveUserId, Integer status);
 }
