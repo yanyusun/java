@@ -27,21 +27,89 @@ public class SysNoticeController extends BaseApiContorller {
     @Autowired
     private SysNoticeService sysNoticeService;
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    /**
+     * @api {GET} http://{url}/sys_notice/c_pageList 分页查询系统消息
+     * @apiName c_pageList
+     * @apiGroup sys_notice
+     * @apiUse SysNoticeQuery
+     * @apiSuccessExample {json} Data-Response:
+        {
+        "code": 2000,
+        "msg": "成功",
+        "data": {
+        "total": 2,
+        "data": [
+        {
+        "id": 3,
+        "version": null,
+        "stateflag": null,
+        "createAt": null,
+        "updateAt": null,
+        "remark": null,
+        "title": "111",
+        "content": "1111",
+        "type": 0,
+        "picname": "3333",
+        "userId": 1
+        },
+        {
+        "id": 4,
+        "version": null,
+        "stateflag": null,
+        "createAt": null,
+        "updateAt": null,
+        "remark": null,
+        "title": "111222",
+        "content": "111122",
+        "type": 0,
+        "picname": "333322",
+        "userId": 1
+        }
+        ]
+        }
+        }
+
+     */
+
+    @RequestMapping(value = "/c_pageList", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse list(SysNoticeQuery sysNoticeQuery) {
-        List<SysNotice> list=sysNoticeService.list(sysNoticeQuery);
-        if(sysNoticeQuery.getIsPaging()){
-            Map<String,Object> map = new HashMap<>();
-            map.put("data",list);
+        if (sysNoticeQuery.getIsPaging()) {
+            Map<String, Object> map = new HashMap<>();
+            List<SysNotice> list = sysNoticeService.list(sysNoticeQuery);
+            map.put("data", list);
             int total = sysNoticeService.queryCount(sysNoticeQuery);
-            map.put("total",total);
+            map.put("total", total);
             return JsonResponseTool.success(map);
-        }else{
-            return JsonResponseTool.success(list);
+        } else {
+            return JsonResponseTool.paramErr("参数错误");
         }
     }
 
+    /**
+     * @api {GET} http://{url}/sys_notice/add 查询更进信息,并去除对应阶段的未读数据
+     * @apiName add
+     * @apiGroup sys_notice
+     * @apiUse SysNoticeDTO
+     * @apiSuccessExample {json} Data-Response:
+        {
+        "code": 2000,
+        "msg": "成功",
+        "data": {
+        "id": null,
+        "version": null,
+        "stateflag": null,
+        "createAt": null,
+        "updateAt": null,
+        "remark": null,
+        "title": "11122266",
+        "content": "11112266",
+        "type": 1,
+        "picname": "33332266",
+        "userId": 1
+        }
+        }
+     */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse add(SysNoticeDTO sysNoticeDTO) {
@@ -50,6 +118,30 @@ public class SysNoticeController extends BaseApiContorller {
         return JsonResponseTool.success(sysNotice);
     }
 
+    /**
+     * @api {GET} http://{url}/sys_notice/update 查询更进信息,并去除对应阶段的未读数据
+     * @apiName add
+     * @apiGroup sys_notice
+     * @apiUse SysNoticeDTO
+     * @apiSuccessExample {json} Data-Response:
+        {
+        "code": 2000,
+        "msg": "成功",
+        "data": {
+        "id": null,
+        "version": null,
+        "stateflag": null,
+        "createAt": null,
+        "updateAt": null,
+        "remark": null,
+        "title": "11122266",
+        "content": "11112266",
+        "type": 1,
+        "picname": "33332266",
+        "userId": 1
+        }
+        }
+     */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse update(SysNoticeDTO sysNoticeDTO) {
@@ -58,6 +150,30 @@ public class SysNoticeController extends BaseApiContorller {
         return JsonResponseTool.success(sysNotice);
     }
 
+    /**
+     * @api {DELETE} http://{url}/sys_notice/del 查询更进信息,并去除对应阶段的未读数据
+     * @apiName del
+     * @apiGroup sys_notice
+     * @apiParam {number} [id] id
+     * @apiSuccessExample {json} Data-Response:
+        {
+        "code": 2000,
+        "msg": "成功",
+        "data": {
+        "id": null,
+        "version": null,
+        "stateflag": null,
+        "createAt": null,
+        "updateAt": null,
+        "remark": null,
+        "title": "11122266",
+        "content": "11112266",
+        "type": 1,
+        "picname": "33332266",
+        "userId": 1
+        }
+        }
+     */
     @RequestMapping(value = "/del", method = RequestMethod.DELETE)
     @ResponseBody
     public JsonResponse update(int id) {

@@ -5,12 +5,12 @@ package com.dqys.business.service.dto.followUp;
  *
  * @apiDefine FollowUpMessageDTO
  * @apiParam {number} [id] id
- * @apiParam {number} [objectId] 对象id
- * @apiParam {number} [objectType] 对象类型
+ * @apiParam {number} objectId 对象id
+ * @apiParam {number} objectType 对象类型
  * @apiParam {number} [secondObjectId] 二级对象id
  * @apiParam {number} [secondObjectType] 二级对象类型
  * @apiParam {string} [content] 内容
- * @apiParam {number} [liquidateStage] 清收阶段
+ * @apiParam {number} liquidateStage 清收阶段
  * @apiParam {number} [secondLiquidateStage] 二级清收阶段
  */
 

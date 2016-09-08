@@ -4,7 +4,6 @@ import com.dqys.business.orm.mapper.sysNotice.SysNoticeMapper;
 import com.dqys.business.orm.pojo.sysNotice.SysNotice;
 import com.dqys.business.orm.query.sysNotice.SysNoticeQuery;
 import com.dqys.business.service.service.sysNotice.SysNoticeService;
-import com.dqys.core.model.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -36,8 +35,6 @@ public class SysNoticeServiceImpl implements SysNoticeService{
     @CacheEvict(value="sys_notice_cache",allEntries=true)
     @Override
     public int insert(SysNotice sysNotice) {
-        //sysNotice.setUserId(UserSession.getCurrent().getUserId());
-        sysNotice.setUserId(1);
         return mapper.insert(sysNotice);
     }
 
@@ -59,7 +56,7 @@ public class SysNoticeServiceImpl implements SysNoticeService{
         return mapper.updateByPrimaryKeySelective(record);
     }
 
-    @Cacheable(value="sys_notice_cache",key="sys_notice_cache_query_count")
+    @Cacheable(value="sys_notice_cache",key="'sys_notice_cache_query_count'")
     @Override
     public int queryCount(SysNoticeQuery sysNoticeQuery) {
         return mapper.queryCount(sysNoticeQuery);

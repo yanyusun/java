@@ -4,6 +4,12 @@ import java.util.Date;
 
 /**
  * Created by yan on 16-9-7.
+ * @apiDefine SysNoticeDTO
+ * @apiParam {number} [id] id
+ * @apiParam {string} title 标题
+ * @apiParam {string} content 内容
+ * @apiParam {number} [type] 通知类型:0系统消息
+ * @apiParam {string} [picname] 图片名称
  */
 public class SysNoticeDTO {
     private Integer id;
@@ -15,8 +21,6 @@ public class SysNoticeDTO {
     private Integer type;
 
     private String picname;
-
-    private Integer userId;
 
     public Integer getId() {
         return id;
@@ -58,11 +62,4 @@ public class SysNoticeDTO {
         this.picname = picname;
     }
 
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
 }

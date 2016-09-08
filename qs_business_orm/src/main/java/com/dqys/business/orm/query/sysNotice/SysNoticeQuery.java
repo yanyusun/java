@@ -6,6 +6,14 @@ import java.util.Date;
 
 /**
  * Created by yan on 16-8-25.
+ * @apiDefine SysNoticeQuery
+ * @apiParam {number} [id] id
+ * @apiParam {string} [title] 标题
+ * @apiParam {number} [type] 通知类型:0系统通知
+ * @apiParam {string} [content] 内容
+ * @apiParam {number} [startPageNum] 当前分页
+ * @apiParam {number} [pageSize] 分页大小
+ * @apiParam {date} [createAt] 创建时间
  */
 public class SysNoticeQuery  extends BaseQuery {
 
