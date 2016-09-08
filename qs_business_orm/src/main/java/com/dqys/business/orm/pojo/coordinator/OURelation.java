@@ -17,6 +17,16 @@ public class OURelation {
 
     private Integer businessId;
 
+    private Integer visibleType;
+
+    public Integer getVisibleType() {
+        return visibleType;
+    }
+
+    public void setVisibleType(Integer visibleType) {
+        this.visibleType = visibleType;
+    }
+
     public Integer getId() {
         return id;
     }

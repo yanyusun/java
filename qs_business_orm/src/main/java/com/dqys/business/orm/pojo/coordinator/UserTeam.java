@@ -27,6 +27,16 @@ public class UserTeam {
 
     private Long stateflag;
 
+    private Integer objectOperStatus;
+
+    public Integer getObjectOperStatus() {
+        return objectOperStatus;
+    }
+
+    public void setObjectOperStatus(Integer objectOperStatus) {
+        this.objectOperStatus = objectOperStatus;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -14,10 +14,11 @@
     <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
     <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
     <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+    <result column="visible_type" property="visibleType" jdbcType="TIMESTAMP" />
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, object_type, object_id, user_id, status, type, employer_id, business_id, stateflag, create_at, update_at
+    id, object_type, object_id, user_id, status, type, employer_id, business_id, stateflag, create_at, update_at,visible_type
   </sql>
 
   <sql id="Query_Condition">

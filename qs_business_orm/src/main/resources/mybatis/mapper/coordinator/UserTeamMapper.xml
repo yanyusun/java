@@ -15,10 +15,11 @@
         <result column="version" property="version" jdbcType="INTEGER"/>
         <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
         <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+        <result column="object_oper_status" property="objectOperStatus" jdbcType="BIGINT"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, create_at, remark, company_id, manger_id, status, ctreater_id, object_id, object_type, 
-    version, update_at, stateflag
+    version, update_at, stateflag,object_oper_status
   </sql>
 
     <sql id="Query_Condition">
@@ -124,6 +125,9 @@
                 object_type,
             </if>
             update_at,
+            <if test="objectOperStatus != null">
+                object_oper_status,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -152,6 +156,9 @@
                 #{objectType,jdbcType=INTEGER},
             </if>
             now(),
+            <if test="objectOperStatus != null">
+                #{objectOperStatus,jdbcType=INTEGER},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.coordinator.UserTeam">
