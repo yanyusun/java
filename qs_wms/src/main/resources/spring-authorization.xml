@@ -6,7 +6,6 @@
 
     <!--<mvc:interceptors>
         <mvc:interceptor>
-
             <mvc:mapping path="/**"/>
 
             <mvc:exclude-mapping path="/login"/>
@@ -14,7 +13,7 @@
             <mvc:exclude-mapping path="/html/*"/>
             <bean class="com.dqys.wms.interceptor.WMSInterceptor"/>
         </mvc:interceptor>
-    </mvc:interceptors>
+    </mvc:interceptors>-->
 
-    <mvc:resources mapping="/html/**" location="/html/"/>-->
+    <mvc:resources mapping="/html/**" location="/html/"/>
 </beans>

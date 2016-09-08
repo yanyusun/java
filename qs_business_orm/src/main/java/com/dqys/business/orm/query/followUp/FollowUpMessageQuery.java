@@ -16,7 +16,7 @@ import com.dqys.core.base.BaseQuery;
  * @apiParam {number} [liquidateStage] 请搜阶段
  * @apiParam {number} [secondLiquidateStage] 二级清收阶段
  * @apiParam {number} [sendStatus] 发送状态
- * @apiParam {boolean} [isPaging] 是否分页0分页，1不分页
+ * @apiParam {boolean} isPaging 是否分页true分页,false不分页c_pageList请求必传
  * @apiParam {number} [startPageNum] 当前分页
  * @apiParam {number} [pageSize] 分页大小
  * @apiParam {date} [createAt] 创建时间

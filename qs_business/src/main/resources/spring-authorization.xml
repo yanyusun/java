@@ -11,10 +11,10 @@
         </mvc:interceptor>
 
         <!--默认全部需要登录身份-->
-      <mvc:interceptor>
-            <mvc:mapping path="/**"/>
-            <bean class="com.dqys.core.interceptor.HeaderInterceptor"/>
-        </mvc:interceptor>
+        <!--<mvc:interceptor>
+          <mvc:mapping path="/**"/>
+             <bean class="com.dqys.core.interceptor.HeaderInterceptor"/>
+         </mvc:interceptor>-->
         <mvc:interceptor>
             <mvc:mapping path="/b_log/*"/>
             <bean class="com.dqys.business.interceptor.BusinessLogIntercetpor"/>

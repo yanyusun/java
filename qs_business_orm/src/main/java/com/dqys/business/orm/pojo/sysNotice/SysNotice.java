@@ -1,27 +1,29 @@
-package com.dqys.business.orm.pojo.followUp;
+package com.dqys.business.orm.pojo.sysNotice;
 
 import com.dqys.core.base.BaseModel;
 
 import java.util.Date;
 
-public class FollowUpReadstatus extends BaseModel  {
+public class SysNotice  extends BaseModel {
     private Integer id;
 
-    private Integer userId;
+    private String title;
 
-    private Integer objectId;
+    private String content;
 
-    private Integer objectType;
+    private Integer type;
 
-    private Integer moment;
-
-    private Integer version;
+    private String picname;
 
     private Date createAt;
 
     private Date updateAt;
 
     private Long stateflag;
+
+    private Integer version;
+
+    private Integer userId;
 
     public Integer getId() {
         return id;
@@ -31,36 +33,36 @@ public class FollowUpReadstatus extends BaseModel  {
         this.id = id;
     }
 
-    public Integer getObjectId() {
-        return objectId;
+    public String getTitle() {
+        return title;
     }
 
-    public void setObjectId(Integer objectId) {
-        this.objectId = objectId;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public Integer getObjectType() {
-        return objectType;
+    public String getContent() {
+        return content;
     }
 
-    public void setObjectType(Integer objectType) {
-        this.objectType = objectType;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    public Integer getMoment() {
-        return moment;
+    public Integer getType() {
+        return type;
     }
 
-    public void setMoment(Integer moment) {
-        this.moment = moment;
+    public void setType(Integer type) {
+        this.type = type;
     }
 
-    public Integer getVersion() {
-        return version;
+    public String getPicname() {
+        return picname;
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
+    public void setPicname(String picname) {
+        this.picname = picname;
     }
 
     public Date getCreateAt() {
@@ -87,6 +89,14 @@ public class FollowUpReadstatus extends BaseModel  {
         this.stateflag = stateflag;
     }
 
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
     public Integer getUserId() {
         return userId;
     }
@@ -94,5 +104,4 @@ public class FollowUpReadstatus extends BaseModel  {
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
-
 }
