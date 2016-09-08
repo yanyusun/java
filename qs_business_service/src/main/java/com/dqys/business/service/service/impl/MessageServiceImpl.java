@@ -13,7 +13,6 @@ import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
-import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
@@ -25,7 +24,6 @@ import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.RabbitMQProducerTool;
 import com.dqys.core.utils.SmsUtil;
 import com.dqys.core.utils.SysPropertyTool;
-import com.rabbitmq.http.client.domain.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -153,12 +151,8 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public String businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer userId, String operUrl) {
         SmsUtil smsUtil = new SmsUtil();
-        TUserTagQuery tUserTagQuery = new TUserTagQuery();
-        tUserTagQuery.setUserType(1);
-        tUserTagQuery.setRole(RoleTypeEnum.ADMIN.getValue());
-        List<TUserTag> list = tUserTagMapper.selectByQuery(tUserTagQuery);//查询平台管理员
-        if (list.size() > 0) {
-            TUserTag tUserTag = list.get(0);
+        TUserTag tUserTag = getAdmin();
+        if (tUserTag != null) {
             TUserInfo tuserInfo = tUserInfoMapper.selectByPrimaryKey(tUserTag.getUserId());
             if (tuserInfo != null) {
                 Map userC = coordinatorMapper.getUserAndCompanyByUserId(userId);//发送者
@@ -174,6 +168,23 @@ public class MessageServiceImpl implements MessageService {
         return "no";
     }
 
+    /**
+     * 获取平台管理员账户
+     *
+     * @return
+     */
+    private TUserTag getAdmin() {
+        TUserTagQuery tUserTagQuery = new TUserTagQuery();
+        tUserTagQuery.setUserType(1);
+        tUserTagQuery.setRole(RoleTypeEnum.ADMIN.getValue());
+        List<TUserTag> list = tUserTagMapper.selectByQuery(tUserTagQuery);//查询平台管理员
+        if (list.size() > 0) {
+            return list.get(0);
+        } else {
+            return null;
+        }
+    }
+
     @Override
     public String businessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer sendUserId, Integer receiveUserId, Integer status) {
         SmsUtil smsUtil = new SmsUtil();
@@ -185,16 +196,60 @@ public class MessageServiceImpl implements MessageService {
                         ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
                         ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId), operation);
             } else {
-                content = smsUtil.sendSms(SmsEnum.FLOW_RESULT_NO.getValue(), MessageUtils.transMapToString(userC, "mobile"),  MessageUtils.transMapToString(userC, "realName"),
+                content = smsUtil.sendSms(SmsEnum.FLOW_RESULT_NO.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
                         ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
                         ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId), operation);
             }
             String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.FLOW_RESULT.getValue());
-            add(title, content, sendUserId, receiveUserId, "", MessageEnum.TASK.getValue(), MessageBTEnum.FLOW_RESULT.getValue(), "");
+            add(title, content, sendUserId, receiveUserId, "", MessageEnum.SERVE.getValue(), MessageBTEnum.FLOW_RESULT.getValue(), "");
             return "yes";
         } else {
             return "no";
         }
+    }
+
+    @Override
+    public String respondInvite(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer sendUserId, Integer receiveUserId, Integer status) {
+        SmsUtil smsUtil = new SmsUtil();
+        TUserTag tUserTag = getAdmin();
+        if (tUserTag != null) {
+            Map userC = coordinatorMapper.getUserAndCompanyByUserId(receiveUserId);//接收者
+            Map oper = coordinatorMapper.getUserAndCompanyByUserId(sendUserId);//发送者
+            TUserInfo tuserInfo = tUserInfoMapper.selectByPrimaryKey(tUserTag.getUserId());
+            if (userC != null && oper != null && tuserInfo != null) {
+                String content = "";//请求公司短信内容
+                String adminContent = "";//平台管理员短信内容
+                String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.INVITE_RESULT.getValue());
+                if (status == 1) {
+                    content = smsUtil.sendSms(SmsEnum.RESPOND_INVITE_RESULT_YES.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
+                            MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "companyName"), MessageUtils.transMapToString(oper, "realName"),
+                            ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
+                            ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId));
+
+                    adminContent = smsUtil.sendSms(SmsEnum.ADMIN_INVITE_RESULT_YES.getValue(), tuserInfo.getMobile(), tuserInfo.getRealName(),
+                            MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "companyName"), MessageUtils.transMapToString(oper, "realName"),
+                            MessageUtils.transMapToString(userC, "companyType"), MessageUtils.transMapToString(userC, "companyName"), MessageUtils.transMapToString(userC, "realName"),
+                            ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
+                            ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId));
+                } else {
+                    content = smsUtil.sendSms(SmsEnum.RESPOND_INVITE_RESULT_NO.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
+                            MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "companyName"), MessageUtils.transMapToString(oper, "realName"),
+                            ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
+                            ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId));
+
+                    adminContent = smsUtil.sendSms(SmsEnum.ADMIN_INVITE_RESULT_NO.getValue(), tuserInfo.getMobile(), tuserInfo.getRealName(),
+                            MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "companyName"), MessageUtils.transMapToString(oper, "realName"),
+                            MessageUtils.transMapToString(userC, "companyType"), MessageUtils.transMapToString(userC, "companyName"), MessageUtils.transMapToString(userC, "realName"),
+                            ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
+                            ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId));
+                }
+                add(title, content, sendUserId, receiveUserId, "", MessageEnum.SERVE.getValue(), MessageBTEnum.INVITE_RESULT.getValue(), "");
+
+                add(title, adminContent, sendUserId, tuserInfo.getId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INVITE_RESULT.getValue(), "");
+                return "yes";
+            }
+        }
+        return "no";
     }
 
     private String sendSms(Integer code, String mobilePhone, String... content) {

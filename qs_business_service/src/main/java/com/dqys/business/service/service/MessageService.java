@@ -89,17 +89,31 @@ public interface MessageService {
     String businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer userId, String operUrl);
 
     /**
-     * 流转结果
+     * 流转结果，平台接受或拒绝
      *
-     * @param objectId
-     * @param objectType
-     * @param flowId
-     * @param flowType
-     * @param operation
-     * @param sendUserId
-     * @param receiveUserId
-     * @param status
+     * @param objectId      对象id
+     * @param objectType    对象类型
+     * @param flowId        业务流转对象id
+     * @param flowType      业务流转对象类型
+     * @param operation     流转操作
+     * @param sendUserId    发送者id（平台管理员）
+     * @param receiveUserId 接收者id（请求公司）
+     * @param status        状态（0拒绝1接收）
      * @return
      */
     String businessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer sendUserId, Integer receiveUserId, Integer status);
+
+    /**
+     * 被邀请公司同意拒绝
+     *
+     * @param objectId      对象id
+     * @param objectType    对象类型
+     * @param flowId        业务流转对象id
+     * @param flowType      业务流转对象类型
+     * @param sendUserId    发送者id（被邀请公司)
+     * @param receiveUserId 接收者id（请求公司）
+     * @param status        状态（0拒绝1接收）
+     * @return
+     */
+    String respondInvite(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer sendUserId, Integer receiveUserId, Integer status);
 }

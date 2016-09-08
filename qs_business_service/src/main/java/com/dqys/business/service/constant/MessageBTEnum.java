@@ -15,7 +15,8 @@ public enum MessageBTEnum {
     REPLACE_CONTACTS(8, "替换联系人"),
     REPLACE(9, "被替换联系人"),
     FLOW(10, "流转请求"),
-    FLOW_RESULT(11, "流转请求结果");
+    FLOW_RESULT(11, "流转请求结果"),
+    INVITE_RESULT(12, "被邀请公司答复结果");
 
     private Integer value;
     private String name;
