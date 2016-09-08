@@ -13,7 +13,9 @@ public enum MessageBTEnum {
     COMPANY_JOIN(6, "主动加入分配器"),
     POSTPONE_AUDIT(7, "延期申请审核结果"),
     REPLACE_CONTACTS(8, "替换联系人"),
-    REPLACE(9, "被替换联系人");
+    REPLACE(9, "被替换联系人"),
+    FLOW(10, "流转请求"),
+    FLOW_RESULT(11, "流转请求结果");
 
     private Integer value;
     private String name;

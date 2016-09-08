@@ -125,4 +125,13 @@ public interface CoordinatorService {
      * @return
      */
     String delCoordinator(Integer companyId);
+
+    /**
+     * 获取对象名称
+     *
+     * @param objectType
+     * @param objectId
+     * @return
+     */
+    String getObjectName(Integer objectType, Integer objectId);
 }
