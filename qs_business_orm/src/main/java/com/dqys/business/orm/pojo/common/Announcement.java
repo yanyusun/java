@@ -1,5 +1,7 @@
 package com.dqys.business.orm.pojo.common;
 
+import java.util.Date;
+
 /**
  * Created by Yvan on 16/8/31.
  * 通告对象
@@ -13,6 +15,25 @@ public class Announcement {
     private String cover; // 封面图片
     private Integer isCover; // 封面图片显示在正文中
     private String mark; // 摘要
+
+    private Date createAt; // 创建时间
+    private Integer stateFlag; // 数据状态
+
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
+    }
+
+    public Integer getStateFlag() {
+        return stateFlag;
+    }
+
+    public void setStateFlag(Integer stateFlag) {
+        this.stateFlag = stateFlag;
+    }
 
     public Integer getId() {
         return id;

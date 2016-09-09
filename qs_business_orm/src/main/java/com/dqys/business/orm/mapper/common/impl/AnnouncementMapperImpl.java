@@ -6,6 +6,8 @@ import com.dqys.core.base.BaseDao;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by Yvan on 16/8/31.
  */
@@ -31,5 +33,10 @@ public class AnnouncementMapperImpl extends BaseDao implements AnnouncementMappe
     @Override
     public Integer update(Announcement record) {
         return super.getSqlSession().getMapper(AnnouncementMapper.class).update(record);
+    }
+
+    @Override
+    public List<Announcement> list() {
+        return super.getSqlSession().getMapper(AnnouncementMapper.class).list();
     }
 }

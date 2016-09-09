@@ -9,23 +9,25 @@
     <result column="ids" property="ids" jdbcType="LONGVARCHAR" />
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
     <result column="mark" property="mark" jdbcType="VARCHAR" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="stateflag" property="stateFlag" jdbcType="INTEGER" />
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, cover, isCover, mark, ids, content
+    id, cover, isCover, mark, ids, content, create_at, stateflag
   </sql>
 
   <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
     from bt_announcement
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </select>
 
-  <delete id="delete" parameterType="java.lang.Integer" >
-    delete from bt_announcement
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
+  <update id="delete" parameterType="java.lang.Integer" >
+    UPDATE bt_announcement SET stateflag = CURRENT_TIMESTAMP
+    where id = #{id,jdbcType=INTEGER} AND stateflag = 0
+  </update>
 
   <insert id="insert" parameterType="com.dqys.business.orm.pojo.common.Announcement" useGeneratedKeys="true" keyProperty="id">
     insert into bt_announcement
@@ -89,8 +91,15 @@
       <if test="content != null" >
         content = #{content,jdbcType=LONGVARCHAR},
       </if>
+      <if test="stateFlag != null" >
+        stateflag = #{stateFlag,jdbcType=INTEGER},
+      </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </update>
+
+  <select id="list" resultMap="BaseResultMap">
+    SELECT <include refid="Base_Column_List" /> FROM bt_announcement ORDER by id DESC
+  </select>
 
 </mapper>
