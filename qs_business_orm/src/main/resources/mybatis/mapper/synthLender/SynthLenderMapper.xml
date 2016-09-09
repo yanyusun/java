@@ -2,5 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.business.orm.mapper.synthLender.SynthLenderMapper">
 
+    <!--查询处置借款人的所属人姓名-->
+    <select id="getRealNameByOURelation" resultType="java.util.Map">
+        SELECT our.user_id,tui.real_name from object_user_relation our LEFT JOIN t_teammate_re ttr
+            ON ttr.user_id=our.user_id LEFT JOIN t_user_info tui
+            ON tui.id=our.user_id
+            WHERE our.stateflag=0 AND ttr.status=#{status,jdbcType=INTEGER} AND ttr.type=#{typeTTR,jdbcType=INTEGER}
+            AND ttr.user_team_id=our.employer_id and our.type=#{typeOUR,jdbcType=INTEGER}
+            AND our.object_type=#{objectType,jdbcType=INTEGER} AND our.object_id=#{objectId,jdbcType=INTEGER}
+           LIMIT 0,1
+    </select>
 
 </mapper>
