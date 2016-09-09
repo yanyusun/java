@@ -48,8 +48,8 @@ public class SynthLenderServiceImpl implements SynthLenderService {
     public Map pawnList(Integer lenderId) {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         String userType = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getUserType();
-        userId = 12;
-        userType = "31";
+//        userId = 12;
+//        userType = "31";
         Map<String, Object> map = new HashMap<String, Object>();
         LenderInfo lenderInfo = lenderInfoMapper.get(lenderId);//借款人信息
         ContactInfo contactInfo = contactInfoMapper.getByModel(ObjectTypeEnum.LENDER.getValue().toString(), ContactTypeEnum.LENDER.getValue(), lenderId);

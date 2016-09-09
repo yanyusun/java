@@ -35,9 +35,9 @@ public class SynLenderController {
     @RequestMapping("/pawnList")
     @ResponseBody
     public JsonResponse pawnList(Integer lenderId, HttpServletRequest httpServletRequest) {
-//        if (UserSession.getCurrent() == null) {
-//            return JsonResponseTool.authFailure("账号没登入");
-//        }
+        if (UserSession.getCurrent() == null) {
+            return JsonResponseTool.authFailure("账号没登入");
+        }
         Map map = new HashMap<>();
         map = synthLenderService.pawnList(lenderId);
         if ("yes".equals(MessageUtils.transMapToString(map, "result"))) {
