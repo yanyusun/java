@@ -33,13 +33,4 @@ public interface BusinessService {
      */
     Integer updateObjectUser_tx(ObjectUserRelation objectUserRelation);
 
-    /**
-     * 添加公司接受业务流转数据
-     * @param type 对象类型
-     * @param id 对象ID
-     * @param distributionId 分配器ID
-     * @param businessType 业务类型
-     */
-    Integer addBusinessService(Integer type, Integer id, Integer distributionId, Integer businessType);
-
 }
