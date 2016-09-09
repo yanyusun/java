@@ -300,7 +300,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         our.setObjectId(ouRelation.getObjectId());
         our.setObjectType(ouRelation.getObjectType());
         our.setUserId(ouRelation.getUserId());
-        our.setType(ouRelation.getType());
+//        our.setType(ouRelation.getType());
         List<OURelation> list = ouRelationMapper.selectBySelective(our);
         if (list.size() == 0) {
             Map map = coordinatorMapper.selectByBusinessId(ouRelation.getObjectType(), ouRelation.getObjectId());
