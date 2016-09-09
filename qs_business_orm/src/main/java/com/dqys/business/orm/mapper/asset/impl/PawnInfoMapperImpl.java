@@ -1,6 +1,7 @@
 package com.dqys.business.orm.mapper.asset.impl;
 
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
+import com.dqys.business.orm.mapper.synthLender.SynthLenderMapper;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.query.asset.PawnQuery;
 import com.dqys.business.orm.query.coordinator.ZcyListQuery;
@@ -71,6 +72,11 @@ public class PawnInfoMapperImpl extends BaseDao implements PawnInfoMapper {
     @Override
     public Integer pawnListPageCount(@Param("zcyListQuery") ZcyListQuery zcyListQuery) {
         return super.getSqlSession().getMapper(PawnInfoMapper.class).pawnListPageCount(zcyListQuery);
+    }
+
+    @Override
+    public List<PawnInfo> pawnListByLenderId(Integer lenderId, Integer userId, Integer objectType,Integer userType) {
+        return super.getSqlSession().getMapper(PawnInfoMapper.class).pawnListByLenderId(lenderId, userId, objectType,userType);
     }
 
 }

@@ -37,7 +37,35 @@ public class IOUInfo extends BaseModel implements Serializable {
     private String evaluateLevel;  // 评级
     private String memo;  // 备注
 
-    public String toString(){
+    private Integer onCollection;//是否可以催收:0可以1不能',
+    private Integer onLawyer;//是否可以司法处置:0可以1不能',
+    private Integer onAgent;// private Integer
+
+    public Integer getOnCollection() {
+        return onCollection;
+    }
+
+    public void setOnCollection(Integer onCollection) {
+        this.onCollection = onCollection;
+    }
+
+    public Integer getOnLawyer() {
+        return onLawyer;
+    }
+
+    public void setOnLawyer(Integer onLawyer) {
+        this.onLawyer = onLawyer;
+    }
+
+    public Integer getOnAgent() {
+        return onAgent;
+    }
+
+    public void setOnAgent(Integer onAgent) {
+        this.onAgent = onAgent;
+    }
+
+    public String toString() {
         String string = "iouInfo:[";
         string += "iouNo:" + iouNo + ",type:" + type + ",lenderId:" + lenderId;
         string += "]";
