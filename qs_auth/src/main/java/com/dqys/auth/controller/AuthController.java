@@ -553,7 +553,7 @@ public class AuthController extends BaseApiContorller {
 
             //验证公司有效性
             ServiceResult<Integer> companyResult = companyService.validateCompany(credential);
-            if (!companyResult.getFlag()) {
+            if (companyResult.getFlag()) {//防止重复存在
                 return JsonResponseTool.failure(String.valueOf(companyResult.getData()));
             }
 
