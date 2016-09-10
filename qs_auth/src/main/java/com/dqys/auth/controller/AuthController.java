@@ -10,6 +10,7 @@ import com.dqys.auth.service.facade.UserService;
 import com.dqys.captcha.service.facade.CaptchaService;
 import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.base.SysProperty;
+import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.ServiceResult;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.Callable;
 
@@ -546,8 +548,15 @@ public class AuthController extends BaseApiContorller {
      */
     @RequestMapping(value = "/add_company", method = RequestMethod.POST)
     public Callable<JsonResponse> addCompany(@RequestParam String companyName, @RequestParam String credential, @RequestParam String licence, @RequestParam Integer type,
-                                             @RequestParam Integer province, @RequestParam Integer city, @RequestParam Integer area, @RequestParam String address) {
+                                             @RequestParam Integer province, @RequestParam Integer city, @RequestParam Integer area, @RequestParam String address,HttpServletRequest httpServletRequest) {
         return () -> {
+            Integer userId = ProtocolTool.validateUser(
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+            );
             //验证区域有效性
             String verifyArea = AreaTool.validateArea(province, city, area);
             if(StringUtils.isNotBlank(verifyArea)) {
@@ -583,7 +592,7 @@ public class AuthController extends BaseApiContorller {
             tCompanyInfo.setArea(area);
             tCompanyInfo.setAddress(address);
             tCompanyInfo.setType(type);
-            companyResult = companyService.addCompany_tx(tCompanyInfo);
+            companyResult = companyService.addCompany_tx(tCompanyInfo,userId);
             if(!companyResult.getFlag()) {
                 return JsonResponseTool.failure(companyResult.getMessage());
             }

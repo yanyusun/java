@@ -20,7 +20,7 @@ public interface CompanyService {
      * @param tCompanyInfo
      * @return
      */
-    ServiceResult<Integer> addCompany_tx(TCompanyInfo tCompanyInfo);
+    ServiceResult<Integer> addCompany_tx(TCompanyInfo tCompanyInfo,Integer userId);
 
     /**
      * 根据Id获取公司信息

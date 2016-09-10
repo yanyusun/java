@@ -44,9 +44,9 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public ServiceResult<Integer> addCompany_tx(TCompanyInfo tCompanyInfo) {
+    public ServiceResult<Integer> addCompany_tx(TCompanyInfo tCompanyInfo,Integer userId) {
         //新增数据
-        Integer userId = UserSession.getCurrent() != null ? UserSession.getCurrent().getUserId() : 0;
+//        Integer userId = UserSession.getCurrent() != null ? UserSession.getCurrent().getUserId() : 0;
         if (userId == 0) {
             return ServiceResult.failure("还未登入", userId);
         }
