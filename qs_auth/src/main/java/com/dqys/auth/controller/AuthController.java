@@ -529,7 +529,7 @@ public class AuthController extends BaseApiContorller {
      */
     @RequestMapping(value = "/add_company", method = RequestMethod.POST)
     public Callable<JsonResponse> addCompany(@RequestParam String companyName, @RequestParam String credential, @RequestParam String licence, @RequestParam Integer type,
-                                             @RequestParam Integer province, @RequestParam Integer city, @RequestParam Integer area, @RequestParam String address, HttpServletRequest httpServletRequest) {
+                                             @RequestParam Integer province, @RequestParam Integer city, @RequestParam Integer area, @RequestParam String address) {
         Integer userId = UserSession.getCurrent() != null ? UserSession.getCurrent().getUserId() : 0;
         return () -> {
             //验证区域有效性
