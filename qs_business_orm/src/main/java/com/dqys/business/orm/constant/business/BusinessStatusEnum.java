@@ -8,6 +8,7 @@ public enum BusinessStatusEnum {
     init(0, "待审核"),
     platform_pass(1, "平台审核通过"),
     platform_refuse(2, "平台审核未通过"),
+    dispose(3, "处置中"),
     end(100, "已完成")
     ;
 

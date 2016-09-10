@@ -263,8 +263,8 @@ public class CompanyController {
      * @api {get} http://{url}/api/company/listRelationByService 根据业务类型获取公司联系关系
      * @apiName listRelationByService
      * @apiGroup companyRelation
-     * @apiParam type 业务流转类型(催收1,处置2,司法3,催收处置4,催收司法5,全6)
-     * @apiParam id 公司ID
+     * @apiParam {number} type 业务流转类型(催收1,处置2,司法3,催收处置4,催收司法5,全6)
+     * @apiParam {number} id 公司ID
      */
     @RequestMapping(value = "/listRelationByService")
     public JsonResponse listRelationByServiceType(@RequestParam("type")Integer type, @RequestParam(required = false)Integer id){
@@ -273,5 +273,48 @@ public class CompanyController {
         }
         return JsonResponseTool.success(companyService.listRelationByServiceType(type, id));
     }
+
+    /**
+     * @api {get} http://{url}/api/company/addBusinessService 平台为申请业务流转的公司添加业务流转伙伴接口
+     * @apiName addBusinessService
+     * @apiGroup companyRelation
+     * @apiParam {number} type 业务流转类型
+     * @apiParam {number} id 公司ID
+     * @apiParam {number} distributionId 分配器ID
+     * @apiParam {number} businessType 业务流转类型
+     * @apiParam {number} companyId 被邀请公司ID
+     */
+    @RequestMapping(value = "/addBusinessService")
+    public JsonResponse addBusinessService(@RequestParam Integer type, @RequestParam Integer id,
+                                           @RequestParam Integer distributionId, @RequestParam Integer businessType,
+                                           @RequestParam Integer companyId) throws BusinessLogException{
+        if(CommonUtil.checkParam(type, id, distributionId, businessType, companyId)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return JsonResponseTool.success(distributionService.addBusinessService(type, id, distributionId, businessType, companyId));
+    }
+
+    /**
+     * @api {get} http://{url}/api/company/designBusinessService 被添加公司接受或者拒绝业务流转邀请
+     * @apiName designBusinessService
+     * @apiGroup companyRelation
+     * @apiParam {number} type 业务流转类型(催收1,处置2,司法3,催收处置4,催收司法5,全6)
+     * @apiParam {number} id 公司ID
+     * @apiParam {number} distributionId 分配器ID
+     * @apiParam {number} businessType 业务流转类型
+     * @apiParam {number} status 接收1拒绝0
+     */
+    @RequestMapping(value = "/designBusinessService")
+    public JsonResponse designBusinessService(@RequestParam Integer type, @RequestParam Integer id,
+                                              @RequestParam Integer distributionId, @RequestParam Integer businessType,
+                                              @RequestParam Integer status) throws BusinessLogException{
+        if(CommonUtil.checkParam(type, id, distributionId, businessType, status)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return JsonResponseTool.success(
+                distributionService.updateBusinessService(type, id, distributionId, businessType, status));
+    }
+
+
 
 }

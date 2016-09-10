@@ -529,6 +529,13 @@ public class DistributionServiceImpl implements DistributionService {
             // 判断是否为接收邀请,是则添加对象关系和实体类的标识
             if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
                 if (companyTeam != null) {
+                    // 修改业务状态
+                    BusinessObjRe businessObjRe = businessObjReMapper.getByObject(
+                            companyTeam.getObjectType(), companyTeam.getObjectId());
+                    Business business = businessMapper.get(businessObjRe.getBusinessId());
+                    business.setStatus(BusinessStatusEnum.dispose.getValue());
+                    businessMapper.update(business);
+
                     // 添加公司之间的关系
                     TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeam.getSenderId());
                     CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(companyTeamRe.getAcceptCompanyId());
@@ -744,140 +751,6 @@ public class DistributionServiceImpl implements DistributionService {
         }
     }
 
-    @Override
-    public Integer addBusinessService(Integer type, Integer id, Integer distributionId, Integer businessType) {
-        if(CommonUtil.checkParam(type, id, distributionId, businessType)){
-            return null;
-        }
-        if(!type.equals(ObjectTypeEnum.PAWN.getValue()) && !type.equals(ObjectTypeEnum.IOU.getValue())){
-            return null;
-        }
-        CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByUserId(UserSession.getCurrent().getUserId());
-        if(companyDetailInfo == null){
-            // 当前用户不正常
-            return null;
-        }
-
-        CompanyTeam companyTeam = companyTeamMapper.get(distributionId);
-        if(companyTeam != null){
-            // 分配器存在
-            if(type.equals(ObjectTypeEnum.PAWN.getValue())){
-                // 当前流转的是抵押物
-                PawnInfo pawnInfo = pawnInfoMapper.get(id);
-                if(pawnInfo != null){
-                    if(PawnEnum.MAINTAIN_REGULAR.getValue().equals(businessType)){
-                        // 常规催收
-                        pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
-                        pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                        pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
-                        pawnInfoMapper.update(pawnInfo);
-                    }else if(PawnEnum.MARKET_DISPOSITION.getValue().equals(businessType)){
-                        // 市场处置
-                        pawnInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
-                        pawnInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
-                        pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
-                        pawnInfoMapper.update(pawnInfo);
-                    }else if(PawnEnum.CM_SIMULTANEOUS.getValue().equals(businessType)){
-                        // 市场处置&常规催收
-                        if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                                .equals(companyDetailInfo.getType())){
-                            // 催收
-                            pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                        }else if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
-                                .equals(companyDetailInfo.getType())){
-                            // 市场
-                            pawnInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
-                        }
-                        pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
-                        pawnInfoMapper.update(pawnInfo);
-                    }else if(PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue().equals(businessType)){
-                        // 司法化解
-                        pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
-                        pawnInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
-                        pawnInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
-                        pawnInfoMapper.update(pawnInfo);
-                    }else if(PawnEnum.CJ_SIMULTANEOUS.getValue().equals(businessType)){
-                        // 司法化解&常规催收
-                        if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                                .equals(companyDetailInfo.getType())){
-                            // 催收
-                            pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                        }else if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
-                                .equals(companyDetailInfo.getType())){
-                            // 律所
-                            pawnInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
-                        }
-                        pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
-                        pawnInfoMapper.update(pawnInfo);
-                    }else if(PawnEnum.CMJ_SIMULTANEOUS.getValue().equals(businessType)){
-                        // 市场处置&司法化解&常规催收
-                        pawnInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
-                        pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                        pawnInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
-                        pawnInfoMapper.update(pawnInfo);
-                    }
-                }
-            }else if(type.equals(ObjectTypeEnum.IOU.getValue())){
-                // 当前流转的是借据
-                IOUInfo iouInfo = iouInfoMapper.get(id);
-                if(iouInfo != null){
-                    if(PawnEnum.MAINTAIN_REGULAR.getValue().equals(businessType)){
-                        // 常规催收
-                        iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
-                        iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                        iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
-                        iouInfoMapper.update(iouInfo);
-                    }else if(PawnEnum.MARKET_DISPOSITION.getValue().equals(businessType)){
-                        // 市场处置
-                        iouInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
-                        iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
-                        iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
-                        iouInfoMapper.update(iouInfo);
-                    }else if(PawnEnum.CM_SIMULTANEOUS.getValue().equals(businessType)){
-                        // 市场处置&常规催收
-                        if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                                .equals(companyDetailInfo.getType())){
-                            // 催收
-                            iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                        }else if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
-                                .equals(companyDetailInfo.getType())){
-                            // 市场
-                            iouInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
-                        }
-                        iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
-                        iouInfoMapper.update(iouInfo);
-                    }else if(PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue().equals(businessType)){
-                        // 司法化解
-                        iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
-                        iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
-                        iouInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
-                        iouInfoMapper.update(iouInfo);
-                    }else if(PawnEnum.CJ_SIMULTANEOUS.getValue().equals(businessType)){
-                        // 司法化解&常规催收
-                        if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                                .equals(companyDetailInfo.getType())){
-                            // 催收
-                            iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                        }else if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
-                                .equals(companyDetailInfo.getType())){
-                            // 律所
-                            iouInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
-                        }
-                        iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
-                        iouInfoMapper.update(iouInfo);
-                    }else if(PawnEnum.CMJ_SIMULTANEOUS.getValue().equals(businessType)){
-                        // 市场处置&司法化解&常规催收
-                        iouInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
-                        iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                        iouInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
-                        iouInfoMapper.update(iouInfo);
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
     private Integer createObjectUserRelation(CompanyTeam companyTeam, Integer userId) {
         // 增加对象与操作事物的联系
         ObjectUserRelation objectUserRelation = new ObjectUserRelation();
@@ -895,7 +768,328 @@ public class DistributionServiceImpl implements DistributionService {
     }
 
     @Override
-    public Integer updateBusinessService(Integer type, Integer id, Integer distributionId, Integer status) {
-        return null;
+    public Integer addBusinessService(Integer type, Integer id, Integer distributionId,
+                                      Integer businessType, Integer companyId) throws BusinessLogException{
+        if (!CommonUtil.isManage()) {
+            return null; // 不是平台管理员
+        }
+        CompanyTeam companyTeam = companyTeamMapper.get(distributionId);
+        if (companyTeam == null) {
+            return null; // 分配器不存在
+        }
+        TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
+        if (userInfo == null || userInfo.getCompanyId() == null) {
+            return null; // 用户不存在
+        }
+        CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(userInfo.getCompanyId());
+        if (companyDetailInfo == null) {
+            return null; // 公司不存在
+        }
+
+        CompanyDetailInfo companyDetailInfo1 = companyInfoMapper.getDetailByCompanyId(companyId); // 被邀请公司信息
+        if (companyDetailInfo1 == null) {
+            return null; // 找不到目标公司
+        }
+
+        CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
+        companyTeamReQuery.setTeamId(distributionId);
+        companyTeamReQuery.setCompanyId(companyId);
+        List<CompanyTeamRe> companyTeamReList = companyTeamReMapper.queryList(companyTeamReQuery);
+        if (companyTeamReList != null || companyTeamReList.size() > 0) {
+            // 已经存在在该分配器中无需再次申请或邀请
+            // 发送短信提醒
+            SmsUtil smsUtil = new SmsUtil();
+            TSysProperty property = SysPropertyTool.getProperty(
+                    SysPropertyTypeEnum.USER_TYPE, companyDetailInfo.getType().toString()); // 公司类型
+            String code = ""; // 对象编号
+            if (ObjectTypeEnum.PAWN.getValue().equals(companyTeam.getObjectType())) {
+                PawnInfo pawnInfo = pawnInfoMapper.get(id);
+                if (pawnInfo != null) {
+                    code = pawnInfo.getPawnNo();
+                }
+            } else if (ObjectTypeEnum.IOU.getValue().equals(companyTeam.getObjectType())) {
+                IOUInfo iouInfo = iouInfoMapper.get(id);
+                if (iouInfo != null) {
+                    code = iouInfo.getIouNo();
+                }
+            }
+            String[] msg = {
+                    companyDetailInfo1.getName(),
+                    companyDetailInfo.getCompanyName(),
+                    property.getPropertyName(),
+                    userInfo.getUserName(),
+                    ObjectTypeEnum.getObjectTypeEnum(type).getName(),
+                    code
+            };
+            smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_INVITE_CODE, companyDetailInfo1.getPhone(), msg);
+            // 添加消息
+            Message message = new Message();
+            message.setTitle(MessageEnum.TASK.getName() + " > "
+                            + ObjectTypeEnum.getObjectTypeEnum(type).getName() + " > "
+                            + code
+            ); // 业务类型 对象类型 对象编号
+            message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_INVITE_CODE, msg));
+            message.setSenderId(userInfo.getId());
+            message.setReceiveId(companyDetailInfo1.getUserId());
+            message.setLabel(null);
+            message.setStatus(0);
+            message.setType(MessageEnum.TASK.getValue());
+            message.setBusinessType(MessageBTEnum.COMPANY_BETWEEN.getValue());
+            message.setOperUrl("/api/company/updateBusinessService?type=" + type + "&id=" + id
+                            + "distributionId=" + companyTeamReList.get(0).getId() + "businessType=" + businessType
+            );
+            messageMapper.add(message);
+            return companyTeamReList.get(0).getId();
+        }
+
+        CompanyTeamRe companyTeamRe = new CompanyTeamRe();
+        companyTeamRe.setCompanyTeamId(distributionId);
+        companyTeamRe.setAcceptCompanyId(companyId);
+        companyTeamRe.setStatus(ObjectAcceptTypeEnum.init.getValue());
+        companyTeamRe.setType(ObjectBusinessTypeEnum.platform.getValue());
+        companyTeamRe.setAccepterId(companyDetailInfo1.getUserId());
+        companyTeamRe.setRoleType(companyDetailInfo.getType());
+        companyTeamRe.setRequesterId(companyDetailInfo.getCompanyId());
+        Integer result = companyTeamReMapper.insert(companyTeamRe);
+        if (CommonUtil.checkResult(result)) {
+            return null;
+        } else {
+            // 添加操作记录
+            businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(),
+                    ObjectLogEnum.join.getValue(),
+                    "", "", 0, id);
+            // 发送短信提醒
+            SmsUtil smsUtil = new SmsUtil();
+            TSysProperty property = SysPropertyTool.getProperty(
+                    SysPropertyTypeEnum.USER_TYPE, companyDetailInfo.getType().toString()); // 公司类型
+            String code = ""; // 对象编号
+            if (ObjectTypeEnum.PAWN.getValue().equals(companyTeam.getObjectType())) {
+                PawnInfo pawnInfo = pawnInfoMapper.get(id);
+                if (pawnInfo != null) {
+                    code = pawnInfo.getPawnNo();
+                }
+            } else if (ObjectTypeEnum.IOU.getValue().equals(companyTeam.getObjectType())) {
+                IOUInfo iouInfo = iouInfoMapper.get(id);
+                if (iouInfo != null) {
+                    code = iouInfo.getIouNo();
+                }
+            }
+            String[] msg = {
+                    companyDetailInfo1.getName(),
+                    companyDetailInfo.getCompanyName(),
+                    property.getPropertyName(),
+                    userInfo.getUserName(),
+                    ObjectTypeEnum.getObjectTypeEnum(type).getName(),
+                    code
+            };
+            smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_INVITE_CODE, companyDetailInfo1.getPhone(), msg);
+            // 添加消息
+            Message message = new Message();
+            message.setTitle(MessageEnum.TASK.getName() + " > "
+                            + ObjectTypeEnum.getObjectTypeEnum(type).getName() + " > "
+                            + code
+            ); // 业务类型 对象类型 对象编号
+            message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_INVITE_CODE, msg));
+            message.setSenderId(userInfo.getId());
+            message.setReceiveId(companyDetailInfo1.getUserId());
+            message.setLabel(null);
+            message.setStatus(0);
+            message.setType(MessageEnum.TASK.getValue());
+            message.setBusinessType(MessageBTEnum.COMPANY_BETWEEN.getValue());
+            message.setOperUrl("/api/company/updateBusinessService?type=" + type + "&id=" + id
+                    + "distributionId=" + companyTeamRe.getId() + "businessType=" + businessType
+            );
+            messageMapper.add(message);
+            return companyTeamRe.getId();
+        }
+    }
+
+    @Override
+    public Integer updateBusinessService(Integer type, Integer id, Integer distributionId,
+                                         Integer businessType, Integer status) throws BusinessLogException {
+        if(CommonUtil.checkParam(type, id, distributionId, businessType, status)){
+            return null;
+        }
+        if(!type.equals(ObjectTypeEnum.PAWN.getValue()) && !type.equals(ObjectTypeEnum.IOU.getValue())){
+            return null;
+        }
+        CompanyTeamRe companyTeamRe = companyTeamReMapper.get(distributionId);
+        if (companyTeamRe == null) {
+            return null; // 分配器记录不存在
+        }
+        TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
+        if (userInfo == null || userInfo.getCompanyId() == null) {
+            return null; // 当前用户存在异常
+        }
+        companyTeamRe.setStatus(status);
+        Integer result = companyTeamReMapper.update(companyTeamRe);
+        if (CommonUtil.checkResult(result)) {
+            return null;
+        } else {
+            // 添加操作记录
+            businessLogService.add(distributionId, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.update.getValue(),
+                    "", "", 0, id);
+            CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
+            if (companyTeam != null) {
+                // 提醒消息
+                TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeam.getSenderId()); // 创建人信息
+                CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(companyTeamRe.getAcceptCompanyId()); // 被邀请公司信息
+                TSysProperty property = SysPropertyTool.getProperty(
+                        SysPropertyTypeEnum.USER_TYPE, companyDetailInfo.getType().toString()); // 公司类型
+                SmsUtil smsUtil = new SmsUtil();
+                String[] msg = {
+                        creator.getUserName(),
+                        companyDetailInfo.getCompanyName(),
+                        property.getPropertyName(),
+                        userInfo.getUserName(),
+                        ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
+                        companyTeam.getObjectId().toString()
+                };
+                Message message = new Message();
+                if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
+                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_PASS_CODE, creator.getMobile(), msg);
+                    message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_PASS_CODE, msg));
+                } else {
+                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_REFUSE_CODE, creator.getMobile(), msg);
+                    message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_REFUSE_CODE, msg));
+                }
+                message.setSenderId(userInfo.getId());
+                message.setReceiveId(companyTeamRe.getAccepterId());
+                message.setLabel(null);
+                message.setStatus(0);
+                message.setType(MessageEnum.TASK.getValue());
+                message.setBusinessType(MessageBTEnum.COMPANY_BETWEEN.getValue());
+                message.setOperUrl(null);
+                messageMapper.add(message);
+                if(SysProperty.BOOLEAN_TRUE.equals(status)){
+                    // 添加公司之间的关系
+                    CompanyRelation companyRelation = companyRelationMapper.getByCompanyId(creator.getCompanyId(),
+                            companyTeamRe.getAcceptCompanyId());
+                    if(companyRelation == null){
+                        companyRelation = new CompanyRelation();
+                        companyRelation.setCompanyAId(creator.getCompanyId());
+                        companyRelation.setCompanyBId(companyTeamRe.getAcceptCompanyId());
+                        companyRelationMapper.insert(companyRelation);
+                    }
+                    if(type.equals(ObjectTypeEnum.PAWN.getValue())){
+                        // 当前流转的是抵押物
+                        PawnInfo pawnInfo = pawnInfoMapper.get(id);
+                        if(pawnInfo != null){
+                            if(PawnEnum.MAINTAIN_REGULAR.getValue().equals(businessType)){
+                                // 常规催收
+                                pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+                                pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+                                pawnInfoMapper.update(pawnInfo);
+                            }else if(PawnEnum.MARKET_DISPOSITION.getValue().equals(businessType)){
+                                // 市场处置
+                                pawnInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
+                                pawnInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+                                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+                                pawnInfoMapper.update(pawnInfo);
+                            }else if(PawnEnum.CM_SIMULTANEOUS.getValue().equals(businessType)){
+                                // 市场处置&常规催收
+                                if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                                        .equals(companyDetailInfo.getType())){
+                                    // 催收
+                                    pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                                }else if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
+                                        .equals(companyDetailInfo.getType())){
+                                    // 市场
+                                    pawnInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
+                                }
+                                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+                                pawnInfoMapper.update(pawnInfo);
+                            }else if(PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue().equals(businessType)){
+                                // 司法化解
+                                pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+                                pawnInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+                                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
+                                pawnInfoMapper.update(pawnInfo);
+                            }else if(PawnEnum.CJ_SIMULTANEOUS.getValue().equals(businessType)){
+                                // 司法化解&常规催收
+                                if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                                        .equals(companyDetailInfo.getType())){
+                                    // 催收
+                                    pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                                }else if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
+                                        .equals(companyDetailInfo.getType())){
+                                    // 律所
+                                    pawnInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
+                                }
+                                pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+                                pawnInfoMapper.update(pawnInfo);
+                            }else if(PawnEnum.CMJ_SIMULTANEOUS.getValue().equals(businessType)){
+                                // 市场处置&司法化解&常规催收
+                                pawnInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
+                                pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
+                                pawnInfoMapper.update(pawnInfo);
+                            }
+                        }
+                    }else if(type.equals(ObjectTypeEnum.IOU.getValue())){
+                        // 当前流转的是借据
+                        IOUInfo iouInfo = iouInfoMapper.get(id);
+                        if(iouInfo != null){
+                            if(PawnEnum.MAINTAIN_REGULAR.getValue().equals(businessType)){
+                                // 常规催收
+                                iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+                                iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                                iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+                                iouInfoMapper.update(iouInfo);
+                            }else if(PawnEnum.MARKET_DISPOSITION.getValue().equals(businessType)){
+                                // 市场处置
+                                iouInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
+                                iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+                                iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+                                iouInfoMapper.update(iouInfo);
+                            }else if(PawnEnum.CM_SIMULTANEOUS.getValue().equals(businessType)){
+                                // 市场处置&常规催收
+                                if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                                        .equals(companyDetailInfo.getType())){
+                                    // 催收
+                                    iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                                }else if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
+                                        .equals(companyDetailInfo.getType())){
+                                    // 市场
+                                    iouInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
+                                }
+                                iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+                                iouInfoMapper.update(iouInfo);
+                            }else if(PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue().equals(businessType)){
+                                // 司法化解
+                                iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+                                iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+                                iouInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
+                                iouInfoMapper.update(iouInfo);
+                            }else if(PawnEnum.CJ_SIMULTANEOUS.getValue().equals(businessType)){
+                                // 司法化解&常规催收
+                                if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                                        .equals(companyDetailInfo.getType())){
+                                    // 催收
+                                    iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                                }else if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
+                                        .equals(companyDetailInfo.getType())){
+                                    // 律所
+                                    iouInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
+                                }
+                                iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+                                iouInfoMapper.update(iouInfo);
+                            }else if(PawnEnum.CMJ_SIMULTANEOUS.getValue().equals(businessType)){
+                                // 市场处置&司法化解&常规催收
+                                iouInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
+                                iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                                iouInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
+                                iouInfoMapper.update(iouInfo);
+                            }
+                        }
+                    }
+                }
+
+            }
+            if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
+            }
+            return result;
+        }
     }
 }
