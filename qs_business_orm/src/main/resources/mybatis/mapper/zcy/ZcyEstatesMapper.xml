@@ -15,7 +15,7 @@
         <result column="house_w" property="houseW" jdbcType="VARCHAR"/>
         <result column="house_remark" property="houseRemark" jdbcType="VARCHAR"/>
         <result column="quota" property="quota" jdbcType="VARCHAR"/>
-        <result column="acreage" property="acreage" jdbcType="VARCHAR"/>
+        <result column="acreage" property="acreage" jdbcType="DOUBLE"/>
         <result column="selling_price" property="sellingPrice" jdbcType="DOUBLE"/>
         <result column="decade" property="decade" jdbcType="VARCHAR"/>
         <result column="property" property="property" jdbcType="VARCHAR"/>
@@ -93,7 +93,7 @@
       0, #{annotation,jdbcType=VARCHAR}, #{replenish,jdbcType=VARCHAR},#{deck,jdbcType=VARCHAR}
       #{houseS,jdbcType=VARCHAR}, #{houseT,jdbcType=VARCHAR}, #{houseC,jdbcType=VARCHAR}, 
       #{houseW,jdbcType=VARCHAR}, #{houseRemark,jdbcType=VARCHAR}, #{quota,jdbcType=VARCHAR}, 
-      #{acreage,jdbcType=VARCHAR}, #{sellingPrice,jdbcType=DOUBLE}, #{decade,jdbcType=VARCHAR}, 
+      #{acreage,jdbcType=DOUBLE}, #{sellingPrice,jdbcType=DOUBLE}, #{decade,jdbcType=VARCHAR},
       #{property,jdbcType=VARCHAR}, #{orientation,jdbcType=VARCHAR}, #{guidePrice,jdbcType=DOUBLE}, 
       #{guideRemark,jdbcType=VARCHAR}, #{decoratePrice,jdbcType=DOUBLE},
       #{tenementPrice,jdbcType=DOUBLE}, #{facility,jdbcType=VARCHAR}, #{internalNumber,jdbcType=VARCHAR}, 
@@ -260,7 +260,7 @@
                 #{quota,jdbcType=VARCHAR},
             </if>
             <if test="acreage != null">
-                #{acreage,jdbcType=VARCHAR},
+                #{acreage,jdbcType=DOUBLE},
             </if>
             <if test="sellingPrice != null">
                 #{sellingPrice,jdbcType=DOUBLE},
@@ -377,7 +377,7 @@
                 quota = #{quota,jdbcType=VARCHAR},
             </if>
             <if test="acreage != null">
-                acreage = #{acreage,jdbcType=VARCHAR},
+                acreage = #{acreage,jdbcType=DOUBLE},
             </if>
             <if test="sellingPrice != null">
                 selling_price = #{sellingPrice,jdbcType=DOUBLE},
@@ -473,7 +473,7 @@
       house_w = #{houseW,jdbcType=VARCHAR},
       house_remark = #{houseRemark,jdbcType=VARCHAR},
       quota = #{quota,jdbcType=VARCHAR},
-      acreage = #{acreage,jdbcType=VARCHAR},
+      acreage = #{acreage,jdbcType=DOUBLE},
       selling_price = #{sellingPrice,jdbcType=DOUBLE},
       decade = #{decade,jdbcType=VARCHAR},
       property = #{property,jdbcType=VARCHAR},
@@ -510,7 +510,7 @@
       house_w = #{houseW,jdbcType=VARCHAR},
       house_remark = #{houseRemark,jdbcType=VARCHAR},
       quota = #{quota,jdbcType=VARCHAR},
-      acreage = #{acreage,jdbcType=VARCHAR},
+      acreage = #{acreage,jdbcType=DOUBLE},
       selling_price = #{sellingPrice,jdbcType=DOUBLE},
       decade = #{decade,jdbcType=VARCHAR},
       property = #{property,jdbcType=VARCHAR},

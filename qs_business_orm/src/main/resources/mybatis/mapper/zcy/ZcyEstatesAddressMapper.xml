@@ -11,7 +11,7 @@
         <result column="plot_name" property="plotName" jdbcType="VARCHAR"/>
         <result column="building_no" property="buildingNo" jdbcType="VARCHAR"/>
         <result column="element" property="element" jdbcType="VARCHAR"/>
-        <result column="floor" property="floor" jdbcType="VARCHAR"/>
+        <result column="floor" property="floor" jdbcType="INTEGER"/>
         <result column="floor_total" property="floorTotal" jdbcType="VARCHAR"/>
         <result column="doorplate" property="doorplate" jdbcType="VARCHAR"/>
         <result column="img_url" property="imgUrl" jdbcType="VARCHAR"/>
@@ -44,7 +44,7 @@
       stateflag)
     values (#{id,jdbcType=INTEGER}, #{estatesId,jdbcType=INTEGER}, #{province,jdbcType=VARCHAR}, 
       #{city,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{road,jdbcType=VARCHAR}, #{plotName,jdbcType=VARCHAR}, 
-      #{buildingNo,jdbcType=VARCHAR}, #{element,jdbcType=VARCHAR}, #{floor,jdbcType=VARCHAR}, 
+      #{buildingNo,jdbcType=VARCHAR}, #{element,jdbcType=VARCHAR}, #{floor,jdbcType=INTEGER},
       #{floorTotal,jdbcType=VARCHAR}, #{doorplate,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
       0, now(),now(),
       0)
@@ -125,7 +125,7 @@
                 #{element,jdbcType=VARCHAR},
             </if>
             <if test="floor != null">
-                #{floor,jdbcType=VARCHAR},
+                #{floor,jdbcType=INTEGER},
             </if>
             <if test="floorTotal != null">
                 #{floorTotal,jdbcType=VARCHAR},
@@ -168,7 +168,7 @@
                 element = #{element,jdbcType=VARCHAR},
             </if>
             <if test="floor != null">
-                floor = #{floor,jdbcType=VARCHAR},
+                floor = #{floor,jdbcType=INTEGER},
             </if>
             <if test="floorTotal != null">
                 floor_total = #{floorTotal,jdbcType=VARCHAR},
@@ -194,7 +194,7 @@
       plot_name = #{plotName,jdbcType=VARCHAR},
       building_no = #{buildingNo,jdbcType=VARCHAR},
       element = #{element,jdbcType=VARCHAR},
-      floor = #{floor,jdbcType=VARCHAR},
+      floor = #{floor,jdbcType=INTEGER},
       floor_total = #{floorTotal,jdbcType=VARCHAR},
       doorplate = #{doorplate,jdbcType=VARCHAR},
       img_url = #{imgUrl,jdbcType=VARCHAR},
