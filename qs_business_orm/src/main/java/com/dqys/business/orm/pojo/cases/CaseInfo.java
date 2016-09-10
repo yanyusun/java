@@ -21,8 +21,8 @@ public class CaseInfo extends BaseModel implements Serializable {
     private String mortgagor; // 抵押人名称
     private Integer mortgageTime; //抵押次数
     private String guarantor;  // 保证人信息
-    private Integer evaluateExcellent; // 评优
-    private Integer evaluateLevel; // 评级
+    private String evaluateExcellent; // 评优
+    private String evaluateLevel; // 评级
     private String memo; // 案件备注
     private Double lawsuitAmount; // 诉讼金额
     private Double lawsuitCorpus; // 诉讼本金
@@ -123,19 +123,19 @@ public class CaseInfo extends BaseModel implements Serializable {
         this.guarantor = guarantor;
     }
 
-    public Integer getEvaluateExcellent() {
+    public String getEvaluateExcellent() {
         return evaluateExcellent;
     }
 
-    public void setEvaluateExcellent(Integer evaluateExcellent) {
+    public void setEvaluateExcellent(String evaluateExcellent) {
         this.evaluateExcellent = evaluateExcellent;
     }
 
-    public Integer getEvaluateLevel() {
+    public String getEvaluateLevel() {
         return evaluateLevel;
     }
 
-    public void setEvaluateLevel(Integer evaluateLevel) {
+    public void setEvaluateLevel(String evaluateLevel) {
         this.evaluateLevel = evaluateLevel;
     }
 
