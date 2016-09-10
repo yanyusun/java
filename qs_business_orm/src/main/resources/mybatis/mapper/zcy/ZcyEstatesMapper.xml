@@ -80,7 +80,7 @@
       house_w, house_remark, quota, 
       acreage, selling_price, decade, 
       property, orientation, guide_price, 
-      guide_remark, house_remarkv, decorate_price, 
+      guide_remark, decorate_price,
       tenement_price, facility, internal_number, 
       title, decorate_type, decorate_case, 
       decorate_time, build_type, house_belong, 
@@ -95,7 +95,7 @@
       #{houseW,jdbcType=VARCHAR}, #{houseRemark,jdbcType=VARCHAR}, #{quota,jdbcType=VARCHAR}, 
       #{acreage,jdbcType=VARCHAR}, #{sellingPrice,jdbcType=DOUBLE}, #{decade,jdbcType=VARCHAR}, 
       #{property,jdbcType=VARCHAR}, #{orientation,jdbcType=VARCHAR}, #{guidePrice,jdbcType=DOUBLE}, 
-      #{guideRemark,jdbcType=VARCHAR}, #{houseRemarkv,jdbcType=VARCHAR}, #{decoratePrice,jdbcType=DOUBLE}, 
+      #{guideRemark,jdbcType=VARCHAR}, #{decoratePrice,jdbcType=DOUBLE},
       #{tenementPrice,jdbcType=DOUBLE}, #{facility,jdbcType=VARCHAR}, #{internalNumber,jdbcType=VARCHAR}, 
       #{title,jdbcType=VARCHAR}, #{decorateType,jdbcType=VARCHAR}, #{decorateCase,jdbcType=VARCHAR}, 
       #{decorateTime,jdbcType=VARCHAR}, #{buildType,jdbcType=VARCHAR}, #{houseBelong,jdbcType=VARCHAR}, 
@@ -158,9 +158,6 @@
             </if>
             <if test="guideRemark != null">
                 guide_remark,
-            </if>
-            <if test="houseRemarkv != null">
-                house_remarkv,
             </if>
             <if test="decoratePrice != null">
                 decorate_price,
@@ -283,9 +280,6 @@
             <if test="guideRemark != null">
                 #{guideRemark,jdbcType=VARCHAR},
             </if>
-            <if test="houseRemarkv != null">
-                #{houseRemarkv,jdbcType=VARCHAR},
-            </if>
             <if test="decoratePrice != null">
                 #{decoratePrice,jdbcType=DOUBLE},
             </if>
@@ -403,9 +397,6 @@
             <if test="guideRemark != null">
                 guide_remark = #{guideRemark,jdbcType=VARCHAR},
             </if>
-            <if test="houseRemarkv != null">
-                house_remarkv = #{houseRemarkv,jdbcType=VARCHAR},
-            </if>
             <if test="decoratePrice != null">
                 decorate_price = #{decoratePrice,jdbcType=DOUBLE},
             </if>
@@ -489,7 +480,6 @@
       orientation = #{orientation,jdbcType=VARCHAR},
       guide_price = #{guidePrice,jdbcType=DOUBLE},
       guide_remark = #{guideRemark,jdbcType=VARCHAR},
-      house_remarkv = #{houseRemarkv,jdbcType=VARCHAR},
       decorate_price = #{decoratePrice,jdbcType=DOUBLE},
       tenement_price = #{tenementPrice,jdbcType=DOUBLE},
       facility = #{facility,jdbcType=VARCHAR},
@@ -527,7 +517,6 @@
       orientation = #{orientation,jdbcType=VARCHAR},
       guide_price = #{guidePrice,jdbcType=DOUBLE},
       guide_remark = #{guideRemark,jdbcType=VARCHAR},
-      house_remarkv = #{houseRemarkv,jdbcType=VARCHAR},
       decorate_price = #{decoratePrice,jdbcType=DOUBLE},
       tenement_price = #{tenementPrice,jdbcType=DOUBLE},
       facility = #{facility,jdbcType=VARCHAR},
