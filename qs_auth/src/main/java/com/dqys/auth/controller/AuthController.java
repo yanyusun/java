@@ -529,7 +529,7 @@ public class AuthController extends BaseApiContorller {
      */
     @RequestMapping(value = "/add_company", method = RequestMethod.POST)
     public Callable<JsonResponse> addCompany(@RequestParam String companyName, @RequestParam String credential, @RequestParam String licence, @RequestParam Integer type,
-                                             @RequestParam Integer province, @RequestParam Integer city, @RequestParam Integer area, @RequestParam String address, HttpServletRequest httpServletRequest) {
+                                             @RequestParam Integer province, @RequestParam Integer city, @RequestParam Integer area, @RequestParam String address) {
         Integer userId = UserSession.getCurrent() != null ? UserSession.getCurrent().getUserId() : 0;
         return () -> {
             //验证区域有效性
@@ -553,7 +553,7 @@ public class AuthController extends BaseApiContorller {
 
             //验证公司有效性
             ServiceResult<Integer> companyResult = companyService.validateCompany(credential);
-            if (companyResult.getFlag()) {
+            if (!companyResult.getFlag()) {
                 return JsonResponseTool.failure(String.valueOf(companyResult.getData()));
             }
 
@@ -567,7 +567,7 @@ public class AuthController extends BaseApiContorller {
             tCompanyInfo.setArea(area);
             tCompanyInfo.setAddress(address);
             tCompanyInfo.setType(type);
-            companyResult = companyService.addCompany_tx(tCompanyInfo, userId);
+            companyResult = companyService.addCompany_tx(tCompanyInfo);
             if (!companyResult.getFlag()) {
                 return JsonResponseTool.failure(companyResult.getMessage());
             }
