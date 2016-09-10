@@ -1,15 +1,11 @@
 package com.dqys.auth.service.impl;
 
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
-import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
-import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.query.CompanyQuery;
 import com.dqys.auth.service.facade.CompanyService;
 import com.dqys.core.model.ServiceResult;
-import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.FileTool;
-import com.rabbitmq.http.client.domain.UserInfo;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -28,8 +24,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Autowired
     private TCompanyInfoMapper tCompanyInfoMapper;
-    @Autowired
-    private TUserInfoMapper tUserInfoMapper;
+
 
     @Override
     public ServiceResult<Integer> validateCompany(String credential) {
@@ -44,22 +39,14 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public ServiceResult<Integer> addCompany_tx(TCompanyInfo tCompanyInfo,Integer userId) {
+    public ServiceResult<Integer> addCompany_tx(TCompanyInfo tCompanyInfo, Integer userId) {
         //新增数据
-//        Integer userId = UserSession.getCurrent() != null ? UserSession.getCurrent().getUserId() : 0;
-        if (userId == 0) {
-            return ServiceResult.failure("还未登入", userId);
-        }
-        TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(userId);
-        if (tUserInfo == null) {
-            return ServiceResult.failure("用户不存在", userId);
-        }
+
         Integer result = this.tCompanyInfoMapper.insertSelective(tCompanyInfo);
         if (result <= 0) {
             return ServiceResult.failure("新增失败", ObjectUtils.NULL);
         }
-        tUserInfo.setCompanyId(tCompanyInfo.getId());
-        tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo);
+
         try {
             if (!FileTool.saveFileSync(tCompanyInfo.getLicence())) {
                 throw new UnexpectedRollbackException("保存附件失败");
