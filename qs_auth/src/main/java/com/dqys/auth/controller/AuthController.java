@@ -567,7 +567,7 @@ public class AuthController extends BaseApiContorller {
             tCompanyInfo.setArea(area);
             tCompanyInfo.setAddress(address);
             tCompanyInfo.setType(type);
-            companyResult = companyService.addCompany_tx(tCompanyInfo, userId);
+            companyResult = companyService.addCompany_tx(tCompanyInfo);
             if (!companyResult.getFlag()) {
                 return JsonResponseTool.failure(companyResult.getMessage());
             }

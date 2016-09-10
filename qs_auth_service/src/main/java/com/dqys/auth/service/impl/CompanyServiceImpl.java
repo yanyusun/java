@@ -39,7 +39,7 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public ServiceResult<Integer> addCompany_tx(TCompanyInfo tCompanyInfo, Integer userId) {
+    public ServiceResult<Integer> addCompany_tx(TCompanyInfo tCompanyInfo) {
         //新增数据
 
         Integer result = this.tCompanyInfoMapper.insertSelective(tCompanyInfo);
