@@ -109,7 +109,7 @@ public class CaseServiceImpl implements CaseService {
             }
         }
         // 增加事务对象
-        if (caseDTO.getpId() > 0) {
+        if (caseDTO.getpId() != null && caseDTO.getpId() > 0) {
             businessService.addServiceObject(ObjectTypeEnum.CASE.getValue(), caseId,
                     ObjectTypeEnum.CASE.getValue(), caseDTO.getpId());
         } else {
