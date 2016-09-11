@@ -53,6 +53,13 @@
         <![CDATA[ AND create_at <= #{endAt} ]]>
       </if>
 
+      <if test="userIds != null">
+        AND user_id in
+        <foreach collection="userIds" open="(" close=")" item="id" separator=",">
+          #{id}
+        </foreach>
+      </if>
+
     </where>
   </sql>
 
@@ -92,6 +99,9 @@
       <if test="businessId != null" >
         business_id,
       </if>
+      <if test="visibleType != null" >
+        visible_type,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="objectType != null" >
@@ -114,6 +124,9 @@
       </if>
       <if test="businessId != null" >
         #{businessId,jdbcType=INTEGER},
+      </if>
+      <if test="visibleType != null" >
+        #{visibleType,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -142,6 +155,9 @@
       </if>
       <if test="businessId != null" >
         business_id = #{businessId,jdbcType=INTEGER},
+      </if>
+      <if test="visibleType != null" >
+        visible_type = #{visibleType,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER} AND stateflag = 0

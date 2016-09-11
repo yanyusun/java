@@ -74,6 +74,8 @@ public class IOUInfo extends BaseModel implements Serializable {
     }
 
 
+
+
     public String getName() {
         return name;
     }

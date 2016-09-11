@@ -25,14 +25,16 @@
     <result column="worth" property="worth" jdbcType="DOUBLE" />
     <result column="memo" property="memo" jdbcType="VARCHAR" />
     <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="on_collection" property="onCollection" jdbcType="INTEGER"/>
+    <result column="on_agent" property="onAgent" jdbcType="INTEGER"/>
+    <result column="on_lawyer" property="onLawyer" jdbcType="INTEGER"/>
   </resultMap>
-
 
   <!-- 基础字段 -->
   <sql id="Base_Column_List" >
     id, version, create_at, update_at, stateflag, remark, lender_id, pawn_no, amount, type,
     evaluate_excellent, evaluate_level, size, province, city, district, address, pawn_rate,
-    dispose_status, worth, memo, name,on_collection,on_lawyer,on_agent
+    dispose_status, worth, memo, name, on_collection, on_agent, on_lawyer
   </sql>
 
   <sql id="Query_Condition">
@@ -44,8 +46,8 @@
     </where>
   </sql>
 
-  <!-- 逻辑删除 -->
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <!-- 逻辑删除 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     UPDATE bt_pawn SET stateflag = CURRENT_TIMESTAMP
     where id = #{id,jdbcType=INTEGER}
   </delete>
@@ -187,6 +189,67 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
 
+    <!-- 修改 -->
+    <update id="update" parameterType="com.dqys.business.orm.pojo.asset.PawnInfo">
+        update bt_pawn
+        <set>
+            version = version+1,
+            update_at = CURRENT_TIMESTAMP ,
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="lenderId != null">
+                lender_id = #{lenderId,jdbcType=INTEGER},
+            </if>
+            <if test="pawnNo != null">
+                pawn_no = #{pawnNo,jdbcType=VARCHAR},
+            </if>
+            <if test="amount != null">
+                amount = #{amount,jdbcType=DOUBLE},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="evaluateExcellent != null">
+                evaluate_excellent = #{evaluateExcellent,jdbcType=VARCHAR},
+            </if>
+            <if test="evaluateLevel != null">
+                evaluate_level = #{evaluateLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="size != null">
+                size = #{size,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null">
+                province = #{province,jdbcType=VARCHAR},
+            </if>
+            <if test="city != null">
+                city = #{city,jdbcType=VARCHAR},
+            </if>
+            <if test="district != null">
+                district = #{district,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="pawnRate != null">
+                pawn_rate = #{pawnRate,jdbcType=DOUBLE},
+            </if>
+            <if test="disposeStatus != null">
+                dispose_status = #{disposeStatus,jdbcType=VARCHAR},
+            </if>
+            <if test="worth != null">
+                worth = #{worth,jdbcType=DOUBLE},
+            </if>
+            <if test="memo != null">
+                memo = #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
   <!-- 修改 -->
   <update id="update" parameterType="com.dqys.business.orm.pojo.asset.PawnInfo" >
     update bt_pawn
@@ -322,6 +385,5 @@
             AND bpr.iou_id=iou.id GROUP BY bpr.pawn_id )
         </if>
     </select>
-
 
 </mapper>
