@@ -503,12 +503,19 @@ public class AuthController extends BaseApiContorller {
     public Callable<JsonResponse> confirmEmail(@RequestParam String confirmKey) {
         Integer uid = UserSession.getCurrent().getUserId();
         return () -> {
-            ServiceResult serviceResult = userService.confirmMail(MailVerifyTypeEnum.EMAIL_CONFIRM, uid, confirmKey, null);
+            ServiceResult<UserDTO> serviceResult = userService.confirmMail(MailVerifyTypeEnum.EMAIL_CONFIRM, uid, confirmKey, null);
             if (!serviceResult.getFlag()) {
                 return JsonResponseTool.failure(serviceResult.getMessage());
             }
 
-            return JsonResponseTool.success(null);
+            return JsonResponseTool.success(ProtocolTool.createUserHeader(
+                    serviceResult.getData().getUserId(),
+                    serviceResult.getData().getUserTypes(),
+                    serviceResult.getData().getRoleIds(),
+                    serviceResult.getData().getIsCertifieds(),
+                    serviceResult.getData().getStatus(),
+                    "adminCompany"
+            ));
         };
     }
 

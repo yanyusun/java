@@ -166,8 +166,8 @@ public class UserServiceImpl implements UserService {
         }
 
         NoSQLWithRedisTool.removeValueObject(MAIL_CONFIRM_KEY + tUserInfo.getEmail());
-
-        return ServiceResult.success(ObjectUtils.NULL);
+        TUserTag tUserTag = tUserTagMapper.selectByUserId(uid).get(0);//更新头部信息
+        return ServiceResult.success(UserUtils.toUserDTO(tUserInfo, tUserTag));
     }
 
     @Override

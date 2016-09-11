@@ -48,6 +48,9 @@ public class SynthLenderServiceImpl implements SynthLenderService {
     public Map pawnList(Integer lenderId) {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         String userType = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getUserType();
+        if (userType.indexOf(",") > 0) {
+            userType = userType.substring(0, userType.indexOf(","));
+        }
 //        userId = 12;
 //        userType = "31";
         Map<String, Object> map = new HashMap<String, Object>();
