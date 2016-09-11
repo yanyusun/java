@@ -53,6 +53,13 @@
         <![CDATA[ AND create_at <= #{endAt} ]]>
       </if>
 
+      <if test="userIds != null">
+        AND user_id in
+        <foreach collection="userIds" open="(" close=")" item="id" separator=",">
+          #{id}
+        </foreach>
+      </if>
+
     </where>
   </sql>
 
