@@ -7,13 +7,10 @@ import com.dqys.auth.orm.pojo.CompanyDetailInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.constant.business.BusinessRelationEnum;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
-import com.dqys.business.orm.constant.business.ObjectUserStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
-import com.dqys.business.orm.constant.coordinator.OURelationEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
 import com.dqys.business.orm.mapper.asset.*;
-import com.dqys.business.orm.mapper.business.BusinessMapper;
 import com.dqys.business.orm.mapper.business.BusinessObjReMapper;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamMapper;
@@ -95,8 +92,6 @@ public class LenderServiceImpl implements LenderService {
     private TUserInfoMapper userInfoMapper;
     @Autowired
     private TCompanyInfoMapper companyInfoMapper;
-    @Autowired
-    private BusinessMapper businessMapper;
 
     @Autowired
     private BusinessService businessService;
@@ -497,17 +492,17 @@ public class LenderServiceImpl implements LenderService {
         Boolean isUrgeOrLawyer = false; // 催收或者律所
         TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
         CompanyDetailInfo detailInfo = companyInfoMapper.getDetailByCompanyId(userInfo.getCompanyId());
-        if(detailInfo.getType().equals(
-                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_ENTRUST).getPropertyValue())){
+        if (detailInfo.getType().equals(
+                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_ENTRUST).getPropertyValue())) {
             isPlatformOrEntrust = true;
-        }else if(detailInfo.getType().equals(
-                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM).getPropertyValue())){
+        } else if (detailInfo.getType().equals(
+                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM).getPropertyValue())) {
             isPlatformOrEntrust = true;
-        }else if(detailInfo.getType().equals(
-                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW).getPropertyValue())){
+        } else if (detailInfo.getType().equals(
+                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW).getPropertyValue())) {
             isUrgeOrLawyer = true;
-        }else if(detailInfo.getType().equals(
-                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE).getPropertyValue())){
+        } else if (detailInfo.getType().equals(
+                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE).getPropertyValue())) {
             isUrgeOrLawyer = true;
         }
         // 为当前操作人且类型为借款人,状态为通过的数据ID
@@ -542,7 +537,7 @@ public class LenderServiceImpl implements LenderService {
             if (ids != null || ids.size() > 0) {
                 lenderQuery.setExceptIds(ids);
             }
-            if(isUrgeOrLawyer){
+            if (isUrgeOrLawyer) {
                 lenderQuery.setIds(businessIds);
             }
             lenderQuery.setOperator(UserSession.getCurrent().getUserId());
@@ -603,9 +598,9 @@ public class LenderServiceImpl implements LenderService {
             List<Integer> result = CommonUtil.pickList(mineIds, companyIds);
             List<Integer> teamateIds = CommonUtil.pickList(adminIds, managerIds);
             result = CommonUtil.pickList(result, CommonUtil.unionList(teamateIds, teamateIds));
-            if(isUrgeOrLawyer){
+            if (isUrgeOrLawyer) {
                 lenderQuery.setIds(CommonUtil.unionList(result, businessIds));
-            }else{
+            } else {
                 lenderQuery.setIds(result);
             }
             lenderQuery.setRepayStatus(SysProperty.BOOLEAN_FALSE);
@@ -625,9 +620,9 @@ public class LenderServiceImpl implements LenderService {
             objectUserRelationList.forEach(objectUserRelation -> {
                 ids.add(objectUserRelation.getObjectId());
             });
-            if(isUrgeOrLawyer){
+            if (isUrgeOrLawyer) {
                 lenderQuery.setIds(CommonUtil.unionList(ids, businessIds));
-            }else{
+            } else {
                 lenderQuery.setIds(ids);
             }
         } else if (ObjectTabEnum.stock.getValue().equals(tab)) {
@@ -643,16 +638,16 @@ public class LenderServiceImpl implements LenderService {
             objectUserRelationList.forEach(objectUserRelation -> {
                 ids.add(objectUserRelation.getObjectId());
             });
-            if(isUrgeOrLawyer){
+            if (isUrgeOrLawyer) {
                 lenderQuery.setIds(CommonUtil.unionList(ids, businessIds));
-            }else{
+            } else {
                 lenderQuery.setIds(ids);
             }
         } else if (ObjectTabEnum.over.getValue().equals(tab)) {
             // 完成
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
-            if(!flag){
+            if (!flag) {
                 objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
             }
             List<ObjectUserRelation> objectUserRelationList = objectUserRelationMapper.list(objectUserRelationQuery);
@@ -666,7 +661,7 @@ public class LenderServiceImpl implements LenderService {
             // 超时
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
-            if(!flag){
+            if (!flag) {
                 objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
             }
             List<ObjectUserRelation> objectUserRelationList = objectUserRelationMapper.list(objectUserRelationQuery);
@@ -674,9 +669,9 @@ public class LenderServiceImpl implements LenderService {
             objectUserRelationList.forEach(objectUserRelation -> {
                 ids.add(objectUserRelation.getObjectId());
             });
-            if(isUrgeOrLawyer || isPlatformOrEntrust){
+            if (isUrgeOrLawyer || isPlatformOrEntrust) {
                 lenderQuery.setIds(CommonUtil.unionList(ids, businessIds));
-            }else{
+            } else {
                 lenderQuery.setIds(ids);
             }
             lenderQuery.setIsOutTime(true);
@@ -684,7 +679,7 @@ public class LenderServiceImpl implements LenderService {
             // 无效
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
-            if(!flag){
+            if (!flag) {
                 objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
             }
             List<ObjectUserRelation> objectUserRelationList = objectUserRelationMapper.list(objectUserRelationQuery);
@@ -699,9 +694,9 @@ public class LenderServiceImpl implements LenderService {
             List<Integer> ids = userTeamMapper.selectByOperatorAndStatus(UserSession.getCurrent().getUserId(),
                     TeammateReEnum.STATUS_INIT.getValue(), ObjectTypeEnum.LENDER.getValue());
             if (ids != null && ids.size() > 0) {
-                if(isUrgeOrLawyer || isPlatformOrEntrust){
+                if (isUrgeOrLawyer || isPlatformOrEntrust) {
                     lenderQuery.setIds(CommonUtil.unionList(ids, businessIds));
-                }else{
+                } else {
                     lenderQuery.setIds(ids);
                 }
             } else {
@@ -723,9 +718,9 @@ public class LenderServiceImpl implements LenderService {
             List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.LENDER.getValue(),
                     BusinessStatusEnum.init.getValue(), UserSession.getCurrent().getUserId());
             if (!CommonUtil.checkParam(ids)) {
-                if(flag){
+                if (flag) {
                     lenderQuery.setIds(CommonUtil.unionList(ids, managerBusinessIds));
-                }else{
+                } else {
                     lenderQuery.setIds(ids);
                 }
             } else {
@@ -749,11 +744,11 @@ public class LenderServiceImpl implements LenderService {
             List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.LENDER.getValue(),
                     BusinessStatusEnum.platform_pass.getValue(), UserSession.getCurrent().getUserId());
             if (!CommonUtil.checkParam(ids)) {
-                if(flag) {
+                if (flag) {
                     lenderQuery.setIds(CommonUtil.unionList(ids, managerBusinessIds));
-                }else if(isPlatformOrEntrust){
+                } else if (isPlatformOrEntrust) {
                     lenderQuery.setIds(CommonUtil.unionList(ids, businessIds));
-                }else {
+                } else {
                     lenderQuery.setIds(ids);
                 }
             } else {
@@ -765,7 +760,7 @@ public class LenderServiceImpl implements LenderService {
             // 待分配
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
-            if(!flag){
+            if (!flag) {
                 objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
             }
             objectUserRelationQuery.setType(BusinessRelationEnum.team.getValue());
@@ -779,8 +774,8 @@ public class LenderServiceImpl implements LenderService {
             } else {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
-            if(!flag){
-                if(isPlatformOrEntrust){
+            if (!flag) {
+                if (isPlatformOrEntrust) {
                     lenderQuery.setIds(businessIds);
                 }
             }
@@ -797,9 +792,9 @@ public class LenderServiceImpl implements LenderService {
             if (CommonUtil.checkParam(ids)) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             } else {
-                if(isUrgeOrLawyer){
+                if (isUrgeOrLawyer) {
                     lenderQuery.setIds(CommonUtil.unionList(ids, businessIds));
-                }else{
+                } else {
                     lenderQuery.setIds(ids);
                 }
             }
@@ -828,7 +823,7 @@ public class LenderServiceImpl implements LenderService {
             // 委托的处置中
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
-            if(!flag){
+            if (!flag) {
                 objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
             }
             List<ObjectUserRelation> objectUserRelationList = objectUserRelationMapper.list(objectUserRelationQuery);
@@ -842,11 +837,11 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setIds(ids);
             }
             lenderQuery.setIsTakePart(true);
-        } else if(ObjectTabEnum.stop.getValue().equals(tab)) {
+        } else if (ObjectTabEnum.stop.getValue().equals(tab)) {
             // 暂停
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
-            if(!flag){
+            if (!flag) {
                 objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
             }
             List<ObjectUserRelation> objectUserRelationList = objectUserRelationMapper.list(objectUserRelationQuery);
@@ -856,11 +851,11 @@ public class LenderServiceImpl implements LenderService {
             });
             lenderQuery.setIds(ids);
             lenderQuery.setIsStop(true);
-        } else if(ObjectTabEnum.myUrge.getValue().equals(tab)) {
+        } else if (ObjectTabEnum.myUrge.getValue().equals(tab)) {
             // 我的催收
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery(); // 对象关系表
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
-            if(!flag){
+            if (!flag) {
                 objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
             }
             List<ObjectUserRelation> objectUserRelationList = objectUserRelationMapper.list(objectUserRelationQuery);
@@ -876,12 +871,12 @@ public class LenderServiceImpl implements LenderService {
             List<Integer> teammateIds = new ArrayList<>();
             list.forEach(teammateRe1 -> {
                 UserTeam userTeam = userTeamMapper.get(teammateRe1.getUserTeamId());
-                if(userTeam != null){
+                if (userTeam != null) {
                     teammateIds.add(userTeam.getObjectId());
                 }
             });
             List<Integer> result = CommonUtil.unionList(teammateIds, ids);
-            if(result == null || result.size() == 0){
+            if (result == null || result.size() == 0) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             } else {
                 lenderQuery.setIds(result);
