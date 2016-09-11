@@ -113,7 +113,7 @@ public class CaseServiceImpl implements CaseService {
             businessService.addServiceObject(ObjectTypeEnum.CASE.getValue(), caseId,
                     ObjectTypeEnum.CASE.getValue(), caseDTO.getpId());
         } else {
-            businessService.addServiceObject(ObjectTypeEnum.CASE.getValue(), caseId, 0, 0);
+            businessService.addServiceObject(ObjectTypeEnum.CASE.getValue(), caseId, null, null);
         }
         // 增加操作记录
         businessLogService.add(caseId, ObjectTypeEnum.CASE.getValue(), ObjectLogEnum.add.getValue(), "", "", 0, 0);
@@ -132,7 +132,7 @@ public class CaseServiceImpl implements CaseService {
                 return null;
             }
         }
-        return null;
+        return 1;
     }
 
     @Override
