@@ -740,6 +740,9 @@ public class DistributionServiceImpl implements DistributionService {
             Message message = new Message();
             smsUtil.sendSms(SysProperty.SMS_OUT_CODE, creator.getMobile(), msg);
             message.setContent(smsUtil.getSendContent(SysProperty.SMS_OUT_CODE, msg));
+
+            // 去除公司的协作器
+            coordinatorService.delCoordinator(companyTeamRe.getAcceptCompanyId());
             // 添加消息
             String code = ""; // 对象编号
             if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
