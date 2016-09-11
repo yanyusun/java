@@ -3,10 +3,12 @@ package com.dqys.business.orm.impl.asset;
 import com.dqys.business.orm.base.BaseTest;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.query.asset.LenderQuery;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,6 +48,13 @@ public class LenderInfoMapperImplTest extends BaseTest {
 */
         Integer delete = lenderInfoMapper.deleteByPrimaryKey(id);
         Assert.assertEquals("1", String.valueOf(delete));
+
+        LenderQuery lenderQuery = new LenderQuery();
+        lenderQuery.setIsNotAsset(true);
+        lenderQuery.setIds(new ArrayList<>());
+        List<LenderInfo> list = lenderInfoMapper.queryList(lenderQuery);
+        Assert.assertNotNull(list);
+
     }
 
     private LenderInfo newOne(Integer index){

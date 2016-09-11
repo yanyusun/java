@@ -47,7 +47,7 @@
         AND is_certified = #{certified,jdbcType=INTEGER}
       </if>
 
-      <if test="userTypes != null">
+      <if test="userTypes != null and userTypes.size() > 0">
         AND user_type IN
         <foreach collection="userTypes" item="ut" separator="," open="(" close=")">
           #{ut}

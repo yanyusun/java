@@ -89,13 +89,13 @@
         <![CDATA[ AND create_at <= #{endAt} ]]>
       </if>
 
-      <if test="ids != null">
+      <if test="ids != null and ids.size() > 0">
         AND id in
           <foreach collection="ids" item="i" open="(" close=")" separator=",">
             #{i}
           </foreach>
       </if>
-      <if test="exceptIds != null">
+      <if test="exceptIds != null and exceptIds.size() > 0">
         AND id not in
           <foreach collection="exceptIds" item="i" open="(" close=")" separator=",">
             #{i}

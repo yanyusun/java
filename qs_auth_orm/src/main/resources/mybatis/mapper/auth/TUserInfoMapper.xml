@@ -53,19 +53,19 @@
         AND user_name LIKE CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
       </if>
 
-      <if test="statuss != null">
+      <if test="statuss != null and statuss.size() > 0">
         AND status IN
         <foreach collection="statuss" open="(" close=")" separator="," item="s">
           #{s}
         </foreach>
       </if>
-      <if test="ids != null">
+      <if test="ids != null and ids.size() > 0">
         AND id IN
         <foreach collection="ids" open="(" close=")" separator="," item="id">
           #{id}
         </foreach>
       </if>
-      <if test="companyIds != null">
+      <if test="companyIds != null and companyIds.size() > 0">
         AND company_id IN
         <foreach collection="companyIds" open="(" close=")" separator="," item="cId">
           #{cId}
