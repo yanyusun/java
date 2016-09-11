@@ -3,6 +3,7 @@ package com.dqys.business.orm.query.business;
 import com.dqys.core.base.BaseQuery;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by yan on 16-7-16.
@@ -39,6 +40,16 @@ public class ObjectUserRelationQuery extends BaseQuery {
 
     private Date startAt; // 开始时间
     private Date endAt; // 结束时间
+
+    private List<Integer> userIds; // 操作人集合
+
+    public List<Integer> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(List<Integer> userIds) {
+        this.userIds = userIds;
+    }
 
     public Integer getBusinessId() {
         return businessId;

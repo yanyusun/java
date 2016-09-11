@@ -45,7 +45,8 @@
     id, version, create_at, update_at, stateflag, remark, iou_no, lender_id, type,
     agency, iou_code, loan_time, loan_attime, amount, pact_rate, outtime_multiple, appropriation_multiple, 
     accrual_repay, loan_repay, level_type, out_days, less_corpus, accrual_arrears, penalty, 
-    arrears, end_at, worth, advance_corpus, evaluate_excellent, evaluate_level, memo, name,on_collection,on_lawyer,on_agent
+    arrears, end_at, worth, advance_corpus, evaluate_excellent, evaluate_level, memo, name,
+    on_collection, on_lawyer, on_agent
   </sql>
 
     <sql id="Query_Condition">
@@ -358,35 +359,17 @@
       where p.id=#{objectId,jdbcType=INTEGER}
   </select>
 
-    <!-- 多条件查出统计 -->
-    <select id="queryCount" parameterType="com.dqys.business.orm.query.asset.IOUQuery" resultMap="BaseResultMap">
-        SELECT COUNT(id) from bt_iou
-        <include refid="Query_Condition"/>
-    </select>
+  <!-- 多条件查出统计 -->
+  <select id="queryCount" parameterType="com.dqys.business.orm.query.asset.IOUQuery" resultMap="BaseResultMap">
+    SELECT COUNT(id) from bt_iou
+    <include refid="Query_Condition" />
+  </select>
 
     <select id="getByName" resultMap="BaseResultMap">
         SELECT
-        <include refid="Base_Column_List"/>
+        <include refid="Base_Column_List" />
         FROM bt_iou
         WHERE lender_id = #{lenderId,jdbcType=INTEGER} AND name = #{name,jdbcType=VARCHAR} AND stateflag = 0
-    </select>
-
-    <!--借据信息 userType=31 催收 userType=32 律师-->
-    <select id="iouListByLenderId" resultMap="BaseResultMap">
-        <if test="userType !=null and userType==31">
-            SELECT iou.* from bt_iou iou
-            WHERE iou.lender_id=#{lenderId,jdbcType=INTEGER} AND iou.stateflag=0 AND iou.id IN (
-            SELECT bpr.iou_id from bt_pawn pawn ,object_user_relation our , bt_pi_relation bpr
-            WHERE pawn.id=our.object_id AND our.object_type=#{objectType,jdbcType=INTEGER} AND
-            our.user_id=#{userId,jdbcType=INTEGER}
-            AND bpr.pawn_id=pawn.id GROUP BY bpr.iou_id )
-        </if>
-        <if test="userType !=null and userType==32">
-            SELECT iou.* from bt_iou iou LEFT JOIN object_user_relation our
-            ON our.object_id=iou.id and our.object_type= #{objectType,jdbcType=INTEGER}
-            WHERE iou.stateflag=0 and our.user_id=#{userId,jdbcType=INTEGER} AND iou.lender_id=
-            #{lenderId,jdbcType=INTEGER}
-        </if>
     </select>
 
 </mapper>

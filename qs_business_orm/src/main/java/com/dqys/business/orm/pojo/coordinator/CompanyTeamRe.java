@@ -23,6 +23,26 @@ public class CompanyTeamRe {
 
     private Long stateflag;
 
+    private Integer roleType; // 角色类型
+    private Integer requesterId; // 请求公司ID
+
+
+    public Integer getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(Integer roleType) {
+        this.roleType = roleType;
+    }
+
+    public Integer getRequesterId() {
+        return requesterId;
+    }
+
+    public void setRequesterId(Integer requesterId) {
+        this.requesterId = requesterId;
+    }
+
     public Integer getId() {
         return id;
     }

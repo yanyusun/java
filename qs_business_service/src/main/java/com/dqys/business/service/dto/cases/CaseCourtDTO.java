@@ -32,7 +32,7 @@ public class CaseCourtDTO {
     private String mobile; // 手机
     private String tel; // 座机
     private String other; // 其他联系方式
-    private String otherLawyer; // 其他联系方式
+    private String otherLawyer; // 其他法官
 
     public Integer getId() {
         return id;

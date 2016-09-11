@@ -18,6 +18,13 @@ public interface DistributionService {
      */
     DistributionDTO getDistribution_tx(Integer type, Integer id) throws BusinessLogException;
 
+    /**
+     * 创建分配器
+     * @param type
+     * @param id
+     * @return
+     * @throws BusinessLogException
+     */
     Integer addDistribution(Integer type, Integer id) throws BusinessLogException;
 
     /**
@@ -50,4 +57,27 @@ public interface DistributionService {
      * @return
      */
     Integer exitDistribution_tx(Integer id) throws BusinessLogException;
+
+    /**
+     * 平台为申请业务流转的公司添加业务流转伙伴
+     * @param type 对象类型
+     * @param id 对象ID
+     * @param distributionId 分配器ID
+     * @param businessType 业务类型
+     * @param companyId 被邀请公司ID
+     */
+    Integer addBusinessService(Integer type, Integer id, Integer distributionId,
+                               Integer businessType, Integer companyId) throws BusinessLogException;
+
+    /**
+     * 被添加公司接受或者拒绝业务流转邀请
+     * @param type
+     * @param id
+     * @param distributionId
+     * @param status
+     * @return
+     */
+    Integer updateBusinessService(Integer type, Integer id, Integer distributionId,
+                                  Integer businessType, Integer status) throws BusinessLogException;
+
 }
