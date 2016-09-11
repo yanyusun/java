@@ -1,7 +1,6 @@
 package com.dqys.business.orm.mapper.asset.impl;
 
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
-import com.dqys.business.orm.mapper.synthLender.SynthLenderMapper;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.query.asset.PawnQuery;
 import com.dqys.business.orm.query.coordinator.ZcyListQuery;
