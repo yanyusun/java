@@ -18,7 +18,7 @@
   </resultMap>
 
   <sql id="Base_Column_List" >
-    id, object_type, object_id, user_id, status, type, employer_id, business_id, stateflag, create_at, update_at
+    id, object_type, object_id, user_id, status, type, employer_id, business_id, stateflag, create_at, update_at,visible_type
   </sql>
 
   <sql id="Query_Condition">

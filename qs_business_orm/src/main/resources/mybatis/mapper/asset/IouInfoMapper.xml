@@ -150,15 +150,6 @@
             <if test="name != null">
                 name,
             </if>
-            <if test="onCollection != null">
-                on_collection,
-            </if>
-            <if test="onAgent != null">
-                on_agent,
-            </if>
-            <if test="onLawyer != null">
-                on_lawyer,
-            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="remark != null">
@@ -397,6 +388,24 @@
         <include refid="Base_Column_List" />
         FROM bt_iou
         WHERE lender_id = #{lenderId,jdbcType=INTEGER} AND name = #{name,jdbcType=VARCHAR} AND stateflag = 0
+    </select>
+
+    <!--借据信息 userType=31 催收 userType=32 律师-->
+    <select id="iouListByLenderId" resultMap="BaseResultMap">
+        <if test="userType !=null and userType==31">
+            SELECT iou.* from bt_iou iou
+            WHERE iou.lender_id=#{lenderId,jdbcType=INTEGER} AND iou.stateflag=0 AND iou.id IN (
+            SELECT bpr.iou_id from bt_pawn pawn ,object_user_relation our , bt_pi_relation bpr
+            WHERE pawn.id=our.object_id AND our.object_type=#{objectType,jdbcType=INTEGER} AND
+            our.user_id=#{userId,jdbcType=INTEGER}
+            AND bpr.pawn_id=pawn.id GROUP BY bpr.iou_id )
+        </if>
+        <if test="userType !=null and userType==32">
+            SELECT iou.* from bt_iou iou LEFT JOIN object_user_relation our
+            ON our.object_id=iou.id and our.object_type= #{objectType,jdbcType=INTEGER}
+            WHERE iou.stateflag=0 and our.user_id=#{userId,jdbcType=INTEGER} AND iou.lender_id=
+            #{lenderId,jdbcType=INTEGER}
+        </if>
     </select>
 
 </mapper>

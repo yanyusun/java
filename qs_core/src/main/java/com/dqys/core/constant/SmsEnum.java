@@ -16,7 +16,15 @@ public enum SmsEnum {
     POSTPONE_AUDIT_YES(110, "延期申请审核成功"),
     POSTPONE_AUDIT_NO(111, "延期申请审核失败"),
     REPLACE_CONTACTS(122, "联系人替换"),
-    REPLACE(123, "被替换");
+    REPLACE(123, "被替换"),
+    FLOW(124, "业务流转请求操作,通知平台管理员短信"),
+    FLOW_RESULT_YES(125, "业务流转请求接受,通知请求公司短信"),
+    FLOW_RESULT_NO(126, "业务流转请求拒绝,通知请求公司短信"),
+    ADMIN_INVITE_RESULT_YES(127, "被邀请公司接受,通知平台管理员短信"),
+    ADMIN_INVITE_RESULT_NO(128, "被邀请公司拒绝,通知平台管理员短信"),
+    RESPOND_INVITE_RESULT_YES(129, "被邀请公司接受,通知请求公司短信"),
+    RESPOND_INVITE_RESULT_NO(130, "被邀请公司拒绝,通知请求公司短信");
+
     private Integer value;
     private String name;
 

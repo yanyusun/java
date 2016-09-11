@@ -52,4 +52,9 @@ public class OURelationMapperImpl extends BaseDao implements OURelationMapper {
     public Integer deleteByUserTeamId(@Param("userTeamIds") List<Integer> userTeamIds) {
         return super.getSqlSession().getMapper(OURelationMapper.class).deleteByUserTeamId(userTeamIds);
     }
+
+    @Override
+    public List<OURelation> findByOURelation(@Param("userId") Integer userId, @Param("objectType") Integer objectType) {
+        return super.getSqlSession().getMapper(OURelationMapper.class).findByOURelation(userId, objectType);
+    }
 }

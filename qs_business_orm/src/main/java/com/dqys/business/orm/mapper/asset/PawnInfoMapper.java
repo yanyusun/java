@@ -3,7 +3,6 @@ package com.dqys.business.orm.mapper.asset;
 
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.query.asset.PawnQuery;
-import org.apache.ibatis.annotations.Param;
 import com.dqys.business.orm.query.coordinator.ZcyListQuery;
 import org.apache.ibatis.annotations.Param;
 
@@ -12,6 +11,7 @@ import java.util.List;
 public interface PawnInfoMapper {
     /**
      * 逻辑删除
+     *
      * @param id
      * @return
      */
@@ -57,7 +57,6 @@ public interface PawnInfoMapper {
     List<PawnInfo> listByLenderId(Integer lenderId);
 
 
-
     /**
      * 多条件查询抵押物
      *
@@ -76,14 +75,26 @@ public interface PawnInfoMapper {
 
     /**
      * 根据特定借款人的特定名称查询抵押物
+     *
      * @param id
      * @param name
      * @return
      */
-    PawnInfo getByName(@Param("lenderId")Integer id, @Param("name")String name);
+    PawnInfo getByName(@Param("lenderId") Integer id, @Param("name") String name);
 
     //    <!--中介抵押物-->
     List<PawnInfo> pawnListPage(@Param("zcyListQuery") ZcyListQuery zcyListQuery);
 
     Integer pawnListPageCount(@Param("zcyListQuery") ZcyListQuery zcyListQuery);
+
+    /**
+     * 获取当前用户的借款人下的抵押物信息
+     *
+     * @param lenderId   借款人id
+     * @param userId     用户id
+     * @param objectType 抵押物类型
+     * @return
+     */
+    List<PawnInfo> pawnListByLenderId(@Param("lenderId") Integer lenderId, @Param("userId") Integer userId, @Param("objectType") Integer objectType, @Param("userType") Integer userType);
+
 }

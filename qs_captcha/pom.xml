@@ -16,6 +16,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kaptcha.version>2.3.2</kaptcha.version>
+        <!--<kaptcha.version>2.3</kaptcha.version>-->
     </properties>
 
     <dependencies>
@@ -24,11 +25,13 @@
             <artifactId>core</artifactId>
             <version>1.0</version>
         </dependency>
-        <dependency>
+
+     <dependency>
             <groupId>com.google.code.kaptcha</groupId>
             <artifactId>kaptcha</artifactId>
             <version>${kaptcha.version}</version>
         </dependency>
+
     </dependencies>
 
 </project>

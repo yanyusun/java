@@ -8,13 +8,13 @@ import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
 import com.dqys.business.service.utils.followUp.FollowUpUtil;
 import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.model.JsonResponse;
-import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -71,7 +71,7 @@ public class FollowUpController extends BaseApiContorller {
     }
 
     /**
-     * @api {GET} http://{url}/follow_up/add 增加跟进信息,状态为未发送
+     * @api {POST} http://{url}/follow_up/add 增加跟进信息,状态为未发送
      * @apiName add
      * @apiGroup followUp
      * @apiUse FollowUpMessageDTO

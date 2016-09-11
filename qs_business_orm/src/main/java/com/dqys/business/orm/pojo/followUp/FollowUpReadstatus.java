@@ -1,8 +1,10 @@
 package com.dqys.business.orm.pojo.followUp;
 
+import com.dqys.core.base.BaseModel;
+
 import java.util.Date;
 
-public class FollowUpReadstatus {
+public class FollowUpReadstatus extends BaseModel  {
     private Integer id;
 
     private Integer userId;
