@@ -659,8 +659,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     }
 
     @Override
-    public String delCoordinator(Integer companyId) {
-        List<Integer> userTeamIds = userTeamMapper.selectByCompany(companyId);//协作器id集合
+    public String delCoordinator(Integer companyId,Integer objectId,Integer objectType) {
+        List<Integer> userTeamIds = userTeamMapper.selectByCompany(companyId,objectId,objectType);//协作器id集合
         if (userTeamIds.size() > 0) {
             teammateReMapper.deleteByUserTeamId(userTeamIds);//删除团队
             ouRelationMapper.deleteByUserTeamId(userTeamIds);//删除业务表

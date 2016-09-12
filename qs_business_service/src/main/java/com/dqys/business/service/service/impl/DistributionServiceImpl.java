@@ -742,7 +742,7 @@ public class DistributionServiceImpl implements DistributionService {
             message.setContent(smsUtil.getSendContent(SysProperty.SMS_OUT_CODE, msg));
 
             // 去除公司的协作器
-            coordinatorService.delCoordinator(companyTeamRe.getAcceptCompanyId());
+            coordinatorService.delCoordinator(companyTeamRe.getAcceptCompanyId(), companyTeam.getObjectId(), companyTeam.getObjectType());
             // 添加消息
             String code = ""; // 对象编号
             if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
