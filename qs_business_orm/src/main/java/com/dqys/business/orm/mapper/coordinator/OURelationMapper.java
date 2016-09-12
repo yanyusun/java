@@ -49,4 +49,13 @@ public interface OURelationMapper {
 
     //    查询公司业务流转关系-
     List<OURelation> findByOURelation(@Param("userId") Integer userId, @Param("objectType") Integer objectType);
+
+    /**
+     * 关联查询事物关系表
+     * @param userId 用户id
+     * @param lenderId 借款人id
+     * @param objectType 借款人对象类型
+     * @return
+     */
+    List<OURelation> selectOURelationByUserTeam(@Param("userId")Integer userId, @Param("lenderId")Integer lenderId,@Param("objectType") Integer objectType);
 }

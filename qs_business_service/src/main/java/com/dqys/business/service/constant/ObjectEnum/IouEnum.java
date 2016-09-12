@@ -18,14 +18,25 @@ public enum IouEnum {
     OPERATION_RECORD(1310, "操作记录"),
     ADD(1311, "新增"),
     UPDATE(1312, "修改"),
-    DELETE(1313, "删除")
-    ;
+    DELETE(1313, "删除");
     private Integer value;
     private String name;
 
     IouEnum(Integer value, String name) {
         this.value = value;
         this.name = name;
+    }
+
+
+    public IouEnum getIouEnum(Integer value) {
+        if (value != null) {
+            for (IouEnum iouEnum : IouEnum.values()) {
+                if (iouEnum.getValue().equals(value)) {
+                    return iouEnum;
+                }
+            }
+        }
+        return null;
     }
 
     public Integer getValue() {

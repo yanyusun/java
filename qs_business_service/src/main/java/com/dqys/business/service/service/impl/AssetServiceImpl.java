@@ -98,6 +98,7 @@ public class AssetServiceImpl implements AssetService {
             return JsonResponseTool.paramErr("参数错误");
         }
         AssetInfo assetInfo = AssetServiceUtils.toAssetInfo(assetDTO);
+        assetInfo.setOperator(UserSession.getCurrent().getUserId());
         assetInfo.setAssetNo(AssetServiceUtils.createAssetCode());
         Integer addResult = assetInfoMapper.insert(assetInfo);
         if (addResult.equals(1)) {
@@ -169,7 +170,7 @@ public class AssetServiceImpl implements AssetService {
             return null;
         }
         AssetQuery assetQuery = createAssetQuery(type);
-        if (assetQuery.getId() == null || assetQuery.getId().equals(SysProperty.NULL_DATA_ID)) {
+        if (assetQuery.getId() != null && assetQuery.getId().equals(SysProperty.NULL_DATA_ID)) {
             return JsonResponseTool.successNullList();
         }
         if (assetListQuery != null) {

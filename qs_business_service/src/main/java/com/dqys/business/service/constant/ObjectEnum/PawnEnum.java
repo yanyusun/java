@@ -34,6 +34,17 @@ public enum PawnEnum {
         this.name = name;
     }
 
+    public PawnEnum getPawnEnum(Integer value){
+        if(value != null){
+            for(PawnEnum pawnEnum : PawnEnum.values()){
+                if(pawnEnum.getValue().equals(value)){
+                    return pawnEnum;
+                }
+            }
+        }
+        return null;
+    }
+
     public Integer getValue() {
         return value;
     }

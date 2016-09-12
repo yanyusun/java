@@ -44,8 +44,9 @@
     <sql id="Base_Column_List">
     id, version, create_at, update_at, stateflag, remark, iou_no, lender_id, type,
     agency, iou_code, loan_time, loan_attime, amount, pact_rate, outtime_multiple, appropriation_multiple, 
-    accrual_repay, loan_repay, level_type, out_days, less_corpus, accrual_arrears, penalty, 
-    arrears, end_at, worth, advance_corpus, evaluate_excellent, evaluate_level, memo, name,on_collection,on_lawyer,on_agent
+    accrual_repay, loan_repay, level_type, out_days, less_corpus, accrual_arrears, penalty,
+    arrears, end_at, worth, advance_corpus, evaluate_excellent, evaluate_level, memo, name,
+    on_collection, on_lawyer, on_agent
   </sql>
 
     <sql id="Query_Condition">
@@ -231,6 +232,15 @@
             </if>
             <if test="name != null">
                 #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="onCollection != null">
+                #{onCollection,jdbcType=INTEGER},
+            </if>
+            <if test="onAgent != null">
+                #{onAgent,jdbcType=INTEGER},
+            </if>
+            <if test="onLawyer != null">
+                #{onLawyer,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>

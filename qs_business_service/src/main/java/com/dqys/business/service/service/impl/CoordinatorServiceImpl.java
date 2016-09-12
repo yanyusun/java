@@ -339,9 +339,9 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         if (status == 1 && result > 0) {
             Map userTeammate = coordinatorMapper.selectByUserTeamAndMateRe(teammateId);//查询团队中的协作器信息
             OURelation ouRelation = new OURelation();
-            String object_oper_status = MessageUtils.transMapToString(userTeammate, "object_oper_status");
+            String object_oper_status = MessageUtils.transMapToString(userTeammate, "object_oper_status");//对象可操作状态:0拥有对其全部的操作1来自业务流转只对其下部分对象有操作权限',
             if ("1".equals(object_oper_status)) {
-                List<OURelation> list = ouRelationMapper.findByOURelation(userT.getMangerId(), userT.getObjectType());
+                List<OURelation> list = ouRelationMapper.findByOURelation(userT.getMangerId(), userT.getObjectType());//查询业务流转对象
                 if (list.size() > 0) {
                     ouRelation = list.get(0);
                 }
@@ -659,17 +659,62 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     }
 
     @Override
-    public String delCoordinator(Integer companyId) {
-        List<Integer> userTeamIds = userTeamMapper.selectByCompany(companyId);//协作器id集合
-        if (userTeamIds.size() > 0) {
-            teammateReMapper.deleteByUserTeamId(userTeamIds);//删除团队
-            ouRelationMapper.deleteByUserTeamId(userTeamIds);//删除业务表
-            userTeamMapper.deleteByCompany(companyId);//删除协作器
-            return "yes";
+    public String delCoordinator(Integer companyId, Integer objectId, Integer objectType) {
+        boolean flag = false;
+        if (ObjectTypeEnum.PAWN.getValue().equals(objectType)) {
+            PawnInfo pawnInfo = pawnInfoMapper.get(objectId);
+            if (pawnInfo != null) {
+                Integer lenderId = pawnInfo.getLenderId();
+                Integer count = getUserTeamByObjectTypeCount(companyId, objectId, objectType, lenderId);
+                if (count != null && count == 0) {
+                    objectType = ObjectTypeEnum.LENDER.getValue();
+                    objectId = lenderId;
+                    flag = true;
+                }
+            }
+        } else if (ObjectTypeEnum.IOU.getValue().equals(objectType)) {
+            IOUInfo iouInfo = iouInfoMapper.get(objectId);
+            if (iouInfo != null) {
+                Integer lenderId = iouInfo.getLenderId();
+                Integer count = getUserTeamByObjectTypeCount(companyId, objectId, objectType, lenderId);
+                if (count != null && count == 0) {
+                    objectType = ObjectTypeEnum.LENDER.getValue();
+                    objectId = lenderId;
+                    flag = true;
+                }
+            }
         } else {
-            return "no";
+            flag = true;
         }
+        if (flag) {
+            List<Integer> userTeamIds = userTeamMapper.selectByCompany(companyId, objectId, objectType);//协作器id集合
+            if (userTeamIds.size() > 0) {
+                teammateReMapper.deleteByUserTeamId(userTeamIds);//删除团队
+                ouRelationMapper.deleteByUserTeamId(userTeamIds);//删除业务表
+                userTeamMapper.deleteByCompany(companyId);//删除协作器
+                return "yes";
+            }
+        }
+        return "no";
+    }
 
+    private Integer getUserTeamByObjectTypeCount(Integer companyId, Integer objectId, Integer objectType, Integer lenderId) {
+        List<Integer> userTeams = userTeamMapper.selectByCompany(companyId, lenderId, ObjectTypeEnum.LENDER.getValue());
+        if (userTeams.size() > 0) {
+            Integer userTeamId = userTeams.get(0);
+            OURelation ouRelation = new OURelation();
+            ouRelation.setType(OURelationEnum.TYPE_ALLOCATION_TEAM.getValue());
+            ouRelation.setEmployerId(userTeamId);
+            ouRelation.setObjectType(objectType);
+            List<OURelation> list = ouRelationMapper.selectBySelective(ouRelation);
+            Integer count = 0;
+            if (list.size() > 0) {
+                ouRelation.setObjectId(objectId);
+                count = ouRelationMapper.deleteByPrimaryKey(ouRelation);
+            }
+            return list.size() - count;
+        }
+        return null;
     }
 
     @Override
@@ -707,6 +752,38 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
         }
         return name;
+    }
+
+    @Override
+    public Integer insetOUReationByFlowWork(Integer userId, Integer objectId, Integer objectType) {
+        Integer lenderId = 0;
+        if (ObjectTypeEnum.PAWN.getValue().equals(objectType)) {
+            PawnInfo info = pawnInfoMapper.get(objectId);
+            if (info != null) {
+                lenderId = info.getLenderId();
+            }
+        } else if (ObjectTypeEnum.IOU.getValue().equals(objectType)) {
+            IOUInfo info = iouInfoMapper.get(objectId);
+            if (info != null) {
+                lenderId = info.getLenderId();
+            }
+        }
+        Integer count = 0;
+        List<OURelation> list = ouRelationMapper.selectOURelationByUserTeam(userId, lenderId, ObjectTypeEnum.LENDER.getValue());//借款人协作器下的事物关系表中的所有操作人员
+        for (OURelation our : list) {
+            our.setId(null);
+            our.setObjectId(objectId);
+            our.setObjectType(objectType);
+            OURelation ouRelation = new OURelation();
+            ouRelation.setObjectId(our.getObjectId());
+            ouRelation.setObjectType(our.getObjectType());
+            ouRelation.setUserId(our.getUserId());
+            List<OURelation> relations = ouRelationMapper.selectBySelective(ouRelation);//判断对象和操作人员是否已经存在
+            if (relations.size() == 0) {
+                count += ouRelationMapper.insertSelective(our);
+            }
+        }
+        return count;
     }
 
 

@@ -28,7 +28,7 @@ public interface UserTeamMapper {
 
     UserTeam selectByPrimaryKeySelective(UserTeam userTeam);
 
-    List<Integer> selectByCompany(Integer companyId);
+    List<Integer> selectByCompany(@Param("companyId") Integer companyId, @Param("objectId") Integer objectId, @Param("objectType") Integer objectType);
 
     Integer deleteByCompany(Integer companyId);
 

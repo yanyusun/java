@@ -82,4 +82,18 @@ public interface CompanyService {
      */
     List<CompanyDTO> listByType(Integer typeId);
 
+    /**
+     * 查询业务流转类型下的所有公司
+     * @param type
+     * @return
+     */
+    List<CompanyDTO> listCompanyByServiceType(Integer type);
+
+    /**
+     * 查询业务流转类型下的合作公司
+     * @param type
+     * @return
+     */
+    List<CompanyDTO> listRelationByServiceType(Integer type, Integer id);
+
 }
