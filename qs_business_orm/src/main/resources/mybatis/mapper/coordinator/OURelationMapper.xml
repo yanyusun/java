@@ -164,7 +164,7 @@
         select
         <include refid="Base_Column_List"/>
         from object_user_relation
-        where 1=1
+        where stateflag=0
         <if test="objectType !=null">
             and object_type=#{objectType}
         </if>
@@ -173,6 +173,12 @@
         </if>
         <if test="userId !=null">
             and user_id=#{userId}
+        </if>
+        <if test="type !=null">
+            and type=#{type}
+        </if>
+        <if test="employerId !=null">
+            and employer_id=#{employerId}
         </if>
     </select>
     <!--物理删除业务表-->
@@ -186,8 +192,16 @@
     <!--查询公司业务流转关系-->
     <select id="findByOURelation" resultMap="BaseResultMap">
         SELECT our.* from  object_user_relation our
-        where our.visible_type=1 and our.type=3 and our.user_id=#{userId,jdbcType=INTEGER}
+        where our.stateflag=0 and our.visible_type=1 and our.type=3 and our.user_id=#{userId,jdbcType=INTEGER}
         AND our.employer_id IN (SELECT ct.id from t_company_team ct where ct.object_type=#{objectType,jdbcType=INTEGER})
+    </select>
+    <!--关联查询事物关系表-->
+    <select id="selectOURelationByUserTeam" resultMap="BaseResultMap">
+        SELECT our.* from object_user_relation our
+        WHERE our.stateflag=0 and our.object_id=#{lenderId} and our.object_type=#{objectType} and our.type=1 and our.employer_id IN
+        (SELECT tut.id from t_teammate_re ttr,t_user_team tut
+        where tut.id=ttr.user_team_id AND ttr.user_id=#{userId}
+        AND tut.object_id=#{lenderId} AND tut.object_type=#{objectType})
     </select>
 
 </mapper>

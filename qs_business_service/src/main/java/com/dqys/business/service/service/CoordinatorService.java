@@ -124,7 +124,7 @@ public interface CoordinatorService {
      * @param companyId
      * @return
      */
-    String delCoordinator(Integer companyId,Integer objectId,Integer objectType);
+    String delCoordinator(Integer companyId, Integer objectId, Integer objectType);
 
     /**
      * 获取对象名称
@@ -134,4 +134,14 @@ public interface CoordinatorService {
      * @return
      */
     String getObjectName(Integer objectType, Integer objectId);
+
+    /**
+     * 添加流转对象
+     *
+     * @param userId
+     * @param objectId
+     * @param objectType
+     * @return
+     */
+    Integer insetOUReationByFlowWork(Integer userId, Integer objectId, Integer objectType);
 }
