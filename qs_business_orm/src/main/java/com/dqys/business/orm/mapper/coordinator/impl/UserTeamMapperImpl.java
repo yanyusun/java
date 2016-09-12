@@ -35,8 +35,8 @@ public class UserTeamMapperImpl extends BaseDao implements UserTeamMapper {
     }
 
     @Override
-    public List<Integer> selectByCompany(Integer companyId) {
-        return super.getSqlSession().getMapper(UserTeamMapper.class).selectByCompany(companyId);
+    public List<Integer> selectByCompany(@Param("companyId") Integer companyId, @Param("objectId") Integer objectId, @Param("objectType") Integer objectType) {
+        return super.getSqlSession().getMapper(UserTeamMapper.class).selectByCompany(companyId, objectId, objectType);
     }
 
     @Override

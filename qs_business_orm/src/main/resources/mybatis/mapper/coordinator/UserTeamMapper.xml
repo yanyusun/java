@@ -246,6 +246,8 @@
     <select id="selectByCompany" parameterType="java.lang.Integer" resultType="int">
       SELECT tut.id from t_user_team tut
       WHERE tut.stateflag=0 AND tut.company_id=#{companyId,jdbcType=INTEGER}
+      AND tut.object_id=#{objectId,jdbcType=INTEGER}
+      AND tut.object_type=#{objectType,jdbcType=INTEGER}
     </select>
 
     <update id="deleteByCompany" parameterType="int">

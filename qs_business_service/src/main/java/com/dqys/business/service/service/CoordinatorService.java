@@ -124,7 +124,7 @@ public interface CoordinatorService {
      * @param companyId
      * @return
      */
-    String delCoordinator(Integer companyId);
+    String delCoordinator(Integer companyId,Integer objectId,Integer objectType);
 
     /**
      * 获取对象名称
