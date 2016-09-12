@@ -617,10 +617,14 @@ public class DistributionServiceImpl implements DistributionService {
                             .getPropertyValue());
             // 判断是否为接收邀请,是则添加对象关系和实体类的标识
             if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
+                // 业务
+                Integer businessId = null;
+                BusinessObjRe businessObjRe = businessObjReMapper.getByObject(companyTeam.getObjectType(), companyTeam.getObjectId());
+                if(businessObjRe != null){
+                    businessId = businessObjRe.getBusinessId();
+                }
                 if (companyTeam != null) {
                     // 修改业务状态
-                    BusinessObjRe businessObjRe = businessObjReMapper.getByObject(
-                            companyTeam.getObjectType(), companyTeam.getObjectId());
                     Business business = businessMapper.get(businessObjRe.getBusinessId());
                     business.setStatus(BusinessStatusEnum.dispose.getValue());
                     businessMapper.update(business);
@@ -657,7 +661,7 @@ public class DistributionServiceImpl implements DistributionService {
                             }
                         }
                         // 添加操作者与操作事物的关联
-                        createObjectUserRelation(companyTeam, companyDetailInfo.getUserId());
+                        createObjectUserRelation(companyTeam, companyDetailInfo.getUserId(), companyTeam.getId(), businessId);
                     } else if (companyTeam.getObjectType().equals(ObjectTypeEnum.ASSETPACKAGE.getValue())) {
                         // 资产包类型
                         if (companyDetailInfo != null) {
@@ -681,7 +685,7 @@ public class DistributionServiceImpl implements DistributionService {
                                 assetInfoMapper.update(assetInfo);
                             }
                         }
-                        createObjectUserRelation(companyTeam, companyDetailInfo.getUserId());
+                        createObjectUserRelation(companyTeam, companyDetailInfo.getUserId(), companyTeam.getId(), businessId);
                         LenderQuery lenderQuery = new LenderQuery();
                         lenderQuery.setAssetId(companyTeam.getObjectId());
                         List<LenderInfo> lenderInfoList = lenderInfoMapper.queryList(lenderQuery);
@@ -691,11 +695,9 @@ public class DistributionServiceImpl implements DistributionService {
                                 companyTeam1 = new CompanyTeam();
                                 companyTeam1.setObjectType(ObjectTypeEnum.LENDER.getValue());
                                 companyTeam1.setObjectId(lenderInfo.getId());
-                                createObjectUserRelation(companyTeam1, companyDetailInfo.getUserId());
+                                createObjectUserRelation(companyTeam1, companyDetailInfo.getUserId(), companyTeam.getId(), businessId);
                             }
                         }
-                    } else if (companyTeam.getObjectType().equals(ObjectTypeEnum.PAWN.getValue())) {
-                        createObjectUserRelation(companyTeam, companyDetailInfo.getUserId());
                     }
                 }
             }
@@ -770,10 +772,9 @@ public class DistributionServiceImpl implements DistributionService {
             messageMapper.add(message);
             // 去除介入信息
             if (companyTeam != null) {
-                // 删除操作者与操作事物的关联
+                // 删除操作者与操作事物的关联(包含业务流转)
                 ObjectUserRelationQuery query = new ObjectUserRelationQuery();
-                query.setObjectType(companyTeam.getObjectType());
-                query.setObjectId(companyTeam.getObjectId());
+                query.setEmployerId(companyTeam.getId());
                 query.setUserId(companyDetailInfo.getUserId());
                 query.setType(BusinessRelationEnum.company.getValue());
                 List<ObjectUserRelation> relationList = objectUserRelationMapper.list(query);
@@ -781,6 +782,7 @@ public class DistributionServiceImpl implements DistributionService {
                 relationList.forEach(objectUserRelation -> {
                     objectUserRelationMapper.deleteByPrimaryKey(objectUserRelation.getId());
                 });
+
                 // todo 这里资产包情况需要修复一下
 
 
@@ -843,7 +845,8 @@ public class DistributionServiceImpl implements DistributionService {
         }
     }
 
-    private Integer createObjectUserRelation(CompanyTeam companyTeam, Integer userId) {
+    private Integer createObjectUserRelation(CompanyTeam companyTeam, Integer userId,
+                                             Integer distrbutionId, Integer businessId) {
         // 增加对象与操作事物的联系
         ObjectUserRelation objectUserRelation = new ObjectUserRelation();
         objectUserRelation.setObjectType(companyTeam.getObjectType());
@@ -851,6 +854,8 @@ public class DistributionServiceImpl implements DistributionService {
         objectUserRelation.setUserId(userId); // 只有管理员才可以接收
         objectUserRelation.setType(BusinessRelationEnum.company.getValue());
         objectUserRelation.setVisibleType(SysProperty.BOOLEAN_TRUE); // 可见
+        objectUserRelation.setEmployerId(distrbutionId); // 分配器ID
+        objectUserRelation.setVisibleType(businessId); // 业务ID
         Integer result = objectUserRelationMapper.insert(objectUserRelation);
         if (result == null) {
             // 添加事物关系失败
@@ -1050,12 +1055,17 @@ public class DistributionServiceImpl implements DistributionService {
                         companyRelationMapper.insert(companyRelation);
                     }
                     // 增加对象关系
+                    BusinessObjRe businessObjRe = businessObjReMapper.getByObject(companyTeam.getObjectType(), companyTeam.getObjectId());
                     ObjectUserRelation objectUserRelation = new ObjectUserRelation();
                     objectUserRelation.setObjectType(type);
                     objectUserRelation.setObjectId(id);
                     objectUserRelation.setUserId(companyTeamRe.getAccepterId()); // 只有管理员才可以接收
                     objectUserRelation.setType(BusinessRelationEnum.company.getValue());
                     objectUserRelation.setVisibleType(SysProperty.BOOLEAN_TRUE); // 可见
+                    objectUserRelation.setEmployerId(companyTeam.getId());
+                    if(businessObjRe != null){
+                        objectUserRelation.setBusinessId(businessObjRe.getBusinessId());
+                    }
                     objectUserRelationMapper.insert(objectUserRelation);
                     // 转换对象状态
                     if(type.equals(ObjectTypeEnum.PAWN.getValue())){
