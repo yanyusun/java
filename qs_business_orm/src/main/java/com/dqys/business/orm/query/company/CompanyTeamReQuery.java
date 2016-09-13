@@ -10,6 +10,23 @@ public class CompanyTeamReQuery {
     private Integer status; // 数据状态
     private Integer companyId; // 公司ID
     private Integer stateflag; // 数据状态
+    private Integer type; // 数据类型
+
+    public Integer getStateflag() {
+        return stateflag;
+    }
+
+    public void setStateflag(Integer stateflag) {
+        this.stateflag = stateflag;
+    }
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
 
     public Integer getId() {
         return id;

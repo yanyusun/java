@@ -482,7 +482,7 @@ public class AssetServiceImpl implements AssetService {
             // 待审核
             List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.ASSETPACKAGE.getValue(),
                     BusinessStatusEnum.init.getValue(), UserSession.getCurrent().getUserId());
-            if (!CommonUtil.checkParam(ids)) {
+            if (!CommonUtil.checkParam(ids) && ids.size() > 0) {
                 if(flag){
                     assetQuery.setIds(CommonUtil.unionList(ids, managerBusinessIds));
                 }else{

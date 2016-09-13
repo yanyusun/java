@@ -7,6 +7,7 @@ public enum  BusinessRelationEnum {
 
     team(1, "团队分配"),
     company(2, "公司分配"),
+    dispose(3, "正在处置"),
     own(0, "自己分配");
 
     private Integer value;
