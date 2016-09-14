@@ -26,7 +26,7 @@ public class SynLenderController {
     private SynthLenderService synthLenderService;
 
     /**
-     * @api {post} zcy/addEstates 借款人信息并关联下抵押物和借据信息
+     * @api {post} zcy/pawnList 借款人信息并关联下抵押物和借据信息
      * @apiParam {int} lenderId 借款人id
      * @apiSampleRequest synLender/pawnList
      * @apiGroup synLender
