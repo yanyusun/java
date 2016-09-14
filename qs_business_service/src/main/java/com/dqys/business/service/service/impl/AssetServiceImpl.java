@@ -331,7 +331,11 @@ public class AssetServiceImpl implements AssetService {
                 assetQuery.setExceptIds(ids);
             }
             if(isUrgeOrLawyer){
-                assetQuery.setIds(businessIds);
+                if(businessIds == null || businessIds.size() == 0){
+                    assetQuery.setId(SysProperty.NULL_DATA_ID);
+                }else{
+                    assetQuery.setIds(businessIds);
+                }
             }
             assetQuery.setOperator(UserSession.getCurrent().getUserId());
         } else if (ObjectTabEnum.handling_urge.getValue().equals(type) || ObjectTabEnum.gongingOn.getValue().equals(type)) {
@@ -396,6 +400,9 @@ public class AssetServiceImpl implements AssetService {
             }else{
                 assetQuery.setIds(result);
             }
+            if(CommonUtil.checkParam(assetQuery.getIds()) || assetQuery.getIds().size() == 0){
+                assetQuery.setId(SysProperty.NULL_DATA_ID);
+            }
             assetQuery.setRepayStatus(SysProperty.BOOLEAN_FALSE);
         } else if (ObjectTabEnum.focus.getValue().equals(type)) {
             // 聚焦
@@ -418,6 +425,9 @@ public class AssetServiceImpl implements AssetService {
             }else{
                 assetQuery.setIds(ids);
             }
+            if(CommonUtil.checkParam(assetQuery.getIds()) || assetQuery.getIds().size() == 0){
+                assetQuery.setId(SysProperty.NULL_DATA_ID);
+            }
         } else if (ObjectTabEnum.stock.getValue().equals(type)) {
             // 存量
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
@@ -435,6 +445,9 @@ public class AssetServiceImpl implements AssetService {
                 assetQuery.setIds(CommonUtil.unionList(ids, businessIds));
             }else{
                 assetQuery.setIds(ids);
+            }
+            if(CommonUtil.checkParam(assetQuery.getIds()) || assetQuery.getIds().size() == 0){
+                assetQuery.setId(SysProperty.NULL_DATA_ID);
             }
         } else if (ObjectTabEnum.over.getValue().equals(type)) {
             // 完成
@@ -516,7 +529,7 @@ public class AssetServiceImpl implements AssetService {
             // 已驳回
             List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.ASSETPACKAGE.getValue(),
                     BusinessStatusEnum.platform_refuse.getValue(), UserSession.getCurrent().getUserId());
-            if (!CommonUtil.checkParam(ids)) {
+            if (!CommonUtil.checkParam(ids) && ids.size() > 0) {
                 assetQuery.setIds(ids);
             } else {
                 // 找不到数据
@@ -568,14 +581,13 @@ public class AssetServiceImpl implements AssetService {
             objectUserRelationList.forEach(objectUserRelation -> {
                 ids.add(objectUserRelation.getObjectId());
             });
-            if (CommonUtil.checkParam(ids)) {
+            if(isUrgeOrLawyer){
+                assetQuery.setIds(CommonUtil.unionList(ids, businessIds));
+            }else{
+                assetQuery.setIds(ids);
+            }
+            if(CommonUtil.checkParam(assetQuery.getIds()) || assetQuery.getIds().size() == 0){
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
-            } else {
-                if(isUrgeOrLawyer){
-                    assetQuery.setIds(CommonUtil.unionList(ids, businessIds));
-                }else{
-                    assetQuery.setIds(ids);
-                }
             }
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_MONTH, -2);

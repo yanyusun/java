@@ -230,7 +230,8 @@ public class UserServiceImpl implements UserService {
         userInfo.setSalt(RandomStringUtils.randomAlphabetic(6));
         try {
             // 密码初始化
-            userInfo.setPassword(SignatureTool.md5Encode(INIT_PASSSWORD, null));
+            userInfo.setPassword(
+                    SignatureTool.md5Encode(SignatureTool.md5Encode(INIT_PASSSWORD, "utf-8") + userInfo.getSalt(), "utf-8"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -403,7 +404,8 @@ public class UserServiceImpl implements UserService {
         tUserInfo1.setId(tUserInfo.getId());
         try {
             // 密码加密
-            tUserInfo1.setPassword(SignatureTool.md5Encode(pwd, null));
+            tUserInfo1.setPassword(SignatureTool.md5Encode(
+                    SignatureTool.md5Encode(INIT_PASSSWORD, "utf-8") + tUserInfo.getSalt(), "utf-8"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -473,7 +475,7 @@ public class UserServiceImpl implements UserService {
                 // 用户基础信息
                 TUserInfo userInfo = UserServiceUtils.toUserInfo(userFileDTO);
                 userInfo.setCompanyId(companyDetailInfo.getCompanyId());
-                userInfo.setPassword(SignatureTool.md5Encode(SignatureTool.md5Encode("12345678", "utf-8") + userInfo.getSalt(), "utf-8"));//默认密码
+                userInfo.setPassword(SignatureTool.md5Encode(SignatureTool.md5Encode(INIT_PASSSWORD, "utf-8") + userInfo.getSalt(), "utf-8"));//默认密码
                 // 用户身份信息
                 TUserTag userTag = UserServiceUtils.toUserTag(userFileDTO);
                 userTag.setUserType(companyDetailInfo.getType().byteValue());

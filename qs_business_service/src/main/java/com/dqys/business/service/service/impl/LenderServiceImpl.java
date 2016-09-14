@@ -555,7 +555,11 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setExceptIds(ids);
             }
             if (isUrgeOrLawyer) {
-                lenderQuery.setIds(businessIds);
+                if(businessIds == null || businessIds.size() == 0){
+                    lenderQuery.setId(SysProperty.NULL_DATA_ID);
+                }else{
+                    lenderQuery.setIds(businessIds);
+                }
             }
             lenderQuery.setOperator(UserSession.getCurrent().getUserId());
         } else if (ObjectTabEnum.handling_urge.getValue().equals(tab) || ObjectTabEnum.gongingOn.getValue().equals(tab)) {
@@ -620,6 +624,9 @@ public class LenderServiceImpl implements LenderService {
             } else {
                 lenderQuery.setIds(result);
             }
+            if(CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0){
+                lenderQuery.setId(SysProperty.NULL_DATA_ID);
+            }
             lenderQuery.setRepayStatus(SysProperty.BOOLEAN_FALSE);
         } else if (ObjectTabEnum.focus.getValue().equals(tab)) {
             // 聚焦
@@ -642,6 +649,9 @@ public class LenderServiceImpl implements LenderService {
             } else {
                 lenderQuery.setIds(ids);
             }
+            if(CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0){
+                lenderQuery.setId(SysProperty.NULL_DATA_ID);
+            }
         } else if (ObjectTabEnum.stock.getValue().equals(tab)) {
             // 存量
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
@@ -659,6 +669,9 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setIds(CommonUtil.unionList(ids, businessIds));
             } else {
                 lenderQuery.setIds(ids);
+            }
+            if(CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0){
+                lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
         } else if (ObjectTabEnum.over.getValue().equals(tab)) {
             // 完成
@@ -750,7 +763,7 @@ public class LenderServiceImpl implements LenderService {
             // 已驳回
             List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.LENDER.getValue(),
                     BusinessStatusEnum.platform_refuse.getValue(), UserSession.getCurrent().getUserId());
-            if (!CommonUtil.checkParam(ids)) {
+            if (!CommonUtil.checkParam(ids) && ids.size() > 0) {
                 lenderQuery.setIds(ids);
             } else {
                 // 找不到数据
@@ -804,14 +817,13 @@ public class LenderServiceImpl implements LenderService {
             objectUserRelationList.forEach(objectUserRelation -> {
                 ids.add(objectUserRelation.getObjectId());
             });
-            if (CommonUtil.checkParam(ids)) {
-                lenderQuery.setId(SysProperty.NULL_DATA_ID);
+            if (isUrgeOrLawyer) {
+                lenderQuery.setIds(CommonUtil.unionList(ids, businessIds));
             } else {
-                if (isUrgeOrLawyer) {
-                    lenderQuery.setIds(CommonUtil.unionList(ids, businessIds));
-                } else {
-                    lenderQuery.setIds(ids);
-                }
+                lenderQuery.setIds(ids);
+            }
+            if(CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0){
+                lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_MONTH, -2);
