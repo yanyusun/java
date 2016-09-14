@@ -11,6 +11,24 @@ public class MessageDTO {
     private String typeName;
     private Integer status;
     private String label;
+    private Integer businessType;//int(2) NOT NULL COMMENT '业务类型：具体就看MessageBTEnum枚举'',
+    private String operUrl;//int(2) NOT NULL COMMENT '操作地址'',;
+
+    public Integer getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(Integer businessType) {
+        this.businessType = businessType;
+    }
+
+    public String getOperUrl() {
+        return operUrl;
+    }
+
+    public void setOperUrl(String operUrl) {
+        this.operUrl = operUrl;
+    }
 
     public String getLabel() {
         return label;

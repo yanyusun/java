@@ -349,7 +349,7 @@ public class RepayServiceImpl implements RepayService {
                 MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "realName"),
                 ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName(), coordinatorService.getObjectName(damageApply.getObject_type(), damageApply.getApply_object_id()), damage_date, original_time);
         String title = coordinatorService.getMessageTitle(damageApply.getApply_object_id(), damageApply.getObject_type(), MessageBTEnum.POSTPONE.getValue());
-        messageService.add(title, content, damageApply.getApply_user_id(), damageApply.getEaxm_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE.getValue(), "?applyId=" + id);
+        messageService.add(title, content, damageApply.getApply_user_id(), damageApply.getEaxm_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE.getValue(), "applyId=" + id);
         map.put("result", "yes");
     }
 

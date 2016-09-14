@@ -17,7 +17,7 @@ import java.util.Date;
  * @apiParam {string} houseRemark 户型备注
  * @apiParam {string} deck 层面
  * @apiParam {string} quota 限购',
- * @apiParam {string} acreage 面积
+ * @apiParam {double} acreage 面积
  * @apiParam {double} sellingPrice 平台售价(单位：万)
  * @apiParam {string} decade 年代
  * @apiParam {string} property 产权
@@ -68,7 +68,7 @@ public class ZcyEstates implements Serializable {
 
     private String quota;//限购',
 
-    private String acreage;//面积
+    private Double acreage;//面积
 
     private Double sellingPrice;//平台售价(单位：万)
 
@@ -272,11 +272,11 @@ public class ZcyEstates implements Serializable {
         this.quota = quota;
     }
 
-    public String getAcreage() {
+    public Double getAcreage() {
         return acreage;
     }
 
-    public void setAcreage(String acreage) {
+    public void setAcreage(Double acreage) {
         this.acreage = acreage;
     }
 

@@ -15,7 +15,7 @@ import java.util.Date;
  * @apiParam {string} plotName 小区名称
  * @apiParam {string} buildingNo 楼栋
  * @apiParam {string} element 单元
- * @apiParam {string} floor 实际楼层
+ * @apiParam {int} floor 实际楼层
  * @apiParam {string} floorTotal 共楼层数
  * @apiParam {string} doorplate 门牌
  * @apiParam {string} imgUrl 图片地址
@@ -39,7 +39,7 @@ public class ZcyEstatesAddress implements Serializable {
 
     private String element;//单元
 
-    private String floor;//实际楼层
+    private Integer floor;//实际楼层
 
     private String floorTotal;//共楼层数
 
@@ -127,11 +127,11 @@ public class ZcyEstatesAddress implements Serializable {
         this.element = element;
     }
 
-    public String getFloor() {
+    public Integer getFloor() {
         return floor;
     }
 
-    public void setFloor(String floor) {
+    public void setFloor(Integer floor) {
         this.floor = floor;
     }
 

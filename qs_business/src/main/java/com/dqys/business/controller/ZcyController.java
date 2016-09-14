@@ -2,6 +2,7 @@ package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.zcy.ZcyModule;
 import com.dqys.business.orm.query.coordinator.ZcyListQuery;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.ZcyService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.AuthHeaderEnum;
@@ -212,20 +213,57 @@ public class ZcyController {
      */
     @RequestMapping("/awaitReceive")
     @ResponseBody
-    public JsonResponse awaitReceive(@ModelAttribute ZcyListQuery zcyListQuery, HttpServletRequest
-            httpServletRequest) throws Exception {
-        Integer userId = ProtocolTool.validateUser(
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
-        );
+    public JsonResponse awaitReceive(@ModelAttribute ZcyListQuery zcyListQuery) throws Exception {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         Map map = new HashMap<>();
         if (zcyListQuery.getPage() < 0) {
             zcyListQuery.setPage(0);
         }
-        map = zcyService.awaitReceive(userId, zcyListQuery);
+        zcyListQuery.setUserId(userId);
+        map = zcyService.awaitReceive(zcyListQuery);
         return JsonResponseTool.success(map);
     }
+
+    /**
+     * @api {post} zcy/zcyDetail 资产源列表
+     * @apiParam {int} estatesId 资产源id
+     * @apiSampleRequest zcy/zcyDetail
+     * @apiGroup ZCY
+     * @apiName zcy/zcyDetail
+     */
+    @RequestMapping("/zcyDetail")
+    @ResponseBody
+    public JsonResponse zcyDetail(Integer estatesId) throws Exception {
+        Map map = new HashMap<>();
+        map = zcyService.zcyDetail(estatesId);
+        return JsonResponseTool.success(map);
+    }
+
+    /**
+     * @api {post} zcy/receivePawn 接收抵押物
+     * @apiParam {int} objectId 对象id
+     * @apiParam {int} objectType 对象类型
+     * @apiParam {int} status 状态（0接收1拒绝）
+     * @apiSampleRequest zcy/receivePawn
+     * @apiGroup ZCY
+     * @apiName zcy/receivePawn
+     */
+    @RequestMapping("/receivePawn")
+    @ResponseBody
+    public JsonResponse receivePawn(Integer objectId, Integer objectType, Integer status) throws BusinessLogException {
+        Map map = new HashMap<>();
+        if (CommonUtil.checkParam(objectId, objectType, status)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if (status != 0 && status != 1) {
+            return JsonResponseTool.paramErr("状态错误");
+        }
+        map = zcyService.receivePawn(objectId, objectType, status);
+        if ("yes".equals(MessageUtils.transMapToString(map, "result"))) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "result"));
+        }
+    }
+
 }

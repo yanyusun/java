@@ -168,6 +168,14 @@ public interface CoordinatorMapper {
      */
     List<Integer> getObjectIdList(@Param("objectType") Integer objectType, @Param("userId") Integer userId, @Param("status") Integer status);
 
+    /**
+     * 通过协作器的对象类型和对象id和用户类型 获取姓名和用户id
+     *
+     * @param objectType 对象类型
+     * @param objectId   对像id
+     * @param type       人员类别（管理者0|所属人1|参与者2）
+     * @return （user_id用户id，real_name真实姓名）
+     */
     Map<String, Object> getRealName(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId, @Param("type") Integer type);
 
     /**
@@ -187,6 +195,19 @@ public interface CoordinatorMapper {
      */
     List<Map<String, Object>> findLabel(Integer estatesId);
 
+    /**
+     *资产源待分配查询对象id
+     * @param userId
+     * @param objectType
+     * @return
+     */
+    List<Integer> findObjectIdByOURelation(@Param("userId") Integer userId, @Param("objectType") Integer objectType);
 
-
+    /**
+     * 资产源正在处置查询对象id
+     * @param userId
+     * @param value
+     * @return
+     */
+    List<Integer> findObjectIdByOURelationAndBusiness(@Param("userId")Integer userId, @Param("objectType")Integer objectType);
 }

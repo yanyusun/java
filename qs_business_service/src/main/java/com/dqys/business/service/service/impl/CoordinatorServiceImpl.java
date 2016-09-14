@@ -1,7 +1,9 @@
 package com.dqys.business.service.service.impl;
 
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.dao.facade.TUserTagMapper;
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
@@ -41,6 +43,7 @@ import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.utils.SmsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +69,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     private IOUInfoMapper iouInfoMapper;
     @Autowired
     private TUserInfoMapper tUserInfoMapper;
+    @Autowired
+    private TUserTagMapper tUserTagMapper;
     @Autowired
     private ZcyEstatesMapper zcyEstatesMapper;
     @Autowired
@@ -96,7 +101,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         UserTeam team = new UserTeam();
         team = userTeamMapper.selectByPrimaryKeySelective(userTeam);
         if (objectType == ObjectTypeEnum.LENDER.getValue()) {//借款人
-            LenderInfo lenderInfo = getLenderInfo(map, objectId);
+            LenderInfo lenderInfo = getLenderInfo(map, objectId);//获取借款人信息
             if (lenderInfo == null) return;
             if (team == null) {
                 userTeam.setObjectId(lenderInfo.getAssetId());
@@ -131,7 +136,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
             userTeamMapper.insertSelective(userTeam);//添加公司内成员协作器
             map.put("userTeamId", userTeam.getId());
-            map.put("result", "yes_add");
+            map.put("result", "yes");
         } else {
             List<TeamDTO> list = getLenderOrAsset(companyId, userTeam.getId(), userTeam.getObjectType());//获取借款人或是资产包的团队信息
             for (TeamDTO t : list) {//查询每个人员的任务数
@@ -145,6 +150,14 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("teams", list);//团队信息
             map.put("people", getPeopleNum(companyId, objectId, objectType));//团队人数
             map.put("userTeamId", team.getId());
+            TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(team.getMangerId());//管理员信息
+            Map admin = new HashMap<>();
+            if (tUserInfo != null) {
+                admin.put("real_name", tUserInfo.getRealName());
+                admin.put("name", "");
+                admin.put("user_id", tUserInfo.getId());
+            }
+            map.put("admin", admin);
             map.put("result", "yes");
         }
     }
@@ -192,11 +205,14 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("loan", lenderInfo.getLoan() == null ? 0 : lenderInfo.getLoan());//总贷款
             map.put("appraisal", lenderInfo.getAppraisal() == null ? 0 : lenderInfo.getAppraisal());//抵押物总评估
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(lenderInfo.getEndAt());
+            if (lenderInfo.getEndAt() != null) {
+                calendar.setTime(lenderInfo.getEndAt());
+            }
             long nowTime = new Date().getTime();
             int day = (int) (calendar.getTimeInMillis() - nowTime) / (1000 * 3600 * 24);
             map.put("dayCount", day > 0 ? day : 0);//逾期天数
         }
+
         return lenderInfo;
     }
 
@@ -223,12 +239,17 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         for (Integer uid : userIds) {
             Integer flag = 0;
             TeammateRe teammateRe = new TeammateRe();
-            teammateRe.setUserId(userId);
+            teammateRe.setUserId(uid);
             teammateRe.setUserTeamId(userTeamId);
             teammateRe.setJoinType(TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue());
             teammateRe.setBusinessType(TeammateReEnum.BUSINESS_TYPE_TASK.getValue());
             flag = getTeammateFlag(teammateRe);//添加参与人
             if (flag == -3) {//人数已满
+                map.put("msg", "人数已到极限，此次成功邀请" + num + "人");
+                break;
+            }
+            if (flag == -4) {//第一个添加人员不是管理者
+                map.put("msg", "第一个不是管理者");
                 break;
             }
             if (flag > 0) {
@@ -257,33 +278,44 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     private Integer getTeammateFlag(TeammateRe teammateRe) {
         Integer flag = 0;
         List<TeammateRe> users = new ArrayList<>();
-        List<TeammateRe> list = teammateReMapper.selectSelective(teammateRe);//查询用于判断人员类别的定位
-        if (list.size() > 0) {
-            users = teammateReMapper.selectSelective(teammateRe);//查询用于判断人员加入过这个协作器没有
+        TeammateRe re = new TeammateRe();
+        re.setUserTeamId(teammateRe.getUserTeamId());
+        //邀请的参与协作器的人员数
+        re.setStatus(TeammateReEnum.STATUS_INIT.getValue());//待接收
+        Integer size = teammateReMapper.selectSelective(re).size();
+        re.setStatus(TeammateReEnum.STATUS_ACCEPT.getValue());//接收
+        size += teammateReMapper.selectSelective(re).size();
+        if (size > 5 && teammateRe.getJoinType().equals(TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue())) {
+            return -2;//主动加入人数已满
         }
+        if (size > 23 && teammateRe.getJoinType().equals(TeammateReEnum.JOIN_TYPE_PASSIVITY.getValue())) {
+            return -3;//被邀请的人数已满
+        }
+        if (size == 0) {
+            TUserTag tags = tUserTagMapper.selectByUserId(teammateRe.getUserId()).get(0);
+            if (RoleTypeEnum.REGULATOR.getValue() != (int) tags.getRoleId()) {
+                return -4;//第一个添加人员不是管理者
+            }
+            teammateRe.setType(TeammateReEnum.TYPE_ADMIN.getValue());
+        } else if (size == 1) {
+            teammateRe.setType(TeammateReEnum.TYPE_AUXILIARY.getValue());
+        } else {
+            teammateRe.setType(TeammateReEnum.TYPE_PARTICIPATION.getValue());
+        }
+        teammateRe.setStatus(ObjectAcceptTypeEnum.init.getValue());
+        re.setUserId(teammateRe.getUserId());
+        re.setStatus(null);
+        users = teammateReMapper.selectSelective(re);//查询用于判断人员加入过这个协作器没有
         if (users.size() > 0) {
             TeammateRe teammateRe1 = users.get(0);
             if (teammateRe1.getStatus() == TeammateReEnum.STATUS_REFUSE.getValue()) {//邀请过的并且以前拒绝过的就修改为待接收状态
                 teammateRe1.setStatus(TeammateReEnum.STATUS_INIT.getValue());
+                teammateRe1.setType(teammateRe.getType());
                 flag = teammateReMapper.updateByPrimaryKeySelective(teammateRe1);
             } else {
                 flag = -1;//已经加入过案组
             }
         } else {
-            if (list.size() > 5 && teammateRe.getJoinType().equals(TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue())) {
-                return -2;//主动加入人数已满
-            }
-            if (list.size() > 23 && teammateRe.getJoinType().equals(TeammateReEnum.JOIN_TYPE_PASSIVITY.getValue())) {
-                return -3;//被邀请的人数已满
-            }
-            if (list.size() == 0) {
-                teammateRe.setType(TeammateReEnum.TYPE_ADMIN.getValue());
-            } else if (list.size() == 1) {
-                teammateRe.setType(TeammateReEnum.TYPE_AUXILIARY.getValue());
-            } else {
-                teammateRe.setType(TeammateReEnum.TYPE_PARTICIPATION.getValue());
-            }
-            teammateRe.setStatus(ObjectAcceptTypeEnum.init.getValue());
             flag = teammateReMapper.insertSelective(teammateRe);//添加参与人
         }
         return flag;
@@ -362,6 +394,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 lenderInfo.setAssetId(ouRelation.getObjectId());
                 List<LenderInfo> lends = coordinatorMapper.selectByLender(lenderInfo);
                 for (LenderInfo len : lends) {
+                    ouRelation.setId(null);
                     ouRelation.setObjectId(len.getId());
                     ouRelation.setObjectType(ObjectTypeEnum.LENDER.getValue());
                     if (checkExist(ouRelation)) {
@@ -410,6 +443,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("result", "exist");//已经纯在
         } else if (flag == -2) {
             map.put("result", "limitation");//人数已满
+        } else if (flag == -4) {
+            map.put("result", "no_admin");//第一个不是管理者
         } else {
             map.put("result", "no");
         }
@@ -629,7 +664,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                     MessageUtils.transMapToString(oper, "realName"),
                     ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(), getObjectName(userTeam.getObjectType(), userTeam.getObjectId()));
             String title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.REPLACE_CONTACTS.getValue());
-            String url = "?teamUserId=" + teamUserId + "&userTeamId=" + userTeamId + "&substitutionUid=" + substitutionUid;
+            String url = "teamUserId=" + teamUserId + "&userTeamId=" + userTeamId + "&substitutionUid=" + substitutionUid;
             messageService.add(title, content, userId, substitutionUid, "", MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE_CONTACTS.getValue(), url);//添加通知消息
             map.put("result", "yes");
         } else {

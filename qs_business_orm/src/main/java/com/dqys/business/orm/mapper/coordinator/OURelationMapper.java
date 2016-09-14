@@ -52,10 +52,19 @@ public interface OURelationMapper {
 
     /**
      * 关联查询事物关系表
-     * @param userId 用户id
-     * @param lenderId 借款人id
+     *
+     * @param userId     用户id
+     * @param lenderId   借款人id
      * @param objectType 借款人对象类型
      * @return
      */
-    List<OURelation> selectOURelationByUserTeam(@Param("userId")Integer userId, @Param("lenderId")Integer lenderId,@Param("objectType") Integer objectType);
+    List<OURelation> selectOURelationByUserTeam(@Param("userId") Integer userId, @Param("lenderId") Integer lenderId, @Param("objectType") Integer objectType);
+
+    /**
+     * 条件查询对象id
+     *
+     * @param ouRelation
+     * @return
+     */
+    List<Integer> findObjectIdBySelective(OURelation ouRelation);
 }

@@ -24,7 +24,8 @@
     <select id="selectByMessage" parameterType="com.dqys.business.orm.pojo.message.Message"
             resultType="com.dqys.business.orm.pojo.message.Message">
         SELECT t.id,t.content,t.label,t.receive_id receiveId ,t.sender_id senderId
-        ,t.status ,t.title,t.type,DATE_FORMAT( t.send_time,'%Y-%m-%d') sendTime
+        ,t.status ,t.title,t.type,DATE_FORMAT( t.send_time,'%Y-%m-%d') sendTime,t.oper_url operUrl
+        ,t.business_type businessType
         from t_message t
         <include refid="WHERE_QUERY"/>
         LIMIT #{startPageNum},#{pageSize}

@@ -42,6 +42,8 @@ public class MessageUtils {
             messageDTO.setTypeName(MessageEnum.getEnumByValue(m.getType()));
             messageDTO.setStatus(m.getStatus());
             messageDTO.setLabel(m.getLabel() == null ? "" : m.getLabel());
+            messageDTO.setBusinessType(m.getBusinessType());
+            messageDTO.setOperUrl(m.getOperUrl());
             list.add(messageDTO);
         }
         return list;
