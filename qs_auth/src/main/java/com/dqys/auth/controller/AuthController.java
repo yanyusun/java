@@ -127,7 +127,7 @@ public class AuthController extends BaseApiContorller {
      * }
      */
     @RequestMapping(value = "/validate_user")
-    public Callable<JsonResponse> velidateUser(@RequestParam(required = false) String userName,
+    public Callable<JsonResponse> validateUser(@RequestParam(required = false) String userName,
                                                @RequestParam(required = false) String mobile,
                                                @RequestParam(required = false) String email) {
 
