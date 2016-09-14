@@ -178,11 +178,11 @@ public class CommonUtil {
         if (checkParam(list, list2)) {
             return null;
         }
-        if (list == null || list.size() == 0) {
-            return exceptMulty(list2);
+        if (list.size() == 0) {
+            return list;
         }
-        if (list2 == null || list2.size() == 0) {
-            return exceptMulty(list);
+        if (list2.size() == 0) {
+            return list2;
         }
         List<Integer> result = new ArrayList<>();
         list = exceptMulty(list);
@@ -209,10 +209,10 @@ public class CommonUtil {
         if (checkParam(list, list2)) {
             return null;
         }
-        if (list == null || list.size() == 0) {
+        if (list.size() == 0) {
             return exceptMulty(list2);
         }
-        if (list2 == null || list2.size() == 0) {
+        if (list2.size() == 0) {
             return exceptMulty(list);
         }
         list = exceptMulty(list);
@@ -230,6 +230,26 @@ public class CommonUtil {
             }
         }
         return list;
+    }
+
+    /**
+     * 多张表整合成一个不重复的表
+     *
+     * @param list
+     * @return
+     */
+    public static List<Integer> pickAll(List<Integer>... list) {
+        if (checkParam(list)) {
+            return null;
+        }
+        if (list.length == 1) {
+            return exceptMulty(list[0]);
+        }
+        List<Integer> result = list[0];
+        for (int i = 1; i < list.length; i++) {
+            result = pickList(result, list[i]);
+        }
+        return result;
     }
 
     /**

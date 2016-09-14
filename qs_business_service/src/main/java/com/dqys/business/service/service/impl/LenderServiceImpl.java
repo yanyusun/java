@@ -7,6 +7,7 @@ import com.dqys.auth.orm.pojo.CompanyDetailInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.constant.business.BusinessRelationEnum;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
+import com.dqys.business.orm.constant.business.ObjectUserStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
@@ -506,11 +507,18 @@ public class LenderServiceImpl implements LenderService {
             isUrgeOrLawyer = true;
         }
         // 为当前操作人且类型为借款人,状态为通过的数据ID
-        List<Integer> businessIds = businessObjReMapper.listIdByTypeIdStatusUser(
+        List<Integer> passIds = businessObjReMapper.listIdByTypeIdStatusUser(
                 ObjectTypeEnum.LENDER.getValue(), BusinessStatusEnum.platform_pass.getValue(), userInfo.getId());
-        List<Integer> managerBusinessIds = businessObjReMapper.listIdByTypeIdStatus(
+        List<Integer> disposeIds = businessObjReMapper.listIdByTypeIdStatusUser(
+                ObjectTypeEnum.LENDER.getValue(), BusinessStatusEnum.dispose.getValue(), userInfo.getId());
+        List<Integer> businessIds = CommonUtil.pickList(passIds, disposeIds);
+        List<Integer> managerPassIds = businessObjReMapper.listIdByTypeIdStatus(
                 ObjectTypeEnum.LENDER.getValue(), BusinessStatusEnum.platform_pass.getValue()
         );
+        List<Integer> managerDisposeIds = businessObjReMapper.listIdByTypeIdStatus(
+                ObjectTypeEnum.LENDER.getValue(), BusinessStatusEnum.dispose.getValue()
+        );
+        List<Integer> managerBusinessIds = CommonUtil.pickList(managerDisposeIds, managerPassIds);
 
         LenderQuery lenderQuery = new LenderQuery();
         if (ObjectTabEnum.accept.getValue().equals(tab)) {
@@ -524,8 +532,17 @@ public class LenderServiceImpl implements LenderService {
             // 协作器中的待接收
             List<Integer> coordinatorIds = userTeamMapper.selectByOperatorAndStatus(UserSession.getCurrent().getUserId(),
                     TeammateReEnum.STATUS_INIT.getValue(), ObjectTypeEnum.LENDER.getValue());
-            List<Integer> result = CommonUtil.unionList(distributionIds, coordinatorIds);
-            if (CommonUtil.checkParam(result)) {
+            // 对象中的待接收对象集合
+            ObjectUserRelationQuery query = new ObjectUserRelationQuery();
+            query.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
+            query.setStatus(ObjectUserStatusEnum.accept.getValue());
+            List<ObjectUserRelation> objectList = objectUserRelationMapper.list(query);
+            List<Integer> objectIds = new ArrayList<>();
+            objectList.forEach(object -> {
+                objectIds.add(object.getObjectId());
+            });
+            List<Integer> result = CommonUtil.pickAll(distributionIds, coordinatorIds, objectIds);
+            if (CommonUtil.checkParam(result) || result.size() == 0) {
                 // 找不到数据,填充0数据限制
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             } else {
@@ -694,7 +711,7 @@ public class LenderServiceImpl implements LenderService {
             List<Integer> ids = userTeamMapper.selectByOperatorAndStatus(UserSession.getCurrent().getUserId(),
                     TeammateReEnum.STATUS_INIT.getValue(), ObjectTypeEnum.LENDER.getValue());
             if (ids != null && ids.size() > 0) {
-                if (isUrgeOrLawyer || isPlatformOrEntrust) {
+                if (!flag) {
                     lenderQuery.setIds(CommonUtil.unionList(ids, businessIds));
                 } else {
                     lenderQuery.setIds(ids);
@@ -715,15 +732,16 @@ public class LenderServiceImpl implements LenderService {
             }
         } else if (ObjectTabEnum.check.getValue().equals(tab)) {
             // 待审核
-            List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.LENDER.getValue(),
-                    BusinessStatusEnum.init.getValue(), UserSession.getCurrent().getUserId());
-            if (!CommonUtil.checkParam(ids)) {
-                if (flag) {
-                    lenderQuery.setIds(CommonUtil.unionList(ids, managerBusinessIds));
-                } else {
-                    lenderQuery.setIds(ids);
-                }
-            } else {
+            if(flag){
+                List<Integer> ids = businessObjReMapper.listIdByTypeIdStatus(ObjectTypeEnum.ASSETPACKAGE.getValue(),
+                        BusinessStatusEnum.init.getValue());
+                lenderQuery.setIds(ids);
+            }else{
+                List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.ASSETPACKAGE.getValue(),
+                        BusinessStatusEnum.init.getValue(), UserSession.getCurrent().getUserId());
+                lenderQuery.setIds(ids);
+            }
+            if (CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0) {
                 // 找不到数据
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
@@ -741,17 +759,12 @@ public class LenderServiceImpl implements LenderService {
             lenderQuery.setIsNotAsset(true);
         } else if (ObjectTabEnum.handle.getValue().equals(tab)) {
             // 待处置
-            List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.LENDER.getValue(),
-                    BusinessStatusEnum.platform_pass.getValue(), UserSession.getCurrent().getUserId());
-            if (!CommonUtil.checkParam(ids)) {
-                if (flag) {
-                    lenderQuery.setIds(CommonUtil.unionList(ids, managerBusinessIds));
-                } else if (isPlatformOrEntrust) {
-                    lenderQuery.setIds(CommonUtil.unionList(ids, businessIds));
-                } else {
-                    lenderQuery.setIds(ids);
-                }
-            } else {
+            if(flag){
+                lenderQuery.setIds(managerBusinessIds);
+            }else{
+                lenderQuery.setIds(businessIds);
+            }
+            if(CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0){
                 // 找不到数据
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
@@ -769,14 +782,16 @@ public class LenderServiceImpl implements LenderService {
             objectUserRelationList.forEach(objectUserRelation -> {
                 ids.add(objectUserRelation.getObjectId());
             });
-            if (!CommonUtil.checkParam(ids)) {
+            if (!CommonUtil.checkParam(ids) && ids.size() > 0) {
                 lenderQuery.setExceptIds(ids);
-            } else {
-                lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
             if (!flag) {
                 if (isPlatformOrEntrust) {
-                    lenderQuery.setIds(businessIds);
+                    if(businessIds != null && businessIds.size() > 0){
+                        lenderQuery.setIds(businessIds);
+                    }else{
+                        lenderQuery.setId(SysProperty.NULL_DATA_ID);
+                    }
                 }
             }
         } else if (ObjectTabEnum.new48h.getValue().equals(tab)) {
