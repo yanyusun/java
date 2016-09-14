@@ -41,7 +41,7 @@
         AND governor = 1
       </if>
       <if test="employee" >
-        AND emplyee = 1
+        AND employee = 1
       </if>
       <if test="platform" >
         AND platform = 1
