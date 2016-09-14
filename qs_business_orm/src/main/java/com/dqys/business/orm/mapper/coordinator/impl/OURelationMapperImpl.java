@@ -62,4 +62,9 @@ public class OURelationMapperImpl extends BaseDao implements OURelationMapper {
     public List<OURelation> selectOURelationByUserTeam(Integer userId, Integer lenderId, Integer objectType) {
         return super.getSqlSession().getMapper(OURelationMapper.class).selectOURelationByUserTeam(userId, lenderId, objectType);
     }
+
+    @Override
+    public List<Integer> findObjectIdBySelective(OURelation ouRelation) {
+        return super.getSqlSession().getMapper(OURelationMapper.class).findObjectIdBySelective(ouRelation);
+    }
 }

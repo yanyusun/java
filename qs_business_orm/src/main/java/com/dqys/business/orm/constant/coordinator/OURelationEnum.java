@@ -9,7 +9,9 @@ public enum OURelationEnum {
     STATUS_FOLLOW(3, "已跟进"),
     TYPE_ALLOCATION_ONESELF(0, "自己分配"),
     TYPE_ALLOCATION_TEAM(1, "团队分配"),
-    TYPE_ALLOCATION_COMPANY(2, "公司分配"),;
+    TYPE_ALLOCATION_COMPANY(2, "公司分配"),
+    ACCEPT_STATUS_INIT(0, "已接收"),
+    ACCEPT_STATUS_ACCEPT(1, "未接收");
     private Integer value;
     private String name;
 

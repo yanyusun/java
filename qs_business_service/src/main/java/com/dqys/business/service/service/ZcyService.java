@@ -97,9 +97,9 @@ public interface ZcyService {
     Map addExpress(ZcyExpress zcyExpress);
 
     /**
-     * 中介抵押物待接收
+     * 中介列表
      */
-    Map awaitReceive(Integer userId, ZcyListQuery zcyListQuery);
+    Map awaitReceive(ZcyListQuery zcyListQuery);
 
     /**
      * 验证资产信息的字段信息
@@ -125,4 +125,21 @@ public interface ZcyService {
      * 验证速卖信息的字段信息
      */
     Map verifyExpress(ZcyExpress zcyExpress);
+
+    /**
+     * 接收抵押物信息
+     *
+     * @param objectId
+     * @param objectType
+     * @param status
+     * @return
+     */
+    Map receivePawn(Integer objectId, Integer objectType, Integer status) throws BusinessLogException;
+
+    /**
+     * 资产源详细信息
+     * @param estatesId
+     * @return
+     */
+    Map zcyDetail(Integer estatesId);
 }

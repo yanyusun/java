@@ -19,6 +19,16 @@ public class OURelation {
 
     private Integer visibleType;
 
+    private Integer acceptStatus;
+
+    public Integer getAcceptStatus() {
+        return acceptStatus;
+    }
+
+    public void setAcceptStatus(Integer acceptStatus) {
+        this.acceptStatus = acceptStatus;
+    }
+
     public Integer getVisibleType() {
         return visibleType;
     }

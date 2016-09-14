@@ -11,9 +11,10 @@
         <result column="employer_id" property="employerId" jdbcType="INTEGER"/>
         <result column="business_id" property="businessId" jdbcType="INTEGER"/>
         <result column="visible_type" property="visibleType" jdbcType="INTEGER"/>
+        <result column="accept_status" property="acceptStatus" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, object_type, object_id, user_id, status, type, employer_id, business_id,visible_type
+    id, object_type, object_id, user_id, status, type, employer_id, business_id,visible_type,accept_status
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -86,6 +87,9 @@
             <if test="visibleType != null">
                 visible_type,
             </if>
+            <if test="acceptStatus != null">
+                accept_status,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -115,6 +119,9 @@
             <if test="visibleType != null">
                 #{visibleType,jdbcType=INTEGER},
             </if>
+            <if test="acceptStatus != null">
+                #{acceptStatus,jdbcType=INTEGER},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.coordinator.OURelation">
@@ -143,6 +150,9 @@
             </if>
             <if test="visibleType != null">
                 visible_type = #{visibleType,jdbcType=INTEGER},
+            </if>
+            <if test="acceptStatus != null">
+                accept_status=#{acceptStatus,jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -202,6 +212,33 @@
         (SELECT tut.id from t_teammate_re ttr,t_user_team tut
         where tut.id=ttr.user_team_id AND ttr.user_id=#{userId}
         AND tut.object_id=#{lenderId} AND tut.object_type=#{objectType})
+    </select>
+    <!--条件查询对象id-->
+    <select id="findObjectIdBySelective" parameterType="com.dqys.business.orm.pojo.coordinator.OURelation"
+            resultType="int">
+        SELECT our.object_id objectId from object_user_relation our
+        WHERE stateflag=0
+        <if test="userId !=null">
+            AND user_id=#{userId}
+        </if>
+        <if test="objectType !=null">
+            AND object_type=#{objectType}
+        </if>
+        <if test="status !=null">
+            AND status=#{status}
+        </if>
+        <if test="type !=null">
+            AND type=#{type}
+        </if>
+        <if test="employerId !=null">
+            AND employer_id=#{employerId}
+        </if>
+        <if test="businessId !=null">
+            AND business_id=#{businessId}
+        </if>
+        <if test="acceptStatus !=null">
+            AND accept_status=#{acceptStatus}
+        </if>
     </select>
 
 </mapper>

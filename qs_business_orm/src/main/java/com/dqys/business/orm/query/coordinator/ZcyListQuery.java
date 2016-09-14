@@ -8,7 +8,7 @@ import java.util.List;
  * Created by mkfeng on 2016/8/19.
  *
  * @apiDefine ZcyListQuery
- * @apiParam {int} status  状态（0待接收1带分配）
+ * @apiParam {int} status  状态（0待接收1带分配2正在处置3全部）
  * @apiParam {string} houses  楼盘小区名称
  * @apiParam {string} buildingNo  楼栋
  * @apiParam {string} startPriceTotal  总价（起始）
@@ -36,8 +36,9 @@ public class ZcyListQuery extends BasePagination {
     private List<Integer> objectIdList;
     private Integer status;//状态
     private Integer objectType;
-    private Integer objectId;
+    private List<Integer> objectIds;
     private Integer startPage;
+    private Integer userId;//
 
     /*筛选条件*/
     private String houses;//楼盘小区名称
@@ -62,6 +63,14 @@ public class ZcyListQuery extends BasePagination {
     private String startEntrust;//挂牌时间（起始）
     private String endEntrust;//挂牌时间（结束）
     private List<String> facilityList;//标签集合
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public String getHouses() {
         return houses;
@@ -247,12 +256,12 @@ public class ZcyListQuery extends BasePagination {
         this.startPage = startPage;
     }
 
-    public Integer getObjectId() {
-        return objectId;
+    public List<Integer> getObjectIds() {
+        return objectIds;
     }
 
-    public void setObjectId(Integer objectId) {
-        this.objectId = objectId;
+    public void setObjectIds(List<Integer> objectIds) {
+        this.objectIds = objectIds;
     }
 
     public Integer getObjectType() {

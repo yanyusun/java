@@ -123,7 +123,7 @@ public class CoordinatorController {
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             return JsonResponseTool.success(map);
         } else {
-            return JsonResponseTool.failure("操作失败");
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map,"msg"));
         }
     }
 
