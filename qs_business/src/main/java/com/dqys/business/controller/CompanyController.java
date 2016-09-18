@@ -146,7 +146,7 @@ public class CompanyController {
      * @apiParam {number} id 分配对象ID
      */
     @RequestMapping(value = "/getDistribution")
-    public JsonResponse getDistribution(@RequestParam(required = true) Integer type,
+    public JsonResponse listDistribution(@RequestParam(required = true) Integer type,
                                         @RequestParam(required = true) Integer id) throws BusinessLogException{
         if (CommonUtil.checkParam(type, id)) {
             return JsonResponseTool.success("参数错误");
@@ -154,7 +154,7 @@ public class CompanyController {
         if (ObjectTypeEnum.getObjectTypeEnum(type) == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return JsonResponseTool.success(distributionService.getDistribution_tx(type, id));
+        return JsonResponseTool.success(distributionService.listDistribution_tx(type, id));
     }
 
     /**
