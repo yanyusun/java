@@ -11,7 +11,7 @@ public class SourceNavigation implements Serializable {
     private String name; // 分类导航的名称
     private Integer pid; // 上级ID
     private Integer lenderId; // 默认(0),传值时表示特殊分类,该借款人独有
-    private Integer type; // 实勘1|证件合同0(默认)
+    private Integer type; // 实勘1|证件合同0(默认)|跟进2
 
     public Integer getId() {
         return id;
