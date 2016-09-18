@@ -5,7 +5,6 @@ import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.utils.SysPropertyTool;
 import com.dqys.wms.constant.MqClientEnum;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
