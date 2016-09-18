@@ -47,7 +47,7 @@ public class OperTypeServiceImpl implements OperTypeService {
         MybatisRedisCache mybatisRedisCache = new MybatisRedisCache();
         String userId_roleId_objectId = userType + "_" + roleId + "_" + objectType;
         List<OperType> list = (List<OperType>) mybatisRedisCache.getObject(userId_roleId_objectId);
-        if (list != null) {
+        if (list != null&&list.size()!=0) {
             return list;
         } else {
             mybatisRedisCache.putObject(userId_roleId_objectId, selectByRoleToOperType(roleId, userType, objectType));

@@ -48,15 +48,9 @@ public class OperTypeController {
     @ResponseBody
     public JsonResponse list(@RequestParam("objectType") Integer objectType, HttpServletRequest httpServletRequest) {
         try {
-            Integer userId = ProtocolTool.validateUser(
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
-            );
+            Integer userId=UserSession.getCurrent().getUserId();
             List<TUserTag> tags = tUserTagMapper.selectByUserId(userId);
-            Integer roleType = RoleTypeEnum.GENERAL.getValue();//1-管理员;2-管理者;3-普通员工4所属人;
+            Integer roleType = RoleTypeEnum.GENERAL.getValue();//1-管理员;2-管理者;3-普通员工;4所属人;
             Integer userType = 0;//0-普通用户;1-平台管理员;2-委托号;31-催收;32-律所;33-中介
             if (tags.size() > 0) {
                 TUserTag tag = tags.get(0);

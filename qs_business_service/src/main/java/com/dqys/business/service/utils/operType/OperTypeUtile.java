@@ -24,7 +24,8 @@ public class OperTypeUtile implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         redisTemplate = (RedisTemplate) applicationContext.getBean("redisTemplate");
         operTypeService = applicationContext.getBean(OperTypeService.class);
-//        opertype();
+        //// TODO: 16-9-18  上线要去掉下面的注释
+        //opertype();
     }
 
     public void opertype() {
