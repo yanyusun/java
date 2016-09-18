@@ -3,6 +3,7 @@ package com.dqys.business.service.service.impl;
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.CompanyDetailInfo;
+import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.constant.business.BusinessRelationEnum;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
@@ -157,7 +158,8 @@ public class DistributionServiceImpl implements DistributionService {
                 rate += finish * 100 / total + "%";
             }
             if (ObjectBusinessTypeEnum.join.getValue().equals(companyTeamRe.getType())
-                    || ObjectBusinessTypeEnum.platform.getValue().equals(companyTeamRe.getType())) {
+                    || ObjectBusinessTypeEnum.platform.getValue().equals(companyTeamRe.getType())
+                    || ObjectBusinessTypeEnum.create.getValue().equals(companyTeamRe.getType())) {
                 CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(companyTeamRe.getAcceptCompanyId());
                 if (companyDetailInfo.getType().equals(Integer.valueOf(
                         SysPropertyTool.getProperty(
@@ -319,12 +321,21 @@ public class DistributionServiceImpl implements DistributionService {
                 companyTeamRe.setStatus(ObjectAcceptTypeEnum.accept.getValue());
                 companyTeamRe.setType(ObjectBusinessTypeEnum.create.getValue());
                 companyTeamRe.setAccepterId(UserSession.getCurrent().getUserId()); // 接收人为创建者
-                result = companyTeamReMapper.insert(companyTeamRe);
-                if (!CommonUtil.checkResult(result)) {
-                    // 添加操作记录
-//                    businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.join.getValue(),
-//                            "", "", 0, teamId);
+                companyTeamReMapper.insert(companyTeamRe);
+                // 添加平台参与记录
+                List<TCompanyInfo> managerList = companyInfoMapper.listByType(Integer.valueOf(
+                        SysPropertyTool.getProperty(
+                            SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM).getPropertyValue()));
+                if(managerList != null && managerList != null){
+                    // 当前只有一个平台方的管理员
+                    CompanyDetailInfo detailInfo = companyInfoMapper.getDetailByCompanyId(managerList.get(0).getId());
+                    companyTeamRe.setAcceptCompanyId(detailInfo.getCompanyId());
+                    companyTeamRe.setStatus(ObjectAcceptTypeEnum.accept.getValue());
+                    companyTeamRe.setType(ObjectBusinessTypeEnum.join.getValue());
+                    companyTeamRe.setAccepterId(detailInfo.getUserId());
+                    companyTeamReMapper.insert(companyTeamRe);
                 }
+
             }
             return teamId;
         }
