@@ -31,7 +31,6 @@ public class FollowUpMessageDTO {
 
     private Integer secondLiquidateStage;
 
-
     public Integer getId() {
         return id;
     }

@@ -108,6 +108,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
                 }
             }
         }
+        //增加资料实勘
         //向mq中增加未读信息
         String[] unReadMessage = {followUpMessage.getObjectId().toString(), followUpMessage.getObjectType().toString(), followUpMessage.getLiquidateStage().toString()};
         RabbitMQProducerTool.addToFollowUnReadMessage(unReadMessage);
