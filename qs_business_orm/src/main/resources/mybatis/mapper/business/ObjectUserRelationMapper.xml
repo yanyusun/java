@@ -53,7 +53,7 @@
         <![CDATA[ AND create_at <= #{endAt} ]]>
       </if>
 
-      <if test="userIds != null">
+      <if test="userIds != null and userIds.size() > 0">
         AND user_id in
         <foreach collection="userIds" open="(" close=")" item="id" separator=",">
           #{id}

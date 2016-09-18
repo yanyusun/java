@@ -38,12 +38,10 @@ import com.dqys.business.orm.query.company.CompanyTeamReQuery;
 import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
-import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.dto.company.BusinessServiceDTO;
 import com.dqys.business.service.dto.company.CompanyTeamReDTO;
 import com.dqys.business.service.dto.company.DistributionDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
-import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.DistributionService;
 import com.dqys.business.service.utils.company.CompanyServiceUtils;
@@ -100,12 +98,10 @@ public class DistributionServiceImpl implements DistributionService {
     private IOUInfoMapper iouInfoMapper;
 
     @Autowired
-    private BusinessLogService businessLogService;
-    @Autowired
     private CoordinatorService coordinatorService;
 
     @Override
-    public DistributionDTO getDistribution_tx(Integer type, Integer id) throws BusinessLogException {
+    public DistributionDTO listDistribution_tx(Integer type, Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(type, id)) {
             return null;
         }
@@ -113,25 +109,25 @@ public class DistributionServiceImpl implements DistributionService {
         CompanyTeam isExist = companyTeamMapper.getByTypeId(type, id);
         if (isExist == null) {
             // 分配器不存在,判断是否存在该对象
-            if(ObjectTypeEnum.ASSETPACKAGE.getValue().equals(type)){
+            if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(type)) {
                 AssetInfo assetInfo = assetInfoMapper.get(id);
-                if(assetInfo != null){
+                if (assetInfo != null) {
                     // 对象存在，创建分配器
                     Integer result = addDistribution(type, id);
-                    if(CommonUtil.checkResult(result)){
+                    if (CommonUtil.checkResult(result)) {
                         return null;
                     }
                 }
-            }else if(ObjectTypeEnum.LENDER.getValue().equals(type)){
+            } else if (ObjectTypeEnum.LENDER.getValue().equals(type)) {
                 LenderInfo lenderInfo = lenderInfoMapper.get(id);
-                if(lenderInfo != null){
+                if (lenderInfo != null) {
                     // 借款人存在，创建分配器
                     Integer result = addDistribution(type, id);
-                    if(CommonUtil.checkResult(result)){
+                    if (CommonUtil.checkResult(result)) {
                         return null;
                     }
                 }
-            }else{
+            } else {
                 return null;
             }
         }
@@ -154,9 +150,14 @@ public class DistributionServiceImpl implements DistributionService {
                     ObjectTypeEnum.ASSETPACKAGE.getValue());
             Integer total = MessageUtils.transMapToInt(map, "total");
             Integer finish = MessageUtils.transMapToInt(map, "finish");
-            String rate = finish * 100 / total + "%";
-            if(ObjectBusinessTypeEnum.join.getValue().equals(companyTeamRe.getType())
-                    || ObjectBusinessTypeEnum.platform.getValue().equals(companyTeamRe.getType())){
+            String rate = "";
+            if(total.equals(0)){
+                rate += 0;
+            }else{
+                rate += finish * 100 / total + "%";
+            }
+            if (ObjectBusinessTypeEnum.join.getValue().equals(companyTeamRe.getType())
+                    || ObjectBusinessTypeEnum.platform.getValue().equals(companyTeamRe.getType())) {
                 CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(companyTeamRe.getAcceptCompanyId());
                 if (companyDetailInfo.getType().equals(Integer.valueOf(
                         SysPropertyTool.getProperty(
@@ -172,7 +173,7 @@ public class DistributionServiceImpl implements DistributionService {
                     distributionDTO.setDisposeNum(distributionDTO.getDisposeNum() + 1); // 处置方
                 }
                 companyTeamReDTOList.add(CompanyServiceUtils.toCompanyTeamReDTO(companyTeamRe, companyDetailInfo, rate, total));
-            }else if(ObjectBusinessTypeEnum.mechanism.getValue().equals(companyTeamRe.getType())){
+            } else if (ObjectBusinessTypeEnum.mechanism.getValue().equals(companyTeamRe.getType())) {
                 // 业务流转做准备
                 keyMap.put(companyTeamRe.getAccepterId(), index);
                 companyTeamReList.get(index).setVersion(total);
@@ -189,49 +190,49 @@ public class DistributionServiceImpl implements DistributionService {
         objectUserRelationQuery.setStatus(ObjectUserStatusEnum.handled.getValue());
         List<ObjectUserRelation> relationList = objectUserRelationMapper.list(objectUserRelationQuery);
         relationList.forEach(objectUserRelation -> {
-            if(ObjectTypeEnum.PAWN.getValue().equals(objectUserRelation.getObjectType())){
+            if (ObjectTypeEnum.PAWN.getValue().equals(objectUserRelation.getObjectType())) {
                 PawnInfo pawnInfo = pawnInfoMapper.get(objectUserRelation.getObjectId());
-                if(pawnInfo != null){
-                    if(ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())){
+                if (pawnInfo != null) {
+                    if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
                         LenderInfo lenderInfo = lenderInfoMapper.get(pawnInfo.getLenderId());
-                        if(lenderInfo != null && lenderInfo.getAssetId() != null){
-                            if(lenderInfo.getAssetId().equals(companyTeam.getObjectId())){
+                        if (lenderInfo != null && lenderInfo.getAssetId() != null) {
+                            if (lenderInfo.getAssetId().equals(companyTeam.getObjectId())) {
                                 CompanyTeamRe ctr = companyTeamReList.get(keyMap.get(objectUserRelation.getUserId()));
                                 CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(ctr.getAcceptCompanyId());
-                                if(ctr != null && detail != null){
+                                if (ctr != null && detail != null) {
                                     serviceDTOList.add(createBSDTO(ctr, detail, pawnInfo.getName(), objectUserRelation.getCreateAt()));
                                 }
                             }
                         }
-                    }else if(ObjectTypeEnum.LENDER.getValue().equals(companyTeam.getObjectType())){
-                        if(pawnInfo.getLenderId().equals(companyTeam.getObjectId())){
+                    } else if (ObjectTypeEnum.LENDER.getValue().equals(companyTeam.getObjectType())) {
+                        if (pawnInfo.getLenderId().equals(companyTeam.getObjectId())) {
                             CompanyTeamRe ctr = companyTeamReList.get(keyMap.get(objectUserRelation.getUserId()));
                             CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(ctr.getAcceptCompanyId());
-                            if(ctr != null && detail != null){
+                            if (ctr != null && detail != null) {
                                 serviceDTOList.add(createBSDTO(ctr, detail, pawnInfo.getName(), objectUserRelation.getCreateAt()));
                             }
                         }
                     }
                 }
-            }else if(ObjectTypeEnum.IOU.getValue().equals(objectUserRelation.getObjectType())){
+            } else if (ObjectTypeEnum.IOU.getValue().equals(objectUserRelation.getObjectType())) {
                 IOUInfo iouInfo = iouInfoMapper.get(objectUserRelation.getObjectId());
-                if(iouInfo != null){
-                    if(ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())){
+                if (iouInfo != null) {
+                    if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
                         LenderInfo lenderInfo = lenderInfoMapper.get(iouInfo.getLenderId());
-                        if(lenderInfo != null && lenderInfo.getAssetId() != null){
-                            if(lenderInfo.getAssetId().equals(companyTeam.getObjectId())){
+                        if (lenderInfo != null && lenderInfo.getAssetId() != null) {
+                            if (lenderInfo.getAssetId().equals(companyTeam.getObjectId())) {
                                 CompanyTeamRe ctr = companyTeamReList.get(keyMap.get(objectUserRelation.getUserId()));
                                 CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(ctr.getAcceptCompanyId());
-                                if(ctr != null && detail != null){
+                                if (ctr != null && detail != null) {
                                     serviceDTOList.add(createBSDTO(ctr, detail, iouInfo.getName(), objectUserRelation.getCreateAt()));
                                 }
                             }
                         }
-                    }else if(ObjectTypeEnum.LENDER.getValue().equals(companyTeam.getObjectType())){
-                        if(iouInfo.getLenderId().equals(companyTeam.getObjectId())){
+                    } else if (ObjectTypeEnum.LENDER.getValue().equals(companyTeam.getObjectType())) {
+                        if (iouInfo.getLenderId().equals(companyTeam.getObjectId())) {
                             CompanyTeamRe ctr = companyTeamReList.get(keyMap.get(objectUserRelation.getUserId()));
                             CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(ctr.getAcceptCompanyId());
-                            if(ctr != null && detail != null){
+                            if (ctr != null && detail != null) {
                                 serviceDTOList.add(createBSDTO(ctr, detail, iouInfo.getName(), objectUserRelation.getCreateAt()));
                             }
                         }
@@ -245,7 +246,7 @@ public class DistributionServiceImpl implements DistributionService {
     }
 
     private BusinessServiceDTO createBSDTO(CompanyTeamRe companyTeamRe, CompanyDetailInfo detail, String name,
-                                           Date time){
+                                           Date time) {
         BusinessServiceDTO result = new BusinessServiceDTO();
 
         result.setId(companyTeamRe.getId());
@@ -274,7 +275,7 @@ public class DistributionServiceImpl implements DistributionService {
             return null;
         }
         Business business = businessMapper.get(businessObjRe.getBusinessId());
-        if (!business.getStatus().equals(BusinessStatusEnum.platform_pass)) {
+        if (!business.getStatus().equals(BusinessStatusEnum.platform_pass.getValue())) {
             return null; // 当前对象还未审核通过
         }
         // 查询分配器
@@ -306,8 +307,8 @@ public class DistributionServiceImpl implements DistributionService {
             }
             Integer teamId = companyTeam.getId();
             // 添加操作记录
-            businessLogService.add(teamId, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.add.getValue(),
-                    "", "创建分配器", 0, 0);
+//            businessLogService.add(teamId, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.add.getValue(),
+//                    "", "创建分配器", 0, 0);
             // 添加本家分配记录
             TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
             if (userInfo != null && userInfo.getCompanyId() != null) {
@@ -321,8 +322,8 @@ public class DistributionServiceImpl implements DistributionService {
                 result = companyTeamReMapper.insert(companyTeamRe);
                 if (!CommonUtil.checkResult(result)) {
                     // 添加操作记录
-                    businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.join.getValue(),
-                            "", "", 0, teamId);
+//                    businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.join.getValue(),
+//                            "", "", 0, teamId);
                 }
             }
             return teamId;
@@ -373,9 +374,9 @@ public class DistributionServiceImpl implements DistributionService {
                 return null;
             } else {
                 // 添加操作记录
-                businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(),
-                        ObjectLogEnum.join.getValue(),
-                        "", "主动加入分配器", 0, 0);
+//                businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(),
+//                        ObjectLogEnum.join.getValue(),
+//                        "", "主动加入分配器", 0, 0);
                 // 发送短信提醒
                 TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeam.getSenderId()); // 创建人信息
                 SmsUtil smsUtil = new SmsUtil();
@@ -478,9 +479,9 @@ public class DistributionServiceImpl implements DistributionService {
             return null;
         } else {
             // 添加操作记录
-            businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(),
-                    ObjectLogEnum.join.getValue(),
-                    "", "邀请加入分配器", 0, 0);
+//            businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(),
+//                    ObjectLogEnum.join.getValue(),
+//                    "", "邀请加入分配器", 0, 0);
             // 发送短信提醒
             SmsUtil smsUtil = new SmsUtil();
             TSysProperty property = SysPropertyTool.getProperty(
@@ -550,8 +551,8 @@ public class DistributionServiceImpl implements DistributionService {
             return null;
         } else {
             // 添加操作记录
-            businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.update.getValue(),
-                    "", "操作(同意|拒绝)加入分配器对象成员", 0, 0);
+//            businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.update.getValue(),
+//                    "", "操作(同意|拒绝)加入分配器对象成员", 0, 0);
             // 提醒消息
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId()); // 分配器信息
             String code = ""; // 对象编号
@@ -645,7 +646,7 @@ public class DistributionServiceImpl implements DistributionService {
                 // 业务
                 Integer businessId = null;
                 BusinessObjRe businessObjRe = businessObjReMapper.getByObject(companyTeam.getObjectType(), companyTeam.getObjectId());
-                if(businessObjRe != null){
+                if (businessObjRe != null) {
                     businessId = businessObjRe.getBusinessId();
                 }
                 if (companyTeam != null) {
@@ -753,8 +754,8 @@ public class DistributionServiceImpl implements DistributionService {
             return null;
         } else {
             // 添加操作记录
-            businessLogService.add(id, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.exit.getValue(),
-                    "", "移除分配器内容对象成员", 0, 0);
+//            businessLogService.add(id, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.exit.getValue(),
+//                    "", "移除分配器内容对象成员", 0, 0);
             // 发送短信提醒
             TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeamRe.getAccepterId()); // 申请人信息
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
@@ -891,11 +892,11 @@ public class DistributionServiceImpl implements DistributionService {
 
     @Override
     public Integer addBusinessService(Integer type, Integer id, Integer distributionId,
-                                      Integer businessType, Integer companyId) throws BusinessLogException{
+                                      Integer businessType, Integer companyId) throws BusinessLogException {
         if (!CommonUtil.isManage()) {
             return null; // 不是平台管理员
         }
-        if(!ObjectTypeEnum.IOU.getValue().equals(type) && !ObjectTypeEnum.PAWN.getValue().equals(type)){
+        if (!ObjectTypeEnum.IOU.getValue().equals(type) && !ObjectTypeEnum.PAWN.getValue().equals(type)) {
             return null; // 流转对象不对
         }
         CompanyTeam companyTeam = companyTeamMapper.get(distributionId);
@@ -925,10 +926,10 @@ public class DistributionServiceImpl implements DistributionService {
         query.setEmployerId(companyTeam.getId());
         query.setBusinessId(businessObjRe.getBusinessId());
         List<ObjectUserRelation> relationList = objectUserRelationMapper.list(query);
-        if(relationList != null || relationList.size() > 0){
+        if (relationList != null || relationList.size() > 0) {
             // 已经增加
             return null;
-        }else{
+        } else {
             // 增加对象关系
             ObjectUserRelation objectUserRelation = new ObjectUserRelation();
             objectUserRelation.setObjectType(type);
@@ -942,20 +943,20 @@ public class DistributionServiceImpl implements DistributionService {
             objectUserRelationMapper.insert(objectUserRelation);
             // 增加所属借款人的对象
             query.setObjectType(ObjectTypeEnum.LENDER.getValue());
-            if(ObjectTypeEnum.IOU.getValue().equals(type)){
+            if (ObjectTypeEnum.IOU.getValue().equals(type)) {
                 IOUInfo iouInfo = iouInfoMapper.get(id);
                 query.setObjectId(iouInfo.getLenderId());
                 relationList = objectUserRelationMapper.list(query);
-                if(relationList == null || relationList.size() == 0){
+                if (relationList == null || relationList.size() == 0) {
                     objectUserRelation.setObjectType(ObjectTypeEnum.LENDER.getValue());
                     objectUserRelation.setObjectId(iouInfo.getLenderId());
                     objectUserRelationMapper.insert(objectUserRelation);
                 }
-            }else if(ObjectTypeEnum.PAWN.getValue().equals(type)){
+            } else if (ObjectTypeEnum.PAWN.getValue().equals(type)) {
                 PawnInfo pawnInfo = pawnInfoMapper.get(id);
                 query.setObjectId(pawnInfo.getLenderId());
                 relationList = objectUserRelationMapper.list(query);
-                if(relationList == null || relationList.size() == 0){
+                if (relationList == null || relationList.size() == 0) {
                     objectUserRelation.setObjectType(ObjectTypeEnum.LENDER.getValue());
                     objectUserRelation.setObjectId(pawnInfo.getLenderId());
                     objectUserRelationMapper.insert(objectUserRelation);
@@ -963,13 +964,13 @@ public class DistributionServiceImpl implements DistributionService {
             }
             // 添加公司
             Integer result = addCompanyTeamRe(distributionId, companyDetailInfo, companyDetailInfo1);
-            if(CommonUtil.checkResult(result)){
+            if (CommonUtil.checkResult(result)) {
                 return null;
-            }else {
+            } else {
                 // 添加操作记录
-                businessLogService.add(result, ObjectTypeEnum.DISTRIBUTION.getValue(),
-                        ObjectLogEnum.join.getValue(),
-                        "", "增加业务流转", 0, 0);
+//                businessLogService.add(result, ObjectTypeEnum.DISTRIBUTION.getValue(),
+//                        ObjectLogEnum.join.getValue(),
+//                        "", "增加业务流转", 0, 0);
 
                 // 发送短信提醒
                 SmsUtil smsUtil = new SmsUtil();
@@ -1024,13 +1025,13 @@ public class DistributionServiceImpl implements DistributionService {
     @Override
     public Integer updateBusinessService(Integer type, Integer id, Integer distributionId,
                                          Integer businessType, Integer status) throws BusinessLogException {
-        if(CommonUtil.checkParam(type, id, distributionId, businessType, status)){
+        if (CommonUtil.checkParam(type, id, distributionId, businessType, status)) {
             return null;
         }
-        if(!ObjectAcceptTypeEnum.accept.getValue().equals(status) && !ObjectAcceptTypeEnum.refuse.getValue().equals(status)){
+        if (!ObjectAcceptTypeEnum.accept.getValue().equals(status) && !ObjectAcceptTypeEnum.refuse.getValue().equals(status)) {
             return null; // 操作状态不对
         }
-        if(!type.equals(ObjectTypeEnum.PAWN.getValue()) && !type.equals(ObjectTypeEnum.IOU.getValue())){
+        if (!type.equals(ObjectTypeEnum.PAWN.getValue()) && !type.equals(ObjectTypeEnum.IOU.getValue())) {
             return null;
         }
         CompanyTeamRe companyTeamRe = companyTeamReMapper.get(distributionId);
@@ -1047,8 +1048,8 @@ public class DistributionServiceImpl implements DistributionService {
             return null;
         } else {
             // 添加操作记录
-            businessLogService.add(distributionId, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.update.getValue(),
-                    "", "决定(同意|拒绝)加入业务流转", 0, 0);
+//            businessLogService.add(distributionId, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.update.getValue(),
+//                    "", "决定(同意|拒绝)加入业务流转", 0, 0);
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
             if (companyTeam != null) {
                 // 提醒消息
@@ -1076,31 +1077,31 @@ public class DistributionServiceImpl implements DistributionService {
                 List<ObjectUserRelation> list = objectUserRelationMapper.list(query);
                 if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
                     // 修改数据对象
-                    if(list != null && list.size() > 0){
+                    if (list != null && list.size() > 0) {
                         // 理论上只有一条
                         ObjectUserRelation relation = list.get(0);
                         relation.setStatus(SysProperty.BOOLEAN_FALSE); // 这里0为接收
                         objectUserRelationMapper.update(relation);
-                        if(ObjectTypeEnum.PAWN.getValue().equals(type)){
+                        if (ObjectTypeEnum.PAWN.getValue().equals(type)) {
                             PawnInfo pawnInfo = pawnInfoMapper.get(id);
                             query.setObjectType(ObjectTypeEnum.LENDER.getValue());
                             query.setObjectId(pawnInfo.getLenderId());
                             list = objectUserRelationMapper.list(query);
-                            if(list != null && list.size() > 0){
+                            if (list != null && list.size() > 0) {
                                 // 设置借款人为接受
-                                if(SysProperty.BOOLEAN_TRUE.equals(list.get(0).getStatus())){
+                                if (SysProperty.BOOLEAN_TRUE.equals(list.get(0).getStatus())) {
                                     list.get(0).setStatus(SysProperty.BOOLEAN_FALSE);
                                     objectUserRelationMapper.update(list.get(0));
                                 }
                             }
-                        }else if(ObjectTypeEnum.IOU.getValue().equals(type)){
+                        } else if (ObjectTypeEnum.IOU.getValue().equals(type)) {
                             IOUInfo iouInfo = iouInfoMapper.get(id);
                             query.setObjectType(ObjectTypeEnum.LENDER.getValue());
                             query.setObjectId(iouInfo.getLenderId());
                             list = objectUserRelationMapper.list(query);
-                            if(list != null && list.size() > 0){
+                            if (list != null && list.size() > 0) {
                                 // 设置借款人为接受
-                                if(SysProperty.BOOLEAN_TRUE.equals(list.get(0).getStatus())){
+                                if (SysProperty.BOOLEAN_TRUE.equals(list.get(0).getStatus())) {
                                     list.get(0).setStatus(SysProperty.BOOLEAN_FALSE);
                                     objectUserRelationMapper.update(list.get(0));
                                 }
@@ -1110,7 +1111,7 @@ public class DistributionServiceImpl implements DistributionService {
                     smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_PASS_CODE, creator.getMobile(), msg);
                     message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_PASS_CODE, msg));
                 } else {
-                    if(list != null && list.size() > 0){
+                    if (list != null && list.size() > 0) {
                         // 理论上只有一条
                         objectUserRelationMapper.deleteByPrimaryKey(list.get(0).getId());
                         // 检查是否最后一条数据
@@ -1120,23 +1121,23 @@ public class DistributionServiceImpl implements DistributionService {
                         query.setEmployerId(companyTeam.getId());
                         query.setUserId(userInfo.getId());
                         list = objectUserRelationMapper.list(query);
-                        if(list == null || list.size() == 0){
-                            if(list == null || list.size() == 0){
-                                if(ObjectTypeEnum.PAWN.getValue().equals(type)){
+                        if (list == null || list.size() == 0) {
+                            if (list == null || list.size() == 0) {
+                                if (ObjectTypeEnum.PAWN.getValue().equals(type)) {
                                     PawnInfo pawnInfo = pawnInfoMapper.get(id);
                                     query.setObjectType(ObjectTypeEnum.LENDER.getValue());
                                     query.setObjectId(pawnInfo.getLenderId());
                                     list = objectUserRelationMapper.list(query);
-                                    if(list != null && list.size() > 0){
+                                    if (list != null && list.size() > 0) {
                                         // 删除借款人(理论上只有一条)
                                         objectUserRelationMapper.deleteByPrimaryKey(list.get(0).getId());
                                     }
-                                }else if(ObjectTypeEnum.IOU.getValue().equals(type)){
+                                } else if (ObjectTypeEnum.IOU.getValue().equals(type)) {
                                     IOUInfo iouInfo = iouInfoMapper.get(id);
                                     query.setObjectType(ObjectTypeEnum.LENDER.getValue());
                                     query.setObjectId(iouInfo.getLenderId());
                                     list = objectUserRelationMapper.list(query);
-                                    if(list != null && list.size() > 0){
+                                    if (list != null && list.size() > 0) {
                                         // 删除借款人(理论上只有一条)
                                         objectUserRelationMapper.deleteByPrimaryKey(list.get(0).getId());
                                     }
@@ -1163,66 +1164,66 @@ public class DistributionServiceImpl implements DistributionService {
                 message.setBusinessType(MessageBTEnum.COMPANY_BETWEEN.getValue());
                 message.setOperUrl(null);
                 messageMapper.add(message);
-                if(SysProperty.BOOLEAN_TRUE.equals(status)) {
+                if (SysProperty.BOOLEAN_TRUE.equals(status)) {
                     // 添加公司之间的关系
                     CompanyRelation companyRelation = companyRelationMapper.getByCompanyId(creator.getCompanyId(),
                             companyTeamRe.getAcceptCompanyId());
-                    if(companyRelation == null){
+                    if (companyRelation == null) {
                         companyRelation = new CompanyRelation();
                         companyRelation.setCompanyAId(creator.getCompanyId());
                         companyRelation.setCompanyBId(companyTeamRe.getAcceptCompanyId());
                         companyRelationMapper.insert(companyRelation);
                     }
                     // 转换对象状态
-                    if(type.equals(ObjectTypeEnum.PAWN.getValue())){
+                    if (type.equals(ObjectTypeEnum.PAWN.getValue())) {
                         // 当前流转的是抵押物
                         PawnInfo pawnInfo = pawnInfoMapper.get(id);
-                        if(pawnInfo != null){
-                            if(PawnEnum.MAINTAIN_REGULAR.getValue().equals(businessType)){
+                        if (pawnInfo != null) {
+                            if (PawnEnum.MAINTAIN_REGULAR.getValue().equals(businessType)) {
                                 // 常规催收
                                 pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
                                 pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
                                 pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
                                 pawnInfoMapper.update(pawnInfo);
-                            }else if(PawnEnum.MARKET_DISPOSITION.getValue().equals(businessType)){
+                            } else if (PawnEnum.MARKET_DISPOSITION.getValue().equals(businessType)) {
                                 // 市场处置
                                 pawnInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
                                 pawnInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
                                 pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
                                 pawnInfoMapper.update(pawnInfo);
-                            }else if(PawnEnum.CM_SIMULTANEOUS.getValue().equals(businessType)){
+                            } else if (PawnEnum.CM_SIMULTANEOUS.getValue().equals(businessType)) {
                                 // 市场处置&常规催收
-                                if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                                        .equals(companyDetailInfo.getType())){
+                                if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                                        .equals(companyDetailInfo.getType())) {
                                     // 催收
                                     pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                                }else if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
-                                        .equals(companyDetailInfo.getType())){
+                                } else if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
+                                        .equals(companyDetailInfo.getType())) {
                                     // 市场
                                     pawnInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
                                 }
                                 pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
                                 pawnInfoMapper.update(pawnInfo);
-                            }else if(PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue().equals(businessType)){
+                            } else if (PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue().equals(businessType)) {
                                 // 司法化解
                                 pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
                                 pawnInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
                                 pawnInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
                                 pawnInfoMapper.update(pawnInfo);
-                            }else if(PawnEnum.CJ_SIMULTANEOUS.getValue().equals(businessType)){
+                            } else if (PawnEnum.CJ_SIMULTANEOUS.getValue().equals(businessType)) {
                                 // 司法化解&常规催收
-                                if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                                        .equals(companyDetailInfo.getType())){
+                                if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                                        .equals(companyDetailInfo.getType())) {
                                     // 催收
                                     pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                                }else if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
-                                        .equals(companyDetailInfo.getType())){
+                                } else if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
+                                        .equals(companyDetailInfo.getType())) {
                                     // 律所
                                     pawnInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
                                 }
                                 pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
                                 pawnInfoMapper.update(pawnInfo);
-                            }else if(PawnEnum.CMJ_SIMULTANEOUS.getValue().equals(businessType)){
+                            } else if (PawnEnum.CMJ_SIMULTANEOUS.getValue().equals(businessType)) {
                                 // 市场处置&司法化解&常规催收
                                 pawnInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
                                 pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
@@ -1230,55 +1231,55 @@ public class DistributionServiceImpl implements DistributionService {
                                 pawnInfoMapper.update(pawnInfo);
                             }
                         }
-                    }else if(type.equals(ObjectTypeEnum.IOU.getValue())){
+                    } else if (type.equals(ObjectTypeEnum.IOU.getValue())) {
                         // 当前流转的是借据
                         IOUInfo iouInfo = iouInfoMapper.get(id);
-                        if(iouInfo != null){
-                            if(PawnEnum.MAINTAIN_REGULAR.getValue().equals(businessType)){
+                        if (iouInfo != null) {
+                            if (PawnEnum.MAINTAIN_REGULAR.getValue().equals(businessType)) {
                                 // 常规催收
                                 iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
                                 iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
                                 iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
                                 iouInfoMapper.update(iouInfo);
-                            }else if(PawnEnum.MARKET_DISPOSITION.getValue().equals(businessType)){
+                            } else if (PawnEnum.MARKET_DISPOSITION.getValue().equals(businessType)) {
                                 // 市场处置
                                 iouInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
                                 iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
                                 iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
                                 iouInfoMapper.update(iouInfo);
-                            }else if(PawnEnum.CM_SIMULTANEOUS.getValue().equals(businessType)){
+                            } else if (PawnEnum.CM_SIMULTANEOUS.getValue().equals(businessType)) {
                                 // 市场处置&常规催收
-                                if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                                        .equals(companyDetailInfo.getType())){
+                                if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                                        .equals(companyDetailInfo.getType())) {
                                     // 催收
                                     iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                                }else if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
-                                        .equals(companyDetailInfo.getType())){
+                                } else if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
+                                        .equals(companyDetailInfo.getType())) {
                                     // 市场
                                     iouInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
                                 }
                                 iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
                                 iouInfoMapper.update(iouInfo);
-                            }else if(PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue().equals(businessType)){
+                            } else if (PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue().equals(businessType)) {
                                 // 司法化解
                                 iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
                                 iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
                                 iouInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
                                 iouInfoMapper.update(iouInfo);
-                            }else if(PawnEnum.CJ_SIMULTANEOUS.getValue().equals(businessType)){
+                            } else if (PawnEnum.CJ_SIMULTANEOUS.getValue().equals(businessType)) {
                                 // 司法化解&常规催收
-                                if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                                        .equals(companyDetailInfo.getType())){
+                                if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                                        .equals(companyDetailInfo.getType())) {
                                     // 催收
                                     iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                                }else if(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
-                                        .equals(companyDetailInfo.getType())){
+                                } else if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
+                                        .equals(companyDetailInfo.getType())) {
                                     // 律所
                                     iouInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
                                 }
                                 iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
                                 iouInfoMapper.update(iouInfo);
-                            }else if(PawnEnum.CMJ_SIMULTANEOUS.getValue().equals(businessType)){
+                            } else if (PawnEnum.CMJ_SIMULTANEOUS.getValue().equals(businessType)) {
                                 // 市场处置&司法化解&常规催收
                                 iouInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
                                 iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
@@ -1296,19 +1297,20 @@ public class DistributionServiceImpl implements DistributionService {
 
     /**
      * 添加分配器里业务流转的对象数据
+     *
      * @param distributionId 分配器ID
-     * @param own 当前操作人公司信息
-     * @param opposite 被分配公司信息
+     * @param own            当前操作人公司信息
+     * @param opposite       被分配公司信息
      * @return
      */
     private Integer addCompanyTeamRe(Integer distributionId, CompanyDetailInfo own,
-                                     CompanyDetailInfo opposite){
+                                     CompanyDetailInfo opposite) {
         CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
         companyTeamReQuery.setTeamId(distributionId);
         companyTeamReQuery.setCompanyId(opposite.getCompanyId());
         companyTeamReQuery.setType(ObjectBusinessTypeEnum.mechanism.getValue());
         List<CompanyTeamRe> companyTeamReList = companyTeamReMapper.queryList(companyTeamReQuery);
-        if(companyTeamReList == null || companyTeamReList.size() == 0){
+        if (companyTeamReList == null || companyTeamReList.size() == 0) {
             CompanyTeamRe companyTeamRe = new CompanyTeamRe();
             companyTeamRe.setCompanyTeamId(distributionId);
             companyTeamRe.setAcceptCompanyId(opposite.getCompanyId());
@@ -1317,13 +1319,13 @@ public class DistributionServiceImpl implements DistributionService {
             companyTeamRe.setAccepterId(opposite.getUserId());
             companyTeamRe.setRoleType(own.getType());
             companyTeamRe.setRequesterId(own.getCompanyId());
-            Integer result =  companyTeamReMapper.insert(companyTeamRe);
-            if(CommonUtil.checkResult(result)){
+            Integer result = companyTeamReMapper.insert(companyTeamRe);
+            if (CommonUtil.checkResult(result)) {
                 return null;
-            }else{
+            } else {
                 return companyTeamRe.getId();
             }
-        }else{
+        } else {
             // 理论上只有一条
             return companyTeamReList.get(0).getId();
         }

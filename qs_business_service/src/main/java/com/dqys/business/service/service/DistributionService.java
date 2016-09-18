@@ -16,7 +16,7 @@ public interface DistributionService {
      * @param id
      * @return
      */
-    DistributionDTO getDistribution_tx(Integer type, Integer id) throws BusinessLogException;
+    DistributionDTO listDistribution_tx(Integer type, Integer id) throws BusinessLogException;
 
     /**
      * 创建分配器
