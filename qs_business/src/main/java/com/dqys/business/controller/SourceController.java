@@ -24,7 +24,7 @@ public class SourceController {
      * @apiName listNavigation
      * @apiGroup source
      * @apiParam {number} lenderId 借款人ID
-     * @apiParam {number} type 实勘1|证件合同0(默认)
+     * @apiParam {number} type 实勘1|证件合同0(默认)|跟进2
      * @apiSuccess {object} data 参考git地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_orm/src/main/java/com/dqys/business/orm/pojo/common/SourceNavigation.java
      */
     @RequestMapping(value = "/listNavigation")
@@ -44,7 +44,8 @@ public class SourceController {
      */
     @RequestMapping(value = "/addNavigation", method = RequestMethod.POST)
     public JsonResponse addNavigation(@ModelAttribute SourceNavigation sourceNavigation) {
-        if (CommonUtil.checkParam(sourceNavigation, sourceNavigation.getType(), sourceNavigation.getPid())) {
+        if (CommonUtil.checkParam(sourceNavigation, sourceNavigation.getType(), sourceNavigation.getPid(),
+                sourceNavigation.getName())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         Integer result = sourceService.addNavigation(sourceNavigation);
@@ -102,7 +103,7 @@ public class SourceController {
      * @apiParam {number} navId 分类ID
      */
     @RequestMapping(value = "/get")
-    public JsonResponse get(@RequestParam Integer lenderId, @RequestParam Integer navId) {
+        public JsonResponse get(@RequestParam Integer lenderId, @RequestParam Integer navId) {
         if (CommonUtil.checkParam(navId, lenderId)) {
             return JsonResponseTool.paramErr("参数错误");
         }

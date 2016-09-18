@@ -109,12 +109,34 @@ public class DistributionServiceImpl implements DistributionService {
         if (CommonUtil.checkParam(type, id)) {
             return null;
         }
-        // 查询分配器
-        CompanyTeam companyTeam = companyTeamMapper.getByTypeId(type, id);
-        if (companyTeam == null) {
+        // 查询分配器是否存在
+        CompanyTeam isExist = companyTeamMapper.getByTypeId(type, id);
+        if (isExist == null) {
             // 分配器不存在,判断是否存在该对象
-            return null;
+            if(ObjectTypeEnum.ASSETPACKAGE.getValue().equals(type)){
+                AssetInfo assetInfo = assetInfoMapper.get(id);
+                if(assetInfo != null){
+                    // 对象存在，创建分配器
+                    Integer result = addDistribution(type, id);
+                    if(CommonUtil.checkResult(result)){
+                        return null;
+                    }
+                }
+            }else if(ObjectTypeEnum.LENDER.getValue().equals(type)){
+                LenderInfo lenderInfo = lenderInfoMapper.get(id);
+                if(lenderInfo != null){
+                    // 借款人存在，创建分配器
+                    Integer result = addDistribution(type, id);
+                    if(CommonUtil.checkResult(result)){
+                        return null;
+                    }
+                }
+            }else{
+                return null;
+            }
         }
+
+        CompanyTeam companyTeam = companyTeamMapper.getByTypeId(type, id);
         // 查询分配器成员
         CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
         companyTeamReQuery.setTeamId(companyTeam.getId());
