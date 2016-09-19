@@ -11,12 +11,14 @@ public enum  SourceInfoEnum {
     FOLLOW_UP_TYPE(2,"跟进信息"),
     //是否展示在外网
     SHOW_ENABLE(1,"可以展示在外网"),
-    SHOW_UNABLE(0),
+    SHOW_UNABLE(0,"不可以展示在外网"),
     //是否对外公开
+    OPEN_ENABLE(1,"可以公开"),
+    OPEN_UNABLE(0,"不可以公开"),
+    //资源编号前缀
+    FOLLOW_UP_CODE_PRE("fu_");//资源编号跟进前缀
 
-    //
-
-    private Integer value;
+    private Object value;
     private String name;
 
     public static String getSourceInfoEnum(Integer value) {
@@ -28,11 +30,11 @@ public enum  SourceInfoEnum {
         return "";
     }
 
-    public Integer getValue() {
+    public Object getValue() {
         return value;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(Object value) {
         this.value = value;
     }
 
@@ -44,9 +46,12 @@ public enum  SourceInfoEnum {
         this.name = name;
     }
 
-    SourceInfoEnum(Integer value, String name) {
+    SourceInfoEnum(Object value, String name) {
 
         this.value = value;
         this.name = name;
+    }
+    SourceInfoEnum(Object value) {
+        this.value = value;
     }
 }

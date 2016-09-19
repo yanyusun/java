@@ -147,11 +147,11 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
      * @param fileList
      * @return
      */
-    private SourceInfoDTO createSourceInfo(List<String> fileList){
+    private SourceInfoDTO createSourceInfo(List<String> fileList,String userId){
         SourceInfoDTO sourceInfoDTO = new SourceInfoDTO();
         SourceNavigation nav=NavUtil.getCommonSourceNavigation(SourceInfoEnum.FOLLOW_UP_TYPE.getValue());
         sourceInfoDTO.setNavId(nav.getId());
-        sourceInfoDTO.setCode();
+        sourceInfoDTO.setCode(So);
         List<SourceDTO> sourceDTOList = new ArrayList<>();
         for(String file:fileList){
             SourceDTO sourceDTO  = new SourceDTO();

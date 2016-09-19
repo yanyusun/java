@@ -42,7 +42,7 @@ public class NavUtil implements ApplicationContextAware {
      * @param navType 资源类型
      * @return
      */
-    public static SourceNavigation getCommonSourceNavigation(Integer navType){
+    public static SourceNavigation getCommonSourceNavigation(Object navType){
         SourceNavigation sourceNavigation=NoSQLWithRedisTool.getHashObject(NavUtil.COMMON_SOURCE_NAV_KEY+SourceNavigation.class.getName()
                 ,NavUtil.COMMON_SOURCE_NAV_KEY+navType);
         return sourceNavigation;
