@@ -21,8 +21,17 @@ public class CompanyTeamReDTO {
     private String rate; // 业绩比率
     private Integer task; // 正在进行的任务
     private String contact; // 联系人
+    private Integer status; // 接受状态
     private Date time; // 接收时间
     private Integer stateflag; // 数据状态
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public Integer getId() {
         return id;

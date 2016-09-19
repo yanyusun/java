@@ -252,6 +252,7 @@ public class DistributionServiceImpl implements DistributionService {
         BusinessServiceDTO result = new BusinessServiceDTO();
 
         result.setId(companyTeamRe.getId());
+        result.setStatus(companyTeamRe.getStatus());
         result.setAvg(detail.getAvg());
         result.setType(detail.getType().toString());
         result.setName(detail.getCompanyName());
@@ -360,8 +361,8 @@ public class DistributionServiceImpl implements DistributionService {
             CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
             companyTeamReQuery.setTeamId(id);
             List<CompanyTeamRe> countList = companyTeamReMapper.queryList(companyTeamReQuery);
-            if (countList != null && countList.size() > 5) {
-                // 获取不到数据或已经超过5个参与
+            if (countList != null && countList.size() > 3) {
+                // 获取不到数据或已经超过3个参与(处置方只能有一个)
                 return null;
             }
 
@@ -465,8 +466,8 @@ public class DistributionServiceImpl implements DistributionService {
         CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
         companyTeamReQuery.setTeamId(id);
         List<CompanyTeamRe> countList = companyTeamReMapper.queryList(companyTeamReQuery);
-        if (countList != null && countList.size() > 5) {
-            // 获取不到数据或已经超过5个参与
+        if (countList != null && countList.size() > 3) {
+            // 获取不到数据或已经超过3个参与(处置方只能有一个)
             return null;
         }
 

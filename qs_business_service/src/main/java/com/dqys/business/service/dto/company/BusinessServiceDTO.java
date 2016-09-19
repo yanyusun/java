@@ -18,6 +18,15 @@ public class BusinessServiceDTO {
     private String target; // 针对对象
     private Date time; // 接收时间
     private Integer stateflag; // 数据状态
+    private Integer status; // 接受状态
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public Integer getId() {
         return id;

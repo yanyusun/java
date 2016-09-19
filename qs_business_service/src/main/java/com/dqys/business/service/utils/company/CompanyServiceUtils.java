@@ -141,6 +141,7 @@ public class CompanyServiceUtils {
                 + AreaTool.getAreaById(companyDetailInfo.getDistrict()).getLabel());
         companyTeamReDTO.setRate(rate);
         companyTeamReDTO.setContact(companyDetailInfo.getName());
+        companyTeamReDTO.setStatus(companyTeamRe.getStatus());
         companyTeamReDTO.setTask(task);
         companyTeamReDTO.setStateflag(companyTeamRe.getStateflag().intValue());
         switch (companyDetailInfo.getType()){
