@@ -58,6 +58,9 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
     @Autowired
     private AssetInfoMapper assetInfoMapper;
 
+    @Autowired
+    private
+
     @Override
     public int insert(FollowUpMessageDTO followUpMessageDTO) {
         FollowUpMessage followUpMessage = FollowUpUtil.toFollowUpMessage(followUpMessageDTO);
@@ -79,6 +82,8 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             teamId = teamid;
         }
         followUpMessage.setTeamId(teamId);
+        //增加资料实勘
+
         int re = followUpMessageMapper.insert(followUpMessage);
         if(followUpMessage.getObjectType()== ObjectTypeEnum.LENDER.getValue()){//如果一级跟进对象是借款人, 增加跟进次数
             LenderInfo lenderInfo=lenderInfoMapper.get(followUpMessage.getObjectId());
@@ -118,7 +123,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
                 }
             }
         }
-        //增加资料实勘
+
         //向mq中增加未读信息
         String[] unReadMessage = {followUpMessage.getObjectId().toString(), followUpMessage.getObjectType().toString(), followUpMessage.getLiquidateStage().toString()};
         RabbitMQProducerTool.addToFollowUnReadMessage(unReadMessage);
@@ -144,23 +149,23 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
 
     /**
      * 根据文件名生成资源信息
-     * @param fileList
+     * @param fileList 上传文件信息list
      * @return
      */
     private SourceInfoDTO createSourceInfo(List<String> fileList,String userId){
         SourceInfoDTO sourceInfoDTO = new SourceInfoDTO();
         SourceNavigation nav=NavUtil.getCommonSourceNavigation(SourceInfoEnum.FOLLOW_UP_TYPE.getValue());
         sourceInfoDTO.setNavId(nav.getId());
-        sourceInfoDTO.setCode(So);
+        sourceInfoDTO.setCode(SourceInfoEnum.FOLLOW_UP_TYPE.getObjectValue()+userId);
+        sourceInfoDTO.setIsshow(SourceInfoEnum.SHOW_UNABLE.getValue());
+        sourceInfoDTO.setOpen(SourceInfoEnum.OPEN_ENABLE.getValue());
         List<SourceDTO> sourceDTOList = new ArrayList<>();
         for(String file:fileList){
             SourceDTO sourceDTO  = new SourceDTO();
-            sourceDTO.
-            file
+            sourceDTO.setFileName(file);
+            sourceDTOList.add(sourceDTO);
         }
-        SourceDTO
-        sourceDTOList.add(s)
-        //sourceInfo
+        sourceInfoDTO.setSourceDTOList(sourceDTOList);
         return  sourceInfoDTO;
     };
 

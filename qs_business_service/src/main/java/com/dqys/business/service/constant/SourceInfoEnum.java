@@ -18,8 +18,19 @@ public enum  SourceInfoEnum {
     //资源编号前缀
     FOLLOW_UP_CODE_PRE("fu_");//资源编号跟进前缀
 
-    private Object value;
+    private Integer value;
     private String name;
+    private Object objectValue;
+
+    SourceInfoEnum(Integer value, String name) {
+
+        this.value = value;
+        this.name = name;
+    }
+    SourceInfoEnum(Object value) {
+        this.objectValue = value;
+    }
+
 
     public static String getSourceInfoEnum(Integer value) {
         for (SourceInfoEnum e : SourceInfoEnum.values()) {
@@ -30,11 +41,11 @@ public enum  SourceInfoEnum {
         return "";
     }
 
-    public Object getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public void setValue(Object value) {
+    public void setValue(Integer value) {
         this.value = value;
     }
 
@@ -46,12 +57,11 @@ public enum  SourceInfoEnum {
         this.name = name;
     }
 
-    SourceInfoEnum(Object value, String name) {
-
-        this.value = value;
-        this.name = name;
+    public Object getObjectValue() {
+        return objectValue;
     }
-    SourceInfoEnum(Object value) {
-        this.value = value;
+
+    public void setObjectValue(Object objectValue) {
+        this.objectValue = objectValue;
     }
 }
