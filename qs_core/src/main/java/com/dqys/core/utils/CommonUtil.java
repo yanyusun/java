@@ -296,8 +296,7 @@ public class CommonUtil {
         property = SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_ADMINISTRATOR_KEY);
         String reg1 = property.getPropertyValue();
 
-        if (roleStr.indexOf(reg) > -1
-                && typeStr.indexOf(reg1) > -1) {
+        if(roleStr.equals(reg1 + ",") && typeStr.equals(reg + ",")){
             return true;
         }
         return false;
