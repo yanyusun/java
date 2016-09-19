@@ -76,7 +76,7 @@ public interface MessageService {
     void sendSmsByTeammate(UserTeam userTeam, Map<String, Object> map, Integer uid, String remark);
 
     /**
-     * 业务流转请求短信通知
+     * 业务流转请求短信通知(发送给平台)
      *
      * @param objectId   对象id
      * @param objectType 对象类型
@@ -116,4 +116,47 @@ public interface MessageService {
      * @return
      */
     String respondInvite(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer sendUserId, Integer receiveUserId, Integer status);
+
+    /**
+     * 执行司法化解（律所接收到通知）
+     *
+     * @param objectId   对象id
+     * @param objectType 对象类型
+     * @param flowId     流转对象id
+     * @param flowType   流转对象类型
+     * @param userId     操作人
+     * @param operation  业务操作
+     * @param onStatus   (0加入1移除)
+     * @return
+     */
+    String judicature(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus);
+
+    /**
+     * 市场处置（中介接收短信通知）
+     *
+     * @param objectId   对象id
+     * @param objectType 对象类型
+     * @param flowId     流转对象id
+     * @param flowType   流转对象类型
+     * @param userId     操作人
+     * @param operation  业务操作
+     * @param onStatus   (0加入1移除)
+     * @return
+     */
+    String intermediary(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus);
+
+    /**
+     * 维持常规催收（催收接收短信通知）
+     *
+     * @param objectId   对象id
+     * @param objectType 对象类型
+     * @param flowId     流转对象id
+     * @param flowType   流转对象类型
+     * @param userId     操作人
+     * @param operation  业务操作
+     * @param onStatus   (0加入1移除)
+     * @return
+     */
+    String collectiones(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus);
+
 }

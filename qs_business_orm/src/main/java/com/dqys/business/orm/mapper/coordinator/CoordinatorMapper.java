@@ -1,6 +1,5 @@
 package com.dqys.business.orm.mapper.coordinator;
 
-import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
@@ -196,7 +195,8 @@ public interface CoordinatorMapper {
     List<Map<String, Object>> findLabel(Integer estatesId);
 
     /**
-     *资产源待分配查询对象id
+     * 资产源待分配查询对象id
+     *
      * @param userId
      * @param objectType
      * @return
@@ -205,9 +205,28 @@ public interface CoordinatorMapper {
 
     /**
      * 资产源正在处置查询对象id
+     *
      * @param userId
      * @param value
      * @return
      */
-    List<Integer> findObjectIdByOURelationAndBusiness(@Param("userId")Integer userId, @Param("objectType")Integer objectType);
+    List<Integer> findObjectIdByOURelationAndBusiness(@Param("userId") Integer userId, @Param("objectType") Integer objectType);
+
+    /**
+     * 根据对象类型和对象id获取分配器中的公司管理员
+     *
+     * @param objectId
+     * @param objectType
+     * @return
+     */
+    Map getCompanyAndUser(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType, @Param("userType") Integer userType);
+
+    /**
+     * 根据对象id和对象类型获取分配器成员
+     *
+     * @param objectId
+     * @param objectType
+     * @return
+     */
+    List<Map> findUserTypeByCompanyTeam(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType);
 }

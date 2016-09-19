@@ -144,4 +144,28 @@ public interface CoordinatorService {
      * @return
      */
     Integer insetOUReationByFlowWork(Integer userId, Integer objectId, Integer objectType);
+
+    /**
+     * 判断流转对象是否需要发送短信
+     *
+     * @param flowId
+     * @param flowType
+     * @param onStatus （0可以1不能）
+     * @param type     类型(31催收32律师33中介)
+     * @return //默认true 发送短信
+     */
+    Boolean verdictOrganization(Integer flowId, Integer flowType, Integer onStatus, Integer type);
+
+    /**
+     * 业务流转接口
+     *
+     * @param objectId   对象id
+     * @param objectType 对象类型
+     * @param flowId     流转对象id
+     * @param flowType   流转对象类型
+     * @param operType   操作类型（参考IouEnum 或PawnEnum）
+     * @return
+     */
+    Map businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType);
+
 }

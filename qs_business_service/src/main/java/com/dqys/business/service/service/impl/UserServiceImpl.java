@@ -458,7 +458,7 @@ public class UserServiceImpl implements UserService {
             return JsonResponseTool.paramErr("您不是管理员,没有权限导入成员");
         }
 
-        Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file);
+        Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file,tUserInfoMapper);
         if (map.get("result") == null || map.get("result").equals("error")) {
             List<ExcelMessage> error = (List<ExcelMessage>) map.get("data");
             JsonResponse jsonResponse = new JsonResponse();

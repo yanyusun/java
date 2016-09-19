@@ -9,7 +9,13 @@ public enum UserInfoEnum {
     ADD_ADMIN(992, "添加管理者"),
     UPDATE_COMMON_USER(993, "修改普通用户"),
     UPDATE_ADMIN(994, "修改管理者账号"),
-    LOOK_USER(995, "查看用户列表"),;
+    LOOK_USER(995, "查看用户列表"),
+    USER_TYPE_COMMON(0,"普通员工"),
+    USER_TYPE_ADMIN(1,"平台管理员"),
+    USER_TYPE_ENTRUST(2,"委托"),
+    USER_TYPE_COLLECTION(31,"催收"),
+    USER_TYPE_JUDICIARY(32,"律所司法"),
+    USER_TYPE_INTERMEDIARY(33,"中介");
     private Integer value;
     private String name;
 

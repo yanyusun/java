@@ -23,7 +23,8 @@ public enum SmsEnum {
     ADMIN_INVITE_RESULT_YES(127, "被邀请公司接受,通知平台管理员短信"),
     ADMIN_INVITE_RESULT_NO(128, "被邀请公司拒绝,通知平台管理员短信"),
     RESPOND_INVITE_RESULT_YES(129, "被邀请公司接受,通知请求公司短信"),
-    RESPOND_INVITE_RESULT_NO(130, "被邀请公司拒绝,通知请求公司短信");
+    RESPOND_INVITE_RESULT_NO(130, "被邀请公司拒绝,通知请求公司短信"),
+    FlOW_OPER(131, "流转通知");
 
     private Integer value;
     private String name;

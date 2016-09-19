@@ -28,7 +28,7 @@ public enum IouEnum {
     }
 
 
-    public IouEnum getIouEnum(Integer value) {
+    public static IouEnum getIouEnum(Integer value) {
         if (value != null) {
             for (IouEnum iouEnum : IouEnum.values()) {
                 if (iouEnum.getValue().equals(value)) {

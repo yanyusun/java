@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,7 +33,7 @@ public class SynLenderController {
      */
     @RequestMapping("/pawnList")
     @ResponseBody
-    public JsonResponse pawnList(Integer lenderId, HttpServletRequest httpServletRequest) {
+    public JsonResponse pawnList(Integer lenderId) {
         if (UserSession.getCurrent() == null) {
             return JsonResponseTool.authFailure("账号没登入");
         }

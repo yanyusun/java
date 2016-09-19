@@ -28,7 +28,7 @@
         ,t.business_type businessType
         from t_message t
         <include refid="WHERE_QUERY"/>
-        LIMIT #{startPageNum},#{pageSize}
+        LIMIT #{startPageNum},#{pageSize} ORDER BY t.send_time DESC
     </select>
     <!--标记为已读-->
     <update id="readMessage">

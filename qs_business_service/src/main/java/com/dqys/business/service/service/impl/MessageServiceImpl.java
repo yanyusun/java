@@ -13,6 +13,7 @@ import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
@@ -222,7 +223,7 @@ public class MessageServiceImpl implements MessageService {
                 String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.INVITE_RESULT.getValue());
                 if (status == 1) {
                     content = smsUtil.sendSms(SmsEnum.RESPOND_INVITE_RESULT_YES.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
-                            MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "companyName"), MessageUtils.transMapToString(oper, "realName"),
+                            CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "companyName"), MessageUtils.transMapToString(oper, "realName"),
                             ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
                             ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId));
 
@@ -233,13 +234,13 @@ public class MessageServiceImpl implements MessageService {
                             ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId));
                 } else {
                     content = smsUtil.sendSms(SmsEnum.RESPOND_INVITE_RESULT_NO.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
-                            MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "companyName"), MessageUtils.transMapToString(oper, "realName"),
+                            CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "companyName"), MessageUtils.transMapToString(oper, "realName"),
                             ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
                             ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId));
 
                     adminContent = smsUtil.sendSms(SmsEnum.ADMIN_INVITE_RESULT_NO.getValue(), tuserInfo.getMobile(), tuserInfo.getRealName(),
-                            MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "companyName"), MessageUtils.transMapToString(oper, "realName"),
-                            MessageUtils.transMapToString(userC, "companyType"), MessageUtils.transMapToString(userC, "companyName"), MessageUtils.transMapToString(userC, "realName"),
+                            CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "companyName"), MessageUtils.transMapToString(oper, "realName"),
+                            CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(userC, "companyType")).getName(), MessageUtils.transMapToString(userC, "companyName"), MessageUtils.transMapToString(userC, "realName"),
                             ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
                             ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId));
                 }
@@ -250,6 +251,52 @@ public class MessageServiceImpl implements MessageService {
             }
         }
         return "no";
+    }
+
+    @Override
+    public String judicature(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus) {
+        if (setJiGou(objectId, objectType, flowId, flowType, userId, operation, onStatus, UserInfoEnum.USER_TYPE_JUDICIARY.getValue())) {
+            return "yes";
+        }
+        return "no";
+    }
+
+    @Override
+    public String intermediary(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus) {
+        if (setJiGou(objectId, objectType, flowId, flowType, userId, operation, onStatus, UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue())) {
+            return "yes";
+        }
+        return "no";
+    }
+
+    @Override
+    public String collectiones(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus) {
+        if (setJiGou(objectId, objectType, flowId, flowType, userId, operation, onStatus, UserInfoEnum.USER_TYPE_COLLECTION.getValue())) {
+            return "yes";
+        }
+        return "no";
+    }
+
+    private boolean setJiGou(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, Integer userType) {
+        boolean flag = coordinatorService.verdictOrganization(flowId, flowType, onStatus, userType);
+        if (flag) {
+            SmsUtil smsUtil = new SmsUtil();
+            //根据对象类型和对象id获取分配器中的公司管理员
+            Map map = coordinatorMapper.getCompanyAndUser(objectId, objectType, userType);
+            Map userC = coordinatorMapper.getUserAndCompanyByUserId(MessageUtils.transMapToInt(map, "userId"));//接收者
+            Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);//发送者
+            if (userC != null) {
+                String content = smsUtil.sendSms(SmsEnum.FlOW_OPER.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
+                        CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "companyName"),
+                        MessageUtils.transMapToString(oper, "realName"),
+                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
+                        ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId), operation, onStatus == 0 ? "加入" : "移除");
+                String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.FLOW_RESULT.getValue());
+                add(title, content, userId, MessageUtils.transMapToInt(map, "userId"), "", MessageEnum.SERVE.getValue(), MessageBTEnum.FLOW_RESULT.getValue(), "");
+                return true;
+            }
+        }
+        return false;
     }
 
     private String sendSms(Integer code, String mobilePhone, String... content) {

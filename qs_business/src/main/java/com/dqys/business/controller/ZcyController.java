@@ -5,13 +5,10 @@ import com.dqys.business.orm.query.coordinator.ZcyListQuery;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.ZcyService;
 import com.dqys.business.service.utils.message.MessageUtils;
-import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
-import com.dqys.core.utils.DateFormatTool;
 import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.core.utils.ProtocolTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -83,7 +78,7 @@ public class ZcyController {
      */
     @RequestMapping("/addEstates")
     @ResponseBody
-    public JsonResponse addEstates(@ModelAttribute ZcyModule zcyModule, HttpServletRequest httpServletRequest) throws Exception {
+    public JsonResponse addEstates(@ModelAttribute ZcyModule zcyModule) throws Exception {
         Integer userId = UserSession.getCurrent().getUserId();
         Map map = new HashMap<>();
         zcyModule.getZcyEstates().setOperator(userId.toString());

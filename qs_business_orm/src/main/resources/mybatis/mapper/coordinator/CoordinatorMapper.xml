@@ -122,10 +122,13 @@
     </select>
     <!--获取相应的公司-->
     <select id="companyList" resultType="java.util.Map">
-        SELECT tci.id,tci.company_name from t_company_info tci
+         SELECT tci.id,tci.company_name,tci.type,tut.user_type userType from t_company_info tci LEFT JOIN t_user_info tui
+            ON tui.company_id=tci.id LEFT JOIN t_user_tag tut
+            ON tut.user_id=tui.id
         where tci.id IN (
         SELECT tut.company_id from t_user_team tut
 	        where tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} GROUP BY tut.company_id )
+	        GROUP BY tci.id
     </select>
     <!--根据公司id获取公司的管理员信息-->
     <select id="getAdminUser" resultType="java.util.Map">
@@ -425,5 +428,22 @@
         WHERE our.stateflag=0  AND our.user_id=#{userId} AND our.object_type=#{objectType} AND our.accept_status=0
          AND our.object_type=bor.object_type AND b.id=bor.business_id AND b.status=3
     </select>
+    <!--根据对象类型和对象id获取分配器中的公司管理员-->
+    <select id="getCompanyAndUser" resultType="java.util.Map">
+        SELECT tui.id userId from t_company_team tct LEFT JOIN t_company_team_re ctr
+        ON ctr.company_team_id=tct.id LEFT JOIN t_user_info tui
+        ON ctr.accepter_id=tui.id LEFT JOIN t_user_tag tut
+        ON tut.user_id=tui.id
+        WHERE tct.object_id=#{objectId} AND tct.object_type=#{objectType} AND tut.user_type=#{userType}
+        LIMIT 0,1
+    </select>
+    <!--根据对象id和对象类型获取分配器成员的用户类型-->
+    <select id="findUserTypeByCompanyTeam" resultType="java.util.Map">
+        SELECT tut.user_type userType from t_company_team tct LEFT JOIN t_company_team_re ttr
+        ON ttr.company_team_id=tct.id LEFT JOIN t_user_tag tut
+        ON tut.user_id=ttr.accepter_id
+        where tct.stateflag=0 AND ttr.stateflag=0 AND tct.object_id=#{objectId} and tct.object_type=#{objectType}
+    </select>
+
 
 </mapper>
