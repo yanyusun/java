@@ -38,6 +38,8 @@ public class FollowUpMessage  extends BaseModel {
 
     private Integer sendStatus;
 
+    private Integer sourceInfoId;
+
     private TUserInfo userInfo;
 
     private TeammateRe teammateRe;
@@ -195,5 +197,13 @@ public class FollowUpMessage  extends BaseModel {
 
     public void setCompanyInfo(TCompanyInfo companyInfo) {
         this.companyInfo = companyInfo;
+    }
+
+    public Integer getSourceInfoId() {
+        return sourceInfoId;
+    }
+
+    public void setSourceInfoId(Integer sourceInfoId) {
+        this.sourceInfoId = sourceInfoId;
     }
 }

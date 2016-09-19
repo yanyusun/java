@@ -17,9 +17,25 @@
         <result column="liquidate_stage" property="liquidateStage" jdbcType="INTEGER"/>
         <result column="second_liquidate_stage" property="secondLiquidateStage" jdbcType="INTEGER"/>
         <result column="send_status" property="sendStatus" jdbcType="INTEGER"/>
+        <result column="source_info_id" property="sourceInfoId" jdbcType="INTEGER"/>
     </resultMap>
 
     <resultMap id="MessageWithUserAndTeam" type="com.dqys.business.orm.pojo.followUp.FollowUpMessage"
+               extends="BaseResultMap">
+        <association property="userInfo" javaType="com.dqys.auth.orm.pojo.TUserInfo">
+            <result column="user_name" property="userName"/>
+            <result column="sex" property="sex"/>
+        </association>
+        <association property="teammateRe" javaType="com.dqys.business.orm.pojo.coordinator.TeammateRe">
+            <result column="type" property="type"/>
+        </association>
+        <association property="companyInfo" javaType="com.dqys.auth.orm.pojo.TCompanyInfo">
+            <result column="company_name" property="companyName"/>
+        </association>
+    </resultMap>
+
+    <!--关联其他所有信息的跟进信息-->
+    <resultMap id="MessageWithAll" type="com.dqys.business.orm.pojo.followUp.FollowUpMessage"
                extends="BaseResultMap">
         <association property="userInfo" javaType="com.dqys.auth.orm.pojo.TUserInfo">
             <result column="user_name" property="userName"/>
