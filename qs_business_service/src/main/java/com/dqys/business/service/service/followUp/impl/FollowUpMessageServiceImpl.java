@@ -5,6 +5,7 @@ import com.dqys.business.orm.constant.coordinator.OURelationEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
 import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
+import com.dqys.business.orm.mapper.common.SourceInfoMapper;
 import com.dqys.business.orm.mapper.coordinator.OURelationMapper;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
@@ -20,6 +21,7 @@ import com.dqys.business.service.constant.SourceInfoEnum;
 import com.dqys.business.service.dto.common.SourceDTO;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
+import com.dqys.business.service.service.common.SourceService;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
 import com.dqys.business.service.utils.common.NavUtil;
@@ -59,14 +61,15 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
     private AssetInfoMapper assetInfoMapper;
 
     @Autowired
-    private
+    private SourceService sourceService;
 
     @Override
     public int insert(FollowUpMessageDTO followUpMessageDTO) {
         FollowUpMessage followUpMessage = FollowUpUtil.toFollowUpMessage(followUpMessageDTO);
         Date curDate=new Date();
         UserSession userSession = UserSession.getCurrent();
-        followUpMessage.setUserId(userSession.getUserId());
+        Integer userId=userSession.getUserId();
+        followUpMessage.setUserId(userId);
         OURelation ouRelation =new OURelation();
         ouRelation.setUserId(userSession.getUserId());
         ouRelation.setObjectType(followUpMessage.getObjectType());
@@ -83,7 +86,9 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
         }
         followUpMessage.setTeamId(teamId);
         //增加资料实勘
-
+        SourceInfoDTO sourceInfoDTO=createSourceInfo(followUpMessageDTO.getFileList(),userId);
+        int sourceInfoDTOId=sourceService.addSource(sourceInfoDTO);
+        followUpMessage.sets
         int re = followUpMessageMapper.insert(followUpMessage);
         if(followUpMessage.getObjectType()== ObjectTypeEnum.LENDER.getValue()){//如果一级跟进对象是借款人, 增加跟进次数
             LenderInfo lenderInfo=lenderInfoMapper.get(followUpMessage.getObjectId());
@@ -152,11 +157,11 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
      * @param fileList 上传文件信息list
      * @return
      */
-    private SourceInfoDTO createSourceInfo(List<String> fileList,String userId){
+    private SourceInfoDTO createSourceInfo(List<String> fileList,Integer userId){
         SourceInfoDTO sourceInfoDTO = new SourceInfoDTO();
         SourceNavigation nav=NavUtil.getCommonSourceNavigation(SourceInfoEnum.FOLLOW_UP_TYPE.getValue());
         sourceInfoDTO.setNavId(nav.getId());
-        sourceInfoDTO.setCode(SourceInfoEnum.FOLLOW_UP_TYPE.getObjectValue()+userId);
+        sourceInfoDTO.setCode(SourceInfoEnum.FOLLOW_UP_TYPE.getObjectValue()+userId.toString());
         sourceInfoDTO.setIsshow(SourceInfoEnum.SHOW_UNABLE.getValue());
         sourceInfoDTO.setOpen(SourceInfoEnum.OPEN_ENABLE.getValue());
         List<SourceDTO> sourceDTOList = new ArrayList<>();
