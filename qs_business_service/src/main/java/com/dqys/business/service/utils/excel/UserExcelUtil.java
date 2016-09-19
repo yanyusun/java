@@ -1,5 +1,7 @@
 package com.dqys.business.service.utils.excel;
 
+import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.service.dto.excel.ExcelMessage;
 import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.core.constant.KeyEnum;
@@ -26,7 +28,7 @@ public class UserExcelUtil {
      *
      * @return
      */
-    public static Map<String, Object> upLoadUserExcel(String fileName) {
+    public static Map<String, Object> upLoadUserExcel(String fileName, TUserInfoMapper tUserInfoMapper) {
         Map<String, Object> map = new HashMap<String, Object>();
         String name[] = fileName.split("_");
         if (name.length != 3) {
@@ -40,11 +42,10 @@ public class UserExcelUtil {
             // 临时文件地址
             String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue()
                     + "/temp/" + type + "/" + userId + "/";
-
             List<Map<String, Object>> list = ExcelTool.readExcelForList(path, fileName, 1, 0, 0);//借款人
             //判断文件的字段格式
             List<ExcelMessage> error = new ArrayList<ExcelMessage>();//错误信息
-            if (!checkUserExcel(list, error)) {
+            if (!checkUserExcel(list, error, tUserInfoMapper)) {
                 //文件的写出成表格文件
                 map.put("result", "error");
                 map.put("data", error);
@@ -106,14 +107,14 @@ public class UserExcelUtil {
      * @param error
      * @return
      */
-    private static boolean checkUserExcel(List<Map<String, Object>> list, List<ExcelMessage> error) {
+    private static boolean checkUserExcel(List<Map<String, Object>> list, List<ExcelMessage> error, TUserInfoMapper tUserInfoMapper) {
         String[] str = {"序号", "*姓名", "*昵称", "*性别", "*自定义账号", "*微信号", "QQ号", "办公电话", "*手机号", "*工作邮箱", "*部门", "*职位名称",
                 "*职责名称", "职责描述", "*职责区域", "*系统角色", "从业年限(年）", "入职时间", "历史业绩（总数量）", "备注"};
         ExcelUtilAsset.templateFormat(str, list.get(0), "用户", "表头信息错误", error);
         boolean flag = true;
         if (error != null && error.size() < 1) {
             //判断每个表格的数据类型
-            checkUser(error, list);
+            checkUser(error, list, tUserInfoMapper);
             if (error.size() > 0) {
                 flag = false;
             }
@@ -123,9 +124,10 @@ public class UserExcelUtil {
         return flag;
     }
 
-    private static void checkUser(List<ExcelMessage> error, List<Map<String, Object>> list) {
+    private static void checkUser(List<ExcelMessage> error, List<Map<String, Object>> list, TUserInfoMapper tUserInfoMapper) {
         String name = "用户信息表";
         Map<String, Object> map = list.get(0);
+        List<String> emailList = new ArrayList<>();
         for (int i = 1; i < list.size(); i++) {
             Map<String, Object> l = list.get(i);
             if (transStringToInteger(transMapToString(l, "var0")) == null) {
@@ -169,6 +171,17 @@ public class UserExcelUtil {
             if (!FormatValidateTool.checkEmail(transMapToString(l, "var9"))) {//*工作邮箱
                 placeByExcel(error, name, i, 9, transMapToString(map, "var9"), "格式错误");
                 ;
+            } else {
+                //判断excel表里的邮箱是否 重复
+                if (emailList.contains(transMapToString(l, "var9"))) {
+                    placeByExcel(error, name, i, 9, transMapToString(map, "var9"), "表内邮箱重复");
+                } else {
+                    emailList.add(transMapToString(l, "var9"));//
+                    //判断库里的邮箱是否重复
+                    if (verifyUser(tUserInfoMapper, null, null, transMapToString(l, "var9"))) {
+                        placeByExcel(error, name, i, 9, transMapToString(map, "var9"), "该邮箱已注册");
+                    }
+                }
             }
             if (transMapToString(l, "var10").equals("")) {//*部门
                 placeByExcel(error, name, i, 10, transMapToString(map, "var10"), "不能为空");
@@ -262,5 +275,21 @@ public class UserExcelUtil {
         }
     }
 
+    /**
+     * 验证是否存在了
+     *
+     * @param account
+     * @param mobile
+     * @param email
+     * @return （存在true 不存在false）
+     */
+    private static boolean verifyUser(TUserInfoMapper tUserInfoMapper, String account, String mobile, String email) {
+        List<TUserInfo> list = tUserInfoMapper.verifyUser(account, mobile, email);
+        if (list.size() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 }
