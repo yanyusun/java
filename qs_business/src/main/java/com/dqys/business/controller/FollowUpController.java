@@ -76,44 +76,39 @@ public class FollowUpController extends BaseApiContorller {
      * @apiGroup followUp
      * @apiUse FollowUpMessageDTO
      * @apiSuccessExample {json} Data-Response:
-     *{
-        "code": 2000,
-        "msg": "成功",
-        "data": {
-        "id": null,
-        "objectId": 111,
-        "objectType": 111,
-        "userId": 1,
-        "teamId": 0,
-        "content": "111",
-        "version": null,
-        "createAt": null,
-        "updateAt": null,
-        "stateflag": null,
-        "secondObjectId": null,
-        "secondObjectType": 111,
-        "liquidateStage": 111,
-        "secondLiquidateStage": 111,
-        "sendStatus": null,
-        "userInfo": null,
-        "teammateRe": null,
-        "companyInfo": null
-        }
-        }
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {
+     * "id": null,
+     * "objectId": 111,
+     * "objectType": 111,
+     * "userId": 1,
+     * "teamId": 0,
+     * "content": "111",
+     * "version": null,
+     * "createAt": null,
+     * "updateAt": null,
+     * "stateflag": null,
+     * "secondObjectId": null,
+     * "secondObjectType": 111,
+     * "liquidateStage": 111,
+     * "secondLiquidateStage": 111,
+     * "sendStatus": null,
+     * "userInfo": null,
+     * "teammateRe": null,
+     * "companyInfo": null
+     * }
+     * }
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse add(FollowUpMessageDTO followUpMessageDTO) {
-        if (followUpMessageDTO.getObjectId()==null||followUpMessageDTO.getObjectType()==null||followUpMessageDTO.getLiquidateStage()==null) {
+        if (followUpMessageDTO.getObjectId() == null || followUpMessageDTO.getObjectType() == null || followUpMessageDTO.getLiquidateStage() == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        FollowUpMessage followUpMessage = FollowUpUtil.toFollowUpMessage(followUpMessageDTO);
-        if (followUpMessage != null) {
-            followUpMessageService.insert(followUpMessage);
-        } else {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        return JsonResponseTool.success(followUpMessage);
+        followUpMessageService.insert(followUpMessageDTO);
+        return JsonResponseTool.success(followUpMessageDTO);
     }
 
     /**
@@ -123,20 +118,20 @@ public class FollowUpController extends BaseApiContorller {
      * @apiParam {number} objectId 对象id
      * @apiParam {number} objectType 对象类型
      * @apiSuccessExample {json} Data-Response:
-     *  {
-            "code": 2000,
-            "msg": "成功",
-            "data": [
-            {
-            "count": 2,
-            "moment": 111
-            },
-            {
-            "count": 1,
-            "moment": 222
-            }
-            ]
-            }
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": [
+     * {
+     * "count": 2,
+     * "moment": 111
+     * },
+     * {
+     * "count": 1,
+     * "moment": 222
+     * }
+     * ]
+     * }
      */
     @RequestMapping(value = "/unread_count", method = RequestMethod.GET)
     @ResponseBody

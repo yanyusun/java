@@ -3,6 +3,7 @@ package com.dqys.business.service.service.followUp;
 
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
+import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 
 import java.util.List;
 
@@ -12,10 +13,10 @@ import java.util.List;
 public interface FollowUpMessageService {
     /**
      * 增加跟进信息并且增加跟进次数
-     * @param followUpMessage
+     * @param followUpMessageDTO
      * @return
      */
-    int insert(FollowUpMessage followUpMessage);
+    int insert(FollowUpMessageDTO followUpMessageDTO);
 
     /**
      * 查询跟进信息

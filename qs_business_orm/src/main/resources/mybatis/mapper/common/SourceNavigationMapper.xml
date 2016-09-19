@@ -84,4 +84,11 @@
     WHERE lender_id = #{lenderId,jdbcType=INTEGER} AND type = #{type,jdbcType=INTEGER}
   </select>
 
+  <select id="ListByIsCustom" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM bt_source_nav
+    WHERE is_custom = #{isCustom,jdbcType=INTEGER}
+  </select>
+
 </mapper>

@@ -10,18 +10,27 @@ import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.common.SourceInfo;
+import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.coordinator.OURelation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
+import com.dqys.business.service.constant.SourceInfoEnum;
+import com.dqys.business.service.dto.common.SourceDTO;
+import com.dqys.business.service.dto.common.SourceInfoDTO;
+import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
+import com.dqys.business.service.utils.common.NavUtil;
+import com.dqys.business.service.utils.followUp.FollowUpUtil;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.RabbitMQProducerTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +59,8 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
     private AssetInfoMapper assetInfoMapper;
 
     @Override
-    public int insert(FollowUpMessage followUpMessage) {
+    public int insert(FollowUpMessageDTO followUpMessageDTO) {
+        FollowUpMessage followUpMessage = FollowUpUtil.toFollowUpMessage(followUpMessageDTO);
         Date curDate=new Date();
         UserSession userSession = UserSession.getCurrent();
         followUpMessage.setUserId(userSession.getUserId());
@@ -131,5 +141,27 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
         followUpReadStatusService.cancelUnread(followUpMessageQuery.getObjectId(),followUpMessageQuery.getObjectType(),followUpMessageQuery.getLiquidateStage());
         return getlistWithUserAndTeam(followUpMessageQuery);
     }
+
+    /**
+     * 根据文件名生成资源信息
+     * @param fileList
+     * @return
+     */
+    private SourceInfoDTO createSourceInfo(List<String> fileList){
+        SourceInfoDTO sourceInfoDTO = new SourceInfoDTO();
+        SourceNavigation nav=NavUtil.getCommonSourceNavigation(SourceInfoEnum.FOLLOW_UP_TYPE.getValue());
+        sourceInfoDTO.setNavId(nav.getId());
+        sourceInfoDTO.setCode();
+        List<SourceDTO> sourceDTOList = new ArrayList<>();
+        for(String file:fileList){
+            SourceDTO sourceDTO  = new SourceDTO();
+            sourceDTO.
+            file
+        }
+        SourceDTO
+        sourceDTOList.add(s)
+        //sourceInfo
+        return  sourceInfoDTO;
+    };
 
 }
