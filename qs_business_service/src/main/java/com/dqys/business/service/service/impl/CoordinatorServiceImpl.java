@@ -36,8 +36,7 @@ import com.dqys.business.orm.pojo.zcy.ZcyEstates;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
-import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
-import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
+import com.dqys.business.service.constant.ObjectEnum.*;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
@@ -45,6 +44,7 @@ import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.SmsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -138,7 +138,15 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("userTeamId", userTeam.getId());
             map.put("result", "yes");
         } else {
-            List<TeamDTO> list = getLenderOrAsset(companyId, userTeam.getId(), userTeam.getObjectType());//获取借款人或是资产包的团队信息
+            List<TeamDTO> list = getLenderOrAsset(companyId, userTeam.getObjectId(), userTeam.getObjectType());//获取借款人或是资产包的团队信息
+            TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(team.getMangerId());//管理员信息
+            if (tUserInfo != null) {
+                TeamDTO teamDTO = new TeamDTO();
+                teamDTO.setUserId(tUserInfo.getId());
+                teamDTO.setRealName(tUserInfo.getRealName());
+                teamDTO.setRoleType(1);
+                list.add(teamDTO);
+            }
             for (TeamDTO t : list) {//查询每个人员的任务数
                 Map<String, Object> task = getTaskCount(companyId, t.getUserId(), objectType);
                 t.setFinishTask(MessageUtils.transMapToInt(task, "finish"));
@@ -150,14 +158,6 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("teams", list);//团队信息
             map.put("people", getPeopleNum(companyId, objectId, objectType));//团队人数
             map.put("userTeamId", team.getId());
-            TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(team.getMangerId());//管理员信息
-            Map admin = new HashMap<>();
-            if (tUserInfo != null) {
-                admin.put("real_name", tUserInfo.getRealName());
-                admin.put("name", "");
-                admin.put("user_id", tUserInfo.getId());
-            }
-            map.put("admin", admin);
             map.put("result", "yes");
         }
     }
@@ -821,6 +821,136 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         return count;
     }
 
+    @Override
+    public Boolean verdictOrganization(Integer flowId, Integer flowType, Integer onStatus, Integer type) {
+        boolean flag = false;
+        Integer coll = 0;
+        Integer lay = 0;
+        Integer age = 0;
+        if (flowType == ObjectTypeEnum.PAWN.getValue()) {
+            PawnInfo info = pawnInfoMapper.get(flowId);
+            if (info != null) {
+                coll = info.getOnCollection();
+                lay = info.getOnLawyer();
+                age = info.getOnAgent();
+            } else {
+                return flag;
+            }
+        } else if (flowType == ObjectTypeEnum.IOU.getValue()) {
+            IOUInfo info = iouInfoMapper.get(flowId);
+            if (info != null) {
+                coll = info.getOnCollection();
+                lay = info.getOnLawyer();
+                age = info.getOnAgent();
+            } else {
+                return flag;
+            }
+        }
+        if (type == UserInfoEnum.USER_TYPE_COLLECTION.getValue() && coll != onStatus) {
+            coll = onStatus;
+            flag = true;
+        } else if (type == UserInfoEnum.USER_TYPE_JUDICIARY.getValue() && lay != onStatus) {
+            lay = onStatus;
+            flag = true;
+        } else if (type == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue() && age != onStatus) {
+            age = onStatus;
+            flag = true;
+        }
+        if (flag) {
+            if (flowType == ObjectTypeEnum.PAWN.getValue()) {
+                PawnInfo info = pawnInfoMapper.get(flowId);
+                if (info != null) {
+                    info.setOnCollection(coll);
+                    info.setOnAgent(age);
+                    info.setOnLawyer(lay);
+                    pawnInfoMapper.update(info);//修改抵押物的机构处置状态
+                }
+            } else if (flowType == ObjectTypeEnum.IOU.getValue()) {
+                IOUInfo info = iouInfoMapper.get(flowId);
+                if (info != null) {
+                    info.setOnCollection(coll);
+                    info.setOnAgent(age);
+                    info.setOnLawyer(lay);
+                    iouInfoMapper.update(info);//修改借据的机构处置状态
+                }
+            }
+        }
+        return flag;
+    }
+
+    @Override
+    public Map businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType) {
+        Map map = new HashMap<>();
+        if (ObjectTypeEnum.PAWN.getValue() == flowType) {//抵押物
+            if (PawnEnum.MAINTAIN_REGULAR.getValue() == operType) {//维持常规催收
+                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), 0, 1, 1);
+            } else if (PawnEnum.MARKET_DISPOSITION.getValue() == operType) {//市场处置
+                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), 1, 1, 0);
+            } else if (PawnEnum.CM_SIMULTANEOUS.getValue() == operType) {//催收/市场同时进行
+                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), 0, 1, 0);
+            } else if (PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue() == operType) {//执行司法化解
+                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), 1, 0, 1);
+            } else if (PawnEnum.CJ_SIMULTANEOUS.getValue() == operType) {//催收/司法化解同时进行
+                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), 0, 0, 1);
+            } else if (PawnEnum.CMJ_SIMULTANEOUS.getValue() == operType) {//催收、市场、司法同时进行
+                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), 0, 0, 0);
+            }
+        } else if (ObjectTypeEnum.IOU.getValue() == flowType) {//借据
+            if (IouEnum.MAINTAIN_REGULAR.getValue() == operType) {//维持常规催收
+                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), 0, 1, 1);
+            } else if (IouEnum.MARKET_DISPOSITION.getValue() == operType) {//市场处置
+                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), 1, 1, 0);
+            } else if (IouEnum.CM_SIMULTANEOUS.getValue() == operType) {//催收/市场同时进行
+                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), 0, 1, 0);
+            } else if (IouEnum.EXECUTE_JUSTICE_RESOLVE.getValue() == operType) {//执行司法化解
+                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), 1, 0, 1);
+            } else if (IouEnum.CJ_SIMULTANEOUS.getValue() == operType) {//催收/司法化解同时进行
+                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), 0, 0, 1);
+            } else if (IouEnum.CMJ_SIMULTANEOUS.getValue() == operType) {//催收、市场、司法同时进行
+                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), 0, 0, 0);
+            }
+        }
+
+        return map;
+    }
+
+    /**
+     * @param map
+     * @param objectId
+     * @param objectType
+     * @param flowId
+     * @param flowType
+     * @param operation
+     * @param coll       常规催收（0可以1不能）
+     * @param lawy       司法化解（0可以1不能）
+     * @param agen       市场处置（0可以1不能）
+     */
+    private void setFlow(Map map, Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, String operation, Integer coll, Integer lawy, Integer agen) {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        String operUrl = "flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType;//消息列表使用的访问参数拼接
+        boolean c = false;
+        boolean l = false;
+        boolean a = false;
+        //获取分配器中参与的所有公司类型（31催收32律所33中介）
+        List<Map> list = coordinatorMapper.findUserTypeByCompanyTeam(objectId, objectType);
+        for (Map m : list) {
+            if (UserInfoEnum.USER_TYPE_COLLECTION.getValue() == MessageUtils.transMapToInt(m, "userType")) {//催收
+                c = true;
+            } else if (UserInfoEnum.USER_TYPE_JUDICIARY.getValue() == MessageUtils.transMapToInt(m, "userType")) {//律所
+                l = true;
+            } else if (UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue() == MessageUtils.transMapToInt(m, "userType")) {//中介
+                a = true;
+            }
+        }
+        if ((coll == 0 && !c) || (lawy == 0 && !l) || (agen == 0 && !a)) {//判断是否符合，发送给平台管理员短信
+            messageService.businessFlow(objectId, objectType, flowId, flowType, operation, userId, operUrl);
+        }
+        //进行处置机构发送短信
+        messageService.judicature(objectId, objectType, flowId, flowType, userId, operation, lawy);//司法机构
+        messageService.collectiones(objectId, objectType, flowId, flowType, userId, operation, coll);//催收机构
+        messageService.intermediary(objectId, objectType, flowId, flowType, userId, operation, agen);//市场处置
+        map.put("result", "yes");
+    }
 
     private Map teamDel(Integer userId, Integer teamUserId, Integer userTeamId, Integer status, Integer substitutionUid) {
         Map map = new HashMap<>();

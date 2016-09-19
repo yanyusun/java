@@ -4,22 +4,17 @@ import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.service.service.AssetService;
 import com.dqys.business.service.service.CoordinatorService;
-import com.dqys.business.service.service.impl.AssetServiceImpl;
-import com.dqys.business.service.utils.excel.ExcelUtilAsset;
 import com.dqys.business.service.utils.message.MessageUtils;
-import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.core.utils.ProtocolTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,14 +44,8 @@ public class CoordinatorController {
      */
     @RequestMapping("/list")
     @ResponseBody
-    public JsonResponse coordinatorList(Integer companyId, Integer objectId, Integer type, HttpServletRequest httpServletRequest) throws Exception {
-        Integer userId = ProtocolTool.validateUser(
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
-        );
+    public JsonResponse coordinatorList(Integer companyId, Integer objectId, Integer type) throws Exception {
+        Integer userId = UserSession.getCurrent().getUserId();
         Map<String, Object> map = new HashMap<>();
         if (objectId != null && type == 1) {
             coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.LENDER.getValue(), userId);//查询借款人团队
@@ -84,14 +73,8 @@ public class CoordinatorController {
      */
     @RequestMapping("/userList")
     @ResponseBody
-    public JsonResponse userList(String realName, HttpServletRequest httpServletRequest) throws Exception {
-        Integer userId = ProtocolTool.validateUser(
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
-        );
+    public JsonResponse userList(String realName) throws Exception {
+        Integer userId = UserSession.getCurrent().getUserId();
         Map<String, Object> map = coordinatorService.getCompanyUserList(realName, userId, null);
         return JsonResponseTool.success(map);
     }
@@ -108,14 +91,8 @@ public class CoordinatorController {
      */
     @RequestMapping("/addTeammate")
     @ResponseBody
-    public JsonResponse addTeammate(@RequestParam("userTeamId") Integer userTeamId, @RequestParam("remark") String remark, HttpServletRequest httpServletRequest, Integer... userIds) throws Exception {
-        Integer userId = ProtocolTool.validateUser(
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
-        );
+    public JsonResponse addTeammate(@RequestParam("userTeamId") Integer userTeamId, @RequestParam("remark") String remark, Integer... userIds) throws Exception {
+        Integer userId = UserSession.getCurrent().getUserId();
         if (CommonUtil.checkParam(userTeamId, userIds)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -138,14 +115,8 @@ public class CoordinatorController {
      */
     @RequestMapping("/isAccept")
     @ResponseBody
-    public JsonResponse isAccept(Integer teammateId, Integer status, HttpServletRequest httpServletRequest) throws Exception {
-        Integer userId = ProtocolTool.validateUser(
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
-        );
+    public JsonResponse isAccept(Integer teammateId, Integer status) throws Exception {
+        Integer userId = UserSession.getCurrent().getUserId();
         if (CommonUtil.checkParam(teammateId, status)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -168,14 +139,8 @@ public class CoordinatorController {
      */
     @RequestMapping("/addInitiative")
     @ResponseBody
-    public JsonResponse addInitiative(Integer userTeammateId, HttpServletRequest httpServletRequest) throws Exception {
-        Integer userId = ProtocolTool.validateUser(
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
-        );
+    public JsonResponse addInitiative(Integer userTeammateId) throws Exception {
+        Integer userId =UserSession.getCurrent().getUserId();
         if (CommonUtil.checkParam(userTeammateId)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -200,7 +165,7 @@ public class CoordinatorController {
      */
     @RequestMapping("/auditBusiness")
     @ResponseBody
-    public JsonResponse auditBusiness(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType, @RequestParam("status") Integer status, HttpServletRequest httpServletRequest) throws Exception {
+    public JsonResponse auditBusiness(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType, @RequestParam("status") Integer status) throws Exception {
         if (CommonUtil.checkParam(objectType, objectId, status)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -210,13 +175,7 @@ public class CoordinatorController {
         if (status != BusinessStatusEnum.platform_pass.getValue() && status != BusinessStatusEnum.platform_refuse.getValue()) {
             return JsonResponseTool.paramErr("状态有误");
         }
-        Integer userId = ProtocolTool.validateUser(
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
-        );
+        Integer userId = UserSession.getCurrent().getUserId();
         Map map = new HashMap<>();
         coordinatorService.auditBusiness(map, userId, objectId, objectType, status);
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
@@ -237,15 +196,9 @@ public class CoordinatorController {
      */
     @RequestMapping("/isPause")
     @ResponseBody
-    public JsonResponse isPause(Integer objectId, Integer objectType, Integer status, HttpServletRequest httpServletRequest) throws Exception {
+    public JsonResponse isPause(Integer objectId, Integer objectType, Integer status) throws Exception {
 
-        Integer userId = ProtocolTool.validateUser(
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
-        );
+        Integer userId = UserSession.getCurrent().getUserId();
         Map map = new HashMap<>();
         if (CommonUtil.checkParam(objectType, objectId, status)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -279,14 +232,8 @@ public class CoordinatorController {
     @RequestMapping("/delUser")
     @ResponseBody
     public JsonResponse deleteTeammatUser(@RequestParam("teamUserId") Integer teamUserId, @RequestParam("userTeamId") Integer userTeamId,
-                                          @RequestParam("status") Integer status, @RequestParam("substitutionUid") Integer substitutionUid, HttpServletRequest httpServletRequest) throws Exception {
-        Integer userId = ProtocolTool.validateUser(
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
-        );
+                                          @RequestParam("status") Integer status, @RequestParam("substitutionUid") Integer substitutionUid) throws Exception {
+        Integer userId = UserSession.getCurrent().getUserId();
         Map map = new HashMap<>();
         if (CommonUtil.checkParam(teamUserId, userTeamId)) {
             return JsonResponseTool.paramErr("参数有误");

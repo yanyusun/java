@@ -583,9 +583,9 @@ public class ZcyServiceImpl implements ZcyService {
     @Override
     public Map zcyDetail(Integer estatesId) {
         Map map = new HashMap<>();
-        ZcyEstates estates = zcyEstatesMapper.selectByPrimaryKey(estatesId);
-        if (estates != null) {
-            map.put("estates", estates);
+        Map<String, Object> zcy = zcyEstatesMapper.selectDetailByZcy(estatesId);
+        if (zcy != null) {
+            map.put("detail", zcy);
             map.put("result", "yes");
         } else {
             map.put("result", "no");

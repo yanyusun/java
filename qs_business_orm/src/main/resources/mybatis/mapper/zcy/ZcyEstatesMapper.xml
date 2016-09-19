@@ -556,5 +556,18 @@
             AND status=#{status,jdbcType=INTEGER}
         </if>
     </select>
+    <!--资产源详情-->
+    <select id="selectDetailByZcy" resultType="java.util.Map" parameterType="int">
+           SELECT tzm.original_price originalPrice,tze.guide_price guidePrice,tze.house_belong houseBelong,
+            tze.decade,tze.build_type buildType,tze.house_use houseUse,tze.tenement_price tenementPrice,
+            tze.heating_way heatingWay,tze.acreage,tzea.area,tzo.entrust_source entrustSource,
+            tze.facility,tzex.express_price expressPrice,tzex.entrust_protocol_time expressStartTime,tzex.entrust_abort_time expressEndTime
+             from t_zcy_estates tze LEFT JOIN t_zcy_express tzex
+            ON tze.id=tzex.estates_id LEFT JOIN t_zcy_maintain tzm
+            ON tze.id=tzm.estates_id LEFT JOIN t_zcy_owner tzo
+            ON tze.id=tzo.estates_id LEFT JOIN t_zcy_estates_address tzea
+            ON tze.id=tzea.estates_id
+            WHERE tze.id=#{estatesId} LIMIT 0,1
+    </select>
 
 </mapper>

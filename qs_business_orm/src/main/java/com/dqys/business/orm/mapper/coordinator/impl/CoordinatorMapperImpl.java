@@ -138,5 +138,15 @@ public class CoordinatorMapperImpl extends BaseDao implements CoordinatorMapper 
         return super.getSqlSession().getMapper(CoordinatorMapper.class).findObjectIdByOURelationAndBusiness(userId, objectType);
     }
 
+    @Override
+    public Map getCompanyAndUser(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType, @Param("userType") Integer userType) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).getCompanyAndUser(objectId, objectType, userType);
+    }
+
+    @Override
+    public List<Map> findUserTypeByCompanyTeam(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).findUserTypeByCompanyTeam(objectId, objectType);
+    }
+
 
 }

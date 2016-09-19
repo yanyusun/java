@@ -6,6 +6,7 @@ import com.dqys.core.base.BaseDao;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mkfeng on 2016/7/27.
@@ -50,5 +51,10 @@ public class ZcyEstatesMapperImpl extends BaseDao implements ZcyEstatesMapper {
     @Override
     public List<ZcyEstates> selectBySelective(ZcyEstates record) {
         return super.getSqlSession().getMapper(ZcyEstatesMapper.class).selectBySelective(record);
+    }
+
+    @Override
+    public Map<String, Object> selectDetailByZcy(Integer estatesId) {
+        return super.getSqlSession().getMapper(ZcyEstatesMapper.class).selectDetailByZcy(estatesId);
     }
 }

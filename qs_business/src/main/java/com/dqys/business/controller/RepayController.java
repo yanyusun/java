@@ -6,16 +6,17 @@ import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
 import com.dqys.business.service.service.RepayService;
 import com.dqys.business.service.utils.message.MessageUtils;
-import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.JsonResponse;
-import com.dqys.core.utils.*;
+import com.dqys.core.model.UserSession;
+import com.dqys.core.utils.CommonUtil;
+import com.dqys.core.utils.DateFormatTool;
+import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -92,7 +93,7 @@ public class RepayController {
     public JsonResponse updateRepayMoney(@RequestParam("repayId") Integer repayId, @RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType,
                                          @RequestParam("repayType") Integer repayType, @RequestParam("repayWay") Integer repayWay,
                                          @RequestParam("money") Double money, @RequestParam("remark") String remark,
-                                         @RequestParam("file") String file, HttpServletRequest httpServletRequest) throws Exception {
+                                         @RequestParam("file") String file) throws Exception {
         if (CommonUtil.checkParam(repayId, objectId, objectType, repayType, repayWay, money)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -112,13 +113,7 @@ public class RepayController {
             return JsonResponseTool.paramErr("还款方式错误");
         }
         Map map = new HashMap<>();
-        Integer userId = ProtocolTool.validateUser(
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
-                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
-        );
+        Integer userId = UserSession.getCurrent().getUserId();
         map = repayService.updateRepayMoney(repayId, userId, objectId, objectType, repayType, repayWay, money, remark, file);
         return JsonResponseTool.success(map);
     }
@@ -141,7 +136,7 @@ public class RepayController {
     public JsonResponse repayMoney(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType,
                                    @RequestParam("repayType") Integer repayType, @RequestParam("repayWay") Integer repayWay,
                                    @RequestParam("money") Double money, @RequestParam("remark") String remark,
-                                   @RequestParam("file") String file, HttpServletRequest httpServletRequest) {
+                                   @RequestParam("file") String file) {
         if (CommonUtil.checkParam(objectId, objectType, repayType, repayWay, money)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -162,13 +157,7 @@ public class RepayController {
         }
         Map map = new HashMap<>();
         try {
-            Integer userId = ProtocolTool.validateUser(
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
-            );
+            Integer userId = UserSession.getCurrent().getUserId();
             map = repayService.repayMoney(userId, objectId, objectType, repayType, repayWay, money, remark, file);
             return JsonResponseTool.success(map);
         } catch (Exception e) {
@@ -231,7 +220,7 @@ public class RepayController {
      */
     @RequestMapping("/postpone")
     @ResponseBody
-    public JsonResponse postpone(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType, @RequestParam("postponeTime") String postponeTime, HttpServletRequest httpServletRequest) {
+    public JsonResponse postpone(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType, @RequestParam("postponeTime") String postponeTime) {
         if (CommonUtil.checkParam(objectId, objectType, postponeTime)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -243,13 +232,7 @@ public class RepayController {
         }
         Map map = new HashMap<>();
         try {
-            Integer userId = ProtocolTool.validateUser(
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
-            );
+            Integer userId = UserSession.getCurrent().getUserId();
             DamageApply damageApply = new DamageApply();
             damageApply.setStatus(0);
             damageApply.setApply_object_id(objectId);
@@ -274,7 +257,7 @@ public class RepayController {
      */
     @RequestMapping("/auditPostpone")
     @ResponseBody
-    public JsonResponse postpone(@RequestParam("applyId") Integer applyId, @RequestParam("status") Integer status, HttpServletRequest httpServletRequest) {
+    public JsonResponse postpone(@RequestParam("applyId") Integer applyId, @RequestParam("status") Integer status) {
         Map map = new HashMap<>();
         if (CommonUtil.checkParam(applyId, status)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -283,13 +266,7 @@ public class RepayController {
             return JsonResponseTool.paramErr("审批状态错误");
         }
         try {
-            Integer userId = ProtocolTool.validateUser(
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
-                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
-            );
+            Integer userId = UserSession.getCurrent().getUserId();
             repayService.auditPostpone(applyId, status, userId, map);
             if (MessageUtils.transMapToString(map, "result").equals("yes")) {
                 return JsonResponseTool.success(map);
