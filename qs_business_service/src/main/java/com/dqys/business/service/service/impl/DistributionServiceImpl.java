@@ -368,7 +368,7 @@ public class DistributionServiceImpl implements DistributionService {
 
             companyTeamReQuery.setCompanyId(userInfo.getCompanyId());
             List<CompanyTeamRe> companyTeamReList = companyTeamReMapper.queryList(companyTeamReQuery);
-            if (companyTeamReList != null || companyTeamReList.size() > 0) {
+            if (companyTeamReList != null && companyTeamReList.size() > 0) {
                 // 已经存在在该分配器中无需再次申请或邀请
                 return null;
             }
@@ -391,8 +391,14 @@ public class DistributionServiceImpl implements DistributionService {
                 // 发送短信提醒
                 TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeam.getSenderId()); // 创建人信息
                 SmsUtil smsUtil = new SmsUtil();
-                TSysProperty property = SysPropertyTool.getProperty(
-                        SysPropertyTypeEnum.USER_TYPE, companyDetailInfo.getType().toString()); //
+                List<TSysProperty> propertyList = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE);
+                TSysProperty property = null;
+                for (TSysProperty tSysProperty : propertyList){
+                    if(companyDetailInfo.getType().toString().equals(tSysProperty.getPropertyValue())){
+                        property = tSysProperty;
+                        break;
+                    }
+                }
                 String[] msg = {
                         creator.getUserName(),
                         companyDetailInfo.getCompanyName(),
@@ -467,7 +473,7 @@ public class DistributionServiceImpl implements DistributionService {
 
         companyTeamReQuery.setCompanyId(companyId);
         List<CompanyTeamRe> companyTeamReList = companyTeamReMapper.queryList(companyTeamReQuery);
-        if (companyTeamReList != null || companyTeamReList.size() > 0) {
+        if (companyTeamReList != null && companyTeamReList.size() > 0) {
             // 已经存在在该分配器中无需再次申请或邀请
             return null;
         }
@@ -495,8 +501,14 @@ public class DistributionServiceImpl implements DistributionService {
 //                    "", "邀请加入分配器", 0, 0);
             // 发送短信提醒
             SmsUtil smsUtil = new SmsUtil();
-            TSysProperty property = SysPropertyTool.getProperty(
-                    SysPropertyTypeEnum.USER_TYPE, companyDetailInfo.getType().toString()); // 公司类型
+            List<TSysProperty> propertyList = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE);
+            TSysProperty property = null;
+            for (TSysProperty tSysProperty : propertyList){
+                if(companyDetailInfo.getType().toString().equals(tSysProperty.getPropertyValue())){
+                    property = tSysProperty;
+                    break;
+                }
+            }
             String[] msg = {
                     companyDetailInfo1.getName(),
                     companyDetailInfo.getCompanyName(),
@@ -614,8 +626,14 @@ public class DistributionServiceImpl implements DistributionService {
                 // 发送短信提醒
                 TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeam.getSenderId()); // 创建人信息
                 CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(userInfo.getCompanyId()); // 被邀请公司信息
-                TSysProperty property = SysPropertyTool.getProperty(
-                        SysPropertyTypeEnum.USER_TYPE, companyDetailInfo.getType().toString()); // 公司类型
+                List<TSysProperty> propertyList = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE);
+                TSysProperty property = null;
+                for (TSysProperty tSysProperty : propertyList){
+                    if(companyDetailInfo.getType().toString().equals(tSysProperty.getPropertyValue())){
+                        property = tSysProperty;
+                        break;
+                    }
+                }
                 SmsUtil smsUtil = new SmsUtil();
                 String[] msg = {
                         creator.getUserName(),
@@ -985,8 +1003,14 @@ public class DistributionServiceImpl implements DistributionService {
 
                 // 发送短信提醒
                 SmsUtil smsUtil = new SmsUtil();
-                TSysProperty property = SysPropertyTool.getProperty(
-                        SysPropertyTypeEnum.USER_TYPE, companyDetailInfo.getType().toString()); // 公司类型
+                List<TSysProperty> propertyList = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE);
+                TSysProperty property = null;
+                for (TSysProperty tSysProperty : propertyList){
+                    if(companyDetailInfo.getType().toString().equals(tSysProperty.getPropertyValue())){
+                        property = tSysProperty;
+                        break;
+                    }
+                }
                 String code = ""; // 对象编号
                 if (ObjectTypeEnum.PAWN.getValue().equals(companyTeam.getObjectType())) {
                     PawnInfo pawnInfo = pawnInfoMapper.get(id);
@@ -1066,8 +1090,14 @@ public class DistributionServiceImpl implements DistributionService {
                 // 提醒消息
                 TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeam.getSenderId()); // 创建人信息
                 CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(companyTeamRe.getAcceptCompanyId()); // 被邀请公司信息
-                TSysProperty property = SysPropertyTool.getProperty(
-                        SysPropertyTypeEnum.USER_TYPE, companyDetailInfo.getType().toString()); // 公司类型
+                List<TSysProperty> propertyList = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE);
+                TSysProperty property = null;
+                for (TSysProperty tSysProperty : propertyList){
+                    if(companyDetailInfo.getType().toString().equals(tSysProperty.getPropertyValue())){
+                        property = tSysProperty;
+                        break;
+                    }
+                }
                 SmsUtil smsUtil = new SmsUtil();
                 String[] msg = {
                         creator.getUserName(),

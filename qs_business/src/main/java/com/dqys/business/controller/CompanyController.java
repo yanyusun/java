@@ -12,7 +12,6 @@ import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -162,7 +161,6 @@ public class CompanyController {
      * @apiName joinDistribution
      * @apiGroup distribution
      * @apiParam {number} id 分配器ID
-     * @apiParam {number} companyId 公司ID
      * @apiSuccess {number} id
      */
     @RequestMapping(value = "/joinDistribution")
@@ -232,10 +230,7 @@ public class CompanyController {
      * @api {get} http://{url}/api/company/getRelation 获取公司间合作关系
      * @apiName getRelation
      * @apiGroup companyRelation
-     * @apiParam {number} type
      * @apiParam {number} id
-     * @apiUse DistributionDTO
-     * @apiUse CompanyTeamReDTO
      */
     @RequestMapping(value = "/getRelation")
     public JsonResponse getRelation(@RequestParam(required = true) Integer id) {

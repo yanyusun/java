@@ -325,19 +325,17 @@ public class AssetServiceImpl implements AssetService {
         } else if (ObjectTabEnum.apply.getValue().equals(type)) {
             // 待申请 -- 暂未其他公司参与
             List<Integer> ids = companyTeamReMapper.listAssigned(ObjectTypeEnum.ASSETPACKAGE.getValue());
-            if (ids == null || ids.size() == 0) {
-                assetQuery.setId(SysProperty.NULL_DATA_ID);
-            } else {
+            if (ids != null && ids.size() > 0) {
                 assetQuery.setExceptIds(ids);
             }
-            if(isUrgeOrLawyer){
-                if(businessIds == null || businessIds.size() == 0){
-                    assetQuery.setId(SysProperty.NULL_DATA_ID);
-                }else{
-                    assetQuery.setIds(businessIds);
-                }
-            }
-            assetQuery.setOperator(UserSession.getCurrent().getUserId());
+//            if(isUrgeOrLawyer){
+//                if(businessIds == null || businessIds.size() == 0){
+//                    assetQuery.setId(SysProperty.NULL_DATA_ID);
+//                }else{
+//                    assetQuery.setIds(businessIds);
+//                }
+//            }
+//            assetQuery.setOperator(UserSession.getCurrent().getUserId());
         } else if (ObjectTabEnum.handling_urge.getValue().equals(type) || ObjectTabEnum.gongingOn.getValue().equals(type)) {
             // 正在处置
 //            List<Integer> ids = companyTeamReMapper.listObjectIdByTypeAndManager(

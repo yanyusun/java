@@ -554,14 +554,14 @@ public class LenderServiceImpl implements LenderService {
             if (ids != null || ids.size() > 0) {
                 lenderQuery.setExceptIds(ids);
             }
-            if (isUrgeOrLawyer) {
-                if(businessIds == null || businessIds.size() == 0){
-                    lenderQuery.setId(SysProperty.NULL_DATA_ID);
-                }else{
-                    lenderQuery.setIds(businessIds);
-                }
-            }
-            lenderQuery.setOperator(UserSession.getCurrent().getUserId());
+//            if (isUrgeOrLawyer) {
+//                if(businessIds == null || businessIds.size() == 0){
+//                    lenderQuery.setId(SysProperty.NULL_DATA_ID);
+//                }else{
+//                    lenderQuery.setIds(businessIds);
+//                }
+//            }
+//            lenderQuery.setOperator(UserSession.getCurrent().getUserId());
         } else if (ObjectTabEnum.handling_urge.getValue().equals(tab) || ObjectTabEnum.gongingOn.getValue().equals(tab)) {
             // 正在处置
 //            List<Integer> ids = companyTeamReMapper.listObjectIdByTypeAndManager(

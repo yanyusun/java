@@ -13,7 +13,7 @@
     <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
     <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
     <result column="role_type" property="roleType" jdbcType="INTEGER" />
-    <result column="b_requester_id" property="requestId" jdbcType="INTEGER" />
+    <result column="b_requester_id" property="requesterId" jdbcType="INTEGER" />
   </resultMap>
   <!-- 基础字段 -->
   <sql id="Base_Column_List" >
@@ -156,7 +156,7 @@
     SELECT object_id from t_company_team where object_type = #{type,jdbcType=INTEGER} AND id IN (
       SELECT s.id FROM (
         SELECT count(company_team_id) as num,company_team_id as id FROM t_company_team_re
-        WHERE accept_company_id in (
+        WHERE status != 2 AND accept_company_id in (
           SELECT id FROM t_company_info
           WHERE id in (
             SELECT company_id FROM t_user_info
@@ -167,7 +167,7 @@
           )
         )
         GROUP BY company_team_id
-      ) s WHERE s.num > 1
+      ) s WHERE s.num > 0
     )
   </select>
 
