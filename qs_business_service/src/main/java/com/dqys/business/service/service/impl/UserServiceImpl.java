@@ -218,8 +218,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JsonResponse add(UserInsertDTO data) {
-        if (data == null) {
-            return JsonResponseTool.paramErr("参数错误");
+        String checkData = UserServiceUtils.checkData(data);
+        if (checkData != null) {
+            return JsonResponseTool.paramErr(checkData);
         }
         TCompanyInfo companyInfo = getCompanyByUserId(UserSession.getCurrent().getUserId());
         if (companyInfo == null) {

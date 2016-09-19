@@ -146,4 +146,15 @@ public class UserServiceUtils {
     }
 
 
+    public static String checkData(UserInsertDTO userInsertDTO){
+        if(CommonUtil.checkParam(userInsertDTO, userInsertDTO.getRealName(),
+                userInsertDTO.getUserName(), userInsertDTO.getSex(), userInsertDTO.getRoleId(),
+                userInsertDTO.getAccount(), userInsertDTO.getMobile(), userInsertDTO.getWechat(),
+                userInsertDTO.getEmail(), userInsertDTO.getOccupation(), userInsertDTO.getApartmentId(),
+                userInsertDTO.getDuty(), userInsertDTO.getAreaId(), userInsertDTO.getUserType())){
+            return "参数错误";
+        }
+        return null;
+    }
+
 }

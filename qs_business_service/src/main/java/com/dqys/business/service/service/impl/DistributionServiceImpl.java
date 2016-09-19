@@ -294,7 +294,7 @@ public class DistributionServiceImpl implements DistributionService {
                     return null;
                 }
             } else {
-                // 没有该对象
+                // 对象类型不符合
                 return null;
             }
             // 存在该对象,创建分配器
@@ -312,15 +312,14 @@ public class DistributionServiceImpl implements DistributionService {
 //            businessLogService.add(teamId, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.add.getValue(),
 //                    "", "创建分配器", 0, 0);
             // 添加本家分配记录
-            TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
-            if (userInfo != null && userInfo.getCompanyId() != null) {
-                Integer companyId = userInfo.getCompanyId();
+            CompanyDetailInfo detailInfo = companyInfoMapper.getDetailByUserId(UserSession.getCurrent().getUserId());
+            if (detailInfo != null && detailInfo.getCompanyId() != null) {
                 CompanyTeamRe companyTeamRe = new CompanyTeamRe();
                 companyTeamRe.setCompanyTeamId(teamId);
-                companyTeamRe.setAcceptCompanyId(companyId);
+                companyTeamRe.setAcceptCompanyId(detailInfo.getCompanyId());
                 companyTeamRe.setStatus(ObjectAcceptTypeEnum.accept.getValue());
                 companyTeamRe.setType(ObjectBusinessTypeEnum.create.getValue());
-                companyTeamRe.setAccepterId(UserSession.getCurrent().getUserId()); // 接收人为创建者
+                companyTeamRe.setAccepterId(detailInfo.getUserId()); // 接收人为创建者
                 companyTeamReMapper.insert(companyTeamRe);
                 // 添加平台参与记录
                 List<TCompanyInfo> managerList = companyInfoMapper.listByType(Integer.valueOf(
@@ -328,7 +327,7 @@ public class DistributionServiceImpl implements DistributionService {
                             SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM).getPropertyValue()));
                 if(managerList != null && managerList != null){
                     // 当前只有一个平台方的管理员
-                    CompanyDetailInfo detailInfo = companyInfoMapper.getDetailByCompanyId(managerList.get(0).getId());
+                    detailInfo = companyInfoMapper.getDetailByCompanyId(managerList.get(0).getId());
                     companyTeamRe.setAcceptCompanyId(detailInfo.getCompanyId());
                     companyTeamRe.setStatus(ObjectAcceptTypeEnum.accept.getValue());
                     companyTeamRe.setType(ObjectBusinessTypeEnum.join.getValue());
@@ -378,8 +377,8 @@ public class DistributionServiceImpl implements DistributionService {
             companyTeamRe.setStatus(ObjectAcceptTypeEnum.init.getValue());
             companyTeamRe.setType(ObjectBusinessTypeEnum.join.getValue());
             companyTeamRe.setAccepterId(userInfo.getId());
-            companyTeamRe.setRoleType(companyDetailInfo.getType());
-            companyTeamRe.setRequesterId(companyDetailInfo.getCompanyId());
+//            companyTeamRe.setRoleType(companyDetailInfo.getType());
+//            companyTeamRe.setRequesterId(companyDetailInfo.getCompanyId());
             Integer result = companyTeamReMapper.insert(companyTeamRe);
             if (CommonUtil.checkResult(result)) {
                 return null;
@@ -400,10 +399,10 @@ public class DistributionServiceImpl implements DistributionService {
                     }
                 }
                 String[] msg = {
-                        creator.getUserName(),
+                        creator.getRealName(),
                         companyDetailInfo.getCompanyName(),
                         property.getPropertyName(),
-                        userInfo.getUserName(),
+                        userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
                         companyTeam.getObjectId().toString()
                 };
@@ -489,8 +488,8 @@ public class DistributionServiceImpl implements DistributionService {
         companyTeamRe.setStatus(ObjectAcceptTypeEnum.init.getValue());
         companyTeamRe.setType(ObjectBusinessTypeEnum.platform.getValue());
         companyTeamRe.setAccepterId(companyDetailInfo1.getUserId());
-        companyTeamRe.setRoleType(companyDetailInfo.getType());
-        companyTeamRe.setRequesterId(companyDetailInfo.getCompanyId());
+//        companyTeamRe.setRoleType(companyDetailInfo.getType());
+//        companyTeamRe.setRequesterId(companyDetailInfo.getCompanyId());
         Integer result = companyTeamReMapper.insert(companyTeamRe);
         if (CommonUtil.checkResult(result)) {
             return null;
@@ -513,7 +512,7 @@ public class DistributionServiceImpl implements DistributionService {
                     companyDetailInfo1.getName(),
                     companyDetailInfo.getCompanyName(),
                     property.getPropertyName(),
-                    userInfo.getUserName(),
+                    userInfo.getRealName(),
                     ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
                     companyTeam.getObjectId().toString()
             };
@@ -563,9 +562,17 @@ public class DistributionServiceImpl implements DistributionService {
         if (userInfo == null || userInfo.getCompanyId() == null) {
             return null; // 当前用户存在异常
         }
-        if (!CommonUtil.isManage()) {
-            // 不是平台方管理员
-            return null;
+
+        if(companyTeamRe.getType().equals(ObjectBusinessTypeEnum.platform.getValue())){
+            // 平台分配
+            if(!companyTeamRe.getAcceptCompanyId().equals(userInfo.getCompanyId())){
+                return null; // 不是本公司的，无法审核
+            }
+        }else if(companyTeamRe.getType().equals(ObjectBusinessTypeEnum.join.getValue())){
+            // 主动加入
+            if (!CommonUtil.isManage()) {
+                return null; // 不是平台方管理员，无法审核
+            }
         }
 
         companyTeamRe.setStatus(status);
@@ -595,8 +602,8 @@ public class DistributionServiceImpl implements DistributionService {
                 TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeamRe.getAccepterId()); // 申请人信息
                 SmsUtil smsUtil = new SmsUtil();
                 String[] msg = {
-                        creator.getUserName(),
-                        userInfo.getUserName(),
+                        creator.getRealName(),
+                        userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
                         companyTeam.getObjectId().toString()
                 };
@@ -636,10 +643,10 @@ public class DistributionServiceImpl implements DistributionService {
                 }
                 SmsUtil smsUtil = new SmsUtil();
                 String[] msg = {
-                        creator.getUserName(),
+                        creator.getRealName(),
                         companyDetailInfo.getCompanyName(),
                         property.getPropertyName(),
-                        userInfo.getUserName(),
+                        userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
                         companyTeam.getObjectId().toString()
                 };
@@ -790,7 +797,7 @@ public class DistributionServiceImpl implements DistributionService {
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
             SmsUtil smsUtil = new SmsUtil();
             String[] msg = {
-                    creator.getUserName(),
+                    creator.getRealName(),
                     ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
                     companyTeam.getObjectId().toString()
             };
@@ -1027,7 +1034,7 @@ public class DistributionServiceImpl implements DistributionService {
                         companyDetailInfo1.getName(),
                         companyDetailInfo.getCompanyName(),
                         property.getPropertyName(),
-                        userInfo.getUserName(),
+                        userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(type).getName(),
                         code
                 };
@@ -1100,10 +1107,10 @@ public class DistributionServiceImpl implements DistributionService {
                 }
                 SmsUtil smsUtil = new SmsUtil();
                 String[] msg = {
-                        creator.getUserName(),
+                        creator.getRealName(),
                         companyDetailInfo.getCompanyName(),
                         property.getPropertyName(),
-                        userInfo.getUserName(),
+                        userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
                         companyTeam.getObjectId().toString()
                 };
