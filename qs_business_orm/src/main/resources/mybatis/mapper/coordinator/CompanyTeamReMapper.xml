@@ -36,7 +36,10 @@
         AND accept_company_id = #{companyId,jdbcType=INTEGER}
       </if>
       <if test="stateflag != null">
-        AND stateflag = #{stateflag,jdbcType=INTEGER}
+        AND stateflag > 0
+      </if>
+      <if test="stateflag == null">
+        AND stateflag = 0
       </if>
     </where>
   </sql>
@@ -142,7 +145,7 @@
   <select id="queryList" parameterType="com.dqys.business.orm.query.company.CompanyTeamReQuery" resultMap="BaseResultMap">
     SELECT * from t_company_team_re
     <include refid="Query_Condition" />
-    ORDER BY id DESC
+    ORDER BY id ASC
   </select>
 
   <select id="listObjectIdByTypeAndManager" resultType="java.lang.Integer">
