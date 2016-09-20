@@ -16,8 +16,9 @@ public enum  SourceInfoEnum {
     OPEN_ENABLE(1,"可以公开"),
     OPEN_UNABLE(0,"不可以公开"),
     //资源编号前缀
-    FOLLOW_UP_CODE_PRE("fu_");//资源编号跟进前缀
-
+    FOLLOW_UP_CODE_PRE("fu_"),//资源编号跟进前缀
+    //公共分类时
+    COMMUN_NAV_LENDER_ID(0);
     private Integer value;
     private String name;
     private Object objectValue;

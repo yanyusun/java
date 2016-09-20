@@ -23,13 +23,14 @@ public class NavUtil implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         redisTemplate = (RedisTemplate) applicationContext.getBean("redisTemplate");
         sourceNavigationMapper = applicationContext.getBean(SourceNavigationMapper.class);
+
         this.loadCommonNav();
     }
 
     /**
      * 加载公共资源实勘分类
      */
-    private static void loadCommonNav(){
+    public static void loadCommonNav(){
         List<SourceNavigation> list=sourceNavigationMapper.ListByIsCustom(isCustom);
         for(SourceNavigation navigation:list){
             redisTemplate.boundHashOps(NavUtil.COMMON_SOURCE_NAV_KEY+SourceNavigation.class.getName())

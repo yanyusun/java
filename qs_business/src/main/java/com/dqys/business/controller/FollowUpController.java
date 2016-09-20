@@ -79,30 +79,23 @@ public class FollowUpController extends BaseApiContorller {
      * @apiGroup followUp
      * @apiUse FollowUpMessageDTO
      * @apiSuccessExample {json} Data-Response:
-     * {
-     * "code": 2000,
-     * "msg": "成功",
-     * "data": {
-     * "id": null,
-     * "objectId": 111,
-     * "objectType": 111,
-     * "userId": 1,
-     * "teamId": 0,
-     * "content": "111",
-     * "version": null,
-     * "createAt": null,
-     * "updateAt": null,
-     * "stateflag": null,
-     * "secondObjectId": null,
-     * "secondObjectType": 111,
-     * "liquidateStage": 111,
-     * "secondLiquidateStage": 111,
-     * "sendStatus": null,
-     * "userInfo": null,
-     * "teammateRe": null,
-     * "companyInfo": null
-     * }
-     * }
+        {
+        "code": 2000,
+        "msg": "成功",
+        "data": {
+        "id": null,
+        "objectId": 111,
+        "objectType": 111,
+        "secondObjectId": 111,
+        "secondObjectType": 111,
+        "content": "111",
+        "liquidateStage": 111,
+        "secondLiquidateStage": 111,
+        "fileList": [
+        "897978797.jpg"
+        ]
+        }
+        }
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody

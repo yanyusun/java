@@ -167,6 +167,8 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
         sourceInfoDTO.setCode(SourceInfoEnum.FOLLOW_UP_TYPE.getObjectValue()+userId.toString());
         sourceInfoDTO.setIsshow(SourceInfoEnum.SHOW_UNABLE.getValue());
         sourceInfoDTO.setOpen(SourceInfoEnum.OPEN_ENABLE.getValue());
+        System.out.println("1122");
+        sourceInfoDTO.setLenderId(0);//公共分类时借款人id为0
         List<SourceDTO> sourceDTOList = new ArrayList<>();
         for(String file:fileList){
             SourceDTO sourceDTO  = new SourceDTO();
