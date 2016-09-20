@@ -28,8 +28,8 @@ public enum  SourceInfoEnum {
         this.value = value;
         this.name = name;
     }
-    SourceInfoEnum(Object value) {
-        this.objectValue = value;
+    SourceInfoEnum(Object objectValue) {
+        this.objectValue = objectValue;
     }
 
 
@@ -62,7 +62,7 @@ public enum  SourceInfoEnum {
         return objectValue;
     }
 
-    public void setObjectValue(Object objectValue) {
+    public void getObjectValue(Object objectValue) {
         this.objectValue = objectValue;
     }
 }

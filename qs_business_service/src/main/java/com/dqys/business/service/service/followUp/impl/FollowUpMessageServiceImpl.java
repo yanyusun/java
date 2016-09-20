@@ -84,7 +84,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
         }
         followUpMessage.setTeamId(teamId);
         //增加资料实勘
-        SourceInfoDTO sourceInfoDTO=createSourceInfo(followUpMessageDTO.getFileList(),userId);
+        SourceInfoDTO sourceInfoDTO=createSourceInfo(followUpMessageDTO.getFileList(),userId,followUpMessage.getObjectId());
         int sourceInfoDTOId=sourceService.addSource(sourceInfoDTO);
         followUpMessage.setSourceInfoId(sourceInfoDTOId);
         int re = followUpMessageMapper.insert(followUpMessage);
@@ -126,7 +126,6 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
                 }
             }
         }
-
         //向mq中增加未读信息
         String[] unReadMessage = {followUpMessage.getObjectId().toString(), followUpMessage.getObjectType().toString(), followUpMessage.getLiquidateStage().toString()};
         RabbitMQProducerTool.addToFollowUnReadMessage(unReadMessage);
@@ -160,15 +159,14 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
      * @param fileList 上传文件信息list
      * @return
      */
-    private SourceInfoDTO createSourceInfo(List<String> fileList,Integer userId){
+    private SourceInfoDTO createSourceInfo(List<String> fileList,Integer userId,Integer lenderId){
         SourceInfoDTO sourceInfoDTO = new SourceInfoDTO();
         SourceNavigation nav=NavUtil.getCommonSourceNavigation(SourceInfoEnum.FOLLOW_UP_TYPE.getValue());
         sourceInfoDTO.setNavId(nav.getId());
         sourceInfoDTO.setCode(SourceInfoEnum.FOLLOW_UP_TYPE.getObjectValue()+userId.toString());
         sourceInfoDTO.setIsshow(SourceInfoEnum.SHOW_UNABLE.getValue());
         sourceInfoDTO.setOpen(SourceInfoEnum.OPEN_ENABLE.getValue());
-        System.out.println("1122");
-        sourceInfoDTO.setLenderId(0);//公共分类时借款人id为0
+        sourceInfoDTO.setLenderId(lenderId);//公共分类时借款人id为0
         List<SourceDTO> sourceDTOList = new ArrayList<>();
         for(String file:fileList){
             SourceDTO sourceDTO  = new SourceDTO();

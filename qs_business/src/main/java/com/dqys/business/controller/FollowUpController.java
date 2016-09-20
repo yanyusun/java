@@ -37,31 +37,82 @@ public class FollowUpController extends BaseApiContorller {
      * @apiUse FollowUpMessageQuery
      * @apiSuccessExample {json} Data-Response:
      * {
-     * "code": 2000,
-     * "msg": "成功",
-     * "data": [
-     * {
-     * "id": 1,
-     * "objectId": null,
-     * "objectType": null,
-     * "userId": null,
-     * "teamId": null,
-     * "content": null,
-     * "version": null,
-     * "createAt": null,
-     * "updateAt": null,
-     * "stateflag": null,
-     * "secondObjectId": null,
-     * "secondObjectType": null,
-     * "liquidateStage": 1,
-     * "secondLiquidateStage": null,
-     * "sendStatus": null,
-     * "userInfo": null,
-     * "teammateRe": null,
-     * "companyInfo": null
-     * }
-     * ]
-     * }
+    "code": 2000,
+    "msg": "成功",
+    "data": [
+    {
+        "id": 8,
+        "version": null,
+        "stateflag": null,
+        "createAt": null,
+        "updateAt": null,
+        "remark": null,
+        "objectId": null,
+        "objectType": null,
+        "userId": null,
+        "teamId": null,
+        "content": "111",
+        "secondObjectId": null,
+        "secondObjectType": null,
+        "liquidateStage": 111,
+        "secondLiquidateStage": null,
+        "sendStatus": null,
+        "sourceInfoId": 131,
+        "userInfo": {
+        "id": null,
+        "version": null,
+        "stateflag": null,
+        "createAt": null,
+        "updateAt": null,
+        "remark": null,
+        "userName": "zs",
+        "realName": null,
+        "account": null,
+        "wechat": null,
+        "avg": null,
+        "sex": true,
+        "mobile": null,
+        "email": null,
+        "password": null,
+        "salt": null,
+        "identity": null,
+        "companyId": null,
+        "status": null,
+        "qq": null
+        },
+    "teammateRe": null,
+    "companyInfo": {
+    "id": null,
+    "version": null,
+    "stateflag": null,
+    "createAt": null,
+    "updateAt": null,
+    "remark": null,
+    "companyName": "test",
+    "credential": null,
+    "licence": null,
+    "legalPerson": null,
+    "province": null,
+    "city": null,
+    "area": null,
+    "address": null,
+    "isAuth": null,
+    "type": null
+    },
+    "sourceSourceList": [
+        {
+        "id": null,
+        "sourceInfoId": null,
+        "path": "897978797.jpg",
+        "name": null,
+        "fileType": null,
+        "memo": null,
+        "stateflag": null
+         }
+     ]
+    }
+    ]
+    }
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
