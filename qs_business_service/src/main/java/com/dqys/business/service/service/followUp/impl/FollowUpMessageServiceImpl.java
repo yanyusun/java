@@ -5,13 +5,11 @@ import com.dqys.business.orm.constant.coordinator.OURelationEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
 import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
-import com.dqys.business.orm.mapper.common.SourceInfoMapper;
 import com.dqys.business.orm.mapper.coordinator.OURelationMapper;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.pojo.common.SourceInfo;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.coordinator.OURelation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
@@ -88,7 +86,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
         //增加资料实勘
         SourceInfoDTO sourceInfoDTO=createSourceInfo(followUpMessageDTO.getFileList(),userId);
         int sourceInfoDTOId=sourceService.addSource(sourceInfoDTO);
-        followUpMessage.sets
+        followUpMessage.setSourceInfoId(sourceInfoDTOId);
         int re = followUpMessageMapper.insert(followUpMessage);
         if(followUpMessage.getObjectType()== ObjectTypeEnum.LENDER.getValue()){//如果一级跟进对象是借款人, 增加跟进次数
             LenderInfo lenderInfo=lenderInfoMapper.get(followUpMessage.getObjectId());
@@ -147,9 +145,14 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
     }
 
     @Override
+    public List<FollowUpMessage> getlistWithAll(FollowUpMessageQuery followUpMessageQuery) {
+        return followUpMessageMapper.getlistWithALL(followUpMessageQuery);
+    }
+
+    @Override
     public List<FollowUpMessage> listAndCancelUnread(FollowUpMessageQuery followUpMessageQuery) {
         followUpReadStatusService.cancelUnread(followUpMessageQuery.getObjectId(),followUpMessageQuery.getObjectType(),followUpMessageQuery.getLiquidateStage());
-        return getlistWithUserAndTeam(followUpMessageQuery);
+        return getlistWithAll(followUpMessageQuery);
     }
 
     /**

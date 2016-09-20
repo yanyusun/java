@@ -40,5 +40,12 @@ public interface FollowUpMessageService {
      */
     List<FollowUpMessage> listAndCancelUnread(FollowUpMessageQuery followUpMessageQuery);
 
+    /**
+     * 查询跟进信息,级联公司,用户,资源
+     * @param followUpMessageQuery
+     * @return
+     */
+    List<FollowUpMessage> getlistWithAll(FollowUpMessageQuery followUpMessageQuery);
+
 
 }
