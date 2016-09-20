@@ -50,7 +50,7 @@ public class FollowUpReadstatusMapperImp extends BaseDao implements FollowUpRead
     }
 
     @Override
-    public void deleteByOOL(@Param("objectId") int objectId, @Param("objectType") int objectType, @Param("liquidateStage") int liquidateStage, @Param("user_id") int userId) {
+    public void deleteByOOL(@Param("objectId") int objectId, @Param("objectType") int objectType, @Param("liquidateStage") int liquidateStage, @Param("userId") int userId) {
         super.getSqlSession().getMapper(FollowUpReadstatusMapper.class).deleteByOOL(objectId, objectType, liquidateStage,userId);
     }
 
