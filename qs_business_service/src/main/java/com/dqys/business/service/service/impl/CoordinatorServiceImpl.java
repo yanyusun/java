@@ -16,6 +16,7 @@ import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.mapper.cases.CaseInfoMapper;
+import com.dqys.business.orm.mapper.company.CompanyTeamMapper;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.coordinator.OURelationMapper;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
@@ -28,6 +29,7 @@ import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.cases.CaseInfo;
+import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
 import com.dqys.business.orm.pojo.coordinator.OURelation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
@@ -87,6 +89,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     private BusinessLogService businessLogService;
     @Autowired
     private RepayMapper repayMapper;
+    @Autowired
+    private CompanyTeamMapper companyTeamMapper;
 
     @Autowired
     private ObjectUserRelationMapper objectUserRelationMapper;
@@ -884,6 +888,12 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     @Override
     public Map businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, Integer companyTeamId) {
         Map map = new HashMap<>();
+        if (companyTeamId == null) {
+            CompanyTeam team = companyTeamMapper.getByTypeId(objectType, objectId);//协作器id参数为null，自己查询协作器id
+            if (team != null) {
+                companyTeamId = team.getId();
+            }
+        }
         if (ObjectTypeEnum.PAWN.getValue() == flowType) {//抵押物
             if (PawnEnum.MAINTAIN_REGULAR.getValue() == operType) {//维持常规催收
                 setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 0, 1, 1);
@@ -897,6 +907,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 0, 0, 1);
             } else if (PawnEnum.CMJ_SIMULTANEOUS.getValue() == operType) {//催收、市场、司法同时进行
                 setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 0, 0, 0);
+            } else {
+                map.put("result", "no_operType");//业务操作类型有误
             }
         } else if (ObjectTypeEnum.IOU.getValue() == flowType) {//借据
             if (IouEnum.MAINTAIN_REGULAR.getValue() == operType) {//维持常规催收
@@ -911,7 +923,11 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 0, 0, 1);
             } else if (IouEnum.CMJ_SIMULTANEOUS.getValue() == operType) {//催收、市场、司法同时进行
                 setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 0, 0, 0);
+            } else {
+                map.put("result", "no_operType");//业务操作类型有误
             }
+        } else {
+            map.put("result", "no_flowType");//流转对象类型有误
         }
 
         return map;

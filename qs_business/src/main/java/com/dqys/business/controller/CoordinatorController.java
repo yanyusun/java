@@ -100,7 +100,7 @@ public class CoordinatorController {
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             return JsonResponseTool.success(map);
         } else {
-            return JsonResponseTool.failure(MessageUtils.transMapToString(map,"msg"));
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
         }
     }
 
@@ -140,7 +140,7 @@ public class CoordinatorController {
     @RequestMapping("/addInitiative")
     @ResponseBody
     public JsonResponse addInitiative(Integer userTeammateId) throws Exception {
-        Integer userId =UserSession.getCurrent().getUserId();
+        Integer userId = UserSession.getCurrent().getUserId();
         if (CommonUtil.checkParam(userTeammateId)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -252,4 +252,25 @@ public class CoordinatorController {
         }
     }
 
+
+    /**
+     * @api {post} coordinator/businessFlow 业务流转通知平台
+     * @apiParam {int} objectId      对象id
+     * @apiParam {int} objectType    对象类型
+     * @apiParam {int} flowId        流转对象id
+     * @apiParam {int} flowType      流转对象类型
+     * @apiParam {int} operType      操作类型（参考IouEnum 或PawnEnum）
+     * @apiParam {int} companyTeamId 分配器id
+     * @apiSampleRequest coordinator/businessFlow
+     * @apiGroup companyRelation
+     * @apiName coordinator/businessFlow
+     */
+    @RequestMapping("/businessFlow")
+    @ResponseBody
+    public JsonResponse businessFlow(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType,
+                                     @RequestParam("flowId") Integer flowId, @RequestParam("flowType") Integer flowType
+            , @RequestParam("operType") Integer operType, @RequestParam("companyTeamId") Integer companyTeamId) throws Exception {
+        Map map = coordinatorService.businessFlow(objectId, objectType, flowId, flowType, operType, companyTeamId);
+        return JsonResponseTool.success(map);
+    }
 }

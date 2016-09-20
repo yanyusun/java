@@ -82,6 +82,7 @@ public class MessageUtils {
 
     /**
      * 消息的操作地址operType的json格式
+     *
      * @param accept            同意请求地址加参数
      * @param acceptRequestType 同意请求方式(默认get)
      * @param reject            拒绝请求地址加参数
@@ -90,8 +91,8 @@ public class MessageUtils {
      * @return
      */
     public static String setOperUrl(String accept, String acceptRequestType, String reject, String rejectRequestType, String distribution) {
-        String json = "{\"distribution\":\"" + distribution==null?"":distribution + "\",\"accept\":\"" + accept==null?"":accept + "\",\"acceptRequestType\":\""
-                + acceptRequestType==null?"get":acceptRequestType + "\",\"reject\":\"" + reject==null?"":reject + "\",\"rejectRequestType\":\"" + rejectRequestType==null?"get":rejectRequestType + "\"}";
+        String json = "{\"distribution\":\"" + (distribution == null ? "" : distribution) + "\",\"accept\":\"" + (accept == null ? "" : accept) + "\",\"acceptRequestType\":\""
+                + (acceptRequestType == null ? "get" : acceptRequestType) + "\",\"reject\":\"" + (reject == null ? "" : reject) + "\",\"rejectRequestType\":\"" + (rejectRequestType == null ? "get" : rejectRequestType) + "\"}";
         return json;
     }
 
