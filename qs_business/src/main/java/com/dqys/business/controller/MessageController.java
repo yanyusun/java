@@ -3,9 +3,12 @@ package com.dqys.business.controller;
 import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.orm.pojo.message.MessageQuery;
 import com.dqys.business.service.constant.MessageEnum;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.business.service.constant.UserStatusTypeEnum;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -44,6 +47,11 @@ public class MessageController {
     @ResponseBody
     public JsonResponse messageList(@ModelAttribute MessageQuery messageQuery) {
         Message message = MessageUtils.transToMessage(messageQuery);
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        String roleId = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getRoleId();
+        if (roleId.indexOf(UserInfoEnum.USER_TYPE_ADMIN.getValue().toString()) != -1) {
+            message.setReceiveId(userId);
+        }
         List<Message> list = messageService.selectByMessage(message);
         if (list == null) {
             return JsonResponseTool.noData();
@@ -64,7 +72,7 @@ public class MessageController {
             map.put("taskMes", messageService.selectCount(sage));//"任务未读消息数"
             sage.setType(message.getType());
             sage.setStatus(message.getStatus());
-            map.put("listCount",messageService.selectCount(sage));//条件查询消息数量
+            map.put("listCount", messageService.selectCount(sage));//条件查询消息数量
             return JsonResponseTool.success(map);
         }
     }
