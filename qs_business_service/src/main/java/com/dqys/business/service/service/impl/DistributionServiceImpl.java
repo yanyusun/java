@@ -56,7 +56,6 @@ import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.SmsUtil;
 import com.dqys.core.utils.SysPropertyTool;
-import org.aspectj.bridge.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -137,6 +136,7 @@ public class DistributionServiceImpl implements DistributionService {
         CompanyTeam companyTeam = companyTeamMapper.getByTypeId(type, id);
         // 查询分配器成员
         CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
+        companyTeamReQuery.setStateflag(SysProperty.DEFAULT); // null表示有效查询，0表示全查询，<>0表示已删除
         companyTeamReQuery.setTeamId(companyTeam.getId());
         List<CompanyTeamRe> companyTeamReList = companyTeamReMapper.queryList(companyTeamReQuery);
         List<CompanyTeamReDTO> companyTeamReDTOList = new ArrayList<>();
