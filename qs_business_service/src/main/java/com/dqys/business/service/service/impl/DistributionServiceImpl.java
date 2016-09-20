@@ -56,6 +56,7 @@ import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.SmsUtil;
 import com.dqys.core.utils.SysPropertyTool;
+import org.aspectj.bridge.MessageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -438,7 +439,14 @@ public class DistributionServiceImpl implements DistributionService {
                 message.setStatus(0);
                 message.setType(MessageEnum.TASK.getValue());
                 message.setBusinessType(MessageBTEnum.COMPANY_JOIN.getValue());
-                message.setOperUrl("/api/company/designDistribution?id=" + id);
+                message.setOperUrl(
+                        MessageUtils.setOperUrl(
+                                "/api/company/designDistribution?id=" + companyTeamRe.getId() + "&status=1",
+                                "get",
+                                "/api/company/designDistribution?id=" + companyTeamRe.getId() + "&status=0",
+                                "get",
+                                null
+                        ));
                 messageMapper.add(message);
 
                 return companyTeamRe.getId();
@@ -548,7 +556,14 @@ public class DistributionServiceImpl implements DistributionService {
             message.setStatus(0);
             message.setType(MessageEnum.TASK.getValue());
             message.setBusinessType(MessageBTEnum.COMPANY_BETWEEN.getValue());
-            message.setOperUrl("/api/company/designDistribution?id=" + id);
+            message.setOperUrl(
+                    MessageUtils.setOperUrl(
+                            "/api/company/designDistribution?id=" + companyTeamRe.getId() + "&status=1",
+                            "get",
+                            "/api/company/designDistribution?id=" + companyTeamRe.getId() + "&status=0",
+                            "get",
+                            null
+                    ));
             messageMapper.add(message);
 
             return companyTeamRe.getId();
@@ -1058,12 +1073,24 @@ public class DistributionServiceImpl implements DistributionService {
                 message.setStatus(0);
                 message.setType(MessageEnum.TASK.getValue());
                 message.setBusinessType(MessageBTEnum.COMPANY_BETWEEN.getValue());
-                message.setOperUrl("{\"accpet\":\"/api/company/updateBusinessService?type=" + type
-                                + "&id=" + id + "&distributionId=" + result + "&businessType=" + businessType
-                                + "&status=1\",\"reject\":\"/api/company/designBusinessService?type=" + type
-                                + "&id=" + id + "&distributionId=" + result + "&businessType=" + businessType
-                                + "&status=2}"
-                );
+                message.setOperUrl(
+                        MessageUtils.setOperUrl(
+                                "/api/company/designBusinessService?type=" + type
+                                        + "&id=" + id + "&distributionId=" + result + "&businessType=" + businessType
+                                        + "&status=1",
+                                "get",
+                                "/api/company/designBusinessService?type=" + type
+                                        + "&id=" + id + "&distributionId=" + result + "&businessType=" + businessType
+                                        + "&status=0",
+                                "get",
+                                null
+                        ));
+//                message.setOperUrl("{\"accpet\":\"/api/company/updateBusinessService?type=" + type
+//                                + "&id=" + id + "&distributionId=" + result + "&businessType=" + businessType
+//                                + "&status=1\",\"reject\":\"/api/company/designBusinessService?type=" + type
+//                                + "&id=" + id + "&distributionId=" + result + "&businessType=" + businessType
+//                                + "&status=2}"
+//                );
                 messageMapper.add(message);
                 return result;
             }
