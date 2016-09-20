@@ -66,6 +66,9 @@ public class FollowUpController extends BaseApiContorller {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse list(FollowUpMessageQuery followUpMessageQuery) {
+        if(followUpMessageQuery.getObjectId()==null||followUpMessageQuery.getObjectType()==null||followUpMessageQuery.getLiquidateStage()==null){
+            return JsonResponseTool.paramErr("参数错误");
+        }
         List<FollowUpMessage> list = followUpMessageService.listAndCancelUnread(followUpMessageQuery);
         return JsonResponseTool.success(list);
     }
