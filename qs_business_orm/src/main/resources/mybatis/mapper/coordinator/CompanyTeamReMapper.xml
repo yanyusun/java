@@ -35,8 +35,11 @@
       <if test="companyId != null">
         AND accept_company_id = #{companyId,jdbcType=INTEGER}
       </if>
-      <if test="stateflag != null">
+      <if test="stateflag != null and stateflag != 0">
         AND stateflag > 0
+      </if>
+      <if test="stateflag == null">
+        AND stateflag = 0
       </if>
     </where>
   </sql>
