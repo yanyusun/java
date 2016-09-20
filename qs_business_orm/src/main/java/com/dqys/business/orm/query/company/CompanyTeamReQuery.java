@@ -59,12 +59,4 @@ public class CompanyTeamReQuery {
     public void setCompanyId(Integer companyId) {
         this.companyId = companyId;
     }
-
-    public Integer getStatefalg() {
-        return stateflag;
-    }
-
-    public void setStatefalg(Integer statefalg) {
-        this.stateflag = statefalg;
-    }
 }

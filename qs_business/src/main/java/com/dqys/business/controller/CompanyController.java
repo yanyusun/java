@@ -214,9 +214,9 @@ public class CompanyController {
     /**
      * @api {get} http://{url}/api/company/exitDistribution 退出分配器
      * @apiName exitDistribution
-     * @apiGroup distribution 分配器
-     * @apiParam {number} type 类型
-     * @apiParam {number} data
+     * @apiGroup distribution
+     * @apiParam {number} id 分配器成员ID
+     * @apiSuccess {number} data
      */
     @RequestMapping(value = "/exitDistribution")
     public JsonResponse exitDistribution(@RequestParam(required = true) Integer id) throws BusinessLogException {
