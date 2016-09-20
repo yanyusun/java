@@ -254,7 +254,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
             if (flag > 0) {
                 num++;
-                Integer result = messageService.add(title, remark, userId, uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.INSIDE.getValue(), "teammateId=" + teammateRe.getId());//添加消息记录
+                Integer result = messageService.add(title, remark, userId, uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.INSIDE.getValue(),
+                        MessageUtils.setOperUrl("/coordinator/isAccept?status=1&teammateId=" + teammateRe.getId(), null, "/coordinator/isAccept?status=2&teammateId=" + teammateRe.getId(), null, null));//添加消息记录
                 if (result > 0) {
                     //发送短信
                     messageService.sendSmsByTeammate(userTeam, userAndCompany, uid, remark);
@@ -435,7 +436,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                     content = smsUtil.sendSms(SmsEnum.INITIATIVE_JOIN.getValue(), tUserInfo.getMobile(), tUserInfo.getRealName(), sendUser.getRealName(),
                             ObjectTypeEnum.getObjectTypeEnum(userT.getObjectType()).getName(), getObjectName(userT.getObjectType(), userT.getObjectId()));//发送短信
                     String title = getMessageTitle(userT.getObjectId(), userT.getObjectType(), MessageBTEnum.INITIATIVE.getValue());
-                    messageService.add(title, content, userId, userT.getMangerId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INITIATIVE.getValue(), "teammateId=" + teammateRe.getId());
+                    messageService.add(title, content, userId, userT.getMangerId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INITIATIVE.getValue(),
+                            MessageUtils.setOperUrl("/coordinator/isAccept?status=1&teammateId=" + teammateRe.getId(), null, "/coordinator/isAccept?status=2&teammateId=" + teammateRe.getId(), null, null));
                 }
             }
             map.put("result", "yes");
@@ -664,7 +666,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                     MessageUtils.transMapToString(oper, "realName"),
                     ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(), getObjectName(userTeam.getObjectType(), userTeam.getObjectId()));
             String title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.REPLACE_CONTACTS.getValue());
-            String url = "teamUserId=" + teamUserId + "&userTeamId=" + userTeamId + "&substitutionUid=" + substitutionUid;
+            String url = MessageUtils.setOperUrl("/coordinator/delUser?status=0&teamUserId=" + teamUserId + "&userTeamId=" + userTeamId + "&substitutionUid=" + substitutionUid, null,
+                    "/coordinator/delUser?status=1&teamUserId=" + teamUserId + "&userTeamId=" + userTeamId + "&substitutionUid=" + substitutionUid, null, null);
             messageService.add(title, content, userId, substitutionUid, "", MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE_CONTACTS.getValue(), url);//添加通知消息
             map.put("result", "yes");
         } else {
@@ -879,35 +882,35 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     }
 
     @Override
-    public Map businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType) {
+    public Map businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, Integer companyTeamId) {
         Map map = new HashMap<>();
         if (ObjectTypeEnum.PAWN.getValue() == flowType) {//抵押物
             if (PawnEnum.MAINTAIN_REGULAR.getValue() == operType) {//维持常规催收
-                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), 0, 1, 1);
+                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 0, 1, 1);
             } else if (PawnEnum.MARKET_DISPOSITION.getValue() == operType) {//市场处置
-                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), 1, 1, 0);
+                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 1, 1, 0);
             } else if (PawnEnum.CM_SIMULTANEOUS.getValue() == operType) {//催收/市场同时进行
-                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), 0, 1, 0);
+                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 0, 1, 0);
             } else if (PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue() == operType) {//执行司法化解
-                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), 1, 0, 1);
+                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 1, 0, 1);
             } else if (PawnEnum.CJ_SIMULTANEOUS.getValue() == operType) {//催收/司法化解同时进行
-                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), 0, 0, 1);
+                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 0, 0, 1);
             } else if (PawnEnum.CMJ_SIMULTANEOUS.getValue() == operType) {//催收、市场、司法同时进行
-                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), 0, 0, 0);
+                setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 0, 0, 0);
             }
         } else if (ObjectTypeEnum.IOU.getValue() == flowType) {//借据
             if (IouEnum.MAINTAIN_REGULAR.getValue() == operType) {//维持常规催收
-                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), 0, 1, 1);
+                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 0, 1, 1);
             } else if (IouEnum.MARKET_DISPOSITION.getValue() == operType) {//市场处置
-                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), 1, 1, 0);
+                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 1, 1, 0);
             } else if (IouEnum.CM_SIMULTANEOUS.getValue() == operType) {//催收/市场同时进行
-                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), 0, 1, 0);
+                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 0, 1, 0);
             } else if (IouEnum.EXECUTE_JUSTICE_RESOLVE.getValue() == operType) {//执行司法化解
-                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), 1, 0, 1);
+                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 1, 0, 1);
             } else if (IouEnum.CJ_SIMULTANEOUS.getValue() == operType) {//催收/司法化解同时进行
-                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), 0, 0, 1);
+                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 0, 0, 1);
             } else if (IouEnum.CMJ_SIMULTANEOUS.getValue() == operType) {//催收、市场、司法同时进行
-                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), 0, 0, 0);
+                setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 0, 0, 0);
             }
         }
 
@@ -925,9 +928,12 @@ public class CoordinatorServiceImpl implements CoordinatorService {
      * @param lawy       司法化解（0可以1不能）
      * @param agen       市场处置（0可以1不能）
      */
-    private void setFlow(Map map, Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, String operation, Integer coll, Integer lawy, Integer agen) {
+    private void setFlow(Map map, Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, String operation, Integer companyTeamId, Integer coll, Integer lawy, Integer agen) {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
-        String operUrl = "flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType;//消息列表使用的访问参数拼接
+        String operUrl = MessageUtils.setOperUrl("?status=0&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType, null,
+                "?status=0&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType, null,
+                "?type=3&flowId=" + flowId + "&flowType=" + flowType + "&companyTeamId=" + companyTeamId + "&operType=" + operType + "&userId=" + userId);
+        //消息列表使用的访问参数拼接
         boolean c = false;
         boolean l = false;
         boolean a = false;

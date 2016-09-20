@@ -159,13 +159,14 @@ public interface CoordinatorService {
     /**
      * 业务流转接口
      *
-     * @param objectId   对象id
-     * @param objectType 对象类型
-     * @param flowId     流转对象id
-     * @param flowType   流转对象类型
-     * @param operType   操作类型（参考IouEnum 或PawnEnum）
+     * @param objectId      对象id
+     * @param objectType    对象类型
+     * @param flowId        流转对象id
+     * @param flowType      流转对象类型
+     * @param operType      操作类型（参考IouEnum 或PawnEnum）
+     * @param companyTeamId 分配器id
      * @return
      */
-    Map businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType);
+    Map businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, Integer companyTeamId);
 
 }
