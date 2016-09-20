@@ -933,6 +933,21 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         return map;
     }
 
+    @Override
+    public Map sendBusinessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, Integer receiveUserId, Integer status) {
+        Map map = new HashMap<>();
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        String operation = "";
+        if (ObjectTypeEnum.PAWN.getValue() == flowType) {
+            operation = PawnEnum.getPawnEnum(operType).getName();
+        } else if (ObjectTypeEnum.IOU.getValue() == flowType) {
+            operation = IouEnum.getIouEnum(operType).getName();
+        }
+        String result = messageService.businessFlowResult(objectId, objectType, flowId, flowType, operation, userId, receiveUserId, status);
+        map.put("result", result);
+        return map;
+    }
+
     /**
      * @param map
      * @param objectId
@@ -946,8 +961,10 @@ public class CoordinatorServiceImpl implements CoordinatorService {
      */
     private void setFlow(Map map, Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, String operation, Integer companyTeamId, Integer coll, Integer lawy, Integer agen) {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
-        String operUrl = MessageUtils.setOperUrl("?status=0&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType, null,
-                "?status=0&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType, null,
+        String operUrl = MessageUtils.setOperUrl("/coordinator/businessFlowResult?status=1&objectId=" + objectId + "&objectType=" + objectType +
+                        "&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType + "&receiveUserId=" + userId, null,
+                "/coordinator/businessFlowResult?status=0&objectId=" + objectId + "&objectType=" + objectType +
+                        "&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType + "&receiveUserId=" + userId, null,
                 "?type=3&flowId=" + flowId + "&flowType=" + flowType + "&companyTeamId=" + companyTeamId + "&operType=" + operType + "&userId=" + userId);
         //消息列表使用的访问参数拼接
         boolean c = false;

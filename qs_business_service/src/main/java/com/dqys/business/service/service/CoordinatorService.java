@@ -169,4 +169,16 @@ public interface CoordinatorService {
      */
     Map businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, Integer companyTeamId);
 
+    /**
+     *
+     * @param objectId      对象id
+     * @param objectType    对象类型
+     * @param flowId        业务流转对象id
+     * @param flowType      业务流转对象类型
+     * @param operType     流转操作
+     * @param receiveUserId 接收者id（请求公司）
+     * @param status        状态（0拒绝1接收）
+     * @return
+     */
+    Map sendBusinessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, Integer receiveUserId,Integer status);
 }
