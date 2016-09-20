@@ -268,12 +268,18 @@
     </select>
 
     <select id="getlistWithALL" resultMap="messageWithALL" parameterType="com.dqys.business.orm.query.followUp.FollowUpMessageQuery">
-        SELECT m.id,m.content,m.create_at,m.liquidate_stage,u.user_name,u.sex,c.company_name,s.path,m.sourceInfo_id
+        SELECT m.id,m.content,m.create_at,m.liquidate_stage,u.user_name,u.sex,c.company_name,s.path,m.source_info_id
         FROM t_follow_up_message m
         LEFT JOIN t_user_info u ON m.user_id = u.id
         LEFT JOIN t_company_info c on u.company_id =c.id
-        LEFT JOIN bt_source_source s on s.source_info_id =m.sourceInfo_id
+        LEFT JOIN bt_source_source s on s.source_info_id =m.source_info_id
         WHERE 1=1
+        <if test="objectId != null">
+           AND object_id = #{objectId,jdbcType=INTEGER}
+        </if>
+        <if test="objectType != null">
+            AND object_type = #{objectType,jdbcType=INTEGER}
+        </if>
         <if test="liquidateStage != null">
             AND m.liquidate_stage = #{liquidateStage,jdbcType=INTEGER}
         </if>
