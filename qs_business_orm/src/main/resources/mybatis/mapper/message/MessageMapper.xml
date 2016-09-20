@@ -11,6 +11,9 @@
             <if test="status !=null">
                 and t.status=#{status}
             </if>
+            <if test="receiveId !=null">
+                and t.receive_id=#{receiveId}
+            </if>
         </where>
     </sql>
     <!--查询记录数量-->
