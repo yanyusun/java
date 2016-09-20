@@ -282,17 +282,22 @@ public class DistributionServiceImpl implements DistributionService {
             return null; // 当前对象还未审核通过
         }
         // 查询分配器
+        Integer creatorId = 0;
         CompanyTeam companyTeam = companyTeamMapper.getByTypeId(type, id);
         if (companyTeam == null) {
             if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(type)) {
                 AssetInfo assetInfo = assetInfoMapper.get(id);
                 if (assetInfo == null) {
                     return null;
+                }else{
+                    creatorId = assetInfo.getOperator();
                 }
             } else if (ObjectTypeEnum.LENDER.getValue().equals(type)) {
                 LenderInfo lenderInfo = lenderInfoMapper.get(id);
                 if (lenderInfo == null) {
                     return null;
+                }else{
+                    creatorId = lenderInfo.getOperator();
                 }
             } else {
                 // 对象类型不符合
@@ -301,7 +306,7 @@ public class DistributionServiceImpl implements DistributionService {
             // 存在该对象,创建分配器
             companyTeam = new CompanyTeam();
             companyTeam.setObjectId(id);
-            companyTeam.setSenderId(UserSession.getCurrent().getUserId());
+            companyTeam.setSenderId(creatorId);
             companyTeam.setObjectType(type);
             Integer result = companyTeamMapper.insert(companyTeam);
             if (CommonUtil.checkResult(result)) {
@@ -313,7 +318,7 @@ public class DistributionServiceImpl implements DistributionService {
 //            businessLogService.add(teamId, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.add.getValue(),
 //                    "", "创建分配器", 0, 0);
             // 添加本家分配记录
-            CompanyDetailInfo detailInfo = companyInfoMapper.getDetailByUserId(UserSession.getCurrent().getUserId());
+            CompanyDetailInfo detailInfo = companyInfoMapper.getDetailByUserId(creatorId);
             if (detailInfo != null && detailInfo.getCompanyId() != null) {
                 CompanyTeamRe companyTeamRe = new CompanyTeamRe();
                 companyTeamRe.setCompanyTeamId(teamId);

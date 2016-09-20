@@ -214,7 +214,7 @@ public class CompanyController {
     /**
      * @api {get} http://{url}/api/company/exitDistribution 退出分配器
      * @apiName exitDistribution
-     * @apiGroup distribution 分配器
+     * @apiGroup distribution
      * @apiParam {number} type 类型
      * @apiParam {number} data
      */
