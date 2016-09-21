@@ -276,7 +276,7 @@ public class CompanyController {
      * @apiParam {number} type 业务流转类型
      * @apiParam {number} id 公司ID
      * @apiParam {number} distributionId 分配器ID
-     * @apiParam {number} businessType 业务流转类型
+     * @apiParam {number} businessType 业务流转类型(催收1,处置2,司法3,催收处置4,催收司法5,全6)
      * @apiParam {number} companyId 被邀请公司ID
      */
     @RequestMapping(value = "/addBusinessService")

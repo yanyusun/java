@@ -685,78 +685,86 @@ public class AssetServiceImpl implements AssetService {
         Map<String, Integer> iouIdMap = new HashMap<>();
 
         // 抵押物信息
-        for (PawnDTO pawnDTO : pawnDTOList) {
-            pawnDTO.setLenderId(lenderId);
-            PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
-            pawnInfo.setPawnNo(PawnServiceUtils.createPawnCode());
-            result = pawnInfoMapper.insert(pawnInfo);
-            if (CommonUtil.checkResult(result)) {
-                // 添加失败
-                return JsonResponseTool.failure("添加抵押物失败");
+        if(pawnDTOList != null && pawnDTOList.size() != 0){
+            for (PawnDTO pawnDTO : pawnDTOList) {
+                pawnDTO.setLenderId(lenderId);
+                PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
+                pawnInfo.setPawnNo(PawnServiceUtils.createPawnCode());
+                result = pawnInfoMapper.insert(pawnInfo);
+                if (CommonUtil.checkResult(result)) {
+                    // 添加失败
+                    return JsonResponseTool.failure("添加抵押物失败");
+                }
+                businessService.addServiceObject(ObjectTypeEnum.PAWN.getValue(), pawnInfo.getId(),
+                        ObjectTypeEnum.LENDER.getValue(), pawnDTO.getLenderId());
+                // 增加操作记录
+                businessLogService.add(pawnInfo.getId(), ObjectTypeEnum.PAWN.getValue(), ObjectLogEnum.add.getValue(),
+                        "", pawnDTO.getMemo(), 0, 0);
+                pawnRelation.put(pawnInfo.getId(), pawnDTO.getIouNames());
+                pawnIdMap.put(pawnDTO.getPawnName(), pawnInfo.getId());
             }
-            businessService.addServiceObject(ObjectTypeEnum.PAWN.getValue(), pawnInfo.getId(),
-                    ObjectTypeEnum.LENDER.getValue(), pawnDTO.getLenderId());
-            // 增加操作记录
-            businessLogService.add(pawnInfo.getId(), ObjectTypeEnum.PAWN.getValue(), ObjectLogEnum.add.getValue(),
-                    "", pawnDTO.getMemo(), 0, 0);
-            pawnRelation.put(pawnInfo.getId(), pawnDTO.getIouNames());
-            pawnIdMap.put(pawnDTO.getPawnName(), pawnInfo.getId());
         }
         // 借据信息
-        for (IouDTO iouDTO : iouDTOList) {
-            iouDTO.setLenderId(lenderId);
-            IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
-            iouInfo.setIouNo(IouServiceUtils.createIouCode());
-            result = iouInfoMapper.insert(iouInfo);
-            if (CommonUtil.checkResult(result)) {
-                // 添加失败
-                return JsonResponseTool.failure("添加借据失败");
+        if(iouDTOList != null && iouDTOList.size() != 0){
+            for (IouDTO iouDTO : iouDTOList) {
+                iouDTO.setLenderId(lenderId);
+                IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
+                iouInfo.setIouNo(IouServiceUtils.createIouCode());
+                result = iouInfoMapper.insert(iouInfo);
+                if (CommonUtil.checkResult(result)) {
+                    // 添加失败
+                    return JsonResponseTool.failure("添加借据失败");
+                }
+                // 添加业务
+                businessService.addServiceObject(ObjectTypeEnum.IOU.getValue(), iouInfo.getId(),
+                        ObjectTypeEnum.LENDER.getValue(), iouDTO.getLenderId());
+                // 添加操作记录
+                businessLogService.add(iouInfo.getId(), ObjectTypeEnum.IOU.getValue(), ObjectLogEnum.add.getValue(),
+                        "", iouDTO.getMemo(), 0, 0);
+                iouRelation.put(iouInfo.getId(), iouDTO.getPawnNames());
+                iouIdMap.put(iouDTO.getIouName(), iouInfo.getId());
             }
-            // 添加业务
-            businessService.addServiceObject(ObjectTypeEnum.IOU.getValue(), iouInfo.getId(),
-                    ObjectTypeEnum.LENDER.getValue(), iouDTO.getLenderId());
-            // 添加操作记录
-            businessLogService.add(iouInfo.getId(), ObjectTypeEnum.IOU.getValue(), ObjectLogEnum.add.getValue(),
-                    "", iouDTO.getMemo(), 0, 0);
-            iouRelation.put(iouInfo.getId(), iouDTO.getPawnNames());
-            iouIdMap.put(iouDTO.getIouName(), iouInfo.getId());
         }
         // 抵押物与借据之间的关联关系
-        for (Integer pawnId : pawnRelation.keySet()) {
-            if (pawnRelation.get(pawnId) != null && pawnRelation.get(pawnId).length() > 0) {
-                String nameArr[] = pawnRelation.get(pawnId).split(",");
-                for (String name : nameArr) {
-                    if (iouIdMap.get(name) != null) {
-                        RelationQuery relationQuery = new RelationQuery();
-                        relationQuery.setPawnId(pawnId);
-                        relationQuery.setIouId(iouIdMap.get(name));
-                        List<PiRelation> list = piRelationMapper.queryList(relationQuery);
-                        if (list == null || list.size() == 0) {
-                            // 防止重复数据
-                            PiRelation piRelation = new PiRelation();
-                            piRelation.setPawnId(pawnId);
-                            piRelation.setIouId(iouIdMap.get(name));
-                            piRelationMapper.insert(piRelation);
+        if(pawnRelation.size() > 0){
+            for (Integer pawnId : pawnRelation.keySet()) {
+                if (pawnRelation.get(pawnId) != null && pawnRelation.get(pawnId).length() > 0) {
+                    String nameArr[] = pawnRelation.get(pawnId).split(",");
+                    for (String name : nameArr) {
+                        if (iouIdMap.get(name) != null) {
+                            RelationQuery relationQuery = new RelationQuery();
+                            relationQuery.setPawnId(pawnId);
+                            relationQuery.setIouId(iouIdMap.get(name));
+                            List<PiRelation> list = piRelationMapper.queryList(relationQuery);
+                            if (list == null || list.size() == 0) {
+                                // 防止重复数据
+                                PiRelation piRelation = new PiRelation();
+                                piRelation.setPawnId(pawnId);
+                                piRelation.setIouId(iouIdMap.get(name));
+                                piRelationMapper.insert(piRelation);
+                            }
                         }
                     }
                 }
             }
         }
-        for (Integer iouId : iouRelation.keySet()) {
-            if (pawnRelation.get(iouId) != null && pawnRelation.get(iouId).length() > 0) {
-                String nameArr[] = pawnRelation.get(iouId).split(",");
-                for (String name : nameArr) {
-                    if (pawnIdMap.get(name) != null) {
-                        RelationQuery relationQuery = new RelationQuery();
-                        relationQuery.setPawnId(pawnIdMap.get(name));
-                        relationQuery.setIouId(iouId);
-                        List<PiRelation> list = piRelationMapper.queryList(relationQuery);
-                        if (list == null || list.size() == 0) {
-                            // 防止重复数据
-                            PiRelation piRelation = new PiRelation();
-                            piRelation.setPawnId(pawnIdMap.get(name));
-                            piRelation.setIouId(iouId);
-                            piRelationMapper.insert(piRelation);
+        if(iouRelation.size() > 0){
+            for (Integer iouId : iouRelation.keySet()) {
+                if (pawnRelation.get(iouId) != null && pawnRelation.get(iouId).length() > 0) {
+                    String nameArr[] = pawnRelation.get(iouId).split(",");
+                    for (String name : nameArr) {
+                        if (pawnIdMap.get(name) != null) {
+                            RelationQuery relationQuery = new RelationQuery();
+                            relationQuery.setPawnId(pawnIdMap.get(name));
+                            relationQuery.setIouId(iouId);
+                            List<PiRelation> list = piRelationMapper.queryList(relationQuery);
+                            if (list == null || list.size() == 0) {
+                                // 防止重复数据
+                                PiRelation piRelation = new PiRelation();
+                                piRelation.setPawnId(pawnIdMap.get(name));
+                                piRelation.setIouId(iouId);
+                                piRelationMapper.insert(piRelation);
+                            }
                         }
                     }
                 }

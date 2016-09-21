@@ -298,6 +298,13 @@ public class DistributionServiceImpl implements DistributionService {
                 if (lenderInfo == null) {
                     return null;
                 }else{
+                    if(lenderInfo.getAssetId() != null){
+                        CompanyTeam companyTeam1 = companyTeamMapper.getByTypeId(
+                                ObjectTypeEnum.ASSETPACKAGE.getValue(), lenderInfo.getAssetId());
+                        if(companyTeam1 != null){
+                            return null; // 该借款人属于资产包，但是该资产包已经被分配，所以无法在创建
+                        }
+                    }
                     creatorId = lenderInfo.getOperator();
                 }
             } else {
@@ -951,7 +958,7 @@ public class DistributionServiceImpl implements DistributionService {
     public Integer addBusinessService(Integer type, Integer id, Integer distributionId,
                                       Integer businessType, Integer companyId) throws BusinessLogException {
         if (!CommonUtil.isManage()) {
-            return null; // 不是平台管理员
+            return null; // 不是所属处置机构
         }
         if (!ObjectTypeEnum.IOU.getValue().equals(type) && !ObjectTypeEnum.PAWN.getValue().equals(type)) {
             return null; // 流转对象不对

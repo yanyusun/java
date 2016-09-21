@@ -376,9 +376,11 @@ public class UserServiceImpl implements UserService {
             if (tUserInfo != null) {
                 TUserInfo tUserInfo1 = new TUserInfo();
                 tUserInfo1.setId(tUserInfo.getId());
+                tUserInfo1.setSalt(RandomStringUtils.randomAlphabetic(6));
                 try {
                     // 密码初始化
-                    tUserInfo1.setPassword(SignatureTool.md5Encode(INIT_PASSSWORD, null));
+                    tUserInfo1.setPassword(SignatureTool.md5Encode(
+                            SignatureTool.md5Encode(INIT_PASSSWORD, "utf-8") + tUserInfo1.getSalt(), "utf-8"));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

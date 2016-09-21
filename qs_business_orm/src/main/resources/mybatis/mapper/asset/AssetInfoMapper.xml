@@ -7,7 +7,7 @@
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
     <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
-    <result column="stateflag" property="stateflag" jdbcType="INTEGER" />
+    <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="asset_no" property="assetNo" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="INTEGER" />

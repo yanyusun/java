@@ -19,7 +19,7 @@ public class ObjectUserRelation {
 
     private Integer businessId; // 业务ID
 
-    private Integer stateflag; // 数据状态
+    private Long stateflag; // 数据状态
 
     private Date createAt; // 创建时间
 
@@ -99,11 +99,11 @@ public class ObjectUserRelation {
         this.businessId = businessId;
     }
 
-    public Integer getStateflag() {
+    public Long getStateflag() {
         return stateflag;
     }
 
-    public void setStateflag(Integer stateflag) {
+    public void setStateflag(Long stateflag) {
         this.stateflag = stateflag;
     }
 

@@ -303,6 +303,26 @@ public class CommonUtil {
     }
 
     /**
+     * 判断当前登录用户是否为处置方
+     * @return
+     */
+    public static boolean isDispose(){
+        String typeStr = UserSession.getCurrent().getUserType();
+
+        TSysProperty property = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY);
+        String reg = property.getPropertyValue();
+        TSysProperty property1 = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW);
+        String reg1 = property1.getPropertyValue();
+        TSysProperty property2 = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE);
+        String reg2 = property2.getPropertyValue();
+
+        if(typeStr.equals(reg + ",") || typeStr.equals(reg1 + ",") || typeStr.equals(reg2 + ",")){
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 创建特定位数的数字
      *
      * @param number
