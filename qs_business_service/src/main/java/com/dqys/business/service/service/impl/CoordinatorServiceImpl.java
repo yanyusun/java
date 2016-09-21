@@ -895,33 +895,34 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
         }
         if (ObjectTypeEnum.PAWN.getValue() == flowType) {//抵押物
-            if (PawnEnum.MAINTAIN_REGULAR.getValue() == operType) {//维持常规催收
+            if (PawnEnum.MAINTAIN_REGULAR.getValue().equals(operType)) {//维持常规催收
                 setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 0, 1, 1);
-            } else if (PawnEnum.MARKET_DISPOSITION.getValue() == operType) {//市场处置
+            } else if (PawnEnum.MARKET_DISPOSITION.getValue().equals(operType)) {//市场处置
                 setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 1, 1, 0);
-            } else if (PawnEnum.CM_SIMULTANEOUS.getValue() == operType) {//催收/市场同时进行
+            } else if (PawnEnum.CM_SIMULTANEOUS.getValue().equals(operType)) {//催收/市场同时进行
                 setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 0, 1, 0);
-            } else if (PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue() == operType) {//执行司法化解
+            } else if (PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue().equals(operType)) {//执行司法化解
                 setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 1, 0, 1);
-            } else if (PawnEnum.CJ_SIMULTANEOUS.getValue() == operType) {//催收/司法化解同时进行
+            } else if (PawnEnum.CJ_SIMULTANEOUS.getValue().equals(operType)) {//催收/司法化解同时进行
                 setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 0, 0, 1);
-            } else if (PawnEnum.CMJ_SIMULTANEOUS.getValue() == operType) {//催收、市场、司法同时进行
+            } else if (PawnEnum.CMJ_SIMULTANEOUS.getValue().equals(operType)) {//催收、市场、司法同时进行
                 setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 0, 0, 0);
             } else {
                 map.put("result", "no_operType");//业务操作类型有误
             }
         } else if (ObjectTypeEnum.IOU.getValue() == flowType) {//借据
-            if (IouEnum.MAINTAIN_REGULAR.getValue() == operType) {//维持常规催收
+            System.out.println(IouEnum.CM_SIMULTANEOUS.getValue() + ">>>>");
+            if (IouEnum.MAINTAIN_REGULAR.getValue().equals(operType)) {//维持常规催收
                 setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 0, 1, 1);
-            } else if (IouEnum.MARKET_DISPOSITION.getValue() == operType) {//市场处置
+            } else if (IouEnum.MARKET_DISPOSITION.getValue().equals(operType)) {//市场处置
                 setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 1, 1, 0);
-            } else if (IouEnum.CM_SIMULTANEOUS.getValue() == operType) {//催收/市场同时进行
+            } else if (IouEnum.CM_SIMULTANEOUS.getValue().equals(operType)) {//催收/市场同时进行
                 setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 0, 1, 0);
-            } else if (IouEnum.EXECUTE_JUSTICE_RESOLVE.getValue() == operType) {//执行司法化解
+            } else if (IouEnum.EXECUTE_JUSTICE_RESOLVE.getValue().equals(operType)) {//执行司法化解
                 setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 1, 0, 1);
-            } else if (IouEnum.CJ_SIMULTANEOUS.getValue() == operType) {//催收/司法化解同时进行
+            } else if (IouEnum.CJ_SIMULTANEOUS.getValue().equals(operType)) {//催收/司法化解同时进行
                 setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 0, 0, 1);
-            } else if (IouEnum.CMJ_SIMULTANEOUS.getValue() == operType) {//催收、市场、司法同时进行
+            } else if (IouEnum.CMJ_SIMULTANEOUS.getValue().equals(operType)) {//催收、市场、司法同时进行
                 setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 0, 0, 0);
             } else {
                 map.put("result", "no_operType");//业务操作类型有误
@@ -930,6 +931,21 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("result", "no_flowType");//流转对象类型有误
         }
 
+        return map;
+    }
+
+    @Override
+    public Map sendBusinessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, Integer receiveUserId, Integer status) {
+        Map map = new HashMap<>();
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        String operation = "";
+        if (ObjectTypeEnum.PAWN.getValue() == flowType) {
+            operation = PawnEnum.getPawnEnum(operType).getName();
+        } else if (ObjectTypeEnum.IOU.getValue() == flowType) {
+            operation = IouEnum.getIouEnum(operType).getName();
+        }
+        String result = messageService.businessFlowResult(objectId, objectType, flowId, flowType, operation, userId, receiveUserId, status);
+        map.put("result", result);
         return map;
     }
 
@@ -946,8 +962,10 @@ public class CoordinatorServiceImpl implements CoordinatorService {
      */
     private void setFlow(Map map, Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, String operation, Integer companyTeamId, Integer coll, Integer lawy, Integer agen) {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
-        String operUrl = MessageUtils.setOperUrl("?status=0&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType, null,
-                "?status=0&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType, null,
+        String operUrl = MessageUtils.setOperUrl("/coordinator/businessFlowResult?status=1&objectId=" + objectId + "&objectType=" + objectType +
+                        "&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType + "&receiveUserId=" + userId, null,
+                "/coordinator/businessFlowResult?status=0&objectId=" + objectId + "&objectType=" + objectType +
+                        "&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType + "&receiveUserId=" + userId, null,
                 "?type=3&flowId=" + flowId + "&flowType=" + flowType + "&companyTeamId=" + companyTeamId + "&operType=" + operType + "&userId=" + userId);
         //消息列表使用的访问参数拼接
         boolean c = false;

@@ -4,6 +4,7 @@ import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.service.service.AssetService;
 import com.dqys.business.service.service.CoordinatorService;
+import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -30,7 +31,8 @@ public class CoordinatorController {
     private CoordinatorService coordinatorService;
     @Autowired
     private AssetService assetService;
-
+    @Autowired
+    private MessageService messageService;
 
     /**
      * @api {post} coordinator/list 借款人或是资产包的参与者
@@ -270,7 +272,40 @@ public class CoordinatorController {
     public JsonResponse businessFlow(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType,
                                      @RequestParam("flowId") Integer flowId, @RequestParam("flowType") Integer flowType
             , @RequestParam("operType") Integer operType, @RequestParam("companyTeamId") Integer companyTeamId) throws Exception {
+        if (CommonUtil.checkParam(objectId, objectType, flowId, flowType, operType)) {
+            return JsonResponseTool.paramErr("参数有误");
+        }
         Map map = coordinatorService.businessFlow(objectId, objectType, flowId, flowType, operType, companyTeamId);
         return JsonResponseTool.success(map);
     }
+
+    /**
+     * @api {post} coordinator/businessFlowResult 平台审核业务流转通知
+     * @apiParam {int} objectId      对象id
+     * @apiParam {int} objectType    对象类型
+     * @apiParam {int} flowId        业务流转对象id
+     * @apiParam {int} flowType      业务流转对象类型
+     * @apiParam {int} operType     流转操作
+     * @apiParam {int} receiveUserId 接收者id（请求公司）
+     * @apiParam {int} status        状态（0拒绝1接收）
+     * @apiSampleRequest coordinator/businessFlowResult
+     * @apiGroup companyRelation
+     * @apiName coordinator/businessFlowResult
+     */
+    @RequestMapping("/businessFlowResult")
+    @ResponseBody
+    public JsonResponse businessFlowResult(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType,
+                                           @RequestParam("flowId") Integer flowId, @RequestParam("flowType") Integer flowType,
+                                           @RequestParam("operType") Integer operType, @RequestParam("receiveUserId") Integer receiveUserId,
+                                           @RequestParam("status") Integer status) throws Exception {
+        if (CommonUtil.checkParam(objectId, objectType, flowId, flowType, operType, receiveUserId, status)) {
+            return JsonResponseTool.paramErr("参数有误");
+        }
+        if (status != 0 && status != 1) {
+            return JsonResponseTool.paramErr("状态有误");
+        }
+        Map map = coordinatorService.sendBusinessFlowResult(objectId, objectType, flowId, flowType, operType, receiveUserId, status);
+        return JsonResponseTool.success(map);
+    }
+
 }
