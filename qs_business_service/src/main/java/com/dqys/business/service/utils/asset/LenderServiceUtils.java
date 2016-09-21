@@ -26,14 +26,6 @@ import java.util.List;
  */
 public class LenderServiceUtils {
 
-    public static final String PRE_LENDER_CODE = "BO"; // 格式:JKR160612XXXX
-
-    public static String createLenderNo() {
-        return PRE_LENDER_CODE
-                + DateFormatTool.format(DateFormatTool.DATE_FORMAT_6)
-                + RandomStringUtils.randomNumeric(4);
-    }
-
     /**
      * 借款人基础信息DTO转化成DAO
      *

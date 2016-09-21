@@ -20,6 +20,7 @@ import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -68,7 +69,7 @@ public class PawnServiceImpl implements PawnService {
         }
         PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
         // 统计当前借款人已经具有的抵押物数量
-        pawnInfo.setPawnNo(PawnServiceUtils.createPawnCode());
+        pawnInfo.setPawnNo(RandomUtil.getCode(RandomUtil.PAWN_CODE));
         Integer addResult = pawnInfoMapper.insert(pawnInfo);
         if (!CommonUtil.checkResult(addResult)) {
             Integer pawnId = pawnInfo.getId();

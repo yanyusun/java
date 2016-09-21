@@ -6,7 +6,8 @@ package com.dqys.business.orm.constant.business;
 public enum ObjectUserStatusEnum {
 
     accept(1, "待接收"),
-    checked(2, "待审核"),
+    accepted(0, "已接受"),
+    refuse(2, "已拒绝"),
     handled(3, "已跟进");
 
     private Integer value;

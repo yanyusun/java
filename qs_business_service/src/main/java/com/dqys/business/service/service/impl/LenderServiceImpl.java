@@ -53,6 +53,7 @@ import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.RandomUtil;
 import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -316,7 +317,7 @@ public class LenderServiceImpl implements LenderService {
         }
         // 添加借款人基础信息
         LenderInfo lenderInfo = LenderServiceUtils.toLenderInfo(lenderDTO);
-        lenderInfo.setLenderNo(LenderServiceUtils.createLenderNo());
+        lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
         Integer addResult = lenderInfoMapper.insert(lenderInfo);
         if (CommonUtil.checkResult(addResult)) {
             return JsonResponseTool.failure("添加失败");

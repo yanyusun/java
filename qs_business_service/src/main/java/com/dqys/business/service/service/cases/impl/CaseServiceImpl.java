@@ -22,6 +22,7 @@ import com.dqys.business.service.utils.cases.CaseServiceUtils;
 import com.dqys.core.base.BaseSelectonDTO;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.RandomUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -79,7 +80,7 @@ public class CaseServiceImpl implements CaseService {
             return null;
         }
         // 创建案件的编号
-        caseInfo.setCaseNo(CaseServiceUtils.createCaseNo());
+        caseInfo.setCaseNo(RandomUtil.getCode(RandomUtil.CASE_CODE));
         // 增加案件基础信息
         Integer result = caseInfoMapper.insert(caseInfo);
         if (CommonUtil.checkResult(result)) {

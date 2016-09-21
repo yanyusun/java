@@ -27,6 +27,7 @@ import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -74,7 +75,7 @@ public class IouServiceImpl implements IouService {
             return JsonResponseTool.paramErr("参数错误");
         }
         IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
-        iouInfo.setIouNo(IouServiceUtils.createIouCode());
+        iouInfo.setIouNo(RandomUtil.getCode(RandomUtil.IOU_CODE));
 
         Integer iouResult = iouInfoMapper.insert(iouInfo);
         if(!CommonUtil.checkResult(iouResult)){

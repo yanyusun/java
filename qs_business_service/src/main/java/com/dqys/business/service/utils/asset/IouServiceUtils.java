@@ -15,17 +15,6 @@ import java.util.List;
  */
 public class IouServiceUtils {
 
-    public static final String MIDDLE_IOU_CODE = "IO"; // 格式:JIE160101XXXX
-    /**
-     * 生成借据号
-     * @return
-     */
-    public static String createIouCode(){
-        return MIDDLE_IOU_CODE
-                + DateFormatTool.format(DateFormatTool.DATE_FORMAT_6)
-                + RandomStringUtils.randomNumeric(4);
-    }
-
     public static List<IouDTO> toIouDTO(List<IOUInfo> iouInfoList){
         if(CommonUtil.checkParam(iouInfoList)){
             return null;
