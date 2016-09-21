@@ -18,13 +18,6 @@ import java.util.Random;
  */
 public class CaseServiceUtils {
 
-    public static final String CASE_NO = "LC";
-    public static String createCaseNo(){
-        return CASE_NO
-                + DateFormatTool.format(DateFormatTool.DATE_FORMAT_6)
-                + RandomStringUtils.randomNumeric(4);
-    }
-
     public static CaseInfo toCaseInfo(CaseDTO caseDTO){
         if(CommonUtil.checkParam(caseDTO, caseDTO.getPawnId())){
             return null;

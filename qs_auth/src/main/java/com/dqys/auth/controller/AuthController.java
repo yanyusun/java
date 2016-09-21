@@ -315,27 +315,13 @@ public class AuthController extends BaseApiContorller {
                 return JsonResponseTool.authFailure(userServiceResult.getMessage());
             }
 
-            // auto 验证注册信息是否完善<这里后期完善>
-            String step = "false"; // false:无效账户,active:激活邮箱,adminCompany:未完善信息,authentication:未认证,true:信息完善
-            Integer status = userServiceResult.getData().getStatus();
-            Integer companyId = userServiceResult.getData().getCompanyId();
-            if (status.equals(0)) {
-                step = "active";
-            } else if (companyId == null || companyId.equals("")) {
-                step = "adminCompany";
-            } else if (companyService.get(companyId).getIsAuth().equals(0)) {
-                step = "authentication";
-            } else {
-                step = "true";
-            }
-
             return JsonResponseTool.success(ProtocolTool.createUserHeader(
                             userServiceResult.getData().getUserId(),
                             userServiceResult.getData().getUserTypes(),
                             userServiceResult.getData().getRoleIds(),
                             userServiceResult.getData().getIsCertifieds(),
                             userServiceResult.getData().getStatus(),
-                            step
+                            verifyUserStep(userServiceResult)
                     )
             );
         };
@@ -514,7 +500,7 @@ public class AuthController extends BaseApiContorller {
                     serviceResult.getData().getRoleIds(),
                     serviceResult.getData().getIsCertifieds(),
                     serviceResult.getData().getStatus(),
-                    "adminCompany"
+                    verifyUserStep(serviceResult)
             ));
         };
     }
@@ -658,4 +644,21 @@ public class AuthController extends BaseApiContorller {
         };
     }
 
+
+    private String verifyUserStep(ServiceResult<UserDTO> userServiceResult){
+        // todo 验证注册信息是否完善<这里后期完善>
+        String step = "false"; // false:无效账户,active:激活邮箱,adminCompany:未完善信息,authentication:未认证,true:信息完善
+        Integer status = userServiceResult.getData().getStatus();
+        Integer companyId = userServiceResult.getData().getCompanyId();
+        if (status.equals(0)) {
+            step = "active";
+        } else if (companyId == null || companyId.equals("")) {
+            step = "adminCompany";
+        } else if (companyService.get(companyId).getIsAuth().equals(0)) {
+            step = "authentication";
+        } else {
+            step = "true";
+        }
+        return step;
+    }
 }

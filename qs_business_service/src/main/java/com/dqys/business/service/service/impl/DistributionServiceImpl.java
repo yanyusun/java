@@ -179,6 +179,7 @@ public class DistributionServiceImpl implements DistributionService {
             } else if (ObjectBusinessTypeEnum.mechanism.getValue().equals(companyTeamRe.getType())) {
                 // 业务流转做准备
                 keyMap.put(companyTeamRe.getAccepterId(), index);
+                userIds.add(companyTeamRe.getAccepterId());
                 companyTeamReList.get(index).setVersion(total);
                 companyTeamReList.get(index).setStatus(finish);
             }
@@ -190,7 +191,7 @@ public class DistributionServiceImpl implements DistributionService {
         List<BusinessServiceDTO> serviceDTOList = new ArrayList<>();
         ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
         objectUserRelationQuery.setUserIds(userIds);
-        objectUserRelationQuery.setStatus(ObjectUserStatusEnum.handled.getValue());
+        objectUserRelationQuery.setType(BusinessRelationEnum.dispose.getValue());
         List<ObjectUserRelation> relationList = objectUserRelationMapper.list(objectUserRelationQuery);
         relationList.forEach(objectUserRelation -> {
             if (ObjectTypeEnum.PAWN.getValue().equals(objectUserRelation.getObjectType())) {
@@ -957,9 +958,6 @@ public class DistributionServiceImpl implements DistributionService {
     @Override
     public Integer addBusinessService(Integer type, Integer id, Integer distributionId,
                                       Integer businessType, Integer companyId) throws BusinessLogException {
-        if (!CommonUtil.isManage()) {
-            return null; // 不是所属处置机构
-        }
         if (!ObjectTypeEnum.IOU.getValue().equals(type) && !ObjectTypeEnum.PAWN.getValue().equals(type)) {
             return null; // 流转对象不对
         }
@@ -974,6 +972,25 @@ public class DistributionServiceImpl implements DistributionService {
         CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(userInfo.getCompanyId());
         if (companyDetailInfo == null) {
             return null; // 公司不存在
+        }
+        CompanyTeamReQuery teamReQuery = new CompanyTeamReQuery();
+        teamReQuery.setTeamId(companyTeam.getId());
+        List<CompanyTeamRe> teamReList = companyTeamReMapper.queryList(teamReQuery);
+        boolean canAdd = false;
+        for (CompanyTeamRe companyTeamRe : teamReList) {
+            if(companyTeamRe.getType().equals(ObjectBusinessTypeEnum.platform.getValue())
+                    || companyTeamRe.getType().equals(ObjectBusinessTypeEnum.join.getValue())){
+                if(companyTeamRe.getAcceptCompanyId().equals(userInfo.getCompanyId())
+                        && companyTeamRe.getStatus().equals(ObjectAcceptTypeEnum.accept.getValue())){
+                    canAdd = true;break;
+                }
+            }
+        }
+        if(!canAdd){
+            return null; // 只有平台或者所属处置方才能发起业务流转
+        }
+        if(!userInfo.getCompanyId().equals(companyDetailInfo.getCompanyId())){
+            return null; // 只有参与处置方才能
         }
         CompanyDetailInfo companyDetailInfo1 = companyInfoMapper.getDetailByCompanyId(companyId); // 被邀请公司信息
         if (companyDetailInfo1 == null) {
@@ -990,7 +1007,7 @@ public class DistributionServiceImpl implements DistributionService {
         query.setEmployerId(companyTeam.getId());
         query.setBusinessId(businessObjRe.getBusinessId());
         List<ObjectUserRelation> relationList = objectUserRelationMapper.list(query);
-        if (relationList != null || relationList.size() > 0) {
+        if (relationList != null && relationList.size() > 0) {
             // 已经增加
             return null;
         } else {
@@ -1000,7 +1017,7 @@ public class DistributionServiceImpl implements DistributionService {
             objectUserRelation.setObjectId(id);
             objectUserRelation.setUserId(companyDetailInfo1.getUserId()); // 只有管理员才可以接收
             objectUserRelation.setType(BusinessRelationEnum.dispose.getValue());
-            objectUserRelation.setStatus(SysProperty.BOOLEAN_TRUE); // 这里填充1为未接受
+            objectUserRelation.setStatus(ObjectUserStatusEnum.accept.getValue()); // 这里填充1为待接受
             objectUserRelation.setVisibleType(SysProperty.BOOLEAN_TRUE); // 可见
             objectUserRelation.setEmployerId(companyTeam.getId());
             objectUserRelation.setBusinessId(businessObjRe.getBusinessId());
@@ -1027,7 +1044,7 @@ public class DistributionServiceImpl implements DistributionService {
                 }
             }
             // 添加公司
-            Integer result = addCompanyTeamRe(distributionId, companyDetailInfo, companyDetailInfo1);
+            Integer result = addCompanyTeamRe(distributionId, companyDetailInfo1);
             if (CommonUtil.checkResult(result)) {
                 return null;
             } else {
@@ -1124,6 +1141,9 @@ public class DistributionServiceImpl implements DistributionService {
         if (userInfo == null || userInfo.getCompanyId() == null) {
             return null; // 当前用户存在异常
         }
+        if(!companyTeamRe.getAccepterId().equals(userInfo.getId())){
+            return null; // 非被邀请公司的管理员
+        }
         companyTeamRe.setStatus(status);
         Integer result = companyTeamReMapper.update(companyTeamRe);
         if (CommonUtil.checkResult(result)) {
@@ -1168,7 +1188,7 @@ public class DistributionServiceImpl implements DistributionService {
                     if (list != null && list.size() > 0) {
                         // 理论上只有一条
                         ObjectUserRelation relation = list.get(0);
-                        relation.setStatus(SysProperty.BOOLEAN_FALSE); // 这里0为接收
+                        relation.setStatus(ObjectUserStatusEnum.accepted.getValue()); // 这里0为接收
                         objectUserRelationMapper.update(relation);
                         if (ObjectTypeEnum.PAWN.getValue().equals(type)) {
                             PawnInfo pawnInfo = pawnInfoMapper.get(id);
@@ -1387,12 +1407,10 @@ public class DistributionServiceImpl implements DistributionService {
      * 添加分配器里业务流转的对象数据
      *
      * @param distributionId 分配器ID
-     * @param own            当前操作人公司信息
      * @param opposite       被分配公司信息
      * @return
      */
-    private Integer addCompanyTeamRe(Integer distributionId, CompanyDetailInfo own,
-                                     CompanyDetailInfo opposite) {
+    private Integer addCompanyTeamRe(Integer distributionId, CompanyDetailInfo opposite) {
         CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
         companyTeamReQuery.setTeamId(distributionId);
         companyTeamReQuery.setCompanyId(opposite.getCompanyId());
@@ -1405,8 +1423,8 @@ public class DistributionServiceImpl implements DistributionService {
             companyTeamRe.setStatus(ObjectAcceptTypeEnum.init.getValue());
             companyTeamRe.setType(ObjectBusinessTypeEnum.mechanism.getValue());
             companyTeamRe.setAccepterId(opposite.getUserId());
-            companyTeamRe.setRoleType(own.getType());
-            companyTeamRe.setRequesterId(own.getCompanyId());
+            companyTeamRe.setRoleType(SysProperty.BOOLEAN_TRUE);
+            companyTeamRe.setRequesterId(UserSession.getCurrent().getUserId());
             Integer result = companyTeamReMapper.insert(companyTeamRe);
             if (CommonUtil.checkResult(result)) {
                 return null;

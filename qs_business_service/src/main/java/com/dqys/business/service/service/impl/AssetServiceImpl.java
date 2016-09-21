@@ -48,6 +48,7 @@ import com.dqys.core.model.TSysProperty;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.RandomUtil;
 import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -101,7 +102,7 @@ public class AssetServiceImpl implements AssetService {
         }
         AssetInfo assetInfo = AssetServiceUtils.toAssetInfo(assetDTO);
         assetInfo.setOperator(UserSession.getCurrent().getUserId());
-        assetInfo.setAssetNo(AssetServiceUtils.createAssetCode());
+        assetInfo.setAssetNo(RandomUtil.getCode(RandomUtil.ASSET_CODE));
         Integer addResult = assetInfoMapper.insert(assetInfo);
         if (addResult.equals(1)) {
             Integer id = assetInfo.getId();
@@ -689,7 +690,7 @@ public class AssetServiceImpl implements AssetService {
             for (PawnDTO pawnDTO : pawnDTOList) {
                 pawnDTO.setLenderId(lenderId);
                 PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
-                pawnInfo.setPawnNo(PawnServiceUtils.createPawnCode());
+                pawnInfo.setPawnNo(RandomUtil.getCode(RandomUtil.PAWN_CODE));
                 result = pawnInfoMapper.insert(pawnInfo);
                 if (CommonUtil.checkResult(result)) {
                     // 添加失败
@@ -709,7 +710,7 @@ public class AssetServiceImpl implements AssetService {
             for (IouDTO iouDTO : iouDTOList) {
                 iouDTO.setLenderId(lenderId);
                 IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
-                iouInfo.setIouNo(IouServiceUtils.createIouCode());
+                iouInfo.setIouNo(RandomUtil.getCode(RandomUtil.IOU_CODE));
                 result = iouInfoMapper.insert(iouInfo);
                 if (CommonUtil.checkResult(result)) {
                     // 添加失败

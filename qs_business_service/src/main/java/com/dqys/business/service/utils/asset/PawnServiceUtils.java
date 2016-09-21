@@ -15,18 +15,6 @@ import java.util.List;
  */
 public class PawnServiceUtils {
 
-    public static final String PRE_PAWN_CODE = "CO"; // 格式:DYW160612XXXX
-
-    /**
-     * 生成抵押物号
-     * @return
-     */
-    public static String createPawnCode(){
-        return PRE_PAWN_CODE
-                + DateFormatTool.format(DateFormatTool.DATE_FORMAT_6)
-                + RandomStringUtils.randomNumeric(4);
-    }
-
     /**
      * 量化转换抵押物DTO成DAO
      * @param pawnDTOList

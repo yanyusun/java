@@ -297,7 +297,7 @@ public class CompanyController {
      * @apiParam {number} id 公司ID
      * @apiParam {number} distributionId 分配器ID
      * @apiParam {number} businessType 业务流转类型
-     * @apiParam {number} status 接收1拒绝0
+     * @apiParam {number} status 接收1拒绝2
      */
     @RequestMapping(value = "/designBusinessService")
     public JsonResponse designBusinessService(@RequestParam Integer type, @RequestParam Integer id,
@@ -305,6 +305,10 @@ public class CompanyController {
                                               @RequestParam Integer status) throws BusinessLogException{
         if(CommonUtil.checkParam(type, id, distributionId, businessType, status)){
             return JsonResponseTool.paramErr("参数错误");
+        }
+        if(!status.equals(ObjectAcceptTypeEnum.accept.getValue())){
+            // 如果不是接受状态,全部设置为拒绝
+            status = ObjectAcceptTypeEnum.refuse.getValue();
         }
         return JsonResponseTool.success(
                 distributionService.updateBusinessService(type, id, distributionId, businessType, status));
