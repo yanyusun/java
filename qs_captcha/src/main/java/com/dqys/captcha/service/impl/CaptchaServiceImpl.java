@@ -122,6 +122,7 @@ public class CaptchaServiceImpl implements CaptchaService {
 
     /* 校验验证码 */
     private boolean validCaptcha(String key, String code) {
+        Object cacheCode =NoSQLWithRedisTool.getHashObject(key, SUB_CODE);
         if(code.equals(NoSQLWithRedisTool.getHashObject(key, SUB_CODE))) {
             NoSQLWithRedisTool.removeValueObject(key);
             return true;

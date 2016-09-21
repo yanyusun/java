@@ -20,7 +20,7 @@ public class RandomUtil {
     public final static String PAWN_CODE = "CO";//抵押物
     public final static String ESTATES_CODE = "ZC";//资产源
     private static String timeFormat = "yyMM";//日期格式
-    private static Integer count = 10;//循环数
+    private static Integer count = 10000;//循环数
     private static Integer codePlaces = 4;//随机位数的个数
 
     public static String createRandomNum(String time) {
@@ -73,8 +73,10 @@ public class RandomUtil {
             list.remove(serialNumber);
             mybatisRedisCache.putObject(code + time, list);
             return serialNumber;
+        }else{
+            return null;
         }
-        return null;
+
     }
 
     public static void main(String[] args) {
