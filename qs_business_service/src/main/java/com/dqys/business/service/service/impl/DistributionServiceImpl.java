@@ -33,7 +33,6 @@ import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
 import com.dqys.business.orm.pojo.message.Message;
-import com.dqys.business.orm.query.asset.LenderQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.orm.query.company.CompanyTeamReQuery;
 import com.dqys.business.service.constant.MessageBTEnum;
@@ -249,6 +248,14 @@ public class DistributionServiceImpl implements DistributionService {
         return distributionDTO;
     }
 
+    /**
+     * 创建业务流成员的书籍
+     * @param companyTeamRe 分配器成员信息
+     * @param detail 当前公司的详细信息
+     * @param name 对象名称
+     * @param time 业务流时间
+     * @return
+     */
     private BusinessServiceDTO createBSDTO(CompanyTeamRe companyTeamRe, CompanyDetailInfo detail, String name,
                                            Date time) {
         BusinessServiceDTO result = new BusinessServiceDTO();
@@ -581,7 +588,7 @@ public class DistributionServiceImpl implements DistributionService {
     @Override
     public Integer updateDistribution_tx(Integer id, Integer status) throws BusinessLogException {
         if (CommonUtil.checkParam(id, status)) {
-            return null;
+            return null; // 参数错误
         }
         CompanyTeamRe companyTeamRe = companyTeamReMapper.get(id);
         if (companyTeamRe == null) {
@@ -612,6 +619,7 @@ public class DistributionServiceImpl implements DistributionService {
             // 添加操作记录
 //            businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.update.getValue(),
 //                    "", "操作(同意|拒绝)加入分配器对象成员", 0, 0);
+
             // 提醒消息
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId()); // 分配器信息
             String code = ""; // 对象编号
@@ -699,18 +707,19 @@ public class DistributionServiceImpl implements DistributionService {
 
             Integer lawType = Integer.valueOf(
                     SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
-                            .getPropertyValue());
+                            .getPropertyValue()); // 律所
             Integer urgeType = Integer.valueOf(
                     SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                            .getPropertyValue());
+                            .getPropertyValue()); // 催收
             Integer intermediaryType = Integer.valueOf(
                     SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                            .getPropertyValue());
-            // 判断是否为接收邀请,是则添加对象关系和实体类的标识
+                            .getPropertyValue()); // 中介
+            // 接收邀请,添加对象关系和实体类的标识
             if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
                 // 业务
                 Integer businessId = null;
-                BusinessObjRe businessObjRe = businessObjReMapper.getByObject(companyTeam.getObjectType(), companyTeam.getObjectId());
+                BusinessObjRe businessObjRe =
+                        businessObjReMapper.getByObject(companyTeam.getObjectType(), companyTeam.getObjectId());
                 if (businessObjRe != null) {
                     businessId = businessObjRe.getBusinessId();
                 }
@@ -722,71 +731,28 @@ public class DistributionServiceImpl implements DistributionService {
 
                     // 添加公司之间的关系
                     TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeam.getSenderId());
-                    CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(companyTeamRe.getAcceptCompanyId());
-                    CompanyRelation companyRelation = new CompanyRelation();
-                    companyRelation.setCompanyAId(creator.getCompanyId());
-                    companyRelation.setCompanyBId(companyTeamRe.getAcceptCompanyId());
-                    companyRelationMapper.insert(companyRelation);
+                    CompanyDetailInfo companyDetailInfo =
+                            companyInfoMapper.getDetailByCompanyId(companyTeamRe.getAcceptCompanyId());
+                    addCompanyRelation(creator.getCompanyId(), companyTeamRe.getAcceptCompanyId());
 
+                    // 添加操作者与操作事物的关联
+                    createObjectUserRelation(companyTeam.getObjectType(), companyTeam.getObjectId(), companyDetailInfo.getUserId(),
+                            companyTeam.getId(), businessId);
                     if (companyTeam.getObjectType().equals(ObjectTypeEnum.LENDER.getValue())) {
                         // 借款人类型
-                        if (companyDetailInfo != null) {
-                            if (companyDetailInfo.getType().equals(lawType)) {
-                                // 律所
-                                LenderInfo lenderInfo = new LenderInfo();
-                                lenderInfo.setId(companyTeam.getObjectId());
-                                lenderInfo.setIsLawyer(SysProperty.BOOLEAN_TRUE);
-                                lenderInfoMapper.update(lenderInfo);
-                            } else if (companyDetailInfo.getType().equals(urgeType)) {
-                                // 催收
-                                LenderInfo lenderInfo = new LenderInfo();
-                                lenderInfo.setId(companyTeam.getObjectId());
-                                lenderInfo.setIsCollection(SysProperty.BOOLEAN_TRUE);
-                                lenderInfoMapper.update(lenderInfo);
-                            } else if (companyDetailInfo.getType().equals(intermediaryType)) {
-                                // 中介
-                                LenderInfo lenderInfo = new LenderInfo();
-                                lenderInfo.setId(companyTeam.getObjectId());
-                                lenderInfo.setIsAgent(SysProperty.BOOLEAN_TRUE);
-                                lenderInfoMapper.update(lenderInfo);
-                            }
-                        }
-                        // 添加操作者与操作事物的关联
-                        createObjectUserRelation(companyTeam, companyDetailInfo.getUserId(), companyTeam.getId(), businessId);
+                        addLenderDispose(companyTeam.getObjectId(), companyDetailInfo.getType(),
+                                lawType, urgeType, intermediaryType);
                     } else if (companyTeam.getObjectType().equals(ObjectTypeEnum.ASSETPACKAGE.getValue())) {
                         // 资产包类型
-                        if (companyDetailInfo != null) {
-                            if (companyDetailInfo.getType().equals(lawType)) {
-                                // 律所
-                                AssetInfo assetInfo = new AssetInfo();
-                                assetInfo.setId(companyTeam.getObjectId());
-                                assetInfo.setIsLawyer(SysProperty.BOOLEAN_TRUE);
-                                assetInfoMapper.update(assetInfo);
-                            } else if (companyDetailInfo.getType().equals(urgeType)) {
-                                // 催收
-                                AssetInfo assetInfo = new AssetInfo();
-                                assetInfo.setId(companyTeam.getObjectId());
-                                assetInfo.setIsCollection(SysProperty.BOOLEAN_TRUE);
-                                assetInfoMapper.update(assetInfo);
-                            } else if (companyDetailInfo.getType().equals(intermediaryType)) {
-                                // 中介
-                                AssetInfo assetInfo = new AssetInfo();
-                                assetInfo.setId(companyTeam.getObjectId());
-                                assetInfo.setIsAgent(SysProperty.BOOLEAN_TRUE);
-                                assetInfoMapper.update(assetInfo);
-                            }
-                        }
-                        createObjectUserRelation(companyTeam, companyDetailInfo.getUserId(), companyTeam.getId(), businessId);
-                        LenderQuery lenderQuery = new LenderQuery();
-                        lenderQuery.setAssetId(companyTeam.getObjectId());
-                        List<LenderInfo> lenderInfoList = lenderInfoMapper.queryList(lenderQuery);
+                        addAssetDispose(companyTeam.getObjectId(), companyDetailInfo.getType(),
+                                lawType, urgeType, intermediaryType);
+                        // 添加资产包下的借款人关系信息
+                        List<LenderInfo> lenderInfoList = lenderInfoMapper.listByAssetId(companyTeam.getObjectId());
                         for (LenderInfo lenderInfo : lenderInfoList) {
                             CompanyTeam companyTeam1 = companyTeamMapper.getByTypeId(ObjectTypeEnum.LENDER.getValue(), lenderInfo.getId());
                             if (companyTeam1 == null) {
-                                companyTeam1 = new CompanyTeam();
-                                companyTeam1.setObjectType(ObjectTypeEnum.LENDER.getValue());
-                                companyTeam1.setObjectId(lenderInfo.getId());
-                                createObjectUserRelation(companyTeam1, companyDetailInfo.getUserId(), companyTeam.getId(), businessId);
+                                createObjectUserRelation(ObjectTypeEnum.LENDER.getValue(), lenderInfo.getId(),
+                                        companyDetailInfo.getUserId(), companyTeam.getId(), businessId);
                             }
                         }
                     }
@@ -821,6 +787,7 @@ public class DistributionServiceImpl implements DistributionService {
             // 添加操作记录
 //            businessLogService.add(id, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.exit.getValue(),
 //                    "", "移除分配器内容对象成员", 0, 0);
+
             // 发送短信提醒
             TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeamRe.getAccepterId()); // 申请人信息
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
@@ -835,7 +802,8 @@ public class DistributionServiceImpl implements DistributionService {
             message.setContent(smsUtil.getSendContent(SysProperty.SMS_OUT_CODE, msg));
 
             // 去除公司的协作器
-            coordinatorService.delCoordinator(companyTeamRe.getAcceptCompanyId(), companyTeam.getObjectId(), companyTeam.getObjectType());
+            coordinatorService.delCoordinator(companyTeamRe.getAcceptCompanyId(),
+                    companyTeam.getObjectId(), companyTeam.getObjectType());
             // 添加消息
             String code = ""; // 对象编号
             if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
@@ -864,88 +832,45 @@ public class DistributionServiceImpl implements DistributionService {
             // 去除介入信息
             if (companyTeam != null) {
                 // 删除操作者与操作事物的关联(包含业务流转)
-                ObjectUserRelationQuery query = new ObjectUserRelationQuery();
-                query.setEmployerId(companyTeam.getId());
-                query.setUserId(companyDetailInfo.getUserId());
-                query.setType(BusinessRelationEnum.company.getValue());
-                List<ObjectUserRelation> relationList = objectUserRelationMapper.list(query);
-                // 理论上这里只有一条
-                relationList.forEach(objectUserRelation -> {
-                    objectUserRelationMapper.deleteByPrimaryKey(objectUserRelation.getId());
-                });
+                if(companyTeam.getObjectType().equals(ObjectTypeEnum.ASSETPACKAGE.getValue())){
+                    deleteAssetObjectUserRelation(companyTeam.getObjectId(), companyTeam.getId(),
+                            companyDetailInfo.getUserId());
+                }else if(companyTeam.getObjectType().equals(ObjectTypeEnum.LENDER.getValue())){
+                    deleteLenderObjectUserRelation(companyTeam.getObjectId(), companyTeam.getId(),
+                            companyDetailInfo.getUserId());
+                }
 
-                // todo 这里资产包情况需要修复一下
-
-
-                Integer lawType = Integer.valueOf(
-                        SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
-                                .getPropertyValue());
-                Integer urgeType = Integer.valueOf(
-                        SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                                .getPropertyValue());
-                Integer intermediaryType = Integer.valueOf(
-                        SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                                .getPropertyValue());
                 if (companyTeam.getObjectType().equals(ObjectTypeEnum.LENDER.getValue())) {
                     // 借款人类型
-                    if (companyDetailInfo.getType().equals(lawType)) {
-                        // 律所
-                        LenderInfo lenderInfo = new LenderInfo();
-                        lenderInfo.setId(companyTeam.getObjectId());
-                        lenderInfo.setIsLawyer(SysProperty.BOOLEAN_FALSE);
-                        lenderInfoMapper.update(lenderInfo);
-                    } else if (companyDetailInfo.getType().equals(urgeType)) {
-                        // 催收
-                        LenderInfo lenderInfo = new LenderInfo();
-                        lenderInfo.setId(companyTeam.getObjectId());
-                        lenderInfo.setIsCollection(SysProperty.BOOLEAN_FALSE);
-                        lenderInfoMapper.update(lenderInfo);
-                    } else if (companyDetailInfo.getType().equals(intermediaryType)) {
-                        // 中介
-                        LenderInfo lenderInfo = new LenderInfo();
-                        lenderInfo.setId(companyTeam.getObjectId());
-                        lenderInfo.setIsAgent(SysProperty.BOOLEAN_FALSE);
-                        lenderInfoMapper.update(lenderInfo);
-                    }
+                    clearLenderDispose(companyTeam.getObjectId());
                 } else if (companyTeam.getObjectType().equals(ObjectTypeEnum.ASSETPACKAGE.getValue())) {
                     // 资产包类型
-                    if (companyDetailInfo != null) {
-                        if (companyDetailInfo.getType().equals(lawType)) {
-                            // 律所
-                            AssetInfo assetInfo = new AssetInfo();
-                            assetInfo.setId(companyTeam.getObjectId());
-                            assetInfo.setIsLawyer(SysProperty.BOOLEAN_FALSE);
-                            assetInfoMapper.update(assetInfo);
-                        } else if (companyDetailInfo.getType().equals(urgeType)) {
-                            // 催收
-                            AssetInfo assetInfo = new AssetInfo();
-                            assetInfo.setId(companyTeam.getObjectId());
-                            assetInfo.setIsCollection(SysProperty.BOOLEAN_FALSE);
-                            assetInfoMapper.update(assetInfo);
-                        } else if (companyDetailInfo.getType().equals(intermediaryType)) {
-                            // 中介
-                            AssetInfo assetInfo = new AssetInfo();
-                            assetInfo.setId(companyTeam.getObjectId());
-                            assetInfo.setIsAgent(SysProperty.BOOLEAN_FALSE);
-                            assetInfoMapper.update(assetInfo);
-                        }
-                    }
+                    clearAssetDispose(companyTeam.getObjectId());
                 }
             }
             return result;
         }
     }
 
-    private Integer createObjectUserRelation(CompanyTeam companyTeam, Integer userId,
-                                             Integer distrbutionId, Integer businessId) {
+    /**
+     * 创建对象之间的关系
+     * @param type 类型
+     * @param id id
+     * @param userId 操作人(管理员)
+     * @param distributionId 分配器ID
+     * @param businessId 业务ID
+     * @return
+     */
+    private Integer createObjectUserRelation(Integer type, Integer id, Integer userId,
+                                             Integer distributionId, Integer businessId) {
         // 增加对象与操作事物的联系
         ObjectUserRelation objectUserRelation = new ObjectUserRelation();
-        objectUserRelation.setObjectType(companyTeam.getObjectType());
-        objectUserRelation.setObjectId(companyTeam.getObjectId());
+        objectUserRelation.setObjectType(type);
+        objectUserRelation.setObjectId(id);
         objectUserRelation.setUserId(userId); // 只有管理员才可以接收
         objectUserRelation.setType(BusinessRelationEnum.company.getValue());
         objectUserRelation.setVisibleType(SysProperty.BOOLEAN_TRUE); // 可见
-        objectUserRelation.setEmployerId(distrbutionId); // 分配器ID
+        objectUserRelation.setEmployerId(distributionId); // 分配器ID
         objectUserRelation.setVisibleType(businessId); // 业务ID
         Integer result = objectUserRelationMapper.insert(objectUserRelation);
         if (result == null) {
@@ -1109,12 +1034,6 @@ public class DistributionServiceImpl implements DistributionService {
                                 "get",
                                 null
                         ));
-//                message.setOperUrl("{\"accpet\":\"/api/company/updateBusinessService?type=" + type
-//                                + "&id=" + id + "&distributionId=" + result + "&businessType=" + businessType
-//                                + "&status=1\",\"reject\":\"/api/company/designBusinessService?type=" + type
-//                                + "&id=" + id + "&distributionId=" + result + "&businessType=" + businessType
-//                                + "&status=2}"
-//                );
                 messageMapper.add(message);
                 return result;
             }
@@ -1274,127 +1193,13 @@ public class DistributionServiceImpl implements DistributionService {
                 messageMapper.add(message);
                 if (SysProperty.BOOLEAN_TRUE.equals(status)) {
                     // 添加公司之间的关系
-                    CompanyRelation companyRelation = companyRelationMapper.getByCompanyId(creator.getCompanyId(),
-                            companyTeamRe.getAcceptCompanyId());
-                    if (companyRelation == null) {
-                        companyRelation = new CompanyRelation();
-                        companyRelation.setCompanyAId(creator.getCompanyId());
-                        companyRelation.setCompanyBId(companyTeamRe.getAcceptCompanyId());
-                        companyRelationMapper.insert(companyRelation);
-                    }
+                    addCompanyRelation(creator.getCompanyId(), companyTeamRe.getAcceptCompanyId());
+
                     // 转换对象状态
                     if (type.equals(ObjectTypeEnum.PAWN.getValue())) {
-                        // 当前流转的是抵押物
-                        PawnInfo pawnInfo = pawnInfoMapper.get(id);
-                        if (pawnInfo != null) {
-                            if (PawnEnum.MAINTAIN_REGULAR.getValue().equals(businessType)) {
-                                // 常规催收
-                                pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
-                                pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
-                                pawnInfoMapper.update(pawnInfo);
-                            } else if (PawnEnum.MARKET_DISPOSITION.getValue().equals(businessType)) {
-                                // 市场处置
-                                pawnInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
-                                pawnInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
-                                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
-                                pawnInfoMapper.update(pawnInfo);
-                            } else if (PawnEnum.CM_SIMULTANEOUS.getValue().equals(businessType)) {
-                                // 市场处置&常规催收
-                                if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                                        .equals(companyDetailInfo.getType())) {
-                                    // 催收
-                                    pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                                } else if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
-                                        .equals(companyDetailInfo.getType())) {
-                                    // 市场
-                                    pawnInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
-                                }
-                                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
-                                pawnInfoMapper.update(pawnInfo);
-                            } else if (PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue().equals(businessType)) {
-                                // 司法化解
-                                pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
-                                pawnInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
-                                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
-                                pawnInfoMapper.update(pawnInfo);
-                            } else if (PawnEnum.CJ_SIMULTANEOUS.getValue().equals(businessType)) {
-                                // 司法化解&常规催收
-                                if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                                        .equals(companyDetailInfo.getType())) {
-                                    // 催收
-                                    pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                                } else if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
-                                        .equals(companyDetailInfo.getType())) {
-                                    // 律所
-                                    pawnInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
-                                }
-                                pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
-                                pawnInfoMapper.update(pawnInfo);
-                            } else if (PawnEnum.CMJ_SIMULTANEOUS.getValue().equals(businessType)) {
-                                // 市场处置&司法化解&常规催收
-                                pawnInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
-                                pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
-                                pawnInfoMapper.update(pawnInfo);
-                            }
-                        }
+                        changePawnBusiness(id, businessType, companyDetailInfo); // 当前流转的是抵押物
                     } else if (type.equals(ObjectTypeEnum.IOU.getValue())) {
-                        // 当前流转的是借据
-                        IOUInfo iouInfo = iouInfoMapper.get(id);
-                        if (iouInfo != null) {
-                            if (PawnEnum.MAINTAIN_REGULAR.getValue().equals(businessType)) {
-                                // 常规催收
-                                iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
-                                iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                                iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
-                                iouInfoMapper.update(iouInfo);
-                            } else if (PawnEnum.MARKET_DISPOSITION.getValue().equals(businessType)) {
-                                // 市场处置
-                                iouInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
-                                iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
-                                iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
-                                iouInfoMapper.update(iouInfo);
-                            } else if (PawnEnum.CM_SIMULTANEOUS.getValue().equals(businessType)) {
-                                // 市场处置&常规催收
-                                if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                                        .equals(companyDetailInfo.getType())) {
-                                    // 催收
-                                    iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                                } else if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
-                                        .equals(companyDetailInfo.getType())) {
-                                    // 市场
-                                    iouInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
-                                }
-                                iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
-                                iouInfoMapper.update(iouInfo);
-                            } else if (PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue().equals(businessType)) {
-                                // 司法化解
-                                iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
-                                iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
-                                iouInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
-                                iouInfoMapper.update(iouInfo);
-                            } else if (PawnEnum.CJ_SIMULTANEOUS.getValue().equals(businessType)) {
-                                // 司法化解&常规催收
-                                if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
-                                        .equals(companyDetailInfo.getType())) {
-                                    // 催收
-                                    iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                                } else if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
-                                        .equals(companyDetailInfo.getType())) {
-                                    // 律所
-                                    iouInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
-                                }
-                                iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
-                                iouInfoMapper.update(iouInfo);
-                            } else if (PawnEnum.CMJ_SIMULTANEOUS.getValue().equals(businessType)) {
-                                // 市场处置&司法化解&常规催收
-                                iouInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
-                                iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
-                                iouInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
-                                iouInfoMapper.update(iouInfo);
-                            }
-                        }
+                        changeIouBusiness(id, businessType, companyDetailInfo); // 当前流转的是借据
                     }
                 }
 
@@ -1402,6 +1207,34 @@ public class DistributionServiceImpl implements DistributionService {
             return result;
         }
     }
+
+    /**
+     * 增加公司关联信息
+     * @param aId
+     * @param bId
+     * @return
+     */
+    private Integer addCompanyRelation(Integer aId, Integer bId){
+        if(CommonUtil.checkParam(aId, bId)){
+            return null; // 参数错误
+        }
+        CompanyRelation relation = companyRelationMapper.getByCompanyId(aId, bId);
+        if(relation != null){
+            return null; // 已经存在
+        }else{
+            relation = new CompanyRelation();
+            relation.setCompanyAId(aId);
+            relation.setCompanyBId(bId);
+            Integer result = companyRelationMapper.insert(relation);
+            if(CommonUtil.checkResult(result)){
+                return result;
+            }else{
+                return relation.getId();
+            }
+        }
+    }
+
+
 
     /**
      * 添加分配器里业务流转的对象数据
@@ -1436,4 +1269,306 @@ public class DistributionServiceImpl implements DistributionService {
             return companyTeamReList.get(0).getId();
         }
     }
+
+    /**
+     * 为资产包添加处置信息
+     * @param id 借款人ID
+     * @param companyType 操作公司的类型
+     * @param lawType 律所类型
+     * @param urgeType 催收类型
+     * @param agentType 中介类型
+     * @return
+     */
+    private Integer addAssetDispose(Integer id, Integer companyType, Integer lawType,
+                                     Integer urgeType, Integer agentType){
+        if(!CommonUtil.checkParam(id, companyType, lawType, urgeType, agentType)){
+            AssetInfo assetInfo = new AssetInfo();
+            assetInfo.setId(id);
+            if (companyType.equals(lawType)) { // 律所
+                assetInfo.setIsLawyer(SysProperty.BOOLEAN_TRUE);
+            } else if (companyType.equals(urgeType)) { // 催收
+                assetInfo.setIsCollection(SysProperty.BOOLEAN_TRUE);
+            } else if (companyType.equals(agentType)) { // 中介
+                assetInfo.setIsAgent(SysProperty.BOOLEAN_TRUE);
+            }
+            Integer result = assetInfoMapper.update(assetInfo);
+            if(CommonUtil.checkResult(result)){
+                return result;
+            }else{
+                List<LenderInfo> list = lenderInfoMapper.listByAssetId(id);
+                list.forEach(lenderInfo -> {
+                    if(!isIndependentLender(lenderInfo.getId())){
+                        addLenderDispose(lenderInfo.getId(), companyType, lawType, urgeType, agentType);
+                    }
+                });
+                return id;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 为借款人添加处置信息
+     * @param id 借款人ID
+     * @param companyType 操作公司的类型
+     * @param lawType 律所类型
+     * @param urgeType 催收类型
+     * @param agentType 中介类型
+     * @return
+     */
+    private Integer addLenderDispose(Integer id, Integer companyType, Integer lawType,
+                                     Integer urgeType, Integer agentType){
+        if(!CommonUtil.checkParam(id, companyType, lawType, urgeType, agentType)){
+            LenderInfo lenderInfo = new LenderInfo();
+            lenderInfo.setId(id);
+            if (companyType.equals(lawType)) { // 律所
+                lenderInfo.setIsLawyer(SysProperty.BOOLEAN_TRUE);
+            } else if (companyType.equals(urgeType)) { // 催收
+                lenderInfo.setIsCollection(SysProperty.BOOLEAN_TRUE);
+            } else if (companyType.equals(agentType)) { // 中介
+                lenderInfo.setIsAgent(SysProperty.BOOLEAN_TRUE);
+            }
+            Integer result = lenderInfoMapper.update(lenderInfo);
+            if(CommonUtil.checkResult(result)){
+                return result;
+            }else{
+                return id;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 清楚资产包以及资产包下的非独立分配的借款人的处置信息
+     * @param id 资产包ID
+     * @return
+     */
+    private Integer clearAssetDispose(Integer id){
+        if(id == null){
+            return null;
+        }
+        AssetInfo assetInfo = new AssetInfo();
+        assetInfo.setId(id);
+        assetInfo.setIsAgent(SysProperty.DEFAULT);
+        assetInfo.setIsCollection(SysProperty.DEFAULT);
+        assetInfo.setIsLawyer(SysProperty.DEFAULT);
+        Integer result = assetInfoMapper.update(assetInfo);
+        if(CommonUtil.checkResult(result)){
+            return result;
+        }else{
+            List<LenderInfo> list = lenderInfoMapper.listByAssetId(id);
+            list.forEach(lenderInfo -> {
+                // 不是独立分配的借款人就清楚处置状态
+                if(!isIndependentLender(lenderInfo.getId())){
+                    clearLenderDispose(lenderInfo.getId());
+                }
+            });
+            return id;
+        }
+    }
+
+    /**
+     * 查看当前ID的借款人是否是
+     * @param id 借款人ID
+     * @return true 是独立借款人
+     */
+    private boolean isIndependentLender(Integer id){
+        if(id != null){
+            CompanyTeam companyTeam = companyTeamMapper.getByTypeId(ObjectTypeEnum.LENDER.getValue(), id);
+            if(companyTeam != null){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 清楚借款人全部处置信息
+     * @param id 借款人ID
+     * @return
+     */
+    private Integer clearLenderDispose(Integer id){
+        if(id == null){
+            return null;
+        }
+        LenderInfo lenderInfo = new LenderInfo();
+        lenderInfo.setId(id);
+        lenderInfo.setIsAgent(SysProperty.DEFAULT);
+        lenderInfo.setIsCollection(SysProperty.DEFAULT);
+        lenderInfo.setIsLawyer(SysProperty.DEFAULT);
+        Integer result = lenderInfoMapper.update(lenderInfo);
+        if(CommonUtil.checkResult(result)){
+            return result;
+        }else{
+            return id;
+        }
+    }
+
+    /**
+     * 删除对象之间联系关系
+     * @param id 对象ID
+     * @param employeeId 分配器ID
+     * @param userId 被删除对象用户ID
+     * @return
+     */
+    private Integer deleteAssetObjectUserRelation(Integer id, Integer employeeId, Integer userId){
+        ObjectUserRelationQuery query = new ObjectUserRelationQuery();
+        query.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
+        query.setObjectId(id);
+        query.setEmployerId(employeeId);
+        query.setUserId(userId);
+        query.setType(BusinessRelationEnum.company.getValue());
+        List<ObjectUserRelation> relationList = objectUserRelationMapper.list(query);
+        relationList.forEach(objectUserRelation -> {
+            objectUserRelationMapper.deleteByPrimaryKey(objectUserRelation.getId());
+            // 删除资产包下的借款人
+            List<LenderInfo> list = lenderInfoMapper.listByAssetId(id);
+            for (LenderInfo lenderInfo : list) {
+                deleteAssetObjectUserRelation(lenderInfo.getId(), employeeId, userId);
+            }
+        });
+        return 1;
+    }
+
+    /**
+     * 删除对象之间联系关系
+     * @param id 对象ID
+     * @param employeeId 分配器ID
+     * @param userId 被删除对象用户ID
+     * @return
+     */
+    private Integer deleteLenderObjectUserRelation(Integer id, Integer employeeId, Integer userId){
+        ObjectUserRelationQuery query = new ObjectUserRelationQuery();
+        query.setObjectType(ObjectTypeEnum.LENDER.getValue());
+        query.setObjectId(id);
+        query.setEmployerId(employeeId);
+        query.setUserId(userId);
+        query.setType(BusinessRelationEnum.company.getValue());
+        List<ObjectUserRelation> relationList = objectUserRelationMapper.list(query);
+        relationList.forEach(objectUserRelation -> {
+            objectUserRelationMapper.deleteByPrimaryKey(objectUserRelation.getId());
+        });
+        return 1;
+    }
+
+    private Integer changeIouBusiness(Integer id, Integer businessType, CompanyDetailInfo companyDetailInfo){
+        if(!CommonUtil.checkParam(id, businessType, companyDetailInfo)){
+            IOUInfo iouInfo = iouInfoMapper.get(id);
+            if (PawnEnum.MAINTAIN_REGULAR.getValue().equals(businessType)) {
+                // 常规催收
+                iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+                iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+            } else if (PawnEnum.MARKET_DISPOSITION.getValue().equals(businessType)) {
+                // 市场处置
+                iouInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
+                iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+                iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+            } else if (PawnEnum.CM_SIMULTANEOUS.getValue().equals(businessType)) {
+                // 市场处置&常规催收
+                if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                        .equals(companyDetailInfo.getType())) {
+                    // 催收
+                    iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                } else if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
+                        .equals(companyDetailInfo.getType())) {
+                    // 市场
+                    iouInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
+                }
+                iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+            } else if (PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue().equals(businessType)) {
+                // 司法化解
+                iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+                iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+                iouInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
+            } else if (PawnEnum.CJ_SIMULTANEOUS.getValue().equals(businessType)) {
+                // 司法化解&常规催收
+                if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                        .equals(companyDetailInfo.getType())) {
+                    // 催收
+                    iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                } else if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
+                        .equals(companyDetailInfo.getType())) {
+                    // 律所
+                    iouInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
+                }
+                iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+            } else if (PawnEnum.CMJ_SIMULTANEOUS.getValue().equals(businessType)) {
+                // 市场处置&司法化解&常规催收
+                iouInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
+                iouInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                iouInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
+            }
+            Integer result = iouInfoMapper.update(iouInfo);
+            if(!CommonUtil.checkResult(result)){
+                return id;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 改变抵押物的状态
+     * @param id 抵押物ID
+     * @param businessType 业务流类型
+     * @param companyDetailInfo 公司信息
+     * @return
+     */
+    private Integer changePawnBusiness(Integer id, Integer businessType, CompanyDetailInfo companyDetailInfo){
+        if(!CommonUtil.checkParam(id, businessType, companyDetailInfo)){
+            PawnInfo pawnInfo = pawnInfoMapper.get(id);
+            if (PawnEnum.MAINTAIN_REGULAR.getValue().equals(businessType)) {
+                // 常规催收
+                pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+                pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+            } else if (PawnEnum.MARKET_DISPOSITION.getValue().equals(businessType)) {
+                // 市场处置
+                pawnInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
+                pawnInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+            } else if (PawnEnum.CM_SIMULTANEOUS.getValue().equals(businessType)) {
+                // 市场处置&常规催收
+                if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                        .equals(companyDetailInfo.getType())) {
+                    // 催收
+                    pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                } else if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY)
+                        .equals(companyDetailInfo.getType())) {
+                    // 市场
+                    pawnInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
+                }
+                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+            } else if (PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue().equals(businessType)) {
+                // 司法化解
+                pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+                pawnInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
+                pawnInfoMapper.update(pawnInfo);
+            } else if (PawnEnum.CJ_SIMULTANEOUS.getValue().equals(businessType)) {
+                // 司法化解&常规催收
+                if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE)
+                        .equals(companyDetailInfo.getType())) {
+                    // 催收
+                    pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                } else if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW)
+                        .equals(companyDetailInfo.getType())) {
+                    // 律所
+                    pawnInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
+                }
+                pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+            } else if (PawnEnum.CMJ_SIMULTANEOUS.getValue().equals(businessType)) {
+                // 市场处置&司法化解&常规催收
+                pawnInfo.setOnAgent(SysProperty.BOOLEAN_FALSE);
+                pawnInfo.setOnCollection(SysProperty.BOOLEAN_FALSE);
+                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_FALSE);
+            }
+            Integer result = pawnInfoMapper.update(pawnInfo);
+            if(!CommonUtil.checkResult(result)){
+                return id;
+            }
+        }
+        return null;
+    }
+
 }

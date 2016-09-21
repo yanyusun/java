@@ -11,7 +11,7 @@ public class ObjectUserRelation {
 
     private Integer userId; // 操作人Id
 
-    private Integer status; // 状态(1待接收；2带审核;3已跟进)
+    private Integer status; // 状态(1待接收；2已拒绝;3已跟进；0已接受)
 
     private Integer type; // 关联类型:0自己分配;1团队分配;2公司分配
 

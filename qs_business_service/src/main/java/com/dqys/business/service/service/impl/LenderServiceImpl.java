@@ -747,11 +747,11 @@ public class LenderServiceImpl implements LenderService {
         } else if (ObjectTabEnum.check.getValue().equals(tab)) {
             // 待审核
             if(flag){
-                List<Integer> ids = businessObjReMapper.listIdByTypeIdStatus(ObjectTypeEnum.ASSETPACKAGE.getValue(),
+                List<Integer> ids = businessObjReMapper.listIdByTypeIdStatus(ObjectTypeEnum.LENDER.getValue(),
                         BusinessStatusEnum.init.getValue());
                 lenderQuery.setIds(ids);
             }else{
-                List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.ASSETPACKAGE.getValue(),
+                List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.LENDER.getValue(),
                         BusinessStatusEnum.init.getValue(), UserSession.getCurrent().getUserId());
                 lenderQuery.setIds(ids);
             }
