@@ -94,7 +94,7 @@
         ON tusi.id=ttr.user_id
         WHERE tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} and tut.company_id=#{companyId,jdbcType=INTEGER}
             and ttr.status=1 and ttr.stateflag=0 and tut.stateflag=0
-            and tust.stateflag=0 and bor.stateflag=0
+            and tust.stateflag=0
     </select>
     <!--获取当前进行的任务总数-->
     <select id="getTaskOngoing" resultType="java.util.Map">

@@ -911,7 +911,6 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 map.put("result", "no_operType");//业务操作类型有误
             }
         } else if (ObjectTypeEnum.IOU.getValue() == flowType) {//借据
-            System.out.println(IouEnum.CM_SIMULTANEOUS.getValue() + ">>>>");
             if (IouEnum.MAINTAIN_REGULAR.getValue().equals(operType)) {//维持常规催收
                 setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 0, 1, 1);
             } else if (IouEnum.MARKET_DISPOSITION.getValue().equals(operType)) {//市场处置

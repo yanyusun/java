@@ -49,6 +49,7 @@
     <result column="belong_follow_time" property="belongFollowTime" jdbcType="TIMESTAMP" />
     <result column="belong_follow_times" property="belongFollowTimes" jdbcType="INTEGER" />
     <result column="repay_status" property="repayStatus" jdbcType="INTEGER" />
+    <result column="lender_no" property="lenderNo" jdbcType="VARCHAR" />
   </resultMap>
 
   <!-- 基础字段 -->
@@ -57,7 +58,7 @@
     accrual, loan, appraisal, loan_type, loan_mode, loan_name, evaluate_excellent, evaluate_level,
     dispose_mode, tags, urge_type, entrust_born_type, entrust_born, guarantee_type, guarantee_mode,
     guarantee_source, is_guarantee_connection, guarentee_economic, is_lawsuit, is_decision, real_urge_time,
-    phone_urge_time, entrust_urge_time, can_contact, can_pay, is_worth, memo, is_collection, is_lawyer,
+    phone_urge_time, entrust_urge_time, can_contact, can_pay, is_worth, memo, lender_no,is_collection, is_lawyer,
     is_agent, follow_up_times, is_stop, follow_up_time, belong_follow_time, belong_follow_times, repay_status
   </sql>
 

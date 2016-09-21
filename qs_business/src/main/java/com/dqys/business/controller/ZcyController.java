@@ -220,7 +220,7 @@ public class ZcyController {
     }
 
     /**
-     * @api {post} zcy/zcyDetail 资产源列表
+     * @api {post} zcy/zcyDetail 资产源详情
      * @apiParam {int} estatesId 资产源id
      * @apiSampleRequest zcy/zcyDetail
      * @apiGroup ZCY
