@@ -23,6 +23,7 @@ import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
+import com.dqys.business.orm.query.coordinator.UserTeamQuery;
 import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
 import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
@@ -487,15 +488,35 @@ public class AssetServiceImpl implements AssetService {
             assetQuery.setStateflag(1);
         } else if (ObjectTabEnum.join.getValue().equals(type)) {
             // 待参与
-            List<Integer> ids = userTeamMapper.selectByOperatorAndStatus(UserSession.getCurrent().getUserId(),
-                    TeammateReEnum.STATUS_INIT.getValue(), ObjectTypeEnum.ASSETPACKAGE.getValue());
-            if (ids != null && ids.size() > 0) {
-                if(!flag){
-                    assetQuery.setIds(CommonUtil.unionList(ids, businessIds));
-                }else{
-                    assetQuery.setIds(ids);
+            UserTeamQuery query = new UserTeamQuery();
+            query.setCompanyId(userInfo.getCompanyId());
+            query.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
+            List<UserTeam> list = userTeamMapper.queryList(query); // 获取该公司下所有的协作器
+            List<Integer> result = new ArrayList<>();
+            for (UserTeam userTeam : list) {
+                TeammateRe teammateRe = new TeammateRe();
+                teammateRe.setUserTeamId(userTeam.getId());
+                List<TeammateRe> reList = teammateReMapper.selectSelective(teammateRe);
+                if(reList == null){
+                    result.add(userTeam.getObjectId());
+                }else if(reList.size() < 6){
+                    boolean isExist = false;
+                    for (TeammateRe re : reList) {
+                        if(re.getUserId().equals(userInfo.getId())){
+                            isExist = true;break;
+                        }
+                    }
+                    if(!isExist){
+                        result.add(userTeam.getObjectId());
+                    }
                 }
+            }
+            if (!flag) {
+                assetQuery.setIds(CommonUtil.unionList(result, businessIds));
             } else {
+                assetQuery.setIds(result);
+            }
+            if (assetQuery.getIds() == null || assetQuery.getIds().size() == 0) {
                 // 找不到数据
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
             }

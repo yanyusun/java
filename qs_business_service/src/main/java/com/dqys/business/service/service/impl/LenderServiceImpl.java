@@ -722,15 +722,35 @@ public class LenderServiceImpl implements LenderService {
             lenderQuery.setStateflag(1);
         } else if (ObjectTabEnum.join.getValue().equals(tab)) {
             // 待参与
-            List<Integer> ids = userTeamMapper.selectByOperatorAndStatus(UserSession.getCurrent().getUserId(),
-                    TeammateReEnum.STATUS_INIT.getValue(), ObjectTypeEnum.LENDER.getValue());
-            if (ids != null && ids.size() > 0) {
-                if (!flag) {
-                    lenderQuery.setIds(CommonUtil.unionList(ids, businessIds));
-                } else {
-                    lenderQuery.setIds(ids);
+            UserTeamQuery query = new UserTeamQuery();
+            query.setCompanyId(userInfo.getCompanyId());
+            query.setObjectType(ObjectTypeEnum.LENDER.getValue());
+            List<UserTeam> list = userTeamMapper.queryList(query); // 获取该公司下所有的协作器
+            List<Integer> result = new ArrayList<>();
+            for (UserTeam userTeam : list) {
+                TeammateRe teammateRe = new TeammateRe();
+                teammateRe.setUserTeamId(userTeam.getId());
+                List<TeammateRe> reList = teammateReMapper.selectSelective(teammateRe);
+                if(reList == null){
+                    result.add(userTeam.getObjectId());
+                }else if(reList.size() < 6){
+                    boolean isExist = false;
+                    for (TeammateRe re : reList) {
+                        if(re.getUserId().equals(userInfo.getId())){
+                            isExist = true;break;
+                        }
+                    }
+                    if(!isExist){
+                        result.add(userTeam.getObjectId());
+                    }
                 }
+            }
+            if (!flag) {
+                lenderQuery.setIds(CommonUtil.unionList(result, businessIds));
             } else {
+                lenderQuery.setIds(result);
+            }
+            if (lenderQuery.getIds() == null || lenderQuery.getIds().size() == 0) {
                 // 找不到数据
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
@@ -842,7 +862,7 @@ public class LenderServiceImpl implements LenderService {
             List<Integer> teammateIds = teammateReMapper.listObjectIdByJoinType(ObjectTypeEnum.LENDER.getValue(),
                     UserSession.getCurrent().getUserId(), TeammateReEnum.TYPE_PARTICIPATION.getValue());
             List<Integer> ids = CommonUtil.unionList(relationIds, teammateIds);
-            if (CommonUtil.checkParam(ids)) {
+            if (CommonUtil.checkParam(ids) || ids.size() == 0) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             } else {
                 lenderQuery.setIds(ids);
