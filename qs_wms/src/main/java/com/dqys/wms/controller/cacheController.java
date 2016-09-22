@@ -3,14 +3,15 @@ package com.dqys.wms.controller;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.wms.utils.CacheTool;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 /**
  * Created by yan on 16-9-22.
- */@Controller
+ */
+@RestController
 @RequestMapping("/cache")
 public class cacheController {
     @RequestMapping("/clearMybById")
@@ -23,7 +24,7 @@ public class cacheController {
     public JsonResponse selectMybById(String id) {
         CacheTool cacheTool = new CacheTool();
         List<Object> list=cacheTool.getById(id);
-        return JsonResponseTool.success("!");
+        return JsonResponseTool.success(list);
     }
 
 }

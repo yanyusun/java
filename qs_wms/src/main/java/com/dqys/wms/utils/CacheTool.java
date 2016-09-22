@@ -1,5 +1,6 @@
 package com.dqys.wms.utils;
 
+import org.apache.commons.lang3.SerializationUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -63,7 +64,7 @@ public class CacheTool {
             jedis.select(DB_INDEX);
             Set<byte[]> keys = jedis.keys(getKeys(id).getBytes(UTF_8));
             for (byte[] key : keys) {
-                valueList.add(jedis.get(key));
+                valueList.add(SerializationUtils.deserialize(jedis.get(key)));
             }
         } catch (Exception e) {
             borrowOrOprSuccess = false;
