@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -36,36 +37,91 @@ public class FollowUpController extends BaseApiContorller {
      * @apiGroup followUp
      * @apiUse FollowUpMessageQuery
      * @apiSuccessExample {json} Data-Response:
-     * {
-     * "code": 2000,
-     * "msg": "成功",
-     * "data": [
-     * {
-     * "id": 1,
-     * "objectId": null,
-     * "objectType": null,
-     * "userId": null,
-     * "teamId": null,
-     * "content": null,
-     * "version": null,
-     * "createAt": null,
-     * "updateAt": null,
-     * "stateflag": null,
-     * "secondObjectId": null,
-     * "secondObjectType": null,
-     * "liquidateStage": 1,
-     * "secondLiquidateStage": null,
-     * "sendStatus": null,
-     * "userInfo": null,
-     * "teammateRe": null,
-     * "companyInfo": null
-     * }
-     * ]
-     * }
+    {
+    "code": 2000,
+    "msg": "成功",
+    "data": [
+    {
+    "id": 18,
+    "version": null,
+    "stateflag": null,
+    "createAt": "2016-09-22",
+    "updateAt": null,
+    "remark": null,
+    "objectId": null,
+    "objectType": null,
+    "userId": null,
+    "teamId": null,
+    "content": "11",
+    "secondObjectId": null,
+    "secondObjectType": null,
+    "liquidateStage": 11,
+    "secondLiquidateStage": null,
+    "sendStatus": null,
+    "userInfo": {
+    "id": null,
+    "version": null,
+    "stateflag": null,
+    "createAt": null,
+    "updateAt": null,
+    "remark": null,
+    "userName": "zs",
+    "realName": null,
+    "account": null,
+    "wechat": null,
+    "avg": null,
+    "sex": true,
+    "mobile": null,
+    "email": null,
+    "password": null,
+    "salt": null,
+    "identity": null,
+    "companyId": null,
+    "status": null,
+    "qq": null
+    },
+    "teammateRe": null,
+    "companyInfo": {
+    "id": null,
+    "version": null,
+    "stateflag": null,
+    "createAt": null,
+    "updateAt": null,
+    "remark": null,
+    "companyName": "test",
+    "credential": null,
+    "licence": null,
+    "legalPerson": null,
+    "province": null,
+    "city": null,
+    "area": null,
+    "address": null,
+    "isAuth": null,
+    "type": null
+    },
+    "fileList": [
+    {
+    "id": null,
+    "version": null,
+    "stateflag": null,
+    "createAt": null,
+    "updateAt": null,
+    "remark": null,
+    "pathFilename": "aaa.jpg",
+    "showFilename": "p.jpg",
+    "followUpMessageId": null
+    }
+    ]
+    }
+    ]
+    }
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse list(FollowUpMessageQuery followUpMessageQuery) {
+        if(followUpMessageQuery.getObjectId()==null||followUpMessageQuery.getObjectType()==null||followUpMessageQuery.getLiquidateStage()==null){
+            return JsonResponseTool.paramErr("参数错误");
+        }
         List<FollowUpMessage> list = followUpMessageService.listAndCancelUnread(followUpMessageQuery);
         return JsonResponseTool.success(list);
     }
@@ -76,44 +132,42 @@ public class FollowUpController extends BaseApiContorller {
      * @apiGroup followUp
      * @apiUse FollowUpMessageDTO
      * @apiSuccessExample {json} Data-Response:
-     *{
-        "code": 2000,
-        "msg": "成功",
-        "data": {
-        "id": null,
-        "objectId": 111,
-        "objectType": 111,
-        "userId": 1,
-        "teamId": 0,
-        "content": "111",
-        "version": null,
-        "createAt": null,
-        "updateAt": null,
-        "stateflag": null,
-        "secondObjectId": null,
-        "secondObjectType": 111,
-        "liquidateStage": 111,
-        "secondLiquidateStage": 111,
-        "sendStatus": null,
-        "userInfo": null,
-        "teammateRe": null,
-        "companyInfo": null
-        }
-        }
+    {
+    "code": 2000,
+    "msg": "成功",
+    "data": {
+    "id": null,
+    "objectId": 111,
+    "objectType": 111,
+    "secondObjectId": 11,
+    "secondObjectType": 11,
+    "content": "11",
+    "liquidateStage": 11,
+    "secondLiquidateStage": 11,
+    "fileList": [
+    {
+    "id": null,
+    "version": null,
+    "stateflag": null,
+    "createAt": null,
+    "updateAt": null,
+    "remark": null,
+    "pathFilename": "aaa.jpg",
+    "showFilename": "p.jpg",
+    "followUpMessageId": 18
+    }
+    ]
+    }
+    }
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse add(FollowUpMessageDTO followUpMessageDTO) {
-        if (followUpMessageDTO.getObjectId()==null||followUpMessageDTO.getObjectType()==null||followUpMessageDTO.getLiquidateStage()==null) {
+    public JsonResponse add(FollowUpMessageDTO followUpMessageDTO) throws IOException{
+        if (followUpMessageDTO.getObjectId() == null || followUpMessageDTO.getObjectType() == null || followUpMessageDTO.getLiquidateStage() == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        FollowUpMessage followUpMessage = FollowUpUtil.toFollowUpMessage(followUpMessageDTO);
-        if (followUpMessage != null) {
-            followUpMessageService.insert(followUpMessage);
-        } else {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        return JsonResponseTool.success(followUpMessage);
+        followUpMessageService.insert(followUpMessageDTO);
+        return JsonResponseTool.success(followUpMessageDTO);
     }
 
     /**
@@ -123,20 +177,20 @@ public class FollowUpController extends BaseApiContorller {
      * @apiParam {number} objectId 对象id
      * @apiParam {number} objectType 对象类型
      * @apiSuccessExample {json} Data-Response:
-     *  {
-            "code": 2000,
-            "msg": "成功",
-            "data": [
-            {
-            "count": 2,
-            "moment": 111
-            },
-            {
-            "count": 1,
-            "moment": 222
-            }
-            ]
-            }
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": [
+     * {
+     * "count": 2,
+     * "moment": 111
+     * },
+     * {
+     * "count": 1,
+     * "moment": 222
+     * }
+     * ]
+     * }
      */
     @RequestMapping(value = "/unread_count", method = RequestMethod.GET)
     @ResponseBody

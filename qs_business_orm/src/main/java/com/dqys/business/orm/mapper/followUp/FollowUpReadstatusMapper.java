@@ -34,7 +34,7 @@ public interface FollowUpReadstatusMapper {
      * @param objectType
      * @param liquidateStage
      */
-    void deleteByOOL(@Param("objectId") int objectId, @Param("objectType") int objectType, @Param("liquidateStage") int liquidateStage,@Param("user_id") int userId);
+    void deleteByOOL(@Param("objectId") int objectId, @Param("objectType") int objectType, @Param("liquidateStage") int liquidateStage,@Param("userId") int userId);
 
     List<Map<String, String>> getCountMap(@Param("objectId") int objectId, @Param("objectType") int objectType, @Param("userId") int userId);
 }

@@ -8,20 +8,33 @@ import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.coordinator.OURelationMapper;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
+import com.dqys.business.orm.mapper.followUp.FollowUpSourceMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.coordinator.OURelation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
+import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
+import com.dqys.business.service.constant.SourceInfoEnum;
+import com.dqys.business.service.dto.common.SourceDTO;
+import com.dqys.business.service.dto.common.SourceInfoDTO;
+import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
+import com.dqys.business.service.service.common.SourceService;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
+import com.dqys.business.service.utils.common.NavUtil;
+import com.dqys.business.service.utils.followUp.FollowUpUtil;
 import com.dqys.core.model.UserSession;
+import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.RabbitMQProducerTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,11 +62,16 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
     @Autowired
     private AssetInfoMapper assetInfoMapper;
 
+    @Autowired
+    private FollowUpSourceMapper followUpSourceMapper;
+
     @Override
-    public int insert(FollowUpMessage followUpMessage) {
+    public int insert(FollowUpMessageDTO followUpMessageDTO) throws IOException{
+        FollowUpMessage followUpMessage = FollowUpUtil.toFollowUpMessage(followUpMessageDTO);
         Date curDate=new Date();
         UserSession userSession = UserSession.getCurrent();
-        followUpMessage.setUserId(userSession.getUserId());
+        Integer userId=userSession.getUserId();
+        followUpMessage.setUserId(userId);
         OURelation ouRelation =new OURelation();
         ouRelation.setUserId(userSession.getUserId());
         ouRelation.setObjectType(followUpMessage.getObjectType());
@@ -69,7 +87,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             teamId = teamid;
         }
         followUpMessage.setTeamId(teamId);
-        int re = followUpMessageMapper.insert(followUpMessage);
+        followUpMessageMapper.insertSelective(followUpMessage);
         if(followUpMessage.getObjectType()== ObjectTypeEnum.LENDER.getValue()){//如果一级跟进对象是借款人, 增加跟进次数
             LenderInfo lenderInfo=lenderInfoMapper.get(followUpMessage.getObjectId());
             /* 增加借款人跟进次数 */
@@ -108,11 +126,15 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
                 }
             }
         }
-        //增加资料实勘
+        //插入跟进上传的资源,并保存文件
+        List<FollowUpSource> fileList=followUpMessageDTO.getFileList();
+        if(fileList!=null){
+            insertBatchInsertSource(fileList,followUpMessage.getId());
+        }
         //向mq中增加未读信息
         String[] unReadMessage = {followUpMessage.getObjectId().toString(), followUpMessage.getObjectType().toString(), followUpMessage.getLiquidateStage().toString()};
         RabbitMQProducerTool.addToFollowUnReadMessage(unReadMessage);
-        return re;
+        return followUpMessage.getId();
     }
 
 
@@ -127,9 +149,22 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
     }
 
     @Override
-    public List<FollowUpMessage> listAndCancelUnread(FollowUpMessageQuery followUpMessageQuery) {
-        followUpReadStatusService.cancelUnread(followUpMessageQuery.getObjectId(),followUpMessageQuery.getObjectType(),followUpMessageQuery.getLiquidateStage());
-        return getlistWithUserAndTeam(followUpMessageQuery);
+    public List<FollowUpMessage> getlistWithAll(FollowUpMessageQuery followUpMessageQuery) {
+        return followUpMessageMapper.getlistWithALL(followUpMessageQuery);
     }
 
+    @Override
+    public List<FollowUpMessage> listAndCancelUnread(FollowUpMessageQuery followUpMessageQuery) {
+        followUpReadStatusService.cancelUnread(followUpMessageQuery.getObjectId(),followUpMessageQuery.getObjectType(),followUpMessageQuery.getLiquidateStage());
+        return getlistWithAll(followUpMessageQuery);
+    }
+
+    @Override
+    public void insertBatchInsertSource(List<FollowUpSource> fileList,Integer followUpId) throws IOException {
+        for (FollowUpSource followUpSource:fileList){
+            followUpSource.setFollowUpMessageId(followUpId);
+            followUpSourceMapper.insertSelective(followUpSource);
+            //FileTool.saveFileSync(followUpSource.getPathFilename());
+        }
+    }
 }

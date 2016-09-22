@@ -32,6 +32,8 @@
 
     <bean id="businessExceptionHandler" class="com.dqys.business.service.exception.handler.BusinessExceptionHandler"/>
 
+    <bean id="navUtil" class="com.dqys.business.service.utils.common.NavUtil"/>
+
     <!-- SpringMVC上传文件时，需要配置MultipartResolver处理器 -->
    <!-- <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">-->
     <!--<property name="defaultEncoding" value="UTF-8"/>-->

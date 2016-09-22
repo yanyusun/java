@@ -1,5 +1,9 @@
 package com.dqys.business.service.dto.followUp;
 
+import com.dqys.business.orm.pojo.followUp.FollowUpSource;
+
+import java.util.List;
+
 /**
  * Created by yan on 16-8-12.
  *
@@ -12,6 +16,7 @@ package com.dqys.business.service.dto.followUp;
  * @apiParam {string} [content] 内容
  * @apiParam {number} liquidateStage 清收阶段
  * @apiParam {number} [secondLiquidateStage] 二级清收阶段
+ * @apiParam {list} [fileList] 文件名称列表
  */
 
 public class FollowUpMessageDTO {
@@ -30,6 +35,8 @@ public class FollowUpMessageDTO {
     private Integer liquidateStage;
 
     private Integer secondLiquidateStage;
+
+    private List<FollowUpSource> fileList;
 
     public Integer getId() {
         return id;
@@ -93,5 +100,13 @@ public class FollowUpMessageDTO {
 
     public void setSecondLiquidateStage(Integer secondLiquidateStage) {
         this.secondLiquidateStage = secondLiquidateStage;
+    }
+
+    public List<FollowUpSource> getFileList() {
+        return fileList;
+    }
+
+    public void setFileList(List<FollowUpSource> fileList) {
+        this.fileList = fileList;
     }
 }

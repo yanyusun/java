@@ -63,4 +63,9 @@ public class FollowUpMessageMapperImpl extends BaseDao implements FollowUpMessag
     public void updateBySendStatus(FollowUpMessage followUpMessage) {
         super.getSqlSession().getMapper(FollowUpMessageMapper.class).updateBySendStatus(followUpMessage);
     }
+
+    @Override
+    public List<FollowUpMessage> getlistWithALL(FollowUpMessageQuery query) {
+        return  super.getSqlSession().getMapper(FollowUpMessageMapper.class).getlistWithALL(query);
+    }
 }

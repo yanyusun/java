@@ -30,5 +30,12 @@ public interface FollowUpMessageMapper {
      */
     List<FollowUpMessage> getlistWithUserAndTeam(FollowUpMessageQuery query);
 
+    /**
+     * 查询所有与跟进信息相关联的信息
+     * @param query
+     * @return
+     */
+    List<FollowUpMessage> getlistWithALL(FollowUpMessageQuery query);
+
     void updateBySendStatus(FollowUpMessage followUpMessage);
 }

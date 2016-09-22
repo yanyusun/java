@@ -2,10 +2,13 @@ package com.dqys.business.orm.pojo.followUp;
 
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.business.orm.pojo.common.SourceInfo;
+import com.dqys.business.orm.pojo.common.SourceSource;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.core.base.BaseModel;
 
 import java.util.Date;
+import java.util.List;
 
 public class FollowUpMessage  extends BaseModel {
     private Integer id;
@@ -44,6 +47,8 @@ public class FollowUpMessage  extends BaseModel {
 
     //private UserTeam userTeam;
     private TCompanyInfo companyInfo;
+
+    private List<FollowUpSource> fileList;
 
     public Integer getId() {
         return id;
@@ -195,5 +200,14 @@ public class FollowUpMessage  extends BaseModel {
 
     public void setCompanyInfo(TCompanyInfo companyInfo) {
         this.companyInfo = companyInfo;
+    }
+
+
+    public List<FollowUpSource> getFileList() {
+        return fileList;
+    }
+
+    public void setFileList(List<FollowUpSource> fileList) {
+        this.fileList = fileList;
     }
 }
