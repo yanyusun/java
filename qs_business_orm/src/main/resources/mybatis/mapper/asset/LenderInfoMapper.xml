@@ -64,7 +64,7 @@
   <sql id="Query_Condition">
     <where>
       <if test="stateflag != null">
-        AND statefalg != 0
+        AND stateflag != 0
       </if>
       <if test="assetId != null">
         AND asset_id = #{assetId,jdbcType=INTEGER}
