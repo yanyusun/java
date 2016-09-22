@@ -220,7 +220,7 @@
                 from t_teammate_re
                 where stateflag = 0 AND user_id = #{id,jdbcType=INTEGER} AND status = #{status,jdbcType=INTEGER}
             ) as res
-            WHERE (res.num = 0 AND res.num = 1 AND res.num = 2 AND res.num = 3 AND res.num = 4)
+            WHERE (res.num = 0 or res.num = 1 or res.num = 2 or res.num = 3 or res.num = 4)
         )
     </select>
 
