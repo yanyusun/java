@@ -171,7 +171,7 @@ public class FollowUpController extends BaseApiContorller {
     }
 
     /**
-     * @api {GET} http://{url}/follow_up/add 增加跟进信息,状态为未发送
+     * @api {GET} http://{url}/follow_up/unread_count 读取未读的数量
      * @apiName list
      * @apiGroup followUp
      * @apiParam {number} objectId 对象id
