@@ -27,11 +27,13 @@ import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
 import com.dqys.business.service.utils.common.NavUtil;
 import com.dqys.business.service.utils.followUp.FollowUpUtil;
 import com.dqys.core.model.UserSession;
+import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.RabbitMQProducerTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -86,9 +88,6 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
         }
         followUpMessage.setTeamId(teamId);
         int followUpId = followUpMessageMapper.insert(followUpMessage);
-        //插入跟进上传的资源
-        List<FollowUpSource> fileList = followUpId
-        followUpSourceMapper.insertSelective();
         if(followUpMessage.getObjectType()== ObjectTypeEnum.LENDER.getValue()){//如果一级跟进对象是借款人, 增加跟进次数
             LenderInfo lenderInfo=lenderInfoMapper.get(followUpMessage.getObjectId());
             /* 增加借款人跟进次数 */
@@ -127,10 +126,12 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
                 }
             }
         }
+        //插入跟进上传的资源,并保存文件
+        insertBatchInsertSource(followUpMessageDTO.getFileList());
         //向mq中增加未读信息
         String[] unReadMessage = {followUpMessage.getObjectId().toString(), followUpMessage.getObjectType().toString(), followUpMessage.getLiquidateStage().toString()};
         RabbitMQProducerTool.addToFollowUnReadMessage(unReadMessage);
-        return re;
+        return followUpId;
     }
 
 
@@ -156,7 +157,10 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
     }
 
     @Override
-    public void insertBatchInsertSource(List<FollowUpSource> fileList) {
+    public void insertBatchInsertSource(List<FollowUpSource> fileList) throws IOException {
+        for (FollowUpSource followUpSource:fileList){
 
+            FileTool.saveFileSync(followUpSource.getPathFilename());
+        }
     }
 }

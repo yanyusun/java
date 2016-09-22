@@ -6,6 +6,7 @@ import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -52,6 +53,6 @@ public interface FollowUpMessageService {
      * 批量插入上传的资源
      * @param fileList
      */
-    void insertBatchInsertSource(List<FollowUpSource> fileList);
+    void insertBatchInsertSource(List<FollowUpSource> fileList) throws IOException;
 
 }
