@@ -1,11 +1,13 @@
 package com.dqys.core.utils;
 
 import com.dqys.core.cache.MybatisRedisCache;
+import com.mysql.jdbc.TimeUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 随机编号规则
@@ -33,13 +35,19 @@ public class RandomUtil {
         List<String> lenderList = setCodeList(LENDER_CODE + time);
         List<String> pawnList = setCodeList(PAWN_CODE + time);
         List<String> estatesList = setCodeList(ESTATES_CODE + time);
-        MybatisRedisCache mybatisRedisCache = new MybatisRedisCache();
-        mybatisRedisCache.putObject(ASSET_CODE + time, assetList);
-        mybatisRedisCache.putObject(CASE_CODE + time, caseList);
-        mybatisRedisCache.putObject(IOU_CODE + time, iouList);
-        mybatisRedisCache.putObject(LENDER_CODE + time, lenderList);
-        mybatisRedisCache.putObject(PAWN_CODE + time, pawnList);
-        mybatisRedisCache.putObject(ESTATES_CODE + time, estatesList);
+//        MybatisRedisCache mybatisRedisCache = new MybatisRedisCache();
+//        mybatisRedisCache.putObject(ASSET_CODE + time, assetList);
+//        mybatisRedisCache.putObject(CASE_CODE + time, caseList);
+//        mybatisRedisCache.putObject(IOU_CODE + time, iouList);
+//        mybatisRedisCache.putObject(LENDER_CODE + time, lenderList);
+//        mybatisRedisCache.putObject(PAWN_CODE + time, pawnList);
+//        mybatisRedisCache.putObject(ESTATES_CODE + time, estatesList);
+        NoSQLWithRedisTool.setValueObject(ASSET_CODE + time, assetList, 31L, TimeUnit.DAYS);
+        NoSQLWithRedisTool.setValueObject(CASE_CODE + time, caseList, 31L, TimeUnit.DAYS);
+        NoSQLWithRedisTool.setValueObject(IOU_CODE + time, iouList, 31L, TimeUnit.DAYS);
+        NoSQLWithRedisTool.setValueObject(LENDER_CODE + time, lenderList, 31L, TimeUnit.DAYS);
+        NoSQLWithRedisTool.setValueObject(PAWN_CODE + time, pawnList, 31L, TimeUnit.DAYS);
+        NoSQLWithRedisTool.setValueObject(ESTATES_CODE + time, estatesList, 31L, TimeUnit.DAYS);
         return "yes";
     }
 
@@ -64,23 +72,26 @@ public class RandomUtil {
                 && !LENDER_CODE.equals(code) && !PAWN_CODE.equals(code) && !ESTATES_CODE.equals(code)) {
             return null;
         }
-        MybatisRedisCache mybatisRedisCache = new MybatisRedisCache();
         String time = new SimpleDateFormat(timeFormat).format(new Date());
-        List<String> list = (List<String>) mybatisRedisCache.getObject(code + time);
+//        MybatisRedisCache mybatisRedisCache = new MybatisRedisCache();
+//        List<String> list = (List<String>) mybatisRedisCache.getObject(code + time);
+        List<String> list =  NoSQLWithRedisTool.getValueObject(code + time)==null?new ArrayList<>():NoSQLWithRedisTool.getValueObject(code + time);
         if (list.size() > 0) {
             Integer num = CommonUtil.getRandomNum(list.size());
             String serialNumber = list.get(num);//规则编号
             list.remove(serialNumber);
-            mybatisRedisCache.putObject(code + time, list);
+//            mybatisRedisCache.putObject(code + time, list);
+            NoSQLWithRedisTool.setValueObject(code + time, list, 31L, TimeUnit.DAYS);
             return serialNumber;
         }else{
-            return null;
+            createRandomNum(time);
+            getCode(code);
         }
-
+        return null;
     }
 
     public static void main(String[] args) {
-     //   System.out.println(createRandomNum("1609"));
+           System.out.println(createRandomNum("1609"));
 //        MybatisRedisCache mybatisRedisCache = new MybatisRedisCache();
 //        List<String> list = (List<String>) mybatisRedisCache.getObject(ASSET_CODE + "1608");
 //        System.out.println(list);
