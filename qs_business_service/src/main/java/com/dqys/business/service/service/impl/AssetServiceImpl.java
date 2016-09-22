@@ -489,8 +489,10 @@ public class AssetServiceImpl implements AssetService {
         } else if (ObjectTabEnum.join.getValue().equals(type)) {
             // 待参与
             UserTeamQuery query = new UserTeamQuery();
-            query.setCompanyId(userInfo.getCompanyId());
-            query.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
+            if(!flag){
+                query.setCompanyId(userInfo.getCompanyId());
+            }
+            query.setObjectType(ObjectTypeEnum.LENDER.getValue());
             List<UserTeam> list = userTeamMapper.queryList(query); // 获取该公司下所有的协作器
             List<Integer> result = new ArrayList<>();
             for (UserTeam userTeam : list) {
@@ -511,14 +513,11 @@ public class AssetServiceImpl implements AssetService {
                     }
                 }
             }
-            if (!flag) {
-                assetQuery.setIds(CommonUtil.unionList(result, businessIds));
-            } else {
-                assetQuery.setIds(result);
-            }
-            if (assetQuery.getIds() == null || assetQuery.getIds().size() == 0) {
+            if(result == null || result.size() == 0){
                 // 找不到数据
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
+            }else{
+                assetQuery.setIds(result);
             }
         } else if (ObjectTabEnum.joined.getValue().equals(type)) {
             // 已参与
