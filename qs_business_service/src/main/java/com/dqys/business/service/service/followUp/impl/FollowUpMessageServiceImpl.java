@@ -66,7 +66,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
     private FollowUpSourceMapper followUpSourceMapper;
 
     @Override
-    public int insert(FollowUpMessageDTO followUpMessageDTO) {
+    public int insert(FollowUpMessageDTO followUpMessageDTO) throws IOException{
         FollowUpMessage followUpMessage = FollowUpUtil.toFollowUpMessage(followUpMessageDTO);
         Date curDate=new Date();
         UserSession userSession = UserSession.getCurrent();
@@ -127,7 +127,10 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             }
         }
         //插入跟进上传的资源,并保存文件
-        insertBatchInsertSource(followUpMessageDTO.getFileList());
+        List<FollowUpSource> fileList=followUpMessageDTO.getFileList();
+        if(fileList!=null){
+            insertBatchInsertSource(followUpMessageDTO.getFileList(),followUpId);
+        }
         //向mq中增加未读信息
         String[] unReadMessage = {followUpMessage.getObjectId().toString(), followUpMessage.getObjectType().toString(), followUpMessage.getLiquidateStage().toString()};
         RabbitMQProducerTool.addToFollowUnReadMessage(unReadMessage);
@@ -157,9 +160,10 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
     }
 
     @Override
-    public void insertBatchInsertSource(List<FollowUpSource> fileList) throws IOException {
+    public void insertBatchInsertSource(List<FollowUpSource> fileList,Integer followUpId) throws IOException {
         for (FollowUpSource followUpSource:fileList){
-
+            followUpSource.setFollowUpMessageId(followUpId);
+            followUpSourceMapper.insertSelective(followUpSource);
             FileTool.saveFileSync(followUpSource.getPathFilename());
         }
     }

@@ -18,7 +18,7 @@ public interface FollowUpMessageService {
      * @param followUpMessageDTO
      * @return
      */
-    int insert(FollowUpMessageDTO followUpMessageDTO);
+    int insert(FollowUpMessageDTO followUpMessageDTO) throws IOException;
 
     /**
      * 查询跟进信息
@@ -53,6 +53,6 @@ public interface FollowUpMessageService {
      * 批量插入上传的资源
      * @param fileList
      */
-    void insertBatchInsertSource(List<FollowUpSource> fileList) throws IOException;
+    void insertBatchInsertSource(List<FollowUpSource> fileList,Integer followUpId) throws IOException;
 
 }
