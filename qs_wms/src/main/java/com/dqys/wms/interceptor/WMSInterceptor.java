@@ -27,7 +27,7 @@ public class WMSInterceptor extends BaseInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        Integer userId =ProtocolTool.validateUser(
+      /*  Integer userId =ProtocolTool.validateUser(
                 String.valueOf(httpServletRequest.getSession().getAttribute(AuthHeaderEnum.X_QS_USER.getValue())),
                 String.valueOf(httpServletRequest.getSession().getAttribute(AuthHeaderEnum.X_QS_TYPE.getValue())),
                 String.valueOf(httpServletRequest.getSession().getAttribute(AuthHeaderEnum.X_QS_ROLE.getValue())),
@@ -74,7 +74,7 @@ public class WMSInterceptor extends BaseInterceptor {
             }
             httpServletRequest.getRequestDispatcher("/login").forward(httpServletRequest, httpServletResponse);
             return false;
-        }
+        }*/
 
         return true;
     }
