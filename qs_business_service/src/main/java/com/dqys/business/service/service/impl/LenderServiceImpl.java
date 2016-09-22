@@ -723,7 +723,9 @@ public class LenderServiceImpl implements LenderService {
         } else if (ObjectTabEnum.join.getValue().equals(tab)) {
             // 待参与
             UserTeamQuery query = new UserTeamQuery();
-            query.setCompanyId(userInfo.getCompanyId());
+            if(!flag){
+                query.setCompanyId(userInfo.getCompanyId());
+            }
             query.setObjectType(ObjectTypeEnum.LENDER.getValue());
             List<UserTeam> list = userTeamMapper.queryList(query); // 获取该公司下所有的协作器
             List<Integer> result = new ArrayList<>();
@@ -745,14 +747,11 @@ public class LenderServiceImpl implements LenderService {
                     }
                 }
             }
-            if (!flag) {
-                lenderQuery.setIds(CommonUtil.unionList(result, businessIds));
-            } else {
-                lenderQuery.setIds(result);
-            }
-            if (lenderQuery.getIds() == null || lenderQuery.getIds().size() == 0) {
+            if(result == null || result.size() == 0){
                 // 找不到数据
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
+            }else{
+                lenderQuery.setIds(result);
             }
         } else if (ObjectTabEnum.joined.getValue().equals(tab)) {
             // 已参与
