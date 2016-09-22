@@ -25,7 +25,7 @@
     delete from t_follow_up_source
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.chebaiyong.biz.asset.domain.FollowUpSource" >
+  <insert id="insert" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpSource" >
     insert into t_follow_up_source (id, path_filename, show_filename, 
       follow_up_message_id, create_at, update_at, 
       stateflag, version)
@@ -33,7 +33,7 @@
       #{followUpMessageId,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
       #{stateflag,jdbcType=BIGINT}, #{version,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.chebaiyong.biz.asset.domain.FollowUpSource">
+  <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpSource">
     insert into t_follow_up_source
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -88,7 +88,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.chebaiyong.biz.asset.domain.FollowUpSource" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpSource" >
     update t_follow_up_source
     <set >
       <if test="pathFilename != null" >
@@ -115,7 +115,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.chebaiyong.biz.asset.domain.FollowUpSource" >
+  <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpSource" >
     update t_follow_up_source
     set path_filename = #{pathFilename,jdbcType=VARCHAR},
       show_filename = #{showFilename,jdbcType=VARCHAR},

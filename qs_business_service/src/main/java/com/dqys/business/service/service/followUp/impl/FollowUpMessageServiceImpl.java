@@ -87,7 +87,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             teamId = teamid;
         }
         followUpMessage.setTeamId(teamId);
-        int followUpId = followUpMessageMapper.insert(followUpMessage);
+        followUpMessageMapper.insertSelective(followUpMessage);
         if(followUpMessage.getObjectType()== ObjectTypeEnum.LENDER.getValue()){//如果一级跟进对象是借款人, 增加跟进次数
             LenderInfo lenderInfo=lenderInfoMapper.get(followUpMessage.getObjectId());
             /* 增加借款人跟进次数 */
@@ -129,12 +129,12 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
         //插入跟进上传的资源,并保存文件
         List<FollowUpSource> fileList=followUpMessageDTO.getFileList();
         if(fileList!=null){
-            insertBatchInsertSource(followUpMessageDTO.getFileList(),followUpId);
+            insertBatchInsertSource(fileList,followUpMessage.getId());
         }
         //向mq中增加未读信息
         String[] unReadMessage = {followUpMessage.getObjectId().toString(), followUpMessage.getObjectType().toString(), followUpMessage.getLiquidateStage().toString()};
         RabbitMQProducerTool.addToFollowUnReadMessage(unReadMessage);
-        return followUpId;
+        return followUpMessage.getId();
     }
 
 
@@ -164,7 +164,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
         for (FollowUpSource followUpSource:fileList){
             followUpSource.setFollowUpMessageId(followUpId);
             followUpSourceMapper.insertSelective(followUpSource);
-            FileTool.saveFileSync(followUpSource.getPathFilename());
+            //FileTool.saveFileSync(followUpSource.getPathFilename());
         }
     }
 }
