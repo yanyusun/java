@@ -142,7 +142,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("userTeamId", userTeam.getId());
             map.put("result", "yes");
         } else {
-            List<TeamDTO> list = getLenderOrAsset(companyId, userTeam.getObjectId(), userTeam.getObjectType());//获取借款人或是资产包的团队信息
+            List<TeamDTO> list = getLenderOrAsset(companyId, team.getObjectId(), team.getObjectType());//获取借款人或是资产包的团队信息
             TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(team.getMangerId());//管理员信息
             if (tUserInfo != null) {
                 TeamDTO teamDTO = new TeamDTO();
@@ -255,6 +255,9 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             if (flag == -4) {//第一个添加人员不是管理者
                 map.put("msg", "第一个不是管理者");
                 break;
+            }
+            if (flag == -1) {//已经加入过案组
+                map.put("msg", "可能已经加入过案组");
             }
             if (flag > 0) {
                 num++;
