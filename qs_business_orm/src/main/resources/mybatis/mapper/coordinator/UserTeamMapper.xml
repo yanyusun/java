@@ -219,6 +219,7 @@
                 select user_team_id as id,count(user_team_id) as num
                 from t_teammate_re
                 where stateflag = 0 AND user_id = #{id,jdbcType=INTEGER} AND status = #{status,jdbcType=INTEGER}
+                 GROUP BY user_team_id
             ) as res
             WHERE (res.num = 0 or res.num = 1 or res.num = 2 or res.num = 3 or res.num = 4)
         )
