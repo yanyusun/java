@@ -1,5 +1,7 @@
 package com.dqys.business.service.dto.followUp;
 
+import com.dqys.business.orm.pojo.followUp.FollowUpSource;
+
 import java.util.List;
 
 /**
@@ -34,7 +36,7 @@ public class FollowUpMessageDTO {
 
     private Integer secondLiquidateStage;
 
-    private List<String> fileList;
+    private List<FollowUpSource> fileList;
 
     public Integer getId() {
         return id;
@@ -100,11 +102,11 @@ public class FollowUpMessageDTO {
         this.secondLiquidateStage = secondLiquidateStage;
     }
 
-    public List<String> getFileList() {
+    public List<FollowUpSource> getFileList() {
         return fileList;
     }
 
-    public void setFileList(List<String> fileList) {
+    public void setFileList(List<FollowUpSource> fileList) {
         this.fileList = fileList;
     }
 }

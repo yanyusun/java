@@ -50,7 +50,7 @@ public class FollowUpMessage  extends BaseModel {
     //private UserTeam userTeam;
     private TCompanyInfo companyInfo;
 
-    private List<SourceSource> sourceSourceList;
+    private List<FollowUpSource> fileList;
 
     public Integer getId() {
         return id;
@@ -212,11 +212,11 @@ public class FollowUpMessage  extends BaseModel {
         this.sourceInfoId = sourceInfoId;
     }
 
-    public List<SourceSource> getSourceSourceList() {
-        return sourceSourceList;
+    public List<FollowUpSource> getFileList() {
+        return fileList;
     }
 
-    public void setSourceSourceList(List<SourceSource> sourceSourceList) {
-        this.sourceSourceList = sourceSourceList;
+    public void setFileList(List<FollowUpSource> fileList) {
+        this.fileList = fileList;
     }
 }

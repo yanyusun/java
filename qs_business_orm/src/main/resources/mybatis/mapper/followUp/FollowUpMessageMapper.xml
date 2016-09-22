@@ -66,7 +66,7 @@
     delete from t_follow_up_message
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage">
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage"  useGeneratedKeys="true" keyProperty="id">
     insert into t_follow_up_message (id, object_id, object_type, 
       user_id, team_id, content, 
       version, create_at, update_at, 
