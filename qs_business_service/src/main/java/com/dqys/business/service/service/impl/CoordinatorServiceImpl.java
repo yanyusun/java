@@ -104,18 +104,18 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         userTeam.setCompanyId(companyId);
         UserTeam team = new UserTeam();
         team = userTeamMapper.selectByPrimaryKeySelective(userTeam);
-        if (objectType == ObjectTypeEnum.LENDER.getValue()) {//借款人
-            LenderInfo lenderInfo = getLenderInfo(map, objectId);//获取借款人信息
-            if (lenderInfo == null) return;
-            if (team == null) {
-                userTeam.setObjectId(lenderInfo.getAssetId());
-                userTeam.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
-                UserTeam teamAsset = userTeamMapper.selectByPrimaryKeySelective(userTeam);
-                if (teamAsset != null) {
-                    team = teamAsset;
-                }
-            }
-        }
+//        if (objectType == ObjectTypeEnum.LENDER.getValue()) {//借款人
+//            LenderInfo lenderInfo = getLenderInfo(map, objectId);//获取借款人信息
+//            if (lenderInfo == null) return;
+//            if (team == null) {
+//                userTeam.setObjectId(lenderInfo.getAssetId());
+//                userTeam.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
+//                UserTeam teamAsset = userTeamMapper.selectByPrimaryKeySelective(userTeam);
+//                if (teamAsset != null) {
+//                    team = teamAsset;
+//                }
+//            }
+//        }
         if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {//资产包
             if (getAsset(map, objectId)) return;
         }
