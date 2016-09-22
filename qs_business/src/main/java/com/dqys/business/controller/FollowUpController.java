@@ -172,7 +172,7 @@ public class FollowUpController extends BaseApiContorller {
 
     /**
      * @api {GET} http://{url}/follow_up/unread_count 读取未读的数量
-     * @apiName list
+     * @apiName unread_count
      * @apiGroup followUp
      * @apiParam {number} objectId 对象id
      * @apiParam {number} objectType 对象类型
