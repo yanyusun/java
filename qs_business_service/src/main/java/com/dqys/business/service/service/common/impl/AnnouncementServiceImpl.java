@@ -4,6 +4,8 @@ import com.dqys.business.orm.mapper.common.AnnouncementMapper;
 import com.dqys.business.orm.pojo.common.Announcement;
 import com.dqys.business.service.service.common.AnnouncementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +14,8 @@ import java.util.List;
 /**
  * Created by Yvan on 16/9/9.
  */
+@Primary
+@Repository
 public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Autowired
