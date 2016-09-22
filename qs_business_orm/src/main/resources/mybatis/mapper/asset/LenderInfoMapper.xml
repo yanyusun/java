@@ -122,7 +122,7 @@
         AND (is_collection = 1 OR is_lawyer = 1 OR is_agent = 1)
       </if>
       <if test="isOutTime">
-        <![CDATA[ AND endAt < CURRENT_TIMESTAMP ]]>
+        AND CURRENT_TIME > end_at
       </if>
 
 
