@@ -625,7 +625,7 @@ public class AssetServiceImpl implements AssetService {
             List<Integer> teammateIds = teammateReMapper.listObjectIdByJoinType(ObjectTypeEnum.ASSETPACKAGE.getValue(),
                     UserSession.getCurrent().getUserId(), TeammateReEnum.TYPE_PARTICIPATION.getValue());
             List<Integer> ids = CommonUtil.unionList(relationIds, teammateIds);
-            if (CommonUtil.checkParam(ids)) {
+            if (CommonUtil.checkParam(ids) || ids.size() == 0) {
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
             } else {
                 assetQuery.setIds(ids);
