@@ -269,7 +269,6 @@ public class AssetServiceImpl implements AssetService {
         Boolean isUrgeOrLawyer = false; // 催收或者律所
         TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
         CompanyDetailInfo detailInfo = companyInfoMapper.getDetailByCompanyId(userInfo.getCompanyId());
-        TSysProperty property = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_ENTRUST);
         if(detailInfo.getType().toString().equals(
                 SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_ENTRUST).getPropertyValue())){
             isPlatformOrEntrust = true;
