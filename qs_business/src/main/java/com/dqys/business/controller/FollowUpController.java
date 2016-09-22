@@ -37,50 +37,49 @@ public class FollowUpController extends BaseApiContorller {
      * @apiGroup followUp
      * @apiUse FollowUpMessageQuery
      * @apiSuccessExample {json} Data-Response:
-     * {
+    {
     "code": 2000,
     "msg": "成功",
     "data": [
     {
-        "id": 8,
-        "version": null,
-        "stateflag": null,
-        "createAt": null,
-        "updateAt": null,
-        "remark": null,
-        "objectId": null,
-        "objectType": null,
-        "userId": null,
-        "teamId": null,
-        "content": "111",
-        "secondObjectId": null,
-        "secondObjectType": null,
-        "liquidateStage": 111,
-        "secondLiquidateStage": null,
-        "sendStatus": null,
-        "sourceInfoId": 131,
-        "userInfo": {
-        "id": null,
-        "version": null,
-        "stateflag": null,
-        "createAt": null,
-        "updateAt": null,
-        "remark": null,
-        "userName": "zs",
-        "realName": null,
-        "account": null,
-        "wechat": null,
-        "avg": null,
-        "sex": true,
-        "mobile": null,
-        "email": null,
-        "password": null,
-        "salt": null,
-        "identity": null,
-        "companyId": null,
-        "status": null,
-        "qq": null
-        },
+    "id": 18,
+    "version": null,
+    "stateflag": null,
+    "createAt": "2016-09-22",
+    "updateAt": null,
+    "remark": null,
+    "objectId": null,
+    "objectType": null,
+    "userId": null,
+    "teamId": null,
+    "content": "11",
+    "secondObjectId": null,
+    "secondObjectType": null,
+    "liquidateStage": 11,
+    "secondLiquidateStage": null,
+    "sendStatus": null,
+    "userInfo": {
+    "id": null,
+    "version": null,
+    "stateflag": null,
+    "createAt": null,
+    "updateAt": null,
+    "remark": null,
+    "userName": "zs",
+    "realName": null,
+    "account": null,
+    "wechat": null,
+    "avg": null,
+    "sex": true,
+    "mobile": null,
+    "email": null,
+    "password": null,
+    "salt": null,
+    "identity": null,
+    "companyId": null,
+    "status": null,
+    "qq": null
+    },
     "teammateRe": null,
     "companyInfo": {
     "id": null,
@@ -100,17 +99,19 @@ public class FollowUpController extends BaseApiContorller {
     "isAuth": null,
     "type": null
     },
-    "sourceSourceList": [
-        {
-        "id": null,
-        "sourceInfoId": null,
-        "path": "897978797.jpg",
-        "name": null,
-        "fileType": null,
-        "memo": null,
-        "stateflag": null
-         }
-     ]
+    "fileList": [
+    {
+    "id": null,
+    "version": null,
+    "stateflag": null,
+    "createAt": null,
+    "updateAt": null,
+    "remark": null,
+    "pathFilename": "aaa.jpg",
+    "showFilename": "p.jpg",
+    "followUpMessageId": null
+    }
+    ]
     }
     ]
     }
@@ -131,23 +132,33 @@ public class FollowUpController extends BaseApiContorller {
      * @apiGroup followUp
      * @apiUse FollowUpMessageDTO
      * @apiSuccessExample {json} Data-Response:
-        {
-        "code": 2000,
-        "msg": "成功",
-        "data": {
-        "id": null,
-        "objectId": 111,
-        "objectType": 111,
-        "secondObjectId": 111,
-        "secondObjectType": 111,
-        "content": "111",
-        "liquidateStage": 111,
-        "secondLiquidateStage": 111,
-        "fileList": [
-        "897978797.jpg"
-        ]
-        }
-        }
+    {
+    "code": 2000,
+    "msg": "成功",
+    "data": {
+    "id": null,
+    "objectId": 111,
+    "objectType": 111,
+    "secondObjectId": 11,
+    "secondObjectType": 11,
+    "content": "11",
+    "liquidateStage": 11,
+    "secondLiquidateStage": 11,
+    "fileList": [
+    {
+    "id": null,
+    "version": null,
+    "stateflag": null,
+    "createAt": null,
+    "updateAt": null,
+    "remark": null,
+    "pathFilename": "aaa.jpg",
+    "showFilename": "p.jpg",
+    "followUpMessageId": 18
+    }
+    ]
+    }
+    }
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
