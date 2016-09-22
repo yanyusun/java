@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.auth.orm.dao.facade.TUserInfoMapper" >
 
-  <cache type="com.dqys.core.cache.MybatisRedisCache" eviction="LRU"/>
+  <!--<cache type="com.dqys.core.cache.MybatisRedisCache" eviction="LRU"/>-->
 
   <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.TUserInfo" >
     <id column="id" property="id" jdbcType="INTEGER" />
