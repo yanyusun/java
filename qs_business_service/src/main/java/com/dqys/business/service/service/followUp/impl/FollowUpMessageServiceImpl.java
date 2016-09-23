@@ -164,6 +164,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
         for (FollowUpSource followUpSource:fileList){
             followUpSource.setFollowUpMessageId(followUpId);
             followUpSourceMapper.insertSelective(followUpSource);
+            //// TODO: 16-9-23 前端测试完必后去掉注释 
             //FileTool.saveFileSync(followUpSource.getPathFilename());
         }
     }
