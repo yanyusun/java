@@ -128,6 +128,7 @@ public class MybatisRedisCache implements Cache {
         }
     }
 
+
     public int getSize() {
         Jedis jedis = null;
         int result = 0;
