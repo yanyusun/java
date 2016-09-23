@@ -26,10 +26,13 @@ import com.dqys.business.service.service.RepayService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.utils.DateFormatTool;
+import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.SmsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.UnexpectedRollbackException;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,6 +74,13 @@ public class RepayServiceImpl implements RepayService {
 
     @Override
     public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
+        try {
+            if (!FileTool.saveFileSync(file)) {
+                throw new UnexpectedRollbackException("保存附件失败");
+            }
+        } catch (IOException e) {
+            throw new UnexpectedRollbackException("保存附件异常");
+        }
 //        businessLogService.add(objectId, ObjectTypeEnum.IOU.getValue(), IouEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
         Map map = new HashMap<>();
         List<IOUInfo> ious = new ArrayList<>();
@@ -108,13 +118,8 @@ public class RepayServiceImpl implements RepayService {
         repay.setRepayType(repayType);
         repay.setRepayWay(repayWay);
         repay.setRepayFidType(objectType);
-//        InputStream in = file.getInputStream();
-//        if (file.getSize() > 0) {
-//            byte[] bytes = new byte[(int) file.getSize()];
-//            in.read(bytes);
-//            repay.setRepayBills(bytes);
-//        }
         repay.setRepayM(money);
+        repay.setRepayBills(file);
         setRepayLenderId(repay);
         repayMapper.insertSelective(repay);
         map.put("repayId", repay.getId());

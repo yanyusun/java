@@ -239,6 +239,10 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         String title = "未知";
         if (userTeam != null) {
             title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.INSIDE.getValue());
+        } else {
+            map.put("msg", "协作器不存在");
+            map.put("result", "no");
+            return map;
         }
         Map userAndCompany = coordinatorMapper.getUserAndCompanyByUserId(userId);
         for (Integer uid : userIds) {
@@ -356,9 +360,14 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     public Map isAccept(Integer teammateId, Integer status, Integer userId) throws BusinessLogException {
 //        businessLogService.add(teammateId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.UPDATE_COMMON_USER.getValue(), "被邀请人同意或拒绝", "", 0, 0);
         Map<String, Object> map = new HashMap<>();
+        map.put("result", "no");
         TeammateRe teammateRe = teammateReMapper.selectByPrimaryKey(teammateId);
         if (teammateRe == null) {
-            map.put("result", "no_exist");
+            map.put("msg", "团队查询有误");
+            return map;
+        }
+        if (teammateRe.getStatus() != 0) {
+            map.put("msg", "重复操作");
             return map;
         }
         UserTeam userT = null;
@@ -367,7 +376,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             userTeam.setId(teammateRe.getUserTeamId());
             userT = userTeamMapper.selectByPrimaryKeySelective(userTeam);
             if (userT == null) {
-                map.put("result", "no_exist");//不存在
+                map.put("msg", "协作器查询有误");//不存在
                 return map;
             }
 //            if (userT.getMangerId() != userId) {
@@ -415,8 +424,6 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("result", "yes");
         } else if (status == 2 && result > 0) {
             map.put("result", "yes");
-        } else {
-            map.put("result", "no");
         }
         return map;
     }
@@ -425,17 +432,18 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     public Map addTeammate(Integer userTeammateId, Integer userId) throws BusinessLogException {
         Map map = new HashMap<>();
         Integer flag = 0;
-        TeammateRe teammateRe = new TeammateRe();
-        teammateRe.setUserId(userId);
-        teammateRe.setUserTeamId(userTeammateId);
-        teammateRe.setJoinType(TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue());
-        teammateRe.setBusinessType(TeammateReEnum.BUSINESS_TYPE_TASK.getValue());
-        flag = getTeammateFlag(teammateRe);
-        if (flag > 0) {
-            UserTeam userTeam = new UserTeam();
-            userTeam.setId(userTeammateId);
-            UserTeam userT = userTeamMapper.selectByPrimaryKeySelective(userTeam);//团队信息
-            if (userT != null) {
+        map.put("result", "no");
+        UserTeam userTeam = new UserTeam();
+        userTeam.setId(userTeammateId);
+        UserTeam userT = userTeamMapper.selectByPrimaryKeySelective(userTeam);//团队信息
+        if (userT != null) {
+            TeammateRe teammateRe = new TeammateRe();
+            teammateRe.setUserId(userId);
+            teammateRe.setUserTeamId(userTeammateId);
+            teammateRe.setJoinType(TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue());
+            teammateRe.setBusinessType(TeammateReEnum.BUSINESS_TYPE_TASK.getValue());
+            flag = getTeammateFlag(teammateRe);
+            if (flag > 0) {
                 TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(userT.getMangerId());//接受者
                 TUserInfo sendUser = tUserInfoMapper.selectByPrimaryKey(userId);//请求者
                 String content = "";//消息内容
@@ -447,16 +455,18 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                     messageService.add(title, content, userId, userT.getMangerId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INITIATIVE.getValue(),
                             MessageUtils.setOperUrl("/coordinator/isAccept?status=1&teammateId=" + teammateRe.getId(), null, "/coordinator/isAccept?status=2&teammateId=" + teammateRe.getId(), null, null));
                 }
+                map.put("result", "yes");
+            } else if (flag == -1) {
+                map.put("msg", "已经加入过案组");//已经加入过案组
+            } else if (flag == -2) {
+                map.put("msg", "案组人数已满");//人数已满
+            } else if (flag == -4) {
+                map.put("msg", "第一个不是管理者");//第一个不是管理者
+            } else {
+                map.put("msg", "操作失败");
             }
-            map.put("result", "yes");
-        } else if (flag == -1) {
-            map.put("result", "exist");//已经纯在
-        } else if (flag == -2) {
-            map.put("result", "limitation");//人数已满
-        } else if (flag == -4) {
-            map.put("result", "no_admin");//第一个不是管理者
         } else {
-            map.put("result", "no");
+            map.put("msg", "协作器不存在");//协作器不存在
         }
 //        businessLogService.add(userId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.ADD_COMMON_USER.getValue(), "主动加入案组", "", 0, 0);
         return map;
@@ -892,6 +902,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     @Override
     public Map businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, Integer companyTeamId) {
         Map map = new HashMap<>();
+        map.put("result", "no");
         if (companyTeamId == null) {
             CompanyTeam team = companyTeamMapper.getByTypeId(objectType, objectId);//协作器id参数为null，自己查询协作器id
             if (team != null) {
@@ -912,7 +923,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             } else if (PawnEnum.CMJ_SIMULTANEOUS.getValue().equals(operType)) {//催收、市场、司法同时进行
                 setFlow(map, objectId, objectType, flowId, flowType, operType, PawnEnum.getPawnEnum(operType).getName(), companyTeamId, 0, 0, 0);
             } else {
-                map.put("result", "no_operType");//业务操作类型有误
+                map.put("msg", "业务操作类型有误");//业务操作类型有误
             }
         } else if (ObjectTypeEnum.IOU.getValue() == flowType) {//借据
             if (IouEnum.MAINTAIN_REGULAR.getValue().equals(operType)) {//维持常规催收
@@ -928,10 +939,10 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             } else if (IouEnum.CMJ_SIMULTANEOUS.getValue().equals(operType)) {//催收、市场、司法同时进行
                 setFlow(map, objectId, objectType, flowId, flowType, operType, IouEnum.getIouEnum(operType).getName(), companyTeamId, 0, 0, 0);
             } else {
-                map.put("result", "no_operType");//业务操作类型有误
+                map.put("msg", "业务操作类型有误");//业务操作类型有误
             }
         } else {
-            map.put("result", "no_flowType");//流转对象类型有误
+            map.put("msg", "流转对象类型有误");//流转对象类型有误
         }
 
         return map;
@@ -949,6 +960,9 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
         String result = messageService.businessFlowResult(objectId, objectType, flowId, flowType, operation, userId, receiveUserId, status);
         map.put("result", result);
+        if ("no".equals(result)) {
+            map.put("msg", "用户信息不存在");
+        }
         return map;
     }
 

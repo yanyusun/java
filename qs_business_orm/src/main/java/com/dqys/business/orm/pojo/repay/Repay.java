@@ -12,7 +12,7 @@ public class Repay implements Serializable {
     private Integer repayFid;//int(11) DEFAULT NULL COMMENT '还款主体',
     private String repayFidName;// varchar(100) DEFAULT NULL COMMENT '还款主体名称'
     private Integer repayWay;//int(11) DEFAULT NULL COMMENT '还款方式',
-    private byte[] repayBills;//longblob COMMENT '还款单据图片',
+    private String repayBills;//longblob COMMENT '还款单据图片',
     private String remark;//varchar(256) DEFAULT NULL COMMENT '备注',
     private Integer version;//int(11) NOT NULL DEFAULT '0' COMMENT '版本',
     private Date createAt;//datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -94,11 +94,11 @@ public class Repay implements Serializable {
         this.repayWay = repayWay;
     }
 
-    public byte[] getRepayBills() {
+    public String getRepayBills() {
         return repayBills;
     }
 
-    public void setRepayBills(byte[] repayBills) {
+    public void setRepayBills(String repayBills) {
         this.repayBills = repayBills;
     }
 

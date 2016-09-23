@@ -19,7 +19,7 @@
         <result column="lender_id" property="lenderId" jdbcType="INTEGER"></result>
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.dqys.business.orm.pojo.repay.Repay" extends="BaseResultMapRepay">
-        <result column="repay_bills" property="repayBills" jdbcType="LONGVARBINARY"/>
+        <result column="repay_bills" property="repayBills" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap id="BaseResultMapRepayRecord" type="com.dqys.business.orm.pojo.repay.RepayRecord">
         <id column="id" property="id" jdbcType="INTEGER"/>
@@ -164,7 +164,7 @@
             version =version+1,
             update_at =now(),
             <if test="repayBills != null">
-                repay_bills = #{repayBills,jdbcType=LONGVARBINARY},
+                repay_bills = #{repayBills,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -240,7 +240,7 @@
             now(),
             now(),
             <if test="repayBills != null">
-                #{repayBills,jdbcType=LONGVARBINARY},
+                #{repayBills,jdbcType=VARCHAR},
             </if>
             <if test="repayFidType != null">
                 #{repayFidType,jdbcType=DOUBLE},

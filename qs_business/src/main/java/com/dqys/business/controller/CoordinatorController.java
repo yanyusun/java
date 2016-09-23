@@ -122,11 +122,14 @@ public class CoordinatorController {
         if (CommonUtil.checkParam(teammateId, status)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        if (status == 1 || status == 2) {
-            Map map = coordinatorService.isAccept(teammateId, status, userId);
+        if (status != 1 && status != 2) {
+            return JsonResponseTool.paramErr("状态参数有误");
+        }
+        Map map = coordinatorService.isAccept(teammateId, status, userId);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             return JsonResponseTool.success(map);
         } else {
-            return JsonResponseTool.paramErr("状态参数有误");
+             return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
         }
 
     }
@@ -149,10 +152,8 @@ public class CoordinatorController {
         Map map = coordinatorService.addTeammate(userTeammateId, userId);
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             return JsonResponseTool.success(map);
-        } else if (MessageUtils.transMapToString(map, "result").equals("exist")) {
-            return JsonResponseTool.failure("已经存在");
         } else {
-            return JsonResponseTool.failure("操作失败");
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
         }
     }
 
@@ -276,7 +277,11 @@ public class CoordinatorController {
             return JsonResponseTool.paramErr("参数有误");
         }
         Map map = coordinatorService.businessFlow(objectId, objectType, flowId, flowType, operType, companyTeamId);
-        return JsonResponseTool.success(map);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+        }
     }
 
     /**
@@ -305,7 +310,11 @@ public class CoordinatorController {
             return JsonResponseTool.paramErr("状态有误");
         }
         Map map = coordinatorService.sendBusinessFlowResult(objectId, objectType, flowId, flowType, operType, receiveUserId, status);
-        return JsonResponseTool.success(map);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+        }
     }
 
 }

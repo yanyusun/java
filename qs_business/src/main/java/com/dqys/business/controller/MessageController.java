@@ -48,8 +48,8 @@ public class MessageController {
     public JsonResponse messageList(@ModelAttribute MessageQuery messageQuery) {
         Message message = MessageUtils.transToMessage(messageQuery);
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
-        String roleId = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getRoleId();
-        if (roleId.indexOf(UserInfoEnum.USER_TYPE_ADMIN.getValue().toString()) != -1) {
+        String userType = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getUserType();
+        if (!userType.equals(UserInfoEnum.USER_TYPE_ADMIN.getValue() + ",")) {
             message.setReceiveId(userId);
         }
         List<Message> list = messageService.selectByMessage(message);
