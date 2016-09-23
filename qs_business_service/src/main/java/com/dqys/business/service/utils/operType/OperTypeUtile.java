@@ -2,7 +2,6 @@ package com.dqys.business.service.utils.operType;
 
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.service.OperTypeService;
-import com.dqys.core.cache.MybatisRedisCache;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -25,11 +24,10 @@ public class OperTypeUtile implements ApplicationContextAware {
         redisTemplate = (RedisTemplate) applicationContext.getBean("redisTemplate");
         operTypeService = applicationContext.getBean(OperTypeService.class);
         //// TODO: 16-9-18  上线要去掉下面的注释
-        //opertype();
+//        opertype();
     }
 
     public void opertype() {
-        MybatisRedisCache mybatisRedisCache = new MybatisRedisCache();
         List<Integer> userIds = operTypeService.selectByUserIds();//?????
         List<Integer> roleIds = operTypeService.selectByRoleIds();
         List<Integer> objectIds = operTypeService.selectByObjectIds();
@@ -37,14 +35,13 @@ public class OperTypeUtile implements ApplicationContextAware {
             for (Integer rol : roleIds) {
                 for (Integer obj : objectIds) {
                     List<OperType> operTypes = operTypeService.selectByRoleToOperType(rol, use, obj);
-                    mybatisRedisCache.putObject(use + "_" + rol + "_" + obj, operTypes);
+                    redisTemplate.opsForValue().set(use + "_" + rol + "_" + obj, operTypes);
                 }
             }
         }
     }
 
     /**
-     *
      * 请完善这个方法????
      *
      * @param userType 用户类型
@@ -52,20 +49,21 @@ public class OperTypeUtile implements ApplicationContextAware {
      * @param objType  对象类型
      * @return 该用户对这种操作对象所具有的操作列表
      */
-    public static List<OperType> operTypes(int userType,int userRole,int objType){
-        String key=userType + "_" + userRole + "_" + objType;
+    public static List<OperType> operTypes(int userType, int userRole, int objType) {
+        String key = userType + "_" + userRole + "_" + objType;
         return null;
     }
 
     /**
      * 请完善这个方法????
+     *
      * @param userType 用户类型
      * @param userRole 用户角色
-     * @param objType 对象类型
-     * @param Oper 操作类型
+     * @param objType  对象类型
+     * @param Oper     操作类型
      * @return 该用户是否具有对应操作的权限
      */
-    public static boolean hasAuth(int userType,int userRole,int objType,int Oper){
+    public static boolean hasAuth(int userType, int userRole, int objType, int Oper) {
         return true;
     }
 }

@@ -4,10 +4,12 @@ import com.dqys.business.orm.mapper.operType.OperTypeMapper;
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.service.OperTypeService;
 import com.dqys.core.cache.MybatisRedisCache;
+import com.dqys.core.utils.NoSQLWithRedisTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,23 +46,22 @@ public class OperTypeServiceImpl implements OperTypeService {
 
     @Override
     public List<OperType> getOperType(Integer roleId, Integer userType, Integer objectType) {
-        MybatisRedisCache mybatisRedisCache = new MybatisRedisCache();
         String userId_roleId_objectId = userType + "_" + roleId + "_" + objectType;
-        List<OperType> list = (List<OperType>) mybatisRedisCache.getObject(userId_roleId_objectId);
-        if (list != null&&list.size()!=0) {
+        List<OperType> list = NoSQLWithRedisTool.getValueObject(userId_roleId_objectId) == null ? new ArrayList<>() : NoSQLWithRedisTool.getValueObject(userId_roleId_objectId);
+        if (list != null && list.size() != 0) {
             return list;
         } else {
-            mybatisRedisCache.putObject(userId_roleId_objectId, selectByRoleToOperType(roleId, userType, objectType));
+            NoSQLWithRedisTool.getRedisTemplate().opsForValue().set(userId_roleId_objectId, selectByRoleToOperType(roleId, userType, objectType));
         }
-        return (List<OperType>) mybatisRedisCache.getObject(userId_roleId_objectId);
+        return (List<OperType>) NoSQLWithRedisTool.getValueObject(userId_roleId_objectId);
     }
 
     @Override
     public boolean checkOperType(Integer roleType, Integer userType, Integer objectType, Integer operType) {
-        List<OperType> list=getOperType(roleType,userType,objectType);
-        for(OperType o:list){
-            if(o.getOperType()==operType){
-               return true;
+        List<OperType> list = getOperType(roleType, userType, objectType);
+        for (OperType o : list) {
+            if (o.getOperType() == operType) {
+                return true;
             }
         }
         return false;
