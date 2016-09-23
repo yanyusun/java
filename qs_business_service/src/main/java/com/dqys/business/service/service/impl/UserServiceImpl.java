@@ -399,20 +399,26 @@ public class UserServiceImpl implements UserService {
         if (CommonUtil.checkParam(id, pwd)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(id);
-        if (tUserInfo == null) {
-            return JsonResponseTool.failure("参数错误");
+        Integer userId = UserSession.getCurrent().getUserId();
+        CompanyDetailInfo companyDetailInfo = tCompanyInfoMapper.getDetailByUserId(userId);
+        if (companyDetailInfo == null || companyDetailInfo.getUserId().equals(userId)) {
+            return JsonResponseTool.paramErr("您不是管理员,没有权限导入成员");
         }
-        TUserInfo tUserInfo1 = new TUserInfo();
-        tUserInfo1.setId(tUserInfo.getId());
+        TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(id);
+        if(userInfo == null){
+            return JsonResponseTool.failure("该用户不存在");
+        }
+        if(userInfo.getCompanyId().equals(companyDetailInfo.getCompanyId())){
+            return JsonResponseTool.failure("没有权限修改其他公司成员");
+        }
         try {
             // 密码加密
-            tUserInfo1.setPassword(SignatureTool.md5Encode(
-                    SignatureTool.md5Encode(INIT_PASSSWORD, "utf-8") + tUserInfo.getSalt(), "utf-8"));
+            userInfo.setPassword(SignatureTool.md5Encode(
+                    SignatureTool.md5Encode(INIT_PASSSWORD, "utf-8") + userInfo.getSalt(), "utf-8"));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Integer result = tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo1);
+        Integer result = tUserInfoMapper.updateByPrimaryKeySelective(userInfo);
         if (result < 1) {
             return JsonResponseTool.failure("设置失败");
         } else {

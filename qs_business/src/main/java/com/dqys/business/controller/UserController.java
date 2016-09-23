@@ -327,7 +327,7 @@ public class UserController {
             return JsonResponseTool.paramErr("参数错误");
         }
         if (pwd.length() < 6) {
-            return JsonResponseTool.paramErr("参数错误");
+            return JsonResponseTool.paramErr("密码最少6位数");
         }
         return userService.setPwd(id, pwd);
     }
