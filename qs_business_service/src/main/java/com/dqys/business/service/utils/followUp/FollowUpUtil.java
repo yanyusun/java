@@ -19,7 +19,7 @@ public class FollowUpUtil {
         }
         if(null!=followUpMessageDTO.getSecondObjectId()){
             followUpMessage.setSecondObjectType(followUpMessageDTO.getSecondObjectType());
-
+            followUpMessage.setSecondObjectId(followUpMessageDTO.getSecondObjectId());
         }
         return followUpMessage;
     }

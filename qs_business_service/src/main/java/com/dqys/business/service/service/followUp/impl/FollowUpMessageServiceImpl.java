@@ -81,11 +81,8 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             ouRelation.setStatus(OURelationEnum.STATUS_FOLLOW.getValue());
             ouRelationMapper.updateByPrimaryKey(ouRelation);
         }
-        int teamId = 0;
-        Integer teamid = followUpMessageMapper.getTeamId(followUpMessage.getObjectId(), followUpMessage.getObjectType(), followUpMessage.getUserId());
-        if (teamid != null) {
-            teamId = teamid;
-        }
+        //得到团队id
+        int teamId = getTeamId(followUpMessage.getObjectId(), followUpMessage.getObjectType(), followUpMessage.getUserId());
         followUpMessage.setTeamId(teamId);
         followUpMessageMapper.insertSelective(followUpMessage);
         if(followUpMessage.getObjectType()== ObjectTypeEnum.LENDER.getValue()){//如果一级跟进对象是借款人, 增加跟进次数
@@ -166,5 +163,26 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             followUpSourceMapper.insertSelective(followUpSource);
             //FileTool.saveFileSync(followUpSource.getPathFilename());
         }
+    }
+
+    /**
+     * 得到团队id
+     * @param objectId
+     * @param ObjectType
+     * @param userId
+     * @return
+     */
+    private int getTeamId(int objectId,int ObjectType,int userId){
+        int teamid=0;
+        if(ObjectType==ObjectTypeEnum.LENDER.getValue()){//当协作器是以借款人建立时先查借款人,没有就查资产包的协作器
+            teamid=followUpMessageMapper.getTeamId(objectId,ObjectType,userId);
+            if(teamid==0){
+                AssetInfo assetInfo=assetInfoMapper.get(objectId);
+                teamid=followUpMessageMapper.getTeamId(assetInfo.getId(),ObjectTypeEnum.ASSETPACKAGE.getValue(),userId);
+            }
+        }else{
+            teamid=followUpMessageMapper.getTeamId(objectId,ObjectType,userId);
+        }
+        return teamid;
     }
 }
