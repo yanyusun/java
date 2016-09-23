@@ -16,6 +16,8 @@ import com.dqys.core.base.BaseQuery;
  * @apiParam {number} [liquidateStage] 请搜阶段
  * @apiParam {number} [secondLiquidateStage] 二级清收阶段
  * @apiParam {number} [sendStatus] 发送状态
+ * @apiParam {boolean} [mine] 只查自己
+ * @apiParam {boolean} [team] 只查团队
  * @apiParam {boolean} isPaging 是否分页true分页,false不分页c_pageList请求必传
  * @apiParam {number} [startPageNum] 当前分页
  * @apiParam {number} [pageSize] 分页大小
@@ -43,6 +45,12 @@ public class FollowUpMessageQuery extends BaseQuery {
     private Integer secondLiquidateStage;
 
     private Integer sendStatus;
+
+    private Integer userId;
+
+    private boolean mine;
+
+    private boolean team;
 
     @Override
     public Integer getId() {
@@ -124,5 +132,29 @@ public class FollowUpMessageQuery extends BaseQuery {
 
     public void setSendStatus(Integer sendStatus) {
         this.sendStatus = sendStatus;
+    }
+
+    public boolean isMine() {
+        return mine;
+    }
+
+    public void setMine(boolean mine) {
+        this.mine = mine;
+    }
+
+    public boolean isTeam() {
+        return team;
+    }
+
+    public void setTeam(boolean team) {
+        this.team = team;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

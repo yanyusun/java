@@ -245,7 +245,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-    <!---->
+    <!--查询当前用户已当前对象建立的所在协作器id-->
     <select id="getTeamId" resultType="java.lang.Integer">
     SELECT tut.id from t_user_team tut
       JOIN t_teammate_re ttr ON ttr.user_team_id=tut.id
@@ -296,6 +296,12 @@
         </if>
         <if test="secondLiquidateStage != null">
             AND m.second_liquidate_stage = #{secondLiquidateStage,jdbcType=INTEGER}
+        </if>
+        <if test="teamId != null">
+            AND m.team_id = #{teamId,jdbcType=INTEGER}
+        </if>
+        <if test="userId != null">
+            AND m.user_id = #{userId,jdbcType=INTEGER}
         </if>
         ORDER BY m.create_at DESC
     </select>
