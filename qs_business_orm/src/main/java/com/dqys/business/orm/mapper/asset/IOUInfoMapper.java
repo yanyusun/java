@@ -87,4 +87,10 @@ public interface IOUInfoMapper {
      */
     List<IOUInfo> iouListByLenderId(@Param("lenderId") Integer lenderId, @Param("userId") Integer userId, @Param("objectType") Integer objectType, @Param("userType") Integer userType);
 
+    /**
+     * 获取所有借据
+     * @param iouIds
+     * @return
+     */
+    List<IOUInfo> selectIouInfoByObjectIds(List<Integer> iouIds);
 }
