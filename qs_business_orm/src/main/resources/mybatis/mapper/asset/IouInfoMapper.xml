@@ -367,6 +367,15 @@
       ON i.id=pr.iou_id
       where p.id=#{objectId,jdbcType=INTEGER}
   </select>
+    <!--获取所有借据-->
+    <select id="selectIouInfoByObjectIds" resultMap="BaseResultMap">
+        SELECT * from bt_iou WHERE stateflag=0 AND
+         id IN
+         <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
+         #{id}
+         </foreach>
+        ORDER BY accrual_arrears,less_corpus
+    </select>
 
     <!-- 多条件查出统计 -->
     <select id="queryCount" parameterType="com.dqys.business.orm.query.asset.IOUQuery" resultMap="BaseResultMap">

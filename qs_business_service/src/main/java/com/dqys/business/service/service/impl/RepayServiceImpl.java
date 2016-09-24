@@ -214,6 +214,8 @@ public class RepayServiceImpl implements RepayService {
         } else if (repay.getRepayFidType() == RepayEnum.OBJECT_PAWN.getValue()) {
             PawnInfo pawnInfo = pawnInfoMapper.get(repay.getRepayFid());
             repay.setLenderId(pawnInfo.getLenderId());
+        } else if (repay.getRepayFidType() == RepayEnum.OBJECT_UNLIMITED.getValue()) {
+            repay.setLenderId(repay.getRepayFid());
         }
     }
 
@@ -264,6 +266,23 @@ public class RepayServiceImpl implements RepayService {
             ious.add(iou);
         } else if (objectType == RepayEnum.OBJECT_PAWN.getValue()) {//抵押物
             ious = iouInfoMapper.selectIouInfoByPawnId(objectId);
+        } else if (objectType == RepayEnum.OBJECT_UNLIMITED.getValue()) {//不限对象
+            Map map = new HashMap<>();
+            getIouAndPawnByLender(objectId, map);//借款人下的所有借据和抵押物
+            List<Map> iousList = (List<Map>) map.get("ious");
+            List<Map> pawnsList = (List<Map>) map.get("pawns");
+            //一个借据必然对应一个抵押物
+            List<Integer> iouIds = new ArrayList<>();
+            if (iousList != null) {
+                for (Map m : iousList) {//转成集合去查询
+                    if (MessageUtils.transMapToInt(m, "id") != null) {
+                        iouIds.add(MessageUtils.transMapToInt(m, "id"));
+                    }
+                }
+            }
+            if (iouIds.size() > 0) {
+                ious = iouInfoMapper.selectIouInfoByObjectIds(iouIds);//所有借据
+            }
         }
         return ious;
     }
@@ -423,14 +442,14 @@ public class RepayServiceImpl implements RepayService {
                     assetInfo.setId(damageApply.getApply_object_id());
                     assetInfo.setEndAt(damageApply.getDamage_date());
                     result = assetInfoMapper.update(assetInfo);
-                businessLogService.add(assetInfo.getId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.update.getValue(), "延期申请审核操作", "", 0, 0);//操作日志
+                    businessLogService.add(assetInfo.getId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.update.getValue(), "延期申请审核操作", "", 0, 0);//操作日志
                 }
                 if (damageApply.getObject_type() == ObjectTypeEnum.LENDER.getValue()) {
                     LenderInfo lenderInfo = new LenderInfo();
                     lenderInfo.setId(damageApply.getApply_object_id());
                     lenderInfo.setEndAt(damageApply.getDamage_date());
                     result = lenderInfoMapper.update(lenderInfo);
-                businessLogService.add(lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue(), LenderEnum.UPDATE_EDIT.getValue(), "延期申请审核操作", "", 0, 0);//操作日志
+                    businessLogService.add(lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue(), LenderEnum.UPDATE_EDIT.getValue(), "延期申请审核操作", "", 0, 0);//操作日志
                 }
             }
             //添加通知消息记录
@@ -456,8 +475,8 @@ public class RepayServiceImpl implements RepayService {
 
     @Override
     public void getIouAndPawnByLender(Integer lenderId, Map map) {
-        map.put("ious", repayMapper.getIouByLenderId(lenderId));
-        map.put("pawns", repayMapper.getPawnByLenderId(lenderId));
+        map.put("ious", repayMapper.getIouByLenderId(lenderId));//map的key（number和id）
+        map.put("pawns", repayMapper.getPawnByLenderId(lenderId));//map的key（number和id）
     }
 
     @Override
