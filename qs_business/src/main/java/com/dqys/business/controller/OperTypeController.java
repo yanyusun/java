@@ -6,6 +6,7 @@ import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.service.OperTypeService;
+import com.dqys.business.service.utils.common.buttonUtil.ListButtonShowerBean;
 import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.model.JsonResponse;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,11 +48,12 @@ public class OperTypeController {
      */
     @RequestMapping("/list")
     @ResponseBody
-    public JsonResponse list(@RequestParam("objectType") Integer objectType, HttpServletRequest httpServletRequest) {
+    public JsonResponse list(@RequestParam("objectType") Integer objectType,@RequestParam("objectId") Integer objectId, HttpServletRequest httpServletRequest) {
         try {
             Integer userId=UserSession.getCurrent().getUserId();
             List<TUserTag> tags = tUserTagMapper.selectByUserId(userId);
             Integer roleType = RoleTypeEnum.GENERAL.getValue();//1-管理员;2-管理者;3-普通员工;4所属人;
+            //// TODO: 16-9-24 增加是不是所属人的判断
             Integer userType = 0;//0-普通用户;1-平台管理员;2-委托号;31-催收;32-律所;33-中介
             if (tags.size() > 0) {
                 TUserTag tag = tags.get(0);
@@ -74,5 +77,47 @@ public class OperTypeController {
         } catch (Exception e) {
             return JsonResponseTool.serverErr();
         }
+    }
+
+    /**
+     * @api {GET} http://{url}/operType/listbuttonShower 读取未读的数量
+     * @apiName listbuttonShower
+     * @apiGroup OperType
+     * @apiParam {number} objectId 对象id
+     * @apiParam {number} objectType 对象类型
+     * @apiParam {number} navId 对象类型
+     * @apiSuccessExample {json} Data-Response:
+    {
+    "code": 2000,
+    "msg": "成功",
+    "data": {
+    "hasRightButton": true,
+    "hasUserTeamButton": false,
+    "hasUserTeamButtonApply": false,
+    "hasUserTeamButtonAdd": false,
+    "hasCompanyTeamButton": true,
+    "hasCompanyTeamButtonApply": false,
+    "hasCompanyTeamButtonAdd": true,
+    "rightButtonList": [
+    [
+    "1",
+    "操作记录"
+    ]
+    ]
+    }
+    }
+     */
+    @RequestMapping("/listbuttonShower")
+    @ResponseBody
+    public JsonResponse getListButtonShower(Integer objectType, Integer objectId ,Integer navId) {
+        ListButtonShowerBean buttonShowerBean = new ListButtonShowerBean();
+        List<String[]> list1=new ArrayList<>();
+        String [] s = {"1","操作记录"};
+        list1.add(s);
+        buttonShowerBean.setHasCompanyTeamButton(true);
+        buttonShowerBean.setHasCompanyTeamButtonAdd(true);
+        buttonShowerBean.setRightButtonList(list1);
+        return JsonResponseTool.success(buttonShowerBean);
+
     }
 }
