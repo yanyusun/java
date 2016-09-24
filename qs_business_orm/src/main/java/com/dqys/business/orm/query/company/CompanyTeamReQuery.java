@@ -12,6 +12,16 @@ public class CompanyTeamReQuery {
     private Integer stateflag; // 数据状态
     private Integer type; // 数据类型
 
+    private boolean valid = false; // 有效状态(非拒绝)
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
+    }
+
     public Integer getStateflag() {
         return stateflag;
     }

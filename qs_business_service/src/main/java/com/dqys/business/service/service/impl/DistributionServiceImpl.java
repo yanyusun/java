@@ -381,8 +381,9 @@ public class DistributionServiceImpl implements DistributionService {
 
             CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
             companyTeamReQuery.setTeamId(id);
+            companyTeamReQuery.setValid(true);
             List<CompanyTeamRe> countList = companyTeamReMapper.queryList(companyTeamReQuery);
-            if (countList != null && countList.size() > 3) {
+            if (countList != null && countList.size() >= 3) {
                 // 获取不到数据或已经超过3个参与(处置方只能有一个)
                 return null;
             }
@@ -493,17 +494,18 @@ public class DistributionServiceImpl implements DistributionService {
 
         CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
         companyTeamReQuery.setTeamId(id);
+        companyTeamReQuery.setValid(true);
         List<CompanyTeamRe> countList = companyTeamReMapper.queryList(companyTeamReQuery);
-        if (countList != null && countList.size() > 3) {
+        if (countList != null && countList.size() >= 3) {
             // 获取不到数据或已经超过3个参与(处置方只能有一个)
             return null;
         }
 
-        companyTeamReQuery.setCompanyId(companyId);
-        List<CompanyTeamRe> companyTeamReList = companyTeamReMapper.queryList(companyTeamReQuery);
-        if (companyTeamReList != null && companyTeamReList.size() > 0) {
-            // 已经存在在该分配器中无需再次申请或邀请
-            return null;
+        for (CompanyTeamRe companyTeamRe : countList) {
+            if(companyTeamRe.getAcceptCompanyId().equals(companyId)){
+                // 已经存在在该分配器中无需再次申请或邀请
+                return null;
+            }
         }
 
         CompanyDetailInfo companyDetailInfo1 = companyInfoMapper.getDetailByCompanyId(companyId); // 被邀请公司信息
@@ -900,6 +902,7 @@ public class DistributionServiceImpl implements DistributionService {
         }
         CompanyTeamReQuery teamReQuery = new CompanyTeamReQuery();
         teamReQuery.setTeamId(companyTeam.getId());
+        teamReQuery.setValid(true);
         List<CompanyTeamRe> teamReList = companyTeamReMapper.queryList(teamReQuery);
         boolean canAdd = false;
         for (CompanyTeamRe companyTeamRe : teamReList) {

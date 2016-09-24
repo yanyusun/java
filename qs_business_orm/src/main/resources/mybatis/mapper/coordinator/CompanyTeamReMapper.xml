@@ -41,6 +41,10 @@
       <if test="stateflag == null">
         AND stateflag = 0
       </if>
+
+      <if test="valid">
+        AND status != 2
+      </if>
     </where>
   </sql>
 

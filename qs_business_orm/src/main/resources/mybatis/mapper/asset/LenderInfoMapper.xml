@@ -139,12 +139,12 @@
           #{i}
         </foreach>
       </if>
-      <!--<if test="withIds != null">-->
-        <!--OR id in-->
-        <!--<foreach collection="withIds" item="i" open="(" close=")" separator=",">-->
-          <!--#{i}-->
-        <!--</foreach>-->
-      <!--</if>-->
+      <if test="exceptIds != null and exceptIds.size() > 0">
+        AND id NOT in
+        <foreach collection="exceptIds" item="i" open="(" close=")" separator=",">
+          #{i}
+        </foreach>
+      </if>
 
     </where>
   </sql>
@@ -568,6 +568,9 @@
     SELECT * from bt_lender
     <include refid="Query_Condition" />
     ORDER BY id DESC
+    <if test="isPaging">
+      limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </if>
   </select>
   
   <select id="queryCount" resultType="java.lang.Integer" parameterType="com.dqys.business.orm.query.asset.LenderQuery">

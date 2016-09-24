@@ -832,7 +832,9 @@ public class LenderServiceImpl implements LenderService {
             // 48h 新
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
-            objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
+            if(!flag){
+                objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
+            }
             List<ObjectUserRelation> objectUserRelationList = objectUserRelationMapper.list(objectUserRelationQuery);
             List<Integer> ids = new ArrayList<>();
             objectUserRelationList.forEach(objectUserRelation -> {

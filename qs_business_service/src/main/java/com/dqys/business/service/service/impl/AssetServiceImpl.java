@@ -593,7 +593,9 @@ public class AssetServiceImpl implements AssetService {
             // 48h 新
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
-            objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
+            if(!flag){
+                objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
+            }
             List<ObjectUserRelation> objectUserRelationList = objectUserRelationMapper.list(objectUserRelationQuery);
             List<Integer> ids = new ArrayList<>();
             objectUserRelationList.forEach(objectUserRelation -> {
