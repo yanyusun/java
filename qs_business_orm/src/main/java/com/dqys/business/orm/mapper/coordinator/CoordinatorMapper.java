@@ -229,4 +229,13 @@ public interface CoordinatorMapper {
      * @return
      */
     List<Map> findUserTypeByCompanyTeam(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType);
+
+    /**
+     * 获取资产源全部
+     *
+     * @param userId
+     * @param value
+     * @return
+     */
+    List<Integer> findObjectIdByAssetSourceAll(@Param("userId")Integer userId, @Param("objectType")Integer objectType);
 }

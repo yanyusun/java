@@ -365,10 +365,35 @@ public class ZcyServiceImpl implements ZcyService {
             getZcyDispose(zcyListQuery, map);
         }
         if (zcyListQuery.getStatus() == 3) {//全部
-
+            getZcyAll(zcyListQuery, map);
         }
         map.put("result", "yes");
         return map;
+    }
+    /**
+     * 资产源全部列表
+     *
+     * @param zcyListQuery
+     * @param map
+     */
+    private void getZcyAll(ZcyListQuery zcyListQuery, Map map) {
+        List<ZcyPawnDTO> zcyPawnDTOs = new ArrayList<>();
+        Integer count = 0;
+        Integer num = 0;
+        List<Integer> objectIds = coordinatorMapper.findObjectIdByAssetSourceAll(zcyListQuery.getUserId(), ObjectTypeEnum.ASSETSOURCE.getValue());//查询自己所参与的和自己录入的资产源
+        if (objectIds.size() > 0) {
+            zcyListQuery.setObjectIdList(objectIds);//设置资产源待接收
+            zcyListQuery.setUserId(null);
+            zcyListQuery.setStartPage(zcyListQuery.getPage() * zcyListQuery.getPageCount());
+            num = coordinatorMapper.selectByZCYListPageCount(zcyListQuery);
+            count += num;
+            zcyPawnDTOs = coordinatorMapper.selectByZCYListPage(zcyListQuery);
+            setZcyPawnDTOs(zcyPawnDTOs);
+        }
+        //以下为转过来的抵押物待接收
+        count = setWaitReceivePawn(zcyListQuery, zcyPawnDTOs, count, num);
+        map.put("zcyPawnDTOs", zcyPawnDTOs);
+        map.put("count", count);
     }
 
     /**
@@ -438,6 +463,20 @@ public class ZcyServiceImpl implements ZcyService {
             setZcyPawnDTOs(zcyPawnDTOs);
         }
         //以下为转过来的抵押物待接收
+        count = setWaitReceivePawn(zcyListQuery, zcyPawnDTOs, count, num);
+        map.put("zcyPawnDTOs", zcyPawnDTOs);
+        map.put("count", count);
+    }
+
+    /**
+     * 设置抵押物待接收
+     * @param zcyListQuery
+     * @param zcyPawnDTOs
+     * @param count
+     * @param num
+     * @return
+     */
+    private Integer setWaitReceivePawn(ZcyListQuery zcyListQuery, List<ZcyPawnDTO> zcyPawnDTOs, Integer count, Integer num) {
         List<Integer> objectIdList = coordinatorMapper.getObjectIdList(ObjectTypeEnum.PAWN.getValue(), zcyListQuery.getUserId(), zcyListQuery.getStatus());//查询分配器中的所有待接收的抵押物id
         if (objectIdList.size() > 0) {
             zcyListQuery.setObjectIdList(objectIdList);
@@ -460,8 +499,7 @@ public class ZcyServiceImpl implements ZcyService {
                 }
             }
         }
-        map.put("zcyPawnDTOs", zcyPawnDTOs);
-        map.put("count", count);
+        return count;
     }
 
     /**

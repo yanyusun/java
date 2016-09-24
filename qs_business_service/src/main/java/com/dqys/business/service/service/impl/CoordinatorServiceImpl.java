@@ -4,6 +4,7 @@ import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
+import com.dqys.auth.orm.query.TUserTagQuery;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
@@ -14,6 +15,7 @@ import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
+import com.dqys.business.orm.mapper.business.BusinessMapper;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.mapper.cases.CaseInfoMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamMapper;
@@ -27,6 +29,7 @@ import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
+import com.dqys.business.orm.pojo.business.Business;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.cases.CaseInfo;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
@@ -39,6 +42,7 @@ import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.*;
+import com.dqys.business.service.constant.UserStatusTypeEnum;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
@@ -91,7 +95,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     private RepayMapper repayMapper;
     @Autowired
     private CompanyTeamMapper companyTeamMapper;
-
+    @Autowired
+    private BusinessMapper businessMapper;
     @Autowired
     private ObjectUserRelationMapper objectUserRelationMapper;
 
@@ -474,52 +479,78 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public void auditBusiness(Map map, Integer userId, Integer objectId, Integer objectType, Integer status) throws BusinessLogException {
+        map.put("result", "no");
         Integer operType = 0;
         String text = "";
         Integer receive_id = 0;//录入人
-        if (objectType == ObjectTypeEnum.LENDER.getValue()) {
-            LenderInfo len = coordinatorMapper.getLenderInfo(objectId);
-            if (len != null) {
-                receive_id = len.getOperator() == null ? 0 : len.getOperator();
-            }
-            operType = LenderEnum.UPDATE_EDIT.getValue();
-            text = "借款人审核操作";
-        } else if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
-            AssetInfo assetInfo = coordinatorMapper.getAssetInfo(objectId);
-            if (assetInfo != null) {
-                receive_id = assetInfo.getOperator() == null ? 0 : assetInfo.getOperator();
-            }
-            operType = AssetPackageEnum.update.getValue();
-            text = "资产包审核操作";
-        }
         List<Integer> ids = new ArrayList<>();
         ids.add(objectId);
         List<Integer> buinessIds = repayMapper.getBusinessId(objectType, ids);
-//        businessLogService.add(objectId, objectType, operType, text, "", 0, 0);//添加操作日志
-        if (buinessIds.size() > 0) {
-            Integer result = repayMapper.updateBusinessStatus(buinessIds.get(0), status);
-            if (result > 0) {
-                SmsUtil smsUtil = new SmsUtil();//发送短信通知
-                Integer code = 0;
-                if (status == BusinessStatusEnum.platform_pass.getValue()) {
-                    code = SmsEnum.BUSINESS_AUDIT_YES.getValue();
-                } else {
-                    code = SmsEnum.BUSINESS_AUDIT_NO.getValue();
-                }
-                Map userC = coordinatorMapper.getUserAndCompanyByUserId(receive_id);
-                String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
-                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
-                String title = getMessageTitle(objectId, objectType, MessageBTEnum.BUSINESS.getValue());
-                messageService.add(title, content, userId, receive_id, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS.getValue(), "");//添加通知消息
-                map.put("result", "yes");
-                return;
-            }
+        if (buinessIds.size() == 0) {
+            map.put("msg", "业务号不存在");
+            return;
         }
-        map.put("result", "no");
+        Business business = businessMapper.get(buinessIds.get(0));
+        if (business == null) {
+            map.put("msg", "业务号不存在");
+            return;
+        }
+        if (business.getStatus() == status) {
+            map.put("msg", "重复操作");
+            return;
+        }
+        //修改业务状态
+        Integer result = repayMapper.updateBusinessStatus(buinessIds.get(0), status);
+        if (result > 0) {
+            SmsUtil smsUtil = new SmsUtil();//发送短信通知
+            Integer code = 0;
+            boolean audit = true;//是否为业务审核
+            if (status == BusinessStatusEnum.platform_pass.getValue()) {
+                code = SmsEnum.BUSINESS_AUDIT_YES.getValue();
+            } else if (status == BusinessStatusEnum.platform_refuse.getValue()) {
+                code = SmsEnum.BUSINESS_AUDIT_NO.getValue();
+            } else if (status == BusinessStatusEnum.init.getValue()) {//重新申请审核
+                audit = false;
+                TUserTagQuery tUserTagQuery = new TUserTagQuery();
+                tUserTagQuery.setUserType(UserInfoEnum.USER_TYPE_ADMIN.getValue());
+                tUserTagQuery.setRole(RoleTypeEnum.ADMIN.getValue());
+                List<TUserTag> list = tUserTagMapper.selectByQuery(tUserTagQuery);//重新申请审核，重新发送给平台管理员
+                if (list.size() > 0) {
+                    receive_id = list.get(0).getUserId();//平台管理员id
+                }
+                text = "重新业务审核申请";
+            }
+            if (objectType == ObjectTypeEnum.LENDER.getValue() && audit) {
+                LenderInfo len = coordinatorMapper.getLenderInfo(objectId);
+                if (len != null) {
+                    receive_id = len.getOperator() == null ? 0 : len.getOperator();
+                }
+                operType = LenderEnum.UPDATE_EDIT.getValue();
+                text = "借款人审核操作";
+            } else if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue() && audit) {
+                AssetInfo assetInfo = coordinatorMapper.getAssetInfo(objectId);
+                if (assetInfo != null) {
+                    receive_id = assetInfo.getOperator() == null ? 0 : assetInfo.getOperator();
+                }
+                operType = AssetPackageEnum.update.getValue();
+                text = "资产包审核操作";
+            }
+            businessLogService.add(objectId, objectType, operType, text, "", 0, 0);//添加操作日志
+            Map userC = coordinatorMapper.getUserAndCompanyByUserId(receive_id);
+            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
+                    ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
+            String title = getMessageTitle(objectId, objectType, MessageBTEnum.BUSINESS.getValue());
+            messageService.add(title, content, userId, receive_id, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS.getValue(), "");//添加通知消息
+            map.put("result", "yes");
+            return;
+        } else {
+            map.put("msg", "审核业务号失败");
+        }
     }
 
     @Override
-    public void isPause(Map map, Integer objectId, Integer objectType, Integer status, Integer userId) throws BusinessLogException {
+    public void isPause(Map map, Integer objectId, Integer objectType, Integer status, Integer userId) throws
+            BusinessLogException {
         Integer operType = 0;//操作类型
         List<Map<String, Object>> receive_ids = new ArrayList<>();
         LenderInfo lenderInfo = new LenderInfo();
@@ -635,7 +666,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     }
 
     @Override
-    public Map deleteTeammatUser(Integer userId, Integer teamUserId, Integer userTeamId, Integer status, Integer substitutionUid) throws Exception {
+    public Map deleteTeammatUser(Integer userId, Integer teamUserId, Integer userTeamId, Integer status, Integer
+            substitutionUid) throws Exception {
         Map map = new HashMap<>();
         Map code = new HashMap<>();
         UserTeam ut = new UserTeam();

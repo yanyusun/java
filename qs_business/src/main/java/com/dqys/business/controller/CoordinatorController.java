@@ -129,7 +129,7 @@ public class CoordinatorController {
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             return JsonResponseTool.success(map);
         } else {
-             return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
         }
 
     }
@@ -161,7 +161,7 @@ public class CoordinatorController {
      * @api {post} coordinator/auditBusiness 平台业务审核
      * @apiParam {int} objectId 对象id
      * @apiParam {int} objectType 对象类型(10资产包11借款人)
-     * @apiParam {int} status 状态（1通过2不通过）
+     * @apiParam {int} status 状态（0重新申请1通过2不通过）
      * @apiSampleRequest coordinator/auditBusiness
      * @apiGroup Coordinator
      * @apiName coordinator/auditBusiness
@@ -175,7 +175,7 @@ public class CoordinatorController {
         if (objectType != ObjectTypeEnum.LENDER.getValue() && objectType != ObjectTypeEnum.ASSETPACKAGE.getValue()) {
             return JsonResponseTool.paramErr("对象类型有误");
         }
-        if (status != BusinessStatusEnum.platform_pass.getValue() && status != BusinessStatusEnum.platform_refuse.getValue()) {
+        if (status != BusinessStatusEnum.init.getValue() && status != BusinessStatusEnum.platform_pass.getValue() && status != BusinessStatusEnum.platform_refuse.getValue()) {
             return JsonResponseTool.paramErr("状态有误");
         }
         Integer userId = UserSession.getCurrent().getUserId();
@@ -184,7 +184,7 @@ public class CoordinatorController {
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             return JsonResponseTool.success(map);
         } else {
-            return JsonResponseTool.failure("操作失败");
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
         }
     }
 

@@ -415,6 +415,14 @@
         SELECT zef.type,zef.name,zef.code from t_zcy_estates_facility zef
           where zef.estates_id=#{estatesId} and (zef.type=0 or zef.type=1)
     </select>
+    <!--获取资产源全部-->
+    <select id="findObjectIdByAssetSourceAll" resultType="int">
+         SELECT our.object_id from object_user_relation our
+        WHERE our.stateflag=0  AND our.user_id=#{userId} AND our.object_type=#{objectType}
+        UNION
+          SELECT tze.id from t_zcy_estates tze
+        WHERE tze.stateflag=0  AND tze.operator=#{userId}
+    </select>
     <!--获取接收后还未加入协作器的对象id-->
     <select id="findObjectIdByOURelation" resultType="int">
         SELECT our.object_id from object_user_relation our
