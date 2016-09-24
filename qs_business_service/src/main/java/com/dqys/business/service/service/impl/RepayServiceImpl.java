@@ -18,6 +18,9 @@ import com.dqys.business.orm.pojo.repay.Repay;
 import com.dqys.business.orm.pojo.repay.RepayRecord;
 import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
+import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
+import com.dqys.business.service.constant.ObjectEnum.IouEnum;
+import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
 import com.dqys.business.service.exception.bean.ArtificialException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
@@ -81,7 +84,7 @@ public class RepayServiceImpl implements RepayService {
         } catch (IOException e) {
             throw new UnexpectedRollbackException("保存附件异常");
         }
-//        businessLogService.add(objectId, ObjectTypeEnum.IOU.getValue(), IouEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
+        businessLogService.add(objectId, ObjectTypeEnum.IOU.getValue(), IouEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
         Map map = new HashMap<>();
         List<IOUInfo> ious = new ArrayList<>();
         ious = getIouInfos(objectId, objectType, ious);//根据对象类型获取所有借据
@@ -272,22 +275,56 @@ public class RepayServiceImpl implements RepayService {
     }
 
     /**
+     * 还款扣除金额
      * 减去借据金额和借款人金额和资产包金额
      */
     private boolean dispose(Integer lenderId, Integer iouId, Integer version, Double priMoney, Double accMoney, Double penalty) {
         int result = repayMapper.repayIou(iouId, version, priMoney, accMoney, penalty);//借据扣除
         if (result > 0) {
+            setRepayStatus(iouId, 3);//修改借据还款状态
             LenderInfo len = lenderInfoMapper.get(lenderId);
             Integer num = repayMapper.repayLender(lenderId, len.getVersion(), priMoney, penalty != null ? penalty : accMoney);//借款人扣除
             if (num > 0) {
-                AssetInfo assetInfo = assetInfoMapper.get(len.getAssetId());
-                Integer count = repayMapper.repayAsset(assetInfo.getId(), assetInfo.getVersion(), priMoney, penalty != null ? penalty : accMoney);//资产包扣除
-                if (count > 0) {
-                    setRepayStatus(assetInfo.getId(), 1);//修改资产包还款状态
-                    setRepayStatus(len.getId(), 2);//修改借款人还款状态
-                    setRepayStatus(iouId, 3);//修改借据还款状态
-                    return true;
+                setRepayStatus(len.getId(), 2);//修改借款人还款状态
+                if (len.getAssetId() != null) {
+                    AssetInfo assetInfo = assetInfoMapper.get(len.getAssetId());
+                    Integer count = repayMapper.repayAsset(assetInfo.getId(), assetInfo.getVersion(), priMoney, penalty != null ? penalty : accMoney);//资产包扣除
+                    if (count > 0) {
+                        setRepayStatus(assetInfo.getId(), 1);//修改资产包还款状态
+                    }
                 }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 还款冲正
+     * 把原扣的金额补还回去
+     */
+
+    private boolean reversalDispose(RepayRecord re) {
+        IOUInfo iouInfo = iouInfoMapper.get(re.getIouId());
+        int result = repayMapper.repayIouReversal(iouInfo.getId(), iouInfo.getVersion(), re.getRepayPrincipal(), re.getRepayInterest(), re.getRepayFine());//借据冲正
+        if (result > 0) {
+            setRepayStatus(iouInfo.getId(), 3);//修改借据还款状态
+            LenderInfo len = lenderInfoMapper.get(iouInfo.getLenderId());
+            Integer num = repayMapper.repayLenderReversal(len.getId(), len.getVersion(), re.getRepayPrincipal(), re.getRepayFine() != null ? re.getRepayFine() : re.getRepayInterest());//借款人冲正
+            if (num > 0) {
+                setRepayStatus(len.getId(), 2);//修改借款人还款状态
+                if (len.getAssetId() != null) {
+                    AssetInfo assetInfo = assetInfoMapper.get(len.getAssetId());
+                    Integer count = repayMapper.repayAssetReversal(assetInfo.getId(), assetInfo.getVersion(), re.getRepayPrincipal(), re.getRepayFine() != null ? re.getRepayFine() : re.getRepayInterest());//资产包冲正
+                    if (count > 0) {
+                        setRepayStatus(assetInfo.getId(), 1);//修改资产包还款状态
+                    }
+                }
+                RepayRecord record = new RepayRecord();
+                record.setId(re.getId());
+                record.setStatus(2);
+                repayMapper.updateRecordSelective(record);//修改还款记录状态
+                return true;
             }
         }
         return false;
@@ -300,6 +337,7 @@ public class RepayServiceImpl implements RepayService {
      * @param type(1资产包2借款人3借据)
      * @return
      */
+
     private boolean setRepayStatus(Integer id, Integer type) {
         Map map = repayMapper.getSumMoney(id, type);
         Integer num = 0;
@@ -385,14 +423,14 @@ public class RepayServiceImpl implements RepayService {
                     assetInfo.setId(damageApply.getApply_object_id());
                     assetInfo.setEndAt(damageApply.getDamage_date());
                     result = assetInfoMapper.update(assetInfo);
-//                businessLogService.add(assetInfo.getId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.update.getValue(), "延期申请审核操作", "", 0, 0);//操作日志
+                businessLogService.add(assetInfo.getId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.update.getValue(), "延期申请审核操作", "", 0, 0);//操作日志
                 }
                 if (damageApply.getObject_type() == ObjectTypeEnum.LENDER.getValue()) {
                     LenderInfo lenderInfo = new LenderInfo();
                     lenderInfo.setId(damageApply.getApply_object_id());
                     lenderInfo.setEndAt(damageApply.getDamage_date());
                     result = lenderInfoMapper.update(lenderInfo);
-//                businessLogService.add(lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue(), LenderEnum.UPDATE_EDIT.getValue(), "延期申请审核操作", "", 0, 0);//操作日志
+                businessLogService.add(lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue(), LenderEnum.UPDATE_EDIT.getValue(), "延期申请审核操作", "", 0, 0);//操作日志
                 }
             }
             //添加通知消息记录
@@ -488,38 +526,6 @@ public class RepayServiceImpl implements RepayService {
         }
     }
 
-
-    /**
-     * 还款冲正
-     *
-     * @param re
-     * @return
-     */
-
-    private boolean reversalDispose(RepayRecord re) {
-        IOUInfo iouInfo = iouInfoMapper.get(re.getIouId());
-        int result = repayMapper.repayIouReversal(iouInfo.getId(), iouInfo.getVersion(), re.getRepayPrincipal(), re.getRepayInterest(), re.getRepayFine());
-        if (result > 0) {
-            LenderInfo len = lenderInfoMapper.get(iouInfo.getLenderId());
-            Integer num = repayMapper.repayLenderReversal(len.getId(), len.getVersion(), re.getRepayPrincipal(), re.getRepayFine() != null ? re.getRepayFine() : re.getRepayInterest());
-            if (num > 0) {
-                AssetInfo assetInfo = assetInfoMapper.get(len.getAssetId());
-                Integer count = repayMapper.repayAssetReversal(assetInfo.getId(), assetInfo.getVersion(), re.getRepayPrincipal(), re.getRepayFine() != null ? re.getRepayFine() : re.getRepayInterest());
-                if (count > 0) {
-                    RepayRecord record = new RepayRecord();
-                    record.setId(re.getId());
-                    record.setStatus(2);
-                    if (repayMapper.updateRecordSelective(record) > 0) {
-                        setRepayStatus(assetInfo.getId(), 1);//修改资产包还款状态
-                        setRepayStatus(len.getId(), 2);//修改借款人还款状态
-                        setRepayStatus(iouInfo.getId(), 3);//修改借据还款状态
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
 
     /**
      * 给延期申请对象赋值
