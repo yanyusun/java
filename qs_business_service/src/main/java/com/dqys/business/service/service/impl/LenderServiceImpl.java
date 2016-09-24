@@ -318,6 +318,7 @@ public class LenderServiceImpl implements LenderService {
         // 添加借款人基础信息
         LenderInfo lenderInfo = LenderServiceUtils.toLenderInfo(lenderDTO);
         lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
+        lenderInfo.setOperator(UserSession.getCurrent().getUserId());
         Integer addResult = lenderInfoMapper.insert(lenderInfo);
         if (CommonUtil.checkResult(addResult)) {
             return JsonResponseTool.failure("添加失败");

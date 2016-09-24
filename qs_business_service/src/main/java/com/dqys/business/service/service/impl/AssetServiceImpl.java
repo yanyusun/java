@@ -834,6 +834,7 @@ public class AssetServiceImpl implements AssetService {
         for (LenderDTO lenderDTO : lenderDTOList) {
             lenderDTO.setAssetId(id);
             LenderInfo lenderInfo = LenderServiceUtils.toLenderInfo(lenderDTO);
+            lenderInfo.setOperator(UserSession.getCurrent().getUserId());
             Integer result = lenderInfoMapper.insert(lenderInfo);
             if (CommonUtil.checkResult(result)) {
                 return JsonResponseTool.failure("增加借款人基础信息失败");
