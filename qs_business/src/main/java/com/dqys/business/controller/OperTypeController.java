@@ -45,6 +45,73 @@ public class OperTypeController {
      * @apiSampleRequest operType/list
      * @apiParam {int} objectType 对象类型
      * @apiGroup　 OperType
+     * {
+    "code": 2000,
+    "msg": "成功",
+    "data": [
+    {
+    "id": 119,
+    "operType": 111,
+    "operName": "修改/编辑"
+    },
+    {
+    "id": 120,
+    "operType": 112,
+    "operName": "添加关注"
+    },
+    {
+    "id": 121,
+    "operType": 113,
+    "operName": "评优/内部评级"
+    },
+    {
+    "id": 122,
+    "operType": 114,
+    "operName": "申请律师函"
+    },
+    {
+    "id": 123,
+    "operType": 115,
+    "operName": "申请延期"
+    },
+    {
+    "id": 124,
+    "operType": 116,
+    "operName": "设置为无效"
+    },
+    {
+    "id": 125,
+    "operType": 117,
+    "operName": "录跟进"
+    },
+    {
+    "id": 126,
+    "operType": 118,
+    "operName": "增加注释"
+    },
+    {
+    "id": 127,
+    "operType": 119,
+    "operName": "修改日志"
+    },
+    {
+    "id": 128,
+    "operType": 1110,
+    "operName": "操作日志"
+    },
+    {
+    "id": 129,
+    "operType": 1111,
+    "operName": "添加一条还款"
+    },
+    {
+    "id": 130,
+    "operType": 1112,
+    "operName": "分配借款人"
+    }
+    ]
+    }
+     *
      */
     @RequestMapping("/list")
     @ResponseBody
