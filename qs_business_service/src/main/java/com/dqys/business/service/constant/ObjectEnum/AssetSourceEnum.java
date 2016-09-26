@@ -12,7 +12,15 @@ public enum AssetSourceEnum {
     ADJOURNMENT(165, "申请延期"),
     INVALID_SET(166, "设置为无效"),
     FOLLOW_UP(167, "录跟进"),
-    ADD_COMMENT(168, "增加注释"),;
+    ADD_COMMENT(168, "增加注释"),
+
+
+    //列表显示枚举
+    VIEW_OPERATION_LOG(1600, "操作日志"),
+    VIEW_ACCPET(1601,"同意接收"),
+    VIEW_REJECT(1602,"拒绝接收"),
+    VIEW_REAPPLY(1603,"重新申请")
+    ;
     private Integer value;
     private String name;
 

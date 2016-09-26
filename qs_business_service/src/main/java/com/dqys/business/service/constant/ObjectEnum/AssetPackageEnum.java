@@ -7,7 +7,13 @@ package com.dqys.business.service.constant.ObjectEnum;
 public enum AssetPackageEnum {
     delete(102, "删除"),
     update(101, "编辑"),
-    add(100, "添加");
+    add(100, "添加"),
+
+    //列表显示
+    VIEW_OPERATION_LOG(1000, "操作日志"),
+    VIEw_ACCPET(1001,"同意接收"),
+    VIEW_REJECT(1002,"拒绝接收");
+
     private Integer value;
     private String name;
 

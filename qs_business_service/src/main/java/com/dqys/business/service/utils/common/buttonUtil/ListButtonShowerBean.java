@@ -9,24 +9,45 @@ import java.util.List;
  */
 public class ListButtonShowerBean {
     //右侧操作按钮
-    private boolean hasRightButton=true;
+    private boolean hasRightButton = true;
 
     //协作器炒作操作按钮
-    private boolean hasUserTeamButton=false;
+    private boolean hasUserTeamButton = false;
     //协作器加入该按组按钮
-    private boolean hasUserTeamButtonApply=false;
+    private boolean hasUserTeamButtonApply = false;
     //协作器邀请加入按钮
-    private boolean hasUserTeamButtonAdd=false;
+    private boolean hasUserTeamButtonAdd = false;
 
-     //分配器操作按钮
-    private boolean hasCompanyTeamButton=false;
+    //分配器操作按钮
+    private boolean hasCompanyTeamButton = false;
     //分配器加入该按组按钮
-    private boolean hasCompanyTeamButtonApply=false;
+    private boolean hasCompanyTeamButtonApply = false;
     //分配邀请加入按钮
-    private boolean hasCompanyTeamButtonAdd=false;
+    private boolean hasCompanyTeamButtonAdd = false;
 
 
-    private List<String[]> rightButtonList=new LinkedList<>();
+    private List<String[]> rightButtonList = new LinkedList<>();
+
+
+    public ListButtonShowerBean(List<String[]> rightButtonList,boolean hasRightButton, boolean hasUserTeamButton, boolean hasUserTeamButtonApply, boolean hasUserTeamButtonAdd, boolean hasCompanyTeamButton, boolean hasCompanyTeamButtonApply, boolean hasCompanyTeamButtonAdd) {
+        this.hasRightButton = hasRightButton;
+        this.hasUserTeamButton = hasUserTeamButton;
+        this.hasUserTeamButtonApply = hasUserTeamButtonApply;
+        this.hasUserTeamButtonAdd = hasUserTeamButtonAdd;
+        this.hasCompanyTeamButton = hasCompanyTeamButton;
+        this.hasCompanyTeamButtonApply = hasCompanyTeamButtonApply;
+        this.hasCompanyTeamButtonAdd = hasCompanyTeamButtonAdd;
+        this.rightButtonList = rightButtonList;
+    }
+
+    public ListButtonShowerBean(List<String[]> rightButtonList) {
+        this.rightButtonList = rightButtonList;
+    }
+
+    public ListButtonShowerBean() {
+        super();
+    }
+
 
     public boolean isHasRightButton() {
         return hasRightButton;
@@ -91,4 +112,5 @@ public class ListButtonShowerBean {
     public void setRightButtonList(List<String[]> rightButtonList) {
         this.rightButtonList = rightButtonList;
     }
+
 }
