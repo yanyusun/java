@@ -229,7 +229,7 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_user_team WHERE stateflag = 0 AND object_type = #{type,jdbcType=INTEGER} AND object_id =
-        #{id,jdbcType=INTEGER}
+        #{id,jdbcType=INTEGER} AND company_id=#{companyId}
     </select>
 
     <select id="queryList" parameterType="com.dqys.business.orm.query.coordinator.UserTeamQuery"

@@ -33,8 +33,8 @@ public class CompanyController {
      * @apiName listCompany
      * @apiGroup organization
      * @apiParam {number} [type] 公司类型
-     * @apiSuccess {companyDTO} data 公司信息集合
-     * @apiUse companyDTO
+//     * @apiSuccess {companyDTO} data 公司信息集合
+//     * @apiUse companyDTO
      */
     @RequestMapping(value = "/listCompany")
     public JsonResponse listCompany(@RequestParam(required = false) Integer type){
