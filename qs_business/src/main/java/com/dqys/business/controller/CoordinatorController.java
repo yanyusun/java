@@ -100,7 +100,7 @@ public class CoordinatorController {
         if (map.get("result").toString().equals("yes")) {
             return JsonResponseTool.success(map);
         } else {
-            return JsonResponseTool.noData();
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map,"msg"));
         }
     }
 

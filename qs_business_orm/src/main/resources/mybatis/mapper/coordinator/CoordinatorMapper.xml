@@ -7,6 +7,7 @@
         <result column="type" property="roleType" jdbcType="INTEGER"/>
         <result column="name" property="teamName" jdbcType="VARCHAR"/>
         <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="avg" property="avg" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="BaseResultMapLenderInfo" type="com.dqys.business.orm.pojo.asset.LenderInfo">
@@ -86,7 +87,7 @@
     </resultMap>
     <!--查询借款人或资产包的团队信息-->
     <select id="getLenderOrAsset" resultMap="BaseResultMap">
-        SELECT tusi.real_name,bor.name,ttr.user_id,ttr.type
+        SELECT tusi.real_name,bor.name,ttr.user_id,ttr.type,tusi.avg
         from t_teammate_re ttr LEFT JOIN  t_user_tag tust
         ON tust.user_id=ttr.user_id LEFT JOIN t_user_team tut
         ON tut.id=ttr.user_team_id LEFT JOIN bt_organization bor
@@ -144,10 +145,10 @@
         from t_company_info tci LEFT JOIN t_user_info tui
         ON tui.company_id=tci.id
         WHERE tci.id in (
-        <if test="companyId !=null">
+        <if test="companyId !=null and userId == null">
             #{companyId,jdbcType=INTEGER}
         </if>
-        <if test="userId !=null">
+        <if test="userId !=null and companyId == null">
             SELECT tui2.company_id from t_user_info tui2 where tui2.id=#{userId,jdbcType=INTEGER}
         </if>
         )
