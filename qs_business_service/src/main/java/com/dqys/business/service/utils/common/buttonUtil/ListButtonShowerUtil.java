@@ -21,6 +21,6 @@ public class ListButtonShowerUtil {
     }
 
     private static String getKey(ObjectTabEnum objectTabEnum, ObjectTypeEnum objectTypeEnum, UserInfoEnum userInfoEnum, RoleTypeEnum roleTypeEnum){
-
+        return  objectTabEnum.getValue()+"_"+objectTypeEnum.getValue()+"_"+userInfoEnum.getValue()+"_"+roleTypeEnum;
     }
 }
