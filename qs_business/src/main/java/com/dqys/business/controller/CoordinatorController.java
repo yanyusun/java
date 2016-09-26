@@ -72,6 +72,22 @@ public class CoordinatorController {
      * @apiSampleRequest coordinator/userList
      * @apiGroup Coordinator
      * @apiName coordinator/userList
+     * @apiSuccessExample {json} Data-Response:
+     *{
+    "code": 2000,
+    "msg": "成功",
+    "data": {
+    "users": [
+    {
+    "realName": "张三",//姓名
+    "companyId": 3,//公司id
+    "companyName": "test",//公司名称
+    "userName": "zs",//用户名称
+    "userId": 12 //用户id
+    }
+    ]
+    }
+    }
      */
     @RequestMapping("/userList")
     @ResponseBody

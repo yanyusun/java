@@ -58,11 +58,12 @@ public interface UserTeamMapper {
     /**
      * 根据对像类型和对象ID查询协作器
      *
-     * @param id
-     * @param type
+     * @param id 对象id
+     * @param type 对象类型
+     * @param companyId 公司id
      * @return
      */
-    UserTeam getByObject(@Param("id") Integer id, @Param("type") Integer type);
+    UserTeam getByObject(@Param("id") Integer id, @Param("type") Integer type,@Param("companyId")Integer companyId);
 
     /**
      * 条件遍历
