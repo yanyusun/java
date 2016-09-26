@@ -52,6 +52,7 @@ import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.SmsUtil;
+import com.rabbitmq.http.client.domain.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -103,6 +104,11 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType, Integer userid) {
+        Integer userId = UserSession.getCurrent() == null ? 0:UserSession.getCurrent().getUserId();
+        if (companyId == null) {
+            TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(userId);
+            companyId = userInfo.getCompanyId();
+        }
         UserTeam userTeam = new UserTeam();
         userTeam.setObjectType(objectType);
         userTeam.setObjectId(objectId);
@@ -211,6 +217,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("result", "no_lender");//借款人不存在
             return null;
         } else {
+            map.put("name", lenderInfo.getLenderNo());//借款人名称
             map.put("accrual", lenderInfo.getAccrual() == null ? 0 : lenderInfo.getAccrual());//总利息
             map.put("loan", lenderInfo.getLoan() == null ? 0 : lenderInfo.getLoan());//总贷款
             map.put("appraisal", lenderInfo.getAppraisal() == null ? 0 : lenderInfo.getAppraisal());//抵押物总评估

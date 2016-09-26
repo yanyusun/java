@@ -37,6 +37,22 @@ public class ZcyController {
      * @apiSampleRequest zcy/get
      * @apiGroup ZCY
      * @apiName zcy/get
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * "estates":{},//资产源信息
+     * "address":{},//房源地址
+     * "facility":{},//配套设施
+     * "feature":{},//房源特色
+     * "defect":{},//房源缺点
+     * "contacts":{},//联系人
+     * "owner":{},//业主信息
+     * "maintain":{},//维护信息
+     * "tax":{},//税率
+     * "school":{},//可上学校
+     * "lookHouse":{},//看房时间;
+     * "key":{},//钥匙信息
+     * "express":{}//速卖信息
+     * }
      */
     @RequestMapping("/get")
     @ResponseBody
@@ -205,10 +221,42 @@ public class ZcyController {
      * @apiSampleRequest zcy/awaitReceive
      * @apiGroup ZCY
      * @apiName zcy/awaitReceive
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * "count":12,//总数量
+     * "zcyPawnDTOs":
+     * {
+     * "pawnId":"",//抵押物id
+     * "estatesId":"",//资产信息id
+     * "keyId":"",// 钥匙信息id
+     * "title":"",//标题
+     * "houseNo":"",//编号
+     * "place":"",//位置
+     * "label":"",//标签
+     * "houseType":"",//户型
+     * "orientation":"",//朝向
+     * "floor":"",//楼层
+     * "acreage":"",//面积
+     * "priceTotal":"",//总价（万）
+     * "priceUnit":"",//单价(万)
+     * "hangShingle":"",//挂牌
+     * "daiKan":"",//带看
+     * "daiKanLately ":"",//最近带看
+     * "keKan":"",//可看
+     * "shiKan":"",//实勘
+     * "maintaining":"",//维护人
+     * "currentBooking":"",//当前预约
+     * "realityDynamic":"",//实际动态
+     * "entrustTime":""//委托时间
+     * }
+     * }
      */
     @RequestMapping("/awaitReceive")
     @ResponseBody
     public JsonResponse awaitReceive(@ModelAttribute ZcyListQuery zcyListQuery) throws Exception {
+        if (CommonUtil.checkParam(zcyListQuery.getStatus())) {
+            return JsonResponseTool.paramErr("参数有误");
+        }
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         Map map = new HashMap<>();
         if (zcyListQuery.getPage() < 0) {
@@ -225,10 +273,38 @@ public class ZcyController {
      * @apiSampleRequest zcy/zcyDetail
      * @apiGroup ZCY
      * @apiName zcy/zcyDetail
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {
+     * "result": "yes",
+     * "detail": {
+     * "area": "11",//市区
+     * "decade": "2016-09-26",//年代
+     * "buildType": "6",//建筑类型
+     * "heatingWay": "1",//供暖方式
+     * "acreage": 313,//面积
+     * "guidePrice": 13,//过户指导价(元/m2)
+     * "houseBelong": "4",//房屋权属
+     * "tenementPrice": 1,//物业费
+     * "facility": "31",//嫌恶设施
+     * "houseUse": "65"， //房屋用途
+     * "originalPrice": ，//原购房价格（单位：万）
+     * "entrustSource":,//委托来源
+     * "expressPrice":,//速卖价格
+     * "expressStartTime":,//速卖起始时间
+     * "expressEndTime":,//速卖结束时间
+     * }
+     * }
+     * }
      */
     @RequestMapping("/zcyDetail")
     @ResponseBody
     public JsonResponse zcyDetail(Integer estatesId) throws Exception {
+        if (CommonUtil.checkParam(estatesId)) {
+            return JsonResponseTool.paramErr("参数有误");
+        }
         Map map = new HashMap<>();
         map = zcyService.zcyDetail(estatesId);
         return JsonResponseTool.success(map);

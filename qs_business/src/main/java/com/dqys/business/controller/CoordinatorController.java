@@ -43,6 +43,45 @@ public class CoordinatorController {
      * @apiSampleRequest coordinator/list
      * @apiGroup Coordinator
      * @apiName coordinator/list
+     * @apiSuccessExample {json} Data-Response:
+     *{
+    "code": 2000,
+    "msg": "成功",
+    "data": {
+    "result": "yes",//反馈结果状态（成功yes）
+    "loan": 2221,//总贷款
+    "dayCount": 22,//逾期天数
+    "teams": [
+    {
+    "userId": 11,//用户id
+    "roleType": 0,//角色类型（0管理者1所属人2参与人）
+    "realName": "WZHPAN",//真实姓名
+    "teamName": "研发部门",//团队名称
+    "finishTask": 0,//完成任务数
+    "totalTask": 3,//总任务数
+    "ongoingTask": 0,//当前进行任务数
+    "leaveWordTime": ""//最后留言时间
+    }
+    ],
+    "companys": [
+    {
+    "company_name": "test", //公司名称
+    "id": 3, //公司id
+    "userType": 1 //用户类别（1平台 2委托 31催收 32律所 33中介）
+    }
+    ],
+    "name": null, //名称
+    "appraisal": 31, //抵押物总评估
+    "accrual": 313,//总利息
+    "userTeamId": 352,//协作器id
+    "people": [
+    {
+    "type": 0,//角色类型(0管理者，1所属人 ，2参与人)
+    "peopleNum": 1 //对应的人数
+    }
+    ]
+    }
+    }
      */
     @RequestMapping("/list")
     @ResponseBody

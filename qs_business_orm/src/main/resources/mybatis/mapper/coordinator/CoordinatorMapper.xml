@@ -230,15 +230,14 @@
             ON tci.id=tui.company_id
             WHERE tui.id=#{userId} LIMIT 0,1
     </select>
-    <!--根据对象类型，用户id，状态 获取对应的状态的对象id-->
+    <!--根据对象类型，用户id，状态 获取对应的状态的对象id objectType(12抵押物16资产源)-->
     <select id="getObjectIdList" resultType="java.lang.Integer">
-        <if test="objectType==12">--分配器的待接收（类型为抵押物）
+        <if test="objectType==12">
             (SELECT tct.object_id from t_company_team tct LEFT JOIN t_company_team_re tcr
             ON tcr.company_team_id=tct.id and tcr.status=#{status} AND tct.object_type=#{objectType}
             WHERE tcr.accepter_id=#{userId})
         </if>
-        -- UNION
-        <if test="objectType==16">--协作器的待接收（类型为资产源）
+        <if test="objectType==16">
             (SELECT tut.object_id from t_user_team tut LEFT JOIN t_teammate_re ttr
             ON ttr.user_team_id=tut.id and ttr.status=#{status} AND tut.object_type=#{objectType}
             WHERE ttr.user_id=#{userId})

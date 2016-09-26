@@ -38,6 +38,35 @@ public class RepayController {
      * @apiParam {int} repayFidType 对象类型（1借据2抵押物）
      * @apiParam {int} lenderId 借款人id
      * @apiGroup Repay
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {
+     * "result": "yes",
+     * "repays": [
+     * {
+     * "id": 59,
+     * "damageDate": "2016-09-22",//还款时间,
+     * "repayType": 2,//还款类型(0还利息1还本金2还利息加本金)
+     * "operUserId": 263,//操作员id
+     * "repayM": 1123,// 还款总金额
+     * "repayFid": 528,//还款主体id
+     * "repayFidName": null,//还款主体名称
+     * "repayWay": 2,//还款方式
+     * "repayBills": null,//还款单据图片
+     * "remark": "",//备注
+     * "version": 0,//
+     * "createAt": "2016-09-22",//
+     * "updateAt": "2016-09-22",//
+     * "stateflag": 0,//
+     * "repayFidType": 1,//还款主体类型（借据或抵押物）
+     * "status": 1,//状态（0正常，2冲正）
+     * "lenderId": 190//借款人id
+     * }
+     * ]
+     * }
+     * }
      */
     @RequestMapping("repayList")
     @ResponseBody
@@ -62,6 +91,25 @@ public class RepayController {
      * @apiSampleRequest repay/getIouAndPawnByLender
      * @apiParam {int} lenderId 借款人id
      * @apiGroup Repay
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {
+     * "pawns": [
+     * {
+     * "number": "CO16090004",//编号
+     * "id": 843 //抵押物id
+     * }
+     * ],
+     * "ious": [
+     * {
+     * "number": "IO16090002",//编号
+     * "id": 540 //借据id
+     * }
+     * ]
+     * }
+     * }
      */
     @RequestMapping("/getIouAndPawnByLender")
     @ResponseBody
