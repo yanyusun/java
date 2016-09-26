@@ -1,6 +1,9 @@
 package com.dqys.business.service.utils.common.buttonUtil;
 
+import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
+import com.dqys.core.constant.RoleTypeEnum;
 
 /**
  * 列表界面按钮控制显示类
@@ -17,7 +20,7 @@ public class ListButtonShowerUtil {
         return buttonShowerBean;
     }
 
-    private static String getKey(ObjectTabEnum objectTab,){
+    private static String getKey(ObjectTabEnum objectTabEnum, ObjectTypeEnum objectTypeEnum, UserInfoEnum userInfoEnum, RoleTypeEnum roleTypeEnum){
 
     }
 }
