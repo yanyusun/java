@@ -39,4 +39,9 @@ public class AnnouncementMapperImpl extends BaseDao implements AnnouncementMappe
     public List<Announcement> list() {
         return super.getSqlSession().getMapper(AnnouncementMapper.class).list();
     }
+
+    @Override
+    public List<Announcement> listByUser(Integer id) {
+        return super.getSqlSession().getMapper(AnnouncementMapper.class).listByUser(id);
+    }
 }

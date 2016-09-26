@@ -10,7 +10,7 @@
     <result column="content" property="content" jdbcType="LONGVARCHAR" />
     <result column="mark" property="mark" jdbcType="VARCHAR" />
     <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
-    <result column="stateflag" property="stateFlag" jdbcType="INTEGER" />
+    <result column="stateflag" property="stateFlag" jdbcType="BIGINT" />
   </resultMap>
 
   <sql id="Base_Column_List" >
@@ -38,7 +38,7 @@
       <if test="cover != null" >
         cover,
       </if>
-      <if test="iscover != null" >
+      <if test="isCover != null" >
         isCover,
       </if>
       <if test="mark != null" >
@@ -58,8 +58,8 @@
       <if test="cover != null" >
         #{cover,jdbcType=VARCHAR},
       </if>
-      <if test="iscover != null" >
-        #{iscover,jdbcType=TINYINT},
+      <if test="isCover != null" >
+        #{isCover,jdbcType=TINYINT},
       </if>
       <if test="mark != null" >
         #{mark,jdbcType=VARCHAR},
@@ -80,7 +80,7 @@
         cover = #{cover,jdbcType=VARCHAR},
       </if>
       <if test="isCover != null" >
-        isCover = #{iscover,jdbcType=TINYINT},
+        isCover = #{isCover,jdbcType=TINYINT},
       </if>
       <if test="mark != null" >
         mark = #{mark,jdbcType=VARCHAR},
@@ -101,5 +101,12 @@
   <select id="list" resultMap="BaseResultMap">
     SELECT <include refid="Base_Column_List" /> FROM bt_announcement ORDER by id DESC
   </select>
+
+  <select id="listByUser" resultMap="BaseResultMap" >
+    SELECT <include refid="Base_Column_List" /> FROM bt_announcement
+    where ids like CONCAT('%',#{id,jdbcType=INTEGER},'%') ORDER by id DESC
+  </select>
+
+
 
 </mapper>

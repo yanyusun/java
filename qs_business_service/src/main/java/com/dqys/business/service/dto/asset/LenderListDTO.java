@@ -7,12 +7,6 @@ import java.util.List;
 
 /**
  * Created by Yvan on 16/7/11.
- * @apiDefine LenderListDTO
- * @apiSuccessExample {json} lenderListDTO:
- * {
- *     id:1,
- * }
- * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/asset/LenderListDTO.java
  */
 public class LenderListDTO {
     private String avg; // 头像

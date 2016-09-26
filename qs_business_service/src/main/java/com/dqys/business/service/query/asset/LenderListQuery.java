@@ -4,24 +4,6 @@ import com.dqys.core.base.BasePagination;
 
 /**
  * Created by Yvan on 16/7/11.
- * @apiDefine LenderListQuery
- * @apiParam {number} id 主键
- * @apiParam {number} entrustId 委托方
- * @apiParam {string} search 搜索(客户编号|姓名|电话|注释?)
- * @apiParam {string} urgeType 催收阶段
- * @apiParam {string} assetNo 资产包编号
- * @apiParam {number} belong 所属人
- * @apiParam {number} outDays N天以上未催收
- * @apiParam {number} isOutTime 逾期维护
- * @apiParam {number} canContact 可联系
- * @apiParam {number} isAssigned 已分配
- * @apiParam {number} isOwn 自己录入
- * @apiParam {number} isAsset 非资产包
- * @apiParam {number} passOut 转出
- * @apiParam {number} passIn 转入
- * @apiParam {number} isWorth 资不抵债
- * @apiParam {number} waitAssist 转协助的
- * @apiParam {number} assist 正在协助
  */
 public class LenderListQuery extends BasePagination{
 

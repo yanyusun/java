@@ -22,11 +22,9 @@ public class AnnouncementController {
     private AnnouncementService amService;
 
     /**
-     * @api {get} http://{url}/announcement/get 根据ID获取公告
-     * @apiName get
-     * @apiGroup announcement
-     * @apiParam {number} id id
-     * @apiSuccess {Announcement} data 参考：http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_orm/src/main/java/com/dqys/business/orm/pojo/common/Announcement.java
+     * 根据ID获取公告
+     * @param id 数据ID
+     * @return
      */
     @RequestMapping(value = "/get")
     public JsonResponse get(Integer id){
@@ -37,26 +35,23 @@ public class AnnouncementController {
     }
 
     /**
-     * @api {post} http://{url}/announcement/add 添加公告
-     * @apiName add
-     * @apiGroup announcement
-     * @apiParam {Announcement} data 参考：http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_orm/src/main/java/com/dqys/business/orm/pojo/common/Announcement.java
-     * @apiSuccess {number} data id
+     * 添加公告
+     * @param announcement 公告对象
+     * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public JsonResponse add(Announcement announcement){
         if(CommonUtil.checkParam(announcement, announcement.getContent(), announcement.getIds(),
-                announcement.getMark())){
+                announcement.getCover(), announcement.getIsCover())){
             return JsonResponseTool.paramErr("参数错误");
         }
         return CommonUtil.responseBack(amService.insert(announcement));
     }
 
     /**
-     * @api {get} http://{url}/announcement/delete 删除公告
-     * @apiName delete
-     * @apiGroup announcement
-     * @apiParam {number} id id
+     * 删除公告
+     * @param id 数据ID
+     * @return
      */
     @RequestMapping(value = "/delete")
     public JsonResponse delete(Integer id){
@@ -67,10 +62,8 @@ public class AnnouncementController {
     }
 
     /**
-     * @api {get} http://{url}/announcement/list 获取当前用户所有公告
-     * @apiName list
-     * @apiGroup announcement
-     * @apiSuccess {Announcement} data 参考：http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_orm/src/main/java/com/dqys/business/orm/pojo/common/Announcement.java
+     * 获取当前用户所有公告
+     * @return
      */
     @RequestMapping(value = "/list")
     public JsonResponse list(){

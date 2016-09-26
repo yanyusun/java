@@ -24,12 +24,10 @@ public class CaseController {
     private CaseService caseService;
 
     /**
-     * @api {post} http://{url}/case/add 创建案件信息
-     * @apiName add
-     * @apiGroup case
-     * @apiUse Case
-     * @apiUse CaseCourt
-     * @apiSuccess {number} data 新增后的ID
+     * 创建案件信息
+     * @param caseDTO
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/add",method = RequestMethod.POST)
     @ResponseBody
@@ -51,10 +49,10 @@ public class CaseController {
 
 
     /**
-     * @api {post} http://{url}/case/listAdd 批量创建案件信息
-     * @apiName listAdd
-     * @apiGroup case
-     * @apiParam {objectList} caseDTOList 参考创建案件信息
+     * 批量创建案件信息
+     * @param caseDTOList
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/listAdd",method = RequestMethod.POST)
     @ResponseBody
@@ -71,12 +69,10 @@ public class CaseController {
     }
 
     /**
-     * @api {post} http://{url}/case/update 修改案件信息
-     * @apiName update
-     * @apiGroup case
-     * @apiUse Case
-     * @apiUse CaseCourt
-     * @apiSuccess {number} data 修改后的ID
+     * 修改案件信息
+     * @param caseDTO
+     * @return
+     * @throws BusinessLogException
      */
     public JsonResponse update(@ModelAttribute CaseDTO caseDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(caseDTO, caseDTO.getPawnId(), caseDTO.getDefendant(), caseDTO.getPlaintiff(),
@@ -95,14 +91,10 @@ public class CaseController {
     }
 
     /**
-     * @api {post} http://{url}/case/list 根据借款人查询案件信息
-     * @apiName list
-     * @apiGroup case
-     * @apiParam {number} id 借款人ID
-     * @apiParam {number} [index] 第N件案件
-     * @apiSuccess {CaseDTO} data 案件信息
-     * @apiUse CaseDTO
-     * @apiUse CaseCourtDTO
+     * 根据借款人查询案件信息
+     * @param id
+     * @param index
+     * @return
      */
     public JsonResponse list(@RequestParam(required = true) Integer id, @RequestParam(required = false) Integer index) {
         if (CommonUtil.checkParam(id)) {
@@ -120,14 +112,10 @@ public class CaseController {
     }
 
     /**
-     * @api {post} http://{url}/case/listCase 根据案件查询
-     * @apiName listCase
-     * @apiGroup case
-     * @apiParam {number} id 案件ID
-     * @apiParam {number} [index] 第N件子案件
-     * @apiSuccess {CaseDTO} data 案件信息
-     * @apiUse CaseDTO
-     * @apiUse CaseCourtDTO
+     * 根据案件查询
+     * @param id
+     * @param index
+     * @return
      */
     public JsonResponse listCase(@RequestParam(required = true) Integer id, @RequestParam(required = false) Integer index) {
         if (CommonUtil.checkParam(id)) {
@@ -145,12 +133,11 @@ public class CaseController {
     }
 
     /**
-     * @api {post} http://{url}/case/divide 拆分案件
-     * @apiName divide
-     * @apiGroup case
-     * @apiParam {number} id 案件ID
-     * @apiParam {string} ids 借据ID集(","隔开)
-     * @apiSuccess {number} data 拆分后的ID
+     * 拆分案件
+     * @param id
+     * @param ids
+     * @return
+     * @throws BusinessLogException
      */
     public JsonResponse divide(@RequestParam Integer id, @RequestParam String ids) throws BusinessLogException {
         if (CommonUtil.checkParam(id, ids) && ids.length() == 0) {

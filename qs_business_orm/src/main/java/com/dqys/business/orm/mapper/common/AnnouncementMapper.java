@@ -16,4 +16,6 @@ public interface AnnouncementMapper {
 
     List<Announcement> list();
 
+    List<Announcement> listByUser(Integer id);
+
 }

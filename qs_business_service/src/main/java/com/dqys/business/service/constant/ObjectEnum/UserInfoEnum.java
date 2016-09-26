@@ -12,8 +12,8 @@ public enum UserInfoEnum {
     LOOK_USER(995, "查看用户列表"),
     USER_TYPE_COMMON(0,"普通员工"),
     USER_TYPE_ADMIN(1,"平台管理员"),
-    USER_TYPE_ENTRUST(2,"委托"),
-    USER_TYPE_COLLECTION(31,"催收"),
+    USER_TYPE_ENTRUST(2,"委托方"),
+    USER_TYPE_COLLECTION(31,"催收方"),
     USER_TYPE_JUDICIARY(32,"律所司法"),
     USER_TYPE_INTERMEDIARY(33,"中介");
     private Integer value;
@@ -39,5 +39,16 @@ public enum UserInfoEnum {
 
         this.value = value;
         this.name = name;
+    }
+
+    public static UserInfoEnum getUserInfoEnum(Integer value){
+        if(value != null){
+            for (UserInfoEnum userInfoEnum : UserInfoEnum.values()) {
+                if(userInfoEnum.getValue().equals(value)){
+                    return userInfoEnum;
+                }
+            }
+        }
+        return null;
     }
 }

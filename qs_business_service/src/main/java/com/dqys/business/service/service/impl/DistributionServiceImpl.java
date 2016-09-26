@@ -38,6 +38,8 @@ import com.dqys.business.orm.query.company.CompanyTeamReQuery;
 import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.dto.company.BusinessServiceDTO;
 import com.dqys.business.service.dto.company.CompanyTeamReDTO;
 import com.dqys.business.service.dto.company.DistributionDTO;
@@ -344,10 +346,8 @@ public class DistributionServiceImpl implements DistributionService {
                 companyTeamRe.setAccepterId(detailInfo.getUserId()); // 接收人为创建者
                 companyTeamReMapper.insert(companyTeamRe);
                 // 添加平台参与记录
-                List<TCompanyInfo> managerList = companyInfoMapper.listByType(Integer.valueOf(
-                        SysPropertyTool.getProperty(
-                            SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM).getPropertyValue()));
-                if(managerList != null && managerList != null){
+                List<TCompanyInfo> managerList = companyInfoMapper.listByType(UserInfoEnum.USER_TYPE_ADMIN.getValue());
+                if(managerList != null && managerList.size() != 0){
                     // 当前只有一个平台方的管理员
                     detailInfo = companyInfoMapper.getDetailByCompanyId(managerList.get(0).getId());
                     companyTeamRe.setAcceptCompanyId(detailInfo.getCompanyId());
@@ -399,37 +399,25 @@ public class DistributionServiceImpl implements DistributionService {
             companyTeamRe.setAcceptCompanyId(userInfo.getCompanyId());
             companyTeamRe.setStatus(ObjectAcceptTypeEnum.init.getValue());
             companyTeamRe.setType(ObjectBusinessTypeEnum.join.getValue());
-            companyTeamRe.setAccepterId(userInfo.getId());
-//            companyTeamRe.setRoleType(companyDetailInfo.getType());
-//            companyTeamRe.setRequesterId(companyDetailInfo.getCompanyId());
+            companyTeamRe.setAccepterId(companyDetailInfo.getUserId());
             Integer result = companyTeamReMapper.insert(companyTeamRe);
             if (CommonUtil.checkResult(result)) {
                 return null;
             } else {
-                // 添加操作记录
-//                businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(),
-//                        ObjectLogEnum.join.getValue(),
-//                        "", "主动加入分配器", 0, 0);
+                // 获取平台信息
+                List<TCompanyInfo> companyInfoList = companyInfoMapper.listByType(UserInfoEnum.USER_TYPE_ADMIN.getValue());
+                CompanyDetailInfo platformDetail = companyInfoMapper.getDetailByCompanyId(companyInfoList.get(0).getId());
                 // 发送短信提醒
-                TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeam.getSenderId()); // 创建人信息
                 SmsUtil smsUtil = new SmsUtil();
-                List<TSysProperty> propertyList = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE);
-                TSysProperty property = null;
-                for (TSysProperty tSysProperty : propertyList){
-                    if(companyDetailInfo.getType().toString().equals(tSysProperty.getPropertyValue())){
-                        property = tSysProperty;
-                        break;
-                    }
-                }
                 String[] msg = {
-                        creator.getRealName(),
+                        platformDetail.getName(),
                         companyDetailInfo.getCompanyName(),
-                        property.getPropertyName(),
+                        UserInfoEnum.getUserInfoEnum(companyDetailInfo.getType()).getName(),
                         userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
                         companyTeam.getObjectId().toString()
                 };
-                smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_CODE, creator.getMobile(), msg);
+                smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_CODE, companyDetailInfo.getPhone(), msg); // 平台接收
                 // 添加消息
                 String code = ""; // 对象编号
                 if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
@@ -450,7 +438,7 @@ public class DistributionServiceImpl implements DistributionService {
                 ); // 业务类型 对象类型 对象编号
                 message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_JOIN_CODE, msg));
                 message.setSenderId(userInfo.getId());
-                message.setReceiveId(companyTeam.getSenderId());
+                message.setReceiveId(platformDetail.getUserId()); // 平台接收审核
                 message.setLabel(null);
                 message.setStatus(0);
                 message.setType(MessageEnum.TASK.getValue());
@@ -483,11 +471,7 @@ public class DistributionServiceImpl implements DistributionService {
         if (companyTeam == null) {
             return null; // 分配器不存在
         }
-        TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
-        if (userInfo == null || userInfo.getCompanyId() == null) {
-            return null; // 用户不存在
-        }
-        CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(userInfo.getCompanyId());
+        CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByUserId(UserSession.getCurrent().getUserId());
         if (companyDetailInfo == null) {
             return null; // 公司不存在
         }
@@ -519,31 +503,17 @@ public class DistributionServiceImpl implements DistributionService {
         companyTeamRe.setStatus(ObjectAcceptTypeEnum.init.getValue());
         companyTeamRe.setType(ObjectBusinessTypeEnum.platform.getValue());
         companyTeamRe.setAccepterId(companyDetailInfo1.getUserId());
-//        companyTeamRe.setRoleType(companyDetailInfo.getType());
-//        companyTeamRe.setRequesterId(companyDetailInfo.getCompanyId());
         Integer result = companyTeamReMapper.insert(companyTeamRe);
         if (CommonUtil.checkResult(result)) {
             return null;
         } else {
-            // 添加操作记录
-//            businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(),
-//                    ObjectLogEnum.join.getValue(),
-//                    "", "邀请加入分配器", 0, 0);
             // 发送短信提醒
             SmsUtil smsUtil = new SmsUtil();
-            List<TSysProperty> propertyList = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE);
-            TSysProperty property = null;
-            for (TSysProperty tSysProperty : propertyList){
-                if(companyDetailInfo.getType().toString().equals(tSysProperty.getPropertyValue())){
-                    property = tSysProperty;
-                    break;
-                }
-            }
             String[] msg = {
                     companyDetailInfo1.getName(),
                     companyDetailInfo.getCompanyName(),
-                    property.getPropertyName(),
-                    userInfo.getRealName(),
+                    UserInfoEnum.getUserInfoEnum(companyDetailInfo.getType()).getName(),
+                    companyDetailInfo.getName(),
                     ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
                     companyTeam.getObjectId().toString()
             };
@@ -567,7 +537,7 @@ public class DistributionServiceImpl implements DistributionService {
                             + code
             ); // 业务类型 对象类型 对象编号
             message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_INVITE_CODE, msg));
-            message.setSenderId(userInfo.getId());
+            message.setSenderId(companyDetailInfo.getUserId());
             message.setReceiveId(companyDetailInfo1.getUserId());
             message.setLabel(null);
             message.setStatus(0);
@@ -596,6 +566,9 @@ public class DistributionServiceImpl implements DistributionService {
         if (companyTeamRe == null) {
             return null; // 分配器记录不存在
         }
+        if(!companyTeamRe.getStatus().equals(ObjectAcceptTypeEnum.init.getValue())){
+           return null; // 不是待审核状态
+        }
         TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
         if (userInfo == null || userInfo.getCompanyId() == null) {
             return null; // 当前用户存在异常
@@ -603,8 +576,8 @@ public class DistributionServiceImpl implements DistributionService {
 
         if(companyTeamRe.getType().equals(ObjectBusinessTypeEnum.platform.getValue())){
             // 平台分配
-            if(!companyTeamRe.getAcceptCompanyId().equals(userInfo.getCompanyId())){
-                return null; // 不是本公司的，无法审核
+            if(!companyTeamRe.getAccepterId().equals(userInfo.getId())){
+                return null; // 不是被邀请公司的管理员，无法审核
             }
         }else if(companyTeamRe.getType().equals(ObjectBusinessTypeEnum.join.getValue())){
             // 主动加入
@@ -618,10 +591,6 @@ public class DistributionServiceImpl implements DistributionService {
         if (CommonUtil.checkResult(result)) {
             return null;
         } else {
-            // 添加操作记录
-//            businessLogService.add(companyTeamRe.getId(), ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.update.getValue(),
-//                    "", "操作(同意|拒绝)加入分配器对象成员", 0, 0);
-
             // 提醒消息
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId()); // 分配器信息
             String code = ""; // 对象编号
@@ -638,20 +607,23 @@ public class DistributionServiceImpl implements DistributionService {
             }
             if (ObjectBusinessTypeEnum.join.getValue().equals(companyTeamRe.getType())) {
                 // 发送短信提醒
-                TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeamRe.getAccepterId()); // 申请人信息
+                TUserInfo applicant = userInfoMapper.selectByPrimaryKey(companyTeamRe.getAccepterId()); // 申请人信息
+                TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeam.getSenderId()); // 创建人信息
                 SmsUtil smsUtil = new SmsUtil();
                 String[] msg = {
-                        creator.getRealName(),
+                        applicant.getRealName(),
                         userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
                         companyTeam.getObjectId().toString()
                 };
                 Message message = new Message();
                 if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
-                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_PASS_CODE, creator.getMobile(), msg);
+                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_PASS_CODE, applicant.getMobile(), msg); // 申请人接收
+                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_PASS_CODE, creator.getMobile(), msg); // 创建人接收
                     message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_JOIN_PASS_CODE, msg));
                 } else {
-                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_REFUSE_CODE, creator.getMobile(), msg);
+                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_REFUSE_CODE, applicant.getMobile(), msg); // 申请人接收
+                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_REFUSE_CODE, creator.getMobile(), msg); // 创建人接收
                     message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_JOIN_REFUSE_CODE, msg));
                 }
                 // 添加消息
@@ -660,50 +632,53 @@ public class DistributionServiceImpl implements DistributionService {
                                 + code
                 ); // 业务类型 对象类型 对象编号
                 message.setSenderId(userInfo.getId());
-                message.setReceiveId(companyTeamRe.getAccepterId());
+                message.setReceiveId(companyTeamRe.getAccepterId()); // 申请人接收
                 message.setLabel(null);
                 message.setStatus(0);
                 message.setType(MessageEnum.TASK.getValue());
                 message.setBusinessType(MessageBTEnum.COMPANY_JOIN.getValue());
                 message.setOperUrl(null);
                 messageMapper.add(message);
+                message.setReceiveId(companyTeam.getSenderId()); // 创建人
+                messageMapper.add(message);
             } else if (ObjectBusinessTypeEnum.mechanism.getValue().equals(companyTeamRe.getType())
                     || ObjectBusinessTypeEnum.platform.getValue().equals(companyTeamRe.getType())) {
+                // 获取平台信息
+                List<TCompanyInfo> companyInfoList = companyInfoMapper.listByType(UserInfoEnum.USER_TYPE_ADMIN.getValue());
+                CompanyDetailInfo platformDetail = companyInfoMapper.getDetailByCompanyId(companyInfoList.get(0).getId());
                 // 发送短信提醒
                 TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeam.getSenderId()); // 创建人信息
                 CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(userInfo.getCompanyId()); // 被邀请公司信息
-                List<TSysProperty> propertyList = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE);
-                TSysProperty property = null;
-                for (TSysProperty tSysProperty : propertyList){
-                    if(companyDetailInfo.getType().toString().equals(tSysProperty.getPropertyValue())){
-                        property = tSysProperty;
-                        break;
-                    }
-                }
                 SmsUtil smsUtil = new SmsUtil();
                 String[] msg = {
                         creator.getRealName(),
                         companyDetailInfo.getCompanyName(),
-                        property.getPropertyName(),
+                        UserInfoEnum.getUserInfoEnum(companyDetailInfo.getType()).getName(),
                         userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
                         companyTeam.getObjectId().toString()
                 };
                 Message message = new Message();
                 if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
-                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_PASS_CODE, creator.getMobile(), msg);
+                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_PASS_CODE, creator.getMobile(), msg); // 创建人接收
+                    msg[0] = platformDetail.getName();
+                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_PASS_CODE, platformDetail.getPhone(), msg); // 平台接收
                     message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_PASS_CODE, msg));
                 } else {
-                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_REFUSE_CODE, creator.getMobile(), msg);
+                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_REFUSE_CODE, creator.getMobile(), msg); // 创建人接收
+                    msg[0] = platformDetail.getName();
+                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_REFUSE_CODE, creator.getMobile(), msg); // 平台接收
                     message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_REFUSE_CODE, msg));
                 }
                 message.setSenderId(userInfo.getId());
-                message.setReceiveId(companyTeamRe.getAccepterId());
+                message.setReceiveId(companyTeam.getSenderId()); // 创建人接收
                 message.setLabel(null);
                 message.setStatus(0);
                 message.setType(MessageEnum.TASK.getValue());
                 message.setBusinessType(MessageBTEnum.COMPANY_BETWEEN.getValue());
                 message.setOperUrl(null);
+                messageMapper.add(message);
+                message.setReceiveId(platformDetail.getUserId()); // 平台接收
                 messageMapper.add(message);
             }
 
@@ -917,8 +892,8 @@ public class DistributionServiceImpl implements DistributionService {
         if(!canAdd){
             return null; // 只有平台或者所属处置方才能发起业务流转
         }
-        if(!userInfo.getCompanyId().equals(companyDetailInfo.getCompanyId())){
-            return null; // 只有参与处置方才能
+        if(userInfo.getCompanyId().equals(companyId)){
+            return null; // 必须非本公司
         }
         CompanyDetailInfo companyDetailInfo1 = companyInfoMapper.getDetailByCompanyId(companyId); // 被邀请公司信息
         if (companyDetailInfo1 == null) {
@@ -983,14 +958,6 @@ public class DistributionServiceImpl implements DistributionService {
 
                 // 发送短信提醒
                 SmsUtil smsUtil = new SmsUtil();
-                List<TSysProperty> propertyList = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE);
-                TSysProperty property = null;
-                for (TSysProperty tSysProperty : propertyList){
-                    if(companyDetailInfo.getType().toString().equals(tSysProperty.getPropertyValue())){
-                        property = tSysProperty;
-                        break;
-                    }
-                }
                 String code = ""; // 对象编号
                 if (ObjectTypeEnum.PAWN.getValue().equals(companyTeam.getObjectType())) {
                     PawnInfo pawnInfo = pawnInfoMapper.get(id);
@@ -1006,7 +973,7 @@ public class DistributionServiceImpl implements DistributionService {
                 String[] msg = {
                         companyDetailInfo1.getName(),
                         companyDetailInfo.getCompanyName(),
-                        property.getPropertyName(),
+                        UserInfoEnum.getUserInfoEnum(companyDetailInfo.getType()).getName(),
                         userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(type).getName(),
                         code
@@ -1076,22 +1043,18 @@ public class DistributionServiceImpl implements DistributionService {
 //                    "", "决定(同意|拒绝)加入业务流转", 0, 0);
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
             if (companyTeam != null) {
+                // 获取平台信息
+                List<TCompanyInfo> companyInfoList = companyInfoMapper.listByType(UserInfoEnum.USER_TYPE_ADMIN.getValue());
+                CompanyDetailInfo platformDetail = companyInfoMapper.getDetailByCompanyId(companyInfoList.get(0).getId());
+
                 // 提醒消息
                 TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeam.getSenderId()); // 创建人信息
                 CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(companyTeamRe.getAcceptCompanyId()); // 被邀请公司信息
-                List<TSysProperty> propertyList = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE);
-                TSysProperty property = null;
-                for (TSysProperty tSysProperty : propertyList){
-                    if(companyDetailInfo.getType().toString().equals(tSysProperty.getPropertyValue())){
-                        property = tSysProperty;
-                        break;
-                    }
-                }
                 SmsUtil smsUtil = new SmsUtil();
                 String[] msg = {
                         creator.getRealName(),
                         companyDetailInfo.getCompanyName(),
-                        property.getPropertyName(),
+                        UserInfoEnum.getUserInfoEnum(companyDetailInfo.getType()).getName(),
                         userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
                         companyTeam.getObjectId().toString()
@@ -1138,7 +1101,9 @@ public class DistributionServiceImpl implements DistributionService {
                             }
                         }
                     }
-                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_PASS_CODE, creator.getMobile(), msg);
+                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_PASS_CODE, creator.getMobile(), msg); // 创建人接收
+                    msg[0] = platformDetail.getName();
+                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_PASS_CODE, platformDetail.getPhone(), msg); // 平台接收
                     message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_PASS_CODE, msg));
                 } else {
                     if (list != null && list.size() > 0) {
@@ -1184,6 +1149,8 @@ public class DistributionServiceImpl implements DistributionService {
                     companyTeamReMapper.update(ctr);
 
                     smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_REFUSE_CODE, creator.getMobile(), msg);
+                    msg[0] = platformDetail.getName();
+                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_REFUSE_CODE, platformDetail.getPhone(), msg);
                     message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_REFUSE_CODE, msg));
                 }
                 message.setSenderId(userInfo.getId());
@@ -1193,6 +1160,8 @@ public class DistributionServiceImpl implements DistributionService {
                 message.setType(MessageEnum.TASK.getValue());
                 message.setBusinessType(MessageBTEnum.COMPANY_BETWEEN.getValue());
                 message.setOperUrl(null);
+                messageMapper.add(message);
+                message.setReceiveId(platformDetail.getUserId());
                 messageMapper.add(message);
                 if (SysProperty.BOOLEAN_TRUE.equals(status)) {
                     // 添加公司之间的关系

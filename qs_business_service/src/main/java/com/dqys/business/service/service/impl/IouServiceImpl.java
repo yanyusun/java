@@ -51,8 +51,6 @@ public class IouServiceImpl implements IouService {
     private BusinessService businessService;
     @Autowired
     private BusinessLogService businessLogService;
-    @Autowired
-    private ObjectUserRelationMapper objectUserRelationMapper;
 
     @Override
     public JsonResponse delete_tx(Integer id) throws BusinessLogException{

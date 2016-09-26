@@ -1,24 +1,7 @@
 package com.dqys.business.service.dto.cases;
 
 /**
- * @apiDefine CaseCourtDTO
- * @apiSuccessExample {json} CaseCourtDTO:
- * {}
- * git : http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/cases/CaseCourtDTO.java
- */
-/**
  * Created by Yvan on 16/7/26.
- * @apiDefine CaseCourt
- * @apiParam {number} [id] 主键
- * @apiParam {string} caseId 案件ID
- * @apiParam {string} court 法院名称
- * @apiParam {string} code 法院案号
- * @apiParam {string} lawyer 法官
- * @apiParam {number} gender 性别(1男性)
- * @apiParam {string} lawyerMemo 备注
- * @apiParam {string} mobile 手机
- * @apiParam {string} tel 座机
- * @apiParam {string} other 其他联系方式
  */
 public class CaseCourtDTO {
 

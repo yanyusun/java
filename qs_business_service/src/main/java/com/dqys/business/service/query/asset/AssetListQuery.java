@@ -7,15 +7,6 @@ import java.util.Date;
 
 /**
  * Created by Yvan on 16/7/7.
- * @apiDefine AssetListQuery
- * @apiParam {number} [type] 资产包类型
- * @apiParam {number} [areaId] 行政区域ID
- * @apiParam {number} [operator] 操作人Id
- * @apiParam {boolean} [isOwn] 是否选择自己录入选项
- * @apiParam {number} [companyId] 贷款公司Id
- * @apiParam {string} [code] 编号
- * @apiParam {date} [startAt] 开始时间
- * @apiParam {date} [endAt] 结束时间
  */
 public class AssetListQuery extends BasePagination {
 

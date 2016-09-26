@@ -26,10 +26,10 @@ public class PawnController {
 
 
     /**
-     * @api {get} http://{url}/pawn/delete 删除抵押物
-     * @apiName delete
-     * @apiGroup pawn
-     * @apiParam {number} id 抵押物ID
+     * 删除抵押物
+     * @param id
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
@@ -41,11 +41,10 @@ public class PawnController {
     }
 
     /**
-     * @api {post} http://{url}/pawn/add 增加抵押物信息
-     * @apiName add
-     * @apiGroup pawn
-     * @apiUse Pawn
-     * @apiSuccess {number} data 增加后的数据ID
+     * 增加抵押物信息
+     * @param pawnDTO
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
@@ -58,10 +57,10 @@ public class PawnController {
     }
 
     /**
-     * @api {post} http://{url}/pawn/listAdd 增加抵押物信息(多条)
-     * @apiName listAdd
-     * @apiGroup pawn
-     * @apiParam {objectList} pawnDTOList 参考增加抵押物信息
+     * 增加抵押物信息(多条)
+     * @param pawnDTOList
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/listAdd", method = RequestMethod.POST)
     @ResponseBody
@@ -77,11 +76,10 @@ public class PawnController {
     }
 
     /**
-     * @api {post} http://{url}/pawn/update 修改抵押物信息
-     * @apiName update
-     * @apiGroup pawn
-     * @apiUse Pawn
-     * @apiSuccess {number} data 增加后的数据ID
+     * 修改抵押物信息
+     * @param pawnDTO
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
@@ -97,12 +95,9 @@ public class PawnController {
     }
 
     /**
-     * @api {post} http://{url}/pawn/get 获取抵押物信息
-     * @apiName get
-     * @apiGroup pawn
-     * @apiParam {number} id 抵押物ID
-     * @apiSuccess {PawnDTO} data 抵押物信息
-     * @apiUse PawnDTO
+     * 获取抵押物信息
+     * @param id
+     * @return
      */
     @RequestMapping(value = "/get")
     @ResponseBody
@@ -114,12 +109,9 @@ public class PawnController {
     }
 
     /**
-     * @api {post} http://{url}/iou/listPawn 获取借款人的抵押物信息
-     * @apiName listPawn
-     * @apiGroup iou
-     * @apiParam {number} id 借款人ID
-     * @apiSuccess {PawnDTO} data 抵押物信息
-     * @apiUse PawnDTO
+     * 获取借款人的抵押物信息
+     * @param id
+     * @return
      */
     @RequestMapping(value = "/listPawn")
     @ResponseBody
