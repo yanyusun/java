@@ -47,11 +47,13 @@ import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.MessageService;
+import com.dqys.business.service.service.UserService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.SmsUtil;
+import com.rabbitmq.http.client.domain.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -103,6 +105,11 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType, Integer userid) {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        if (companyId == null) {
+            TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(userId);
+            companyId = userInfo.getCompanyId();
+        }
         UserTeam userTeam = new UserTeam();
         userTeam.setObjectType(objectType);
         userTeam.setObjectId(objectId);
@@ -127,7 +134,21 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
 
         if (team == null) {//判断是否在t_user_team表中添加了记录，添加了返回信息，没添加的返回id
-            //需要判断userId是否拥有创建的权限？
+            //需要判断userId是否拥有创建的权限
+            String role = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getRoleId();
+            boolean authority = false;
+            String[] roleType = role.split(",");
+            for (int i = 0; i < roleType.length; i++) {
+                if (RoleTypeEnum.ADMIN.getValue().toString().equals(roleType[i]) || RoleTypeEnum.REGULATOR.getValue().toString().equals(roleType[i])) {//用户为管理员或管理者才拥有权限
+                    authority = true;
+                }
+            }
+            if (!authority) {
+                map.put("result", "no");
+                map.put("msg", "没有权限创建协作器");
+                return;
+            }
+
             Map<String, Object> adminUser = coordinatorMapper.getAdminUser(companyId);
             Integer mangerId = MessageUtils.transMapToInt(adminUser, "id");
             userTeam.setMangerId(mangerId == null ? userid : mangerId);
@@ -211,6 +232,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("result", "no_lender");//借款人不存在
             return null;
         } else {
+            map.put("name", lenderInfo.getLenderNo());//借款人名称
             map.put("accrual", lenderInfo.getAccrual() == null ? 0 : lenderInfo.getAccrual());//总利息
             map.put("loan", lenderInfo.getLoan() == null ? 0 : lenderInfo.getLoan());//总贷款
             map.put("appraisal", lenderInfo.getAppraisal() == null ? 0 : lenderInfo.getAppraisal());//抵押物总评估
@@ -229,8 +251,15 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     @Override
     public Map<String, Object> getCompanyUserList(String realName, Integer userId, Integer companyId) {
         Map map = new HashMap<>();
-        List<Map<String, Object>> list = coordinatorMapper.getCompanyUserList(realName, userId, companyId);
-        map.put("users", list);
+        map.put("result", "no");
+        //用户id和公司id只能选择其一，没有公司id就通过用户id查找公司id
+        if ((companyId == null && userId != null) || (companyId != null && userId == null)) {
+            List<Map<String, Object>> list = coordinatorMapper.getCompanyUserList(realName, userId, companyId);
+            map.put("users", list);
+            map.put("result", "yes");
+        } else {
+            map.put("msg", "参数传输有误");
+        }
         return map;
     }
 
@@ -936,9 +965,18 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         Map map = new HashMap<>();
         map.put("result", "no");
         if (companyTeamId == null) {
-            CompanyTeam team = companyTeamMapper.getByTypeId(objectType, objectId);//协作器id参数为null，自己查询协作器id
+            CompanyTeam team = companyTeamMapper.getByTypeId(objectType, objectId);//分配器id参数为null，自己查询分配器id
+            if (team == null && objectType == ObjectTypeEnum.LENDER.getValue()) {//借款人分配器不存在，查询资产包的分配器
+                LenderInfo info = lenderInfoMapper.get(objectId);
+                if (info != null && info.getAssetId() != null) {
+                    team = companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETPACKAGE.getValue(), info.getAssetId());
+                }
+            }
             if (team != null) {
                 companyTeamId = team.getId();
+            } else {
+                map.put("msg", "该对象类型不存在分配器");//该对象类型不存在分配器
+                return map;
             }
         }
         if (ObjectTypeEnum.PAWN.getValue() == flowType) {//抵押物
@@ -1015,7 +1053,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                         "&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType + "&receiveUserId=" + userId, null,
                 "/coordinator/businessFlowResult?status=0&objectId=" + objectId + "&objectType=" + objectType +
                         "&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType + "&receiveUserId=" + userId, null,
-                "?type=3&flowId=" + flowId + "&flowType=" + flowType + "&companyTeamId=" + companyTeamId + "&operType=" + operType + "&userId=" + userId);
+                "type=3&flowId=" + flowId + "&flowType=" + flowType + "&companyTeamId=" + companyTeamId + "&operType=" + operType + "&userId=" + userId);
         //消息列表使用的访问参数拼接
         boolean c = false;
         boolean l = false;

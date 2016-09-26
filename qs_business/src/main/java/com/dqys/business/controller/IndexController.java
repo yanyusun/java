@@ -27,6 +27,17 @@ public class IndexController {
      * @apiSampleRequest index/general
      * @apiGroup INDEX
      * @apiName index/general
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {
+     * "await": 0,//待完成任务-------------
+     * "finish": 0,//已完成------------
+     * "unfinished": 2,//正在进行中------------
+     * "join": 1 //参与的任务
+     * }
+     * }
      */
     @RequestMapping("/general")
     @ResponseBody

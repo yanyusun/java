@@ -42,6 +42,32 @@ public class MessageController {
      * @apiSampleRequest message/pageList
      * @apiGroup Message
      * @apiName message/pageList
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {
+     * "totalMes": 28,//全部未读消息数
+     * "productMes": 0,//产品未读消息数
+     * "safetyMes": 0,//安全未读消息数"
+     * "taskMes": 15,//任务未读消息数"
+     * "list": [
+     * {
+     * "id": 64,
+     * "title": "借款人null公司内部邀请",//标题
+     * "contant": "协作器邀请验证消息",//内容
+     * "sendTime": "2016-09-23",//发送时间
+     * "typeName": "任务消息",// 消息名称
+     * "status": 1,//状态（0未读1已读）
+     * "label": "任务消息",//标签
+     * "businessType": 0,// 业务类型
+     * "operUrl": "{\"distribution\":\"\",\"accept\":\"/coordinator/isAccept?status=1&teammateId=23\",\"acceptRequestType\":\"get\",\"reject\":\"/coordinator/isAccept?status=2&teammateId=23\",\"rejectRequestType\":\"get\"}"//json格式操作地址
+     * }
+     * ],
+     * "listCount": 50,//条件查询消息数量（分页使用）
+     * "serveMes": 13 //服务未读消息数"
+     * }
+     * }
      */
     @RequestMapping("/pageList")
     @ResponseBody

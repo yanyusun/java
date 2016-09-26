@@ -36,10 +36,19 @@ public class IOUInfo extends BaseModel implements Serializable {
     private String evaluateExcellent;  // 评优
     private String evaluateLevel;  // 评级
     private String memo;  // 备注
+    private Integer repayStatus;  // 还款状态
 
     private Integer onCollection;//是否可以催收:0可以1不能',
     private Integer onLawyer;//是否可以司法处置:0可以1不能',
     private Integer onAgent;// private Integer
+
+    public Integer getRepayStatus() {
+        return repayStatus;
+    }
+
+    public void setRepayStatus(Integer repayStatus) {
+        this.repayStatus = repayStatus;
+    }
 
     public Integer getOnCollection() {
         return onCollection;
@@ -72,8 +81,6 @@ public class IOUInfo extends BaseModel implements Serializable {
         return string;
 
     }
-
-
 
 
     public String getName() {

@@ -475,8 +475,10 @@ public class RepayServiceImpl implements RepayService {
 
     @Override
     public void getIouAndPawnByLender(Integer lenderId, Map map) {
-        map.put("ious", repayMapper.getIouByLenderId(lenderId));//map的key（number和id）
-        map.put("pawns", repayMapper.getPawnByLenderId(lenderId));//map的key（number和id）
+        List<Map> ious = repayMapper.getIouByLenderId(lenderId);
+        List<Map> pawns = repayMapper.getPawnByLenderId(lenderId);
+        map.put("ious", ious);//map的key（number和id）
+        map.put("pawns", pawns);//map的key（number和id）
     }
 
     @Override

@@ -7,6 +7,7 @@
         <result column="type" property="roleType" jdbcType="INTEGER"/>
         <result column="name" property="teamName" jdbcType="VARCHAR"/>
         <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="avg" property="avg" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="BaseResultMapLenderInfo" type="com.dqys.business.orm.pojo.asset.LenderInfo">
@@ -86,7 +87,7 @@
     </resultMap>
     <!--查询借款人或资产包的团队信息-->
     <select id="getLenderOrAsset" resultMap="BaseResultMap">
-        SELECT tusi.real_name,bor.name,ttr.user_id,ttr.type
+        SELECT tusi.real_name,bor.name,ttr.user_id,ttr.type,tusi.avg
         from t_teammate_re ttr LEFT JOIN  t_user_tag tust
         ON tust.user_id=ttr.user_id LEFT JOIN t_user_team tut
         ON tut.id=ttr.user_team_id LEFT JOIN bt_organization bor
@@ -144,10 +145,10 @@
         from t_company_info tci LEFT JOIN t_user_info tui
         ON tui.company_id=tci.id
         WHERE tci.id in (
-        <if test="companyId !=null">
+        <if test="companyId !=null and userId == null">
             #{companyId,jdbcType=INTEGER}
         </if>
-        <if test="userId !=null">
+        <if test="userId !=null and companyId == null">
             SELECT tui2.company_id from t_user_info tui2 where tui2.id=#{userId,jdbcType=INTEGER}
         </if>
         )
@@ -230,15 +231,14 @@
             ON tci.id=tui.company_id
             WHERE tui.id=#{userId} LIMIT 0,1
     </select>
-    <!--根据对象类型，用户id，状态 获取对应的状态的对象id-->
+    <!--根据对象类型，用户id，状态 获取对应的状态的对象id objectType(12抵押物16资产源)-->
     <select id="getObjectIdList" resultType="java.lang.Integer">
-        <if test="objectType==12">--分配器的待接收（类型为抵押物）
+        <if test="objectType==12">
             (SELECT tct.object_id from t_company_team tct LEFT JOIN t_company_team_re tcr
             ON tcr.company_team_id=tct.id and tcr.status=#{status} AND tct.object_type=#{objectType}
             WHERE tcr.accepter_id=#{userId})
         </if>
-        -- UNION
-        <if test="objectType==16">--协作器的待接收（类型为资产源）
+        <if test="objectType==16">
             (SELECT tut.object_id from t_user_team tut LEFT JOIN t_teammate_re ttr
             ON ttr.user_team_id=tut.id and ttr.status=#{status} AND tut.object_type=#{objectType}
             WHERE ttr.user_id=#{userId})
