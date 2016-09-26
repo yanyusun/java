@@ -280,18 +280,22 @@ public class LenderServiceImpl implements LenderService {
         map.put("total", count);
         List<LenderInfo> lenderInfoList = lenderInfoMapper.queryList(lenderQuery);
         List<LenderListDTO> lenderListDTOList = new ArrayList<>();
+        TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
         lenderInfoList.forEach(lenderInfo -> {
             // 借款人信息
             ContactInfo contactInfo = contactInfoMapper.getByModel(ObjectTypeEnum.LENDER.getValue().toString(),
                     ContactTypeEnum.LENDER.getValue(), lenderInfo.getId());
             // 协作器
-            UserTeam userTeam = userTeamMapper.getByObject(lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue());
-            List<TeamDTO> teamDTOList = new ArrayList<TeamDTO>();
-            if (userTeam != null) {
-                teamDTOList = coordinatorService.getLenderOrAsset(userTeam.getCompanyId(),
-                        lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue());
+            if(userInfo != null){
+                UserTeam userTeam = userTeamMapper.getByObject(
+                        lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue(), userInfo.getCompanyId());
+                List<TeamDTO> teamDTOList = new ArrayList<TeamDTO>();
+                if (userTeam != null) {
+                    teamDTOList = coordinatorService.getLenderOrAsset(userTeam.getCompanyId(),
+                            lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue());
+                }
+                lenderListDTOList.add(LenderServiceUtils.toLenderListDTO(lenderInfo, contactInfo, teamDTOList));
             }
-            lenderListDTOList.add(LenderServiceUtils.toLenderListDTO(lenderInfo, contactInfo, teamDTOList));
         });
         map.put("data", lenderListDTOList);
         return JsonResponseTool.success(map);
