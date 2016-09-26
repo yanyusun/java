@@ -29,12 +29,9 @@ public class CompanyController {
     private DistributionService distributionService;
 
     /**
-     * @api {GET} http://{url}/api/company/listCompany 查看特定类型的公司
-     * @apiName listCompany
-     * @apiGroup organization
-     * @apiParam {number} [type] 公司类型
-//     * @apiSuccess {companyDTO} data 公司信息集合
-//     * @apiUse companyDTO
+     * 查看特定类型的公司
+     * @param type 特定类型
+     * @return
      */
     @RequestMapping(value = "/listCompany")
     public JsonResponse listCompany(@RequestParam(required = false) Integer type){
@@ -43,13 +40,10 @@ public class CompanyController {
 
 
     /**
-     * @api {GET} http://{url}/api/company/listOrganization 查看组织列表(部门|团队)
-     * @apiName listOrganization
-     * @apiGroup organization
-     * @apiParam {number} companyId 公司Id
-     * @apiParam {type} type 组织类型
-     * @apiSuccess {OrganizationDTO} data 组织架构
-     * @apiUse OrganizationDTO
+     * 查看组织列表(部门|团队)
+     * @param companyId 公司ID
+     * @param type 组织类型
+     * @return
      */
     @RequestMapping(value = "/listOrganization")
     public JsonResponse listTeam(@RequestParam(required = true) Integer companyId,
@@ -65,11 +59,9 @@ public class CompanyController {
     }
 
     /**
-     * @api {POST} http://{url}/api/company/addOrganization 新增组织(部门|团队)
-     * @apiName addOrganization
-     * @apiGroup organization
-     * @apiUse Organization
-     * @apiSuccess {number} data 新增的ID
+     * 新增组织(部门|团队)
+     * @param organizationInsertDTO 新增组织
+     * @return
      */
     @RequestMapping(value = "/addOrganization", method = RequestMethod.POST)
     public JsonResponse addOrganization(@ModelAttribute OrganizationInsertDTO organizationInsertDTO) {
@@ -84,11 +76,9 @@ public class CompanyController {
     }
 
     /**
-     * @api {POST} http://{url}/api/company/updateOrganization 修改组织(部门|团队)
-     * @apiName updateOrganization
-     * @apiGroup organization
-     * @apiUse Organization
-     * @apiSuccess {number} data 修改后的ID
+     * 修改组织(部门|团队)
+     * @param organizationInsertDTO 修改组织信息
+     * @return
      */
     @RequestMapping(value = "/updateOrganization", method = RequestMethod.POST)
     public JsonResponse updateOrganization(@ModelAttribute OrganizationInsertDTO organizationInsertDTO) {
@@ -103,10 +93,9 @@ public class CompanyController {
     }
 
     /**
-     * @api {get} http://{url}/api/company/deleteOrganization 删除组织(部门|团队)
-     * @apiName deleteOrganization
-     * @apiGroup organization
-     * @apiParam {number} id 组织ID
+     * 删除组织(部门|团队)
+     * @param id 组织ID
+     * @return
      */
     @RequestMapping(value = "/deleteOrganization")
     public JsonResponse addOrganization(@RequestParam(required = true) Integer id) {
@@ -117,13 +106,10 @@ public class CompanyController {
     }
 
     /**
-     * @api {get} http://{url}/api/company/getOrganization 获取组织(部门|团队)
-     * @apiName getOrganization
-     * @apiGroup organization
-     * @apiParam {string} type 组织类型
-     * @apiParam {number} id 组织ID
-     * @apiSuccess {OrganizationDTO} data 返回组织架构
-     * @apiUse OrganizationDTO
+     * 获取组织(部门|团队)
+     * @param type 组织类型
+     * @param id 公司ID
+     * @return
      */
     @RequestMapping(value = "/getOrganization")
     public JsonResponse getOrganization(@RequestParam(required = true) String type,
@@ -138,11 +124,11 @@ public class CompanyController {
     }
 
     /**
-     * @api {get} http://{url}/api/company/getDistribution 获取该对象的分配器列表
-     * @apiName getDistribution
-     * @apiGroup distribution
-     * @apiParam {number} type 分配对象类型(如:资产包asset)
-     * @apiParam {number} id 分配对象ID
+     * 获取该对象的分配器列表
+     * @param type 对象类型
+     * @param id 对象ID
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/getDistribution")
     public JsonResponse listDistribution(@RequestParam(required = true) Integer type,
@@ -157,11 +143,10 @@ public class CompanyController {
     }
 
     /**
-     * @api {get} http://{url}/api/company/joinDistribution 申请加入分配器
-     * @apiName joinDistribution
-     * @apiGroup distribution
-     * @apiParam {number} id 分配器ID
-     * @apiSuccess {number} id
+     * 申请加入分配器
+     * @param id 分配器ID
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/joinDistribution")
     public JsonResponse joinDistribution(@RequestParam(required = true) Integer id) throws BusinessLogException {
@@ -172,12 +157,11 @@ public class CompanyController {
     }
 
     /**
-     * @api {get} http://{url}/api/company/inviteDistribution 邀请加入分配器
-     * @apiName inviteDistribution
-     * @apiGroup distribution
-     * @apiParam {number} id 分配器ID
-     * @apiParam {number} companyId 公司ID
-     * @apiSuccess {number} id
+     * 邀请加入分配器
+     * @param id 分配器ID
+     * @param companyId 被邀请公司ID
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/inviteDistribution")
     public JsonResponse inviteDistribution(@RequestParam(required = true) Integer id,
@@ -190,12 +174,11 @@ public class CompanyController {
     }
 
     /**
-     * @api {get} http://{url}/api/company/designDistribution 决定加入分配器(同意或者拒绝)
-     * @apiName designDistribution
-     * @apiGroup distribution
-     * @apiParam {number} id 被邀请ID
-     * @apiParam {number} status 操作类型(接收1|拒绝0)
-     * @apiSuccess {number} id
+     * 决定加入分配器(同意或者拒绝)
+     * @param id 分配器成员id
+     * @param status 状态
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/designDistribution")
     public JsonResponse designDistribution(@RequestParam(required = true) Integer id,
@@ -212,11 +195,10 @@ public class CompanyController {
 
 
     /**
-     * @api {get} http://{url}/api/company/exitDistribution 退出分配器
-     * @apiName exitDistribution
-     * @apiGroup distribution
-     * @apiParam {number} id 分配器成员ID
-     * @apiSuccess {number} data
+     * 退出分配器
+     * @param id 分配器成员ID
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/exitDistribution")
     public JsonResponse exitDistribution(@RequestParam(required = true) Integer id) throws BusinessLogException {
@@ -227,10 +209,9 @@ public class CompanyController {
     }
 
     /**
-     * @api {get} http://{url}/api/company/getRelation 获取公司间合作关系
-     * @apiName getRelation
-     * @apiGroup companyRelation
-     * @apiParam {number} id
+     * 获取公司间合作关系
+     * @param id 公司Id
+     * @return
      */
     @RequestMapping(value = "/getRelation")
     public JsonResponse getRelation(@RequestParam(required = true) Integer id) {
@@ -241,10 +222,9 @@ public class CompanyController {
     }
 
     /**
-     * @api {get} http://{url}/api/company/listByService 根据业务类型获取公司
-     * @apiName listByService
-     * @apiGroup companyRelation
-     * @apiParam {number} type 业务流转类型(催收1,处置2,司法3,催收处置4,催收司法5,全6)
+     * 根据业务类型获取公司
+     * @param type 业务流转类型
+     * @return
      */
     @RequestMapping(value = "/listByService")
     public JsonResponse listCompanyByServiceType(Integer type){
@@ -255,11 +235,10 @@ public class CompanyController {
     }
 
     /**
-     * @api {get} http://{url}/api/company/listRelationByService 根据业务类型获取公司联系关系
-     * @apiName listRelationByService
-     * @apiGroup companyRelation
-     * @apiParam {number} type 业务流转类型(催收1,处置2,司法3,催收处置4,催收司法5,全6)
-     * @apiParam {number} id 公司ID
+     * 根据业务类型获取公司联系关系
+     * @param type 业务流转类型
+     * @param id 公司ID
+     * @return
      */
     @RequestMapping(value = "/listRelationByService")
     public JsonResponse listRelationByServiceType(@RequestParam("type")Integer type, @RequestParam(required = false)Integer id){
@@ -270,14 +249,14 @@ public class CompanyController {
     }
 
     /**
-     * @api {get} http://{url}/api/company/addBusinessService 平台为申请业务流转的公司添加业务流转伙伴接口
-     * @apiName addBusinessService
-     * @apiGroup companyRelation
-     * @apiParam {number} type 业务流转类型
-     * @apiParam {number} id 公司ID
-     * @apiParam {number} distributionId 分配器ID
-     * @apiParam {number} businessType 业务流转类型(催收1,处置2,司法3,催收处置4,催收司法5,全6)
-     * @apiParam {number} companyId 被邀请公司ID
+     * 平台为申请业务流转的公司添加业务流转伙伴接口
+     * @param type 对象类型
+     * @param id 对象ID
+     * @param distributionId 分配器ID
+     * @param businessType 业务流转类型
+     * @param companyId 公司Id
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/addBusinessService")
     public JsonResponse addBusinessService(@RequestParam Integer type, @RequestParam Integer id,
@@ -290,14 +269,14 @@ public class CompanyController {
     }
 
     /**
-     * @api {get} http://{url}/api/company/designBusinessService 被添加公司接受或者拒绝业务流转邀请
-     * @apiName designBusinessService
-     * @apiGroup companyRelation
-     * @apiParam {number} type 业务流转类型(催收1,处置2,司法3,催收处置4,催收司法5,全6)
-     * @apiParam {number} id 公司ID
-     * @apiParam {number} distributionId 分配器ID
-     * @apiParam {number} businessType 业务流转类型
-     * @apiParam {number} status 接收1拒绝2
+     * 被添加公司接受或者拒绝业务流转邀请
+     * @param type 对象类型
+     * @param id 对象ID
+     * @param distributionId 分配器成员ID
+     * @param businessType 业务流转类型
+     * @param status 状态码
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/designBusinessService")
     public JsonResponse designBusinessService(@RequestParam Integer type, @RequestParam Integer id,

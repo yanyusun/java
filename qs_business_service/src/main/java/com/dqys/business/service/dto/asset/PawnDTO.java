@@ -1,36 +1,7 @@
 package com.dqys.business.service.dto.asset;
 
-import java.util.List;
-/**
- * @apiDefine PawnDTO
- * @apiSuccessExample {json} PawnDTO:
- * {
- *
- * }
- * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/asset/PawnDTO.java
- */
-
 /**
  * Created by Yvan on 16/6/16.
- * @apiDefine Pawn
- * @apiParam {number} id 主键
- * @apiParam {number} lenderId 借款人ID
- * @apiParam {string} pawnNo 抵押物编号
- * @apiParam {string} pawnName 抵押物名称
- * @apiParam {number} amount 贷款金额
- * @apiParam {string} type 抵押物类型
- * @apiParam {string} evaluateExcellent 评优
- * @apiParam {string} evaluateLevel 评级
- * @apiParam {string} size 规模大小
- * @apiParam {number} province 省份
- * @apiParam {number} city 城市
- * @apiParam {number} district 区域
- * @apiParam {string} address 详细地址
- * @apiParam {number} pawnRate 抵押率
- * @apiParam {string} disposeStatus 处置状态
- * @apiParam {number} worth 价值
- * @apiParam {string} memo 备注
- * @apiParam {string} iouIds 借据Id集合
  */
 public class PawnDTO {
 
@@ -78,16 +49,16 @@ public class PawnDTO {
         return pawnNo;
     }
 
+    public void setPawnNo(String pawnNo) {
+        this.pawnNo = pawnNo;
+    }
+
     public Integer getLenderId() {
         return lenderId;
     }
 
     public void setLenderId(Integer lenderId) {
         this.lenderId = lenderId;
-    }
-
-    public void setPawnNo(String pawnNo) {
-        this.pawnNo = pawnNo;
     }
 
     public Double getAmount() {

@@ -1,13 +1,6 @@
 package com.dqys.business.service.dto.company;
 
 /**
- * @apiDefine Organization
- * @apiParam {string} type 类型
- * @apiParam {string} name 名称
- * @apiParam {number} userId 负责人ID
- * @apiParam {number} companyId 公司ID
- * @apiParam {number} pid 上级ID
- * @apiParam {string} remark 备注
  * Created by Yvan on 16/7/8.
  */
 public class OrganizationInsertDTO {

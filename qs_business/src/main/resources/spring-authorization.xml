@@ -55,6 +55,10 @@
             <mvc:mapping path="/source/*"/>
             <bean class="com.dqys.business.interceptor.common.SourceInterceptor"/>
         </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/announcement/*"/>
+            <bean class="com.dqys.business.interceptor.common.AnnouncementInterceptor"/>
+        </mvc:interceptor>
     </mvc:interceptors>
 
 </beans>

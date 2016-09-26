@@ -40,15 +40,8 @@ public class AssetController {
     private UserService userService;
 
     /**
-     * @api {get} http://{url}/asset/getInit 获取初始化数据
-     * @apiName getInit
-     * @apiGroup asset
-     * @apiSuccess {SelectonDTO} assetType 资产包类型
-     * @apiSuccess {SelectonDTO} excellent 评优
-     * @apiUse SelectonDTO
-     * @apiUse AssetTypeEnum
-     * @apiUse ExcellentTypeEnum
-     * @apiSuccess {string} level 评级
+     * 获取初始化数据
+     * @return
      */
     @RequestMapping(value = "/getInit")
     public JsonResponse getInit() {
@@ -62,11 +55,10 @@ public class AssetController {
     }
 
     /**
-     * @api {POST} http://{url}/asset/add 添加资产包
-     * @apiName add
-     * @apiGroup asset
-     * @apiUse Asset
-     * @apiSuccess {number} data 新增的ID
+     * 添加资产包
+     * @param assetDTO
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public JsonResponse add(@ModelAttribute AssetDTO assetDTO) throws BusinessLogException {
@@ -78,10 +70,10 @@ public class AssetController {
     }
 
     /**
-     * @api {get} http://{url}/asset/delete 删除资产包
-     * @apiName delete
-     * @apiGroup asset
-     * @apiParam {number} id 资产包ID
+     * 删除资产包
+     * @param id
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/delete")
     public JsonResponse delete(Integer id) throws BusinessLogException {
@@ -92,11 +84,10 @@ public class AssetController {
     }
 
     /**
-     * @api {POST} http://{url}/asset/update 修改资产包
-     * @apiName update
-     * @apiGroup asset
-     * @apiUse Asset
-     * @apiSuccess {number} data 修改的ID
+     * 修改资产包
+     * @param assetDTO
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/update")
     public JsonResponse update(@ModelAttribute AssetDTO assetDTO) throws BusinessLogException {
@@ -112,12 +103,9 @@ public class AssetController {
 
 
     /**
-     * @api {get} http://{url}/asset/get 获取资产包
-     * @apiName get
-     * @apiGroup asset
-     * @apiParam {number} id 资产包ID
-     * @apiSuccess {AssetDTO} data 资产包信息
-     * @apiUse AssetDTO
+     * 获取资产包
+     * @param id
+     * @return
      */
     @RequestMapping(value = "/get")
     public JsonResponse get(@RequestParam Integer id) {
@@ -128,13 +116,9 @@ public class AssetController {
     }
 
     /**
-     * @api {get} http://{url}/asset/listLenderSelect 获取资产包下联系人下拉
-     * @apiName listLenderSelect
-     * @apiGroup asset
-     * @apiParam {number} id 资产包ID
-     * @apiSuccess {SelectonDTO} data 借款人信息
-     * @apiUse SelectonDTO
-     * @apiUse LenderListDTO
+     * 获取资产包下联系人下拉
+     * @param id
+     * @return
      */
     @RequestMapping(value = "/listLenderSelect")
     public JsonResponse listLenderSelect(@RequestParam(required = true) Integer id) {
@@ -145,11 +129,11 @@ public class AssetController {
     }
 
     /**
-     * @api {get} http://{url}/asset/excelIn excel导入资产包的借款人
-     * @apiName excelIn
-     * @apiGroup asset
-     * @apiParam {number} id 公司ID
-     * @apiParam {string} file excel文件
+     * excel导入资产包的借款人
+     * @param id
+     * @param file
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/excelIn")
     public JsonResponse addLenders(@RequestParam(required = true) Integer id,
@@ -161,10 +145,9 @@ public class AssetController {
     }
 
     /**
-     * @api {get} http://{url}/asset/listLender 查询资产包借款人
-     * @apiName listLender
-     * @apiGroup asset
-     * @apiParam {number} id 资产包ID
+     * 查询资产包借款人
+     * @param id
+     * @return
      */
     @RequestMapping(value = "/listLender")
     public JsonResponse listLender(@RequestParam(required = true) Integer id) {
@@ -175,14 +158,10 @@ public class AssetController {
     }
 
     /**
-     * @api {get} http://{url}/asset/list 获取资产包列表
-     * @apiName list
-     * @apiGroup asset
-     * @apiParam {number} nav 子导航栏项目
-     * @apiUse AssetListQuery
-     * @apiUse tabEnum
-     * @apiSuccess {AssetDTO} data 资产包信息
-     * @apiUse AssetDTO
+     * 获取资产包列表
+     * @param assetListQuery
+     * @param nav
+     * @return
      */
     @RequestMapping(value = "/list")
     public JsonResponse list(@ModelAttribute AssetListQuery assetListQuery, @RequestParam(required = true) Integer nav) {
@@ -193,13 +172,11 @@ public class AssetController {
     }
 
     /**
-     * @api {get} http://{url}/asset/assignedBatch 批量分配(未完成)
-     * @apiName assignedBatch
-     * @apiGroup asset
-     * @apiDescription 协作器时补充
-     * todo 未完成
-     * @apiParam {string} ids 批量分配对象ID集合
-     * @apiParam {number} id  被分配者ID
+     * 批量分配(未完成)
+     * @param ids
+     * @param id
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/assignedBatch")
     public JsonResponse assignedBatch(@RequestParam("ids") String ids, @RequestParam("id") Integer id) throws BusinessLogException {
@@ -215,18 +192,10 @@ public class AssetController {
     }
 
     /**
-     * @api {get} http://{url}/asset/addLender 添加资产包借款人(整合版)
-     * @apiName addLender
-     * @apiGroup asset
-     * @apiParam {number} id  资产包ID
-     * @apiParam {LenderDTO} lenderDTO 借款人基础信息
-     * @apiParam {ContactDTO} contactDTOList 联系人集合
-     * @apiParam {PawnDTO} pawnDTOList 抵押物集合
-     * @apiParam {IouDTO} iouDTOList 借据集合
-     * @apiUse Iou
-     * @apiUse Pawn
-     * @apiUse LenderDTO
-     * @apiUse ContactDTO
+     * 添加资产包借款人(整合版)
+     * @param assetLenderInsertDTO
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/addLender", method = RequestMethod.POST)
     public JsonResponse addLender(@ModelAttribute AssetLenderInsertDTO assetLenderInsertDTO) throws BusinessLogException {

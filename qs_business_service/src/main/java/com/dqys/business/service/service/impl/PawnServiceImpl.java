@@ -180,11 +180,13 @@ public class PawnServiceImpl implements PawnService {
         relationQuery.setPawnId(pawnDTO.getId());
         List<PiRelation> piRelationList = piRelationMapper.queryList(relationQuery);
         piRelationList.forEach(piRelation -> {
-            IOUInfo iouInfo = iouInfoMapper.get(piRelation.getIouId());
-            if(pawnDTO.getIouNames() == null || pawnDTO.getIouNames().equals("")){
-                pawnDTO.setIouNames(iouInfo.getName());
-            }else{
-                pawnDTO.setIouNames(pawnDTO.getIouNames() + "," + iouInfo.getName());
+            if(piRelation.getIouId() != null){
+                IOUInfo iouInfo = iouInfoMapper.get(piRelation.getIouId());
+                if(pawnDTO.getIouNames() == null || pawnDTO.getIouNames().equals("")){
+                    pawnDTO.setIouNames(iouInfo.getName());
+                }else{
+                    pawnDTO.setIouNames(pawnDTO.getIouNames() + "," + iouInfo.getName());
+                }
             }
         });
         return CommonUtil.responseBack(PawnServiceUtils.toPawnDTO(pawnInfoMapper.get(id)));

@@ -5,12 +5,6 @@ import java.util.Date;
 /**
  * Created by Yvan on 16/7/14.
  * 分配器成员
- * @apiDefine CompanyTeamReDTO
- * @apiSuccessExample {json} CompanyTeamReDTO:
- * {
- *
- * }
- * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/company/CompanyTeamReDTO.java
  */
 public class CompanyTeamReDTO {
 

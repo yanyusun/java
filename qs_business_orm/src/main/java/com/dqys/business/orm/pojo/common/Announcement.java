@@ -17,7 +17,7 @@ public class Announcement {
     private String mark; // 摘要
 
     private Date createAt; // 创建时间
-    private Integer stateFlag; // 数据状态
+    private Long stateFlag; // 数据状态
 
     public Date getCreateAt() {
         return createAt;
@@ -27,11 +27,11 @@ public class Announcement {
         this.createAt = createAt;
     }
 
-    public Integer getStateFlag() {
+    public Long getStateFlag() {
         return stateFlag;
     }
 
-    public void setStateFlag(Integer stateFlag) {
+    public void setStateFlag(Long stateFlag) {
         this.stateFlag = stateFlag;
     }
 

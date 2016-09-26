@@ -7,49 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @apiDefine CaseDTO
- * @apiSuccessExample {json} CaseDTO:
- * {}
- * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/cases/CaseDTO.java
- */
-
-/**
  * Created by Yvan on 16/6/16.
- * @apiDefine Case
- * @apiParam {number} [id] 主键ID(修改时必传,增加时可不传)
- * @apiParam {number} pawnId 抵押物ID
- * @apiParam {number} iouIds 借据Ids(逗号隔开)
- * @apiParam {number} [pId] 被拆分的案件特有属性
- * @apiParam {string} plaintiff 原告
- * @apiParam {string} defendant 被告
- * @apiParam {string} spouse 配偶
- * @apiParam {string} mortgagor 抵押人名称
- * @apiParam {string} mortgageTime 抵押次数
- * @apiParam {string} guarantor 保证人名称
- * @apiParam {string} mortgageTime 抵押次数
- * @apiParam {string} guarantor 保证人
- * @apiParam {string} evaluateExcellent 评优
- * @apiParam {string} evaluateLevel 评级
- * @apiParam {number} lawsuitAmount 诉讼金额
- * @apiParam {number} lawsuitCorpus 诉讼本金
- * @apiParam {number} lawsuitAccrual 诉讼利息
- * @apiParam {number} attachmentStatus 查封(1为肯定,表示已查封,下同)
- * @apiParam {date} attachmentDate 查封时间
- * @apiParam {string} attachmentCourt 法院
- * @apiParam {number} attachmentTime 查封次数
- * @apiParam {number} isPreservation 保全(1保全)
- * @apiParam {date} preservationStart 保全开始时间
- * @apiParam {date} preservationStart 保全结束时间
- * @apiParam {string} preservationMemo 续保情况
- * @apiParam {number} isFirst 首封(1)
- * @apiParam {string} firstAttachmentCourt 首封法院
- * @apiParam {string} preservationCourt 执行保全法院
- * @apiParam {string} firstAttachmentCode 法院案号
- * @apiParam {date} firstAttachmentDate 查封时间
- * @apiParam {string} memo 备注
- * @apiParam {string} lawsuitMemo 诉讼备注
- * @apiParam {string} attachmentMemo 查封情况
- * @apiParam {CaseCourt} courtDTOList 相关联法院
  */
 public class CaseDTO {
 

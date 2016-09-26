@@ -22,10 +22,10 @@
     <where>
       stateflag = 0
       <if test="pawnId != null">
-        pawn_id = #{pawnId,jdbcType=INTEGER}
+        AND pawn_id = #{pawnId,jdbcType=INTEGER}
       </if>
       <if test="iouId != null">
-        iou_id = #{iouId,jdbcType=INTEGER}
+        AND iou_id = #{iouId,jdbcType=INTEGER}
       </if>
     </where>
   </sql>

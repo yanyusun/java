@@ -23,10 +23,10 @@ public class IouController {
     private IouService iouService;
 
     /**
-     * @api {get} http://{url}/iou/delete 删除借据
-     * @apiName delete
-     * @apiGroup iou
-     * @apiParam {number} id 借据ID
+     * 删除借据
+     * @param id
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
@@ -38,10 +38,10 @@ public class IouController {
     }
 
     /**
-     * @api {post} http://{url}/iou/add 新增借据
-     * @apiName add
-     * @apiGroup iou
-     * @apiUse Iou
+     * 新增借据
+     * @param iouDTO
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
@@ -54,10 +54,10 @@ public class IouController {
     }
 
     /**
-     * @api {post} http://{url}/iou/listAdd 新增借据
-     * @apiName listAdd
-     * @apiGroup iou
-     * @apiParam {objectData} iouDTOList 参考新增借据
+     * 新增借据
+     * @param iouDTOList
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/listAdd", method = RequestMethod.POST)
     @ResponseBody
@@ -73,11 +73,10 @@ public class IouController {
     }
 
     /**
-     * @api {post} http://{url}/iou/update 修改借据信息
-     * @apiName update
-     * @apiGroup iou
-     * @apiUse Iou
-     * @apiSuccess {number} data 修改后的ID
+     * 修改借据信息
+     * @param iouDTO
+     * @return
+     * @throws BusinessLogException
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
@@ -93,11 +92,9 @@ public class IouController {
     }
 
     /**
-     * @api {post} http://{url}/iou/get 获取借据信息
-     * @apiName get
-     * @apiGroup iou
-     * @apiParam {number} id 借据ID
-     * @apiUse IouDTO
+     * 获取借据信息
+     * @param id
+     * @return
      */
     @RequestMapping(value = "/get")
     @ResponseBody
@@ -109,12 +106,9 @@ public class IouController {
     }
 
     /**
-     * @api {post} http://{url}/iou/listIou 获取借款人的借据信息
-     * @apiName listIou
-     * @apiGroup iou
-     * @apiParam {number} id 借款人ID
-     * @apiSuccess {IouDTO} data 借据信息
-     * @apiUse IouDTO
+     * 获取借款人的借据信息
+     * @param id
+     * @return
      */
     @RequestMapping(value = "/listIou")
     @ResponseBody

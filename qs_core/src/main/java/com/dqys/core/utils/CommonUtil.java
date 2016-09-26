@@ -87,8 +87,17 @@ public class CommonUtil {
      * @param num
      * @return
      */
-    public static String[] initLevel(Integer num) {
-        return CommonUtil.UPLETTER.toString().substring(0, num).split(",");
+    public static List<String> initLevel(Integer num) {
+        if(null != num){
+            List<String> result = new ArrayList<>();
+            if(num > 0){
+                for (int i = 0; i < num % 26; i++){
+                    result.add(UPLETTER[i]);
+                }
+            }
+            return result;
+        }
+        return null;
     }
 
     /**
