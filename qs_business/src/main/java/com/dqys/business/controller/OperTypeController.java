@@ -121,6 +121,7 @@ public class OperTypeController {
             List<TUserTag> tags = tUserTagMapper.selectByUserId(userId);
             Integer roleType = RoleTypeEnum.GENERAL.getValue();//1-管理员;2-管理者;3-普通员工;4所属人;
             //// TODO: 16-9-24 增加是不是所属人的判断
+
             Integer userType = 0;//0-普通用户;1-平台管理员;2-委托号;31-催收;32-律所;33-中介
             if (tags.size() > 0) {
                 TUserTag tag = tags.get(0);
