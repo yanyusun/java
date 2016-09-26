@@ -38,6 +38,7 @@
         <result column="on_collection" property="onCollection" jdbcType="INTEGER"/>
         <result column="on_lawyer" property="onLawyer" jdbcType="INTEGER"/>
         <result column="on_agent" property="onAgent" jdbcType="INTEGER"/>
+        <result column="repay_status" property="repayStatus" jdbcType="INTEGER"/>
     </resultMap>
 
     <!-- 基础字段 -->
@@ -46,7 +47,7 @@
     agency, iou_code, loan_time, loan_attime, amount, pact_rate, outtime_multiple, appropriation_multiple, 
     accrual_repay, loan_repay, level_type, out_days, less_corpus, accrual_arrears, penalty,
     arrears, end_at, worth, advance_corpus, evaluate_excellent, evaluate_level, memo, name,
-    on_collection, on_lawyer, on_agent
+    on_collection, on_lawyer, on_agent,repay_status
   </sql>
 
     <sql id="Query_Condition">

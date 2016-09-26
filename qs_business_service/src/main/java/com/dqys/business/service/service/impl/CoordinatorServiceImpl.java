@@ -104,7 +104,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType, Integer userid) {
-        Integer userId = UserSession.getCurrent() == null ? 0:UserSession.getCurrent().getUserId();
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         if (companyId == null) {
             TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(userId);
             companyId = userInfo.getCompanyId();
@@ -943,9 +943,18 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         Map map = new HashMap<>();
         map.put("result", "no");
         if (companyTeamId == null) {
-            CompanyTeam team = companyTeamMapper.getByTypeId(objectType, objectId);//协作器id参数为null，自己查询协作器id
+            CompanyTeam team = companyTeamMapper.getByTypeId(objectType, objectId);//分配器id参数为null，自己查询分配器id
+            if (team == null && objectType == ObjectTypeEnum.LENDER.getValue()) {//借款人分配器不存在，查询资产包的分配器
+                LenderInfo info = lenderInfoMapper.get(objectId);
+                if (info != null && info.getAssetId() != null) {
+                    team = companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETPACKAGE.getValue(), info.getAssetId());
+                }
+            }
             if (team != null) {
                 companyTeamId = team.getId();
+            } else {
+                map.put("msg", "该对象类型不存在分配器");//该对象类型不存在分配器
+                return map;
             }
         }
         if (ObjectTypeEnum.PAWN.getValue() == flowType) {//抵押物
@@ -1022,7 +1031,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                         "&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType + "&receiveUserId=" + userId, null,
                 "/coordinator/businessFlowResult?status=0&objectId=" + objectId + "&objectType=" + objectType +
                         "&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType + "&receiveUserId=" + userId, null,
-                "?type=3&flowId=" + flowId + "&flowType=" + flowType + "&companyTeamId=" + companyTeamId + "&operType=" + operType + "&userId=" + userId);
+                "type=3&flowId=" + flowId + "&flowType=" + flowType + "&companyTeamId=" + companyTeamId + "&operType=" + operType + "&userId=" + userId);
         //消息列表使用的访问参数拼接
         boolean c = false;
         boolean l = false;

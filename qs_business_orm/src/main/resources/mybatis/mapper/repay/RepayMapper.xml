@@ -444,12 +444,15 @@
     <!--根据借款人获取借据-->
     <select id="getIouByLenderId" resultType="java.util.Map">
         SELECT iou.iou_no number,iou.id id from bt_iou iou
-        where iou.lender_id=#{lenderId,jdbcType=INTEGER} and iou.stateflag=0
+        where iou.lender_id=#{lenderId,jdbcType=INTEGER} and iou.stateflag=0 AND ioou.repay_status=1
     </select>
     <!--根据借款人获取抵押物-->
     <select id="getPawnByLenderId" resultType="java.util.Map">
-        SELECT pawn.pawn_no number,pawn.id id from bt_pawn pawn
-        where pawn.lender_id=#{lenderId,jdbcType=INTEGER} and pawn.stateflag=0
+        SELECT pawn.pawn_no number,pawn.id id from bt_pawn pawn LEFT JOIN bt_pi_relation bpr
+        ON bpr.pawn_id=pawn.id LEFT JOIN bt_iou iou
+        ON iou.id=bpr.iou_id
+        where pawn.lender_id=#{lenderId,jdbcType=INTEGER} and pawn.stateflag=0 AND iou.repay_status=1
+        GROUP BY pawn.id
     </select>
     <!--根据对象类型和对象id获取还款记录信息-->
     <select id="getRepayRecord" resultMap="BaseResultMapRepayRecord">
