@@ -24,100 +24,591 @@ public class ListButtonShowerUtil {
 
     // TODO: 16-9-26  后期改为从数据库查询完成并且加入缓存,实现可以调控
     static {
+        //同意,拒绝,操作日志
+        Integer[] rightButtonArray1 = {LenderEnum.VIEw_ACCPET.getValue(), LenderEnum.VIEW_REJECT.getValue(), LenderEnum.VIEW_OPERATION_LOG.getValue()};
+        //操作日志
+        Integer[] rightButtonArray2 = {LenderEnum.VIEW_OPERATION_LOG.getValue()};
+        //操作日志,重新申请
+        Integer[] rightButtonArray3 = {LenderEnum.VIEW_OPERATION_LOG.getValue(),LenderEnum.VIEW_REAPPLY.getValue()};
         //--------------------------------->待审核
         //待审核 平台管理员 借款人
-        Integer[] rightButtonArray1 = {LenderEnum.VIEw_ACCPET.getValue(), LenderEnum.VIEW_REJECT.getValue(), LenderEnum.VIEW_OPERATION_LOG.getValue()};
         map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray1, ObjectTypeEnum.LENDER)));
         //待审核 委托管理员 借款人
-        Integer[] rightButtonArray2 = {LenderEnum.VIEW_OPERATION_LOG.getValue()};
         map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
         //待审核 委托所属人 借款人
-        Integer[] rightButtonArray3 = {LenderEnum.VIEW_OPERATION_LOG.getValue()};
-        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR), new ListButtonShowerBean(getrightButtonList(rightButtonArray3, ObjectTypeEnum.LENDER)));
+        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR), new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
         //待审核 委托管理者 借款人
-        Integer[] rightButtonArray4 = {LenderEnum.VIEW_OPERATION_LOG.getValue()};
-        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR), new ListButtonShowerBean(getrightButtonList(rightButtonArray4, ObjectTypeEnum.LENDER)));
+        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR), new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
         //待审核 委托管理者 借款人
-        Integer[] rightButtonArray5 = {LenderEnum.VIEW_OPERATION_LOG.getValue()};
-        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL), new ListButtonShowerBean(getrightButtonList(rightButtonArray5, ObjectTypeEnum.LENDER)));
+        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL), new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
 
         //待审核 平台管理员 资产包
-        Integer[] rightButtonArray6 = {AssetPackageEnum.VIEw_ACCPET.getValue(), AssetPackageEnum.VIEW_REJECT.getValue(), AssetPackageEnum.VIEW_OPERATION_LOG.getValue()};
-        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray6, ObjectTypeEnum.ASSETPACKAGE)));
+        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray1, ObjectTypeEnum.ASSETPACKAGE)));
         //待审核 委托管理员 资产包
-        Integer[] rightButtonArray7 = {AssetPackageEnum.VIEW_OPERATION_LOG.getValue()};
-        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray7, ObjectTypeEnum.ASSETPACKAGE)));
+        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.ASSETPACKAGE)));
         //待审核 委托所属人 资产包
-        Integer[] rightButtonArray8 = {AssetPackageEnum.VIEW_OPERATION_LOG.getValue()};
-        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR), new ListButtonShowerBean(getrightButtonList(rightButtonArray8, ObjectTypeEnum.ASSETPACKAGE)));
+        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR), new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.ASSETPACKAGE)));
         //待审核 委托管理者 资产包
-        Integer[] rightButtonArray9 = {AssetPackageEnum.VIEW_OPERATION_LOG.getValue()};
-        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR), new ListButtonShowerBean(getrightButtonList(rightButtonArray9, ObjectTypeEnum.ASSETPACKAGE)));
+        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR), new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.ASSETPACKAGE)));
         //待审核 委托管理者 资产包
-        Integer[] rightButtonArray10 = {AssetPackageEnum.VIEW_OPERATION_LOG.getValue()};
-        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL), new ListButtonShowerBean(getrightButtonList(rightButtonArray10, ObjectTypeEnum.ASSETPACKAGE)));
+        map.put(getKey(ObjectTabEnum.check, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL), new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.ASSETPACKAGE)));
 
         //---------------------------------------->驳回
         //驳回 平台管理员 借款人
-        Integer[] rightButtonArray11 = {LenderEnum.VIEW_OPERATION_LOG.getValue()};
-        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray11, ObjectTypeEnum.LENDER)));
+        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
         //驳回 委托管理员 借款人
-        Integer[] rightButtonArray12 = {LenderEnum.VIEW_OPERATION_LOG.getValue(),LenderEnum.VIEW_REAPPLY.getValue()};
-        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray12, ObjectTypeEnum.LENDER)));
+        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray3, ObjectTypeEnum.LENDER)));
         //驳回 委托所属人 借款人
-        Integer[] rightButtonArray13 = {LenderEnum.VIEW_OPERATION_LOG.getValue(),LenderEnum.VIEW_REAPPLY.getValue()};
-        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR), new ListButtonShowerBean(getrightButtonList(rightButtonArray13, ObjectTypeEnum.LENDER)));
+        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR), new ListButtonShowerBean(getrightButtonList(rightButtonArray3, ObjectTypeEnum.LENDER)));
         //驳回 委托管理者 借款人
-        Integer[] rightButtonArray14 = {LenderEnum.VIEW_OPERATION_LOG.getValue(),LenderEnum.VIEW_REAPPLY.getValue()};
-        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR), new ListButtonShowerBean(getrightButtonList(rightButtonArray14, ObjectTypeEnum.LENDER)));
+        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR), new ListButtonShowerBean(getrightButtonList(rightButtonArray3, ObjectTypeEnum.LENDER)));
         //驳回 委托管理者 借款人
-        Integer[] rightButtonArray15 = {LenderEnum.VIEW_OPERATION_LOG.getValue(),LenderEnum.VIEW_REAPPLY.getValue()};
-        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL), new ListButtonShowerBean(getrightButtonList(rightButtonArray15, ObjectTypeEnum.LENDER)));
+        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL), new ListButtonShowerBean(getrightButtonList(rightButtonArray3, ObjectTypeEnum.LENDER)));
 
         //驳回 平台管理员 资产包
-        Integer[] rightButtonArray16 = {LenderEnum.VIEW_OPERATION_LOG.getValue()};
-        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray16, ObjectTypeEnum.ASSETPACKAGE)));
+        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.ASSETPACKAGE)));
         //驳回 委托管理员 资产包
-        Integer[] rightButtonArray17 = {LenderEnum.VIEW_OPERATION_LOG.getValue(),LenderEnum.VIEW_REAPPLY.getValue()};
-        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray17, ObjectTypeEnum.ASSETPACKAGE)));
+        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray3, ObjectTypeEnum.ASSETPACKAGE)));
         //驳回 委托所属人 资产包
-        Integer[] rightButtonArray18 = {LenderEnum.VIEW_OPERATION_LOG.getValue(),LenderEnum.VIEW_REAPPLY.getValue()};
-        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR), new ListButtonShowerBean(getrightButtonList(rightButtonArray18, ObjectTypeEnum.ASSETPACKAGE)));
+        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR), new ListButtonShowerBean(getrightButtonList(rightButtonArray3, ObjectTypeEnum.ASSETPACKAGE)));
         //驳回 委托管理者 资产包
-        Integer[] rightButtonArray19 = {LenderEnum.VIEW_OPERATION_LOG.getValue(),LenderEnum.VIEW_REAPPLY.getValue()};
-        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR), new ListButtonShowerBean(getrightButtonList(rightButtonArray19, ObjectTypeEnum.ASSETPACKAGE)));
+        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR), new ListButtonShowerBean(getrightButtonList(rightButtonArray3, ObjectTypeEnum.ASSETPACKAGE)));
         //驳回 委托管理者 资产包
-        Integer[] rightButtonArray20 = {LenderEnum.VIEW_OPERATION_LOG.getValue(),LenderEnum.VIEW_REAPPLY.getValue()};
-        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL), new ListButtonShowerBean(getrightButtonList(rightButtonArray20, ObjectTypeEnum.ASSETPACKAGE)));
+        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL), new ListButtonShowerBean(getrightButtonList(rightButtonArray3, ObjectTypeEnum.ASSETPACKAGE)));
 
         //------------------------------------------------->待处置
-        //驳回 平台管理员 借款人
-        Integer[] rightButtonArray21 = {LenderEnum.VIEW_OPERATION_LOG.getValue()};
-        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray11, ObjectTypeEnum.LENDER)));
+        //待处置 平台管理员 借款人
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
+                , getUserTeamBeanAdd(
+                        getCompanyTeamBeanAdd(
+                                new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)))
+                ));
+        //待处置 平台管理者 借款人
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
+                ,getUserTeamBeanAdd(
+                        new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER))));
+        //待处置 平台所属人 借款人
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //待处置 平台参与人 借款人
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+
+        //待处置 委托管理员 借款人
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
+                ,getUserTeamBeanAdd(
+                        new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER))));
+        //待处置 委托管理者 借款人
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
+                ,getUserTeamBeanAdd(
+                        new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER))));
+        //待处置 委托所属人 借款人
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //待处置 委托参与人 借款人
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+
+
+        //待处置 平台管理员 资产包IEW_OPERATION_LOG.getValue()};
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
+                , getUserTeamBeanAdd(
+                        getCompanyTeamBeanAdd(
+                                new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.ASSETPACKAGE)))
+                ));
+        //待处置 平台管理者 资产包
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
+                ,getUserTeamBeanAdd(
+                        new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.ASSETPACKAGE))));
+        //待处置 平台所属人 资产包
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.ASSETPACKAGE)));
+        //待处置 平台参与人 资产包
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.ASSETPACKAGE)));
+
+        //待处置 委托管理员 资产包
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
+                ,getUserTeamBeanAdd(
+                        new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.ASSETPACKAGE))));
+        //待处置 委托管理者 资产包
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
+                ,getUserTeamBeanAdd(
+                        new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.ASSETPACKAGE))));
+        //待处置 委托所属人 资产包
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.ASSETPACKAGE)));
+        //待处置 委托参与人 资产包
+        map.put(getKey(ObjectTabEnum.handle, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.ASSETPACKAGE)));
+
+
+        //--------------------------------------------------->待参与
+        //待参与 平台管理员 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 平台管理者 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 平台所属人 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 平台参与人 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+
+        //待参与 委托管理员 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 委托管理者 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 委托所属人 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 委托参与人 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+
+        //待参与 催收管理员 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 催收管理者 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 催收所属人 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 催收参与人 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+
+        //待参与 律所司法管理员 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 律所司法管理者 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 律所司法所属人 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 律所司法参与人 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+
+        //待参与 中介管理员 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 中介管理者 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 中介所属人 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 中介参与人 借款人
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
 
 
 
-        //驳回 委托管理员 借款人
-        Integer[] rightButtonArray12 = {LenderEnum.VIEW_OPERATION_LOG.getValue(),LenderEnum.VIEW_REAPPLY.getValue()};
-        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN), new ListButtonShowerBean(getrightButtonList(rightButtonArray12, ObjectTypeEnum.LENDER)));
-        //驳回 委托所属人 借款人
-        Integer[] rightButtonArray13 = {LenderEnum.VIEW_OPERATION_LOG.getValue(),LenderEnum.VIEW_REAPPLY.getValue()};
-        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR), new ListButtonShowerBean(getrightButtonList(rightButtonArray13, ObjectTypeEnum.LENDER)));
-        //驳回 委托管理者 借款人
-        Integer[] rightButtonArray14 = {LenderEnum.VIEW_OPERATION_LOG.getValue(),LenderEnum.VIEW_REAPPLY.getValue()};
-        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR), new ListButtonShowerBean(getrightButtonList(rightButtonArray14, ObjectTypeEnum.LENDER)));
-        //驳回 委托管理者 借款人
-        Integer[] rightButtonArray15 = {LenderEnum.VIEW_OPERATION_LOG.getValue(),LenderEnum.VIEW_REAPPLY.getValue()};
-        map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL), new ListButtonShowerBean(getrightButtonList(rightButtonArray15, ObjectTypeEnum.LENDER)));
+        //待参与 平台管理员 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 平台管理者 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 平台所属人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 平台参与人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+
+        //待参与 委托管理员 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 委托管理者 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 委托所属人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 委托参与人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+
+        //待参与 催收管理员 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 催收管理者 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 催收所属人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 催收参与人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+
+        //待参与 律所司法管理员 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 律所司法管理者 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 律所司法所属人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 律所司法参与人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+
+        //待参与 中介管理员 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 中介管理者 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 中介所属人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 中介参与人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETPACKAGE, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+
+
+        //待参与 平台管理员 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 平台管理者 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 平台所属人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 平台参与人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+
+        //待参与 委托管理员 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 委托管理者 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 委托所属人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 委托参与人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+
+        //待参与 催收管理员 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 催收管理者 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 催收所属人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 催收参与人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+
+        //待参与 律所司法管理员 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 律所司法管理者 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 律所司法所属人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 律所司法参与人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+
+        //待参与 中介管理员 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 中介管理者 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 中介所属人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+        //待参与 中介参与人 资产包
+        map.put(getKey(ObjectTabEnum.join, ObjectTypeEnum.ASSETSOURCE, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
+                , getAllFalseBean(
+                        getUserTeamApply(new ListButtonShowerBean())));
+
+
+
+
+
+        //-------------------------------------------------------------------->已参与
+        //已参与 平台管理员 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 平台管理者 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 平台所属人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 平台参与人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+
+        //已参与 委托管理员 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 委托管理者 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 委托所属人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 委托参与人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+
+        //已参与 催收管理员 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 催收管理者 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 催收所属人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 催收参与人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+
+        //已参与 律所司法管理员 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 律所司法管理者 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 律所司法所属人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 律所司法参与人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+
+        //已参与 中介管理员 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 中介管理者 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 中介所属人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 中介参与人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+
+
+
+        //已参与 平台管理员 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 平台管理者 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 平台所属人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 平台参与人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+
+        //已参与 委托管理员 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 委托管理者 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 委托所属人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 委托参与人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+
+        //已参与 催收管理员 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 催收管理者 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 催收所属人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 催收参与人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+
+        //已参与 律所司法管理员 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 律所司法管理者 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 律所司法所属人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 律所司法参与人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+
+        //已参与 中介管理员 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 中介管理者 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 中介所属人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 中介参与人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
 
 
 
 
 
 
+        //------------------------------------>超时
+        //已参与 平台管理员 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 平台管理者 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 平台所属人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 平台参与人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
 
+        //已参与 委托管理员 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 委托管理者 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 委托所属人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 委托参与人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
 
+        //已参与 催收管理员 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 催收管理者 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 催收所属人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 催收参与人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
 
+        //已参与 律所司法管理员 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 律所司法管理者 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 律所司法所属人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 律所司法参与人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+
+        //已参与 中介管理员 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 中介管理者 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 中介所属人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
+        //已参与 中介参与人 借款人
+        map.put(getKey(ObjectTabEnum.joined, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, ObjectTypeEnum.LENDER)));
 
     }
 
@@ -245,4 +736,9 @@ public class ListButtonShowerUtil {
     public static ListButtonShowerBean getCompanyTeamBeanAddAndApply(ListButtonShowerBean bean){
         return getCompanyTeamBean(bean,true,true);
     }
+    public  static ListButtonShowerBean getAllFalseBean(ListButtonShowerBean bean){
+        bean.setHasRightButton(false);
+        return bean;
+    }
+
 }
