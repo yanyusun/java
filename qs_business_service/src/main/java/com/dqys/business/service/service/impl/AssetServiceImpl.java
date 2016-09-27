@@ -8,6 +8,7 @@ import com.dqys.business.orm.constant.business.BusinessRelationEnum;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.business.ObjectUserStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
+import com.dqys.business.orm.constant.company.ObjectBusinessTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
 import com.dqys.business.orm.mapper.asset.*;
@@ -308,15 +309,16 @@ public class AssetServiceImpl implements AssetService {
             List<Integer> coordinatorIds = userTeamMapper.selectByOperatorAndStatus(UserSession.getCurrent().getUserId(),
                     TeammateReEnum.STATUS_INIT.getValue(), ObjectTypeEnum.ASSETPACKAGE.getValue());
             // 对象中的待接收对象集合
-            ObjectUserRelationQuery query = new ObjectUserRelationQuery();
-            query.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
-            query.setStatus(ObjectUserStatusEnum.accept.getValue());
-            List<ObjectUserRelation> objectList = objectUserRelationMapper.list(query);
-            List<Integer> objectIds = new ArrayList<>();
-            objectList.forEach(object -> {
-                objectIds.add(object.getObjectId());
-            });
-            List<Integer> result = CommonUtil.pickAll(distributionIds, coordinatorIds, objectIds);
+//            ObjectUserRelationQuery query = new ObjectUserRelationQuery();
+//            query.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
+//            query.setStatus(ObjectUserStatusEnum.accept.getValue());
+//            List<ObjectUserRelation> objectList = objectUserRelationMapper.list(query);
+//            List<Integer> objectIds = new ArrayList<>();
+//            objectList.forEach(object -> {
+//                objectIds.add(object.getObjectId());
+//            });
+//            List<Integer> result = CommonUtil.pickAll(distributionIds, coordinatorIds, objectIds);
+            List<Integer> result = CommonUtil.pickAll(distributionIds, coordinatorIds);
             if (CommonUtil.checkParam(result) || result.size() == 0) {
                 // 找不到数据,填充0数据限制
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
@@ -403,6 +405,7 @@ public class AssetServiceImpl implements AssetService {
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
             }
             assetQuery.setRepayStatus(SysProperty.BOOLEAN_FALSE);
+            assetQuery.setOperator(userInfo.getId());
         } else if (ObjectTabEnum.focus.getValue().equals(type)) {
             // 聚焦
             assetQuery.setId(SysProperty.NULL_DATA_ID); // 暂时不显示数据
@@ -494,7 +497,7 @@ public class AssetServiceImpl implements AssetService {
             if(!flag){
                 query.setCompanyId(userInfo.getCompanyId());
             }
-            query.setObjectType(ObjectTypeEnum.LENDER.getValue());
+            query.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
             List<UserTeam> list = userTeamMapper.queryList(query); // 获取该公司下所有的协作器
             List<Integer> result = new ArrayList<>();
             for (UserTeam userTeam : list) {
@@ -546,6 +549,7 @@ public class AssetServiceImpl implements AssetService {
                 // 找不到数据
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
             }
+            assetQuery.setOperator(userInfo.getId());
         } else if (ObjectTabEnum.refuse.getValue().equals(type)) {
             // 已驳回
             List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.ASSETPACKAGE.getValue(),
@@ -556,17 +560,20 @@ public class AssetServiceImpl implements AssetService {
                 // 找不到数据
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
             }
+            assetQuery.setOperator(userInfo.getId());
         } else if (ObjectTabEnum.handle.getValue().equals(type)) {
             // 待处置
             if(flag){
-                assetQuery.setIds(managerBusinessIds);
+                assetQuery.setIds(managerPassIds); // 通过审核还未处置
             }else{
-                assetQuery.setIds(businessIds);
+                assetQuery.setIds(passIds); // 通过审核还未处置
+                assetQuery.setOperator(userInfo.getId());
             }
             if(CommonUtil.checkParam(assetQuery.getIds()) || assetQuery.getIds().size() == 0){
                 // 找不到数据
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
             }
+            assetQuery.setOperator(userInfo.getId());
         } else if (ObjectTabEnum.assign.getValue().equals(type)) {
             // 待分配
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
@@ -583,6 +590,7 @@ public class AssetServiceImpl implements AssetService {
             if (!CommonUtil.checkParam(ids) && ids.size() > 0) {
                 assetQuery.setExceptIds(ids);
             }
+            assetQuery.setOperator(userInfo.getId());
             if(!flag){
                 if(isPlatformOrEntrust){
                     if(businessIds != null && businessIds.size() > 0){
@@ -620,13 +628,14 @@ public class AssetServiceImpl implements AssetService {
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
             objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
+            objectUserRelationQuery.setType(BusinessRelationEnum.team.getValue());
             List<ObjectUserRelation> objectUserRelationList = objectUserRelationMapper.list(objectUserRelationQuery);
             List<Integer> relationIds = new ArrayList<>();
             objectUserRelationList.forEach(objectUserRelation -> {
                 relationIds.add(objectUserRelation.getObjectId());
             });
             List<Integer> teammateIds = teammateReMapper.listObjectIdByJoinType(ObjectTypeEnum.ASSETPACKAGE.getValue(),
-                    UserSession.getCurrent().getUserId(), TeammateReEnum.TYPE_PARTICIPATION.getValue());
+                    UserSession.getCurrent().getUserId(), TeammateReEnum.TYPE_AUXILIARY.getValue());
             List<Integer> ids = CommonUtil.unionList(relationIds, teammateIds);
             if (CommonUtil.checkParam(ids) || ids.size() == 0) {
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
@@ -654,7 +663,7 @@ public class AssetServiceImpl implements AssetService {
         } else if (ObjectTabEnum.stop.getValue().equals(type)) {
             // 暂停
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
-            objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
+            objectUserRelationQuery.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
             if(!flag){
                 objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
             }

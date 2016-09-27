@@ -71,12 +71,8 @@ public class UserController {
     }
 
     /**
-     * @api {GET} http://{url}/api/user/listUser 获取公司
-     * @apiName listUser
-     * @apiGroup User
-     * @apiDescription 暂未补充
-     * @apiSuccess {UserDTO} data 用户信息
-     * @apiUse UserDTO
+     * 获取公司
+     * @return
      */
     @RequestMapping(value = "/listUser")
     @ResponseBody
@@ -89,16 +85,8 @@ public class UserController {
     }
 
     /**
-     * @api {GET} http://{url}/api/user/getInit 获取初始化列表
-     * @apiName getInit
-     * @apiGroup User
-     * @apiSuccess {CompanyDTO} companyInfo 公司信息
-     * @apiUse CompanyDTO
-     * @apiSuccess {SelectonDTO} userStatus 用户状态集
-     * @apiUse SelectonDTO
-     * @apiSuccess {Property} userType 用户账号类型
-     * @apiSuccess {Property} roleType 用户角色类型
-     * @apiUse PropertyDTO
+     * 获取初始化列表
+     * @return
      */
     @RequestMapping(value = "/getInit")
     @ResponseBody
@@ -116,12 +104,9 @@ public class UserController {
     }
 
     /**
-     * @api {GET} http://{url}/api/user/list 用户列表
-     * @apiName list
-     * @apiGroup User
-     * @apiUse UserListQuery
-     * @apiSuccess {UserList} data
-     * @apiUse UserList
+     * 用户列表
+     * @param userListQuery
+     * @return
      */
     @RequestMapping(value = "/list")
     @ResponseBody
@@ -130,11 +115,9 @@ public class UserController {
     }
 
     /**
-     * @api {POST} http://{url}/api/user/add 增加用户
-     * @apiName add
-     * @apiGroup User
-     * @apiUse UserInsert
-     * @apiSuccess {number} data 添加成功后的ID
+     * 增加用户
+     * @param userInsertDTO
+     * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
@@ -153,12 +136,9 @@ public class UserController {
     }
 
     /**
-     * @api {POST} http://{url}/api/user/get 查看用户信息
-     * @apiName get
-     * @apiGroup User
-     * @apiParam {number} id 用户ID
-     * @apiSuccess {UserInsertDTO} data 用户信息
-     * @apiUse UserInsertDTO
+     * 查看用户信息
+     * @param id
+     * @return
      */
     @RequestMapping(value = "/get")
     @ResponseBody
@@ -170,11 +150,9 @@ public class UserController {
     }
 
     /**
-     * @api {POST} http://{url}/api/user/update 修改用户信息
-     * @apiName update
-     * @apiGroup User
-     * @apiUse UserInsert
-     * @apiSuccess {number} data 添加后的Id
+     * 修改用户信息
+     * @param userInsertDTO
+     * @return
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
@@ -191,11 +169,9 @@ public class UserController {
     }
 
     /**
+     * 删除用户信息
      * @param id
      * @return
-     * @api {get} http://{url}/api/user/delete 删除用户信息
-     * @apiName delete
-     * @apiGroup User
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
@@ -208,11 +184,10 @@ public class UserController {
 
 
     /**
-     * @apiIgnore {GET} http://{url}/api/user/assignedBatch 批量分配<暂时不处理>
-     * @apiName assignedBatch
-     * @apiGroup User
-     * @apiParam {string} ids 操作成员ID的集合,","分隔
-     * @apiParam {number} id 交付给某人
+     * 批量分配<暂时不处理>
+     * @param ids
+     * @param id
+     * @return
      */
     @RequestMapping(value = "/assignedBatch")
     @ResponseBody
@@ -225,11 +200,10 @@ public class UserController {
     }
 
     /**
-     * @api {GET} http://{url}/api/user/statusBatch 批量设置状态
-     * @apiName statusBatch
-     * @apiGroup User
-     * @apiParam {string} ids 操作成员ID的集合,","分隔
-     * @apiParam {number} status 状态
+     * 批量设置状态
+     * @param ids
+     * @param status
+     * @return
      */
     @RequestMapping(value = "/statusBatch")
     @ResponseBody
@@ -242,10 +216,10 @@ public class UserController {
     }
 
     /**
-     * @api {GET} http://{url}/api/user/userExcel 成员信息excel导入
-     * @apiName userExcel
-     * @apiGroup User
-     * @apiParam {String} file 上传的excel文件
+     * 成员信息excel导入
+     * @param file
+     * @return
+     * @throws Exception
      */
     @RequestMapping(value = "/userExcel")
     @ResponseBody
@@ -258,10 +232,9 @@ public class UserController {
     }
 
     /**
-     * @api {GET} http://{url}/api/user/sendMsg 消息提醒(暂时废除)
-     * @apiName sendMsg
-     * @apiGroup User
-     * @apiParam {string} ids 操作用户ID集合,","分隔
+     * 消息提醒(暂时废除)
+     * @param ids
+     * @return
      */
     @RequestMapping(value = "/sendMsg")
     @ResponseBody
@@ -278,10 +251,9 @@ public class UserController {
     }
 
     /**
-     * @api {GET} http://{url}/api/user/setPwdBatch 批量重置密码
-     * @apiName setPwdBatch
-     * @apiGroup User
-     * @apiParam {string} ids 操作用户ID集合,","分隔
+     * 批量重置密码
+     * @param ids
+     * @return
      */
     @RequestMapping(value = "/setPwdBatch")
     @ResponseBody
@@ -298,12 +270,10 @@ public class UserController {
     }
 
     /**
+     * 重置密码
+     * @param id
+     * @param pwd
      * @return
-     * @api {POST} http://{url}/api/user/setPwd 重置密码
-     * @apiName setPwd
-     * @apiGroup User
-     * @apiParam {number} id 被操作用户
-     * @apiParam {string} pwd 新密码
      */
     @RequestMapping(value = "/setPwd", method = RequestMethod.POST)
     @ResponseBody
