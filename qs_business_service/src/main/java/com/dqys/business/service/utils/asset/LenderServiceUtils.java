@@ -373,7 +373,8 @@ public class LenderServiceUtils {
     public static String checkData(ContactDTO contactDTO) {
         if (CommonUtil.checkParam(contactDTO,
                 contactDTO.getName(), contactDTO.getType(), contactDTO.getIdcard(),
-                contactDTO.getMobile())) {
+                contactDTO.getMobile(), contactDTO.getProvince(), contactDTO.getCity(),
+                contactDTO.getDistrict())) {
             return "参数缺失";
         }
         if (ContactTypeEnum.getContactTypeEnum(contactDTO.getType()) == null) {

@@ -457,12 +457,13 @@ public class LenderServiceImpl implements LenderService {
         List<ContactInfo> contactInfoList = contactInfoMapper.listByMode(ObjectTypeEnum.LENDER.getValue().toString(), lenderInfo.getId());
         resultMap.put("contactDTOs", LenderServiceUtils.toContactDTO(contactInfoList));
         for (ContactInfo contactInfo : contactInfoList) {
-            if(contactInfo.getType().equals(ContactTypeEnum.LENDER.getValue())){
+            if(contactInfo.getType().equals(ContactTypeEnum.LENDER.getValue())
+                    ){
                 lenderDTO.setCurrentAddress(AreaTool.getAreaById(contactInfo.getProvince()).getLabel()
                         + AreaTool.getAreaById(contactInfo.getCity()).getLabel()
                         + AreaTool.getAreaById(contactInfo.getDistrict()).getLabel()
                         + contactInfo.getAddress()
-                );
+                );break;
             }
         }
         // 借据
