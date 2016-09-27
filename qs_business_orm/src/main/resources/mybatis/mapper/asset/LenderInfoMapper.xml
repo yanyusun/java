@@ -282,6 +282,9 @@
       <if test="repayStatus != null" >
         repay_status,
       </if>
+      <if test="lenderNo != null" >
+        lender_no,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -406,6 +409,9 @@
       </if>
       <if test="repayStatus != null" >
         #{repayStatus,jdbcType=INTEGER},
+      </if>
+      <if test="lenderNo != null" >
+        #{lenderNo,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
