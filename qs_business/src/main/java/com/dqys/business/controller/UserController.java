@@ -40,22 +40,7 @@ public class UserController {
     private CompanyService companyService;
 
     /**
-     * @api {GET} http://{url}/api/user/listData 二级导航统计
-     * @apiName listData
-     * @apiGroup User
-     * @apiDescription 二级导航数据统计
-     * @apiSuccessExample {json} Data-Response:
-     * {
-     * plateform:1,
-     * plateformCompany:1,
-     * entrustTotal:1,
-     * entrustAgency:1,
-     * entrustSingle:1,
-     * disposeTotal:1,
-     * urge:1,
-     * judicial:1,
-     * dispose:1,
-     * }
+     * 二级导航统计
      */
     @RequestMapping(value = "/listData")
     @ResponseBody
