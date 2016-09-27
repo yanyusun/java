@@ -453,6 +453,9 @@ public class AssetServiceImpl implements AssetService {
             List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.ASSETPACKAGE.getValue(),
                     BusinessStatusEnum.end.getValue(), UserSession.getCurrent().getUserId());
             assetQuery.setIds(ids);
+            if(CommonUtil.checkParam(assetQuery.getIds()) || assetQuery.getIds().size() == 0){
+                assetQuery.setId(SysProperty.NULL_DATA_ID);
+            }
         } else if (ObjectTabEnum.outTime.getValue().equals(type)) {
             // 超时
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();

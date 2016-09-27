@@ -231,7 +231,7 @@ public class ZcyServiceImpl implements ZcyService {
             map.put("result", "yes");
             map.put("estatesId", zcyEstates.getId());
         } else {
-            map.put("result", "no");
+            getMap(map, "操作失败");
         }
         return map;
     }
@@ -241,8 +241,7 @@ public class ZcyServiceImpl implements ZcyService {
         Map map = new HashMap<>();
         Integer result = 0;
         if (zcyOwner.getEstatesId() == null) {
-            map.put("result", "no_estatesId");
-            return map;
+            return getMap(map, "资产源id有误");
         }
         //只有不存在才添加
         ZcyOwner owner = new ZcyOwner();
@@ -262,7 +261,7 @@ public class ZcyServiceImpl implements ZcyService {
             }
             map.put("result", "yes");
         } else {
-            map.put("result", "no");
+            getMap(map, "操作失败");
         }
         return map;
     }
@@ -272,8 +271,7 @@ public class ZcyServiceImpl implements ZcyService {
         Map map = new HashMap<>();
         Integer result = 0;
         if (zcyMaintain.getEstatesId() == null) {
-            map.put("result", "no_estatesId");
-            return map;
+            return getMap(map, "资产源id有误");
         }
         ZcyMaintain maintain = new ZcyMaintain();
         maintain.setEstatesId(zcyMaintain.getEstatesId());
@@ -297,7 +295,7 @@ public class ZcyServiceImpl implements ZcyService {
             }
             map.put("result", "yes");
         } else {
-            map.put("result", "no");
+            getMap(map, "操作失败");
         }
         return map;
     }
@@ -307,8 +305,7 @@ public class ZcyServiceImpl implements ZcyService {
         Map map = new HashMap<>();
         Integer result = 0;
         if (zcyKey.getEstatesId() == null) {
-            map.put("result", "no_estatesId");
-            return map;
+            return getMap(map, "资产源id有误");
         }
         ZcyKey key = new ZcyKey();
         key.setEstatesId(zcyKey.getEstatesId());
@@ -322,7 +319,7 @@ public class ZcyServiceImpl implements ZcyService {
         if (result > 0) {
             map.put("result", "yes");
         } else {
-            map.put("result", "no");
+            getMap(map, "操作失败");
         }
         return map;
     }
@@ -332,8 +329,7 @@ public class ZcyServiceImpl implements ZcyService {
         Map map = new HashMap<>();
         Integer result = 0;
         if (zcyExpress.getEstatesId() == null) {
-            map.put("result", "no_estatesId");
-            return map;
+            return getMap(map, "资产源id有误");
         }
         ZcyExpress express = new ZcyExpress();
         express.setEstatesId(zcyExpress.getEstatesId());
@@ -347,8 +343,21 @@ public class ZcyServiceImpl implements ZcyService {
         if (result > 0) {
             map.put("result", "yes");
         } else {
-            map.put("result", "no");
+            getMap(map, "操作失败");
         }
+        return map;
+    }
+
+    /**
+     * 组合失败返回信息
+     *
+     * @param map
+     * @param msg
+     * @return
+     */
+    private Map getMap(Map map, String msg) {
+        map.put("result", "no");
+        map.put("msg", msg);
         return map;
     }
 
@@ -370,6 +379,7 @@ public class ZcyServiceImpl implements ZcyService {
         map.put("result", "yes");
         return map;
     }
+
     /**
      * 资产源全部列表
      *
@@ -470,6 +480,7 @@ public class ZcyServiceImpl implements ZcyService {
 
     /**
      * 设置抵押物待接收
+     *
      * @param zcyListQuery
      * @param zcyPawnDTOs
      * @param count
@@ -529,7 +540,9 @@ public class ZcyServiceImpl implements ZcyService {
     @Override
     public Map verifyEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> zcyEstatesAddressList, List<ZcyEstatesFacility> zcyEstatesFacilities) {
         Map<String, Object> map = new HashMap<>();
-
+        if (CommonUtil.checkParam(zcyEstates)) {
+            return getMap(map, "信息不可为空");
+        }
         map.put("result", "yes");
         return map;
     }
@@ -537,7 +550,9 @@ public class ZcyServiceImpl implements ZcyService {
     @Override
     public Map verifyOwner(ZcyOwner zcyOwner, List<ZcyOwnerContacts> zcyOwnerContactses) {
         Map<String, Object> map = new HashMap<>();
-
+        if (CommonUtil.checkParam(zcyOwner)) {
+            return getMap(map, "信息不可为空");
+        }
         map.put("result", "yes");
         return map;
     }
@@ -545,7 +560,9 @@ public class ZcyServiceImpl implements ZcyService {
     @Override
     public Map verifyMaintain(ZcyMaintain zcyMaintain, List<ZcyMaintainOther> zcyMaintainOthers, List<ZcyMaintainTax> zcyMaintainTaxes) {
         Map<String, Object> map = new HashMap<>();
-
+        if (CommonUtil.checkParam(zcyMaintain)) {
+            return getMap(map, "信息不可为空");
+        }
         map.put("result", "yes");
         return map;
     }
@@ -553,7 +570,9 @@ public class ZcyServiceImpl implements ZcyService {
     @Override
     public Map verifyKey(ZcyKey zcyKey) {
         Map<String, Object> map = new HashMap<>();
-
+        if (CommonUtil.checkParam(zcyKey)) {
+            return getMap(map, "信息不可为空");
+        }
         map.put("result", "yes");
         return map;
     }
@@ -561,7 +580,9 @@ public class ZcyServiceImpl implements ZcyService {
     @Override
     public Map verifyExpress(ZcyExpress zcyExpress) {
         Map<String, Object> map = new HashMap<>();
-
+        if (CommonUtil.checkParam(zcyExpress)) {
+            return getMap(map, "信息不可为空");
+        }
         map.put("result", "yes");
         return map;
     }

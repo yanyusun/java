@@ -150,7 +150,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
 
             Map<String, Object> adminUser = coordinatorMapper.getAdminUser(companyId);
-            Integer mangerId = MessageUtils.transMapToInt(adminUser, "id");
+            Integer mangerId = MessageUtils.transMapToInt(adminUser, "id");//获取管理员id
             userTeam.setMangerId(mangerId == null ? userid : mangerId);
             userTeam.setCtreaterId(userid);
             //查询操作人员被操作事物关系
@@ -165,8 +165,15 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                     break;
                 }
             }
-            userTeamMapper.insertSelective(userTeam);//添加公司内成员协作器
-            map.put("userTeamId", userTeam.getId());
+            Integer userTeamId = 0;
+            UserTeam userTe = userTeamMapper.selectByPrimaryKeySelective(userTeam);
+            if (userTe == null) {
+                Integer result = userTeamMapper.insertSelective(userTeam);//添加公司内成员协作器
+                userTeamId = userTeam.getId();
+            } else {
+                userTeamId = userTe.getId();
+            }
+            map.put("userTeamId", userTeamId);
             map.put("result", "yes");
         } else {
             List<TeamDTO> list = getLenderOrAsset(companyId, team.getObjectId(), team.getObjectType());//获取借款人或是资产包的团队信息
@@ -296,7 +303,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 break;
             }
             if (flag == -1) {//已经加入过案组
-                map.put("msg", "可能已经加入过案组");
+                map.put("msg", "可能已经在案组或已邀请");
             }
             if (flag > 0) {
                 num++;
@@ -313,7 +320,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         } else {
             map.put("result", "no");
         }
-//        businessLogService.add(userId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.ADD_COMMON_USER.getValue(), "添加参与人", "", 0, 0);
+        businessLogService.add(userId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.ADD_COMMON_USER.getValue(), "添加参与人", "", 0, 0);
         return map;
     }
 
@@ -360,7 +367,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 teammateRe1.setType(teammateRe.getType());
                 flag = teammateReMapper.updateByPrimaryKeySelective(teammateRe1);
             } else {
-                flag = -1;//已经加入过案组
+                flag = -1;//已经加入过案组或已邀请
             }
         } else {
             flag = teammateReMapper.insertSelective(teammateRe);//添加参与人
@@ -392,7 +399,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public Map isAccept(Integer teammateId, Integer status, Integer userId) throws BusinessLogException {
-//        businessLogService.add(teammateId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.UPDATE_COMMON_USER.getValue(), "被邀请人同意或拒绝", "", 0, 0);
+        businessLogService.add(teammateId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.UPDATE_COMMON_USER.getValue(), "被邀请人同意或拒绝", "", 0, 0);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "no");
         TeammateRe teammateRe = teammateReMapper.selectByPrimaryKey(teammateId);
@@ -410,7 +417,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             userTeam.setId(teammateRe.getUserTeamId());
             userT = userTeamMapper.selectByPrimaryKeySelective(userTeam);
             if (userT == null) {
-                map.put("msg", "协作器查询有误");//不存在
+                map.put("msg", "案组查询有误");//不存在
                 return map;
             }
 //            if (userT.getMangerId() != userId) {
@@ -491,18 +498,18 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 }
                 map.put("result", "yes");
             } else if (flag == -1) {
-                map.put("msg", "已经加入过案组");//已经加入过案组
+                map.put("msg", "已经加入过案组或申请加入已发出");//已经加入过案组
             } else if (flag == -2) {
                 map.put("msg", "案组人数已满");//人数已满
             } else if (flag == -4) {
-                map.put("msg", "第一个不是管理者");//第一个不是管理者
+                map.put("msg", "您不是管理者");//第一个不是管理者
             } else {
                 map.put("msg", "操作失败");
             }
         } else {
-            map.put("msg", "协作器不存在");//协作器不存在
+            map.put("msg", "该案组已不存在");//协作器不存在
         }
-//        businessLogService.add(userId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.ADD_COMMON_USER.getValue(), "主动加入案组", "", 0, 0);
+        businessLogService.add(userId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.ADD_COMMON_USER.getValue(), "主动加入案组", "", 0, 0);
         return map;
     }
 
@@ -638,7 +645,6 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             messageService.add(title, content, userId, rec, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS_PAUSE.getValue(), "");//添加通知消息
         }
         map.put("result", "yes");
-//        businessLogService.add(objectId, objectType, operType, text, "", 0, 0);//添加操作日志
     }
 
     /**
