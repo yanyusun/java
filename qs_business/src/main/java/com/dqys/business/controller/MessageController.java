@@ -86,6 +86,7 @@ public class MessageController {
             map.put("list", MessageUtils.transToMessageDTO(list));
             Message sage = new Message();
 //            map.put("total", messageService.selectCount(sage));//总共的记录数目
+            sage.setReceiveId(message.getReceiveId());
             sage.setStatus(0);//标记的未读消息
             map.put("totalMes", messageService.selectCount(sage));//全部未读消息数
             sage.setType(MessageEnum.PRODUCT.getValue());
@@ -96,9 +97,7 @@ public class MessageController {
             map.put("serveMes", messageService.selectCount(sage));//"服务未读消息数"
             sage.setType(MessageEnum.TASK.getValue());
             map.put("taskMes", messageService.selectCount(sage));//"任务未读消息数"
-            sage.setType(message.getType());
-            sage.setStatus(message.getStatus());
-            map.put("listCount", messageService.selectCount(sage));//条件查询消息数量
+            map.put("listCount", messageService.selectCount(message));//条件查询消息数量
             return JsonResponseTool.success(map);
         }
     }

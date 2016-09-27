@@ -102,8 +102,11 @@ public class ZcyController {
         map = zcyService.verifyEstates(zcyModule.getZcyEstates(), zcyModule.getZcyEstatesAddressList(), zcyModule.getZcyEstatesFacilities());
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             map = zcyService.addEstates(zcyModule.getZcyEstates(), zcyModule.getZcyEstatesAddressList(), zcyModule.getZcyEstatesFacilities());
+            if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+                return JsonResponseTool.success(map);
+            }
         }
-        return JsonResponseTool.success(map);
+        return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
     }
 
     /**
@@ -144,8 +147,11 @@ public class ZcyController {
         map = zcyService.verifyOwner(zcyModule.getZcyOwner(), zcyModule.getZcyOwnerContactses());
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             map = zcyService.addOwner(zcyModule.getZcyOwner(), zcyModule.getZcyOwnerContactses());
+            if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+                return JsonResponseTool.success(map);
+            }
         }
-        return JsonResponseTool.success(map);
+        return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
     }
 
     /**
@@ -169,8 +175,11 @@ public class ZcyController {
         map = zcyService.verifyMaintain(zcyModule.getZcyMaintain(), zcyModule.getZcyMaintainOthers(), zcyModule.getZcyMaintainTaxes());
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             map = zcyService.addMaintain(zcyModule.getZcyMaintain(), zcyModule.getZcyMaintainOthers(), zcyModule.getZcyMaintainTaxes());
+            if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+                return JsonResponseTool.success(map);
+            }
         }
-        return JsonResponseTool.success(map);
+        return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
     }
 
     /**
@@ -190,8 +199,11 @@ public class ZcyController {
         map = zcyService.verifyKey(zcyModule.getZcyKey());
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             map = zcyService.addKey(zcyModule.getZcyKey());
+            if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+                return JsonResponseTool.success(map);
+            }
         }
-        return JsonResponseTool.success(map);
+        return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
     }
 
     /**
@@ -211,8 +223,11 @@ public class ZcyController {
         map = zcyService.verifyExpress(zcyModule.getZcyExpress());
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             map = zcyService.addExpress(zcyModule.getZcyExpress());
+            if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+                return JsonResponseTool.success(map);
+            }
         }
-        return JsonResponseTool.success(map);
+        return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
     }
 
     /**
