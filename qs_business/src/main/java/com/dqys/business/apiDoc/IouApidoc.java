@@ -90,41 +90,7 @@ public class IouApidoc {
      * @apiDefine IouDTO
      * @apiSuccessExample {json} IouDTO:
      * {
-     *     "id": 540,
-     *     "version": 0,
-     *     "stateflag": 0,
-     *     "createAt": "2016-09-22",
-     *     "updateAt": "2016-09-22",
-     *     "remark": null,
-     *     "iouNo": "IO16090002",
-     *     "name": "借据01",
-     *     "lenderId": 245,
-     *     "type": "1",
-     *     "agency": "2AADD",
-     *     "iouCode": "S45543",
-     *     "loanTime": "2016-09-22",
-     *     "loanAttime": "2016-09-22",
-     *     "amount": 0,
-     *     "pactRate": 0,
-     *     "outtimeMultiple": 0,
-     *     "appropriationMultiple": "0",
-     *     "accrualRepay": 0,
-     *     "loanRepay": 0,
-     *     "levelType": "1",
-     *     "outDays": 0,
-     *     "lessCorpus": 0,
-     *     "accrualArrears": 0,
-     *     "penalty": 0,
-     *     "arrears": 0,
-     *     "endAt": "2016-09-21",
-     *     "worth": 0,
-     *     "advanceCorpus": 0,
-     *     "evaluateExcellent": "nice",
-     *     "evaluateLevel": "A",
-     *     "memo": null,
-     *     "onCollection": 0,
-     *     "onLawyer": 0,
-     *     "onAgent": 0
+     *
      * }
      * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/asset/IouDTO.java
      */

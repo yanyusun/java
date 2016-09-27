@@ -20,6 +20,7 @@ import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.coordinator.UserTeamMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.ContactInfo;
+import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
@@ -51,10 +52,7 @@ import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
-import com.dqys.core.utils.CommonUtil;
-import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.core.utils.RandomUtil;
-import com.dqys.core.utils.SysPropertyTool;
+import com.dqys.core.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -448,18 +446,63 @@ public class LenderServiceImpl implements LenderService {
         if (lenderInfo == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        resultMap.put("lenderDTO", LenderServiceUtils.toLenderDTO(lenderInfo));
+        LenderDTO lenderDTO = LenderServiceUtils.toLenderDTO(lenderInfo);
+        if(lenderInfo.getAssetId() != null){
+            AssetInfo assetInfo = assetInfoMapper.get(lenderInfo.getAssetId());
+            if(assetInfo != null){
+                lenderDTO.setAssetCode(assetInfo.getAssetNo());
+            }
+        }
         // 联系人
         List<ContactInfo> contactInfoList = contactInfoMapper.listByMode(ObjectTypeEnum.LENDER.getValue().toString(), lenderInfo.getId());
         resultMap.put("contactDTOs", LenderServiceUtils.toContactDTO(contactInfoList));
+        for (ContactInfo contactInfo : contactInfoList) {
+            if(contactInfo.getType().equals(ContactTypeEnum.LENDER.getValue())){
+                lenderDTO.setCurrentAddress(AreaTool.getAreaById(contactInfo.getProvince()).getLabel()
+                        + AreaTool.getAreaById(contactInfo.getCity()).getLabel()
+                        + AreaTool.getAreaById(contactInfo.getDistrict()).getLabel()
+                        + contactInfo.getAddress()
+                );
+            }
+        }
         // 借据
         IOUQuery iouQuery = new IOUQuery();
         iouQuery.setLenderId(id);
-        resultMap.put("iouDTOs", IouServiceUtils.toIouDTO(iouInfoMapper.queryList(iouQuery)));
+        List<IOUInfo> iouList = iouInfoMapper.queryList(iouQuery);
+        resultMap.put("iouDTOs", IouServiceUtils.toIouDTO(iouList));
+        Date date = null;
+        for (IOUInfo iouInfo : iouList) {
+            if(date == null
+                    || (iouInfo.getEndAt() != null && iouInfo.getEndAt().compareTo(date) > 0)){
+                date = iouInfo.getEndAt();
+            }
+        }
+        Calendar calendar = Calendar.getInstance();
+        if(calendar.getTime().compareTo(date) > 0){
+            long millis = (calendar.getTimeInMillis() - date.getTime()) / 24 / 3600 / 1000;
+            lenderDTO.setOverdueDay(Integer.valueOf(String.valueOf(millis)));
+        }
         // 抵押物
         PawnQuery pawnQuery = new PawnQuery();
         pawnQuery.setLenderId(id);
         resultMap.put("pawnDTOs", PawnServiceUtils.toPawnDTO(pawnInfoMapper.queryList(pawnQuery)));
+        // 协作器
+        TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
+        UserTeam userTeam = userTeamMapper.getByObject(
+                lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue(), userInfo.getCompanyId());
+        if (userTeam != null) {
+            TeammateRe teammateRe = new TeammateRe();
+            teammateRe.setUserTeamId(userTeam.getId());
+            teammateRe.setType(TeammateReEnum.TYPE_AUXILIARY.getValue());
+            List<TeammateRe> teammateReList = teammateReMapper.selectSelective(teammateRe);
+            if(teammateReList != null && teammateReList.size() > 0 && teammateReList.get(0).getUserId() != null){
+                TUserInfo userInfo1 = userInfoMapper.selectByPrimaryKey(teammateReList.get(0).getUserId());
+                if(userInfo1 != null){
+                    lenderDTO.setBelong(userInfo1.getRealName());
+                }
+            }
+        }
+        resultMap.put("lenderDTO", lenderDTO);
         return JsonResponseTool.success(resultMap);
     }
 

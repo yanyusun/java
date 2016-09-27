@@ -21,9 +21,9 @@ public class ContactInfo extends BaseModel implements Serializable{
     private String homeTel;  // 家庭电话
     private String officeTel;  // 办公电话
     private String email;  // 电子邮件
-    private String province;  // 省
-    private String city;  // 市
-    private String district;  // 区
+    private Integer province;  // 省
+    private Integer city;  // 市
+    private Integer district;  // 区
     private String address;  // 详细地址
     private String code; // 工号
     private String otherAddress; // 其他地址
@@ -137,27 +137,27 @@ public class ContactInfo extends BaseModel implements Serializable{
         this.email = email;
     }
 
-    public String getProvince() {
+    public Integer getProvince() {
         return province;
     }
 
-    public void setProvince(String province) {
+    public void setProvince(Integer province) {
         this.province = province;
     }
 
-    public String getCity() {
+    public Integer getCity() {
         return city;
     }
 
-    public void setCity(String city) {
+    public void setCity(Integer city) {
         this.city = city;
     }
 
-    public String getDistrict() {
+    public Integer getDistrict() {
         return district;
     }
 
-    public void setDistrict(String district) {
+    public void setDistrict(Integer district) {
         this.district = district;
     }
 

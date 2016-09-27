@@ -1,13 +1,11 @@
 package com.dqys.business.service.dto.common;
 
-import com.dqys.core.base.BaseSelectonDTO;
-
 import java.util.List;
 
 /**
  * Created by Yvan on 16/8/19.
  */
-public class SelectDTOList{
+public class SelectDTOList {
 
     private String key;
     private String title;

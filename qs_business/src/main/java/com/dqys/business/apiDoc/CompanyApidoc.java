@@ -114,7 +114,7 @@ public class CompanyApidoc {
      * @api {get} /api/company/listByService 根据业务类型获取公司
      * @apiName listByService
      * @apiGroup companyRelation
-     * @apiParam {number} type 业务流转类型(催收1,处置2,司法3,催收处置4,催收司法5,全6)
+     * @apiParam {number} type 业务流转类型
      * @apiSuccess {CompanyDTO} data 公司信息
      * @apiUse CompanyDTO
      */
@@ -136,7 +136,7 @@ public class CompanyApidoc {
      * @apiParam {number} type 业务流转类型
      * @apiParam {number} id 公司ID
      * @apiParam {number} distributionId 分配器ID
-     * @apiParam {number} businessType 业务流转类型(催收1,处置2,司法3,催收处置4,催收司法5,全6)
+     * @apiParam {number} businessType 业务流转类型
      * @apiParam {number} companyId 被邀请公司ID
      * @apiSuccess {number} 分配后的业务流转成员ID
      */
@@ -145,7 +145,7 @@ public class CompanyApidoc {
      * @api {get} /api/company/designBusinessService 被添加公司接受或者拒绝业务流转邀请
      * @apiName designBusinessService
      * @apiGroup companyRelation
-     * @apiParam {number} type 业务流转类型(催收1,处置2,司法3,催收处置4,催收司法5,全6)
+     * @apiParam {number} type 业务流转类型
      * @apiParam {number} id 公司ID
      * @apiParam {number} distributionId 分配器ID
      * @apiParam {number} businessType 业务流转类型

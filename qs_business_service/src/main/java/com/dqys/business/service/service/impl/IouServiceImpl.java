@@ -193,7 +193,7 @@ public class IouServiceImpl implements IouService {
                 iouDTO.setPawnNames(iouDTO.getPawnNames() + "," + pawnInfo.getName());
             }
         });
-        return CommonUtil.responseBack(iouInfoMapper.get(id));
+        return CommonUtil.responseBack(IouServiceUtils.toIouDTO(iouInfoMapper.get(id)));
     }
 
     @Override

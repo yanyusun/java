@@ -47,6 +47,34 @@ public class IouDTO {
     private String pawnIds; // 抵押物IDs
     private String pawnNames; // 抵押物名称集合
 
+    private Integer agent; //代理
+    private Integer urge; //催收
+    private Integer lawyer; //律所
+
+    public Integer getAgent() {
+        return agent;
+    }
+
+    public void setAgent(Integer agent) {
+        this.agent = agent;
+    }
+
+    public Integer getUrge() {
+        return urge;
+    }
+
+    public void setUrge(Integer urge) {
+        this.urge = urge;
+    }
+
+    public Integer getLawyer() {
+        return lawyer;
+    }
+
+    public void setLawyer(Integer lawyer) {
+        this.lawyer = lawyer;
+    }
+
     public Integer getId() {
         return id;
     }

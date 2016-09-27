@@ -28,6 +28,33 @@ public class PawnDTO {
     private String iouIds;
     private String iouNames; // 借据的名称集合
 
+    private Integer agent; // 中介
+    private Integer urge; // 催收
+    private Integer lawyer; // 代理
+
+    public Integer getAgent() {
+        return agent;
+    }
+
+    public void setAgent(Integer agent) {
+        this.agent = agent;
+    }
+
+    public Integer getUrge() {
+        return urge;
+    }
+
+    public void setUrge(Integer urge) {
+        this.urge = urge;
+    }
+
+    public Integer getLawyer() {
+        return lawyer;
+    }
+
+    public void setLawyer(Integer lawyer) {
+        this.lawyer = lawyer;
+    }
 
     public Integer getId() {
         return id;

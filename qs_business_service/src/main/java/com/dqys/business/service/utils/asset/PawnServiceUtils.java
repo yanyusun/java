@@ -96,6 +96,9 @@ public class PawnServiceUtils {
         pawnDTO.setDisposeStatus(pawnInfo.getDisposeStatus());
         pawnDTO.setWorth(pawnInfo.getWorth());
         pawnDTO.setMemo(pawnInfo.getMemo());
+        pawnDTO.setAgent(pawnInfo.getOnAgent());
+        pawnDTO.setUrge(pawnInfo.getOnCollection());
+        pawnDTO.setLawyer(pawnInfo.getOnLawyer());
 
         return pawnDTO;
     }

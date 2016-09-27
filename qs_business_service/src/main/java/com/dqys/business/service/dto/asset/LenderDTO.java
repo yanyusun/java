@@ -1,88 +1,13 @@
 package com.dqys.business.service.dto.asset;
 
-import com.dqys.business.service.dto.common.UserDTO;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
-/**
- * @apiDefine Lender
- * @apiParam {number} id 主键
- * @apiParam {number} [assetId] 资产包ID,只有是资产包借款人时才有
- * @apiParam {date} startAt 委托开始时间
- * @apiParam {date} endAt 委托结束时间
- * @apiParam {number} accrual 总利息
- * @apiParam {number} loan 总贷款
- * @apiParam {number} appraisal 总评估
- * @apiParam {string} loanType 贷款类型
- * @apiParam {string} loanMode 贷款方式
- * @apiParam {string} loanName 贷款名称
- * @apiParam {string} evaluateExcellent 评优
- * @apiParam {string} evaluateLevel 评级
- * @apiParam {string} disposeMode 处置方式
- * @apiParam {string} tags 标签
- * @apiParam {string} urgeType 催收阶段
- * @apiParam {string} entrustBornType 委托来源类型
- * @apiParam {number} entrustBorn 委托来源公司ID
- * @apiParam {string} guaranteeType 担保类型
- * @apiParam {string} guaranteeMode 担保方式
- * @apiParam {string} guaranteeSource 担保资源
- * @apiParam {number} isGuaranteeConnection 担保方是否能联系
- * @apiParam {string} guaranteeEconomic 担保方经济情况
- * @apiParam {number} isLawsuit 是否诉讼
- * @apiParam {number} isDecision 是否判决
- * @apiParam {number} realUrgeTime 实地催收次数
- * @apiParam {number} phoneUrgeTime 电话催收次数
- * @apiParam {number} entrustUrgeTime 委托催收次数
- * @apiParam {number} canContact 债务方是否能联系
- * @apiParam {number} canPay 债务方是否能偿还
- * @apiParam {number} isWorth 抵押物是否覆盖债务
- * @apiParam {string} memo 备注
- * @apiParam {number} operatorId 操作人ID
- *
- */
 
 /**
  * Created by Yvan on 16/6/16.
  * 借款人基础信息
- *
- * @apiDefine LenderDTO
- * @apiSuccessExample {json} lenderDTO:
- * {
- * "id": 1,
- * "assetId": 1,
- * "startAt": "2016-07-06",
- * "endAt": "2016-09-06",
- * "accrual": null,
- * "loan": null,
- * "appraisal": null,
- * "loanType": null,
- * "loanMode": null,
- * "loanName": null,
- * "evaluateExcellent": null,
- * "evaluateLevel": null,
- * "disposeMode": null,
- * "tags": null,
- * "urgeType": null,
- * "entrustBornType": null,
- * "entrustBorn": null,
- * "guaranteeType": null,
- * "guaranteeMode": null,
- * "guaranteeSource": null,
- * "isGuaranteeConnection": null,
- * "guarenteeEconomic": null,
- * "isLawsuit": null,
- * "isDecision": null,
- * "realUrgeTime": null,
- * "phoneUrgeTime": null,
- * "entrustUrgeTime": null,
- * "canContact": null,
- * "canPay": null,
- * "isWorth": null,
- * "memo": null,
- * "operatorId": 0,
- * }
- * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/asset/LenderDTO.java
  */
 public class LenderDTO {
 
@@ -127,6 +52,62 @@ public class LenderDTO {
     private String name; // 借款人姓名
     private Integer sex; // 借款人性别
     private String lenderNo; // 借款人编号
+    // 查全信息时有用
+    private String currentAddress; // 当前地址
+    private Integer overdueDay; // 逾期天数
+    private String belong; // 所属人
+    private Date lastFollow; // 最后跟进
+    private Date createAt; // 录入时间
+    private String assetCode; //资产包编号
+
+
+    public String getCurrentAddress() {
+        return currentAddress;
+    }
+
+    public void setCurrentAddress(String currentAddress) {
+        this.currentAddress = currentAddress;
+    }
+
+    public Integer getOverdueDay() {
+        return overdueDay;
+    }
+
+    public void setOverdueDay(Integer overdueDay) {
+        this.overdueDay = overdueDay;
+    }
+
+    public String getBelong() {
+        return belong;
+    }
+
+    public void setBelong(String belong) {
+        this.belong = belong;
+    }
+
+    public Date getLastFollow() {
+        return lastFollow;
+    }
+
+    public void setLastFollow(Date lastFollow) {
+        this.lastFollow = lastFollow;
+    }
+
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
+    }
+
+    public String getAssetCode() {
+        return assetCode;
+    }
+
+    public void setAssetCode(String assetCode) {
+        this.assetCode = assetCode;
+    }
 
     public Integer getRepayStatus() {
         return repayStatus;
@@ -396,16 +377,16 @@ public class LenderDTO {
         return sex;
     }
 
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
     public Integer getAssetId() {
         return assetId;
     }
 
     public void setAssetId(Integer assetId) {
         this.assetId = assetId;
-    }
-
-    public void setSex(Integer sex) {
-        this.sex = sex;
     }
 
     public String getLenderNo() {

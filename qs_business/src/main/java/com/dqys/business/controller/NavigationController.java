@@ -2,12 +2,14 @@ package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.company.Navigation;
 import com.dqys.business.orm.query.company.NavigationQuery;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.dto.company.NavigationDTO;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.service.UserService;
 import com.dqys.business.service.service.company.NavigationService;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
@@ -34,11 +36,9 @@ public class NavigationController {
 
 
     /**
-     * @api {POST} http://{url}/nav/add 增加导航栏
-     * @apiName add
-     * @apiGroup navigation
-     * @apiUse Navigation
-     * @apiSuccess {number} data 新增key
+     * 增加导航栏
+     * @param navigation
+     * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
@@ -55,10 +55,9 @@ public class NavigationController {
     }
 
     /**
-     * @api {POST} http://{url}/nav/delete 删除导航栏
-     * @apiName delete
-     * @apiGroup navigation
-     * @apiParam {number} id 导航栏key
+     * 删除导航栏
+     * @param id
+     * @return
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
@@ -75,10 +74,9 @@ public class NavigationController {
     }
 
     /**
-     * @api {POST} http://{url}/nav/update 修改导航栏
-     * @apiName update
-     * @apiGroup navigation
-     * @apiUse Navigation
+     * 修改导航栏
+     * @param navigation
+     * @return
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     @ResponseBody
@@ -95,12 +93,9 @@ public class NavigationController {
     }
 
     /**
-     * @api {get} http://{url}/nav/get 获取导航栏
-     * @apiName get
-     * @apiGroup navigation
-     * @apiParam {number} id 导航栏KEY
-     * @apiSuccess {NavigationDTO} data 导航栏数据
-     * @apiUse NavigationDTO
+     * 获取导航栏
+     * @param id
+     * @return
      */
     @RequestMapping(value = "/get")
     @ResponseBody
@@ -117,11 +112,8 @@ public class NavigationController {
     }
 
     /**
-     * @api {GET} http://{url}/nav/getInit 获取初始导航栏
-     * @apiName getInit
-     * @apiGroup navigation
-     * @apiSuccess {NavigationDTO} data 导航栏数据
-     * @apiUse NavigationDTO
+     * 获取初始导航栏
+     * @return
      */
     @RequestMapping(value = "/getTop")
     @ResponseBody
@@ -140,12 +132,9 @@ public class NavigationController {
     }
 
     /**
-     * @api {GET} http://{url}/nav/listById 根据导航栏key获取子导航栏
-     * @apiName listById
-     * @apiGroup navigation
-     * @apiParam {number} id 导航栏key
-     * @apiSuccess {NavigationDTO} data 导航栏数据
-     * @apiUse NavigationDTO
+     * 根据导航栏key获取子导航栏
+     * @param id
+     * @return
      */
     @RequestMapping(value = "/listById")
     @ResponseBody
@@ -236,85 +225,42 @@ public class NavigationController {
         if (CommonUtil.checkParam(userInsertDTO)) {
             return null;
         }
-        // TODO 这边NosqlWithRedisTool 获取不到数据,先以死数据填充后,请后续修正
         NavigationQuery navigationQuery = new NavigationQuery();
         // 平台部分
-        if (userInsertDTO.getUserType().equals(32)) {
+        if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_JUDICIARY.getValue())) {
             // 律所
             navigationQuery.setLaw(true);
-        } else if (userInsertDTO.getUserType().equals(33)) {
+        } else if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue())) {
             // 中介
             navigationQuery.setAgent(true);
-        } else if (userInsertDTO.getUserType().equals(31)) {
+        } else if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_COLLECTION.getValue())) {
             // 催收
             navigationQuery.setCollection(true);
-        } else if (userInsertDTO.getUserType().equals(2)) {
+        } else if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_ENTRUST.getValue())) {
             // 委托
             navigationQuery.setEntrust(true);
-        } else if (userInsertDTO.getUserType().equals(1)) {
+        } else if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_ADMIN.getValue())) {
             // 平台
             navigationQuery.setPlatform(true);
-        } else if (userInsertDTO.getUserType().equals(0)) {
+        } else if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_COMMON.getValue())) {
             // 普通用户(个人)
             navigationQuery.setPersonal(true);
         } else {
             return null;
         }
         // 角色部分
-        if (userInsertDTO.getRoleId().equals(2)) {
+        if (userInsertDTO.getRoleId().equals(RoleTypeEnum.REGULATOR.getValue())) {
             // 管理者
             navigationQuery.setGovernor(true);
-        } else if (userInsertDTO.getRoleId().equals(1)) {
+        } else if (userInsertDTO.getRoleId().equals(RoleTypeEnum.ADMIN.getValue())) {
             // 管理员
             navigationQuery.setManager(true);
-        } else if (userInsertDTO.getRoleId().equals(3)) {
+        } else if (userInsertDTO.getRoleId().equals(RoleTypeEnum.GENERAL.getValue())) {
             // 普通员工
             navigationQuery.setEmployee(true);
         } else {
             return null;
         }
-
-//        UserInsertDTO userInsertDTO = (UserInsertDTO) userService.get(UserSession.getCurrent().getUserId()).getData();
-//        if (CommonUtil.checkParam(userInsertDTO)) {
-//            return null;
-//        }
-//        NavigationQuery navigationQuery = new NavigationQuery();
-//        // 平台部分
-//        if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_LAW) + ",")) {
-//            // 律所
-//            navigationQuery.setLaw(true);
-//        } else if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_INTERMEDIARY) + ",")) {
-//            // 中介
-//            navigationQuery.setAgent(true);
-//        } else if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_URGE))) {
-//            // 催收
-//            navigationQuery.setCollection(true);
-//        } else if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_ENTRUST))) {
-//            // 委托
-//            navigationQuery.setEntrust(true);
-//        } else if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_PLATFORM))) {
-//            // 平台
-//            navigationQuery.setPlatform(true);
-//        } else if (userInsertDTO.getUserType().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.U_TYPE_COMMON))) {
-//            // 普通用户(个人)
-//            navigationQuery.setPersonal(true);
-//        } else {
-//            return null;
-//        }
-//        // 角色部分
-//        if (userInsertDTO.getRoleId().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.ROLE_MANAGER_KEY))) {
-//            // 管理者
-//            navigationQuery.setGovernor(true);
-//        } else if (userInsertDTO.getRoleId().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.ROLE_ADMINISTRATOR_KEY))) {
-//            // 管理员
-//            navigationQuery.setManager(true);
-//        } else if (userInsertDTO.getRoleId().equals(NoSQLWithRedisTool.getValueObject(KeyEnum.ROLE_MANAGER_KEY))) {
-//            // 普通员工
-//            navigationQuery.setEmployee(true);
-//        } else {
-//            return null;
-//        }
-
         return navigationQuery;
     }
 }

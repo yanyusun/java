@@ -181,6 +181,8 @@ public class LenderServiceUtils {
         lenderDTO.setIsWorth(lenderInfo.getIsWorth());
         lenderDTO.setMemo(lenderInfo.getMemo());
         lenderDTO.setRepayStatus(lenderInfo.getRepayStatus());
+        lenderDTO.setLastFollow(lenderInfo.getFollowUpDate());
+        lenderDTO.setCreateAt(lenderInfo.getCreateAt());
 
         return lenderDTO;
     }

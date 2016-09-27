@@ -24,6 +24,8 @@ import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
 import com.dqys.business.orm.query.company.CompanyTeamReQuery;
 import com.dqys.business.orm.query.company.OrganizationQuery;
+import com.dqys.business.service.constant.ObjectEnum.IouEnum;
+import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
 import com.dqys.business.service.dto.company.*;
@@ -155,21 +157,24 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<CompanyDTO> listCompanyByServiceType(Integer type) {
-        // (催收1,处置2,司法3,催收处置4,催收司法5,全6)
         List<TCompanyInfo> companyInfoList = new ArrayList<>();
-        if(type.equals(1)){
+        if(type.equals(PawnEnum.MAINTAIN_REGULAR.getValue())
+                || type.equals(IouEnum.MAINTAIN_REGULAR.getValue())){
             companyInfoList = companyInfoMapper.listByType(
                     Integer.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE,
                             KeyEnum.U_TYPE_URGE).getPropertyValue()));
-        }else if(type.equals(2)){
+        }else if(type.equals(PawnEnum.MARKET_DISPOSITION.getValue())
+                || type.equals(IouEnum.MARKET_DISPOSITION.getValue())){
             companyInfoList = companyInfoMapper.listByType(
                     Integer.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE,
                             KeyEnum.U_TYPE_INTERMEDIARY).getPropertyValue()));
-        }else if(type.equals(3)){
+        }else if(type.equals(PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue())
+                || type.equals(IouEnum.EXECUTE_JUSTICE_RESOLVE.getValue())){
             companyInfoList = companyInfoMapper.listByType(
                     Integer.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE,
                             KeyEnum.U_TYPE_LAW).getPropertyValue()));
-        }else if(type.equals(4)){
+        }else if(type.equals(PawnEnum.CM_SIMULTANEOUS.getValue())
+                || type.equals(IouEnum.CM_SIMULTANEOUS.getValue())){
             List<TCompanyInfo> companyInfoList0 = companyInfoMapper.listByType(
                     Integer.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE,
                             KeyEnum.U_TYPE_URGE).getPropertyValue()));
@@ -182,7 +187,8 @@ public class CompanyServiceImpl implements CompanyService {
             for (TCompanyInfo companyInfo : companyInfoList1) {
                 companyInfoList.add(companyInfo);
             }
-        }else if(type.equals(5)){
+        }else if(type.equals(PawnEnum.CJ_SIMULTANEOUS.getValue())
+                || type.equals(IouEnum.CJ_SIMULTANEOUS.getValue())){
             List<TCompanyInfo> companyInfoList0 = companyInfoMapper.listByType(
                     Integer.valueOf(SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE,
                             KeyEnum.U_TYPE_URGE).getPropertyValue()));
@@ -196,6 +202,7 @@ public class CompanyServiceImpl implements CompanyService {
                 companyInfoList.add(companyInfo);
             }
         }else{
+            // 3种全查询
             return listByType(null);
         }
         return CompanyServiceUtils.toCompanyDTO(companyInfoList);
@@ -213,19 +220,23 @@ public class CompanyServiceImpl implements CompanyService {
             }
             id = userInfo.getCompanyId();
         }
-        // (催收1,处置2,司法3,催收处置4,催收司法5,全6)
         boolean urgeFlag = false;
         boolean agentFlag = false;
         boolean lawyerFlag = false;
-        if(type.equals(1)){
+        if(type.equals(PawnEnum.MAINTAIN_REGULAR.getValue())
+                || type.equals(IouEnum.MAINTAIN_REGULAR.getValue())){
             urgeFlag = true;
-        }else if(type.equals(2)){
+        }else if(type.equals(PawnEnum.MARKET_DISPOSITION.getValue())
+                || type.equals(IouEnum.MARKET_DISPOSITION.getValue())){
             agentFlag = true;
-        }else if(type.equals(3)){
+        }else if(type.equals(PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue())
+                || type.equals(IouEnum.EXECUTE_JUSTICE_RESOLVE.getValue())){
             lawyerFlag = true;
-        }else if(type.equals(4)){
+        }else if(type.equals(PawnEnum.CM_SIMULTANEOUS.getValue())
+                || type.equals(IouEnum.CM_SIMULTANEOUS.getValue())){
             urgeFlag = true;agentFlag = true;
-        }else if(type.equals(5)){
+        }else if(type.equals(PawnEnum.CJ_SIMULTANEOUS.getValue())
+                || type.equals(IouEnum.CJ_SIMULTANEOUS.getValue())){
             urgeFlag = true;lawyerFlag = true;
         }else{
             urgeFlag = true;agentFlag = true;lawyerFlag = true;

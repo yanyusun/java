@@ -56,6 +56,9 @@ public class IouServiceUtils {
         iouDTO.setEvaluateExcellent(iouInfo.getEvaluateExcellent());
         iouDTO.setEvaluateLevel(iouInfo.getEvaluateLevel());
         iouDTO.setMemo(iouInfo.getMemo());
+        iouDTO.setAgent(iouInfo.getOnAgent());
+        iouDTO.setUrge(iouInfo.getOnCollection());
+        iouDTO.setLawyer(iouInfo.getOnLawyer());
 
         return iouDTO;
     }

@@ -2,21 +2,6 @@ package com.dqys.business.orm.pojo.company;
 
 /**
  * 导航栏对象
- * @apiDefine Navigation
- * @apiParam {number} id 主键key
- * @apiParam {string} value 地址值path
- * @apiParam {String} name 名称value
- * @apiParam {number} [pid] 父级key
- * @apiParam {number} [manager] 管理员(1为可视,下同)
- * @apiParam {number} [governor] 管理者
- * @apiParam {number} [employee] 普通员工
- * @apiParam {number} [platform] 平台
- * @apiParam {number} [personal] 个人
- * @apiParam {number} [entrust] 委托
- * @apiParam {number} [collection] 催收
- * @apiParam {number} [agent] 中介
- * @apiParam {number} [law] 律所
- * @apiParam {number} [sort] 排序(数值越大越优先)
  */
 public class Navigation {
 

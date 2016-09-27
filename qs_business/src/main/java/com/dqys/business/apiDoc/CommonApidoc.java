@@ -13,4 +13,14 @@ public class CommonApidoc {
      *     value:"value"
      * }
      */
+
+    /**
+     * @apiDefine SelectonDTOList
+     * @apiSuccessExample {json} SelectDTO-Success-Response:
+     * {
+     *     key:key,
+     *     value:"value",
+     *     children:[SelectDTOList]
+     * }
+     */
 }
