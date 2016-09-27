@@ -5,8 +5,10 @@ import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.operType.OperType;
+import com.dqys.business.service.exception.bean.UndefinitionTypeException;
 import com.dqys.business.service.service.OperTypeService;
 import com.dqys.business.service.utils.common.buttonUtil.ListButtonShowerBean;
+import com.dqys.business.service.utils.common.buttonUtil.ListButtonShowerUtil;
 import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.model.JsonResponse;
@@ -175,15 +177,11 @@ public class OperTypeController {
      */
     @RequestMapping("/listbuttonShower")
     @ResponseBody
-    public JsonResponse getListButtonShower(Integer objectType, Integer objectId ,Integer navId) {
-        ListButtonShowerBean buttonShowerBean = new ListButtonShowerBean();
-        List<String[]> list1=new ArrayList<>();
-        String [] s = {"1","操作记录"};
-        list1.add(s);
-        buttonShowerBean.setHasCompanyTeamButton(true);
-        buttonShowerBean.setHasCompanyTeamButtonAdd(true);
-        buttonShowerBean.setRightButtonList(list1);
-        return JsonResponseTool.success(buttonShowerBean);
+    public JsonResponse getListButtonShower(Integer objectType, Integer objectId ,Integer navId) throws UndefinitionTypeException{
+        UserSession userSession=UserSession.getCurrent();
+        String[] userTypes=userSession.getUserType().split(",");
+        String[] roleId=userSession.getRoleId().split(",");
+        return JsonResponseTool.success(ListButtonShowerUtil.getListButtonShowerBean(navId,objectType,userTypes[0],roleId[0]));
 
     }
 }
