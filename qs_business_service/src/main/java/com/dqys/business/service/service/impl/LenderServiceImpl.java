@@ -379,7 +379,7 @@ public class LenderServiceImpl implements LenderService {
             if (ContactTypeEnum.getContactTypeEnum(contactDTO.getType()) == null) {
                 return JsonResponseTool.paramErr("联系人类型参数错误");
             }
-            if (ContactTypeEnum.LENDER.equals(ContactTypeEnum.getContactTypeEnum(contactDTO.getType()).getValue())) {
+            if (ContactTypeEnum.LENDER.getValue().equals(ContactTypeEnum.getContactTypeEnum(contactDTO.getType()).getValue())) {
                 flag = true;
             }
         }
