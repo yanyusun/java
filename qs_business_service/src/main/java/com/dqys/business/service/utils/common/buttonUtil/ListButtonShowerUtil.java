@@ -269,9 +269,9 @@ public class ListButtonShowerUtil {
                 new ListButtonShowerBean(getrightButtonList(rightButtonArray3, objectTypeEnum)));
 
     }
-
+    //待处置
     public static void putHandle(ObjectTypeEnum objectTypeEnum) {
-        //待处置 平台管理员
+         //平台管理员
         map.put(getKey(ObjectTabEnum.handle, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
                 , getUserTeamBeanAdd(
                         getCompanyTeamBeanAdd(
@@ -607,7 +607,7 @@ public class ListButtonShowerUtil {
         //已参与 平台管理员
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
                 , getCompanyTeamBeanView(
-                        getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                        getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
         //已参与 平台管理者
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
                 , getCompanyTeamBeanView(
