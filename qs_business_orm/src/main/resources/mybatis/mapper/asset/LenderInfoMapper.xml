@@ -85,6 +85,9 @@
       <if test="repayStatus != null">
         AND repay_status = #{repayStatus,jdbcType=INTEGER}
       </if>
+      <if test="operator != null">
+        AND operator = #{operator,jdbcType=INTEGER}
+      </if>
 
 
       <if test="startAt != null">

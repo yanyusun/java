@@ -7,7 +7,6 @@ import com.dqys.auth.orm.pojo.CompanyDetailInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.constant.business.BusinessRelationEnum;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
-import com.dqys.business.orm.constant.business.ObjectUserStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
@@ -284,7 +283,7 @@ public class LenderServiceImpl implements LenderService {
             ContactInfo contactInfo = contactInfoMapper.getByModel(ObjectTypeEnum.LENDER.getValue().toString(),
                     ContactTypeEnum.LENDER.getValue(), lenderInfo.getId());
             // 协作器
-            if(userInfo != null){
+            if (userInfo != null) {
                 UserTeam userTeam = userTeamMapper.getByObject(
                         lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue(), userInfo.getCompanyId());
                 List<TeamDTO> teamDTOList = new ArrayList<TeamDTO>();
@@ -447,9 +446,9 @@ public class LenderServiceImpl implements LenderService {
             return JsonResponseTool.paramErr("参数错误");
         }
         LenderDTO lenderDTO = LenderServiceUtils.toLenderDTO(lenderInfo);
-        if(lenderInfo.getAssetId() != null){
+        if (lenderInfo.getAssetId() != null) {
             AssetInfo assetInfo = assetInfoMapper.get(lenderInfo.getAssetId());
-            if(assetInfo != null){
+            if (assetInfo != null) {
                 lenderDTO.setAssetCode(assetInfo.getAssetNo());
             }
         }
@@ -457,13 +456,14 @@ public class LenderServiceImpl implements LenderService {
         List<ContactInfo> contactInfoList = contactInfoMapper.listByMode(ObjectTypeEnum.LENDER.getValue().toString(), lenderInfo.getId());
         resultMap.put("contactDTOs", LenderServiceUtils.toContactDTO(contactInfoList));
         for (ContactInfo contactInfo : contactInfoList) {
-            if(contactInfo.getType().equals(ContactTypeEnum.LENDER.getValue())
-                    ){
+            if (contactInfo.getType().equals(ContactTypeEnum.LENDER.getValue())
+                    ) {
                 lenderDTO.setCurrentAddress(AreaTool.getAreaById(contactInfo.getProvince()).getLabel()
-                        + AreaTool.getAreaById(contactInfo.getCity()).getLabel()
-                        + AreaTool.getAreaById(contactInfo.getDistrict()).getLabel()
-                        + contactInfo.getAddress()
-                );break;
+                                + AreaTool.getAreaById(contactInfo.getCity()).getLabel()
+                                + AreaTool.getAreaById(contactInfo.getDistrict()).getLabel()
+                                + contactInfo.getAddress()
+                );
+                break;
             }
         }
         // 借据
@@ -473,13 +473,13 @@ public class LenderServiceImpl implements LenderService {
         resultMap.put("iouDTOs", IouServiceUtils.toIouDTO(iouList));
         Date date = null;
         for (IOUInfo iouInfo : iouList) {
-            if(date == null
-                    || (iouInfo.getEndAt() != null && iouInfo.getEndAt().compareTo(date) > 0)){
+            if (date == null
+                    || (iouInfo.getEndAt() != null && iouInfo.getEndAt().compareTo(date) > 0)) {
                 date = iouInfo.getEndAt();
             }
         }
         Calendar calendar = Calendar.getInstance();
-        if(calendar.getTime().compareTo(date) > 0){
+        if (calendar.getTime().compareTo(date) > 0) {
             long millis = (calendar.getTimeInMillis() - date.getTime()) / 24 / 3600 / 1000;
             lenderDTO.setOverdueDay(Integer.valueOf(String.valueOf(millis)));
         }
@@ -496,9 +496,9 @@ public class LenderServiceImpl implements LenderService {
             teammateRe.setUserTeamId(userTeam.getId());
             teammateRe.setType(TeammateReEnum.TYPE_AUXILIARY.getValue());
             List<TeammateRe> teammateReList = teammateReMapper.selectSelective(teammateRe);
-            if(teammateReList != null && teammateReList.size() > 0 && teammateReList.get(0).getUserId() != null){
+            if (teammateReList != null && teammateReList.size() > 0 && teammateReList.get(0).getUserId() != null) {
                 TUserInfo userInfo1 = userInfoMapper.selectByPrimaryKey(teammateReList.get(0).getUserId());
-                if(userInfo1 != null){
+                if (userInfo1 != null) {
                     lenderDTO.setBelong(userInfo1.getRealName());
                 }
             }
@@ -676,7 +676,7 @@ public class LenderServiceImpl implements LenderService {
             } else {
                 lenderQuery.setIds(result);
             }
-            if(CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0){
+            if (CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
             lenderQuery.setRepayStatus(SysProperty.BOOLEAN_FALSE);
@@ -702,7 +702,7 @@ public class LenderServiceImpl implements LenderService {
             } else {
                 lenderQuery.setIds(ids);
             }
-            if(CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0){
+            if (CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
         } else if (ObjectTabEnum.stock.getValue().equals(tab)) {
@@ -723,7 +723,7 @@ public class LenderServiceImpl implements LenderService {
             } else {
                 lenderQuery.setIds(ids);
             }
-            if(CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0){
+            if (CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
         } else if (ObjectTabEnum.over.getValue().equals(tab)) {
@@ -775,7 +775,7 @@ public class LenderServiceImpl implements LenderService {
         } else if (ObjectTabEnum.join.getValue().equals(tab)) {
             // 待参与
             UserTeamQuery query = new UserTeamQuery();
-            if(!flag){
+            if (!flag) {
                 query.setCompanyId(userInfo.getCompanyId());
             }
             query.setObjectType(ObjectTypeEnum.LENDER.getValue());
@@ -785,24 +785,25 @@ public class LenderServiceImpl implements LenderService {
                 TeammateRe teammateRe = new TeammateRe();
                 teammateRe.setUserTeamId(userTeam.getId());
                 List<TeammateRe> reList = teammateReMapper.selectSelective(teammateRe);
-                if(reList == null){
+                if (reList == null) {
                     result.add(userTeam.getObjectId());
-                }else if(reList.size() < 6){
+                } else if (reList.size() < 6) {
                     boolean isExist = false;
                     for (TeammateRe re : reList) {
-                        if(re.getUserId().equals(userInfo.getId())){
-                            isExist = true;break;
+                        if (re.getUserId().equals(userInfo.getId())) {
+                            isExist = true;
+                            break;
                         }
                     }
-                    if(!isExist){
+                    if (!isExist) {
                         result.add(userTeam.getObjectId());
                     }
                 }
             }
-            if(result == null || result.size() == 0){
+            if (result == null || result.size() == 0) {
                 // 找不到数据
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
-            }else{
+            } else {
                 lenderQuery.setIds(result);
             }
         } else if (ObjectTabEnum.joined.getValue().equals(tab)) {
@@ -817,11 +818,11 @@ public class LenderServiceImpl implements LenderService {
             }
         } else if (ObjectTabEnum.check.getValue().equals(tab)) {
             // 待审核
-            if(flag){
+            if (flag) {
                 List<Integer> ids = businessObjReMapper.listIdByTypeIdStatus(ObjectTypeEnum.LENDER.getValue(),
                         BusinessStatusEnum.init.getValue());
                 lenderQuery.setIds(ids);
-            }else{
+            } else {
                 List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.LENDER.getValue(),
                         BusinessStatusEnum.init.getValue(), UserSession.getCurrent().getUserId());
                 lenderQuery.setIds(ids);
@@ -846,13 +847,13 @@ public class LenderServiceImpl implements LenderService {
             lenderQuery.setOperator(userInfo.getId());
         } else if (ObjectTabEnum.handle.getValue().equals(tab)) {
             // 待处置
-            if(flag){
+            if (flag) {
                 lenderQuery.setIds(managerDisposeIds); // 通过审核还未处置
-            }else{
+            } else {
                 lenderQuery.setIds(passIds); // 通过审核还未处置
                 lenderQuery.setOperator(userInfo.getId());
             }
-            if(CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0){
+            if (CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0) {
                 // 找不到数据
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
@@ -877,9 +878,9 @@ public class LenderServiceImpl implements LenderService {
             lenderQuery.setOperator(userInfo.getId());
             if (!flag) {
                 if (isPlatformOrEntrust) {
-                    if(businessIds != null && businessIds.size() > 0){
+                    if (businessIds != null && businessIds.size() > 0) {
                         lenderQuery.setIds(businessIds);
-                    }else{
+                    } else {
                         lenderQuery.setId(SysProperty.NULL_DATA_ID);
                     }
                 }
@@ -888,7 +889,7 @@ public class LenderServiceImpl implements LenderService {
             // 48h 新
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
-            if(!flag){
+            if (!flag) {
                 objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
             }
             List<ObjectUserRelation> objectUserRelationList = objectUserRelationMapper.list(objectUserRelationQuery);
@@ -901,7 +902,7 @@ public class LenderServiceImpl implements LenderService {
             } else {
                 lenderQuery.setIds(ids);
             }
-            if(CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0){
+            if (CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
             Calendar calendar = Calendar.getInstance();
