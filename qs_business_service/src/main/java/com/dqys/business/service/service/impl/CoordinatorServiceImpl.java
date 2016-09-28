@@ -984,7 +984,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 companyTeamId = team.getId();
             } else {
                 //根据用户类型为处置机构时创建分配器
-                if (CommonUtil.isDispose()) {
+                String typeStr = UserSession.getCurrent().getUserType();
+                if (CommonUtil.isDispose(typeStr.substring(0, typeStr.indexOf(",")))) {
                     //todo 调用分配器接口
                     try {
                         DistributionDTO distributionDTO = distributionService.listDistribution_tx(objectType, objectId);
