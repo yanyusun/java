@@ -561,7 +561,9 @@ public class AssetServiceImpl implements AssetService {
                 // 找不到数据
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
             }
-            assetQuery.setOperator(userInfo.getId());
+            if(!flag){
+                assetQuery.setOperator(userInfo.getId());
+            }
         } else if (ObjectTabEnum.handle.getValue().equals(type)) {
             // 待处置
             if(flag){
@@ -574,7 +576,6 @@ public class AssetServiceImpl implements AssetService {
                 // 找不到数据
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
             }
-            assetQuery.setOperator(userInfo.getId());
         } else if (ObjectTabEnum.assign.getValue().equals(type)) {
             // 待分配
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();

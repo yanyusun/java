@@ -687,7 +687,9 @@ public class LenderServiceImpl implements LenderService {
             // 当月
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
-            objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
+            if(!flag){
+                objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
+            }
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_MONTH, -30);
             objectUserRelationQuery.setStartAt(calendar.getTime());
@@ -845,11 +847,13 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
             lenderQuery.setIsNotAsset(true);
-            lenderQuery.setOperator(userInfo.getId());
+            if(!flag){
+                lenderQuery.setOperator(userInfo.getId());
+            }
         } else if (ObjectTabEnum.handle.getValue().equals(tab)) {
             // 待处置
             if (flag) {
-                lenderQuery.setIds(managerDisposeIds); // 通过审核还未处置
+                lenderQuery.setIds(managerPassIds); // 通过审核还未处置
             } else {
                 lenderQuery.setIds(passIds); // 通过审核还未处置
                 lenderQuery.setOperator(userInfo.getId());
@@ -859,7 +863,6 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
             lenderQuery.setIsNotAsset(true);
-            lenderQuery.setOperator(userInfo.getId());
         } else if (ObjectTabEnum.assign.getValue().equals(tab)) {
             // 待分配
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
