@@ -24,7 +24,14 @@ public enum LenderEnum {
     STATUS_COLLECTION(1, "常规催收"),
     STATUS_JUDICIARY(2, "司法化解"),
     STATUS_BAZAAR(3, "市场处置"),
-    STATUS_OTHER(99, "其他处置方式"),;
+    STATUS_OTHER(99, "其他处置方式"),
+
+    //列表显示枚举
+    VIEW_OPERATION_LOG(1100, "操作日志"),
+    VIEw_ACCPET(1101,"同意接收"),
+    VIEW_REJECT(1102,"拒绝接收"),
+    VIEW_REAPPLY(1103,"重新申请")
+    ;
     private Integer value;
     private String name;
 

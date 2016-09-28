@@ -5,8 +5,11 @@ import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.operType.OperType;
+import com.dqys.business.service.exception.bean.UndefinitionTypeException;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.service.OperTypeService;
+import com.dqys.business.service.utils.common.buttonUtil.ListButtonShowerBean;
+import com.dqys.business.service.utils.common.buttonUtil.ListButtonShowerUtil;
 import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.model.JsonResponse;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +42,73 @@ public class OperTypeController {
      * @apiSampleRequest operType/list
      * @apiParam {int} objectType 对象类型
      * @apiGroup　 OperType
+     * {
+    "code": 2000,
+    "msg": "成功",
+    "data": [
+    {
+    "id": 119,
+    "operType": 111,
+    "operName": "修改/编辑"
+    },
+    {
+    "id": 120,
+    "operType": 112,
+    "operName": "添加关注"
+    },
+    {
+    "id": 121,
+    "operType": 113,
+    "operName": "评优/内部评级"
+    },
+    {
+    "id": 122,
+    "operType": 114,
+    "operName": "申请律师函"
+    },
+    {
+    "id": 123,
+    "operType": 115,
+    "operName": "申请延期"
+    },
+    {
+    "id": 124,
+    "operType": 116,
+    "operName": "设置为无效"
+    },
+    {
+    "id": 125,
+    "operType": 117,
+    "operName": "录跟进"
+    },
+    {
+    "id": 126,
+    "operType": 118,
+    "operName": "增加注释"
+    },
+    {
+    "id": 127,
+    "operType": 119,
+    "operName": "修改日志"
+    },
+    {
+    "id": 128,
+    "operType": 1110,
+    "operName": "操作日志"
+    },
+    {
+    "id": 129,
+    "operType": 1111,
+    "operName": "添加一条还款"
+    },
+    {
+    "id": 130,
+    "operType": 1112,
+    "operName": "分配借款人"
+    }
+    ]
+    }
+     *
      */
     @RequestMapping("/list")
     @ResponseBody
@@ -50,5 +121,43 @@ public class OperTypeController {
         } catch (Exception e) {
             return JsonResponseTool.serverErr();
         }
+    }
+
+    /**
+     * @api {GET} http://{url}/operType/listbuttonShower 读取未读的数量
+     * @apiName listbuttonShower
+     * @apiGroup OperType
+     * @apiParam {number} [objectId] 对象id
+     * @apiParam {number} objectType 对象类型
+     * @apiParam {number} navId 对象类型
+     * @apiSuccessExample {json} Data-Response:
+    {
+    "code": 2000,
+    "msg": "成功",
+    "data": {
+    "hasRightButton": true,
+    "hasUserTeamButton": false,
+    "hasUserTeamButtonApply": false,
+    "hasUserTeamButtonAdd": false,
+    "hasCompanyTeamButton": true,
+    "hasCompanyTeamButtonApply": false,
+    "hasCompanyTeamButtonAdd": true,
+    "rightButtonList": [
+    [
+    "1",
+    "操作记录"
+    ]
+    ]
+    }
+    }
+     */
+    @RequestMapping("/listbuttonShower")
+    @ResponseBody
+    public JsonResponse getListButtonShower(Integer objectType, Integer objectId ,Integer navId) throws UndefinitionTypeException{
+        UserSession userSession=UserSession.getCurrent();
+        String[] userTypes=userSession.getUserType().split(",");
+        String[] roleId=userSession.getRoleId().split(",");
+        return JsonResponseTool.success(ListButtonShowerUtil.getListButtonShowerBean(navId,objectType,userTypes[0],roleId[0]));
+
     }
 }
