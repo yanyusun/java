@@ -167,15 +167,18 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                     break;
                 }
             }
-            Integer userTeamId = 0;
-            UserTeam userTe = userTeamMapper.selectByPrimaryKeySelective(userTeam);
-            if (userTe == null) {
-                Integer result = userTeamMapper.insertSelective(userTeam);//添加公司内成员协作器
-                userTeamId = userTeam.getId();
-            } else {
-                userTeamId = userTe.getId();
+            userTeamMapper.insertSelective(userTeam);//添加公司内成员协作器
+            //重新查询下，避免重复多条相同协作器
+            List<Integer> userTeamIds = userTeamMapper.selectByCompany(userTeam.getCompanyId(), userTeam.getObjectId(), userTeam.getObjectType());
+            if (userTeamIds.size() == 1) {
+                map.put("userTeamId", userTeamIds.get(0));
+            } else if (userTeamIds.size() > 1) {//存在多条时，取出一个，其他删除
+                map.put("userTeamId", userTeamIds.get(0));
+                userTeamIds.remove(userTeamIds.get(0));
+                for (Integer id : userTeamIds) {
+                    userTeamMapper.deleteByPrimaryKey(id);
+                }
             }
-            map.put("userTeamId", userTeamId);
             map.put("result", "yes");
         } else {
             List<TeamDTO> list = getLenderOrAsset(companyId, team.getObjectId(), team.getObjectType());//获取借款人或是资产包的团队信息

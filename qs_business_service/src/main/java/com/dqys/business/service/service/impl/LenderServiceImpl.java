@@ -613,8 +613,8 @@ public class LenderServiceImpl implements LenderService {
 //                }
 //            }
 //            lenderQuery.setOperator(UserSession.getCurrent().getUserId());
-        } else if (ObjectTabEnum.handling_urge.getValue().equals(tab) || ObjectTabEnum.gongingOn.getValue().equals(tab)) {
-            // 正在处置
+        } else if (ObjectTabEnum.gongingOn.getValue().equals(tab)) {
+            // 正在进行
 //            List<Integer> ids = companyTeamReMapper.listObjectIdByTypeAndManager(
 //                    ObjectTypeEnum.LENDER.getValue(),
 //                    ObjectAcceptTypeEnum.accept.getValue(),
@@ -929,7 +929,8 @@ public class LenderServiceImpl implements LenderService {
             } else {
                 lenderQuery.setIds(ids);
             }
-        } else if (ObjectTabEnum.handling_entrust.getValue().equals(tab)) {
+        } else if (ObjectTabEnum.handling_urge.getValue().equals(tab)
+                || ObjectTabEnum.handling_entrust.getValue().equals(tab)) {
             // 委托的处置中
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
