@@ -383,10 +383,20 @@ public class DistributionServiceImpl implements DistributionService {
             companyTeamReQuery.setTeamId(id);
             companyTeamReQuery.setValid(true);
             List<CompanyTeamRe> countList = companyTeamReMapper.queryList(companyTeamReQuery);
-            if (countList != null && countList.size() >= 3) {
-                // 获取不到数据或已经超过3个参与(处置方只能有一个)
-                return null;
+            for (CompanyTeamRe companyTeamRe : countList) {
+                if(companyTeamRe.getType().equals(ObjectBusinessTypeEnum.create.getValue())){
+                    // 如果创建方为处置方，默认处置机构为处置方
+                    CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(
+                            companyTeamRe.getAcceptCompanyId());
+                    if(CommonUtil.isDispose(detail.getType().toString())){
+                        return null;
+                    }
+                }
             }
+//            if (countList != null && countList.size() >= 3) {
+//                // 获取不到数据或已经超过3个参与(处置方只能有一个)
+//                return null;
+//            }
 
             companyTeamReQuery.setCompanyId(userInfo.getCompanyId());
             List<CompanyTeamRe> companyTeamReList = companyTeamReMapper.queryList(companyTeamReQuery);
@@ -480,10 +490,20 @@ public class DistributionServiceImpl implements DistributionService {
         companyTeamReQuery.setTeamId(id);
         companyTeamReQuery.setValid(true);
         List<CompanyTeamRe> countList = companyTeamReMapper.queryList(companyTeamReQuery);
-        if (countList != null && countList.size() >= 3) {
-            // 获取不到数据或已经超过3个参与(处置方只能有一个)
-            return null;
+        for (CompanyTeamRe companyTeamRe : countList) {
+            if(companyTeamRe.getType().equals(ObjectBusinessTypeEnum.create.getValue())){
+                // 如果创建方为处置方，默认处置机构为处置方
+                CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(
+                        companyTeamRe.getAcceptCompanyId());
+                if(CommonUtil.isDispose(detail.getType().toString())){
+                    return null;
+                }
+            }
         }
+//        if (countList != null && countList.size() >= 3) {
+//            // 获取不到数据或已经超过3个参与(处置方只能有一个)
+//            return null;
+//        }
 
         for (CompanyTeamRe companyTeamRe : countList) {
             if(companyTeamRe.getAcceptCompanyId().equals(companyId)){
