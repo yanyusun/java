@@ -7,12 +7,13 @@ public class NavigationQuery {
     private Boolean manager; // 管理员
     private Boolean governor; // 管理者
     private Boolean employee; // 普通用户
-    private Boolean platform; // 平台
-    private Boolean personal; // 个人
-    private Boolean entrust; // 委托方
-    private Boolean collection; // 催收
-    private Boolean agent; // 中介
-    private Boolean law; // 律所
+//    private Boolean platform; // 平台
+//    private Boolean personal; // 个人
+//    private Boolean entrust; // 委托方
+//    private Boolean collection; // 催收
+//    private Boolean agent; // 中介
+//    private Boolean law; // 律所
+    private String type; // 用户类型(委托，平台，催收，律所，中介)
 
     public Integer getId() {
         return id;
@@ -55,51 +56,11 @@ public class NavigationQuery {
         this.employee = employee;
     }
 
-    public Boolean getPlatform() {
-        return platform;
+    public String getType() {
+        return type;
     }
 
-    public void setPlatform(Boolean platform) {
-        this.platform = platform;
-    }
-
-    public Boolean getPersonal() {
-        return personal;
-    }
-
-    public void setPersonal(Boolean personal) {
-        this.personal = personal;
-    }
-
-    public Boolean getEntrust() {
-        return entrust;
-    }
-
-    public void setEntrust(Boolean entrust) {
-        this.entrust = entrust;
-    }
-
-    public Boolean getCollection() {
-        return collection;
-    }
-
-    public void setCollection(Boolean collection) {
-        this.collection = collection;
-    }
-
-    public Boolean getAgent() {
-        return agent;
-    }
-
-    public void setAgent(Boolean agent) {
-        this.agent = agent;
-    }
-
-    public Boolean getLaw() {
-        return law;
-    }
-
-    public void setLaw(Boolean law) {
-        this.law = law;
+    public void setType(String type) {
+        this.type = type;
     }
 }
