@@ -42,18 +42,18 @@ import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.*;
-import com.dqys.business.service.constant.UserStatusTypeEnum;
+import com.dqys.business.service.dto.company.DistributionDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
+import com.dqys.business.service.service.DistributionService;
 import com.dqys.business.service.service.MessageService;
-import com.dqys.business.service.service.UserService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.model.UserSession;
+import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.SmsUtil;
-import com.rabbitmq.http.client.domain.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -101,6 +101,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     private BusinessMapper businessMapper;
     @Autowired
     private ObjectUserRelationMapper objectUserRelationMapper;
+    @Autowired
+    private DistributionService distributionService;
 
 
     @Override
@@ -182,7 +184,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 TeamDTO teamDTO = new TeamDTO();
                 teamDTO.setUserId(tUserInfo.getId());
                 teamDTO.setRealName(tUserInfo.getRealName());
-                teamDTO.setRoleType(1);
+                teamDTO.setRoleType(10);//管理员
                 list.add(teamDTO);
             }
             for (TeamDTO t : list) {//查询每个人员的任务数
@@ -320,7 +322,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         } else {
             map.put("result", "no");
         }
-        businessLogService.add(userId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.ADD_COMMON_USER.getValue(), "添加参与人", "", 0, 0);
+//        businessLogService.add(userId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.ADD_COMMON_USER.getValue(), "添加参与人", "", 0, 0);
         return map;
     }
 
@@ -399,7 +401,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public Map isAccept(Integer teammateId, Integer status, Integer userId) throws BusinessLogException {
-        businessLogService.add(teammateId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.UPDATE_COMMON_USER.getValue(), "被邀请人同意或拒绝", "", 0, 0);
+//        businessLogService.add(teammateId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.UPDATE_COMMON_USER.getValue(), "被邀请人同意或拒绝", "", 0, 0);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "no");
         TeammateRe teammateRe = teammateReMapper.selectByPrimaryKey(teammateId);
@@ -509,7 +511,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         } else {
             map.put("msg", "该案组已不存在");//协作器不存在
         }
-        businessLogService.add(userId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.ADD_COMMON_USER.getValue(), "主动加入案组", "", 0, 0);
+//        businessLogService.add(userId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.ADD_COMMON_USER.getValue(), "主动加入案组", "", 0, 0);
         return map;
     }
 
@@ -571,7 +573,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 operType = AssetPackageEnum.update.getValue();
                 text = "资产包审核操作";
             }
-            businessLogService.add(objectId, objectType, operType, text, "", 0, 0);//添加操作日志
+//            businessLogService.add(objectId, objectType, operType, text, "", 0, 0);//添加操作日志
             Map userC = coordinatorMapper.getUserAndCompanyByUserId(receive_id);
             String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
                     ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
@@ -846,32 +848,32 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(objectType)) {//资产包
             AssetInfo info = assetInfoMapper.get(objectId);
             if (info != null) {
-                name = info.getAssetNo();
+                name = info.getAssetNo() == null ? "" : info.getAssetNo();
             }
         } else if (ObjectTypeEnum.PAWN.getValue().equals(objectType)) {//抵押物
             PawnInfo info = pawnInfoMapper.get(objectId);
             if (info != null) {
-                name = info.getPawnNo();
+                name = info.getPawnNo() == null ? "" : info.getPawnNo();
             }
         } else if (ObjectTypeEnum.LENDER.getValue().equals(objectType)) {//借款人
             LenderInfo info = lenderInfoMapper.get(objectId);
             if (info != null) {
-                name = info.getLenderNo();
+                name = info.getLenderNo() == null ? "" : info.getLenderNo();
             }
         } else if (ObjectTypeEnum.IOU.getValue().equals(objectType)) {//借据
             IOUInfo info = iouInfoMapper.get(objectId);
             if (info != null) {
-                name = info.getIouNo();
+                name = info.getIouNo() == null ? "" : info.getIouNo();
             }
         } else if (ObjectTypeEnum.ASSETSOURCE.getValue().equals(objectType)) {//资产源
             ZcyEstates info = zcyEstatesMapper.selectByPrimaryKey(objectId);
             if (info != null) {
-                name = info.getHouseNo();
+                name = info.getHouseNo() == null ? "" : info.getHouseNo();
             }
         } else if (ObjectTypeEnum.CASE.getValue().equals(objectType)) {//案件
             CaseInfo info = caseInfoMapper.get(objectId);
             if (info != null) {
-                name = info.getCaseNo();
+                name = info.getCaseNo() == null ? "" : info.getCaseNo();
             }
         }
         return name;
@@ -981,8 +983,20 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             if (team != null) {
                 companyTeamId = team.getId();
             } else {
-                map.put("msg", "该对象类型不存在分配器");//该对象类型不存在分配器
-                return map;
+                //根据用户类型为处置机构时创建分配器
+                if (CommonUtil.isDispose()) {
+                    //todo 调用分配器接口
+                    try {
+                        DistributionDTO distributionDTO = distributionService.listDistribution_tx(objectType, objectId);
+                        companyTeamId = distributionDTO.getId();
+                    } catch (BusinessLogException e) {
+                        map.put("msg", "创建分配器异常");//该对象类型不存在分配器
+                        return map;
+                    }
+                } else {
+                    map.put("msg", "该对象类型不存在分配器");//该对象类型不存在分配器
+                    return map;
+                }
             }
         }
         if (ObjectTypeEnum.PAWN.getValue() == flowType) {//抵押物

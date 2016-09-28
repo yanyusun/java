@@ -405,7 +405,6 @@ public class AssetServiceImpl implements AssetService {
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
             }
             assetQuery.setRepayStatus(SysProperty.BOOLEAN_FALSE);
-            assetQuery.setOperator(userInfo.getId());
         } else if (ObjectTabEnum.focus.getValue().equals(type)) {
             // 聚焦
             assetQuery.setId(SysProperty.NULL_DATA_ID); // 暂时不显示数据

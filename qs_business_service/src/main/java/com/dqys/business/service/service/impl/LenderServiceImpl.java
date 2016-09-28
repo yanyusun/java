@@ -680,7 +680,6 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
             lenderQuery.setRepayStatus(SysProperty.BOOLEAN_FALSE);
-            lenderQuery.setOperator(userInfo.getId());
         } else if (ObjectTabEnum.focus.getValue().equals(tab)) {
             // 聚焦
             lenderQuery.setId(SysProperty.NULL_DATA_ID); // 暂时不显示数据

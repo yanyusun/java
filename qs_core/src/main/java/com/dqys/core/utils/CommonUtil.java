@@ -215,13 +215,13 @@ public class CommonUtil {
      * @return
      */
     public static List<Integer> pickList(List<Integer> list, List<Integer> list2) {
-        if (checkParam(list, list2)) {
+        if (!checkNullParam(list, list2)) {
             return null;
         }
-        if (list.size() == 0) {
+        if (list == null || list.size() == 0) {
             return exceptMulty(list2);
         }
-        if (list2.size() == 0) {
+        if (list2 == null || list2.size() == 0) {
             return exceptMulty(list);
         }
         list = exceptMulty(list);
