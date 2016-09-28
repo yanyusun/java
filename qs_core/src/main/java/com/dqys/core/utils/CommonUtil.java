@@ -312,12 +312,11 @@ public class CommonUtil {
     }
 
     /**
-     * 判断当前登录用户是否为处置方
+     * 判断用户类型是否为处置方
+     * @param type
      * @return
      */
-    public static boolean isDispose(){
-        String typeStr = UserSession.getCurrent().getUserType();
-
+    public static boolean isDispose(String type){
         TSysProperty property = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY);
         String reg = property.getPropertyValue();
         TSysProperty property1 = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW);
@@ -325,7 +324,7 @@ public class CommonUtil {
         TSysProperty property2 = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE);
         String reg2 = property2.getPropertyValue();
 
-        if(typeStr.equals(reg + ",") || typeStr.equals(reg1 + ",") || typeStr.equals(reg2 + ",")){
+        if(type.equals(reg) || type.equals(reg1) || type.equals(reg2)){
             return true;
         }
         return false;
