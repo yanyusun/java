@@ -831,7 +831,9 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
             lenderQuery.setIsNotAsset(true);
-            lenderQuery.setOperator(userInfo.getId());
+            if(!flag){
+                lenderQuery.setOperator(userInfo.getId());
+            }
         } else if (ObjectTabEnum.refuse.getValue().equals(tab)) {
             // 已驳回
             List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.LENDER.getValue(),

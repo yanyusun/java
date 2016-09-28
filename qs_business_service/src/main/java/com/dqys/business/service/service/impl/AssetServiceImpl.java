@@ -548,7 +548,9 @@ public class AssetServiceImpl implements AssetService {
                 // 找不到数据
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
             }
-            assetQuery.setOperator(userInfo.getId());
+            if(!flag){
+                assetQuery.setOperator(userInfo.getId());
+            }
         } else if (ObjectTabEnum.refuse.getValue().equals(type)) {
             // 已驳回
             List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.ASSETPACKAGE.getValue(),
