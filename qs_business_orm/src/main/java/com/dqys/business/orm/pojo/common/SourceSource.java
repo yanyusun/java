@@ -1,8 +1,10 @@
 package com.dqys.business.orm.pojo.common;
 
+import com.dqys.core.base.BaseModel;
+
 import java.io.Serializable;
 
-public class SourceSource implements Serializable {
+public class SourceSource extends BaseModel {
 
     private Integer id; // 主键
     private Integer sourceInfoId; // 资源信息ID

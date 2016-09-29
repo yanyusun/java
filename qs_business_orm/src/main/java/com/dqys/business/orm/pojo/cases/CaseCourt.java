@@ -4,7 +4,7 @@ import com.dqys.core.base.BaseModel;
 
 import java.io.Serializable;
 
-public class CaseCourt extends BaseModel implements Serializable {
+public class CaseCourt extends BaseModel {
 
     private Integer caseId; // 案件ID
     private String court; // 法院名称

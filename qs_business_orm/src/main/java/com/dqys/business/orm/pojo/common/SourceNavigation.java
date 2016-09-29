@@ -1,11 +1,11 @@
 package com.dqys.business.orm.pojo.common;
 
-import java.io.Serializable;
+import com.dqys.core.base.BaseModel;
 
 /**
  * 资料实勘分类对象
  */
-public class SourceNavigation implements Serializable {
+public class SourceNavigation extends BaseModel {
 
     private Integer id; // 分类导航的ID
     private String name; // 分类导航的名称

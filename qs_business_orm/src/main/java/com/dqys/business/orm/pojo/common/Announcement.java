@@ -1,12 +1,14 @@
 package com.dqys.business.orm.pojo.common;
 
+import com.dqys.core.base.BaseModel;
+
 import java.util.Date;
 
 /**
  * Created by Yvan on 16/8/31.
  * 通告对象
  */
-public class Announcement {
+public class Announcement extends BaseModel{
 
     private Integer id;
 

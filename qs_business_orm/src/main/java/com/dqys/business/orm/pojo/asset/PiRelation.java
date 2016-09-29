@@ -1,9 +1,11 @@
 package com.dqys.business.orm.pojo.asset;
 
+import com.dqys.core.base.BaseModel;
+
 /**
  * 抵押物&借据关系表
  */
-public class PiRelation {
+public class PiRelation extends BaseModel{
 
     private Integer pawnId;  // 抵押物ID
 

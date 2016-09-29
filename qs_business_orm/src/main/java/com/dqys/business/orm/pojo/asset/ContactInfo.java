@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * 联系人
  */
-public class ContactInfo extends BaseModel implements Serializable{
+public class ContactInfo extends BaseModel {
 
     private String mode;  // 模块名称
     private Integer modeId;  // 模块ID

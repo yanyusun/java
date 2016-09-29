@@ -1,8 +1,10 @@
 package com.dqys.business.orm.pojo.businessLog;
 
+import com.dqys.core.base.BaseModel;
+
 import java.util.Date;
 
-public class BusinessLog {
+public class BusinessLog extends BaseModel{
     private Integer id;
 
     private Integer objectType;

@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * 借据
  */
-public class IOUInfo extends BaseModel implements Serializable {
+public class IOUInfo extends BaseModel  {
 
     private String iouNo;  // 编号
     private String name;  // 名称

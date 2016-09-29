@@ -4,7 +4,7 @@ import com.dqys.core.base.BaseModel;
 
 import java.io.Serializable;
 
-public class SourceInfo extends BaseModel implements Serializable {
+public class SourceInfo extends BaseModel {
 
     private Integer navId; // 资源分类ID
     private String code; // 资源编号

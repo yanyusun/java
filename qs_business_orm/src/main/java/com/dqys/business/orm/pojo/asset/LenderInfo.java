@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * 借款人基础信息
  */
-public class LenderInfo extends BaseModel implements Serializable {
+public class LenderInfo extends BaseModel {
 
     private Date startAt;  // 委托开始时间
     private Date endAt;  //委托结束时间

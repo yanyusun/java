@@ -1,9 +1,11 @@
 package com.dqys.business.orm.pojo.company;
 
+import com.dqys.core.base.BaseModel;
+
 /**
  * 导航栏对象
  */
-public class Navigation {
+public class Navigation extends BaseModel {
 
     private Integer id; // 主键
     private String value; // 值

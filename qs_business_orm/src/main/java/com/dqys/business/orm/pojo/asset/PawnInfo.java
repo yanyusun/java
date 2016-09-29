@@ -4,7 +4,7 @@ import com.dqys.core.base.BaseModel;
 
 import java.io.Serializable;
 
-public class PawnInfo extends BaseModel implements Serializable {
+public class PawnInfo extends BaseModel  {
 
     private Integer lenderId;  // 借款人ID
     private String pawnNo;  // 编号

@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * 案件基础信息
  */
-public class CaseInfo extends BaseModel implements Serializable {
+public class CaseInfo extends BaseModel  {
 
     private String caseNo; // 编号(显示)
     private String name; // 名称

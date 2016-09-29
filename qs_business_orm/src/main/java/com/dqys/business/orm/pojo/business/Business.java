@@ -2,6 +2,7 @@ package com.dqys.business.orm.pojo.business;
 
 import java.util.Date;
 
+// TODO: 16-9-29 要继承basemode Integer 改为 Long
 public class Business {
     private Integer id; // 主键
 

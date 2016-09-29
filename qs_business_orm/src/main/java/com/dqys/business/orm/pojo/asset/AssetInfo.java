@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * 资产包基础信息
  */
-public class AssetInfo extends BaseModel implements Serializable {
+public class AssetInfo extends BaseModel  {
 
     private String assetNo; // 编号
     private Integer type;  // 资产包类型
