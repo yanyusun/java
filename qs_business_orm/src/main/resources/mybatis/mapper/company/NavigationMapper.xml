@@ -44,6 +44,9 @@
                 AND employee = 1
             </if>
 
+            <if test="platform">
+                AND platform = 1
+            </if>
             <if test="personal">
                 AND personal = 1
             </if>
