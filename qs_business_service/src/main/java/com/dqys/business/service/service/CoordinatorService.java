@@ -41,7 +41,7 @@ public interface CoordinatorService {
      * @param status
      * @return
      */
-    Map isAccept(Integer teammateId, Integer status, Integer userId) throws BusinessLogException;
+    Map isAccept(Integer teammateId, Integer status, Integer userId,Integer operUserId) throws BusinessLogException;
 
     /**
      * 主动加入案组

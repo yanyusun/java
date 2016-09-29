@@ -15,6 +15,10 @@ public enum SmsEnum {
     POSTPONE_APPLY(109, "延期申请"),//延期申请
     POSTPONE_AUDIT_YES(110, "延期申请审核成功"),
     POSTPONE_AUDIT_NO(111, "延期申请审核失败"),
+    INVITE_COORDINATOR_YES(112, "协作器邀请同意"),
+    INVITE_COORDINATOR_NO(113, "协作器邀请拒绝"),
+    INITIATIVE_JOIN_YES(118, "主动加入同意"),
+    INITIATIVE_JOIN_NO(119, "主动加入被拒绝"),
     REPLACE_CONTACTS(122, "联系人替换"),
     REPLACE(123, "被替换"),
     FLOW(124, "业务流转请求操作,通知平台管理员短信"),

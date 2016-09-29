@@ -117,9 +117,7 @@ public class MessageServiceImpl implements MessageService {
     public void sendSmsByTeammate(UserTeam userTeam, TeammateRe teammateRe, Map<String, Object> map, Integer uid, String remark) {
         Map user = coordinatorMapper.getUserAndCompanyByUserId(uid);
         String objectName = "";
-        String objectType = "";
         if (userTeam != null) {
-            objectType = userTeam.getObjectType() == null ? "" : userTeam.getObjectType().toString();
             ObjectTypeEnum objectTypeEnum = ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType());
             if (objectTypeEnum != null) {
                 objectName = objectTypeEnum.getName();
@@ -144,15 +142,19 @@ public class MessageServiceImpl implements MessageService {
         if (companyTypeEnum != null) {
             companyTypeSend = companyTypeEnum.getName();
         }
+        SmsUtil smsUtil = new SmsUtil();
         String content = "";
         if (MessageUtils.transMapToString(user, "companyName").equals(MessageUtils.transMapToString(map, "companyName"))) {
-            content = sendSms(SmsEnum.INVITE_COORDINATOR.getValue(), mobilePhone, realName, companyNameSend, companyTypeSend, realNameSend, objectType, objectName, remark);
+            content = smsUtil.sendSms(SmsEnum.INVITE_COORDINATOR.getValue(), mobilePhone, realName, typeSend, realNameSend, objectName,
+                    coordinatorService.getObjectName(userTeam.getObjectType(), userTeam.getObjectId()), remark);
         } else {
-            content = sendSms(SmsEnum.INVITE_DISTRIBUTOR.getValue(), mobilePhone, realName, typeSend, realNameSend, objectType, objectName, remark);
+            content = smsUtil.sendSms(SmsEnum.INVITE_DISTRIBUTOR.getValue(), mobilePhone, realName, companyNameSend,
+                    companyTypeSend, realNameSend, objectName, coordinatorService.getObjectName(userTeam.getObjectType(), userTeam.getObjectId()), remark);
         }
         String title = coordinatorService.getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.INSIDE.getValue());
         Integer result = add(title, content, MessageUtils.transMapToInt(map, "userId"), uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.INSIDE.getValue(),
-                MessageUtils.setOperUrl("/coordinator/isAccept?status=1&teammateId=" + teammateRe.getId(), null, "/coordinator/isAccept?status=2&teammateId=" + teammateRe.getId(), null, null));//添加消息记录
+                MessageUtils.setOperUrl("/coordinator/isAccept?status=1&teammateId=" + teammateRe.getId() + "&operUserId=" + MessageUtils.transMapToInt(map, "userId"), null,
+                        "/coordinator/isAccept?status=2&teammateId=" + teammateRe.getId() + "&operUserId=" + MessageUtils.transMapToInt(map, "userId"), null, null));//添加消息记录
     }
 
     @Override
@@ -303,22 +305,6 @@ public class MessageServiceImpl implements MessageService {
             }
         }
         return false;
-    }
-
-    private String sendSms(Integer code, String mobilePhone, String... content) {
-        if (!FormatValidateTool.checkMobile(mobilePhone)) {
-            return "error_mobile";
-        } else {
-            String msg = new SmsUtil().getKeyValue(code);
-            if (msg == null && msg == "") {
-                return "error_msg";
-            }
-            for (int i = 0; i < content.length; i++) {
-                msg = msg.replace("{" + i + "}", content[i]);
-            }
-            sendSMS(null, mobilePhone, msg);
-            return "yes";
-        }
     }
 
 
