@@ -30,6 +30,7 @@ import com.dqys.business.orm.query.asset.*;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.orm.query.coordinator.UserTeamQuery;
 import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
@@ -320,6 +321,17 @@ public class LenderServiceImpl implements LenderService {
         LenderInfo lenderInfo = LenderServiceUtils.toLenderInfo(lenderDTO);
         lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
         lenderInfo.setOperator(UserSession.getCurrent().getUserId());
+        String typeStr = UserSession.getCurrent().getUserType();
+        UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
+        if(infoEnum != null){
+            if(UserInfoEnum.USER_TYPE_COLLECTION.getValue().equals(infoEnum.getValue())){
+                lenderInfo.setIsCollection(SysProperty.BOOLEAN_TRUE);
+            }else if(UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().equals(infoEnum.getValue())){
+                lenderInfo.setIsAgent(SysProperty.BOOLEAN_TRUE);
+            }else if(UserInfoEnum.USER_TYPE_JUDICIARY.getValue().equals(infoEnum.getValue())){
+                lenderInfo.setIsLawyer(SysProperty.BOOLEAN_TRUE);
+            }
+        }
         Integer addResult = lenderInfoMapper.insert(lenderInfo);
         if (CommonUtil.checkResult(addResult)) {
             return JsonResponseTool.failure("添加失败");
