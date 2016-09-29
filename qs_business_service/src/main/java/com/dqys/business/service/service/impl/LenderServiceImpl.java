@@ -384,33 +384,25 @@ public class LenderServiceImpl implements LenderService {
         if (!flag) {
             return JsonResponseTool.paramErr("缺少借款人信息");
         }
-        Integer lender = lenderInfoMapper.update(LenderServiceUtils.toLenderInfo(lenderDTO));
-        if (!CommonUtil.checkResult(lender)) {
+        Integer result = lenderInfoMapper.update(LenderServiceUtils.toLenderInfo(lenderDTO));
+        if (!CommonUtil.checkResult(result)) {
             flag = true;
         }
         // 添加历史记录
         businessLogService.add(lenderDTO.getId(), ObjectTypeEnum.LENDER.getValue(), LenderEnum.UPDATE_EDIT.getValue(),
                 "", "", 0, 0);
         // 流程:比较先有的联系人信息与数据库中的差异性,余删缺增.
-        List<ContactInfo> contactInfoList = contactInfoMapper.listByMode(ObjectTypeEnum.LENDER.getValue().toString(), lender);
+        List<ContactInfo> contactInfoList = contactInfoMapper.listByMode(
+                ObjectTypeEnum.LENDER.getValue().toString(), lenderDTO.getId());
         for (ContactInfo contactInfo : contactInfoList) {
-            boolean isExit = false; // 用于判断这条数据是否还在
-            for (ContactDTO contactDTO : contactDTOList) {
-                if (contactInfo.getId().equals(contactDTO.getId())) {
-                    isExit = true;
-                    Integer update = contactInfoMapper.update(LenderServiceUtils.toContactInfo(contactDTO));
-                    break;
-                }
-            }
-            if (!isExit) {
-                contactInfoMapper.deleteByPrimaryKey(contactInfo.getId());
-            }
+            contactInfoMapper.deleteByPrimaryKey(contactInfo.getId());
         }
         // 补足新增联系人
         for (ContactDTO contactDTO : contactDTOList) {
-            if (contactDTO.getId() == null) {
-                contactInfoMapper.insert(LenderServiceUtils.toContactInfo(contactDTO));
-            }
+            ContactInfo info = LenderServiceUtils.toContactInfo(contactDTO);
+            info.setMode(ObjectTypeEnum.LENDER.getValue().toString());
+            info.setModeId(lenderDTO.getId());
+            contactInfoMapper.insert(info);
         }
         return JsonResponseTool.success(lenderDTO.getId());
     }
