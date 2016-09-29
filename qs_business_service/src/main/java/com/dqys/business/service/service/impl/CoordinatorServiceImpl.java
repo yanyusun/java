@@ -8,7 +8,6 @@ import com.dqys.auth.orm.query.TUserTagQuery;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
-import com.dqys.business.orm.constant.coordinator.CoordinatorEnum;
 import com.dqys.business.orm.constant.coordinator.OURelationEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
 import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
@@ -168,17 +167,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 }
             }
             Integer result = userTeamMapper.insertSelective(userTeam);//添加公司内成员协作器
-            //重新查询下，避免重复多条相同协作器
-            List<Integer> userTeamIds = userTeamMapper.selectByCompany(userTeam.getCompanyId(), userTeam.getObjectId(), userTeam.getObjectType());
-            if (userTeamIds.size() == 1) {
-                map.put("userTeamId", userTeamIds.get(0));
-            } else if (userTeamIds.size() > 1) {//存在多条时，取出一个，其他删除
-                map.put("userTeamId", userTeamIds.get(0));
-                userTeamIds.remove(userTeamIds.get(0));
-                for (Integer id : userTeamIds) {
-                    userTeamMapper.deleteByPrimaryKey(id);
-                }
-            }
+            map.put("userTeamId", userTeam.getId());
             map.put("result", "yes");
         } else {
             List<TeamDTO> list = getLenderOrAsset(companyId, team.getObjectId(), team.getObjectType());//获取借款人或是资产包的团队信息
@@ -202,6 +191,20 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("people", getPeopleNum(companyId, objectId, objectType));//团队人数
             map.put("userTeamId", team.getId());
             map.put("result", "yes");
+        }
+    }
+
+    /**
+     * 删除重复的协作器
+     */
+    private void delRepetitionUserTeam(UserTeam team) {
+        List<Integer> userTeamIds = userTeamMapper.selectByCompany(team.getCompanyId(), team.getObjectId(), team.getObjectType());
+        if (userTeamIds.size() > 1) {//存在多条时
+            for (Integer id : userTeamIds) {
+                if (id != team.getId()) {
+                    userTeamMapper.deleteByPrimaryKey(id);
+                }
+            }
         }
     }
 
@@ -287,6 +290,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("result", "no");
             return map;
         }
+        delRepetitionUserTeam(userTeam);//重新查询下，避免重复多条相同协作器
         Map userAndCompany = coordinatorMapper.getUserAndCompanyByUserId(userId);
         for (Integer uid : userIds) {
             Integer flag = 0;
@@ -397,11 +401,11 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     }
 
     @Override
-    public Map isAccept(Integer teammateId, Integer status, Integer userId) throws BusinessLogException {
+    public Map isAccept(Integer teammateId, Integer status, Integer userId, Integer operUserId) throws BusinessLogException {
 //        businessLogService.add(teammateId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.UPDATE_COMMON_USER.getValue(), "被邀请人同意或拒绝", "", 0, 0);
         Map<String, Object> map = new HashMap<>();
         map.put("result", "no");
-        TeammateRe teammateRe = teammateReMapper.selectByPrimaryKey(teammateId);
+        TeammateRe teammateRe = teammateReMapper.selectByPrimaryKey(teammateId);//团队
         if (teammateRe == null) {
             map.put("msg", "团队查询有误");
             return map;
@@ -410,41 +414,35 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("msg", "重复操作");
             return map;
         }
-        UserTeam userT = null;
-        if (teammateRe.getUserId() != userId) {
-            UserTeam userTeam = new UserTeam();
-            userTeam.setId(teammateRe.getUserTeamId());
-            userT = userTeamMapper.selectByPrimaryKeySelective(userTeam);
-            if (userT == null) {
-                map.put("msg", "案组查询有误");//不存在
-                return map;
-            }
+        UserTeam userTeam = userTeamMapper.get(teammateRe.getUserTeamId());//协作器
+        if (userTeam == null) {
+            map.put("msg", "案组查询有误");//不存在
+            return map;
+        }
 //            if (userT.getMangerId() != userId) {
 //                map.put("result", "no_authority");//没有权限
 //                return map;
 //            }
-        }
         teammateRe.setStatus(status);
         Integer result = teammateReMapper.updateByPrimaryKeySelective(teammateRe);
         if (status == 1 && result > 0) {
-            Map userTeammate = coordinatorMapper.selectByUserTeamAndMateRe(teammateId);//查询团队中的协作器信息
             OURelation ouRelation = new OURelation();
-            String object_oper_status = MessageUtils.transMapToString(userTeammate, "object_oper_status");//对象可操作状态:0拥有对其全部的操作1来自业务流转只对其下部分对象有操作权限',
-            if ("1".equals(object_oper_status)) {
-                List<OURelation> list = ouRelationMapper.findByOURelation(userT.getMangerId(), userT.getObjectType());//查询业务流转对象
+            Integer object_oper_status = userTeam.getObjectOperStatus();//对象可操作状态:0拥有对其全部的操作1来自业务流转只对其下部分对象有操作权限',
+            if (1 == object_oper_status) {
+                List<OURelation> list = ouRelationMapper.findByOURelation(userTeam.getMangerId(), userTeam.getObjectType());//查询业务流转对象
                 if (list.size() > 0) {
                     ouRelation = list.get(0);
                 }
             } else {
                 ouRelation.setStatus(OURelationEnum.STATUS_ACCEPT.getValue());
-                ouRelation.setObjectType(MessageUtils.transMapToInt(userTeammate, "object_type"));
-                ouRelation.setObjectId(MessageUtils.transMapToInt(userTeammate, "object_id"));
+                ouRelation.setObjectType(userTeam.getObjectType());
+                ouRelation.setObjectId(userTeam.getObjectId());
             }
             ouRelation.setType(OURelationEnum.TYPE_ALLOCATION_TEAM.getValue());
-            ouRelation.setUserId(MessageUtils.transMapToInt(userTeammate, "user_id"));
-            ouRelation.setEmployerId(MessageUtils.transMapToInt(userTeammate, "user_team_id"));
+            ouRelation.setUserId(teammateRe.getUserId());
+            ouRelation.setEmployerId(teammateRe.getUserTeamId());
             if (checkExist(ouRelation)) {
-                ouRelationMapper.insertSelective(ouRelation);
+                ouRelationMapper.insertSelective(ouRelation);//添加事物关系
             }
             //如果是资产包，还需要加入资产包下的借款人
             if (ouRelation.getObjectType() == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
@@ -461,11 +459,57 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 }
             }
             //发送消息
+            sendInviteCoordinator(teammateRe, userTeam, userId, operUserId, status);
             map.put("result", "yes");
         } else if (status == 2 && result > 0) {
             map.put("result", "yes");
+            sendInviteCoordinator(teammateRe, userTeam, userId, operUserId, status);
         }
         return map;
+    }
+
+    /**
+     * 协作器的邀请或主动加入的同意或拒绝进行发送短信
+     *
+     * @param teammateRe
+     * @param userTeam
+     * @param userId     发送者（操作者）
+     * @param operUserId （邀请发起人）
+     * @param status （1同意，2拒绝）
+     */
+    private void sendInviteCoordinator(TeammateRe teammateRe, UserTeam userTeam, Integer userId, Integer operUserId, Integer status) {
+        SmsUtil smsUtil = new SmsUtil();
+        String content = "";
+        Integer sendUserId = userId;//发送
+        Integer recUserId = operUserId;//接收
+        if (teammateRe.getJoinType() == TeammateReEnum.JOIN_TYPE_PASSIVITY.getValue()) {//被邀请
+            Map userC = coordinatorMapper.getUserAndCompanyByUserId(recUserId);
+            Map operC = coordinatorMapper.getUserAndCompanyByUserId(sendUserId);
+            if (status == 1) {//同意
+                content = smsUtil.sendSms(SmsEnum.INVITE_COORDINATOR_YES.getValue(), MessageUtils.transMapToString(userC, "mobile"),
+                        MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(operC, "realName"),
+                        ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(), getObjectName(userTeam.getObjectType(), userTeam.getObjectId()));
+            } else if (status == 2) {//拒绝
+                content = smsUtil.sendSms(SmsEnum.INVITE_COORDINATOR_NO.getValue(), MessageUtils.transMapToString(userC, "mobile"),
+                        MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(operC, "realName"),
+                        ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(), getObjectName(userTeam.getObjectType(), userTeam.getObjectId()));
+            }
+        } else if (teammateRe.getJoinType() == TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue()) {//主动加入，管理员操作
+            recUserId = teammateRe.getUserId();//因为主动加入，所以审核同意发送的是管理员，接收的为协作器成员
+            Map userC = coordinatorMapper.getUserAndCompanyByUserId(recUserId);
+            Map operC = coordinatorMapper.getUserAndCompanyByUserId(sendUserId);
+            if (status == 1) {//同意
+                content = smsUtil.sendSms(SmsEnum.INITIATIVE_JOIN_YES.getValue(), MessageUtils.transMapToString(userC, "mobile"),
+                        MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(operC, "realName"),
+                        ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(), getObjectName(userTeam.getObjectType(), userTeam.getObjectId()));
+            } else if (status == 2) {//拒绝
+                content = smsUtil.sendSms(SmsEnum.INITIATIVE_JOIN_NO.getValue(), MessageUtils.transMapToString(userC, "mobile"),
+                        MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(operC, "realName"),
+                        ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(), getObjectName(userTeam.getObjectType(), userTeam.getObjectId()));
+            }
+        }
+        String title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.INSIDE_RESULT.getValue());
+        messageService.add(title, content, sendUserId, recUserId, "", MessageEnum.SERVE.getValue(), MessageBTEnum.INSIDE_RESULT.getValue(), "");
     }
 
     @Override
@@ -714,34 +758,6 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
         if (status == null && substitutionUid == null) {//删除协作器联系人
             code = teamDel(userId, teamUserId, userTeamId, status, substitutionUid);
-        } else if (status != null && substitutionUid != null) {//替换协作器联系人
-            if (userId.equals(substitutionUid)) {
-                code = teamDel(userId, teamUserId, userTeamId, status, substitutionUid);//删除联系人
-                if ("200".equals(code.get("code")) && status == 1) {
-                    teamDel(userId, substitutionUid, userTeamId, null, null);//如果替换人在该团队已经存在，那么先删除之后
-                    TeammateRe teammateRe = (TeammateRe) code.get("teammateRe");
-                    teammateRe.setId(null);
-                    teammateRe.setUserId(substitutionUid);
-                    teammateReMapper.insert(teammateRe);
-                    Map res = isAccept(teammateRe.getId(), status, substitutionUid);
-                    if (MessageUtils.transMapToString(res, "result").equals("yes")) {
-                        SmsUtil smsUtil = new SmsUtil();//发送短信通知
-                        Map userC = coordinatorMapper.getUserAndCompanyByUserId(teamUserId);
-                        Map oper = coordinatorMapper.getUserAndCompanyByUserId(substitutionUid);
-                        String content = smsUtil.sendSms(SmsEnum.REPLACE.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
-                                MessageUtils.transMapToString(oper, "realName"),
-                                ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(), getObjectName(userTeam.getObjectType(), userTeam.getObjectId()), TeammateReEnum.get(teammateRe.getType()));
-                        String title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.REPLACE.getValue());
-                        messageService.add(title, content, userId, substitutionUid, "", MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE.getValue(), "");//添加通知消息
-                        map.put("result", "yes");
-                    } else {
-                        throw new Exception();
-                    }
-                }
-            } else {
-                map.put("result", "no_self");
-                map.put("msg", "不正确的访问");
-            }
         } else if (status == null && substitutionUid != null) {//发送短信通知替补的人
             SmsUtil smsUtil = new SmsUtil();//发送短信通知
             Map userC = coordinatorMapper.getUserAndCompanyByUserId(substitutionUid);
@@ -754,6 +770,36 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                     "/coordinator/delUser?status=1&teamUserId=" + teamUserId + "&userTeamId=" + userTeamId + "&substitutionUid=" + substitutionUid, null, null);
             messageService.add(title, content, userId, substitutionUid, "", MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE_CONTACTS.getValue(), url);//添加通知消息
             map.put("result", "yes");
+        } else if (status != null && substitutionUid != null) {//替换协作器联系人
+            if (userId.equals(substitutionUid)) {
+                if (status == 1) {
+                    code = teamDel(userId, teamUserId, userTeamId, status, substitutionUid);//删除联系人
+                    if ("200".equals(code.get("code"))) {
+                        teamDel(userId, substitutionUid, userTeamId, null, null);//如果替换人在该团队已经存在，那么先删除之后
+                        TeammateRe teammateRe = (TeammateRe) code.get("teammateRe");
+                        teammateRe.setId(null);
+                        teammateRe.setUserId(substitutionUid);
+                        teammateReMapper.insert(teammateRe);
+                        Map res = isAccept(teammateRe.getId(), status, substitutionUid, null);
+                        if (MessageUtils.transMapToString(res, "result").equals("yes")) {
+                            SmsUtil smsUtil = new SmsUtil();//发送短信通知
+                            Map userC = coordinatorMapper.getUserAndCompanyByUserId(teamUserId);
+                            Map oper = coordinatorMapper.getUserAndCompanyByUserId(substitutionUid);
+                            String content = smsUtil.sendSms(SmsEnum.REPLACE.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
+                                    MessageUtils.transMapToString(oper, "realName"),
+                                    ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(), getObjectName(userTeam.getObjectType(), userTeam.getObjectId()), TeammateReEnum.get(teammateRe.getType()));
+                            String title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.REPLACE.getValue());
+                            messageService.add(title, content, userId, substitutionUid, "", MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE.getValue(), "");//添加通知消息
+                            map.put("result", "yes");
+                        } else {
+                            throw new Exception();
+                        }
+                    }
+                }
+            } else {
+                map.put("result", "no_self");
+                map.put("msg", "不正确的访问");
+            }
         } else {
             map.put("result", "no_par");
             map.put("msg", "参数错误");
@@ -983,7 +1029,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 //根据用户类型为处置机构时创建分配器
                 String typeStr = UserSession.getCurrent().getUserType();
                 if (CommonUtil.isDispose(typeStr.substring(0, typeStr.indexOf(",")))) {
-                    //todo 调用分配器接口
+                    // 调用分配器接口
                     try {
                         DistributionDTO distributionDTO = distributionService.listDistribution_tx(objectType, objectId);
                         companyTeamId = distributionDTO.getId();

@@ -44,44 +44,44 @@ public class CoordinatorController {
      * @apiGroup Coordinator
      * @apiName coordinator/list
      * @apiSuccessExample {json} Data-Response:
-     *{
-    "code": 2000,
-    "msg": "成功",
-    "data": {
-    "result": "yes",//反馈结果状态（成功yes）
-    "loan": 2221,//总贷款
-    "dayCount": 22,//逾期天数
-    "teams": [
-    {
-    "userId": 11,//用户id
-    "roleType": 0,//角色类型（0管理者1所属人2参与人）
-    "realName": "WZHPAN",//真实姓名
-    "teamName": "研发部门",//团队名称
-    "finishTask": 0,//完成任务数
-    "totalTask": 3,//总任务数
-    "ongoingTask": 0,//当前进行任务数
-    "leaveWordTime": ""//最后留言时间
-    }
-    ],
-    "companys": [
-    {
-    "company_name": "test", //公司名称
-    "id": 3, //公司id
-    "userType": 1 //用户类别（1平台 2委托 31催收 32律所 33中介）
-    }
-    ],
-    "name": null, //名称
-    "appraisal": 31, //抵押物总评估
-    "accrual": 313,//总利息
-    "userTeamId": 352,//协作器id
-    "people": [
-    {
-    "type": 0,//角色类型(0管理者，1所属人 ，2参与人)
-    "peopleNum": 1 //对应的人数
-    }
-    ]
-    }
-    }
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {
+     * "result": "yes",//反馈结果状态（成功yes）
+     * "loan": 2221,//总贷款
+     * "dayCount": 22,//逾期天数
+     * "teams": [
+     * {
+     * "userId": 11,//用户id
+     * "roleType": 0,//角色类型（0管理者1所属人2参与人）
+     * "realName": "WZHPAN",//真实姓名
+     * "teamName": "研发部门",//团队名称
+     * "finishTask": 0,//完成任务数
+     * "totalTask": 3,//总任务数
+     * "ongoingTask": 0,//当前进行任务数
+     * "leaveWordTime": ""//最后留言时间
+     * }
+     * ],
+     * "companys": [
+     * {
+     * "company_name": "test", //公司名称
+     * "id": 3, //公司id
+     * "userType": 1 //用户类别（1平台 2委托 31催收 32律所 33中介）
+     * }
+     * ],
+     * "name": null, //名称
+     * "appraisal": 31, //抵押物总评估
+     * "accrual": 313,//总利息
+     * "userTeamId": 352,//协作器id
+     * "people": [
+     * {
+     * "type": 0,//角色类型(0管理者，1所属人 ，2参与人)
+     * "peopleNum": 1 //对应的人数
+     * }
+     * ]
+     * }
+     * }
      */
     @RequestMapping("/list")
     @ResponseBody
@@ -100,7 +100,7 @@ public class CoordinatorController {
         if (map.get("result").toString().equals("yes")) {
             return JsonResponseTool.success(map);
         } else {
-            return JsonResponseTool.failure(MessageUtils.transMapToString(map,"msg"));
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
         }
     }
 
@@ -112,23 +112,23 @@ public class CoordinatorController {
      * @apiGroup Coordinator
      * @apiName coordinator/userList
      * @apiSuccessExample {json} Data-Response:
-     *{
-    "code": 2000,
-    "msg": "成功",
-    "data": {
-    "users": [
-    {
-    "realName": "张三",//姓名
-    "companyId": 3,//公司id
-    "companyName": "test",//公司名称
-    "userName": "zs",//用户名称
-    "roleType": 1,//角色（1管理员，2管理者，3普通）
-    "userType": 31,//用户类型（31催收32律所33中介）
-    "userId": 12 //用户id
-    }
-    ]
-    }
-    }
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {
+     * "users": [
+     * {
+     * "realName": "张三",//姓名
+     * "companyId": 3,//公司id
+     * "companyName": "test",//公司名称
+     * "userName": "zs",//用户名称
+     * "roleType": 1,//角色（1管理员，2管理者，3普通）
+     * "userType": 31,//用户类型（31催收32律所33中介）
+     * "userId": 12 //用户id
+     * }
+     * ]
+     * }
+     * }
      */
     @RequestMapping("/userList")
     @ResponseBody
@@ -166,6 +166,7 @@ public class CoordinatorController {
     /**
      * @api {post} coordinator/isAccept 被邀请人员同意或是拒绝请求
      * @apiParam {int} teammateId 参与人关联表id
+     * @apiParam {int} operUserId 邀请发起人
      * @apiParam {int} status 状态（1同意2拒绝）
      * @apiDescription 被邀请人员确认和拒绝
      * @apiSampleRequest coordinator/isAccept
@@ -174,7 +175,7 @@ public class CoordinatorController {
      */
     @RequestMapping("/isAccept")
     @ResponseBody
-    public JsonResponse isAccept(Integer teammateId, Integer status) throws Exception {
+    public JsonResponse isAccept(Integer teammateId, Integer status,Integer operUserId) throws Exception {
         Integer userId = UserSession.getCurrent().getUserId();
         if (CommonUtil.checkParam(teammateId, status)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -182,7 +183,7 @@ public class CoordinatorController {
         if (status != 1 && status != 2) {
             return JsonResponseTool.paramErr("状态参数有误");
         }
-        Map map = coordinatorService.isAccept(teammateId, status, userId);
+        Map map = coordinatorService.isAccept(teammateId, status, userId,operUserId);
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             return JsonResponseTool.success(map);
         } else {
