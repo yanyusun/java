@@ -98,7 +98,7 @@ public class CaseController {
      * @param index
      * @return
      */
-    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequestMapping(value = "/list")
     public JsonResponse list(@RequestParam(required = true) Integer id, @RequestParam(required = false) Integer index) {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -121,7 +121,7 @@ public class CaseController {
      * @param index
      * @return
      */
-    @RequestMapping(value = "/listCase", method = RequestMethod.POST)
+    @RequestMapping(value = "/listCase")
     public JsonResponse listCase(@RequestParam(required = true) Integer id, @RequestParam(required = false) Integer index) {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -145,7 +145,7 @@ public class CaseController {
      * @return
      * @throws BusinessLogException
      */
-    @RequestMapping(value = "/divide", method = RequestMethod.POST)
+    @RequestMapping(value = "/divide")
     public JsonResponse divide(@RequestParam Integer id, @RequestParam String ids) throws BusinessLogException {
         if (CommonUtil.checkParam(id, ids) && ids.length() == 0) {
             return JsonResponseTool.paramErr("参数错误");
