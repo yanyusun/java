@@ -106,9 +106,6 @@ public class CaseController {
         HashMap<String, Object> map = new HashMap<>();
         CaseDTO caseDTO = caseService.getByLender(id, index);
         Integer count = caseService.getCountBylender(id);
-        if (CommonUtil.checkParam(caseDTO, count)) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
         map.put("total", count);
         map.put("data", caseDTO);
         return JsonResponseTool.success(map);
@@ -129,9 +126,6 @@ public class CaseController {
         HashMap<String, Object> map = new HashMap<>();
         CaseDTO caseDTO = caseService.getByCase(id, index);
         Integer count = caseService.getCountByCase(id);
-        if (CommonUtil.checkParam(caseDTO, count)) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
         map.put("total", count);
         map.put("data", caseDTO);
         return JsonResponseTool.success(map);
