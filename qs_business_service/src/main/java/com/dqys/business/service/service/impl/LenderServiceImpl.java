@@ -796,7 +796,8 @@ public class LenderServiceImpl implements LenderService {
                 } else if (reList.size() < 6) {
                     boolean isExist = false;
                     for (TeammateRe re : reList) {
-                        if (re.getUserId().equals(userInfo.getId())) {
+                        if (re.getUserId().equals(userInfo.getId())
+                                && re.getStatus().equals(TeammateReEnum.STATUS_ACCEPT.getValue())) {
                             isExist = true;
                             break;
                         }
