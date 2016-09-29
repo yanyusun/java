@@ -8,7 +8,6 @@ import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -16,7 +15,7 @@ import java.util.HashMap;
 /**
  * Created by Yvan on 16/7/26.
  */
-@Controller
+@RestController
 @RequestMapping(value = "/case")
 public class CaseController {
 
@@ -25,12 +24,12 @@ public class CaseController {
 
     /**
      * 创建案件信息
+     *
      * @param caseDTO
      * @return
      * @throws BusinessLogException
      */
-    @RequestMapping(value = "/add",method = RequestMethod.POST)
-    @ResponseBody
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     public JsonResponse add(@ModelAttribute CaseDTO caseDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(caseDTO, caseDTO.getPawnId(), caseDTO.getDefendant(), caseDTO.getPlaintiff(),
                 caseDTO.getSpouse(), caseDTO.getMortgagor(), caseDTO.getMortgageTime(), caseDTO.getGuarantor(),
@@ -50,12 +49,12 @@ public class CaseController {
 
     /**
      * 批量创建案件信息
+     *
      * @param caseDTOList
      * @return
      * @throws BusinessLogException
      */
-    @RequestMapping(value = "/listAdd",method = RequestMethod.POST)
-    @ResponseBody
+    @RequestMapping(value = "/listAdd", method = RequestMethod.POST)
     public JsonResponse listAdd(@ModelAttribute CaseDTOList caseDTOList) throws BusinessLogException {
         if (CommonUtil.checkParam(caseDTOList) || caseDTOList.getCaseDTOList().size() == 0) {
             return JsonResponseTool.paramErr("参数错误");
@@ -70,10 +69,12 @@ public class CaseController {
 
     /**
      * 修改案件信息
+     *
      * @param caseDTO
      * @return
      * @throws BusinessLogException
      */
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     public JsonResponse update(@ModelAttribute CaseDTO caseDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(caseDTO, caseDTO.getPawnId(), caseDTO.getDefendant(), caseDTO.getPlaintiff(),
                 caseDTO.getSpouse(), caseDTO.getMortgagor(), caseDTO.getMortgageTime(), caseDTO.getGuarantor(),
@@ -92,10 +93,12 @@ public class CaseController {
 
     /**
      * 根据借款人查询案件信息
+     *
      * @param id
      * @param index
      * @return
      */
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
     public JsonResponse list(@RequestParam(required = true) Integer id, @RequestParam(required = false) Integer index) {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -113,10 +116,12 @@ public class CaseController {
 
     /**
      * 根据案件查询
+     *
      * @param id
      * @param index
      * @return
      */
+    @RequestMapping(value = "/listCase", method = RequestMethod.POST)
     public JsonResponse listCase(@RequestParam(required = true) Integer id, @RequestParam(required = false) Integer index) {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -134,11 +139,13 @@ public class CaseController {
 
     /**
      * 拆分案件
+     *
      * @param id
      * @param ids
      * @return
      * @throws BusinessLogException
      */
+    @RequestMapping(value = "/divide", method = RequestMethod.POST)
     public JsonResponse divide(@RequestParam Integer id, @RequestParam String ids) throws BusinessLogException {
         if (CommonUtil.checkParam(id, ids) && ids.length() == 0) {
             return JsonResponseTool.paramErr("参数错误");
