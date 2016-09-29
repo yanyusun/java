@@ -7,8 +7,10 @@ import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.auth.orm.query.TUserTagQuery;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.constant.coordinator.CoordinatorEnum;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.message.MessageMapper;
+import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.service.constant.MessageBTEnum;
@@ -112,7 +114,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public void sendSmsByTeammate(UserTeam userTeam, Map<String, Object> map, Integer uid, String remark) {
+    public void sendSmsByTeammate(UserTeam userTeam, TeammateRe teammateRe, Map<String, Object> map, Integer uid, String remark) {
         Map user = coordinatorMapper.getUserAndCompanyByUserId(uid);
         String objectName = "";
         String objectType = "";
@@ -142,11 +144,15 @@ public class MessageServiceImpl implements MessageService {
         if (companyTypeEnum != null) {
             companyTypeSend = companyTypeEnum.getName();
         }
+        String content = "";
         if (MessageUtils.transMapToString(user, "companyName").equals(MessageUtils.transMapToString(map, "companyName"))) {
-            sendSms(SmsEnum.INVITE_COORDINATOR.getValue(), mobilePhone, realName, companyNameSend, companyTypeSend, realNameSend, objectType, objectName, remark);
+            content = sendSms(SmsEnum.INVITE_COORDINATOR.getValue(), mobilePhone, realName, companyNameSend, companyTypeSend, realNameSend, objectType, objectName, remark);
         } else {
-            sendSms(SmsEnum.INVITE_DISTRIBUTOR.getValue(), mobilePhone, realName, typeSend, realNameSend, objectType, objectName, remark);
+            content = sendSms(SmsEnum.INVITE_DISTRIBUTOR.getValue(), mobilePhone, realName, typeSend, realNameSend, objectType, objectName, remark);
         }
+        String title = coordinatorService.getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.INSIDE.getValue());
+        Integer result = add(title, content, MessageUtils.transMapToInt(map, "userId"), uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.INSIDE.getValue(),
+                MessageUtils.setOperUrl("/coordinator/isAccept?status=1&teammateId=" + teammateRe.getId(), null, "/coordinator/isAccept?status=2&teammateId=" + teammateRe.getId(), null, null));//添加消息记录
     }
 
     @Override

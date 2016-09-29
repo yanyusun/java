@@ -1,5 +1,6 @@
 package com.dqys.business.service.service;
 
+import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.message.Message;
 
@@ -73,7 +74,7 @@ public interface MessageService {
      * @param uid      接收者
      * @param remark   备注
      */
-    void sendSmsByTeammate(UserTeam userTeam, Map<String, Object> map, Integer uid, String remark);
+    void sendSmsByTeammate(UserTeam userTeam,TeammateRe teammateRe, Map<String, Object> map, Integer uid, String remark);
 
     /**
      * 业务流转请求短信通知(发送给平台)

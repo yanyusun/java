@@ -167,7 +167,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                     break;
                 }
             }
-            userTeamMapper.insertSelective(userTeam);//添加公司内成员协作器
+            Integer result = userTeamMapper.insertSelective(userTeam);//添加公司内成员协作器
             //重新查询下，避免重复多条相同协作器
             List<Integer> userTeamIds = userTeamMapper.selectByCompany(userTeam.getCompanyId(), userTeam.getObjectId(), userTeam.getObjectType());
             if (userTeamIds.size() == 1) {
@@ -282,10 +282,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         UserTeam team = new UserTeam();
         team.setId(userTeamId);
         UserTeam userTeam = userTeamMapper.selectByPrimaryKeySelective(team);
-        String title = "未知";
-        if (userTeam != null) {
-            title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.INSIDE.getValue());
-        } else {
+        if (userTeam == null) {
             map.put("msg", "协作器不存在");
             map.put("result", "no");
             return map;
@@ -296,7 +293,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             TeammateRe teammateRe = new TeammateRe();
             teammateRe.setUserId(uid);
             teammateRe.setUserTeamId(userTeamId);
-            teammateRe.setJoinType(TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue());
+            teammateRe.setJoinType(TeammateReEnum.JOIN_TYPE_PASSIVITY.getValue());
             teammateRe.setBusinessType(TeammateReEnum.BUSINESS_TYPE_TASK.getValue());
             flag = getTeammateFlag(teammateRe);//添加参与人
             if (flag == -3) {//人数已满
@@ -312,12 +309,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
             if (flag > 0) {
                 num++;
-                Integer result = messageService.add(title, remark, userId, uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.INSIDE.getValue(),
-                        MessageUtils.setOperUrl("/coordinator/isAccept?status=1&teammateId=" + teammateRe.getId(), null, "/coordinator/isAccept?status=2&teammateId=" + teammateRe.getId(), null, null));//添加消息记录
-                if (result > 0) {
-                    //发送短信
-                    messageService.sendSmsByTeammate(userTeam, userAndCompany, uid, remark);
-                }
+                //发送短信
+                messageService.sendSmsByTeammate(userTeam, teammateRe, userAndCompany, uid, remark);
             }
         }
         if (num > 0) {
@@ -347,7 +340,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         if (size > 5 && teammateRe.getJoinType().equals(TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue())) {
             return -2;//主动加入人数已满
         }
-        if (size > 23 && teammateRe.getJoinType().equals(TeammateReEnum.JOIN_TYPE_PASSIVITY.getValue())) {
+        if (size > 5 && teammateRe.getJoinType().equals(TeammateReEnum.JOIN_TYPE_PASSIVITY.getValue())) {
             return -3;//被邀请的人数已满
         }
         if (size == 0) {
@@ -371,6 +364,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 teammateRe1.setStatus(TeammateReEnum.STATUS_INIT.getValue());
                 teammateRe1.setType(teammateRe.getType());
                 flag = teammateReMapper.updateByPrimaryKeySelective(teammateRe1);
+                teammateRe.setId(teammateRe1.getId());
             } else {
                 flag = -1;//已经加入过案组或已邀请
             }
