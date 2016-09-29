@@ -9,6 +9,7 @@ import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.asset.PiRelation;
 import com.dqys.business.orm.query.asset.RelationQuery;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.dto.asset.PawnDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
@@ -16,8 +17,10 @@ import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.PawnService;
 import com.dqys.business.service.utils.asset.PawnServiceUtils;
+import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.RandomUtil;
@@ -70,6 +73,17 @@ public class PawnServiceImpl implements PawnService {
         PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
         // 统计当前借款人已经具有的抵押物数量
         pawnInfo.setPawnNo(RandomUtil.getCode(RandomUtil.PAWN_CODE));
+        String typeStr = UserSession.getCurrent().getUserType();
+        UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
+        if(infoEnum != null){
+            if(UserInfoEnum.USER_TYPE_COLLECTION.getValue().equals(infoEnum.getValue())){
+                pawnInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+            }else if(UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().equals(infoEnum.getValue())){
+                pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+            }else if(UserInfoEnum.USER_TYPE_JUDICIARY.getValue().equals(infoEnum.getValue())){
+                pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+            }
+        }
         Integer addResult = pawnInfoMapper.insert(pawnInfo);
         if (!CommonUtil.checkResult(addResult)) {
             Integer pawnId = pawnInfo.getId();

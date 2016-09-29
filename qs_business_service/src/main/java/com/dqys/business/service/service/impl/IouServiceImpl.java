@@ -14,6 +14,7 @@ import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.query.asset.IOUQuery;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.IouEnum;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
@@ -22,6 +23,7 @@ import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.IouService;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.business.service.utils.asset.IouServiceUtils;
+import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -74,6 +76,17 @@ public class IouServiceImpl implements IouService {
         }
         IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
         iouInfo.setIouNo(RandomUtil.getCode(RandomUtil.IOU_CODE));
+        String typeStr = UserSession.getCurrent().getUserType();
+        UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
+        if(infoEnum != null){
+            if(UserInfoEnum.USER_TYPE_COLLECTION.getValue().equals(infoEnum.getValue())){
+                iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+            }else if(UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().equals(infoEnum.getValue())){
+                iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+            }else if(UserInfoEnum.USER_TYPE_JUDICIARY.getValue().equals(infoEnum.getValue())){
+                iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+            }
+        }
 
         Integer iouResult = iouInfoMapper.insert(iouInfo);
         if(!CommonUtil.checkResult(iouResult)){
