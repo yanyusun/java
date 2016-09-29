@@ -642,13 +642,21 @@ public class ZcyServiceImpl implements ZcyService {
     @Override
     public Map zcyDetail(Integer estatesId) {
         Map map = new HashMap<>();
-        Map<String, Object> zcy = zcyEstatesMapper.selectDetailByZcy(estatesId);
-        if (zcy != null) {
-            map.put("detail", zcy);
-            map.put("result", "yes");
+        ZcyListQuery zcyListQuery = new ZcyListQuery();
+        List<Integer> objectIds = new ArrayList<>();
+        objectIds.add(estatesId);
+        zcyListQuery.setObjectIdList(objectIds);//设置资产源待接收
+        zcyListQuery.setStartPage(zcyListQuery.getPage() * zcyListQuery.getPageCount());
+        List<ZcyPawnDTO> zcyPawnDTOs = coordinatorMapper.selectByZCYListPage(zcyListQuery);
+        setZcyPawnDTOs(zcyPawnDTOs);
+        if (zcyPawnDTOs.size() > 0) {
+            map.put("zcyPawnDTO", zcyPawnDTOs.get(0));
         } else {
-            map.put("result", "no");
+            map.put("zcyPawnDTO", null);
         }
+        Map<String, Object> zcy = zcyEstatesMapper.selectDetailByZcy(estatesId);
+        map.put("detail", zcy);
+        map.put("result", "yes");
         return map;
     }
 }

@@ -294,6 +294,30 @@ public class ZcyController {
      * "msg": "成功",
      * "data": {
      * "result": "yes",
+     * "zcyPawnDTO": {
+     * "pawnId": 16,//抵押物id
+     * "estatesId": 6,//资产信息id
+     * "keyId": 3,钥匙信息id
+     * "title": "1",//标题
+     * "houseNo": "131345",//编号
+     * "place": "11111111111",//位置
+     * "label": [],//标签
+     * "houseType": "131-31-33-131",//户型
+     * "orientation": "3",//朝向
+     * "floor": null,//楼层
+     * "acreage": "313.00",//面积
+     * "priceTotal": "5.00",//总价（万）
+     * "priceUnit": "13.00",//单价(万)
+     * "hangShingle": "0",//挂牌
+     * "daiKan": 0,//带看
+     * "daiKanLately": 0,//最近带看
+     * "keKan": 0,//可看
+     * "shiKan": 0,
+     * "maintaining": "",//维护人
+     * "currentBooking": 0,
+     * "realityDynamic": 0,
+     * "entrustTime": null //委托时间
+     * },
      * "detail": {
      * "area": "11",//市区
      * "decade": "2016-09-26",//年代
