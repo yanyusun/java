@@ -386,7 +386,7 @@
     )
   </select>
 
-  <select id="listByLender" resultMap="BaseResultMap" >
+  <select id="getByLender" resultMap="BaseResultMap" >
     SELECT
     <include refid="Base_Column_List" />
     FROM bt_case
