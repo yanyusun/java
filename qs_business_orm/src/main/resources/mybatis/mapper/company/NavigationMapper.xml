@@ -43,25 +43,10 @@
             <if test="employee">
                 AND employee = 1
             </if>
-            <if test="platform">
-                AND platform = 1
-            </if>
-            <if test="personal">
-                AND personal = 1
-            </if>
-            <if test="entrust">
-                AND entrust = 1
-            </if>
-            <if test="collection">
-                AND collection = 1
-            </if>
-            <if test="agent">
-                AND agent = 1
-            </if>
-            <if test="law">
-                AND law = 1
-            </if>
 
+            <if test="type != null">
+                AND type = #{type,jdbcType=VARCHAR}
+            </if>
 
         </where>
     </sql>
@@ -235,7 +220,7 @@
         <include refid="Base_Column_List"/>
         from bt_navigation
         <include refid="Base_Condition"/>
-        ORDER BY sort DESC
+        ORDER BY sort ASC
     </select>
 
     <select id="getParent" parameterType="java.lang.Integer" resultMap="BaseResultMap">
