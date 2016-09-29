@@ -10,7 +10,9 @@ import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.auth.orm.query.CompanyQuery;
 import com.dqys.auth.orm.query.TUserQuery;
 import com.dqys.auth.orm.query.TUserTagQuery;
+import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.company.OrganizationMapper;
+import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.pojo.company.Organization;
 import com.dqys.business.orm.query.company.OrganizationQuery;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
@@ -59,6 +61,8 @@ public class UserServiceImpl implements UserService {
     private TAreaMapper areaMapper;
     @Autowired
     private OrganizationMapper organizationMapper;
+    @Autowired
+    private CoordinatorMapper coordinatorMapper;
 
     public static final String INIT_PASSSWORD = "123456";
 
@@ -434,10 +438,35 @@ public class UserServiceImpl implements UserService {
      */
     private UserListDTO _get(TUserInfo tUserInfo) {
         TCompanyInfo tCompanyInfo = null;
+        TUserTag userTag = null;
+        String apartment = null;
+        Integer total = null;
+        Integer going = null;
         if (tUserInfo.getCompanyId() != null) {
             tCompanyInfo = tCompanyInfoMapper.selectByPrimaryKey(tUserInfo.getCompanyId());
+            Map<String, Object> lenderMap = coordinatorMapper.getTaskRatio(
+                    tUserInfo.getCompanyId(), tUserInfo.getId(), ObjectTypeEnum.LENDER.getValue());
+            Map<String, Object> assetMap = coordinatorMapper.getTaskRatio(
+                    tUserInfo.getCompanyId(), tUserInfo.getId(), ObjectTypeEnum.ASSETPACKAGE.getValue());
+            total = Integer.valueOf(String.valueOf(lenderMap.get("total")).trim())
+                    + Integer.valueOf(String.valueOf(assetMap.get("total")).trim());
+            going = total - Integer.valueOf(String.valueOf(lenderMap.get("finish")).trim())
+                    - Integer.valueOf(String.valueOf(assetMap.get("finish")).trim());
         }
-        return UserServiceUtils.toUserListDTO(tUserInfo, tCompanyInfo);
+        List<TUserTag> tagList = tUserTagMapper.selectByUserId(tUserInfo.getId());
+        if(tagList != null && tagList.size() > 0){
+            userTag = tagList.get(0);
+            if(userTag.getApartmentId() != null){
+                OrganizationQuery query = new OrganizationQuery();
+                query.setId(userTag.getApartmentId());
+                List<Organization> organization = organizationMapper.list(query);
+                if(organization != null && organization.size() > 0){
+                    apartment = organization.get(0).getName();
+                }
+            }
+        }
+
+        return UserServiceUtils.toUserListDTO(tUserInfo, tCompanyInfo, userTag, apartment, total, going);
     }
 
     /**

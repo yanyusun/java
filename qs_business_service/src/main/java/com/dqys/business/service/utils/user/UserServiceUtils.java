@@ -7,6 +7,7 @@ import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;
 import com.dqys.core.base.SysProperty;
+import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -17,7 +18,8 @@ import org.apache.commons.lang3.RandomStringUtils;
 public class UserServiceUtils {
 
 
-    public static UserListDTO toUserListDTO(TUserInfo userInfo, TCompanyInfo companyInfo) {
+    public static UserListDTO toUserListDTO(TUserInfo userInfo, TCompanyInfo companyInfo, TUserTag userTag,
+                                            String apartment, Integer total, Integer going) {
         if (CommonUtil.checkParam(userInfo, userInfo.getId())) {
             return null;
         }
@@ -33,6 +35,12 @@ public class UserServiceUtils {
         userListDTO.setAccount(userInfo.getAccount());
         userListDTO.setMobile(userInfo.getMobile());
         userListDTO.setEmail(userInfo.getEmail());
+
+        userListDTO.setApartment(apartment);
+        userListDTO.setOccupation(userTag.getOccupation());
+        userListDTO.setDuty(userTag.getDuty());
+        userListDTO.setRoleName(RoleTypeEnum.get(Integer.valueOf(userTag.getRoleId())));
+
         if (companyInfo != null) {
             userListDTO.setCompany(companyInfo.getCompanyName());
             userListDTO.setArea(AreaTool.getAreaById(companyInfo.getProvince()).getLabel()
@@ -40,9 +48,10 @@ public class UserServiceUtils {
                             + AreaTool.getAreaById(companyInfo.getArea()).getLabel()
             );
         }
-
-        // todo 暂时没有添加数据
-        userListDTO.setTaskNum(null);
+        userListDTO.setTaskNum(total); // 总任务数量
+        userListDTO.setOnGoingNum(going); // 正在进行
+        // todo 默认在职
+        userListDTO.setWork(SysProperty.BOOLEAN_TRUE);
 
         return userListDTO;
     }
@@ -146,12 +155,12 @@ public class UserServiceUtils {
     }
 
 
-    public static String checkData(UserInsertDTO userInsertDTO){
-        if(CommonUtil.checkParam(userInsertDTO, userInsertDTO.getRealName(),
+    public static String checkData(UserInsertDTO userInsertDTO) {
+        if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getRealName(),
                 userInsertDTO.getUserName(), userInsertDTO.getSex(), userInsertDTO.getRoleId(),
                 userInsertDTO.getAccount(), userInsertDTO.getMobile(), userInsertDTO.getWechat(),
                 userInsertDTO.getEmail(), userInsertDTO.getOccupation(), userInsertDTO.getApartmentId(),
-                userInsertDTO.getDuty(), userInsertDTO.getAreaId(), userInsertDTO.getUserType())){
+                userInsertDTO.getDuty(), userInsertDTO.getAreaId(), userInsertDTO.getUserType())) {
             return "参数错误";
         }
         return null;

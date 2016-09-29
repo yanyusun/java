@@ -37,8 +37,63 @@ public class UserListDTO {
     private String company; // 公司信息
     private Integer taskNum; // 当前任务数量
 
+    private String apartment; // 部门
+    private String occupation; // 职位名称
+    private String roleName; // 角色名称
+    private String duty; // 职责名称
+    private Integer work; // 在职状态
+    private Integer onGoingNum; // 正在进行任务数
+
     // 待定二维码<暂未提供>
 
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getApartment() {
+        return apartment;
+    }
+
+    public void setApartment(String apartment) {
+        this.apartment = apartment;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
+    public String getDuty() {
+        return duty;
+    }
+
+    public void setDuty(String duty) {
+        this.duty = duty;
+    }
+
+    public Integer getWork() {
+        return work;
+    }
+
+    public void setWork(Integer work) {
+        this.work = work;
+    }
+
+    public Integer getOnGoingNum() {
+        return onGoingNum;
+    }
+
+    public void setOnGoingNum(Integer onGoingNum) {
+        this.onGoingNum = onGoingNum;
+    }
 
     public Integer getId() {
         return id;

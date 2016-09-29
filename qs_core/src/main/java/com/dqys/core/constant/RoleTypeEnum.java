@@ -11,10 +11,12 @@ public enum RoleTypeEnum {
     private Integer value;
     private String name;
 
-    public String get(Integer value) {
-        for (RoleTypeEnum role : RoleTypeEnum.values()) {
-            if (role.getValue().equals(value)) {
-                return role.getName();
+    public static String get(Integer value) {
+        if(value != null){
+            for (RoleTypeEnum role : RoleTypeEnum.values()) {
+                if (role.getValue().equals(value)) {
+                    return role.getName();
+                }
             }
         }
         return "";
