@@ -122,6 +122,8 @@ public class CoordinatorController {
     "companyId": 3,//公司id
     "companyName": "test",//公司名称
     "userName": "zs",//用户名称
+    "roleType": 1,//角色（1管理员，2管理者，3普通）
+    "userType": 31,//用户类型（31催收32律所33中介）
     "userId": 12 //用户id
     }
     ]

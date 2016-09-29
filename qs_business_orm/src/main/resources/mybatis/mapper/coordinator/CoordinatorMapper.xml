@@ -141,9 +141,10 @@
     <!--获取员工公司下的所有员工-->
     <select id="getCompanyUserList" resultType="java.util.Map">
         SELECT tci.company_name companyName,tui.company_id companyId,tui.real_name realName,tui.user_name
-        userName,tui.id userId
+        userName,tui.id userId,tut.role_id roleType,tut.user_type userType
         from t_company_info tci LEFT JOIN t_user_info tui
-        ON tui.company_id=tci.id
+        ON tui.company_id=tci.id LEFT JOIN t_user_tag tut
+        ON tut.user_id=tui.id
         WHERE tci.id in (
         <if test="companyId !=null and userId == null">
             #{companyId,jdbcType=INTEGER}
