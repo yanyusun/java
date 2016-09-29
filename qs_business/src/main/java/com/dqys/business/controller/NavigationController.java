@@ -227,30 +227,30 @@ public class NavigationController {
         }
         NavigationQuery navigationQuery = new NavigationQuery();
         // 用户类型
-        String userType = UserSession.getCurrent().getUserType();
-        navigationQuery.setType(userType.substring(0, userType.indexOf(",")));
-//        // 平台部分
-//        if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_JUDICIARY.getValue())) {
-//            // 律所
-//            navigationQuery.setLaw(true);
-//        } else if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue())) {
-//            // 中介
-//            navigationQuery.setAgent(true);
-//        } else if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_COLLECTION.getValue())) {
-//            // 催收
-//            navigationQuery.setCollection(true);
-//        } else if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_ENTRUST.getValue())) {
-//            // 委托
-//            navigationQuery.setEntrust(true);
-//        } else if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_ADMIN.getValue())) {
-//            // 平台
-//            navigationQuery.setPlatform(true);
-//        } else if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_COMMON.getValue())) {
-//            // 普通用户(个人)
-//            navigationQuery.setPersonal(true);
-//        } else {
-//            return null;
-//        }
+//        String userType = UserSession.getCurrent().getUserType();
+//        navigationQuery.setType(userType.substring(0, userType.indexOf(",")));
+        // 平台部分
+        if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_JUDICIARY.getValue())) {
+            // 律所
+            navigationQuery.setLaw(true);
+        } else if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue())) {
+            // 中介
+            navigationQuery.setAgent(true);
+        } else if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_COLLECTION.getValue())) {
+            // 催收
+            navigationQuery.setCollection(true);
+        } else if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_ENTRUST.getValue())) {
+            // 委托
+            navigationQuery.setEntrust(true);
+        } else if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_ADMIN.getValue())) {
+            // 平台
+            navigationQuery.setPlatform(true);
+        } else if (userInsertDTO.getUserType().equals(UserInfoEnum.USER_TYPE_COMMON.getValue())) {
+            // 普通用户(个人)
+            navigationQuery.setPersonal(true);
+        } else {
+            return null;
+        }
         // 角色部分
         if (userInsertDTO.getRoleId().equals(RoleTypeEnum.REGULATOR.getValue())) {
             // 管理者

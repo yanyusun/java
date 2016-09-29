@@ -702,6 +702,19 @@ public class AssetServiceImpl implements AssetService {
         // 借款人信息
         lenderDTO.setAssetId(id);
         LenderInfo lenderInfo = LenderServiceUtils.toLenderInfo(lenderDTO);
+        lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
+        lenderInfo.setOperator(UserSession.getCurrent().getUserId());
+        String typeStr = UserSession.getCurrent().getUserType();
+        UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
+        if(infoEnum != null){
+            if(UserInfoEnum.USER_TYPE_COLLECTION.getValue().equals(infoEnum.getValue())){
+                lenderInfo.setIsCollection(SysProperty.BOOLEAN_TRUE);
+            }else if(UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().equals(infoEnum.getValue())){
+                lenderInfo.setIsAgent(SysProperty.BOOLEAN_TRUE);
+            }else if(UserInfoEnum.USER_TYPE_JUDICIARY.getValue().equals(infoEnum.getValue())){
+                lenderInfo.setIsLawyer(SysProperty.BOOLEAN_TRUE);
+            }
+        }
         Integer result = lenderInfoMapper.insert(lenderInfo);
         if (CommonUtil.checkResult(result)) {
             // 添加失败
@@ -862,6 +875,19 @@ public class AssetServiceImpl implements AssetService {
             lenderDTO.setAssetId(id);
             LenderInfo lenderInfo = LenderServiceUtils.toLenderInfo(lenderDTO);
             lenderInfo.setOperator(UserSession.getCurrent().getUserId());
+            lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
+            lenderInfo.setOperator(UserSession.getCurrent().getUserId());
+            String typeStr = UserSession.getCurrent().getUserType();
+            UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
+            if(infoEnum != null){
+                if(UserInfoEnum.USER_TYPE_COLLECTION.getValue().equals(infoEnum.getValue())){
+                    lenderInfo.setIsCollection(SysProperty.BOOLEAN_TRUE);
+                }else if(UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().equals(infoEnum.getValue())){
+                    lenderInfo.setIsAgent(SysProperty.BOOLEAN_TRUE);
+                }else if(UserInfoEnum.USER_TYPE_JUDICIARY.getValue().equals(infoEnum.getValue())){
+                    lenderInfo.setIsLawyer(SysProperty.BOOLEAN_TRUE);
+                }
+            }
             Integer result = lenderInfoMapper.insert(lenderInfo);
             if (CommonUtil.checkResult(result)) {
                 return JsonResponseTool.failure("增加借款人基础信息失败");
@@ -894,6 +920,18 @@ public class AssetServiceImpl implements AssetService {
             }
             pawnDTO.setLenderId(idMap.get(pawnDTO.getId()));
             PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
+            pawnInfo.setPawnNo(RandomUtil.getCode(RandomUtil.PAWN_CODE));
+            String typeStr = UserSession.getCurrent().getUserType();
+            UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
+            if(infoEnum != null){
+                if(UserInfoEnum.USER_TYPE_COLLECTION.getValue().equals(infoEnum.getValue())){
+                    pawnInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+                }else if(UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().equals(infoEnum.getValue())){
+                    pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+                }else if(UserInfoEnum.USER_TYPE_JUDICIARY.getValue().equals(infoEnum.getValue())){
+                    pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+                }
+            }
             Integer result = pawnInfoMapper.insert(pawnInfo);
             if (CommonUtil.checkResult(result)) {
                 return JsonResponseTool.failure("增加抵押物信息失败");
@@ -911,6 +949,18 @@ public class AssetServiceImpl implements AssetService {
             }
             iouDTO.setLenderId(idMap.get(iouDTO.getId()));
             IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
+            iouInfo.setIouNo(RandomUtil.getCode(RandomUtil.IOU_CODE));
+            String typeStr = UserSession.getCurrent().getUserType();
+            UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
+            if(infoEnum != null){
+                if(UserInfoEnum.USER_TYPE_COLLECTION.getValue().equals(infoEnum.getValue())){
+                    iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+                }else if(UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().equals(infoEnum.getValue())){
+                    iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+                }else if(UserInfoEnum.USER_TYPE_JUDICIARY.getValue().equals(infoEnum.getValue())){
+                    iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+                }
+            }
             Integer result = iouInfoMapper.insert(iouInfo);
             if (CommonUtil.checkResult(result)) {
                 return JsonResponseTool.failure("增加借据信息失败");

@@ -44,6 +44,22 @@
                 AND employee = 1
             </if>
 
+            <if test="personal">
+                AND personal = 1
+            </if>
+            <if test="entrust">
+                AND entrust = 1
+            </if>
+            <if test="collection">
+                AND collection = 1
+            </if>
+            <if test="agent">
+                AND agent = 1
+            </if>
+            <if test="law">
+                AND law = 1
+            </if>
+
             <if test="type != null">
                 AND type = #{type,jdbcType=VARCHAR}
             </if>
