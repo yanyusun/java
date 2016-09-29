@@ -339,8 +339,8 @@ public class AssetServiceImpl implements AssetService {
 //                }
 //            }
 //            assetQuery.setOperator(UserSession.getCurrent().getUserId());
-        } else if (ObjectTabEnum.handling_urge.getValue().equals(type) || ObjectTabEnum.gongingOn.getValue().equals(type)) {
-            // 正在处置
+        } else if (ObjectTabEnum.gongingOn.getValue().equals(type)) {
+            // 正在进行
 //            List<Integer> ids = companyTeamReMapper.listObjectIdByTypeAndManager(
 //                    ObjectTypeEnum.LENDER.getValue(),
 //                    ObjectAcceptTypeEnum.accept.getValue(),
@@ -644,7 +644,8 @@ public class AssetServiceImpl implements AssetService {
             } else {
                 assetQuery.setIds(ids);
             }
-        } else if (ObjectTabEnum.handling_entrust.getValue().equals(type)) {
+        } else if (ObjectTabEnum.handling_urge.getValue().equals(type)
+                || ObjectTabEnum.handling_entrust.getValue().equals(type)) {
             // 委托的处置中
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
