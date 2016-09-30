@@ -73,7 +73,7 @@
         Limit 0,1
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    update t_user_team set stateflag=now()
+    DELETE from t_user_team
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <select id="get" parameterType="java.lang.Integer" resultMap="BaseResultMap">

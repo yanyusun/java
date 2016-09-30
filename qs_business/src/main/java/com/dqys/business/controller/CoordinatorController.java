@@ -175,7 +175,7 @@ public class CoordinatorController {
      */
     @RequestMapping("/isAccept")
     @ResponseBody
-    public JsonResponse isAccept(Integer teammateId, Integer status,Integer operUserId) throws Exception {
+    public JsonResponse isAccept(Integer teammateId, Integer status, Integer operUserId) throws Exception {
         Integer userId = UserSession.getCurrent().getUserId();
         if (CommonUtil.checkParam(teammateId, status)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -183,7 +183,7 @@ public class CoordinatorController {
         if (status != 1 && status != 2) {
             return JsonResponseTool.paramErr("状态参数有误");
         }
-        Map map = coordinatorService.isAccept(teammateId, status, userId,operUserId);
+        Map map = coordinatorService.isAccept(teammateId, status, userId, operUserId);
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             return JsonResponseTool.success(map);
         } else {
@@ -294,7 +294,7 @@ public class CoordinatorController {
     @RequestMapping("/delUser")
     @ResponseBody
     public JsonResponse deleteTeammatUser(@RequestParam("teamUserId") Integer teamUserId, @RequestParam("userTeamId") Integer userTeamId,
-                                          @RequestParam("status") Integer status, @RequestParam("substitutionUid") Integer substitutionUid,
+                                          Integer status, Integer substitutionUid,
                                           Integer operUserId) throws Exception {
         Integer userId = UserSession.getCurrent().getUserId();
         Map map = new HashMap<>();
@@ -307,7 +307,7 @@ public class CoordinatorController {
             }
             status += 1;
         }
-        map = coordinatorService.deleteTeammatUser(userId, teamUserId, userTeamId, status, substitutionUid,operUserId);
+        map = coordinatorService.deleteTeammatUser(userId, teamUserId, userTeamId, status, substitutionUid, operUserId);
         if (map.get("result").equals("yes")) {
             return JsonResponseTool.success(map);
         } else {

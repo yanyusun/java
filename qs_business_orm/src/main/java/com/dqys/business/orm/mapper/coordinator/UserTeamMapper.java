@@ -10,6 +10,7 @@ import java.util.List;
 public interface UserTeamMapper {
     /**
      * 删除公司内成员协作器表数据
+     * 物理删除
      *
      * @param id
      * @return

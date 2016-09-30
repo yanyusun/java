@@ -203,7 +203,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         List<Integer> userTeamIds = userTeamMapper.selectByCompany(team.getCompanyId(), team.getObjectId(), team.getObjectType());
         if (userTeamIds.size() > 1) {//存在多条时
             for (Integer id : userTeamIds) {
-                if (id != team.getId()) {
+                if (!id.equals(team.getId())) {
                     userTeamMapper.deleteByPrimaryKey(id);
                 }
             }
@@ -350,13 +350,13 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             return -3;//被邀请的人数已满
         }
         //判断是否存在管理者，不存在返回第一个邀请要管理者
-        if (!judgeTeamReType(teammateRe)) {
+        if (!judgeTeamReType(teammateRe, TeammateReEnum.TYPE_ADMIN.getValue())) {
             TUserTag tags = tUserTagMapper.selectByUserId(teammateRe.getUserId()).get(0);
             if (RoleTypeEnum.REGULATOR.getValue() != (int) tags.getRoleId()) {
                 return -4;//第一个添加人员不是管理者
             }
             teammateRe.setType(TeammateReEnum.TYPE_ADMIN.getValue());
-        } else if (size == 1) {
+        } else if (!judgeTeamReType(teammateRe, TeammateReEnum.TYPE_AUXILIARY.getValue())) {
             teammateRe.setType(TeammateReEnum.TYPE_AUXILIARY.getValue());
         } else {
             teammateRe.setType(TeammateReEnum.TYPE_PARTICIPATION.getValue());
@@ -382,23 +382,23 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     }
 
     /**
-     * 判别该协作器中是否存在了管理者
+     * 判别该协作器中是否存在了管理者或所属人
      *
      * @param teammateRe
      * @return
      */
-    private boolean judgeTeamReType(TeammateRe teammateRe) {
+    private boolean judgeTeamReType(TeammateRe teammateRe, Integer type) {
         boolean flag = false;
         TeammateRe re = new TeammateRe();
-        re.setType(TeammateReEnum.TYPE_ADMIN.getValue());
+        re.setType(type);
         re.setUserTeamId(teammateRe.getUserTeamId());
         re.setStatus(TeammateReEnum.STATUS_INIT.getValue());
-        List<TeammateRe> list = teammateReMapper.selectSelective(re);//查看待接收中是否有管理者
+        List<TeammateRe> list = teammateReMapper.selectSelective(re);//查看待接收中是否存在
         if (list.size() > 0) {
             flag = true;
         } else {
             re.setStatus(TeammateReEnum.STATUS_ACCEPT.getValue());
-            list = teammateReMapper.selectSelective(re);//查看已经接收是否存在管理者
+            list = teammateReMapper.selectSelective(re);//查看已经接收是否存在
             if (list.size() > 0) {
                 flag = true;
             }
@@ -1204,7 +1204,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             ouRelation.setEmployerId(userTeamId);
             ouRelation.setType(OURelationEnum.TYPE_ALLOCATION_TEAM.getValue());
             Integer result1 = ouRelationMapper.deleteByPrimaryKey(ouRelation);
-            if (result > 0 && result1 > 0) {
+            if (result > 0) {
                 map.put("code", "200");//成功
             } else {
                 map.put("code", "505");//数据操作有误
