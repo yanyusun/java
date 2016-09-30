@@ -18,10 +18,7 @@ import com.dqys.business.orm.mapper.company.CompanyTeamMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.coordinator.UserTeamMapper;
-import com.dqys.business.orm.pojo.asset.AssetInfo;
-import com.dqys.business.orm.pojo.asset.ContactInfo;
-import com.dqys.business.orm.pojo.asset.IOUInfo;
-import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
@@ -35,15 +32,10 @@ import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
-import com.dqys.business.service.dto.asset.ContactDTO;
-import com.dqys.business.service.dto.asset.LenderDTO;
-import com.dqys.business.service.dto.asset.LenderListDTO;
+import com.dqys.business.service.dto.asset.*;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.LenderListQuery;
-import com.dqys.business.service.service.BusinessLogService;
-import com.dqys.business.service.service.BusinessService;
-import com.dqys.business.service.service.CoordinatorService;
-import com.dqys.business.service.service.LenderService;
+import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.asset.IouServiceUtils;
 import com.dqys.business.service.utils.asset.LenderServiceUtils;
 import com.dqys.business.service.utils.asset.PawnServiceUtils;
@@ -93,6 +85,8 @@ public class LenderServiceImpl implements LenderService {
     private TUserInfoMapper userInfoMapper;
     @Autowired
     private TCompanyInfoMapper companyInfoMapper;
+    @Autowired
+    private PiRelationMapper piRelationMapper;
 
     @Autowired
     private BusinessService businessService;
@@ -475,14 +469,19 @@ public class LenderServiceImpl implements LenderService {
         IOUQuery iouQuery = new IOUQuery();
         iouQuery.setLenderId(id);
         List<IOUInfo> iouList = iouInfoMapper.queryList(iouQuery);
-        resultMap.put("iouDTOs", IouServiceUtils.toIouDTO(iouList));
+        List<IouDTO> iouDTOList = new ArrayList<>();
         Date date = null;
         for (IOUInfo iouInfo : iouList) {
+            // 获取抵押物与借据的关联
+            iouDTOList.add(changeToDTO(iouInfo));
+            // 获取最大的结束时间
             if (date == null
                     || (iouInfo.getEndAt() != null && iouInfo.getEndAt().compareTo(date) > 0)) {
                 date = iouInfo.getEndAt();
             }
         }
+        resultMap.put("iouDTOs", iouDTOList);
+        // 获取逾期天数
         Calendar calendar = Calendar.getInstance();
         if (calendar.getTime().compareTo(date) > 0) {
             long millis = (calendar.getTimeInMillis() - date.getTime()) / 24 / 3600 / 1000;
@@ -491,7 +490,12 @@ public class LenderServiceImpl implements LenderService {
         // 抵押物
         PawnQuery pawnQuery = new PawnQuery();
         pawnQuery.setLenderId(id);
-        resultMap.put("pawnDTOs", PawnServiceUtils.toPawnDTO(pawnInfoMapper.queryList(pawnQuery)));
+        List<PawnDTO> pawnDTOList = new ArrayList<>();
+        List<PawnInfo> pawnInfoList = pawnInfoMapper.queryList(pawnQuery);
+        for (PawnInfo pawnInfo : pawnInfoList) {
+            pawnDTOList.add(changeToDTO(pawnInfo));
+        }
+        resultMap.put("pawnDTOs", pawnDTOList);
         // 协作器
         TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
         UserTeam userTeam = userTeamMapper.getByObject(
@@ -512,6 +516,8 @@ public class LenderServiceImpl implements LenderService {
         return JsonResponseTool.success(resultMap);
     }
 
+
+
     @Override
     public JsonResponse listLender(Integer id) {
         if (CommonUtil.checkParam(id)) {
@@ -531,6 +537,62 @@ public class LenderServiceImpl implements LenderService {
             }
         }
         return JsonResponseTool.success(selectonDTOList);
+    }
+
+    /**
+     * 转化DAO为DTO
+     * @param pawnInfo
+     * @return
+     */
+    private PawnDTO changeToDTO(PawnInfo pawnInfo){
+        if(pawnInfo != null){
+            PawnDTO pawnDTO = PawnServiceUtils.toPawnDTO(pawnInfo);
+            RelationQuery query = new RelationQuery();
+            query.setPawnId(pawnInfo.getId());
+            List<PiRelation> relationList = piRelationMapper.queryList(query);
+            relationList.forEach(relation -> {
+                IOUInfo iouInfo = iouInfoMapper.get(relation.getIouId());
+                if(iouInfo != null){
+                    if(pawnDTO.getIouNames() == null){
+                        pawnDTO.setIouIds("" + iouInfo.getId());
+                        pawnDTO.setIouNames(iouInfo.getName());
+                    }else{
+                        pawnDTO.setIouIds("," + iouInfo.getId());
+                        pawnDTO.setIouNames("," + iouInfo.getName());
+                    }
+                }
+            });
+            return pawnDTO;
+        }
+        return null;
+    }
+
+    /**
+     * 将DAO转化为DTO
+     * @param iouInfo
+     * @return
+     */
+    public IouDTO changeToDTO(IOUInfo iouInfo){
+        if(iouInfo != null){
+            IouDTO iouDTO = IouServiceUtils.toIouDTO(iouInfo);
+            RelationQuery relationQuery = new RelationQuery();
+            relationQuery.setIouId(iouInfo.getId());
+            List<PiRelation> piRelationList = piRelationMapper.queryList(relationQuery);
+            piRelationList.forEach(piRelation -> {
+                PawnInfo pawnInfo = pawnInfoMapper.get(piRelation.getPawnId());
+                if(pawnInfo != null){
+                    if(iouDTO.getPawnNames() == null){
+                        iouDTO.setPawnNames(pawnInfo.getName());
+                        iouDTO.setPawnIds("" + pawnInfo.getId());
+                    }else{
+                        iouDTO.setPawnIds("," + pawnInfo.getId());
+                        iouDTO.setPawnNames("," + pawnInfo.getName());
+                    }
+                }
+            });
+            return iouDTO;
+        }
+        return null;
     }
 
     /**
@@ -605,11 +667,12 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setIds(result);
             }
         } else if (ObjectTabEnum.apply.getValue().equals(tab)) {
-            // 待申请 -- 暂未其他公司参与
-            List<Integer> ids = companyTeamReMapper.listAssigned(ObjectTypeEnum.LENDER.getValue());
-            if (ids != null || ids.size() > 0) {
-                lenderQuery.setExceptIds(ids);
-            }
+            // 待申请 -- 暂未其他公司参与(只要对象的三个值都不存在1就是未参与)
+                lenderQuery.setNoTakePart(true);
+//            List<Integer> ids = companyTeamReMapper.listAssigned(ObjectTypeEnum.LENDER.getValue());
+//            if (ids != null || ids.size() > 0) {
+//                lenderQuery.setExceptIds(ids);
+//            }
 //            if (isUrgeOrLawyer) {
 //                if(businessIds == null || businessIds.size() == 0){
 //                    lenderQuery.setId(SysProperty.NULL_DATA_ID);

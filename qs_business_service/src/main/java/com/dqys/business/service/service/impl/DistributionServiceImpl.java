@@ -39,11 +39,13 @@ import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.dto.company.BusinessServiceDTO;
 import com.dqys.business.service.dto.company.CompanyTeamReDTO;
 import com.dqys.business.service.dto.company.DistributionDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
+import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.DistributionService;
 import com.dqys.business.service.utils.company.CompanyServiceUtils;
@@ -101,6 +103,8 @@ public class DistributionServiceImpl implements DistributionService {
 
     @Autowired
     private CoordinatorService coordinatorService;
+    @Autowired
+    private BusinessLogService businessLogService;
 
     @Override
     public DistributionDTO listDistribution_tx(Integer type, Integer id) throws BusinessLogException {
@@ -333,8 +337,8 @@ public class DistributionServiceImpl implements DistributionService {
             }
             Integer teamId = companyTeam.getId();
             // 添加操作记录
-//            businessLogService.add(teamId, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.add.getValue(),
-//                    "", "创建分配器", 0, 0);
+            businessLogService.add(id, type, ObjectLogEnum.add.getValue(),
+                    "", "创建分配器", 0, 0);
             // 添加本家分配记录
             CompanyDetailInfo detailInfo = companyInfoMapper.getDetailByUserId(creatorId);
             if (detailInfo != null && detailInfo.getCompanyId() != null) {
@@ -414,6 +418,9 @@ public class DistributionServiceImpl implements DistributionService {
             if (CommonUtil.checkResult(result)) {
                 return null;
             } else {
+                // 添加操作记录
+                businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), ObjectLogEnum.join.getValue(),
+                        "", "主动加入分配器, 公司ID：" + userInfo.getCompanyId() + "发起人ID：" + userInfo.getId(), 0, 0);
                 // 获取平台信息
                 List<TCompanyInfo> companyInfoList = companyInfoMapper.listByType(UserInfoEnum.USER_TYPE_ADMIN.getValue());
                 CompanyDetailInfo platformDetail = companyInfoMapper.getDetailByCompanyId(companyInfoList.get(0).getId());
@@ -527,6 +534,9 @@ public class DistributionServiceImpl implements DistributionService {
         if (CommonUtil.checkResult(result)) {
             return null;
         } else {
+            // 添加操作记录
+            businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), ObjectLogEnum.join.getValue(),
+                    "", "邀请加入分配器，被邀请公司ID：" + companyId + "被邀请人ID：" + companyDetailInfo1.getUserId(), 0, 0);
             // 发送短信提醒
             SmsUtil smsUtil = new SmsUtil();
             String[] msg = {
@@ -611,8 +621,11 @@ public class DistributionServiceImpl implements DistributionService {
         if (CommonUtil.checkResult(result)) {
             return null;
         } else {
-            // 提醒消息
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId()); // 分配器信息
+            // 添加操作记录
+            businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), ObjectLogEnum.update.getValue(),
+                    "", "决定接受与否分配器成员Id：" + id + "，接受状态（1接受）：" + status, 0, 0);
+            // 提醒消息
             String code = ""; // 对象编号
             if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
                 AssetInfo assetInfo = assetInfoMapper.get(companyTeam.getObjectId());
@@ -781,13 +794,13 @@ public class DistributionServiceImpl implements DistributionService {
         if (CommonUtil.checkResult(result)) {
             return null;
         } else {
+            CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
             // 添加操作记录
-//            businessLogService.add(id, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.exit.getValue(),
-//                    "", "移除分配器内容对象成员", 0, 0);
+            businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), ObjectLogEnum.exit.getValue(),
+                    "", "移除分配器内容对象成员id:" + id, 0, 0);
 
             // 发送短信提醒
             TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeamRe.getAccepterId()); // 申请人信息
-            CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
             SmsUtil smsUtil = new SmsUtil();
             String[] msg = {
                     creator.getRealName(),
@@ -972,10 +985,9 @@ public class DistributionServiceImpl implements DistributionService {
                 return null;
             } else {
                 // 添加操作记录
-//                businessLogService.add(result, ObjectTypeEnum.DISTRIBUTION.getValue(),
-//                        ObjectLogEnum.join.getValue(),
-//                        "", "增加业务流转", 0, 0);
-
+                businessLogService.add(id, type,
+                        ObjectLogEnum.join.getValue(),
+                        "", "增加业务流转", 0, 0);
                 // 发送短信提醒
                 SmsUtil smsUtil = new SmsUtil();
                 String code = ""; // 对象编号
@@ -1059,8 +1071,8 @@ public class DistributionServiceImpl implements DistributionService {
             return null;
         } else {
             // 添加操作记录
-//            businessLogService.add(distributionId, ObjectTypeEnum.DISTRIBUTION.getValue(), ObjectLogEnum.update.getValue(),
-//                    "", "决定(同意|拒绝)加入业务流转", 0, 0);
+            businessLogService.add(id, type, ObjectLogEnum.update.getValue(),
+                    "", "决定(同意|拒绝)加入业务流转,业务id：" + distributionId + ",状态(1接受):" + status, 0, 0);
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
             if (companyTeam != null) {
                 // 获取平台信息

@@ -386,7 +386,7 @@
     )
   </select>
 
-  <select id="getByLender" resultMap="BaseResultMap" >
+  <select id="listByLender" resultMap="BaseResultMap" >
     SELECT
     <include refid="Base_Column_List" />
     FROM bt_case
@@ -394,19 +394,23 @@
       SELECT id FROM bt_pawn WHERE lender_id = #{id,jdbcType=INTEGER}
     )
     ORDER by id DESC
-    limit #{index,jdbcType=INTEGER},1
+    <if test="index != null">
+      limit #{index,jdbcType=INTEGER},1
+    </if>
   </select>
   
   <select id="countByCase" parameterType="java.lang.Integer" resultType="java.lang.Integer">
     SELECT COUNT (id) FROM bt_case WHERE stateflag = 0 AND pid = #{id,jdbcType=INTEGER}
   </select>
 
-  <select id="getByCase" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  <select id="listByCase" parameterType="java.lang.Integer" resultType="java.lang.Integer">
     SELECT
     <include refid="Base_Column_List" />
     FROM bt_case WHERE stateflag = 0 AND pid = #{id,jdbcType=INTEGER}
     ORDER by id DESC
-    limit #{index,jdbcType=INTEGER},1
+    <if test="index != null">
+      limit #{index,jdbcType=INTEGER},1
+    </if>
   </select>
   
 </mapper>

@@ -80,7 +80,7 @@ public interface PawnInfoMapper {
      * @param name
      * @return
      */
-    PawnInfo getByName(@Param("lenderId") Integer id, @Param("name") String name);
+    List<PawnInfo> listByName(@Param("lenderId") Integer id, @Param("name") String name);
 
     //    <!--中介抵押物-->
     List<PawnInfo> pawnListPage(@Param("zcyListQuery") ZcyListQuery zcyListQuery);

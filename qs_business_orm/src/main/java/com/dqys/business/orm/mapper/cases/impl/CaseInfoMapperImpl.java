@@ -41,8 +41,8 @@ public class CaseInfoMapperImpl extends BaseDao implements CaseInfoMapper {
     }
 
     @Override
-    public CaseInfo getByLender(@Param("id")Integer id, @Param("index")Integer index) {
-        return super.getSqlSession().getMapper(CaseInfoMapper.class).getByLender(id, index);
+    public List<CaseInfo> listByLender(@Param("id")Integer id, @Param("index")Integer index) {
+        return super.getSqlSession().getMapper(CaseInfoMapper.class).listByLender(id, index);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class CaseInfoMapperImpl extends BaseDao implements CaseInfoMapper {
     }
 
     @Override
-    public CaseInfo getByCase(@Param("id") Integer id, @Param("index") Integer index) {
-        return super.getSqlSession().getMapper(CaseInfoMapper.class).getByCase(id, index);
+    public List<CaseInfo> listByCase(@Param("id") Integer id, @Param("index") Integer index) {
+        return super.getSqlSession().getMapper(CaseInfoMapper.class).listByCase(id, index);
     }
 }

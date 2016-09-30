@@ -105,7 +105,7 @@ public class CaseController {
         }
         HashMap<String, Object> map = new HashMap<>();
         CaseDTO caseDTO = caseService.getByLender(id, index);
-        Integer count = caseService.getCountBylender(id);
+        Integer count = caseService.getCountByLender(id);
         map.put("total", count);
         map.put("data", caseDTO);
         return JsonResponseTool.success(map);
@@ -177,6 +177,34 @@ public class CaseController {
         } else {
             return JsonResponseTool.success(result);
         }
+    }
+
+    /**
+     * 根据借款人信息查询案件信息
+     * @param id
+     * @return
+     */
+    public JsonResponse listByLender(Integer id){
+        if(CommonUtil.checkParam(id)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+
+        return null;
+    }
+
+    /**
+     * 根据母案件查询子案件
+     * @param id
+     * @return
+     */
+    public JsonResponse listByCase(Integer id){
+        if(CommonUtil.checkParam(id)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if(caseService.get(id) == null){
+            return JsonResponseTool.paramErr("案件不存在");
+        }
+        return null;
     }
 
 }

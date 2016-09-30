@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,8 +48,6 @@ public class PawnServiceImpl implements PawnService {
     private BusinessService businessService;
     @Autowired
     private BusinessLogService businessLogService;
-    @Autowired
-    private ObjectUserRelationMapper objectUserRelationMapper;
 
     @Override
     public JsonResponse delete_tx(Integer id) throws BusinessLogException {
@@ -59,6 +58,8 @@ public class PawnServiceImpl implements PawnService {
         if (CommonUtil.checkResult(result)) {
             return JsonResponseTool.failure("删除失败");
         }
+        // 删除关联
+        piRelationMapper.deleteByPawnId(id);
         // 增加操作记录
         businessLogService.add(id, ObjectTypeEnum.PAWN.getValue(), ObjectLogEnum.delete.getValue(),
                 "", "", 0, 0);
@@ -92,37 +93,13 @@ public class PawnServiceImpl implements PawnService {
                 // 以Id为关联
                 String[] idStr = pawnDTO.getIouIds().split(",");
                 for (String id : idStr) {
-                    IOUInfo iouInfo = iouInfoMapper.get(Integer.valueOf(id));
-                    if (iouInfo != null) {
-                        RelationQuery relationQuery = new RelationQuery();
-                        relationQuery.setIouId(Integer.valueOf(id));
-                        relationQuery.setPawnId(pawnId);
-                        List<PiRelation> piRelationList = piRelationMapper.queryList(relationQuery);
-                        if (piRelationList == null || piRelationList.size() == 0) {
-                            PiRelation piRelation = new PiRelation();
-                            piRelation.setIouId(iouInfo.getId());
-                            piRelation.setPawnId(pawnId);
-                            piRelationMapper.insert(piRelation);
-                        }
-                    }
+                    addRelation(pawnId, Integer.valueOf(id), pawnDTO.getLenderId(), null);
                 }
             } else if (pawnDTO.getIouNames() != null && pawnDTO.getIouNames().length() > 0) {
                 // 以名称为关联
                 String[] nameStr = pawnDTO.getIouNames().split(",");
                 for (String name : nameStr) {
-                    IOUInfo iouInfo = iouInfoMapper.getByName(pawnDTO.getLenderId(), name);
-                    if (iouInfo != null) {
-                        RelationQuery relationQuery = new RelationQuery();
-                        relationQuery.setIouId(iouInfo.getId());
-                        relationQuery.setPawnId(pawnId);
-                        List<PiRelation> piRelationList = piRelationMapper.queryList(relationQuery);
-                        if (piRelationList == null || piRelationList.size() == 0) {
-                            PiRelation piRelation = new PiRelation();
-                            piRelation.setIouId(iouInfo.getId());
-                            piRelation.setPawnId(pawnId);
-                            piRelationMapper.insert(piRelation);
-                        }
-                    }
+                    addRelation(pawnId, null, pawnDTO.getLenderId(), name);
                 }
             }
             // 添加业务
@@ -136,6 +113,41 @@ public class PawnServiceImpl implements PawnService {
             return JsonResponseTool.failure("增加失败");
         }
     }
+
+    private void addRelation(Integer pawnId, Integer iouId, Integer lenderId, String name){
+        if(pawnId != null && (iouId != null || name != null)){
+            if(iouId == null){
+                List<IOUInfo> iouInfoList = iouInfoMapper.listByName(lenderId, name);
+                if (iouInfoList != null && iouInfoList.size() > 0) {
+                    RelationQuery relationQuery = new RelationQuery();
+                    relationQuery.setIouId(iouInfoList.get(0).getId());
+                    relationQuery.setPawnId(pawnId);
+                    List<PiRelation> piRelationList = piRelationMapper.queryList(relationQuery);
+                    if (piRelationList == null || piRelationList.size() == 0) {
+                        PiRelation piRelation = new PiRelation();
+                        piRelation.setIouId(iouInfoList.get(0).getId());
+                        piRelation.setPawnId(pawnId);
+                        piRelationMapper.insert(piRelation);
+                    }
+                }
+            }else{
+                IOUInfo iouInfo = iouInfoMapper.get(iouId);
+                if (iouInfo != null) {
+                    RelationQuery relationQuery = new RelationQuery();
+                    relationQuery.setIouId(iouId);
+                    relationQuery.setPawnId(pawnId);
+                    List<PiRelation> piRelationList = piRelationMapper.queryList(relationQuery);
+                    if (piRelationList == null || piRelationList.size() == 0) {
+                        PiRelation piRelation = new PiRelation();
+                        piRelation.setIouId(iouId);
+                        piRelation.setPawnId(pawnId);
+                        piRelationMapper.insert(piRelation);
+                    }
+                }
+            }
+        }
+    }
+
 
     @Override
     public JsonResponse listAdd(List<PawnDTO> pawnDTOList) throws BusinessLogException {
@@ -161,17 +173,16 @@ public class PawnServiceImpl implements PawnService {
         pawnInfoMapper.update(PawnServiceUtils.toPawnInfo(pawnDTO));
         // 清除关联
         piRelationMapper.deleteByPawnId(pawnId);
-        // 添加关联
-        if (pawnDTO.getIouIds().length() > 0) {
+        // 添加关联(如果ids&names同时存在，以IDS为准)
+        if (pawnDTO.getIouIds() != null && pawnDTO.getIouIds().length() > 0) {
             String[] idStr = pawnDTO.getIouIds().split(",");
             for (String id : idStr) {
-                IOUInfo iouInfo = iouInfoMapper.get(Integer.valueOf(id));
-                if (iouInfo != null) {
-                    PiRelation piRelation = new PiRelation();
-                    piRelation.setIouId(iouInfo.getId());
-                    piRelation.setPawnId(pawnId);
-                    piRelationMapper.insert(piRelation);
-                }
+                addRelation(pawnId, Integer.valueOf(id), pawnDTO.getLenderId(), null);
+            }
+        }else if(pawnDTO.getIouNames() != null && pawnDTO.getIouNames().length() > 0){
+            String[] nameStr = pawnDTO.getIouNames().split(",");
+            for (String name : nameStr) {
+                addRelation(pawnId, null, pawnDTO.getLenderId(), name);
             }
         }
         // 增加操作记录
@@ -189,21 +200,7 @@ public class PawnServiceImpl implements PawnService {
         if (pawnInfo == null) {
             return JsonResponseTool.failure("找不到信息");
         }
-        PawnDTO pawnDTO = PawnServiceUtils.toPawnDTO(pawnInfo);
-        RelationQuery relationQuery = new RelationQuery();
-        relationQuery.setPawnId(pawnDTO.getId());
-        List<PiRelation> piRelationList = piRelationMapper.queryList(relationQuery);
-        piRelationList.forEach(piRelation -> {
-            if(piRelation.getIouId() != null){
-                IOUInfo iouInfo = iouInfoMapper.get(piRelation.getIouId());
-                if(pawnDTO.getIouNames() == null || pawnDTO.getIouNames().equals("")){
-                    pawnDTO.setIouNames(iouInfo.getName());
-                }else{
-                    pawnDTO.setIouNames(pawnDTO.getIouNames() + "," + iouInfo.getName());
-                }
-            }
-        });
-        return CommonUtil.responseBack(PawnServiceUtils.toPawnDTO(pawnInfoMapper.get(id)));
+        return JsonResponseTool.success(changeToDTO(pawnInfo));
     }
 
     @Override
@@ -211,7 +208,35 @@ public class PawnServiceImpl implements PawnService {
         if (CommonUtil.checkParam(lenderId)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return CommonUtil.responseBack(PawnServiceUtils.toPawnDTO(pawnInfoMapper.listByLenderId(lenderId)));
+        List<PawnDTO> result = new ArrayList<>();
+        List<PawnInfo> pawnInfoList = pawnInfoMapper.listByLenderId(lenderId);
+        pawnInfoList.forEach(pawnInfo -> {
+            result.add(changeToDTO(pawnInfo));
+        });
+        return JsonResponseTool.success(result);
+    }
+
+    private PawnDTO changeToDTO(PawnInfo pawnInfo){
+        if(pawnInfo != null){
+            PawnDTO pawnDTO = PawnServiceUtils.toPawnDTO(pawnInfo);
+            RelationQuery query = new RelationQuery();
+            query.setPawnId(pawnInfo.getId());
+            List<PiRelation> relationList = piRelationMapper.queryList(query);
+            relationList.forEach(relation -> {
+                IOUInfo iouInfo = iouInfoMapper.get(relation.getIouId());
+                if(iouInfo != null){
+                    if(pawnDTO.getIouNames() == null){
+                        pawnDTO.setIouIds("" + iouInfo.getId());
+                        pawnDTO.setIouNames(iouInfo.getName());
+                    }else{
+                        pawnDTO.setIouIds("," + iouInfo.getId());
+                        pawnDTO.setIouNames("," + iouInfo.getName());
+                    }
+                }
+            });
+            return pawnDTO;
+        }
+        return null;
     }
 
 }

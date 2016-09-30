@@ -62,10 +62,16 @@
     is_agent, follow_up_times, is_stop, follow_up_time, belong_follow_time, belong_follow_times, repay_status
   </sql>
 
+  <!-- 这里：stateflag(null有效状态，0全，非null非0为无效状态)
+            isStop(false,查询0，true,查询1)
+   -->
   <sql id="Query_Condition">
     <where>
-      <if test="stateflag != null">
+      <if test="stateflag != null and stateflag != 0">
         AND stateflag != 0
+      </if>
+      <if test="stateflag == null">
+        AND stateflag = 0
       </if>
       <if test="assetId != null">
         AND asset_id = #{assetId,jdbcType=INTEGER}
@@ -125,8 +131,16 @@
       <if test="isTakePart">
         AND (is_collection = 1 OR is_lawyer = 1 OR is_agent = 1)
       </if>
+      <if test="isNoTakePart">
+        AND is_collection = 0 AND is_lawyer = 0 AND is_agent = 0
+      </if>
       <if test="isOutTime">
         AND CURRENT_TIME > end_at
+      </if>
+
+
+      <if test="!isStop">
+        AND is_stop = 0
       </if>
 
 

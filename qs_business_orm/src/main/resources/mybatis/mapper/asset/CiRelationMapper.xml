@@ -31,20 +31,20 @@
   </sql>
 
   <!-- 逻辑删除-->
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     UPDATE bt_ci_relation set stateflag = CURRENT_TIMESTAMP
     where id = #{id,jdbcType=INTEGER}
-  </delete>
+  </update>
 
-  <delete id="deleteByIouId" parameterType="java.lang.Integer" >
+  <update id="deleteByIouId" parameterType="java.lang.Integer" >
     UPDATE bt_ci_relation set stateflag = CURRENT_TIMESTAMP
     where iou_id = #{id,jdbcType=INTEGER} AND stateflag = 0
-  </delete>
+  </update>
 
-  <delete id="deleteByCaseId" parameterType="java.lang.Integer" >
+  <update id="deleteByCaseId" parameterType="java.lang.Integer" >
     UPDATE bt_ci_relation set stateflag = CURRENT_TIMESTAMP
     where case_id = #{id,jdbcType=INTEGER} AND stateflag = 0
-  </delete>
+  </update>
 
   <!-- 单取 -->
   <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >

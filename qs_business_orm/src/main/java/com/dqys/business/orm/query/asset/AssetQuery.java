@@ -26,8 +26,17 @@ public class AssetQuery extends BaseQuery {
 
     private boolean outTime; // 超时
     private boolean takePart; // 处置方加入
+    private boolean noTakePart; // 没有处置方加入
     private boolean isStop; // 暂停
 
+
+    public boolean isNoTakePart() {
+        return noTakePart;
+    }
+
+    public void setNoTakePart(boolean noTakePart) {
+        this.noTakePart = noTakePart;
+    }
 
     public boolean isStop() {
         return isStop;

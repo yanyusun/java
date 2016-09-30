@@ -31,22 +31,22 @@
   </sql>
 
   <!-- 逻辑删除-->
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     UPDATE bt_pi_relation set stateflag = CURRENT_TIMESTAMP
     where id = #{id,jdbcType=INTEGER}
-  </delete>
+  </update>
 
   <!-- 删除抵押物关联 -->
-  <delete id="deleteByPawnId" parameterType="java.lang.Integer" >
+  <update id="deleteByPawnId" parameterType="java.lang.Integer" >
     UPDATE bt_pi_relation set stateflag = CURRENT_TIMESTAMP
     where pawn_id = #{id,jdbcType=INTEGER}
-  </delete>
+  </update>
 
   <!-- 删除借据关联 -->
-  <delete id="deleteByIouId" parameterType="java.lang.Integer" >
+  <update id="deleteByIouId" parameterType="java.lang.Integer" >
     UPDATE bt_pi_relation set stateflag = CURRENT_TIMESTAMP
     where iou_id = #{id,jdbcType=INTEGER}
-  </delete>
+  </update>
 
   <!-- 单取 -->
   <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >

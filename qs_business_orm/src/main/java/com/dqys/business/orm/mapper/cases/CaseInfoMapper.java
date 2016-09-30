@@ -51,7 +51,7 @@ public interface CaseInfoMapper {
      * @param index
      * @return
      */
-    CaseInfo getByLender(@Param("id")Integer id, @Param("index")Integer index);
+    List<CaseInfo> listByLender(@Param("id")Integer id, @Param("index")Integer index);
 
     /**
      * 根据案件id统计子案件
@@ -66,6 +66,6 @@ public interface CaseInfoMapper {
      * @param index
      * @return
      */
-    CaseInfo getByCase(@Param("id")Integer id, @Param("index")Integer index);
+    List<CaseInfo> listByCase(@Param("id")Integer id, @Param("index")Integer index);
 
 }

@@ -78,6 +78,9 @@
       <if test="takePart">
         AND (is_collection = 1 OR is_lawyer = 1 or is_agent = 1)
       </if>
+      <if test="noTakePart">
+        AND is_collection = 0 AND is_lawyer = 0 AND is_agent = 0
+      </if>
       <if test="isStop">
         AND is_stop = 1
       </if>

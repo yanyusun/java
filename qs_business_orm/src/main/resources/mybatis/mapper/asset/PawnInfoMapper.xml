@@ -301,7 +301,7 @@
     </select>
 
 
-    <select id="getByName" resultMap="BaseResultMap">
+    <select id="listByName" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM bt_pawn

@@ -75,7 +75,7 @@ public interface IOUInfoMapper {
      * @param name
      * @return
      */
-    IOUInfo getByName(@Param("lenderId")Integer id, @Param("name")String name);
+    List<IOUInfo> listByName(@Param("lenderId")Integer id, @Param("name")String name);
 
     /**
      * 获取当前用户的借款人下的借据信息
