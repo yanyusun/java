@@ -250,7 +250,7 @@ public class CoordinatorController {
      * @api {post} coordinator/isPause 借款人或资产包暂停操作
      * @apiParam {int} objectId 对象id
      * @apiParam {int} objectType 对象类型(10资产包11借款人)
-     * @apiParam {int} status 状态（0开启1暂停）
+     * @apiParam {int} status 状态（0开启1暂停2无效）
      * @apiSampleRequest coordinator/isPause
      * @apiGroup Coordinator
      * @apiName coordinator/isPause
@@ -267,16 +267,14 @@ public class CoordinatorController {
         if (objectType != ObjectTypeEnum.LENDER.getValue() && objectType != ObjectTypeEnum.ASSETPACKAGE.getValue()) {
             return JsonResponseTool.paramErr("对象类型有误");
         }
-        if (status != 0 && status != 1) {
+        if (status != 0 && status != 1 && status != 2) {
             return JsonResponseTool.paramErr("状态有误");
         }
         coordinatorService.isPause(map, objectId, objectType, status, userId);
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             return JsonResponseTool.success(map);
-        } else if (MessageUtils.transMapToString(map, "result").equals("repetition")) {
-            return JsonResponseTool.failure("重复操作");
         } else {
-            return JsonResponseTool.failure("操作失败");
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
         }
     }
 

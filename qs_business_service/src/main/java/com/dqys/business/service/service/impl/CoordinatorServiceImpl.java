@@ -666,13 +666,15 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             LenderInfo lender = lenderInfoMapper.get(objectId);
             if (lender == null) {
                 map.put("result", "noExist");//不存在记录
+                map.put("msg", "借款人记录不存在");
                 return;
             }
             if (lender.getIsStop() == status) {
                 map.put("result", "repetition");//重复操作
+                map.put("msg", "重复操作");//
                 return;
             }
-            coordinatorMapper.updateLender(lenderInfo);//借款人暂停后开启
+            coordinatorMapper.updateLender(lenderInfo);//修改借款人isStop状态
             operType = LenderEnum.UPDATE_EDIT.getValue();
             receive_ids = coordinatorMapper.getUserIdByObjUserRelToLender(objectType, objectId);
         } else if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
@@ -682,16 +684,18 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             AssetInfo asset = assetInfoMapper.get(objectId);
             if (asset == null) {
                 map.put("result", "noExist");//不存在记录
+                map.put("msg", "资产包记录不存在");
                 return;
             }
             if (asset.getIsStop() == status) {
                 map.put("result", "repetition");//重复操作
+                map.put("msg", "重复操作");//
                 return;
             }
-            if (assetInfoMapper.update(assetInfo) > 0) {//资产包暂停后，下面的借款人全部暂停了
+            if (assetInfoMapper.update(assetInfo) > 0) {//资产包暂停或无效后，下面的借款人全部暂停或无效了
                 lenderInfo.setIsStop(status);
                 lenderInfo.setAssetId(objectId);
-                coordinatorMapper.updateLender(lenderInfo);
+                coordinatorMapper.updateLender(lenderInfo);//修改资产包isStop状态
             }
             ;
             operType = AssetPackageEnum.update.getValue();
@@ -699,20 +703,24 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
         Integer code = 0;
         if (status == 1) {
-            code = SmsEnum.BUSINESS_PAUSE.getValue();//开启暂停
-        } else {
-            code = SmsEnum.BUSINESS_OPEN.getValue();//关闭暂停
+            code = SmsEnum.BUSINESS_PAUSE.getValue();//设置业务暂停
+        } else if (status == 0) {
+            code = SmsEnum.BUSINESS_OPEN.getValue();//设置业务正常
+        } else if (status == 2) {
+            code = SmsEnum.BUSINESS_INVALID.getValue();//设置业务无效
         }
         SmsUtil smsUtil = new SmsUtil();//发送短信通知
         for (Map receive_id : receive_ids) {
             Integer rec = MessageUtils.transMapToInt(receive_id, "user_id");
-            Map userC = coordinatorMapper.getUserAndCompanyByUserId(rec);
-            Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);
-            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
-                    MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "realName"),
-                    ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
-            String title = getMessageTitle(objectId, objectType, MessageBTEnum.BUSINESS_PAUSE.getValue());
-            messageService.add(title, content, userId, rec, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS_PAUSE.getValue(), "");//添加通知消息
+            if (!rec.equals(userId)) {
+                Map userC = coordinatorMapper.getUserAndCompanyByUserId(rec);
+                Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);
+                String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
+                        MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "realName"),
+                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
+                String title = getMessageTitle(objectId, objectType, MessageBTEnum.BUSINESS_PAUSE.getValue());
+                messageService.add(title, content, userId, rec, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS_PAUSE.getValue(), "");//添加通知消息
+            }
         }
         map.put("result", "yes");
     }

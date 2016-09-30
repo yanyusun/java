@@ -217,13 +217,12 @@
 
     <select id="getUserIdByObjUserRelToLender" resultType="java.util.Map">
             SELECT our.user_id from object_user_relation our
-            where our.status=3 and (our.type=1 or our.type=2)
-            and our.object_type=#{objectType} and our.object_id=#{objectId}
+            where our.stateflag=0 and our.object_type=#{objectType} and our.object_id=#{objectId}
     </select>
 
     <select id="getUserIdByObjUserRelToAsset" resultType="java.util.Map">
        SELECT our.user_id from bt_lender len LEFT JOIN object_user_relation our
-        ON our.object_id=len.id and our.object_type=#{objectType} and our.status=3 and (our.type=1 or our.type=2)
+        ON our.object_id=len.id and our.stateflag=0 and our.object_type=#{objectType}
         where len.asset_id=#{objectId} GROUP BY our.user_id
     </select>
     <!--根据用户id获取相应的用户信息和公司信息-->
