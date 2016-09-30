@@ -151,6 +151,18 @@
             <if test="name != null">
                 name,
             </if>
+            <if test="repayStatus != null">
+                repay_status
+            </if>
+            <if test="onCollection != null">
+                on_collection
+            </if>
+            <if test="onAgent != null">
+                on_agent
+            </if>
+            <if test="onLawyer != null">
+                on_lawyer
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="remark != null">
@@ -233,6 +245,9 @@
             </if>
             <if test="name != null">
                 #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="repayStatus != null">
+                #{repayStatus,jdbcType=INTEGER},
             </if>
             <if test="onCollection != null">
                 #{onCollection,jdbcType=INTEGER},
@@ -340,6 +355,18 @@
             </if>
             <if test="name != null">
                 name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="repayStatus != null">
+                repay_status = #{repayStatus,jdbcType=INTEGER},
+            </if>
+            <if test="onCollection != null">
+                on_collection = #{onCollection,jdbcType=INTEGER},
+            </if>
+            <if test="onAgent != null">
+                on_agent = #{onAgent,jdbcType=INTEGER},
+            </if>
+            <if test="onLawyer != null">
+                on_lawyer = #{onLawyer,jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
