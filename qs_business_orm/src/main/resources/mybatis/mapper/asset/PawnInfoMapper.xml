@@ -247,10 +247,10 @@
                 name = #{name,jdbcType=VARCHAR},
             </if>
             <if test="onCollection != null">
-                on_collection = #{onCollection,jdbcType=INTEGER}
+                on_collection = #{onCollection,jdbcType=INTEGER},
             </if>
             <if test="onAgent != null">
-                on_agent = #{onAgent,jdbcType=INTEGER}
+                on_agent = #{onAgent,jdbcType=INTEGER},
             </if>
             <if test="onLawyer != null">
                 on_lawyer = #{onLawyer,jdbcType=INTEGER}
