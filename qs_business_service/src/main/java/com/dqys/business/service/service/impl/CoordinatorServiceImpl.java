@@ -347,7 +347,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         if (size > 5 && teammateRe.getJoinType().equals(TeammateReEnum.JOIN_TYPE_PASSIVITY.getValue())) {
             return -3;//被邀请的人数已满
         }
-        if (size == 0) {
+        //判断是否存在管理者，不存在返回第一个邀请要管理者
+        if (!judgeTeamReType(teammateRe)) {
             TUserTag tags = tUserTagMapper.selectByUserId(teammateRe.getUserId()).get(0);
             if (RoleTypeEnum.REGULATOR.getValue() != (int) tags.getRoleId()) {
                 return -4;//第一个添加人员不是管理者
@@ -374,6 +375,31 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
         } else {
             flag = teammateReMapper.insertSelective(teammateRe);//添加参与人
+        }
+        return flag;
+    }
+
+    /**
+     * 判别该协作器中是否存在了管理者
+     *
+     * @param teammateRe
+     * @return
+     */
+    private boolean judgeTeamReType(TeammateRe teammateRe) {
+        boolean flag = false;
+        TeammateRe re = new TeammateRe();
+        re.setType(TeammateReEnum.TYPE_ADMIN.getValue());
+        re.setUserTeamId(teammateRe.getUserTeamId());
+        re.setStatus(TeammateReEnum.STATUS_INIT.getValue());
+        List<TeammateRe> list = teammateReMapper.selectSelective(re);//查看待接收中是否有管理者
+        if (list.size() > 0) {
+            flag = true;
+        } else {
+            re.setStatus(TeammateReEnum.STATUS_ACCEPT.getValue());
+            list = teammateReMapper.selectSelective(re);//查看已经接收是否存在管理者
+            if(list.size()>0){
+                flag = true;
+            }
         }
         return flag;
     }
@@ -475,7 +501,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
      * @param userTeam
      * @param userId     发送者（操作者）
      * @param operUserId （邀请发起人）
-     * @param status （1同意，2拒绝）
+     * @param status     （1同意，2拒绝）
      */
     private void sendInviteCoordinator(TeammateRe teammateRe, UserTeam userTeam, Integer userId, Integer operUserId, Integer status) {
         SmsUtil smsUtil = new SmsUtil();
