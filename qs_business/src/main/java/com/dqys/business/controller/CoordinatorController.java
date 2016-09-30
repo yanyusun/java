@@ -286,6 +286,7 @@ public class CoordinatorController {
      * @apiParam {int} userTeamId 团队协作器id
      * @apiParam {int} status 状态（0同意1拒绝）
      * @apiParam {int} substitutionUid 替补人userId
+     * @apiParam {int} operUserId 邀请发起人
      * @apiSampleRequest coordinator/delUser
      * @apiGroup Coordinator
      * @apiName coordinator/delUser
@@ -293,7 +294,8 @@ public class CoordinatorController {
     @RequestMapping("/delUser")
     @ResponseBody
     public JsonResponse deleteTeammatUser(@RequestParam("teamUserId") Integer teamUserId, @RequestParam("userTeamId") Integer userTeamId,
-                                          @RequestParam("status") Integer status, @RequestParam("substitutionUid") Integer substitutionUid) throws Exception {
+                                          @RequestParam("status") Integer status, @RequestParam("substitutionUid") Integer substitutionUid,
+                                          Integer operUserId) throws Exception {
         Integer userId = UserSession.getCurrent().getUserId();
         Map map = new HashMap<>();
         if (CommonUtil.checkParam(teamUserId, userTeamId)) {
@@ -305,7 +307,7 @@ public class CoordinatorController {
             }
             status += 1;
         }
-        map = coordinatorService.deleteTeammatUser(userId, teamUserId, userTeamId, status, substitutionUid);
+        map = coordinatorService.deleteTeammatUser(userId, teamUserId, userTeamId, status, substitutionUid,operUserId);
         if (map.get("result").equals("yes")) {
             return JsonResponseTool.success(map);
         } else {

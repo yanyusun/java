@@ -116,7 +116,7 @@ public interface CoordinatorService {
      * @param substitutionUid
      * @return
      */
-    Map deleteTeammatUser(Integer userId, Integer teamUserId, Integer userTeamId, Integer status, Integer substitutionUid) throws Exception;
+    Map deleteTeammatUser(Integer userId, Integer teamUserId, Integer userTeamId, Integer status, Integer substitutionUid,Integer operUserId) throws Exception;
 
     /**
      * 删除该公司下所有的协作器

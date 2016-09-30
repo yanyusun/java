@@ -15,7 +15,25 @@ public class TeamDTO implements Serializable {
     private Integer totalTask;//总任务数
     private Integer ongoingTask;//当前进行任务数
     private String leaveWordTime;//最后留言时间
+    private Integer status;//状态
+    private Integer joinType;//0被分配，1主动加入
     private String avg;//头像地址
+
+    public Integer getJoinType() {
+        return joinType;
+    }
+
+    public void setJoinType(Integer joinType) {
+        this.joinType = joinType;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public String getAvg() {
         return avg;
