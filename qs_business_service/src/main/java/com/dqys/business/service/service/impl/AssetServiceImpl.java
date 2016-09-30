@@ -916,6 +916,7 @@ public class AssetServiceImpl implements AssetService {
             }
         }
         // 增加抵押物
+        Map<String, Integer> keyMap = new HashMap<>(); // 增加关联关系映射，这里的以抵押物名称，借据中的的映射为准
         for (PawnDTO pawnDTO : pawnDTOList) {
             if (idMap.get(pawnDTO.getId()) == null) {
                 return JsonResponseTool.failure("借款人的相关联系人序号关联不对");
@@ -943,6 +944,7 @@ public class AssetServiceImpl implements AssetService {
             // 增加操作记录
             businessLogService.add(pawnInfo.getId(), ObjectTypeEnum.PAWN.getValue(), ObjectLogEnum.add.getValue(),
                     "", pawnDTO.getMemo(), 0, 0);
+            map.put(pawnDTO.getLenderId() + pawnDTO.getPawnName(), pawnInfo.getId());
         }
         // 增加借据
         for (IouDTO iouDTO : iouDTOList) {
@@ -973,6 +975,24 @@ public class AssetServiceImpl implements AssetService {
             // 添加操作记录
             businessLogService.add(iouInfo.getId(), ObjectTypeEnum.IOU.getValue(), ObjectLogEnum.add.getValue(),
                     "", iouDTO.getMemo(), 0, 0);
+            // 增加关联关系
+            if(iouDTO.getPawnNames() != null && iouDTO.getPawnNames().length() > 0){
+                String[] nameStr = iouDTO.getPawnNames().split(",");
+                for (String s : nameStr) {
+                    if(s.length() > 0 && keyMap.get(s) != null){
+                        RelationQuery query = new RelationQuery();
+                        query.setPawnId(keyMap.get(s));
+                        query.setIouId(iouInfo.getId());
+                        List<PiRelation> relation = piRelationMapper.queryList(query);
+                        if(relation == null || relation.size() == 0){
+                            PiRelation piRelation = new PiRelation();
+                            piRelation.setIouId(iouInfo.getId());
+                            piRelation.setPawnId(keyMap.get(s));
+                            piRelationMapper.insert(piRelation);
+                        }
+                    }
+                }
+            }
         }
         return JsonResponseTool.success(null);
     }
