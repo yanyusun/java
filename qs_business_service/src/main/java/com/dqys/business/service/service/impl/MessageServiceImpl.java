@@ -115,7 +115,6 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public void sendSmsByTeammate(UserTeam userTeam, TeammateRe teammateRe, Map<String, Object> map, Integer uid, String remark) {
-        Map user = coordinatorMapper.getUserAndCompanyByUserId(uid);
         String objectName = "";
         if (userTeam != null) {
             ObjectTypeEnum objectTypeEnum = ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType());
@@ -123,11 +122,12 @@ public class MessageServiceImpl implements MessageService {
                 objectName = objectTypeEnum.getName();
             }
         }
+        Map user = coordinatorMapper.getUserAndCompanyByUserId(uid);
         String mobilePhone = MessageUtils.transMapToString(user, "mobile");//接收者手机号
         String realName = MessageUtils.transMapToString(user, "realName");//接收者真实姓名
 //以下发送者信息
         String typeSend = "";//发送者角色类型
-        Integer role = MessageUtils.transMapToInt(user, "rold");
+        Integer role = MessageUtils.transMapToInt(map, "rold");
         if (role.toString().equals(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_ADMINISTRATOR_KEY).getPropertyValue())) {
             typeSend = "管理员";
         } else if (role.toString().equals(SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_MANAGER_KEY).getPropertyValue())) {

@@ -57,31 +57,29 @@ public class SmsUtil {
      * @return
      */
     public String sendSms(Integer code, String mobilePhone, String... content) {
-        if (FormatValidateTool.checkMobile(mobilePhone)) {
-            String msg = this.getKeyValue(code);
-            if (msg != null && !msg.equals("")) {
-                for (int i = 0; i < content.length; i++) {
-                    msg = msg.replace("{" + i + "}", content[i]);
-                }
-                if (mobilePhone != null && FormatValidateTool.checkMobile(mobilePhone.trim())) {
-                    //发送短信接口
-                    RabbitMQProducerTool.addToSMSSendQueue(mobilePhone.toString(), msg);//加入短信队列
-                }
+        String msg = this.getKeyValue(code);
+        if (msg != null && !msg.equals("")) {
+            for (int i = 0; i < content.length; i++) {
+                msg = msg.replace("{" + i + "}", content[i]);
             }
-            return msg;
         } else {
-            return "";
+            msg = "";
         }
+        if (mobilePhone != null && FormatValidateTool.checkMobile(mobilePhone.trim())) {
+            //发送短信接口
+            RabbitMQProducerTool.addToSMSSendQueue(mobilePhone.trim(), msg);//加入短信队列
+        }
+        return msg;
     }
 
     /**
      * 根据编号获取短信模版
      *
-     * @param code        编号
-     * @param content     替换内容
+     * @param code    编号
+     * @param content 替换内容
      * @return
      */
-    public String getSendContent(Integer code, String... content){
+    public String getSendContent(Integer code, String... content) {
         String msg = this.getKeyValue(code);
         if (msg != null && !msg.equals("")) {
             for (int i = 0; i < content.length; i++) {
