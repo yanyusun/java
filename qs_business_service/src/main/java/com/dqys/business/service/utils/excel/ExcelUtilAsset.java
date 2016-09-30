@@ -214,7 +214,7 @@ public class ExcelUtilAsset {
             if (transMapToString(l, "var1").equals("")) {//*关系
                 placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "不能为空");
             }
-            if (!transMapToString(l, "var1").equals("") && !FormatValidateTool.isNumeric(transMapToString(l, "var1").split("-")[0])) {//*关系
+            if (!transMapToString(l, "var1").equals("") && transMapToString(l, "var1").split("-").length != 2 && !FormatValidateTool.isNumeric(transMapToString(l, "var1").split("-")[0])) {//*关系
                 placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "格式错误");
             }
             if (transMapToString(l, "var2").equals("")) {//*所属原始借据（号）
@@ -266,7 +266,7 @@ public class ExcelUtilAsset {
             if (transMapToString(l, "var1").equals("")) {//*关系
                 placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "不能为空");
             }
-            if (!transMapToString(l, "var1").equals("") && !FormatValidateTool.isNumeric(transMapToString(l, "var1").split("-")[0])) {//*关系
+            if (!transMapToString(l, "var1").equals("") && transMapToString(l, "var1").split("-").length != 2 && !FormatValidateTool.isNumeric(transMapToString(l, "var1").split("-")[0])) {//*关系
                 placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "格式错误");
             }
             if (transMapToString(l, "var2").equals("")) {//*原始借据（号）
@@ -495,6 +495,7 @@ public class ExcelUtilAsset {
             }
             IouDTO iouDTO = new IouDTO();
             iouDTO.setId(transStringToInteger(transMapToString(map2, "var1").split("-")[0]));
+            iouDTO.setIouName(transMapToString(map2, "var1").split("-")[1]);
             iouDTO.setIouCode(transMapToString(map2, "var2"));//原始借据号
             iouDTO.setType(transMapToString(map2, "var3"));// 借据类型
             iouDTO.setAgency(transMapToString(map2, "var4")); // 代理机构
@@ -528,6 +529,7 @@ public class ExcelUtilAsset {
             }
             PawnDTO pawnDTO = new PawnDTO();
             pawnDTO.setId(transStringToInteger(transMapToString(map1, "var1").split("-")[0]));
+            pawnDTO.setPawnName(transMapToString(map1, "var1").split("-")[1]);//关系的抵押物编号
             pawnDTO.setAmount(transStringToDouble(transMapToString(map1, "var3")));//贷款金额
             pawnDTO.setType(transMapToString(map1, "var4"));// 抵押物类型
             pawnDTO.setSize(transMapToString(map1, "var5"));// 规模大小
