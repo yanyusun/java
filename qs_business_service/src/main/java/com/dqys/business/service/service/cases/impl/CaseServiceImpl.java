@@ -21,9 +21,7 @@ import com.dqys.business.service.service.cases.CaseService;
 import com.dqys.business.service.utils.cases.CaseServiceUtils;
 import com.dqys.core.base.BaseSelectonDTO;
 import com.dqys.core.utils.CommonUtil;
-import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.RandomUtil;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -53,11 +51,11 @@ public class CaseServiceImpl implements CaseService {
     private BusinessLogService businessLogService;
 
     @Override
-    public Integer deleteByPrimaryKey_tx(Integer id) throws BusinessLogException{
+    public Integer deleteByPrimaryKey_tx(Integer id) throws BusinessLogException {
         Integer result = caseInfoMapper.deleteByPrimaryKey(id);
-        if(CommonUtil.checkResult(result)){
+        if (CommonUtil.checkResult(result)) {
             return null;
-        }else{
+        } else {
             businessLogService.add(id, ObjectTypeEnum.CASE.getValue(), ObjectLogEnum.delete.getValue(),
                     "", "", 0, 0);
             return result;
@@ -76,7 +74,7 @@ public class CaseServiceImpl implements CaseService {
         }
         // 抵押物信息
         PawnInfo pawnInfo = pawnInfoMapper.get(caseDTO.getPawnId());
-        if(CommonUtil.checkParam(pawnInfo)){
+        if (CommonUtil.checkParam(pawnInfo)) {
             return null;
         }
         // 创建案件的编号
@@ -122,14 +120,14 @@ public class CaseServiceImpl implements CaseService {
     }
 
     @Override
-    public Integer listAdd(CaseDTOList caseDTOList) throws BusinessLogException  {
-        if(CommonUtil.checkParam(caseDTOList, caseDTOList.getCaseDTOList())
-                || caseDTOList.getCaseDTOList().size() == 0){
+    public Integer listAdd(CaseDTOList caseDTOList) throws BusinessLogException {
+        if (CommonUtil.checkParam(caseDTOList, caseDTOList.getCaseDTOList())
+                || caseDTOList.getCaseDTOList().size() == 0) {
             return null;
         }
         for (CaseDTO caseDTO : caseDTOList.getCaseDTOList()) {
             Integer add = add_tx(caseDTO);
-            if(add == null){
+            if (add == null) {
                 return null;
             }
         }
@@ -138,19 +136,19 @@ public class CaseServiceImpl implements CaseService {
 
     @Override
     public CaseDTO get(Integer id) {
-        if(id == null){
+        if (id == null) {
             return null;
         }
         // 基础信息
         CaseInfo caseInfo = caseInfoMapper.get(id);
-        if(caseInfo == null){
+        if (caseInfo == null) {
             return null;
         }
         return createCaseDTOByInfo(caseInfo);
     }
 
     @Override
-    public Integer update_tx(CaseDTO caseDTO) throws BusinessLogException{
+    public Integer update_tx(CaseDTO caseDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(caseDTO, caseDTO.getIouIds(), caseDTO.getPawnId(), caseDTO.getCourtDTOList(),
                 caseDTO.getId())) {
             return null;
@@ -161,7 +159,7 @@ public class CaseServiceImpl implements CaseService {
             return null;
         }
         CaseInfo caseInfo1 = caseInfoMapper.get(caseDTO.getId());
-        if(CommonUtil.checkParam(caseInfo1)){
+        if (CommonUtil.checkParam(caseInfo1)) {
             return null;
         }
         Integer result = caseInfoMapper.update(caseInfo);
@@ -212,7 +210,7 @@ public class CaseServiceImpl implements CaseService {
 
         // 案件与借据
         Integer delete = ciRelationMapper.deleteByCaseId(caseId);
-        if(CommonUtil.checkResult(delete)){
+        if (CommonUtil.checkResult(delete)) {
             // TODO 删除案件所有的关联数据失败
         }
         String[] idStr = caseDTO.getIouIds().split(",");
@@ -231,22 +229,26 @@ public class CaseServiceImpl implements CaseService {
     }
 
     @Override
-    public Integer getCountBylender(Integer id) {
+    public Integer getCountByLender(Integer id) {
         return caseInfoMapper.countByLender(id);
     }
 
     @Override
-    public CaseDTO getByLender(@Param("id") Integer id, @Param("index") Integer index) {
-        if(CommonUtil.checkParam(id)){
+    public CaseDTO getByLender(Integer id, Integer index) {
+        if (CommonUtil.checkParam(id)) {
             return null;
         }
-        if(index == null || index < 1){
+        if (index == null || index < 1) {
             index = 0;
-        }else{
+        } else {
             index = index - 1;
         }
-        CaseInfo caseInfo = caseInfoMapper.getByLender(id, index);
-        if(caseInfo == null){
+        List<CaseInfo> list = caseInfoMapper.listByLender(id, index);
+        if(list == null || list.size() == 0){
+            return null;
+        }
+        CaseInfo caseInfo = list.get(0);
+        if (caseInfo == null) {
             return null;
         }
         return createCaseDTOByInfo(caseInfo);
@@ -258,24 +260,57 @@ public class CaseServiceImpl implements CaseService {
     }
 
     @Override
-    public CaseDTO getByCase(@Param("id") Integer id, @Param("index") Integer index) {
-        if(CommonUtil.checkParam(id)){
+    public CaseDTO getByCase(Integer id, Integer index) {
+        if (CommonUtil.checkParam(id)) {
             return null;
         }
-        if(index == null || index < 1){
+        if (index == null || index < 1) {
             index = 0;
-        }else{
+        } else {
             index = index - 1;
         }
-        CaseInfo caseInfo = caseInfoMapper.getByCase(id,index);
-        if(caseInfo == null){
+        List<CaseInfo> list = caseInfoMapper.listByCase(id, index);
+        if(list == null || list.size() == 0){
+            return null;
+        }
+        CaseInfo caseInfo = list.get(0);
+        if (caseInfo == null) {
             return null;
         }
         return createCaseDTOByInfo(caseInfo);
     }
 
 
-    private CaseDTO createCaseDTOByInfo(CaseInfo caseInfo){
+    @Override
+    public List<CaseDTO> listByLender(Integer id) {
+        if(id != null){
+            List<CaseDTO> result = new ArrayList<>();
+            List<CaseInfo> caseInfoList = caseInfoMapper.listByLender(id, null);
+            caseInfoList.forEach(caseInfo -> {
+                result.add(createCaseDTOByInfo(caseInfo));
+            });
+            return result;
+        }
+        return null;
+    }
+
+    @Override
+    public List<CaseDTO> listByCase(Integer id) {
+        if(id != null){
+            List<CaseDTO> result = new ArrayList<>();
+            List<CaseInfo> caseInfoList = caseInfoMapper.listByCase(id, null);
+            caseInfoList.forEach(caseInfo -> {
+                result.add(createCaseDTOByInfo(caseInfo));
+            });
+            return result;
+        }
+        return null;
+    }
+
+    private CaseDTO createCaseDTOByInfo(CaseInfo caseInfo) {
+        if(caseInfo == null){
+            return null;
+        }
         // 法院信息
         List<CaseCourt> caseCourtList = caseCourtMapper.listByCaseId(caseInfo.getId());
         // 借据信息
@@ -291,7 +326,8 @@ public class CaseServiceImpl implements CaseService {
             selectDTO.setValue("借据" + ciRelation.getIouId());
             selectDTOList.add(selectDTO);
         }
-        ids.substring(0,ids.length()-1); // 去除尾部逗号
+        ids.substring(0, ids.length() - 1); // 去除尾部逗号
         return CaseServiceUtils.toCaseDTO(caseInfo, caseCourtList, ids, selectDTOList);
     }
+
 }

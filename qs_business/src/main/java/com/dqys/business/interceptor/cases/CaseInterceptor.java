@@ -18,6 +18,8 @@ public class CaseInterceptor extends AuthenticationInterceptor {
     public static final String API_UPDATE = "update";
     public static final String API_LIST = "list";
     public static final String API_LIST_CASE = "listCase";
+    public static final String API_LIST_BY_LENDER = "listByLender";
+    public static final String API_LIST_BY_CASE = "listByCase";
 
 
     @Override
@@ -38,6 +40,10 @@ public class CaseInterceptor extends AuthenticationInterceptor {
         } else if (API_LIST.equals(path)) {
             return true;
         } else if (API_LIST_CASE.equals(path)) {
+            return true;
+        } else if (API_LIST_BY_LENDER.equals(path)) {
+            return true;
+        } else if (API_LIST_BY_CASE.equals(path)) {
             return true;
         } else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:" + url);

@@ -55,6 +55,26 @@ public class CaseApidoc {
      */
 
     /**
+     * @api {post} /case/listByLender 根据借款人查询案件
+     * @apiName listByLender
+     * @apiGroup case
+     * @apiParam {number} id 借款人ID
+     * @apiSuccess {CaseDTO} data 案件信息集合
+     * @apiUse CaseDTO
+     * @apiUse CaseCourtDTO
+     */
+
+    /**
+     * @api {post} /case/listByCase 根据母案件查询子案件
+     * @apiName listByCase
+     * @apiGroup case
+     * @apiParam {number} id 案件ID
+     * @apiSuccess {CaseDTO} data 子案件信息集合
+     * @apiUse CaseDTO
+     * @apiUse CaseCourtDTO
+     */
+
+    /**
      * @api {post} /case/divide 拆分案件
      * @apiName divide
      * @apiGroup case

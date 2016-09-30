@@ -3,8 +3,9 @@ package com.dqys.business.service.service.cases;
 import com.dqys.business.service.dto.cases.CaseDTO;
 import com.dqys.business.service.dto.cases.CaseDTOList;
 import com.dqys.business.service.exception.bean.BusinessLogException;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by Yvan on 16/7/26.
@@ -46,21 +47,31 @@ public interface CaseService {
 
     /**
      * 根据借款人统计案件数量
+     *
      * @param id
      * @return
      */
-    Integer getCountBylender(Integer id);
+    Integer getCountByLender(Integer id);
 
     /**
      * 根据借款人以及位置搜索第N件案件
+     *
      * @param id
      * @param index
      * @return
      */
-    CaseDTO getByLender(@Param("id")Integer id, @Param("index")Integer index);
+    CaseDTO getByLender(Integer id, Integer index);
+
+    /**
+     * 根据借款人查询全部的案件信息
+     * @param id
+     * @return
+     */
+    List<CaseDTO> listByLender(Integer id);
 
     /**
      * 根据母案件id统计子案件
+     *
      * @param id
      * @return
      */
@@ -68,14 +79,23 @@ public interface CaseService {
 
     /**
      * 根据母案件ID以及位置找寻子案件信息
+     *
      * @param id
      * @param index
      * @return
      */
-    CaseDTO getByCase(@Param("id")Integer id, @Param("index")Integer index);
+    CaseDTO getByCase(Integer id, Integer index);
+
+    /**
+     * 根据母案件查询子案件
+     * @param id
+     * @return
+     */
+    List<CaseDTO> listByCase(Integer id);
 
     /**
      * 批量增加案件信息
+     *
      * @param caseDTOList
      * @return
      */

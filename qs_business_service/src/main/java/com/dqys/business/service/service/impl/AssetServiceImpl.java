@@ -336,10 +336,12 @@ public class AssetServiceImpl implements AssetService {
             }
         } else if (ObjectTabEnum.apply.getValue().equals(type)) {
             // 待申请 -- 暂未其他公司参与
-            List<Integer> ids = companyTeamReMapper.listAssigned(ObjectTypeEnum.ASSETPACKAGE.getValue());
-            if (ids != null && ids.size() > 0) {
-                assetQuery.setExceptIds(ids);
-            }
+            assetQuery.setNoTakePart(true);
+//            List<Integer> ids = companyTeamReMapper.listAssigned(ObjectTypeEnum.ASSETPACKAGE.getValue());
+//            if (ids != null && ids.size() > 0) {
+//                assetQuery.setExceptIds(ids);
+//            }
+
 //            if(isUrgeOrLawyer){
 //                if(businessIds == null || businessIds.size() == 0){
 //                    assetQuery.setId(SysProperty.NULL_DATA_ID);
