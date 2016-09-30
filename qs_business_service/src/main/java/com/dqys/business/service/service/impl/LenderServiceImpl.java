@@ -94,10 +94,6 @@ public class LenderServiceImpl implements LenderService {
     private BusinessLogService businessLogService;
     @Autowired
     private CoordinatorService coordinatorService;
-    @Autowired
-    private PawnServiceImpl pawnService;
-    @Autowired
-    private IouServiceImpl iouService;
 
 
     @Override
@@ -477,7 +473,7 @@ public class LenderServiceImpl implements LenderService {
         Date date = null;
         for (IOUInfo iouInfo : iouList) {
             // 获取抵押物与借据的关联
-            iouDTOList.add(iouService.changeToDTO(iouInfo));
+            iouDTOList.add(changeToDTO(iouInfo));
             // 获取最大的结束时间
             if (date == null
                     || (iouInfo.getEndAt() != null && iouInfo.getEndAt().compareTo(date) > 0)) {
@@ -497,7 +493,7 @@ public class LenderServiceImpl implements LenderService {
         List<PawnDTO> pawnDTOList = new ArrayList<>();
         List<PawnInfo> pawnInfoList = pawnInfoMapper.queryList(pawnQuery);
         for (PawnInfo pawnInfo : pawnInfoList) {
-            pawnDTOList.add(pawnService.changeToDTO(pawnInfo));
+            pawnDTOList.add(changeToDTO(pawnInfo));
         }
         resultMap.put("pawnDTOs", pawnDTOList);
         // 协作器
@@ -541,6 +537,62 @@ public class LenderServiceImpl implements LenderService {
             }
         }
         return JsonResponseTool.success(selectonDTOList);
+    }
+
+    /**
+     * 转化DAO为DTO
+     * @param pawnInfo
+     * @return
+     */
+    private PawnDTO changeToDTO(PawnInfo pawnInfo){
+        if(pawnInfo != null){
+            PawnDTO pawnDTO = PawnServiceUtils.toPawnDTO(pawnInfo);
+            RelationQuery query = new RelationQuery();
+            query.setPawnId(pawnInfo.getId());
+            List<PiRelation> relationList = piRelationMapper.queryList(query);
+            relationList.forEach(relation -> {
+                IOUInfo iouInfo = iouInfoMapper.get(relation.getIouId());
+                if(iouInfo != null){
+                    if(pawnDTO.getIouNames() == null){
+                        pawnDTO.setIouIds("" + iouInfo.getId());
+                        pawnDTO.setIouNames(iouInfo.getName());
+                    }else{
+                        pawnDTO.setIouIds("," + iouInfo.getId());
+                        pawnDTO.setIouNames("," + iouInfo.getName());
+                    }
+                }
+            });
+            return pawnDTO;
+        }
+        return null;
+    }
+
+    /**
+     * 将DAO转化为DTO
+     * @param iouInfo
+     * @return
+     */
+    public IouDTO changeToDTO(IOUInfo iouInfo){
+        if(iouInfo != null){
+            IouDTO iouDTO = IouServiceUtils.toIouDTO(iouInfo);
+            RelationQuery relationQuery = new RelationQuery();
+            relationQuery.setIouId(iouInfo.getId());
+            List<PiRelation> piRelationList = piRelationMapper.queryList(relationQuery);
+            piRelationList.forEach(piRelation -> {
+                PawnInfo pawnInfo = pawnInfoMapper.get(piRelation.getPawnId());
+                if(pawnInfo != null){
+                    if(iouDTO.getPawnNames() == null){
+                        iouDTO.setPawnNames(pawnInfo.getName());
+                        iouDTO.setPawnIds("" + pawnInfo.getId());
+                    }else{
+                        iouDTO.setPawnIds("," + pawnInfo.getId());
+                        iouDTO.setPawnNames("," + pawnInfo.getName());
+                    }
+                }
+            });
+            return iouDTO;
+        }
+        return null;
     }
 
     /**

@@ -216,7 +216,7 @@ public class PawnServiceImpl implements PawnService {
         return JsonResponseTool.success(result);
     }
 
-    public PawnDTO changeToDTO(PawnInfo pawnInfo){
+    private PawnDTO changeToDTO(PawnInfo pawnInfo){
         if(pawnInfo != null){
             PawnDTO pawnDTO = PawnServiceUtils.toPawnDTO(pawnInfo);
             RelationQuery query = new RelationQuery();

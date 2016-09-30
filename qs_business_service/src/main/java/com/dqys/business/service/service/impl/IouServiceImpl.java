@@ -228,7 +228,7 @@ public class IouServiceImpl implements IouService {
      * @param iouInfo
      * @return
      */
-    public IouDTO changeToDTO(IOUInfo iouInfo){
+    private IouDTO changeToDTO(IOUInfo iouInfo){
         if(iouInfo != null){
             IouDTO iouDTO = IouServiceUtils.toIouDTO(iouInfo);
             RelationQuery relationQuery = new RelationQuery();
