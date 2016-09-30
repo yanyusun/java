@@ -44,7 +44,7 @@ public class CaseApidoc {
      */
 
     /**
-     * @api {post} /case/listCase 根据案件查询
+     * @api {post} /case/listCase 根据案件查询子案件（单条）
      * @apiName listCase
      * @apiGroup case
      * @apiParam {number} id 案件ID

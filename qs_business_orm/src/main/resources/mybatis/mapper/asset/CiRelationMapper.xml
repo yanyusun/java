@@ -22,10 +22,10 @@
     <where>
       stateflag = 0
       <if test="caseId != null">
-        case_id = #{caseId,jdbcType=INTEGER}
+        AND case_id = #{caseId,jdbcType=INTEGER}
       </if>
       <if test="iouId != null">
-        iou_id = #{iouId,jdbcType=INTEGER}
+        AND iou_id = #{iouId,jdbcType=INTEGER}
       </if>
     </where>
   </sql>

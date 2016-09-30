@@ -112,7 +112,7 @@ public class CaseController {
     }
 
     /**
-     * 根据案件查询
+     * 根据案件查询子案件
      *
      * @param id
      * @param index
