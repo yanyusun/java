@@ -8,12 +8,10 @@ import com.dqys.business.orm.mapper.operType.OperTypeMapper;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.service.OperTypeService;
-import com.dqys.core.cache.MybatisRedisCache;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.NoSQLWithRedisTool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,8 +26,6 @@ public class OperTypeServiceImpl implements OperTypeService {
     @Autowired
     private OperTypeMapper operTypeMapper;
 
-    @Autowired
-    private RedisTemplate redisTemplate;
     @Autowired
     private TUserTagMapper tUserTagMapper;
     @Autowired
