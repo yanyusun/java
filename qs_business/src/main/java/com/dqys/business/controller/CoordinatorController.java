@@ -380,7 +380,7 @@ public class CoordinatorController {
      * @api {post} coordinator/setDeadline 设置委托期限
      * @apiParam {int} objectId      对象id
      * @apiParam {int} objectType    对象类型
-     * @apiParam {int} dateTime     委托期限（格式：yyyy-MM-dd HH:mm:ss）
+     * @apiParam {int} dateTime     委托期限（格式：yyyy-MM-dd）
      * @apiSampleRequest coordinator/setDeadline
      * @apiGroup Coordinator
      * @apiName coordinator/setDeadline

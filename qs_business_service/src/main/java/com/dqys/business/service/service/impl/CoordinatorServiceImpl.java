@@ -1160,7 +1160,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             if (info == null) {
                 map.put("msg", "不存在信息记录");
             } else {
-                info.setEndAt(DateFormatTool.parse(DateFormatTool.DATE_FORMAT_19, dateTime));
+                info.setEndAt(DateFormatTool.parse(dateTime,DateFormatTool.DATE_FORMAT_10_REG1));
                 lenderInfoMapper.update(info);
                 map.put("result", "yes");
             }
@@ -1169,7 +1169,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             if (info == null) {
                 map.put("msg", "不存在信息记录");
             } else {
-                info.setEndAt(DateFormatTool.parse(DateFormatTool.DATE_FORMAT_19, dateTime));
+                info.setEndAt(DateFormatTool.parse(dateTime,DateFormatTool.DATE_FORMAT_10_REG1));
                 assetInfoMapper.update(info);
                 map.put("result", "yes");
             }
