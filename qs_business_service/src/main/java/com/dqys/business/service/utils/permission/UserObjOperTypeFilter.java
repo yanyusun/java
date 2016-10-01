@@ -2,7 +2,9 @@ package com.dqys.business.service.utils.permission;
 
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.business.service.service.OperTypeService;
 import com.dqys.core.constant.RoleTypeEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +17,14 @@ import java.util.List;
 @Primary
 public class UserObjOperTypeFilter extends OperTypeFilter {
 
-
-
     private Integer objectType;
 
     public UserObjOperTypeFilter(Integer objectType) {
         this.objectType = objectType;
     }
+
+    @Autowired
+    private OperTypeService operTypeService;
 
     @Override
     public List<OperType> getPermission() {
