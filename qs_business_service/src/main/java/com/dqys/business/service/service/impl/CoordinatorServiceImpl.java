@@ -1151,7 +1151,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         //判断用户是否有权限操作
         if (!jurisdictionByDeadline(objectId, objectType, userId)) {
-
+            map.put("msg", "您没有权限操作");
+            return map;
         }
         //修改借款人或资产包的委托结束时间
         if (objectType == ObjectTypeEnum.LENDER.getValue()) {
@@ -1159,7 +1160,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             if (info == null) {
                 map.put("msg", "不存在信息记录");
             } else {
-                info.setEndAt(DateFormatTool.parse(DateFormatTool.DATE_FORMAT_19, dateTime));
+                info.setEndAt(DateFormatTool.parse(dateTime,DateFormatTool.DATE_FORMAT_10_REG1));
                 lenderInfoMapper.update(info);
                 map.put("result", "yes");
             }
@@ -1168,7 +1169,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             if (info == null) {
                 map.put("msg", "不存在信息记录");
             } else {
-                info.setEndAt(DateFormatTool.parse(DateFormatTool.DATE_FORMAT_19, dateTime));
+                info.setEndAt(DateFormatTool.parse(dateTime,DateFormatTool.DATE_FORMAT_10_REG1));
                 assetInfoMapper.update(info);
                 map.put("result", "yes");
             }
