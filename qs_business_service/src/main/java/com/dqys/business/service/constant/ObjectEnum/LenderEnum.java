@@ -30,7 +30,10 @@ public enum LenderEnum {
     VIEW_OPERATION_LOG(1100, "操作日志"),
     VIEw_ACCPET(1101,"同意接收"),
     VIEW_REJECT(1102,"拒绝接收"),
-    VIEW_REAPPLY(1103,"重新申请")
+    VIEW_REAPPLY(1103,"重新申请"),
+    VIEW_INVALID_SET(1104,"设置为无效"),
+    VIEW_STOP(1105,"暂停"),
+    VIEW_RESUME(1106,"恢复")
     ;
     private Integer value;
     private String name;

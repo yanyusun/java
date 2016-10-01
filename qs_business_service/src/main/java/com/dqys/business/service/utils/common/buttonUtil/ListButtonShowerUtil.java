@@ -30,6 +30,8 @@ public class ListButtonShowerUtil {
     //同意,拒绝
     private static Integer[] rightButtonArray4 = {LenderEnum.VIEw_ACCPET.getValue(), LenderEnum.VIEW_REJECT.getValue()};
 
+    private static Integer[] rightButtonArray5=null;
+
     // TODO: 16-9-26  后期改为从数据库查询完成并且加入缓存,实现可以调控
     static {
         //--------------------------------------------------------->待接收
