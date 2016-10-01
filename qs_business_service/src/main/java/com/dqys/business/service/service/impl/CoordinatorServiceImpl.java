@@ -848,13 +848,13 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 throw new Exception();
             } else if ("501".equals(code.get("code"))) {
                 map.put("result", "no");
-                map.put("msg", "删除失败");
+                map.put("msg", "删除失败,可能被替补人员有误");
             } else if ("500".equals(code.get("code"))) {
                 map.put("result", "no_tiBu");
                 map.put("msg", "需要替补人");
             } else if ("502".equals(code.get("code"))) {
                 map.put("result", "no_lowRank");
-                map.put("msg", "下级不能删除上级");
+                map.put("msg", "没有权限做出删除");
             } else if ("503".equals(code.get("code"))) {
                 map.put("result", "no_delRepeat");
                 map.put("msg", "不能重复删除");
@@ -1188,37 +1188,46 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         List<TeammateRe> list = teammateReMapper.selectSelective(teammateRe);//团队中用户
         teammateRe.setUserId(userId);
         List<TeammateRe> list1 = teammateReMapper.selectSelective(teammateRe);//操作用户
-        if (list.size() > 0 && list1.size() > 0) {
-            TeammateRe team = list.get(0);
+        if (list.size() == 0) {
+            map.put("code", "501");//团队中不存在这人
+            return map;
+        }
+        TeammateRe team = list.get(0);
+        map.put("teammateRe", team);//参与处置的对象
+        if (list1.size() > 0) {
             TeammateRe oper = list1.get(0);
             if (status == null && substitutionUid == null && oper.getType() > team.getType()) {
                 map.put("code", "502");//下级不能删除上级
                 return map;
             }
-            map.put("teammateRe", team);//参与处置的对象
-            if (substitutionUid == null && (team.getType().equals(TeammateReEnum.TYPE_ADMIN.getValue()) || team.getType().equals(TeammateReEnum.TYPE_AUXILIARY.getValue()))) {//管理者0|所属人1|参与者2
-                map.put("code", "500");//需要有人替补
+        } else {
+            UserTeam userTeam =userTeamMapper.get(team.getUserTeamId());
+            if(!userTeam.getMangerId().equals(userId)){
+                map.put("code", "502");//不是管理员，没有权限
                 return map;
             }
-            if (team.getStatus().equals(TeammateReEnum.STATUS_DELETE.getValue())) {
-                map.put("code", "503");//不能重复删除
-                return map;
-            }
-            team.setStatus(TeammateReEnum.STATUS_DELETE.getValue());
-            Integer result = teammateReMapper.updateByPrimaryKey(team);
+        }
+        if (substitutionUid == null && (team.getType().equals(TeammateReEnum.TYPE_ADMIN.getValue())
+                || team.getType().equals(TeammateReEnum.TYPE_AUXILIARY.getValue()))) {//管理者0|所属人1|参与者2
+            map.put("code", "500");//需要有人替补
+            return map;
+        }
+        if (team.getStatus().equals(TeammateReEnum.STATUS_DELETE.getValue())) {
+            map.put("code", "503");//不能重复删除
+            return map;
+        }
+        team.setStatus(TeammateReEnum.STATUS_DELETE.getValue());
+        Integer result = teammateReMapper.updateByPrimaryKey(team);
+        if (result > 0) {
             teammateReMapper.deleteByPrimaryKey(team.getId());
             OURelation ouRelation = new OURelation();
             ouRelation.setUserId(teamUserId);
             ouRelation.setEmployerId(userTeamId);
             ouRelation.setType(OURelationEnum.TYPE_ALLOCATION_TEAM.getValue());
             Integer result1 = ouRelationMapper.deleteByPrimaryKey(ouRelation);
-            if (result > 0) {
-                map.put("code", "200");//成功
-            } else {
-                map.put("code", "505");//数据操作有误
-            }
+            map.put("code", "200");//成功
         } else {
-            map.put("code", "501");//失败
+            map.put("code", "505");//数据操作有误
         }
         return map;
     }
