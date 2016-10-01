@@ -52,6 +52,7 @@ import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
+import com.dqys.core.utils.DateFormatTool;
 import com.dqys.core.utils.SmsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -170,15 +171,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("userTeamId", userTeam.getId());
             map.put("result", "yes");
         } else {
-            List<TeamDTO> list = getLenderOrAsset(companyId, team.getObjectId(), team.getObjectType());//获取借款人或是资产包的团队信息
-            TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(team.getMangerId());//管理员信息
-            if (tUserInfo != null) {
-                TeamDTO teamDTO = new TeamDTO();
-                teamDTO.setUserId(tUserInfo.getId());
-                teamDTO.setRealName(tUserInfo.getRealName());
-                teamDTO.setRoleType(10);//管理员
-                list.add(teamDTO);
-            }
+            List<TeamDTO> list = getTeamDTOs(companyId, team);//协作器团队信息
             for (TeamDTO t : list) {//查询每个人员的任务数
                 if (t.getStatus() == TeammateReEnum.STATUS_ACCEPT.getValue()) {
                     Map<String, Object> task = getTaskCount(companyId, t.getUserId(), objectType);
@@ -194,6 +187,20 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("userTeamId", team.getId());
             map.put("result", "yes");
         }
+    }
+
+    //获取协作器团队信息
+    private List<TeamDTO> getTeamDTOs(Integer companyId, UserTeam team) {
+        List<TeamDTO> list = getLenderOrAsset(companyId, team.getObjectId(), team.getObjectType());//获取借款人或是资产包的团队信息
+        TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(team.getMangerId());//管理员信息
+        if (tUserInfo != null) {
+            TeamDTO teamDTO = new TeamDTO();
+            teamDTO.setUserId(tUserInfo.getId());
+            teamDTO.setRealName(tUserInfo.getRealName());
+            teamDTO.setRoleType(10);//管理员
+            list.add(teamDTO);
+        }
+        return list;
     }
 
     /**
@@ -1137,6 +1144,104 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         return map;
     }
 
+    @Override
+    public Map setDeadline(Integer objectId, Integer objectType, String dateTime) {
+        Map map = new HashMap<>();
+        map.put("result", "no");
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        //判断用户是否有权限操作
+        if (!jurisdictionByDeadline(objectId, objectType, userId)) {
+
+        }
+        //修改借款人或资产包的委托结束时间
+        if (objectType == ObjectTypeEnum.LENDER.getValue()) {
+            LenderInfo info = lenderInfoMapper.get(objectId);
+            if (info == null) {
+                map.put("msg", "不存在信息记录");
+            } else {
+                info.setEndAt(DateFormatTool.parse(DateFormatTool.DATE_FORMAT_19, dateTime));
+                lenderInfoMapper.update(info);
+                map.put("result", "yes");
+            }
+        } else if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+            AssetInfo info = assetInfoMapper.get(objectId);
+            if (info == null) {
+                map.put("msg", "不存在信息记录");
+            } else {
+                info.setEndAt(DateFormatTool.parse(DateFormatTool.DATE_FORMAT_19, dateTime));
+                assetInfoMapper.update(info);
+                map.put("result", "yes");
+            }
+        }
+        return map;
+    }
+
+    /**
+     * 判断用户是否有权限设置委托期限
+     *
+     * @param userId
+     * @return （true有权限false无权）
+     */
+    private boolean jurisdictionByDeadline(Integer objectId, Integer objectType, Integer userId) {
+        TUserTag tag = getUserTagByObject(objectId, objectType);
+        if (tag != null && tag.getUserId() == userId) {
+            return true;//当前用户为录入人才有权限
+        } else {
+            List<TeamDTO> teamDTOs = getTeamList(userId, objectId, objectType);
+            if (teamDTOs != null) {
+                for (TeamDTO t : teamDTOs) {
+                    if ((t.getRoleType() == TeammateReEnum.TYPE_ADMIN.getValue() || t.getRoleType() == 10) && t.getUserId() == userId) {
+                        return true;//当前用户为协作器的管理员或是管理者才有权限
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+    @Override
+    public TUserTag getUserTagByObject(Integer objectId, Integer objectType) {
+        Integer userId = 0;
+        if (objectType == ObjectTypeEnum.LENDER.getValue()) {
+            LenderInfo info = lenderInfoMapper.get(objectId);
+            if (info != null) {
+                userId = info.getOperator();
+            }
+        } else if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+            AssetInfo info = assetInfoMapper.get(objectId);
+            if (info != null) {
+                userId = info.getOperator();
+            }
+        }
+        if (userId != 0) {
+            List<TUserTag> tags = tUserTagMapper.selectByUserId(userId);
+            if (tags.size() > 0) {
+                return tags.get(0);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public List<TeamDTO> getTeamList(Integer userId, Integer objectId, Integer objectType) {
+        TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(userId);
+        if (userInfo != null) {
+            Integer companyId = userInfo.getCompanyId();
+            UserTeam userTeam = userTeamMapper.getByObject(objectId, objectType, companyId);
+            if (userTeam == null && objectType == ObjectTypeEnum.LENDER.getValue()) {
+                LenderInfo lenderInfo = lenderInfoMapper.get(objectId);
+                if (lenderInfo != null && lenderInfo.getAssetId() != null) {
+                    userTeam = userTeamMapper.getByObject(lenderInfo.getAssetId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), companyId);
+                }
+            }
+            if (userTeam != null) {
+                return getTeamDTOs(companyId, userTeam);
+            }
+        }
+        return null;
+    }
+
     /**
      * @param map
      * @param objectId
@@ -1201,8 +1306,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 return map;
             }
         } else {
-            UserTeam userTeam =userTeamMapper.get(team.getUserTeamId());
-            if(!userTeam.getMangerId().equals(userId)){
+            UserTeam userTeam = userTeamMapper.get(team.getUserTeamId());
+            if (!userTeam.getMangerId().equals(userId)) {
                 map.put("code", "502");//不是管理员，没有权限
                 return map;
             }

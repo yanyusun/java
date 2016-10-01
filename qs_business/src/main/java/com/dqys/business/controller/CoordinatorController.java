@@ -9,6 +9,7 @@ import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
+import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,7 +36,7 @@ public class CoordinatorController {
     private MessageService messageService;
 
     /**
-     * @api {post} coordinator/list 借款人或是资产包的参与者
+     * @api {post} coordinator/list 协作器借款人或是资产包的参与者列表
      * @apiParam {int} companyId 公司ID
      * @apiParam {int} objectId 对象id
      * @apiParam {int} type 请求类型（1借款人2资产包3抵押物）
@@ -279,7 +280,7 @@ public class CoordinatorController {
     }
 
     /**
-     * @api {post} coordinator/delUser 协作器删除参与人（暂时）
+     * @api {post} coordinator/delUser 协作器删除参与人
      * @apiParam {int} teamUserId 原参与处置的人userId
      * @apiParam {int} userTeamId 团队协作器id
      * @apiParam {int} status 状态（0同意1拒绝）
@@ -368,6 +369,33 @@ public class CoordinatorController {
             return JsonResponseTool.paramErr("状态有误");
         }
         Map map = coordinatorService.sendBusinessFlowResult(objectId, objectType, flowId, flowType, operType, receiveUserId, status);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+        }
+    }
+
+    /**
+     * @api {post} coordinator/setDeadline 设置委托期限
+     * @apiParam {int} objectId      对象id
+     * @apiParam {int} objectType    对象类型
+     * @apiParam {int} dateTime     委托期限（格式：yyyy-MM-dd HH:mm:ss）
+     * @apiSampleRequest coordinator/setDeadline
+     * @apiGroup Coordinator
+     * @apiName coordinator/setDeadline
+     */
+    @RequestMapping("/setDeadline")
+    @ResponseBody
+    public JsonResponse setDeadline(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType,
+                                    @RequestParam("dateTime") String dateTime) throws Exception {
+        if (CommonUtil.checkParam(objectId, objectType, dateTime)) {
+            return JsonResponseTool.paramErr("参数有误");
+        }
+        if(!FormatValidateTool.isDate(dateTime)){
+            return JsonResponseTool.paramErr("日期格式有误");
+        }
+        Map map = coordinatorService.setDeadline(objectId, objectType, dateTime);
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             return JsonResponseTool.success(map);
         } else {
