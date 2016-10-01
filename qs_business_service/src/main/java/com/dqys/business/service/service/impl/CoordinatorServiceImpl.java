@@ -1151,7 +1151,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         //判断用户是否有权限操作
         if (!jurisdictionByDeadline(objectId, objectType, userId)) {
-
+            map.put("msg", "您没有权限操作");
+            return map;
         }
         //修改借款人或资产包的委托结束时间
         if (objectType == ObjectTypeEnum.LENDER.getValue()) {
