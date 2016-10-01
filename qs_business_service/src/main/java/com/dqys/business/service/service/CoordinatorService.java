@@ -1,8 +1,11 @@
 package com.dqys.business.service.service;
 
+import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
+import com.rabbitmq.http.client.domain.UserInfo;
 
+import javax.servlet.jsp.tagext.TagInfo;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +44,7 @@ public interface CoordinatorService {
      * @param status
      * @return
      */
-    Map isAccept(Integer teammateId, Integer status, Integer userId,Integer operUserId) throws BusinessLogException;
+    Map isAccept(Integer teammateId, Integer status, Integer userId, Integer operUserId) throws BusinessLogException;
 
     /**
      * 主动加入案组
@@ -116,7 +119,7 @@ public interface CoordinatorService {
      * @param substitutionUid
      * @return
      */
-    Map deleteTeammatUser(Integer userId, Integer teamUserId, Integer userTeamId, Integer status, Integer substitutionUid,Integer operUserId) throws Exception;
+    Map deleteTeammatUser(Integer userId, Integer teamUserId, Integer userTeamId, Integer status, Integer substitutionUid, Integer operUserId) throws Exception;
 
     /**
      * 删除该公司下所有的协作器
@@ -170,15 +173,43 @@ public interface CoordinatorService {
     Map businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, Integer companyTeamId);
 
     /**
-     *
      * @param objectId      对象id
      * @param objectType    对象类型
      * @param flowId        业务流转对象id
      * @param flowType      业务流转对象类型
-     * @param operType     流转操作
+     * @param operType      流转操作
      * @param receiveUserId 接收者id（请求公司）
      * @param status        状态（0拒绝1接收）
      * @return
      */
-    Map sendBusinessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, Integer receiveUserId,Integer status);
+    Map sendBusinessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, Integer receiveUserId, Integer status);
+
+    /**
+     * 设置委托期限
+     *
+     * @param objectId
+     * @param objectType
+     * @param dateTime   时间
+     * @return
+     */
+    Map setDeadline(Integer objectId, Integer objectType, String dateTime);
+
+    /**
+     * 根据对象id和对象类型获取相应的录入人信息
+     *
+     * @param objectId
+     * @param objectType
+     * @return
+     */
+    TUserTag getUserTagByObject(Integer objectId, Integer objectType);
+
+    /**
+     * 获取当前用户的协作器团队信息
+     *
+     * @param userId
+     * @param objectId
+     * @param objectType
+     * @return
+     */
+    List<TeamDTO> getTeamList(Integer userId, Integer objectId, Integer objectType);
 }
