@@ -6,6 +6,7 @@ import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.business.BusinessObjReMapper;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.mapper.businessLog.BusinessLogMapper;
+import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.businessLog.BusinessLog;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.orm.query.businessLog.BusinessLogQuery;
@@ -77,7 +78,10 @@ public class BusinessLogServiceImp implements BusinessLogService {
             objectUserRelationQuery.setUserId(userId);
             objectUserRelationQuery.setObjectType(objectType);
             objectUserRelationQuery.setObjectId(objectId);
-            teamId = objectUserRelationMapper.list(objectUserRelationQuery).get(0).getEmployerId();
+            List<ObjectUserRelation> objectUserRelationList = objectUserRelationMapper.list(objectUserRelationQuery);
+            if(objectUserRelationList!=null&&objectUserRelationList.size()!=0){//还为加入团队的情况
+                teamId=objectUserRelationList.get(0).getEmployerId();
+            }
         }
         businessLog.setTeamId(teamId);
         businessLogMapper.insert(businessLog);
