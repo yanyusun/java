@@ -52,7 +52,7 @@ public class OperTypeServiceImpl implements OperTypeService {
     }
 
     @Override
-    public List<OperType> getOperType(Integer roleId, Integer userType, Integer objectType) {
+    public List<OperType> getOperType(Integer roleId, Integer userType, Integer objectType,Integer objectId) {
         Integer userId = UserSession.getCurrent().getUserId();
         List<TUserTag> tags = tUserTagMapper.selectByUserId(userId);
         if (tags.size() > 0) {
@@ -79,6 +79,21 @@ public class OperTypeServiceImpl implements OperTypeService {
         }
         return (List<OperType>) NoSQLWithRedisTool.getValueObject(userId_roleId_objectId);
     }
+
+    @Override
+    public List<OperType> getOperType(Integer roleId, Integer userType, Integer objectType) {
+        String userId_roleId_objectId = userType + "_" + roleId + "_" + objectType;
+        List<OperType> list = NoSQLWithRedisTool.getValueObject(userId_roleId_objectId) == null ? new ArrayList<>() : NoSQLWithRedisTool.getValueObject(userId_roleId_objectId);
+        if (list != null && list.size() != 0) {
+            return list;
+        } else {
+            NoSQLWithRedisTool.getRedisTemplate().opsForValue().set(userId_roleId_objectId, selectByRoleToOperType(roleId, userType, objectType));
+        }
+        return (List<OperType>) NoSQLWithRedisTool.getValueObject(userId_roleId_objectId);
+    }
+
+
+
 
     @Override
     public boolean checkOperType(Integer roleType, Integer userType, Integer objectType, Integer operType) {
