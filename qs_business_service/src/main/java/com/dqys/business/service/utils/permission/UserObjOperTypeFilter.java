@@ -23,6 +23,9 @@ public class UserObjOperTypeFilter extends OperTypeFilter {
         this.objectType = objectType;
     }
 
+    public UserObjOperTypeFilter() {
+    }
+
     @Autowired
     private OperTypeService operTypeService;
 
@@ -33,5 +36,7 @@ public class UserObjOperTypeFilter extends OperTypeFilter {
         List<OperType> operTypes = operTypeService.getOperType(roleType, userType, objectType);
         return  operTypes;
     }
+
+
 
 }

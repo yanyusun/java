@@ -8,8 +8,6 @@ import java.util.List;
  * Created by yan on 16-9-24.
  */
 public class ListButtonShowerBean {
-    //右侧操作按钮
-    private boolean hasRightButton = true;
 
     //协作器炒作操作按钮
     private boolean hasUserTeamButton = false;
@@ -26,36 +24,23 @@ public class ListButtonShowerBean {
     private boolean hasCompanyTeamButtonAdd = false;
 
 
-    private List<String[]> rightButtonList = new LinkedList<>();
-
-
-    public ListButtonShowerBean(List<String[]> rightButtonList,boolean hasRightButton, boolean hasUserTeamButton, boolean hasUserTeamButtonApply, boolean hasUserTeamButtonAdd, boolean hasCompanyTeamButton, boolean hasCompanyTeamButtonApply, boolean hasCompanyTeamButtonAdd) {
-        this.hasRightButton = hasRightButton;
+    public ListButtonShowerBean( boolean hasUserTeamButton, boolean hasUserTeamButtonApply, boolean hasUserTeamButtonAdd, boolean hasCompanyTeamButton, boolean hasCompanyTeamButtonApply, boolean hasCompanyTeamButtonAdd) {
         this.hasUserTeamButton = hasUserTeamButton;
         this.hasUserTeamButtonApply = hasUserTeamButtonApply;
         this.hasUserTeamButtonAdd = hasUserTeamButtonAdd;
         this.hasCompanyTeamButton = hasCompanyTeamButton;
         this.hasCompanyTeamButtonApply = hasCompanyTeamButtonApply;
         this.hasCompanyTeamButtonAdd = hasCompanyTeamButtonAdd;
-        this.rightButtonList = rightButtonList;
     }
 
-    public ListButtonShowerBean(List<String[]> rightButtonList) {
-        this.rightButtonList = rightButtonList;
-    }
+
 
     public ListButtonShowerBean() {
         super();
     }
 
 
-    public boolean isHasRightButton() {
-        return hasRightButton;
-    }
 
-    public void setHasRightButton(boolean hasRightButton) {
-        this.hasRightButton = hasRightButton;
-    }
 
     public boolean isHasUserTeamButton() {
         return hasUserTeamButton;
@@ -105,12 +90,5 @@ public class ListButtonShowerBean {
         this.hasCompanyTeamButtonAdd = hasCompanyTeamButtonAdd;
     }
 
-    public List<String[]> getRightButtonList() {
-        return rightButtonList;
-    }
-
-    public void setRightButtonList(List<String[]> rightButtonList) {
-        this.rightButtonList = rightButtonList;
-    }
 
 }

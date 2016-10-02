@@ -31,6 +31,7 @@ public class FollowUpController extends BaseApiContorller {
     @Autowired
     private FollowUpReadStatusService followUpReadStatusService;
 
+
     /**
      * @api {GET} http://{url}/follow_up/list 查询更进信息,并去除对应阶段的未读数据
      * @apiName list
@@ -118,7 +119,7 @@ public class FollowUpController extends BaseApiContorller {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse list(FollowUpMessageQuery followUpMessageQuery) {
+    public JsonResponse list(FollowUpMessageQuery followUpMessageQuery) throws Exception {
         if(followUpMessageQuery.getObjectId()==null||followUpMessageQuery.getObjectType()==null||followUpMessageQuery.getLiquidateStage()==null){
             return JsonResponseTool.paramErr("参数错误");
         }
