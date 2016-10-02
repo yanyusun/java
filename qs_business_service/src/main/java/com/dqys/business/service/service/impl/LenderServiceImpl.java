@@ -457,6 +457,7 @@ public class LenderServiceImpl implements LenderService {
         for (ContactInfo contactInfo : contactInfoList) {
             if (contactInfo.getType().equals(ContactTypeEnum.LENDER.getValue())
                     ) {
+                lenderDTO.setName(contactInfo.getName());
                 lenderDTO.setCurrentAddress(AreaTool.getAreaById(contactInfo.getProvince()).getLabel()
                                 + AreaTool.getAreaById(contactInfo.getCity()).getLabel()
                                 + AreaTool.getAreaById(contactInfo.getDistrict()).getLabel()

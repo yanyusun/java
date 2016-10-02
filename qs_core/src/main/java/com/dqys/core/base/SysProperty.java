@@ -29,14 +29,14 @@ public class SysProperty {
     // 短信模板
     public static final Integer SMS_VERIFICATION_CODE = 101; // 验证码
 
-    public static final Integer SMS_DISTRIBUTION_INVITE_CODE = 102; // 分配器邀请加入
+    public static final Integer SMS_DISTRIBUTION_INVITE_CODE = 103; // 分配器邀请加入
     public static final Integer SMS_DISTRIBUTION_PASS_CODE = 114; // 分配器接收邀请
     public static final Integer SMS_DISTRIBUTION_REFUSE_CODE = 115; // 分配器拒绝邀请
     public static final Integer SMS_DISTRIBUTION_JOIN_CODE = 117; // 分配器申请加入
     public static final Integer SMS_DISTRIBUTION_JOIN_REFUSE_CODE = 118; // 分配器拒绝申请
     public static final Integer SMS_DISTRIBUTION_JOIN_PASS_CODE = 119; // 分配器同意申请
 
-    public static final Integer SMS_COORDINATOR_INVITE_CODE = 103; // 协作器邀请加入
+    public static final Integer SMS_COORDINATOR_INVITE_CODE = 102; // 协作器邀请加入
     public static final Integer SMS_COORDINATOR_PASS_CODE = 112; // 协作器接收邀请
     public static final Integer SMS_COORDINATOR_REFUSE_CODE = 113; // 协作器拒绝邀请
     public static final Integer SMS_COORDINATOR_JOIN_CODE = 104; // 协作器申请加入
