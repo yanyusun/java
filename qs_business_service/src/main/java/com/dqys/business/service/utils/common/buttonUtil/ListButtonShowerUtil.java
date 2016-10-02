@@ -21,16 +21,6 @@ import java.util.Map;
 public class ListButtonShowerUtil {
 
     public static Map<String, ListButtonShowerBean> map = new HashMap<>();
-    //同意,拒绝,操作日志
-    private static Integer[] rightButtonArray1 = {LenderEnum.VIEw_ACCPET.getValue(), LenderEnum.VIEW_REJECT.getValue(), LenderEnum.VIEW_OPERATION_LOG.getValue()};
-    //操作日志
-    private static Integer[] rightButtonArray2 = {LenderEnum.VIEW_OPERATION_LOG.getValue()};
-    //操作日志,重新申请
-    private static Integer[] rightButtonArray3 = {LenderEnum.VIEW_OPERATION_LOG.getValue(), LenderEnum.VIEW_REAPPLY.getValue()};
-    //同意,拒绝
-    private static Integer[] rightButtonArray4 = {LenderEnum.VIEw_ACCPET.getValue(), LenderEnum.VIEW_REJECT.getValue()};
-
-    private static Integer[] rightButtonArray5=null;
 
     // TODO: 16-9-26  后期改为从数据库查询完成并且加入缓存,实现可以调控
     static {
@@ -109,9 +99,6 @@ public class ListButtonShowerUtil {
         getMyUrge(ObjectTypeEnum.ASSETSOURCE);
 
 
-
-
-
     }
 
     public static ListButtonShowerBean getListButtonShowerBean(Integer navId, Integer objectType, String userType, String roleType) throws UndefinitionTypeException {
@@ -119,7 +106,6 @@ public class ListButtonShowerUtil {
             ListButtonShowerBean listButtonShowerBean = map.get(navId + "_" + objectType + "_" + userType + "_" + roleType);
             if (listButtonShowerBean == null) {//找不到就返回默认
                 listButtonShowerBean = new ListButtonShowerBean();
-                listButtonShowerBean.setHasRightButton(false);
             }
             return listButtonShowerBean;
         } else {
@@ -141,55 +127,6 @@ public class ListButtonShowerUtil {
         return objectTabEnum.getValue() + "_" + objectTypeEnum.getValue() + "_" + userInfoEnum.getValue() + "_" + roleTypeEnum.getValue();
     }
 
-    /**
-     * 生成操作按钮列表
-     *
-     * @param operTypeValues 需要的操作列表按钮
-     * @param ObjectTypeEnum 对象类型
-     * @return
-     * @throws UndefinitionTypeException
-     */
-    public static List<String[]> getrightButtonList(Integer[] operTypeValues, ObjectTypeEnum ObjectTypeEnum) {
-        List<String[]> list = new LinkedList<>();
-        switch (ObjectTypeEnum) {
-            case LENDER:
-                for (Integer operTypeValue : operTypeValues) {
-                    for (LenderEnum e : LenderEnum.values()) {
-                        if (e.getValue() == operTypeValue) {
-                            String[] oprtType = new String[2];
-                            oprtType[0] = operTypeValue.toString();
-                            oprtType[1] = e.getName();
-                            list.add(oprtType);
-                        }
-                    }
-                }
-            case ASSETPACKAGE:
-                for (Integer operTypeValue : operTypeValues) {
-                    for (AssetPackageEnum e : AssetPackageEnum.values()) {
-                        if (e.getValue() == operTypeValue) {
-                            String[] oprtType = new String[2];
-                            oprtType[0] = operTypeValue.toString();
-                            oprtType[1] = e.getName();
-                            list.add(oprtType);
-                        }
-                    }
-                    ;
-                }
-            case ASSETSOURCE:
-                for (Integer operTypeValue : operTypeValues) {
-                    for (AssetSourceEnum e : AssetSourceEnum.values()) {
-                        if (e.getValue() == operTypeValue) {
-                            String[] oprtType = new String[2];
-                            oprtType[0] = operTypeValue.toString();
-                            oprtType[1] = e.getName();
-                            list.add(oprtType);
-                        }
-                    }
-                    ;
-                }
-        }
-        return list;
-    }
 
     /**
      * @param bean
@@ -248,10 +185,6 @@ public class ListButtonShowerUtil {
         return getCompanyTeamBean(bean, false, false);
     }
 
-    public static ListButtonShowerBean getAllFalseBean(ListButtonShowerBean bean) {
-        bean.setHasRightButton(false);
-        return bean;
-    }
 
     /**
      * 待审核
@@ -261,19 +194,19 @@ public class ListButtonShowerUtil {
     public static void putCheck(ObjectTypeEnum objectTypeEnum) {
         //待审核 平台管理员
         map.put(getKey(ObjectTabEnum.check, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN),
-                new ListButtonShowerBean(getrightButtonList(rightButtonArray1, objectTypeEnum)));
+                new ListButtonShowerBean());
         //待审核 委托管理员
         map.put(getKey(ObjectTabEnum.check, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN),
-                new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)));
+                new ListButtonShowerBean());
         //待审核 委托所属人
         map.put(getKey(ObjectTabEnum.check, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR),
-                new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)));
+                new ListButtonShowerBean());
         //待审核 委托管理者
         map.put(getKey(ObjectTabEnum.check, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR),
-                new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)));
+                new ListButtonShowerBean());
         //待审核 委托管理者
         map.put(getKey(ObjectTabEnum.check, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL),
-                new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)));
+                new ListButtonShowerBean());
     }
 
     /**
@@ -284,19 +217,19 @@ public class ListButtonShowerUtil {
     public static void putRefuse(ObjectTypeEnum objectTypeEnum) {
         //驳回 平台管理员
         map.put(getKey(ObjectTabEnum.refuse, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN),
-                new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)));
+                new ListButtonShowerBean());
         //驳回 委托管理员
         map.put(getKey(ObjectTabEnum.refuse, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN),
-                new ListButtonShowerBean(getrightButtonList(rightButtonArray3, objectTypeEnum)));
+                new ListButtonShowerBean());
         //驳回 委托所属人
         map.put(getKey(ObjectTabEnum.refuse, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR),
-                new ListButtonShowerBean(getrightButtonList(rightButtonArray3, objectTypeEnum)));
+                new ListButtonShowerBean());
         //驳回 委托管理者
         map.put(getKey(ObjectTabEnum.refuse, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR),
-                new ListButtonShowerBean(getrightButtonList(rightButtonArray3, objectTypeEnum)));
+                new ListButtonShowerBean());
         //驳回 委托管理者
         map.put(getKey(ObjectTabEnum.refuse, ObjectTypeEnum.LENDER, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL),
-                new ListButtonShowerBean(getrightButtonList(rightButtonArray3, objectTypeEnum)));
+                new ListButtonShowerBean());
 
     }
 
@@ -306,174 +239,167 @@ public class ListButtonShowerUtil {
         map.put(getKey(ObjectTabEnum.handle, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
                 , getUserTeamBeanAdd(
                         getCompanyTeamBeanAdd(
-                                new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))
+                                new ListButtonShowerBean())
                 ));
         //待处置 平台管理者
         map.put(getKey(ObjectTabEnum.handle, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
                 , getUserTeamBeanAdd(
-                        new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum))));
+                        new ListButtonShowerBean()));
         //待处置 平台所属人
         map.put(getKey(ObjectTabEnum.handle, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)));
+                , new ListButtonShowerBean());
         //待处置 平台参与人
         map.put(getKey(ObjectTabEnum.handle, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)));
+                , new ListButtonShowerBean());
 
         //待处置 委托管理员
         map.put(getKey(ObjectTabEnum.handle, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
                 , getUserTeamBeanAdd(
-                        new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum))));
+                        new ListButtonShowerBean()));
         //待处置 委托管理者
         map.put(getKey(ObjectTabEnum.handle, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
                 , getUserTeamBeanAdd(
-                        new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum))));
+                        new ListButtonShowerBean()));
         //待处置 委托所属人
         map.put(getKey(ObjectTabEnum.handle, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)));
+                , new ListButtonShowerBean());
         //待处置 委托参与人
         map.put(getKey(ObjectTabEnum.handle, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)));
+                , new ListButtonShowerBean());
     }
 
     //待参与
     public static void putJoin(ObjectTypeEnum objectTypeEnum) {
         //待参与 平台管理员
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                , getUserTeamApply(new ListButtonShowerBean()));
         //待参与 平台管理者
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                , getUserTeamApply(new ListButtonShowerBean()));
         //待参与 平台所属人
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                , getUserTeamApply(new ListButtonShowerBean()));
         //待参与 平台参与人
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
-
+                , getUserTeamApply(new ListButtonShowerBean()));
         //待参与 委托管理员
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                , getUserTeamApply(new ListButtonShowerBean()));
         //待参与 委托管理者
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                , getUserTeamApply(new ListButtonShowerBean()));
         //待参与 委托所属人
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                ,
+                getUserTeamApply(new ListButtonShowerBean()));
         //待参与 委托参与人
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                ,
+                getUserTeamApply(new ListButtonShowerBean()));
 
         //待参与 催收管理员
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                ,
+                getUserTeamApply(new ListButtonShowerBean()));
         //待参与 催收管理者
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                ,
+                getUserTeamApply(new ListButtonShowerBean()));
         //待参与 催收所属人
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                ,
+                getUserTeamApply(new ListButtonShowerBean()));
         //待参与 催收参与人
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                ,
+                getUserTeamApply(new ListButtonShowerBean()));
 
         //待参与 律所司法管理员
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                ,
+                getUserTeamApply(new ListButtonShowerBean()));
         //待参与 律所司法管理者
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                ,
+                getUserTeamApply(new ListButtonShowerBean()));
         //待参与 律所司法所属人
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                ,
+                getUserTeamApply(new ListButtonShowerBean()));
         //待参与 律所司法参与人
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                ,
+                getUserTeamApply(new ListButtonShowerBean()));
 
         //待参与 中介管理员
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                ,
+                getUserTeamApply(new ListButtonShowerBean()));
         //待参与 中介管理者
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                ,
+                getUserTeamApply(new ListButtonShowerBean()));
         //待参与 中介所属人
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                ,
+                getUserTeamApply(new ListButtonShowerBean()));
         //待参与 中介参与人
         map.put(getKey(ObjectTabEnum.join, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
-                , getAllFalseBean(
-                        getUserTeamApply(new ListButtonShowerBean())));
+                ,
+                getUserTeamApply(new ListButtonShowerBean()));
     }
 
     //已参与
     public static void putJoined(ObjectTypeEnum objectTypeEnum) {
         //已参与 平台管理员
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
-                ,  getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         //已参与 平台管理者
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
-                ,getCompanyTeamBeanView(getUserTeamBeanAdd( new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         //已参与 平台所属人
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView( new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 平台参与人
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView( new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
 
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
-                ,  getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
-                ,getCompanyTeamBeanView(getUserTeamBeanAdd( new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView( new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView( new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
-                ,  getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
-                ,getCompanyTeamBeanView(getUserTeamBeanAdd( new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView( new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView( new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
-                ,  getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
-                ,getCompanyTeamBeanView(getUserTeamBeanAdd( new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView( new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView( new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
-                ,  getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
-                ,getCompanyTeamBeanView(getUserTeamBeanAdd( new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView( new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.joined, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView( new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
 
     }
@@ -486,68 +412,68 @@ public class ListButtonShowerUtil {
     public static void putOutTime(ObjectTypeEnum objectTypeEnum) {
         //已参与 平台管理员
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 平台管理者
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 平台所属人
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 平台参与人
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         //已参与 委托管理员
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 委托管理者
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 委托所属人
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 委托参与人
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         //已参与 催收管理员
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 催收管理者
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 催收所属人
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 催收参与人
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         //已参与 律所司法管理员
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
-                ,getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 律所司法管理者
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
-                ,getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 律所司法所属人
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 律所司法参与人
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         //已参与 中介管理员
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 中介管理者
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
-                ,getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 中介所属人
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
-                ,getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //已参与 中介参与人
         map.put(getKey(ObjectTabEnum.outTime, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
     }
 
     /**
@@ -559,72 +485,72 @@ public class ListButtonShowerUtil {
         // 平台管理员
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
                 , getCompanyTeamBeanView(
-                        getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                        getUserTeamBeanView(new ListButtonShowerBean())));
         // 平台管理者
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
                 , getCompanyTeamBeanView(
                         getUserTeamBeanView(
-                                new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                                new ListButtonShowerBean())));
         // 平台所属人
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         // 平台参与人
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         // 委托管理员
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
                 , getCompanyTeamBeanView(
                         getUserTeamBeanView(
-                                new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                                new ListButtonShowerBean())));
         // 委托管理者
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         // 委托所属人
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //委托参与人
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         // 催收管理员
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         //催收管理者
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         // 催收所属人
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         // 催收参与人
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         // 律所司法管理员
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         // 律所司法管理者
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         // 律所司法所属人
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         // 律所司法参与人
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
-                ,  getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         // 中介管理员
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         // 中介管理者
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         // 中介所属人
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
-                ,  getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         // 中介参与人
         map.put(getKey(ObjectTabEnum.over, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
-                ,  getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
     }
 
     /**
@@ -635,63 +561,63 @@ public class ListButtonShowerUtil {
     public static void putAssign(ObjectTypeEnum objectTypeEnum) {
 
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         ;
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         ;
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         ;
 
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         ;
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         ;
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         ;
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         ;
 
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         ;
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         ;
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         ;
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         ;
 
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         ;
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         ;
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         ;
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         ;
     }
 
@@ -703,50 +629,50 @@ public class ListButtonShowerUtil {
     public static void putAccept(ObjectTypeEnum objectTypeEnum) {
 
         map.put(getKey(ObjectTabEnum.accept, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
         map.put(getKey(ObjectTabEnum.accept, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
 
         map.put(getKey(ObjectTabEnum.accept, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
         map.put(getKey(ObjectTabEnum.accept, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
 
         map.put(getKey(ObjectTabEnum.accept, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
         map.put(getKey(ObjectTabEnum.accept, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
 
 
         map.put(getKey(ObjectTabEnum.accept, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
         map.put(getKey(ObjectTabEnum.accept, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
 
         map.put(getKey(ObjectTabEnum.accept, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
         map.put(getKey(ObjectTabEnum.accept, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
         map.put(getKey(ObjectTabEnum.assign, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
-                , new ListButtonShowerBean(getrightButtonList(rightButtonArray4, objectTypeEnum)));
+                , new ListButtonShowerBean());
 
     }
 
@@ -810,31 +736,31 @@ public class ListButtonShowerUtil {
     public static void putHandling_urge(ObjectTypeEnum objectTypeEnum) {
 
         map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
     }
 
     /**
@@ -844,22 +770,22 @@ public class ListButtonShowerUtil {
      */
     public static void getHandling_entrust(ObjectTypeEnum objectTypeEnum) {
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
-                , getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum))));
+                , getUserTeamBeanAdd(new ListButtonShowerBean()));
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
-                , getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum))));
+                , getUserTeamBeanAdd(new ListButtonShowerBean()));
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum))));
+                , getUserTeamBeanAdd(new ListButtonShowerBean()));
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum))));
+                , getUserTeamBeanAdd(new ListButtonShowerBean()));
 
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
-                , getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum))));
+                , getUserTeamBeanAdd(new ListButtonShowerBean()));
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
-                , getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum))));
+                , getUserTeamBeanAdd(new ListButtonShowerBean()));
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
-                , getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum))));
+                , getUserTeamBeanAdd(new ListButtonShowerBean()));
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
-                , getUserTeamBeanAdd(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum))));
+                , getUserTeamBeanAdd(new ListButtonShowerBean()));
 
     }
 
@@ -870,22 +796,22 @@ public class ListButtonShowerUtil {
      */
     public static void getTask(ObjectTypeEnum objectTypeEnum) {
         map.put(getKey(ObjectTabEnum.task, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.task, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.task, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.task, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.task, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
-                ,getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.task, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.task, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.task, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
     }
 
@@ -896,289 +822,292 @@ public class ListButtonShowerUtil {
      */
     public static void getMyUrge(ObjectTypeEnum objectTypeEnum) {
         map.put(getKey(ObjectTabEnum.myUrge, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.myUrge, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.myUrge, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.myUrge, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.myUrge, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.myUrge, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.myUrge, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.myUrge, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.myUrge, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.myUrge, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.myUrge, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.myUrge, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
     }
 
     /**
      * 当月
+     *
      * @param objectTypeEnum
      */
-    public static void getMonth(ObjectTypeEnum objectTypeEnum){
+    public static void getMonth(ObjectTypeEnum objectTypeEnum) {
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.month, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
     }
 
     /**
      * 当月
+     *
      * @param objectTypeEnum
      */
-    public static void getNew48h(ObjectTypeEnum objectTypeEnum){
+    public static void getNew48h(ObjectTypeEnum objectTypeEnum) {
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.new48h, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
     }
+
     /**
      * 存量
+     *
      * @param objectTypeEnum
      */
-    public static void getStock(ObjectTypeEnum objectTypeEnum){
+    public static void getStock(ObjectTypeEnum objectTypeEnum) {
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stock, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
     }
 
     /**
      * 暂停
+     *
      * @param objectTypeEnum
      */
-    public static void getStop(ObjectTypeEnum objectTypeEnum){
+    public static void getStop(ObjectTypeEnum objectTypeEnum) {
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.stop, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
     }
 
     /**
      * 存量
+     *
      * @param objectTypeEnum
      */
-    public static void getInvalid(ObjectTypeEnum objectTypeEnum){
+    public static void getInvalid(ObjectTypeEnum objectTypeEnum) {
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_JUDICIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.ADMIN)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.REGULATOR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.THEIR)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
-                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean(getrightButtonList(rightButtonArray2, objectTypeEnum)))));
+                , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
     }
-
-
-
 
 
 }
