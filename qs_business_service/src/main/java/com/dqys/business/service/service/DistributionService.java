@@ -2,6 +2,7 @@ package com.dqys.business.service.service;
 
 import com.dqys.business.service.dto.company.DistributionDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
+import com.dqys.core.model.JsonResponse;
 
 /**
  * Created by Yvan on 16/7/21.
@@ -25,14 +26,14 @@ public interface DistributionService {
      * @return
      * @throws BusinessLogException
      */
-    Integer addDistribution(Integer type, Integer id) throws BusinessLogException;
+    JsonResponse addDistribution(Integer type, Integer id) throws BusinessLogException;
 
     /**
      * 加入分配器
      * @param id 分配器ID
      * @return
      */
-    Integer joinDistribution(Integer id) throws BusinessLogException;
+    JsonResponse joinDistribution(Integer id) throws BusinessLogException;
 
     /**
      * 邀请加入分配器
@@ -41,7 +42,7 @@ public interface DistributionService {
      * @return
      * @throws BusinessLogException
      */
-    Integer inviteDistribution(Integer id, Integer companyId) throws BusinessLogException;
+    JsonResponse inviteDistribution(Integer id, Integer companyId) throws BusinessLogException;
 
     /**
      * 修改分配器(同意加入|拒绝加入)
@@ -49,14 +50,14 @@ public interface DistributionService {
      * @param type
      * @return
      */
-    Integer updateDistribution_tx(Integer id, Integer type) throws BusinessLogException;
+    JsonResponse updateDistribution_tx(Integer id, Integer type) throws BusinessLogException;
 
     /**
      * 退出该分配记录
      * @param id
      * @return
      */
-    Integer exitDistribution_tx(Integer id) throws BusinessLogException;
+    JsonResponse exitDistribution_tx(Integer id) throws BusinessLogException;
 
     /**
      * 平台为申请业务流转的公司添加业务流转伙伴
@@ -66,7 +67,7 @@ public interface DistributionService {
      * @param businessType 业务类型
      * @param companyId 被邀请公司ID
      */
-    Integer addBusinessService(Integer type, Integer id, Integer distributionId,
+    JsonResponse addBusinessService(Integer type, Integer id, Integer distributionId,
                                Integer businessType, Integer companyId) throws BusinessLogException;
 
     /**
@@ -77,7 +78,7 @@ public interface DistributionService {
      * @param status
      * @return
      */
-    Integer updateBusinessService(Integer type, Integer id, Integer distributionId,
+    JsonResponse updateBusinessService(Integer type, Integer id, Integer distributionId,
                                   Integer businessType, Integer status) throws BusinessLogException;
 
 }

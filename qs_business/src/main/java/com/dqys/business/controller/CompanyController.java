@@ -153,7 +153,7 @@ public class CompanyController {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.success("参数错误");
         }
-        return CommonUtil.responseBack(distributionService.joinDistribution(id));
+        return distributionService.joinDistribution(id);
     }
 
     /**
@@ -169,8 +169,7 @@ public class CompanyController {
         if (CommonUtil.checkParam(companyId, id)) {
             return JsonResponseTool.success("参数错误");
         }
-        return CommonUtil.responseBack(distributionService.inviteDistribution(
-                id, companyId));
+        return distributionService.inviteDistribution(id, companyId);
     }
 
     /**
@@ -190,7 +189,7 @@ public class CompanyController {
             // 如果不是接受状态,全部设置为拒绝
             status = ObjectAcceptTypeEnum.refuse.getValue();
         }
-        return CommonUtil.responseBack(distributionService.updateDistribution_tx(id, status));
+        return distributionService.updateDistribution_tx(id, status);
     }
 
 
@@ -205,7 +204,7 @@ public class CompanyController {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.success("参数错误");
         }
-        return CommonUtil.responseBack(distributionService.exitDistribution_tx(id));
+        return distributionService.exitDistribution_tx(id);
     }
 
     /**
@@ -265,7 +264,7 @@ public class CompanyController {
         if(CommonUtil.checkParam(type, id, distributionId, businessType, companyId)){
             return JsonResponseTool.paramErr("参数错误");
         }
-        return JsonResponseTool.success(distributionService.addBusinessService(type, id, distributionId, businessType, companyId));
+        return distributionService.addBusinessService(type, id, distributionId, businessType, companyId);
     }
 
     /**
@@ -289,8 +288,7 @@ public class CompanyController {
             // 如果不是接受状态,全部设置为拒绝
             status = ObjectAcceptTypeEnum.refuse.getValue();
         }
-        return JsonResponseTool.success(
-                distributionService.updateBusinessService(type, id, distributionId, businessType, status));
+        return distributionService.updateBusinessService(type, id, distributionId, businessType, status);
     }
 
 

@@ -143,7 +143,7 @@ public class AssetServiceImpl implements AssetService {
         }
         businessLogService.add(assetDTO.getId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.update.getValue(),
                 "", assetDTO.getMemo(), 0, 0);
-        return JsonResponseTool.success(null);
+        return JsonResponseTool.success(assetDTO.getId());
     }
 
     @Override
