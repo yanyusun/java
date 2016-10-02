@@ -112,6 +112,15 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(userId);
             companyId = userInfo.getCompanyId();
         }
+        //类型为抵押物的就查询抵押物的借款人
+        if (objectType == ObjectTypeEnum.PAWN.getValue()) {
+            PawnInfo info = pawnInfoMapper.get(objectId);
+            if (info != null) {
+                objectId = info.getLenderId();
+                objectType = ObjectTypeEnum.LENDER.getValue();
+            }
+        }
+        //查询相应协作器是否存在，不存在的进行创建
         UserTeam userTeam = new UserTeam();
         userTeam.setObjectType(objectType);
         userTeam.setObjectId(objectId);
@@ -157,7 +166,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             userTeam.setCtreaterId(userid);
             //查询操作人员被操作事物关系
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
-            objectUserRelationQuery.setUserId(userid);
+            objectUserRelationQuery.setUserId(userId);
+            objectUserRelationQuery.setObjectId(objectId);
             objectUserRelationQuery.setObjectType(objectType);
             objectUserRelationQuery.setType(3);//业务流转类型
             List<ObjectUserRelation> list = objectUserRelationMapper.list(objectUserRelationQuery);
@@ -1160,7 +1170,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             if (info == null) {
                 map.put("msg", "不存在信息记录");
             } else {
-                info.setEndAt(DateFormatTool.parse(dateTime,DateFormatTool.DATE_FORMAT_10_REG1));
+                info.setEndAt(DateFormatTool.parse(dateTime, DateFormatTool.DATE_FORMAT_10_REG1));
                 lenderInfoMapper.update(info);
                 map.put("result", "yes");
             }
@@ -1169,7 +1179,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             if (info == null) {
                 map.put("msg", "不存在信息记录");
             } else {
-                info.setEndAt(DateFormatTool.parse(dateTime,DateFormatTool.DATE_FORMAT_10_REG1));
+                info.setEndAt(DateFormatTool.parse(dateTime, DateFormatTool.DATE_FORMAT_10_REG1));
                 assetInfoMapper.update(info);
                 map.put("result", "yes");
             }

@@ -539,12 +539,8 @@ public class RepayServiceImpl implements RepayService {
     @Override
     public void getRepayList(Repay repay, Map map) {
         List<Repay> repays = repayMapper.selectByRepay(repay);
-        if (repays.size() > 0) {
-            map.put("result", "yes");
-            map.put("repays", repays);
-        } else {
-            map.put("result", "no");
-        }
+        map.put("result", "yes");
+        map.put("repays", repays);
     }
 
 

@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Service
 @Primary
-public class BusinessLogServiceImp implements BusinessLogService{
+public class BusinessLogServiceImp implements BusinessLogService {
     @Autowired
     private BusinessLogMapper businessLogMapper;
 
@@ -38,34 +38,33 @@ public class BusinessLogServiceImp implements BusinessLogService{
     }
 
     @Override
-    public void add(int objectId, int objectType,int operType,String text, String remark,int businessId,int teamId) throws BusinessLogException {
-        if(CommonUtil.checkParam(objectId,objectType,text)){
-            throw new BusinessLogException("objectId->"+objectId+",objectType->"+objectType+",text->"+text
+    public void add(int objectId, int objectType, int operType, String text, String remark, int businessId, int teamId) throws BusinessLogException {
+        if (CommonUtil.checkParam(objectId, objectType, text)) {
+            throw new BusinessLogException("objectId->" + objectId + ",objectType->" + objectType + ",text->" + text
                     , BusinessLogException.PARAM_ISNOULL_ERROR);
         }
-        int userId=UserSession.getCurrent().getUserId();
-        BusinessLog businessLog=new BusinessLog();
+        int userId = UserSession.getCurrent().getUserId();
+        BusinessLog businessLog = new BusinessLog();
         businessLog.setUserId(userId);
         businessLog.setObjectId(objectId);
         businessLog.setObjectType(objectType);
         businessLog.setOperType(operType);
         businessLog.setText(text);
         businessLog.setRemark(remark);
-        if(businessId==0){//当业务号为0时，进行查询得到当前操作对象的业务号
-            businessId= businessObjReMapper.getByObject(objectType,objectId).getBusinessId();
+        if (businessId == 0) {//当业务号为0时，进行查询得到当前操作对象的业务号
+            businessId = businessObjReMapper.getByObject(objectType, objectId).getBusinessId();
         }
         businessLog.setBusinessId(businessId);
-        if(teamId==0){//当团队id为0时查询
+        if (teamId == 0 && !CommonUtil.isManage()) {//当团队id为0时查询
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setUserId(userId);
             objectUserRelationQuery.setObjectType(objectType);
             objectUserRelationQuery.setObjectId(objectId);
-            teamId=objectUserRelationMapper.list(objectUserRelationQuery).get(0).getEmployerId();
+            teamId = objectUserRelationMapper.list(objectUserRelationQuery).get(0).getEmployerId();
         }
         businessLog.setTeamId(teamId);
         businessLogMapper.insert(businessLog);
     }
-
 
 
 }
