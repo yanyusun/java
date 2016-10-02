@@ -1,5 +1,8 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
+import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.business.BusinessObjReMapper;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.mapper.businessLog.BusinessLogMapper;
@@ -8,6 +11,7 @@ import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.orm.query.businessLog.BusinessLogQuery;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
+import com.dqys.business.service.service.PawnService;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,12 @@ public class BusinessLogServiceImp implements BusinessLogService {
 
     @Autowired
     private ObjectUserRelationMapper objectUserRelationMapper;
+
+    @Autowired
+    private PawnInfoMapper pawnInfoMapper;
+
+    @Autowired
+    private IOUInfoMapper iouInfoMapper;
 
     @Override
     public List<BusinessLog> list(BusinessLogQuery query) {
@@ -56,6 +66,13 @@ public class BusinessLogServiceImp implements BusinessLogService {
         }
         businessLog.setBusinessId(businessId);
         if (teamId == 0 && !CommonUtil.isManage()) {//当团队id为0时查询
+            if(ObjectTypeEnum.IOU.getValue()==objectType){
+                objectId=pawnInfoMapper.get(objectId).getLenderId();
+                objectType=ObjectTypeEnum.LENDER.getValue();
+            }else if(ObjectTypeEnum.IOU.getValue()==objectType){
+                objectId=iouInfoMapper.get(objectId).getLenderId();
+                objectType=ObjectTypeEnum.LENDER.getValue();
+            }
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setUserId(userId);
             objectUserRelationQuery.setObjectType(objectType);
