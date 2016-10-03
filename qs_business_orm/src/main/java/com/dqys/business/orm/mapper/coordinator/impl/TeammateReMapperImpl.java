@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mkfeng on 2016/7/12.
@@ -62,5 +63,10 @@ public class TeammateReMapperImpl extends BaseDao implements TeammateReMapper {
     @Override
     public Integer deleteByUserTeamId(@Param("userTeamIds") List<Integer> userTeamIds) {
         return super.getSqlSession().getMapper(TeammateReMapper.class).deleteByUserTeamId(userTeamIds);
+    }
+
+    @Override
+    public List<TeammateRe> selectSelectiveByUserTeam(Map teamMap) {
+        return super.getSqlSession().getMapper(TeammateReMapper.class).selectSelectiveByUserTeam(teamMap);
     }
 }

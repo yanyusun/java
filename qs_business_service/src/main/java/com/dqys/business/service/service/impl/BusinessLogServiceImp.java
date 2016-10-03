@@ -67,7 +67,7 @@ public class BusinessLogServiceImp implements BusinessLogService {
         }
         businessLog.setBusinessId(businessId);
         if (teamId == 0 && !CommonUtil.isManage()) {//当团队id为0时查询
-            if(ObjectTypeEnum.IOU.getValue()==objectType){
+            if(ObjectTypeEnum.PAWN.getValue()==objectType){
                 objectId=pawnInfoMapper.get(objectId).getLenderId();
                 objectType=ObjectTypeEnum.LENDER.getValue();
             }else if(ObjectTypeEnum.IOU.getValue()==objectType){

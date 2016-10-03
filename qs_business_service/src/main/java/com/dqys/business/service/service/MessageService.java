@@ -74,7 +74,7 @@ public interface MessageService {
      * @param uid      接收者
      * @param remark   备注
      */
-    void sendSmsByTeammate(UserTeam userTeam,TeammateRe teammateRe, Map<String, Object> map, Integer uid, String remark);
+    void sendSmsByTeammate(UserTeam userTeam, TeammateRe teammateRe, Map<String, Object> map, Integer uid, String remark);
 
     /**
      * 业务流转请求短信通知(发送给平台)
@@ -128,9 +128,10 @@ public interface MessageService {
      * @param userId     操作人
      * @param operation  业务操作
      * @param onStatus   (0加入1移除)
+     * @param modify     是否对数据修改（是true否false）
      * @return
      */
-    String judicature(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus);
+    String judicature(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, boolean modify);
 
     /**
      * 市场处置（中介接收短信通知）
@@ -142,9 +143,10 @@ public interface MessageService {
      * @param userId     操作人
      * @param operation  业务操作
      * @param onStatus   (0加入1移除)
+     * @param modify     是否对数据修改（是true否false）
      * @return
      */
-    String intermediary(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus);
+    String intermediary(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, boolean modify);
 
     /**
      * 维持常规催收（催收接收短信通知）
@@ -156,8 +158,9 @@ public interface MessageService {
      * @param userId     操作人
      * @param operation  业务操作
      * @param onStatus   (0加入1移除)
+     * @param modify     是否对数据修改（是true否false）
      * @return
      */
-    String collectiones(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus);
+    String collectiones(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, boolean modify);
 
 }

@@ -262,38 +262,38 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public String judicature(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus) {
-        if (setJiGou(objectId, objectType, flowId, flowType, userId, operation, onStatus, UserInfoEnum.USER_TYPE_JUDICIARY.getValue())) {
+    public String judicature(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, boolean modify) {
+        if (setJiGou(objectId, objectType, flowId, flowType, userId, operation, onStatus, UserInfoEnum.USER_TYPE_JUDICIARY.getValue(), modify)) {
             return "yes";
         }
         return "no";
     }
 
     @Override
-    public String intermediary(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus) {
-        if (setJiGou(objectId, objectType, flowId, flowType, userId, operation, onStatus, UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue())) {
+    public String intermediary(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, boolean modify) {
+        if (setJiGou(objectId, objectType, flowId, flowType, userId, operation, onStatus, UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue(), modify)) {
             return "yes";
         }
         return "no";
     }
 
     @Override
-    public String collectiones(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus) {
-        if (setJiGou(objectId, objectType, flowId, flowType, userId, operation, onStatus, UserInfoEnum.USER_TYPE_COLLECTION.getValue())) {
+    public String collectiones(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, boolean modify) {
+        if (setJiGou(objectId, objectType, flowId, flowType, userId, operation, onStatus, UserInfoEnum.USER_TYPE_COLLECTION.getValue(), modify)) {
             return "yes";
         }
         return "no";
     }
 
-    private boolean setJiGou(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, Integer userType) {
-        boolean flag = coordinatorService.verdictOrganization(flowId, flowType, onStatus, userType);
+    private boolean setJiGou(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, Integer userType, boolean modify) {
+        boolean flag = coordinatorService.verdictOrganization(flowId, flowType, onStatus, userType, modify);
         if (flag) {
             SmsUtil smsUtil = new SmsUtil();
             //根据对象类型和对象id获取分配器中的公司管理员
             Map map = coordinatorMapper.getCompanyAndUser(objectId, objectType, userType);
             Map userC = coordinatorMapper.getUserAndCompanyByUserId(MessageUtils.transMapToInt(map, "userId"));//接收者
             Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);//发送者
-            if (userC != null) {
+            if (userC != null && userId != MessageUtils.transMapToInt(map, "userId")) {//需要发送者与接收者不是同一个人
                 String content = smsUtil.sendSms(SmsEnum.FlOW_OPER.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
                         CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "companyName"),
                         MessageUtils.transMapToString(oper, "realName"),

@@ -176,4 +176,11 @@
         </foreach>
     </update>
 
+    <select id="selectSelectiveByUserTeam" parameterType="java.util.Map" parameterMap="BaseResultMap">
+        SELECT ttr.* FROM t_teammate_re ttr LEFT JOIN t_user_team tut
+        ON tut.id=ttr.user_team_id
+        WHERE ttr.stateflag AND ttr.user_id= #{userId}
+        AND ttr.type= #{type} AND tut.object_id= #{objectId} AND tut.object_type= #{objectType}
+    </select>
+
 </mapper>

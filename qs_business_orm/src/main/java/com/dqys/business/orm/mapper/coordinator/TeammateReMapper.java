@@ -5,6 +5,7 @@ import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TeammateReMapper {
     /**
@@ -64,4 +65,6 @@ public interface TeammateReMapper {
     TeammateRe selectByObjectAndUser(@Param("objectType") Integer objectType, @Param("objectId") Integer objectId, @Param("userId") Integer userId);
 
     Integer deleteByUserTeamId(@Param("userTeamIds") List<Integer> userTeamIds);
+//根据userId 、objectId、objectType、type四个参数查询协作器团队信息
+    List<TeammateRe> selectSelectiveByUserTeam(Map teamMap);
 }

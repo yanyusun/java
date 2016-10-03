@@ -155,9 +155,10 @@ public interface CoordinatorService {
      * @param flowType
      * @param onStatus （0可以1不能）
      * @param type     类型(31催收32律师33中介)
+     * @param modify    是否对数据修改（是true否false）
      * @return //默认true 发送短信
      */
-    Boolean verdictOrganization(Integer flowId, Integer flowType, Integer onStatus, Integer type);
+    Boolean verdictOrganization(Integer flowId, Integer flowType, Integer onStatus, Integer type, boolean modify);
 
     /**
      * 业务流转接口
