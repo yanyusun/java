@@ -5,14 +5,17 @@ package com.dqys.business.service.constant.ObjectEnum;
  * Created by mkfeng on 2016/7/7.
  */
 public enum AssetPackageEnum {
-    delete(102, "删除"),
+    delete(1010, "删除"),
     update(101, "编辑"),
     add(100, "添加"),
-
-    //列表显示
-    VIEW_OPERATION_LOG(1000, "操作日志"),
-    VIEw_ACCPET(1001,"同意接收"),
-    VIEW_REJECT(1002,"拒绝接收");
+    OPERATION_LOG(102, "操作日志"),
+    AUDIT_YES(103, "审核通过"),
+    AUDIT_NO(104, "审核不通过"),
+    PAUSE(105, "暂停"),
+    RESTART_APPLY(106, "重新申请"),
+    INVALID_SET(107, "设置为无效"),
+    INVALID_SET_RECOVER(108, "无效恢复"),
+    PAUSE_RECOVER(109, "暂停恢复");
 
     private Integer value;
     private String name;

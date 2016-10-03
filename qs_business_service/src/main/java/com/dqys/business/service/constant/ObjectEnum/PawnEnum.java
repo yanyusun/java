@@ -24,7 +24,7 @@ public enum PawnEnum {
     SOLUTION(1217, "填写化解方案"),
     REMARK(1218, "填写备注"),
     DELETE(1219, "删除"),
-    UPDATE(1219, "修改")
+    UPDATE(1220, "修改")
     ;
     private Integer value;
     private String name;

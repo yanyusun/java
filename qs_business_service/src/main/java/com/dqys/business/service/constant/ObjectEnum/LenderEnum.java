@@ -18,23 +18,26 @@ public enum LenderEnum {
     OPERATION_LOG(1110, "操作日志"),
     ADD_REIMBURSEMENT(1111, "添加一条还款"),
     DISTRIBUTION_BORROWER(1112, "分配借款人"),
-    DELETE(1113, "删除"),
-    //    以下为借款人状态
-    STATUS_CHECK_PENDING(0, "待审核"),
-    STATUS_COLLECTION(1, "常规催收"),
-    STATUS_JUDICIARY(2, "司法化解"),
-    STATUS_BAZAAR(3, "市场处置"),
-    STATUS_OTHER(99, "其他处置方式"),
+    DELETE(1119, "删除"),
+    AUDIT_YES(1113, "审核通过"),
+    AUDIT_NO(1114, "审核不通过"),
+    PAUSE(1115,"暂停"),
+    RESTART_APPLY(1116,"重新申请"),
+    PAUSE_RECOVER (1117,"暂停恢复"),
+    INVALID_SET_RECOVER(1118,"无效恢复"),
 
-    //列表显示枚举
-    VIEW_OPERATION_LOG(1100, "操作日志"),
-    VIEw_ACCPET(1101,"同意接收"),
-    VIEW_REJECT(1102,"拒绝接收"),
-    VIEW_REAPPLY(1103,"重新申请"),
-    VIEW_INVALID_SET(1104,"设置为无效"),
-    VIEW_STOP(1105,"暂停"),
-    VIEW_RESUME(1106,"恢复")
-    ;
+    //    以下为借款人状态
+    STATUS_CHECK_PENDING(0,"待审核"),
+
+    STATUS_COLLECTION(1,"常规催收"),
+
+    STATUS_JUDICIARY(2,"司法化解"),
+
+    STATUS_BAZAAR(3,"市场处置"),
+
+    STATUS_OTHER(99,"其他处置方式"),
+            ;
+
     private Integer value;
     private String name;
 
