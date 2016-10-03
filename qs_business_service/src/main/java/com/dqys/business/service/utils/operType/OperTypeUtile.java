@@ -108,11 +108,11 @@ public class OperTypeUtile implements ApplicationContextAware {
     private static Integer[] nav19 = {102, 1110, 1615, 1310, 1213};//正在进行
     private static Integer[] nav20 = {102, 1110, 1615, 1310, 1213};//我的催收
 
-    public static Map<String, Object> getOperType(Integer navId, Integer objectType) {
+    public static List<OperType> getOperType(Integer navId, Integer objectType) {
         Map<String, Object> map = new HashMap<>();
         List<OperType> operTypes = getOperTypeList(getNav(navId), objectType);
         map.put(navId + "_" + objectType, operTypes);
-        return map;
+        return operTypes;
     }
 
     private static Integer[] getNav(Integer navId) {
@@ -189,7 +189,7 @@ public class OperTypeUtile implements ApplicationContextAware {
                 OperType operType = new OperType();
                 for (Integer n : navs) {
                     //遍历是否拥有权限，有权限的就加入
-                    if (n == e.getValue()) {
+                    if (e.getValue().equals(n)) {
                         operType.setOperType(e.getValue());
                         operType.setOperName(e.getName());
                         list.add(operType);
@@ -203,7 +203,7 @@ public class OperTypeUtile implements ApplicationContextAware {
                 OperType operType = new OperType();
                 for (Integer n : navs) {
                     //遍历是否拥有权限，有权限的就加入
-                    if (n == e.getValue()) {
+                    if (e.getValue().equals(n)) {
                         operType.setOperType(e.getValue());
                         operType.setOperName(e.getName());
                         list.add(operType);
@@ -217,7 +217,7 @@ public class OperTypeUtile implements ApplicationContextAware {
                 OperType operType = new OperType();
                 for (Integer n : navs) {
                     //遍历是否拥有权限，有权限的就加入
-                    if (n == e.getValue()) {
+                    if (e.getValue().equals(n)) {
                         operType.setOperType(e.getValue());
                         operType.setOperName(e.getName());
                         list.add(operType);
@@ -231,7 +231,7 @@ public class OperTypeUtile implements ApplicationContextAware {
                 OperType operType = new OperType();
                 for (Integer n : navs) {
                     //遍历是否拥有权限，有权限的就加入
-                    if (n == e.getValue()) {
+                    if (e.getValue().equals(n)) {
                         operType.setOperType(e.getValue());
                         operType.setOperName(e.getName());
                         list.add(operType);
@@ -245,7 +245,7 @@ public class OperTypeUtile implements ApplicationContextAware {
                 OperType operType = new OperType();
                 for (Integer n : navs) {
                     //遍历是否拥有权限，有权限的就加入
-                    if (n == e.getValue()) {
+                    if (e.getValue().equals(n)) {
                         operType.setOperType(e.getValue());
                         operType.setOperName(e.getName());
                         list.add(operType);
@@ -259,7 +259,7 @@ public class OperTypeUtile implements ApplicationContextAware {
                 OperType operType = new OperType();
                 for (Integer n : navs) {
                     //遍历是否拥有权限，有权限的就加入
-                    if (n == e.getValue()) {
+                    if (e.getValue().equals(n)) {
                         operType.setOperType(e.getValue());
                         operType.setOperName(e.getName());
                         list.add(operType);
