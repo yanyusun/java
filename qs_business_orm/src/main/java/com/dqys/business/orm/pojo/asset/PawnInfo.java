@@ -1,10 +1,8 @@
 package com.dqys.business.orm.pojo.asset;
 
-import com.dqys.core.base.BaseModel;
+import com.dqys.core.base.BusinessFlowModel;
 
-import java.io.Serializable;
-
-public class PawnInfo extends BaseModel  {
+public class PawnInfo extends BusinessFlowModel {
 
     private Integer lenderId;  // 借款人ID
     private String pawnNo;  // 编号

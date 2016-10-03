@@ -166,4 +166,9 @@ public class UserServiceUtils {
         return null;
     }
 
+    public static Integer headerStringToInt(String head){
+        String s = head.split(",")[0];
+        return Integer.valueOf(s);
+    }
+
 }

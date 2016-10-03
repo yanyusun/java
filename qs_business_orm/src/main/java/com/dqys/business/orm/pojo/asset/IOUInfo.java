@@ -1,14 +1,13 @@
 package com.dqys.business.orm.pojo.asset;
 
-import com.dqys.core.base.BaseModel;
+import com.dqys.core.base.BusinessFlowModel;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
  * 借据
  */
-public class IOUInfo extends BaseModel  {
+public class IOUInfo extends BusinessFlowModel {
 
     private String iouNo;  // 编号
     private String name;  // 名称

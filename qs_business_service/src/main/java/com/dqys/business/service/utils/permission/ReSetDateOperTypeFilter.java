@@ -23,7 +23,7 @@ public class ReSetDateOperTypeFilter extends OperTypeFilter{
     }
 
     @Override
-    public List<OperType> getPermission() {
+    public List<OperType> getPermission(List<OperType> list) {
         ObjectTypeEnum objectTypeEnum=ObjectTypeEnum.getObjectTypeEnum(ObjectType);
         switch (objectTypeEnum){
             case ASSETPACKAGE:

@@ -2,9 +2,14 @@ package com.dqys.business.service.service.impl;
 
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
 import com.dqys.auth.orm.pojo.TUserTag;
+import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
+import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
+import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
+import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.operType.OperTypeMapper;
+import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.service.OperTypeService;
@@ -15,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mkfeng on 2016/7/1.
@@ -30,6 +37,13 @@ public class OperTypeServiceImpl implements OperTypeService {
     private TUserTagMapper tUserTagMapper;
     @Autowired
     private TeammateReMapper teammateReMapper;
+
+    @Autowired
+    private IOUInfoMapper iouInfoMapper;
+    @Autowired
+    private PawnInfoMapper pawnInfoMapper;
+    @Autowired
+    private LenderInfoMapper lenderInfoMapper;
 
     @Override
     public List<OperType> selectByRoleToOperType(Integer roleId, Integer userType, Integer objectType) {

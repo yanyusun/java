@@ -93,4 +93,6 @@ public interface IOUInfoMapper {
      * @return
      */
     List<IOUInfo> selectIouInfoByObjectIds(List<Integer> iouIds);
+
+
 }

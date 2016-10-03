@@ -10,8 +10,10 @@ import java.util.List;
  */
 //// TODO: 16-10-2 后期权限控制用户自定义过滤类 
 public class DiyOpertypeFilter extends OperTypeFilter {
+
+
     @Override
-    public List<OperType> getPermission() {
+    public List<OperType> getPermission(List<OperType> list) {
         return null;
     }
 }

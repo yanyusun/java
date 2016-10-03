@@ -58,7 +58,7 @@ public interface OperTypeService {
      * @param objectType 对象类型
      * @return
      */
-    public List<OperType> getOperType(Integer roleType, Integer userType, Integer objectType, Integer objectId);
+    public List<OperType> getOperType(Integer roleType, Integer userType, Integer objectType);
 
 
     /**
@@ -70,6 +70,8 @@ public interface OperTypeService {
      * @param operType
      * @return
      */
-    public boolean checkOperType(Integer roleType, Integer userType, Integer objectType, Integer operType, Integer objectId);
+    public boolean checkOperType(Integer roleType, Integer userType, Integer objectType, Integer operType);
+
+
 
 }

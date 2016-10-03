@@ -9,5 +9,5 @@ import java.util.List;
  * Created by pan on 16-10-1.
  */
 public interface Permission {
-    public List<OperType> getUserObjectNavidOperType( Integer objectType, Integer objectId, Integer navId);
+    public List<OperType> getOperTypes( Integer objectType, Integer objectId, Integer navId);
 }
