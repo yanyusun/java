@@ -76,8 +76,4 @@ public class IOUInfoMapperImpl extends BaseDao implements IOUInfoMapper {
         return super.getSqlSession().getMapper(IOUInfoMapper.class).selectIouInfoByObjectIds(iouIds);
     }
 
-    @Override
-    public IOUInfo selectByPrimaryKey(Integer id) {
-        return super.getSqlSession().getMapper(IOUInfoMapper.class).selectByPrimaryKey(id);
-    }
 }
