@@ -14,13 +14,14 @@ public enum AssetSourceEnum {
     FOLLOW_UP(167, "录跟进"),
     ADD_COMMENT(168, "增加注释"),
 
+    AUDIT_YES(169, "审核通过"),
+    AUDIT_NO(1610, "审核不通过"),
+    PAUSE(1611, "暂停"),
+    RESTART_APPLY(1612, "重新申请"),
+    INVALID_SET_RECOVER(1613, "无效恢复"),
+    PAUSE_RECOVER(1614, "暂停恢复"),
+    OPERATION_LOG(1615, "操作日志");
 
-    //列表显示枚举
-    VIEW_OPERATION_LOG(1600, "操作日志"),
-    VIEW_ACCPET(1601,"同意接收"),
-    VIEW_REJECT(1602,"拒绝接收"),
-    VIEW_REAPPLY(1603,"重新申请")
-    ;
     private Integer value;
     private String name;
 

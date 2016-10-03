@@ -1009,7 +1009,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     }
 
     @Override
-    public Boolean verdictOrganization(Integer flowId, Integer flowType, Integer onStatus, Integer type) {
+    public Boolean verdictOrganization(Integer flowId, Integer flowType, Integer onStatus, Integer type, boolean modify) {
         boolean flag = false;
         Integer coll = 0;
         Integer lay = 0;
@@ -1050,7 +1050,9 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                     info.setOnCollection(coll);
                     info.setOnAgent(age);
                     info.setOnLawyer(lay);
-                    pawnInfoMapper.update(info);//修改抵押物的机构处置状态
+                    if (modify) {
+                        pawnInfoMapper.update(info);//修改抵押物的机构处置状态
+                    }
                 }
             } else if (flowType == ObjectTypeEnum.IOU.getValue()) {
                 IOUInfo info = iouInfoMapper.get(flowId);
@@ -1058,7 +1060,9 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                     info.setOnCollection(coll);
                     info.setOnAgent(age);
                     info.setOnLawyer(lay);
-                    iouInfoMapper.update(info);//修改借据的机构处置状态
+                    if (modify) {
+                        iouInfoMapper.update(info);//修改借据的机构处置状态
+                    }
                 }
             }
         }
@@ -1290,10 +1294,52 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             messageService.businessFlow(objectId, objectType, flowId, flowType, operation, userId, operUrl);
         }
         //进行处置机构发送短信
-        messageService.judicature(objectId, objectType, flowId, flowType, userId, operation, lawy);//司法机构
-        messageService.collectiones(objectId, objectType, flowId, flowType, userId, operation, coll);//催收机构
-        messageService.intermediary(objectId, objectType, flowId, flowType, userId, operation, agen);//市场处置
+        boolean modify = modifyOnstatus(flowId, flowType, coll, lawy, agen);
+        messageService.judicature(objectId, objectType, flowId, flowType, userId, operation, lawy, modify);//司法机构
+        messageService.collectiones(objectId, objectType, flowId, flowType, userId, operation, coll, modify);//催收机构
+        messageService.intermediary(objectId, objectType, flowId, flowType, userId, operation, agen, modify);//市场处置
         map.put("result", "yes");
+    }
+
+    /**
+     * 用于判别对处置状态是否进行修改
+     * @param flowId
+     * @param flowType
+     * @param coll     常规催收（0可以1不能）
+     * @param lawy     司法化解（0可以1不能）
+     * @param agen     市场处置（0可以1不能）
+     * @return
+     */
+    private boolean modifyOnstatus(Integer flowId, Integer flowType, Integer coll, Integer lawy, Integer agen) {
+        Integer coll_original = 0;
+        Integer lawy_original = 0;
+        Integer agen_original = 0;
+        if (flowType == ObjectTypeEnum.PAWN.getValue()) {
+            PawnInfo info = pawnInfoMapper.get(flowId);
+            coll_original = info.getOnCollection();
+            lawy_original = info.getOnLawyer();
+            agen_original = info.getOnAgent();
+        } else if (flowType == ObjectTypeEnum.IOU.getValue()) {
+            IOUInfo info = iouInfoMapper.get(flowId);
+            coll_original = info.getOnCollection();
+            lawy_original = info.getOnLawyer();
+            agen_original = info.getOnAgent();
+        }
+        if (coll == 1) {
+            coll_original = coll;
+        }
+        if (lawy == 1) {
+            lawy_original = lawy;
+        }
+        if (agen == 1) {
+            agen_original = agen;
+        }
+        //如果三个状态都是为“不能”就不进行修改
+        if (coll_original == 1 && lawy_original == 1 && agen_original == 1) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private Map teamDel(Integer userId, Integer teamUserId, Integer userTeamId, Integer status, Integer substitutionUid) {
