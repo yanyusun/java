@@ -1291,11 +1291,12 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 a = true;
             }
         }
+        boolean modify = true;
         if ((coll == 0 && !c) || (lawy == 0 && !l) || (agen == 0 && !a)) {//判断是否符合，发送给平台管理员短信
             messageService.businessFlow(objectId, objectType, flowId, flowType, operation, userId, operUrl);
+            modify = modifyOnstatus(flowId, flowType, coll, lawy, agen);//判断是否进行修改处置状态，默认可以
         }
         //进行处置机构发送短信
-        boolean modify = modifyOnstatus(flowId, flowType, coll, lawy, agen);
         messageService.judicature(objectId, objectType, flowId, flowType, userId, operation, lawy, modify);//司法机构
         messageService.collectiones(objectId, objectType, flowId, flowType, userId, operation, coll, modify);//催收机构
         messageService.intermediary(objectId, objectType, flowId, flowType, userId, operation, agen, modify);//市场处置
@@ -1304,6 +1305,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     /**
      * 用于判别对处置状态是否进行修改
+     *
      * @param flowId
      * @param flowType
      * @param coll     常规催收（0可以1不能）
