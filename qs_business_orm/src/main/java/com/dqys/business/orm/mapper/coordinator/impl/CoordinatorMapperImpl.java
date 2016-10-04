@@ -1,5 +1,6 @@
 package com.dqys.business.orm.mapper.coordinator.impl;
 
+import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
@@ -9,6 +10,7 @@ import com.dqys.business.orm.query.coordinator.ZcyListQuery;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+import sun.misc.MessageUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -100,7 +102,8 @@ public class CoordinatorMapperImpl extends BaseDao implements CoordinatorMapper 
 
     @Override
     public Map<String, Object> getUserAndCompanyByUserId(Integer userId) {
-        return super.getSqlSession().getMapper(CoordinatorMapper.class).getUserAndCompanyByUserId(userId);
+        Map<String, Object> map = super.getSqlSession().getMapper(CoordinatorMapper.class).getUserAndCompanyByUserId(userId);
+        return map;
     }
 
     @Override

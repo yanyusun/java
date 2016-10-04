@@ -236,8 +236,8 @@ public class MessageServiceImpl implements MessageService {
                             ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId));
 
                     adminContent = smsUtil.sendSms(SmsEnum.ADMIN_INVITE_RESULT_YES.getValue(), tuserInfo.getMobile(), tuserInfo.getRealName(),
-                            MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "companyName"), MessageUtils.transMapToString(oper, "realName"),
-                            MessageUtils.transMapToString(userC, "companyType"), MessageUtils.transMapToString(userC, "companyName"), MessageUtils.transMapToString(userC, "realName"),
+                            CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "companyName"), MessageUtils.transMapToString(oper, "realName"),
+                            CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(userC, "companyType")).getName(), MessageUtils.transMapToString(userC, "companyName"), MessageUtils.transMapToString(userC, "realName"),
                             ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
                             ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId));
                 } else {
