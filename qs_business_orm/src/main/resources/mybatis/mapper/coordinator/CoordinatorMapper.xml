@@ -452,7 +452,7 @@
         SELECT tut.user_type userType from t_company_team tct LEFT JOIN t_company_team_re ttr
         ON ttr.company_team_id=tct.id LEFT JOIN t_user_tag tut
         ON tut.user_id=ttr.accepter_id
-        where tct.stateflag=0 AND ttr.stateflag=0 AND tct.object_id=#{objectId} and tct.object_type=#{objectType}
+        where tct.stateflag=0 AND ttr.stateflag=0 AND ttr.status=1 AND tct.object_id=#{objectId} and tct.object_type=#{objectType}
     </select>
 
 

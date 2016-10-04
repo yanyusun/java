@@ -293,7 +293,7 @@ public class MessageServiceImpl implements MessageService {
             Map map = coordinatorMapper.getCompanyAndUser(objectId, objectType, userType);
             Map userC = coordinatorMapper.getUserAndCompanyByUserId(MessageUtils.transMapToInt(map, "userId"));//接收者
             Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);//发送者
-            if (userC != null && userId != MessageUtils.transMapToInt(map, "userId")) {//需要发送者与接收者不是同一个人
+            if (userC != null && !userId.equals(MessageUtils.transMapToInt(map, "userId"))) {//需要发送者与接收者不是同一个人
                 String content = smsUtil.sendSms(SmsEnum.FlOW_OPER.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
                         CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "companyName"),
                         MessageUtils.transMapToString(oper, "realName"),
