@@ -18,9 +18,11 @@ import java.util.List;
 public class UserObjOperTypeFilter extends OperTypeFilter {
 
     private Integer objectType;
+    private Integer objectId;
 
-    public UserObjOperTypeFilter(Integer objectType) {
+    public UserObjOperTypeFilter(Integer objectType, Integer objectId) {
         this.objectType = objectType;
+        this.objectId = objectId;
     }
 
     public UserObjOperTypeFilter() {
@@ -33,10 +35,9 @@ public class UserObjOperTypeFilter extends OperTypeFilter {
     public List<OperType> getPermission() {
         Integer roleType = RoleTypeEnum.GENERAL.getValue();
         Integer userType = UserInfoEnum.USER_TYPE_COMMON.getValue();
-        List<OperType> operTypes = operTypeService.getOperType(roleType, userType, objectType);
-        return  operTypes;
+        List<OperType> operTypes = operTypeService.getOperType(roleType, userType, objectType, objectId);
+        return operTypes;
     }
-
 
 
 }
