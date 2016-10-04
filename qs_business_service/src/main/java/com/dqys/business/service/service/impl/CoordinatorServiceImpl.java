@@ -1,5 +1,6 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
 import com.dqys.auth.orm.pojo.TUserInfo;
@@ -733,7 +734,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 Map userC = coordinatorMapper.getUserAndCompanyByUserId(rec);
                 Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);
                 String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
-                        MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "realName"),
+                        CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "realName"),
                         ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
                 String title = getMessageTitle(objectId, objectType, MessageBTEnum.BUSINESS_PAUSE.getValue());
                 messageService.add(title, content, userId, rec, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS_PAUSE.getValue(), "");//添加通知消息

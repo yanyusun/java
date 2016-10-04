@@ -103,10 +103,6 @@ public class CoordinatorMapperImpl extends BaseDao implements CoordinatorMapper 
     @Override
     public Map<String, Object> getUserAndCompanyByUserId(Integer userId) {
         Map<String, Object> map = super.getSqlSession().getMapper(CoordinatorMapper.class).getUserAndCompanyByUserId(userId);
-        if (map != null && map.get("companyType") != null) {
-            Integer companyType = (int) map.get("companyType");
-            map.put("companyType", CompanyTypeEnum.getCompanyTypeEnum(companyType));
-        }
         return map;
     }
 

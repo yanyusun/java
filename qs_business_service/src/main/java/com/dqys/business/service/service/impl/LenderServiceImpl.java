@@ -39,6 +39,7 @@ import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.asset.IouServiceUtils;
 import com.dqys.business.service.utils.asset.LenderServiceUtils;
 import com.dqys.business.service.utils.asset.PawnServiceUtils;
+import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.base.BaseSelectonDTO;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.KeyEnum;
@@ -318,12 +319,12 @@ public class LenderServiceImpl implements LenderService {
         lenderInfo.setOperator(UserSession.getCurrent().getUserId());
         String typeStr = UserSession.getCurrent().getUserType();
         UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
-        if(infoEnum != null){
-            if(UserInfoEnum.USER_TYPE_COLLECTION.getValue().equals(infoEnum.getValue())){
+        if (infoEnum != null) {
+            if (UserInfoEnum.USER_TYPE_COLLECTION.getValue().equals(infoEnum.getValue())) {
                 lenderInfo.setIsCollection(SysProperty.BOOLEAN_TRUE);
-            }else if(UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().equals(infoEnum.getValue())){
+            } else if (UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().equals(infoEnum.getValue())) {
                 lenderInfo.setIsAgent(SysProperty.BOOLEAN_TRUE);
-            }else if(UserInfoEnum.USER_TYPE_JUDICIARY.getValue().equals(infoEnum.getValue())){
+            } else if (UserInfoEnum.USER_TYPE_JUDICIARY.getValue().equals(infoEnum.getValue())) {
                 lenderInfo.setIsLawyer(SysProperty.BOOLEAN_TRUE);
             }
         }
@@ -466,10 +467,33 @@ public class LenderServiceImpl implements LenderService {
                 break;
             }
         }
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        String userType = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getUserType();
+        if (userType.indexOf(",") > 0) {
+            userType = userType.substring(0, userType.indexOf(","));
+        }
+        ObjectUserRelationQuery query = new ObjectUserRelationQuery();
+        query.setObjectType(ObjectTypeEnum.LENDER.getValue());
+        query.setObjectId(id);
+        query.setUserId(userId);
+        List<ObjectUserRelation> list = objectUserRelationMapper.list(query);
+        boolean flag = false;
+        if (list.size() > 0) {
+            ObjectUserRelation our = list.get(0);
+            if (our.getVisibleType() != null && our.getVisibleType() == 1) {
+                flag = true;
+            }
+        }
+        List<PawnInfo> pawnInfoList = new ArrayList<>();//抵押物
+        List<IOUInfo> iouList = new ArrayList<>();//借据
+        if (flag) {
+            pawnInfoList = pawnInfoMapper.pawnListByLenderId(id, userId, ObjectTypeEnum.PAWN.getValue(), MessageUtils.transStringToInt(userType));
+            iouList = iouInfoMapper.iouListByLenderId(id, userId, ObjectTypeEnum.IOU.getValue(), MessageUtils.transStringToInt(userType));
+        } else {
+            pawnInfoList = pawnInfoMapper.listByLenderId(id);
+            iouList = iouInfoMapper.listByLenderId(id);
+        }
         // 借据
-        IOUQuery iouQuery = new IOUQuery();
-        iouQuery.setLenderId(id);
-        List<IOUInfo> iouList = iouInfoMapper.queryList(iouQuery);
         List<IouDTO> iouDTOList = new ArrayList<>();
         Date date = null;
         for (IOUInfo iouInfo : iouList) {
@@ -489,10 +513,7 @@ public class LenderServiceImpl implements LenderService {
             lenderDTO.setOverdueDay(Integer.valueOf(String.valueOf(millis)));
         }
         // 抵押物
-        PawnQuery pawnQuery = new PawnQuery();
-        pawnQuery.setLenderId(id);
         List<PawnDTO> pawnDTOList = new ArrayList<>();
-        List<PawnInfo> pawnInfoList = pawnInfoMapper.queryList(pawnQuery);
         for (PawnInfo pawnInfo : pawnInfoList) {
             pawnDTOList.add(changeToDTO(pawnInfo));
         }
@@ -518,7 +539,6 @@ public class LenderServiceImpl implements LenderService {
     }
 
 
-
     @Override
     public JsonResponse listLender(Integer id) {
         if (CommonUtil.checkParam(id)) {
@@ -542,22 +562,23 @@ public class LenderServiceImpl implements LenderService {
 
     /**
      * 转化DAO为DTO
+     *
      * @param pawnInfo
      * @return
      */
-    private PawnDTO changeToDTO(PawnInfo pawnInfo){
-        if(pawnInfo != null){
+    private PawnDTO changeToDTO(PawnInfo pawnInfo) {
+        if (pawnInfo != null) {
             PawnDTO pawnDTO = PawnServiceUtils.toPawnDTO(pawnInfo);
             RelationQuery query = new RelationQuery();
             query.setPawnId(pawnInfo.getId());
             List<PiRelation> relationList = piRelationMapper.queryList(query);
             relationList.forEach(relation -> {
                 IOUInfo iouInfo = iouInfoMapper.get(relation.getIouId());
-                if(iouInfo != null){
-                    if(pawnDTO.getIouNames() == null){
+                if (iouInfo != null) {
+                    if (pawnDTO.getIouNames() == null) {
                         pawnDTO.setIouIds("" + iouInfo.getId());
                         pawnDTO.setIouNames(iouInfo.getName());
-                    }else{
+                    } else {
                         pawnDTO.setIouIds("," + iouInfo.getId());
                         pawnDTO.setIouNames("," + iouInfo.getName());
                     }
@@ -570,22 +591,23 @@ public class LenderServiceImpl implements LenderService {
 
     /**
      * 将DAO转化为DTO
+     *
      * @param iouInfo
      * @return
      */
-    public IouDTO changeToDTO(IOUInfo iouInfo){
-        if(iouInfo != null){
+    public IouDTO changeToDTO(IOUInfo iouInfo) {
+        if (iouInfo != null) {
             IouDTO iouDTO = IouServiceUtils.toIouDTO(iouInfo);
             RelationQuery relationQuery = new RelationQuery();
             relationQuery.setIouId(iouInfo.getId());
             List<PiRelation> piRelationList = piRelationMapper.queryList(relationQuery);
             piRelationList.forEach(piRelation -> {
                 PawnInfo pawnInfo = pawnInfoMapper.get(piRelation.getPawnId());
-                if(pawnInfo != null){
-                    if(iouDTO.getPawnNames() == null){
+                if (pawnInfo != null) {
+                    if (iouDTO.getPawnNames() == null) {
                         iouDTO.setPawnNames(pawnInfo.getName());
                         iouDTO.setPawnIds("" + pawnInfo.getId());
-                    }else{
+                    } else {
                         iouDTO.setPawnIds("," + pawnInfo.getId());
                         iouDTO.setPawnNames("," + pawnInfo.getName());
                     }
@@ -669,7 +691,7 @@ public class LenderServiceImpl implements LenderService {
             }
         } else if (ObjectTabEnum.apply.getValue().equals(tab)) {
             // 待申请 -- 暂未其他公司参与(只要对象的三个值都不存在1就是未参与)
-                lenderQuery.setNoTakePart(true);
+            lenderQuery.setNoTakePart(true);
 //            List<Integer> ids = companyTeamReMapper.listAssigned(ObjectTypeEnum.LENDER.getValue());
 //            if (ids != null || ids.size() > 0) {
 //                lenderQuery.setExceptIds(ids);
@@ -756,7 +778,7 @@ public class LenderServiceImpl implements LenderService {
             // 当月
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
-            if(!flag){
+            if (!flag) {
                 objectUserRelationQuery.setUserId(UserSession.getCurrent().getUserId());
             }
             Calendar calendar = Calendar.getInstance();
@@ -903,7 +925,7 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
             lenderQuery.setIsNotAsset(true);
-            if(!flag){
+            if (!flag) {
                 lenderQuery.setOperator(userInfo.getId());
             }
         } else if (ObjectTabEnum.refuse.getValue().equals(tab)) {
@@ -917,7 +939,7 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
             lenderQuery.setIsNotAsset(true);
-            if(!flag){
+            if (!flag) {
                 lenderQuery.setOperator(userInfo.getId());
             }
         } else if (ObjectTabEnum.handle.getValue().equals(tab)) {

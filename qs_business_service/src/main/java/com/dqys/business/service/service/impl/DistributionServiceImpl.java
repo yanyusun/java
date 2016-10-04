@@ -1,5 +1,6 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.CompanyDetailInfo;
@@ -1086,7 +1087,7 @@ public class DistributionServiceImpl implements DistributionService {
         Map oper = coordinatorMapper.getUserAndCompanyByUserId(businessRequestId);
         String content = smsUtil.sendSms(SmsEnum.ADD_FLOW_COMPANY.getValue(),
                 MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
-                MessageUtils.transMapToString(oper, "companyType"), MessageUtils.transMapToString(oper, "companyName"), MessageUtils.transMapToString(oper, "realName"),
+                CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "companyName"), MessageUtils.transMapToString(oper, "realName"),
                 ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
                 ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId));
         String title = coordinatorService.getMessageTitle(flowId, flowType, MessageBTEnum.COMPANY_BETWEEN.getValue());
