@@ -23,26 +23,29 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/api/company")
 public class CompanyController {
 
-    @Autowired @Qualifier("b_companyService")
+    @Autowired
+    @Qualifier("b_companyService")
     private CompanyService companyService;
     @Autowired
     private DistributionService distributionService;
 
     /**
      * 查看特定类型的公司
+     *
      * @param type 特定类型
      * @return
      */
     @RequestMapping(value = "/listCompany")
-    public JsonResponse listCompany(@RequestParam(required = false) Integer type){
+    public JsonResponse listCompany(@RequestParam(required = false) Integer type) {
         return CommonUtil.responseBack(companyService.listByType(type));
     }
 
 
     /**
      * 查看组织列表(部门|团队)
+     *
      * @param companyId 公司ID
-     * @param type 组织类型
+     * @param type      组织类型
      * @return
      */
     @RequestMapping(value = "/listOrganization")
@@ -60,6 +63,7 @@ public class CompanyController {
 
     /**
      * 新增组织(部门|团队)
+     *
      * @param organizationInsertDTO 新增组织
      * @return
      */
@@ -77,6 +81,7 @@ public class CompanyController {
 
     /**
      * 修改组织(部门|团队)
+     *
      * @param organizationInsertDTO 修改组织信息
      * @return
      */
@@ -94,6 +99,7 @@ public class CompanyController {
 
     /**
      * 删除组织(部门|团队)
+     *
      * @param id 组织ID
      * @return
      */
@@ -107,8 +113,9 @@ public class CompanyController {
 
     /**
      * 获取组织(部门|团队)
+     *
      * @param type 组织类型
-     * @param id 公司ID
+     * @param id   公司ID
      * @return
      */
     @RequestMapping(value = "/getOrganization")
@@ -125,14 +132,15 @@ public class CompanyController {
 
     /**
      * 获取该对象的分配器列表
+     *
      * @param type 对象类型
-     * @param id 对象ID
+     * @param id   对象ID
      * @return
      * @throws BusinessLogException
      */
     @RequestMapping(value = "/getDistribution")
     public JsonResponse listDistribution(@RequestParam(required = true) Integer type,
-                                        @RequestParam(required = true) Integer id) throws BusinessLogException{
+                                         @RequestParam(required = true) Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(type, id)) {
             return JsonResponseTool.success("参数错误");
         }
@@ -144,6 +152,7 @@ public class CompanyController {
 
     /**
      * 申请加入分配器
+     *
      * @param id 分配器ID
      * @return
      * @throws BusinessLogException
@@ -158,14 +167,15 @@ public class CompanyController {
 
     /**
      * 邀请加入分配器
-     * @param id 分配器ID
+     *
+     * @param id        分配器ID
      * @param companyId 被邀请公司ID
      * @return
      * @throws BusinessLogException
      */
     @RequestMapping(value = "/inviteDistribution")
     public JsonResponse inviteDistribution(@RequestParam(required = true) Integer id,
-                                           @RequestParam(required = true) Integer companyId) throws BusinessLogException{
+                                           @RequestParam(required = true) Integer companyId) throws BusinessLogException {
         if (CommonUtil.checkParam(companyId, id)) {
             return JsonResponseTool.success("参数错误");
         }
@@ -174,7 +184,8 @@ public class CompanyController {
 
     /**
      * 决定加入分配器(同意或者拒绝)
-     * @param id 分配器成员id
+     *
+     * @param id     分配器成员id
      * @param status 状态
      * @return
      * @throws BusinessLogException
@@ -185,7 +196,7 @@ public class CompanyController {
         if (CommonUtil.checkParam(id, status)) {
             return JsonResponseTool.success("参数错误");
         }
-        if(!status.equals(ObjectAcceptTypeEnum.accept.getValue())){
+        if (!status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
             // 如果不是接受状态,全部设置为拒绝
             status = ObjectAcceptTypeEnum.refuse.getValue();
         }
@@ -195,6 +206,7 @@ public class CompanyController {
 
     /**
      * 退出分配器
+     *
      * @param id 分配器成员ID
      * @return
      * @throws BusinessLogException
@@ -209,6 +221,7 @@ public class CompanyController {
 
     /**
      * 获取公司间合作关系
+     *
      * @param id 公司Id
      * @return
      */
@@ -222,12 +235,13 @@ public class CompanyController {
 
     /**
      * 根据业务类型获取公司
+     *
      * @param type 业务流转类型
      * @return
      */
     @RequestMapping(value = "/listByService")
-    public JsonResponse listCompanyByServiceType(Integer type){
-        if(type == null || type < 1){
+    public JsonResponse listCompanyByServiceType(Integer type) {
+        if (type == null || type < 1) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return JsonResponseTool.success(companyService.listCompanyByServiceType(type));
@@ -235,13 +249,14 @@ public class CompanyController {
 
     /**
      * 根据业务类型获取公司联系关系
+     *
      * @param type 业务流转类型
-     * @param id 公司ID
+     * @param id   公司ID
      * @return
      */
     @RequestMapping(value = "/listRelationByService")
-    public JsonResponse listRelationByServiceType(@RequestParam("type")Integer type, @RequestParam(required = false)Integer id){
-        if(type == null || type < 1){
+    public JsonResponse listRelationByServiceType(@RequestParam("type") Integer type, @RequestParam(required = false) Integer id) {
+        if (type == null || type < 1) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return JsonResponseTool.success(companyService.listRelationByServiceType(type, id));
@@ -249,42 +264,45 @@ public class CompanyController {
 
     /**
      * 平台为申请业务流转的公司添加业务流转伙伴接口
-     * @param type 对象类型
-     * @param id 对象ID
-     * @param distributionId 分配器ID
-     * @param businessType 业务流转类型
-     * @param companyId 公司Id
+     *
+     * @param type              对象类型
+     * @param id                对象ID
+     * @param distributionId    分配器ID
+     * @param businessType      业务流转类型
+     * @param companyId         公司Id
+     * @param businessRequestId 业务请求用户id
      * @return
      * @throws BusinessLogException
      */
     @RequestMapping(value = "/addBusinessService")
     public JsonResponse addBusinessService(@RequestParam Integer type, @RequestParam Integer id,
                                            @RequestParam Integer distributionId, @RequestParam Integer businessType,
-                                           @RequestParam Integer companyId) throws BusinessLogException{
-        if(CommonUtil.checkParam(type, id, distributionId, businessType, companyId)){
+                                           @RequestParam Integer companyId, @RequestParam Integer businessRequestId) throws BusinessLogException {
+        if (CommonUtil.checkParam(type, id, distributionId, businessType, companyId)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return distributionService.addBusinessService(type, id, distributionId, businessType, companyId);
+        return distributionService.addBusinessService(type, id, distributionId, businessType, companyId, businessRequestId);
     }
 
     /**
      * 被添加公司接受或者拒绝业务流转邀请
-     * @param type 对象类型
-     * @param id 对象ID
+     *
+     * @param type           对象类型
+     * @param id             对象ID
      * @param distributionId 分配器成员ID
-     * @param businessType 业务流转类型
-     * @param status 状态码
+     * @param businessType   业务流转类型
+     * @param status         状态码
      * @return
      * @throws BusinessLogException
      */
     @RequestMapping(value = "/designBusinessService")
     public JsonResponse designBusinessService(@RequestParam Integer type, @RequestParam Integer id,
                                               @RequestParam Integer distributionId, @RequestParam Integer businessType,
-                                              @RequestParam Integer status) throws BusinessLogException{
-        if(CommonUtil.checkParam(type, id, distributionId, businessType, status)){
+                                              @RequestParam Integer status) throws BusinessLogException {
+        if (CommonUtil.checkParam(type, id, distributionId, businessType, status)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        if(!status.equals(ObjectAcceptTypeEnum.accept.getValue())){
+        if (!status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
             // 如果不是接受状态,全部设置为拒绝
             status = ObjectAcceptTypeEnum.refuse.getValue();
         }
