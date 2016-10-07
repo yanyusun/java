@@ -30,7 +30,7 @@ public class OperTypeUtile implements ApplicationContextAware {
         redisTemplate = (RedisTemplate) applicationContext.getBean("redisTemplate");
         operTypeService = applicationContext.getBean(OperTypeService.class);
         //// TODO: 16-9-18  上线要去掉下面的注释
-//        opertype();
+       //opertype();
     }
 
     public void opertype() {

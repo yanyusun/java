@@ -62,4 +62,5 @@ public class UserSession {
     public void setIsCertified(String isCertified) {
         this.isCertified = isCertified;
     }
+
 }

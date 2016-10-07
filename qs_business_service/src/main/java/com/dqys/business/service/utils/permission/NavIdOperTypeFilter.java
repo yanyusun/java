@@ -27,7 +27,7 @@ public class NavIdOperTypeFilter extends OperTypeFilter {
         List<OperType> operTypes2= OperTypeUtile.getOperType(navId,objectType);
         for(OperType operType1:list){
             for(OperType operType2:operTypes2){
-                if(operType2.getOperType()==operType1.getOperType()){
+                if(operType2.getOperType().intValue()==operType1.getOperType().intValue()){
                     operTypes.add(operType1);
                 }
             }

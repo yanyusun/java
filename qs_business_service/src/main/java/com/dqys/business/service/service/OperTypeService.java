@@ -41,14 +41,11 @@ public interface OperTypeService {
 
     /**
      * 根据用户类型，角色id，操作类型获取对应权限;用户类型_角色id_操作类型
-     *
-     * @param roleType   角色类型
-     * @param userType   用户类型
      * @param objectType 对象类型
      * @param objectId
      * @return
      */
-    public List<OperType> getOperType(Integer roleType, Integer userType, Integer objectType,Integer objectId);
+    public List<OperType> getOperType( Integer objectType,Integer objectId);
 
     /**
      * 根据用户类型，角色id，操作类型获取对应权限;用户类型_角色id_操作类型
