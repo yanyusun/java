@@ -310,19 +310,16 @@
 
     <!--抵押物信息 userType=31 催收 userType=32 律师-->
     <select id="pawnListByLenderId" resultMap="BaseResultMap">
-        <if test="userType !=null and userType==31">
-            SELECT pawn.* FROM bt_pawn pawn LEFT JOIN object_user_relation our
-            ON pawn.id=our.object_id AND our.object_type=#{objectType,jdbcType=INTEGER}
-            WHERE pawn.stateflag=0 and pawn.lender_id=#{lenderId,jdbcType=INTEGER} AND our.user_id=#{userId,jdbcType=INTEGER}
-        </if>
-        <if test="userType !=null and userType==32">
-            SELECT pawn.* FROM bt_pawn pawn
+            (SELECT pawn.* FROM bt_pawn pawn LEFT JOIN object_user_relation our
+            ON pawn.id=our.object_id AND our.object_type=12
+            WHERE pawn.stateflag=0 and pawn.lender_id=#{lenderId,jdbcType=INTEGER} AND our.user_id=#{userId,jdbcType=INTEGER})
+        UNION
+            (SELECT pawn.* FROM bt_pawn pawn
             where pawn.stateflag=0 and pawn.lender_id=#{lenderId,jdbcType=INTEGER}
             and pawn.id IN (
             SELECT bpr.pawn_id from bt_iou iou ,object_user_relation our , bt_pi_relation bpr
-            WHERE iou.id=our.object_id AND our.object_type=#{objectType,jdbcType=INTEGER} AND our.user_id=#{userId,jdbcType=INTEGER}
-            AND bpr.iou_id=iou.id GROUP BY bpr.pawn_id )
-        </if>
+            WHERE iou.id=our.object_id AND our.object_type=12 AND our.user_id=#{userId,jdbcType=INTEGER}
+            AND bpr.iou_id=iou.id GROUP BY bpr.pawn_id ))
     </select>
 
 </mapper>

@@ -505,6 +505,9 @@ public class LenderServiceImpl implements LenderService {
                 date = iouInfo.getEndAt();
             }
         }
+        if (date == null) {
+            date = new Date();
+        }
         resultMap.put("iouDTOs", iouDTOList);
         // 获取逾期天数
         Calendar calendar = Calendar.getInstance();

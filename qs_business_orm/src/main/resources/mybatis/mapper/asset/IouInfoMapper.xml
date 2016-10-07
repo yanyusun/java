@@ -398,10 +398,10 @@
     <!--获取所有借据-->
     <select id="selectIouInfoByObjectIds" resultMap="BaseResultMap">
         SELECT * from bt_iou WHERE stateflag=0 AND
-         id IN
-         <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
-         #{id}
-         </foreach>
+        id IN
+        <foreach collection="list" item="id" index="index" open="(" separator="," close=")">
+            #{id}
+        </foreach>
         ORDER BY accrual_arrears,less_corpus
     </select>
 
@@ -420,20 +420,17 @@
 
     <!--借据信息 userType=31 催收 userType=32 律师-->
     <select id="iouListByLenderId" resultMap="BaseResultMap">
-        <if test="userType !=null and userType==31">
-            SELECT iou.* from bt_iou iou
+           ( SELECT iou.* from bt_iou iou
             WHERE iou.lender_id=#{lenderId,jdbcType=INTEGER} AND iou.stateflag=0 AND iou.id IN (
             SELECT bpr.iou_id from bt_pawn pawn ,object_user_relation our , bt_pi_relation bpr
-            WHERE pawn.id=our.object_id AND our.object_type=#{objectType,jdbcType=INTEGER} AND
+            WHERE pawn.id=our.object_id AND our.object_type=13 AND
             our.user_id=#{userId,jdbcType=INTEGER}
-            AND bpr.pawn_id=pawn.id GROUP BY bpr.iou_id )
-        </if>
-        <if test="userType !=null and userType==32">
-            SELECT iou.* from bt_iou iou LEFT JOIN object_user_relation our
-            ON our.object_id=iou.id and our.object_type= #{objectType,jdbcType=INTEGER}
+            AND bpr.pawn_id=pawn.id GROUP BY bpr.iou_id ))
+            UNION
+            (SELECT iou.* from bt_iou iou LEFT JOIN object_user_relation our
+            ON our.object_id=iou.id and our.object_type=13
             WHERE iou.stateflag=0 and our.user_id=#{userId,jdbcType=INTEGER} AND iou.lender_id=
-            #{lenderId,jdbcType=INTEGER}
-        </if>
+            #{lenderId,jdbcType=INTEGER})
     </select>
 
 </mapper>
