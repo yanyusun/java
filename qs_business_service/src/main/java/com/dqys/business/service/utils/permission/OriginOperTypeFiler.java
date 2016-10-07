@@ -15,11 +15,15 @@ public class OriginOperTypeFiler extends OperTypeFilter {
 
     @Override
     public void decorate(OperTypeFilter filter) {
-        getLastFiler(operTypePermissionFilter).decorate(filter);
+        if(operTypePermissionFilter==null){
+            operTypePermissionFilter=filter;
+        }else{
+            getLastFiler(operTypePermissionFilter).decorate(filter);
+        }
     }
 
     private OperTypeFilter getLastFiler(OperTypeFilter filter) {
-        if (filter != null) {
+        if (filter.operTypePermissionFilter != null) {
             getLastFiler(filter.operTypePermissionFilter);
         }
         return filter;
