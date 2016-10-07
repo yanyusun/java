@@ -37,7 +37,7 @@
 ## 特殊服务停启命令汇总
 * redis 用redis客户端连接实例,然后使用shutdown命令.
 * rabbitmq 命令:/sbin/service rabbitmq-server start|stop
-* git 命令:gitlab-ctl start|stop|restart
+* git 命令:gitlab-ctl start|stop|restart|status|reconfigure
 * jenkins 命令: sh /mnt/jenkins_start.sh
 
 ## 项目模块信息
