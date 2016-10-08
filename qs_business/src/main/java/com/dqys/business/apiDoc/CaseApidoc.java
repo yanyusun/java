@@ -84,6 +84,26 @@ public class CaseApidoc {
      */
 
     /**
+     * @api {post} /case/listByLender 根据借款人查询母案件信息
+     * @apiName listByLender
+     * @apiGroup case
+     * @apiParam {number} id 案件ID
+     * @apiSuccess {CaseDTO} data 案件信息
+     * @apiUse CaseDTO
+     * @apiUse CaseCourtDTO
+     */
+
+    /**
+     * @api {post} /case/listByCase 根据母案件ID查询子案件
+     * @apiName listByCase
+     * @apiGroup case
+     * @apiParam {number} id 母案件ID
+     * @apiSuccess {CaseDTO} data 案件信息
+     * @apiUse CaseDTO
+     * @apiUse CaseCourtDTO
+     */
+
+    /**
      * @apiDefine Case
      * @apiParam {number} [id] 主键ID(修改时必传,增加时可不传)
      * @apiParam {number} pawnId 抵押物ID
