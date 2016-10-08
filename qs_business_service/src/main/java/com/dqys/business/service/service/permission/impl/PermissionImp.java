@@ -9,6 +9,7 @@ import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.service.OperTypeService;
+import com.dqys.business.service.service.companyTeam.CompanyTeamService;
 import com.dqys.business.service.service.permission.Permission;
 import com.dqys.business.service.utils.permission.NavIdOperTypeFilter;
 import com.dqys.business.service.utils.permission.NotTheirOperTypeFilter;
@@ -32,7 +33,7 @@ public class PermissionImp implements Permission{
     @Autowired
     private OperTypeService operTypeService;
     @Autowired
-    private CompanyTeamMapper companyTeamMapper;
+    private CompanyTeamService companyTeamService;
     @Autowired
     private CompanyTeamReMapper companyTeamReMapper;
     @Autowired
@@ -57,7 +58,7 @@ public class PermissionImp implements Permission{
             switch (objectTypeEnum) {
                 case LENDER:
                     originOperTypeFiler.decorate(new NotTheirOperTypeFilter(
-                            companyTeamMapper, companyTeamReMapper, tUserInfoMapper, objectType, objectId));
+                            companyTeamService, companyTeamReMapper, tUserInfoMapper, objectType, objectId));
                     break;
                 case PAWN:
                 case IOU:

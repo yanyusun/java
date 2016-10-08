@@ -42,7 +42,7 @@ public class OnHandleOperTypeFilter extends OperTypeFilter {
                     }
                 }
             }
-        Integer[] iou = {130, 131, 132, 133, 134,135};
+        Integer[] iou = {130, 131, 132, 133, 134,135,1310};
         iouNotOnHandeList = new LinkedList<>();
             for (IouEnum e : IouEnum.values()) {
                 OperType operType = new OperType();
