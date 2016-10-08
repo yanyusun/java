@@ -13,6 +13,7 @@ import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.service.OperTypeService;
+import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.NoSQLWithRedisTool;
@@ -66,13 +67,11 @@ public class OperTypeServiceImpl implements OperTypeService {
     }
 
     @Override
-    public List<OperType> getOperType(Integer roleId, Integer userType, Integer objectType, Integer objectId) {
+    public List<OperType> getOperType( Integer objectType, Integer objectId) {
+        UserSession userSession = UserSession.getCurrent();
         Integer userId = UserSession.getCurrent().getUserId();
-        List<TUserTag> tags = tUserTagMapper.selectByUserId(userId);
-        if (tags.size() > 0) {
-            TUserTag tag = tags.get(0);
-            roleId = (int) tag.getRoleId();
-            userType = (int) tag.getUserType();
+        Integer roleId = UserServiceUtils.headerStringToInt(userSession.getRoleId());
+        Integer userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
             Integer flowId = objectId;
             Integer flowType = objectType;
             //对象类型为抵押物或借据，设置借款人的对象类型，协作器只能查资产包或借款人
@@ -104,7 +103,7 @@ public class OperTypeServiceImpl implements OperTypeService {
                     }
                 }
             }
-        }
+       // }
         String userId_roleId_objectId = userType + "_" + roleId + "_" + objectType;
         List<OperType> list = NoSQLWithRedisTool.getValueObject(userId_roleId_objectId) == null ? new ArrayList<>() : NoSQLWithRedisTool.getValueObject(userId_roleId_objectId);
         if (list != null && list.size() != 0) {

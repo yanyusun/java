@@ -12,23 +12,24 @@ import org.springframework.stereotype.Component;
 @Component
 public class TestA extends BaseTest{
     public static void main(String[] args) {
+        Integer a =new Integer(111);
+        Integer b =111;
 
+        System.out.println(a==111);
     }
 
     //@Autowired
     //FollowUpMessageService service;
 
-    @Autowired
-    public FollowUpMessageMapper messageMapper;
+    //@Autowired
+    //public FollowUpMessageMapper messageMapper;
     @Test
     public void p(){
-        FollowUpMessage message = new FollowUpMessage();
-        message.setTeamId(22);
-        message.setUserId(22);
-        message.setObjectId(2121);
-        message.setObjectType(22);
-        message.setLiquidateStage(12);
-        messageMapper.insert(message);
-        System.out.println("!!!!!!");
+        Integer a =111;
+        Integer b =111;
+
+        System.out.println(a==b);
     }
+
+
 }

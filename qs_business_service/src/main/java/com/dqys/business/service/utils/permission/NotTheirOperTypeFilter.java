@@ -36,12 +36,12 @@ public class NotTheirOperTypeFilter extends OperTypeFilter {
         boolean isTheir = false;
         CompanyTeam companyTeam =companyTeamMapper.getByTypeId(objectType,objecId);
         CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
-        companyTeamReQuery.setId(companyTeam.getId());
+        companyTeamReQuery.setTeamId(companyTeam.getId());
         List<CompanyTeamRe> CompanyTeamReList=companyTeamReMapper.queryList(companyTeamReQuery);
         UserSession userSession = UserSession.getCurrent();
         TUserInfo userInfo=tUserInfoMapper.selectByPrimaryKey(userSession.getUserId());
         for(CompanyTeamRe companyTeamRe:CompanyTeamReList){
-            if(companyTeamRe.getAcceptCompanyId()==userInfo.getCompanyId()&&companyTeamRe.getRoleType()==0){
+            if(companyTeamRe.getAcceptCompanyId().intValue()==userInfo.getCompanyId().intValue()&&companyTeamRe.getRoleType()==0){
                 isTheir=true;
             }
         }

@@ -165,7 +165,7 @@ public class ListButtonShowerUtil {
     public static ListButtonShowerBean getCompanyTeamBean(ListButtonShowerBean bean, boolean add, boolean apply) {
         bean.setHasCompanyTeamButton(true);
         bean.setHasCompanyTeamButtonAdd(add);
-        bean.setHasUserTeamButton(apply);
+        bean.setHasCompanyTeamButtonApply(apply);
         return bean;
     }
 
@@ -188,8 +188,8 @@ public class ListButtonShowerUtil {
 
     /**
      * 待审核
-     *
      * @param objectTypeEnum
+     *
      */
     public static void putCheck(ObjectTypeEnum objectTypeEnum) {
         //待审核 平台管理员
@@ -1108,6 +1108,5 @@ public class ListButtonShowerUtil {
         map.put(getKey(ObjectTabEnum.invalid, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
                 , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
     }
-
 
 }

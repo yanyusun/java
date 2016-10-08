@@ -69,7 +69,7 @@ public class PermissionImp implements Permission{
             }
         }
         List<OperType> operTypes = operTypeService
-                .getOperType(RoleTypeEnum.GENERAL.getValue(), UserInfoEnum.USER_TYPE_COMMON.getValue(), objectType, objectId);
+                .getOperType(objectType, objectId);
         return originOperTypeFiler.getPermission(operTypes);
     }
 }
