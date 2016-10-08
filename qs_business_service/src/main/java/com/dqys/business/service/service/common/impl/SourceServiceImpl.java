@@ -83,7 +83,7 @@ public class SourceServiceImpl implements SourceService {
             return null;
         }
         SourceInfo data = sourceInfoMapper.getByNavIdAndLenderId(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId());
-        if(data != null){
+        if(data != null){// 表示当前借款人下该分类已经存在资源
             return null;
         }
         SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO);
