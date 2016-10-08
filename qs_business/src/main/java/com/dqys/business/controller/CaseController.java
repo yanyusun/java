@@ -184,6 +184,7 @@ public class CaseController {
      * @param id
      * @return
      */
+    @RequestMapping(value = "/listByLender")
     public JsonResponse listByLender(Integer id){
         if(CommonUtil.checkParam(id)){
             return JsonResponseTool.paramErr("参数错误");
@@ -197,6 +198,7 @@ public class CaseController {
      * @param id
      * @return
      */
+    @RequestMapping(value = "/listByCase")
     public JsonResponse listByCase(Integer id){
         if(CommonUtil.checkParam(id)){
             return JsonResponseTool.paramErr("参数错误");
