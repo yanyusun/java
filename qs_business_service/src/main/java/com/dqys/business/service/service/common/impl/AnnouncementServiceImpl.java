@@ -3,6 +3,7 @@ package com.dqys.business.service.service.common.impl;
 import com.dqys.business.orm.mapper.common.AnnouncementMapper;
 import com.dqys.business.orm.pojo.common.Announcement;
 import com.dqys.business.service.service.common.AnnouncementService;
+import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -23,17 +24,17 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     private AnnouncementMapper announcementMapper;
 
     @Override
-    public Integer delete(Integer id) {
-        return announcementMapper.delete(id);
+    public JsonResponse delete(Integer id) {
+        return CommonUtil.responseBack(announcementMapper.delete(id));
     }
 
     @Override
-    public Integer insert(Announcement record) {
+    public JsonResponse insert(Announcement record) {
         Integer result = announcementMapper.insert(record);
         if(!CommonUtil.checkResult(result)){
             result = record.getId();
         }
-        return result;
+        return CommonUtil.responseBack(result);
     }
 
     @Override
@@ -42,8 +43,8 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     @Override
-    public Integer update(Announcement record) {
-        return announcementMapper.update(record);
+    public JsonResponse update(Announcement record) {
+        return CommonUtil.responseBack(announcementMapper.update(record));
     }
 
     @Override

@@ -10,8 +10,10 @@ import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
 import com.dqys.business.service.service.common.SourceService;
 import com.dqys.business.service.utils.common.SourceServiceUtls;
+import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.FileTool;
+import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -44,55 +46,55 @@ public class SourceServiceImpl implements SourceService {
     }
 
     @Override
-    public Integer addNavigation(SourceNavigation sourceNavigation) {
+    public JsonResponse addNavigation(SourceNavigation sourceNavigation) {
         if(CommonUtil.checkParam(sourceNavigation, sourceNavigation.getLenderId(), sourceNavigation.getName(),
                 sourceNavigation.getPid(), sourceNavigation.getType())){
-            return null;
+            return JsonResponseTool.paramErr("参数错误");
         }
         Integer result = sourceNavigationMapper.insert(sourceNavigation);
         if(CommonUtil.checkResult(result)){
-            return null;
+            return JsonResponseTool.failure("添加失败");
         }else{
-            return sourceNavigation.getId();
+            return JsonResponseTool.success(sourceNavigation.getId());
         }
     }
 
     @Override
-    public boolean deleteNavigation(Integer navId) {
+    public JsonResponse deleteNavigation(Integer navId) {
         // TODO 这里需要做权限校验
         if(CommonUtil.checkParam(navId)){
-            return false;
+            return JsonResponseTool.paramErr("参数错误！请确定分类列表");
         }
         SourceNavigation sourceNavigation = sourceNavigationMapper.get(navId);
         if(sourceNavigation == null || sourceNavigation.getLenderId().equals(0)){
             // 分类不存在或者该分类属于公共模块的分类
-            return false;
+            return JsonResponseTool.failure("删除失败！该分类不存在或者属于公共分类无法删除");
         }
         Integer result = sourceNavigationMapper.deleteByPrimaryKey(navId);
         if(CommonUtil.checkResult(result)){
-            return false;
+            return JsonResponseTool.failure("删除失败,请重新再试");
         }else{
-            return true;
+            return JsonResponseTool.success(null);
         }
     }
 
     @Override
-    public Integer addSource(SourceInfoDTO sourceInfoDTO) {
+    public JsonResponse addSource(SourceInfoDTO sourceInfoDTO) {
         if(CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getCode(), sourceInfoDTO.getNavId(),
                 sourceInfoDTO.getLenderId(), sourceInfoDTO.getSourceDTOList())){
-            return null;
+            return JsonResponseTool.paramErr("参数错误");
         }
         SourceInfo data = sourceInfoMapper.getByNavIdAndLenderId(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId());
         if(data != null){
-            return null;
+            return JsonResponseTool.failure("添加失败，该借款人载该分类下已经有资源信息，请修改！");
         }
         SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO);
         if(sourceInfo == null){
-            return null;
+            return JsonResponseTool.failure("参数转化失败");
         }
         Integer result = sourceInfoMapper.insert(sourceInfo);
         if(CommonUtil.checkResult(result)){
-            return null;
+            return JsonResponseTool.failure("添加失败");
         }else{
             Integer sourceInfoId = sourceInfo.getId();
             List<SourceSource> sourceList = SourceServiceUtls.toSourceSource(sourceInfoId, sourceInfoDTO);
@@ -105,7 +107,7 @@ public class SourceServiceImpl implements SourceService {
                 }
                 sourceSourceMapper.insert(sourceSource);
             });
-            return sourceInfoId;
+            return JsonResponseTool.success(sourceInfoId);
         }
     }
 
@@ -124,14 +126,14 @@ public class SourceServiceImpl implements SourceService {
     }
 
     @Override
-    public Integer updateSource(SourceInfoDTO sourceInfoDTO) {
+    public JsonResponse updateSource(SourceInfoDTO sourceInfoDTO) {
         if(CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getId(), sourceInfoDTO.getSourceDTOList())){
-            return null;
+            return JsonResponseTool.paramErr("参数错误");
         }
         boolean flag = false; // 判断是否有做修改
         SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO);
         if(sourceInfo == null){
-            return null;
+            return JsonResponseTool.failure("参数转化失败，请重新再试");
         }
         Integer update = sourceInfoMapper.update(sourceInfo);
         if(!CommonUtil.checkResult(update)){
@@ -184,8 +186,8 @@ public class SourceServiceImpl implements SourceService {
         }
         if(!flag){
             // 没有做任何修改
-            return null;
+            return JsonResponseTool.failure("没有改动");
         }
-        return sourceInfo.getId();
+        return JsonResponseTool.success(sourceInfo.getId());
     }
 }

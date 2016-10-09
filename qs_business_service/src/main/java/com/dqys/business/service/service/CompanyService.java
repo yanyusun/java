@@ -1,13 +1,9 @@
 package com.dqys.business.service.service;
 
-import com.dqys.business.orm.pojo.company.Organization;
-import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
 import com.dqys.business.service.dto.company.CompanyDTO;
 import com.dqys.business.service.dto.company.CompanyRelationDTO;
-import com.dqys.business.service.dto.company.DistributionDTO;
 import com.dqys.business.service.dto.company.OrganizationInsertDTO;
-import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.core.model.JsonResponse;
 
 import java.util.List;
@@ -35,6 +31,7 @@ public interface CompanyService {
 
     /**
      * 根据用户ID获取数据
+     *
      * @param userId
      * @return
      */
@@ -42,6 +39,7 @@ public interface CompanyService {
 
     /**
      * 新增组织
+     *
      * @param organizationInsertDTO
      * @return
      */
@@ -49,6 +47,7 @@ public interface CompanyService {
 
     /**
      * 删除组织
+     *
      * @param id
      * @return
      */
@@ -56,6 +55,7 @@ public interface CompanyService {
 
     /**
      * 修改组织
+     *
      * @param organizationInsertDTO
      * @return
      */
@@ -63,6 +63,7 @@ public interface CompanyService {
 
     /**
      * ID获取组织
+     *
      * @param id
      * @return
      */
@@ -70,6 +71,7 @@ public interface CompanyService {
 
     /**
      * 遍历该公司的所有合作关系
+     *
      * @param companyId
      * @return
      */
@@ -77,6 +79,7 @@ public interface CompanyService {
 
     /**
      * 通过公司类型获取公司
+     *
      * @param typeId
      * @return
      */
@@ -84,6 +87,7 @@ public interface CompanyService {
 
     /**
      * 查询业务流转类型下的所有公司
+     *
      * @param type
      * @return
      */
@@ -91,6 +95,7 @@ public interface CompanyService {
 
     /**
      * 查询业务流转类型下的合作公司
+     *
      * @param type
      * @return
      */

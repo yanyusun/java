@@ -3,6 +3,7 @@ package com.dqys.business.service.service.common;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
+import com.dqys.core.model.JsonResponse;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public interface SourceService {
      * @param sourceNavigation
      * @return
      */
-    Integer addNavigation(SourceNavigation sourceNavigation);
+    JsonResponse addNavigation(SourceNavigation sourceNavigation);
 
     /**
      * 删除一个分类列表
@@ -36,7 +37,7 @@ public interface SourceService {
      * @param navId
      * @return
      */
-    boolean deleteNavigation(Integer navId);
+    JsonResponse deleteNavigation(Integer navId);
 
     /**
      * 新增一条资源数据
@@ -44,7 +45,7 @@ public interface SourceService {
      * @param sourceInfoDTO
      * @return
      */
-    Integer addSource(SourceInfoDTO sourceInfoDTO);
+    JsonResponse addSource(SourceInfoDTO sourceInfoDTO);
 
     /**
      * 根据分类列表获取数据
@@ -61,6 +62,6 @@ public interface SourceService {
      * @param sourceInfoDTO
      * @return
      */
-    Integer updateSource(SourceInfoDTO sourceInfoDTO);
+    JsonResponse updateSource(SourceInfoDTO sourceInfoDTO);
 
 }

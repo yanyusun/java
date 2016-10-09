@@ -45,7 +45,7 @@ public class AnnouncementController {
                 announcement.getCover(), announcement.getIsCover())){
             return JsonResponseTool.paramErr("参数错误");
         }
-        return CommonUtil.responseBack(amService.insert(announcement));
+        return amService.insert(announcement);
     }
 
     /**
@@ -58,7 +58,7 @@ public class AnnouncementController {
         if(CommonUtil.checkParam(id)){
             return JsonResponseTool.paramErr("参数错误");
         }
-        return CommonUtil.responseBack(amService.delete(id));
+        return amService.delete(id);
     }
 
     /**

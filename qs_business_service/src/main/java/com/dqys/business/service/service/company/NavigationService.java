@@ -3,6 +3,7 @@ package com.dqys.business.service.service.company;
 import com.dqys.business.orm.pojo.company.Navigation;
 import com.dqys.business.orm.query.company.NavigationQuery;
 import com.dqys.business.service.dto.company.NavigationDTO;
+import com.dqys.core.model.JsonResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,14 +19,14 @@ public interface NavigationService {
      * @param id
      * @return
      */
-    Integer deleteByPrimaryKey(Integer id);
+    JsonResponse deleteByPrimaryKey(Integer id);
 
     /**
      * 新增
      * @param record
      * @return
      */
-    Integer insert(Navigation record);
+    JsonResponse insert(Navigation record);
 
     /**
      * 根据Id获取
@@ -39,7 +40,7 @@ public interface NavigationService {
      * @param record
      * @return
      */
-    Integer update(Navigation record);
+    JsonResponse update(Navigation record);
 
     /**
      * 根据父级Id查询子项

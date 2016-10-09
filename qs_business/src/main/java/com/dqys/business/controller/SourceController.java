@@ -21,6 +21,7 @@ public class SourceController {
 
     /**
      * 分类列表
+     *
      * @param lenderId
      * @param type
      * @return
@@ -36,6 +37,7 @@ public class SourceController {
 
     /**
      * 增加分类
+     *
      * @param sourceNavigation
      * @return
      */
@@ -45,16 +47,12 @@ public class SourceController {
                 sourceNavigation.getName())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer result = sourceService.addNavigation(sourceNavigation);
-        if(CommonUtil.checkResult(result)){
-            return JsonResponseTool.failure("添加失败");
-        }else{
-            return JsonResponseTool.success(result);
-        }
+        return sourceService.addNavigation(sourceNavigation);
     }
 
     /**
      * 删除分类
+     *
      * @param id
      * @return
      */
@@ -63,15 +61,12 @@ public class SourceController {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        if(sourceService.deleteNavigation(id)){
-            return JsonResponseTool.success(null);
-        }else{
-            return JsonResponseTool.failure("删除失败");
-        }
+        return sourceService.deleteNavigation(id);
     }
 
     /**
      * 增加资源
+     *
      * @param sourceInfoDTO
      * @return
      */
@@ -81,22 +76,18 @@ public class SourceController {
                 sourceInfoDTO.getCode())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer result = sourceService.addSource(sourceInfoDTO);
-        if(CommonUtil.checkResult(result)){
-            return JsonResponseTool.failure("添加失败");
-        }else{
-            return JsonResponseTool.success(result);
-        }
+        return sourceService.addSource(sourceInfoDTO);
     }
 
     /**
      * 获取资源信息
+     *
      * @param lenderId
      * @param navId
      * @return
      */
     @RequestMapping(value = "/get")
-        public JsonResponse get(@RequestParam Integer lenderId, @RequestParam Integer navId) {
+    public JsonResponse get(@RequestParam Integer lenderId, @RequestParam Integer navId) {
         if (CommonUtil.checkParam(navId, lenderId)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -105,6 +96,7 @@ public class SourceController {
 
     /**
      * 修改资源信息
+     *
      * @param sourceInfoDTO
      * @return
      */
@@ -114,15 +106,8 @@ public class SourceController {
                 sourceInfoDTO.getCode())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer result = sourceService.updateSource(sourceInfoDTO);
-        if(CommonUtil.checkResult(result)){
-            return JsonResponseTool.failure("修改失败");
-        }else{
-            return JsonResponseTool.success(result);
-        }
+        return sourceService.updateSource(sourceInfoDTO);
     }
-
-
 
 
 }

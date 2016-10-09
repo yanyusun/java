@@ -20,7 +20,10 @@ import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.cases.CaseService;
 import com.dqys.business.service.utils.cases.CaseServiceUtils;
 import com.dqys.core.base.BaseSelectonDTO;
+import com.dqys.core.constant.ResponseCodeEnum;
+import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
+import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -51,38 +54,38 @@ public class CaseServiceImpl implements CaseService {
     private BusinessLogService businessLogService;
 
     @Override
-    public Integer deleteByPrimaryKey_tx(Integer id) throws BusinessLogException {
+    public JsonResponse deleteByPrimaryKey_tx(Integer id) throws BusinessLogException {
         Integer result = caseInfoMapper.deleteByPrimaryKey(id);
         if (CommonUtil.checkResult(result)) {
-            return null;
+            return JsonResponseTool.failure("删除失败");
         } else {
             businessLogService.add(id, ObjectTypeEnum.CASE.getValue(), ObjectLogEnum.delete.getValue(),
                     "", "", 0, 0);
-            return result;
+            return JsonResponseTool.success(result);
         }
     }
 
     @Override
-    public Integer add_tx(CaseDTO caseDTO) throws BusinessLogException {
+    public JsonResponse add_tx(CaseDTO caseDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(caseDTO, caseDTO.getIouIds(), caseDTO.getPawnId(), caseDTO.getCourtDTOList())) {
-            return null;
+            return JsonResponseTool.paramErr("参数错误");
         }
         // 案件基础信息
         CaseInfo caseInfo = CaseServiceUtils.toCaseInfo(caseDTO);
         if (caseInfo == null) {
-            return null;
+            return JsonResponseTool.paramErr("参数转化错误，请重新再试！");
         }
         // 抵押物信息
         PawnInfo pawnInfo = pawnInfoMapper.get(caseDTO.getPawnId());
         if (CommonUtil.checkParam(pawnInfo)) {
-            return null;
+            return JsonResponseTool.paramErr("参数错误，请检查抵押物关联正确性");
         }
         // 创建案件的编号
         caseInfo.setCaseNo(RandomUtil.getCode(RandomUtil.CASE_CODE));
         // 增加案件基础信息
         Integer result = caseInfoMapper.insert(caseInfo);
         if (CommonUtil.checkResult(result)) {
-            return null;
+            return JsonResponseTool.failure("增加失败");
         }
         Integer caseId = caseInfo.getId();
         // 法院信息
@@ -92,7 +95,7 @@ public class CaseServiceImpl implements CaseService {
             Integer courtAdd = caseCourtMapper.insert(caseCourt);
             if (CommonUtil.checkParam(courtAdd)) {
                 // 增加法院信息失败
-                return null;
+                return JsonResponseTool.failure("增加关联法院信息失败");
             }
         }
 
@@ -116,22 +119,22 @@ public class CaseServiceImpl implements CaseService {
         }
         // 增加操作记录
         businessLogService.add(caseId, ObjectTypeEnum.CASE.getValue(), ObjectLogEnum.add.getValue(), "", "", 0, 0);
-        return caseId;
+        return JsonResponseTool.success(caseId);
     }
 
     @Override
-    public Integer listAdd(CaseDTOList caseDTOList) throws BusinessLogException {
+    public JsonResponse listAdd(CaseDTOList caseDTOList) throws BusinessLogException {
         if (CommonUtil.checkParam(caseDTOList, caseDTOList.getCaseDTOList())
                 || caseDTOList.getCaseDTOList().size() == 0) {
-            return null;
+            return JsonResponseTool.paramErr("参数错误");
         }
         for (CaseDTO caseDTO : caseDTOList.getCaseDTOList()) {
-            Integer add = add_tx(caseDTO);
-            if (add == null) {
-                return null;
+            JsonResponse add = add_tx(caseDTO);
+            if (!add.getCode().equals(ResponseCodeEnum.SUCCESS.getValue())) {
+                return JsonResponseTool.failure("添加失败");
             }
         }
-        return 1;
+        return JsonResponseTool.success(null);
     }
 
     @Override
@@ -148,19 +151,19 @@ public class CaseServiceImpl implements CaseService {
     }
 
     @Override
-    public Integer update_tx(CaseDTO caseDTO) throws BusinessLogException {
+    public JsonResponse update_tx(CaseDTO caseDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(caseDTO, caseDTO.getIouIds(), caseDTO.getPawnId(), caseDTO.getCourtDTOList(),
                 caseDTO.getId())) {
-            return null;
+            return JsonResponseTool.paramErr("参数错误");
         }
         // 案件基础信息
         CaseInfo caseInfo = CaseServiceUtils.toCaseInfo(caseDTO);
         if (caseInfo == null) {
-            return null;
+            return JsonResponseTool.paramErr("参数转化错误");
         }
         CaseInfo caseInfo1 = caseInfoMapper.get(caseDTO.getId());
         if (CommonUtil.checkParam(caseInfo1)) {
-            return null;
+            return JsonResponseTool.paramErr("参数错误，案件信息未找到");
         }
         Integer result = caseInfoMapper.update(caseInfo);
         if (!CommonUtil.checkResult(result)) {
@@ -225,7 +228,7 @@ public class CaseServiceImpl implements CaseService {
         }
         // 增加操作记录
         businessLogService.add(caseId, ObjectTypeEnum.CASE.getValue(), ObjectLogEnum.update.getValue(), "", "", 0, 0);
-        return caseId;
+        return JsonResponseTool.success(caseId);
     }
 
     @Override
