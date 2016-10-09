@@ -207,7 +207,11 @@ public class RepayController {
         try {
             Integer userId = UserSession.getCurrent().getUserId();
             map = repayService.repayMoney(userId, objectId, objectType, repayType, repayWay, money, remark, file);
-            return JsonResponseTool.success(map);
+            if("yes".equals(MessageUtils.transMapToString(map,"result"))){
+                return JsonResponseTool.success(map);
+            }else{
+                return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+            }
         } catch (Exception e) {
             map.put("result", "exception");
             return JsonResponseTool.serverErr();
