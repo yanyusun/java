@@ -3,6 +3,7 @@ package com.dqys.auth.service.facade;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.service.constant.MailVerifyTypeEnum;
 import com.dqys.auth.service.dto.UserDTO;
+import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.ServiceResult;
 
 /**
@@ -94,5 +95,17 @@ public interface UserService {
      * @return
      */
     ServiceResult<TUserInfo> registerAdmin_tx(Integer userType, TUserInfo tUserInfo);
+
+    /**
+     * 完善公司以及管理人员信息
+     * @param userId
+     * @param name
+     * @param introduction
+     * @param province
+     * @param city
+     * @param district
+     * @return
+     */
+    JsonResponse registerStep5(Integer userId, String name, String introduction, Integer province, Integer city, Integer district);
 
 }
