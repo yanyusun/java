@@ -4,7 +4,7 @@ package com.dqys.wms.constant;
  * Created by mkfeng on 2016/8/29.
  */
 public enum MqClientEnum {
-    EMAIL_URL("http://rs.iqingsou.com/typeChoose/");//邮箱确认网址
+    EMAIL_URL("http://www.iqingsou.com/typeChoose/");//邮箱确认网址
     private String name;
 
     public String getName() {
