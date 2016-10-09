@@ -85,7 +85,11 @@ public class RepayServiceImpl implements RepayService {
         } catch (IOException e) {
             throw new UnexpectedRollbackException("保存附件异常");
         }
-        businessLogService.add(objectId, ObjectTypeEnum.IOU.getValue(), IouEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
+        if (objectType == ObjectTypeEnum.IOU.getValue()) {
+            businessLogService.add(objectId, ObjectTypeEnum.IOU.getValue(), IouEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
+        } else if (objectType == ObjectTypeEnum.PAWN.getValue()) {
+            businessLogService.add(objectId, ObjectTypeEnum.PAWN.getValue(), IouEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
+        }
         Map map = new HashMap<>();
         List<IOUInfo> ious = new ArrayList<>();
         ious = getIouInfos(objectId, objectType, ious);//根据对象类型获取所有借据
