@@ -3,6 +3,7 @@ package com.dqys.business.service.service.cases;
 import com.dqys.business.service.dto.cases.CaseDTO;
 import com.dqys.business.service.dto.cases.CaseDTOList;
 import com.dqys.business.service.exception.bean.BusinessLogException;
+import com.dqys.core.model.JsonResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface CaseService {
      * @param id
      * @return
      */
-    Integer deleteByPrimaryKey_tx(Integer id) throws BusinessLogException;
+    JsonResponse deleteByPrimaryKey_tx(Integer id) throws BusinessLogException;
 
     /**
      * 增加新案件
@@ -26,7 +27,7 @@ public interface CaseService {
      * @param caseDTO
      * @return
      */
-    Integer add_tx(CaseDTO caseDTO) throws BusinessLogException;
+    JsonResponse add_tx(CaseDTO caseDTO) throws BusinessLogException;
 
     /**
      * 获取案件
@@ -42,7 +43,7 @@ public interface CaseService {
      * @param caseDTO
      * @return
      */
-    Integer update_tx(CaseDTO caseDTO) throws BusinessLogException;
+    JsonResponse update_tx(CaseDTO caseDTO) throws BusinessLogException;
 
 
     /**
@@ -64,6 +65,7 @@ public interface CaseService {
 
     /**
      * 根据借款人查询全部的案件信息
+     *
      * @param id
      * @return
      */
@@ -88,6 +90,7 @@ public interface CaseService {
 
     /**
      * 根据母案件查询子案件
+     *
      * @param id
      * @return
      */
@@ -99,6 +102,6 @@ public interface CaseService {
      * @param caseDTOList
      * @return
      */
-    Integer listAdd(CaseDTOList caseDTOList) throws BusinessLogException;
+    JsonResponse listAdd(CaseDTOList caseDTOList) throws BusinessLogException;
 
 }

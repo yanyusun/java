@@ -46,12 +46,7 @@ public class NavigationController {
         if (CommonUtil.checkParam(navigation, navigation.getValue(), navigation.getName())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer result = navigationService.insert(navigation);
-        if (CommonUtil.checkParam(result)) {
-            return JsonResponseTool.failure("增加失败");
-        } else {
-            return JsonResponseTool.success(result);
-        }
+        return navigationService.insert(navigation);
     }
 
     /**
@@ -65,12 +60,7 @@ public class NavigationController {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer result = navigationService.deleteByPrimaryKey(id);
-        if (CommonUtil.checkParam(result)) {
-            return JsonResponseTool.failure("删除失败");
-        } else {
-            return JsonResponseTool.success(result);
-        }
+        return navigationService.deleteByPrimaryKey(id);
     }
 
     /**
@@ -84,12 +74,7 @@ public class NavigationController {
         if (CommonUtil.checkParam(navigation, navigation.getId(), navigation.getName())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer result = navigationService.update(navigation);
-        if (CommonUtil.checkParam(result)) {
-            return JsonResponseTool.failure("修改失败");
-        } else {
-            return JsonResponseTool.success(result);
-        }
+        return navigationService.update(navigation);
     }
 
     /**

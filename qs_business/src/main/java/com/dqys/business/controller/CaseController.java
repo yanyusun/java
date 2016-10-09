@@ -38,12 +38,7 @@ public class CaseController {
                 caseDTO.getCourtDTOList(), caseDTO.getIouIds())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer result = caseService.add_tx(caseDTO);
-        if (CommonUtil.checkResult(result)) {
-            return JsonResponseTool.failure("增加失败");
-        } else {
-            return JsonResponseTool.success(result);
-        }
+        return caseService.add_tx(caseDTO);
     }
 
 
@@ -59,12 +54,7 @@ public class CaseController {
         if (CommonUtil.checkParam(caseDTOList) || caseDTOList.getCaseDTOList().size() == 0) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer result = caseService.listAdd(caseDTOList);
-        if (CommonUtil.checkResult(result)) {
-            return JsonResponseTool.failure("增加失败");
-        } else {
-            return JsonResponseTool.success(null);
-        }
+        return caseService.listAdd(caseDTOList);
     }
 
     /**
@@ -83,12 +73,7 @@ public class CaseController {
                 caseDTO.getCourtDTOList(), caseDTO.getIouIds(), caseDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        Integer result = caseService.update_tx(caseDTO);
-        if (CommonUtil.checkResult(result)) {
-            return JsonResponseTool.failure("修改失败");
-        } else {
-            return JsonResponseTool.success(caseDTO.getId());
-        }
+        return caseService.update_tx(caseDTO);
     }
 
     /**
@@ -171,12 +156,7 @@ public class CaseController {
         }
         caseDTO.setType("1"); // 子类型
         caseDTO.setpId(id); // 父级类型ID
-        Integer result = caseService.add_tx(caseDTO);
-        if (CommonUtil.checkResult(result)) {
-            return JsonResponseTool.failure("增加失败");
-        } else {
-            return JsonResponseTool.success(result);
-        }
+        return caseService.add_tx(caseDTO);
     }
 
     /**

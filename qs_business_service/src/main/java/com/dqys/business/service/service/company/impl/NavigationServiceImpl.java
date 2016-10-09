@@ -6,7 +6,9 @@ import com.dqys.business.orm.query.company.NavigationQuery;
 import com.dqys.business.service.dto.company.NavigationDTO;
 import com.dqys.business.service.service.company.NavigationService;
 import com.dqys.business.service.utils.company.NavigationServiceUtils;
+import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
+import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -24,23 +26,23 @@ public class NavigationServiceImpl implements NavigationService {
     private NavigationMapper navigationMapper;
 
     @Override
-    public Integer deleteByPrimaryKey(Integer id) {
+    public JsonResponse deleteByPrimaryKey(Integer id) {
         if(CommonUtil.checkParam(id)){
-            return null;
+            return JsonResponseTool.paramErr("参数错误");
         }
-        return navigationMapper.deleteByPrimaryKey(id);
+        return CommonUtil.responseBack(navigationMapper.deleteByPrimaryKey(id));
     }
 
     @Override
-    public Integer insert(Navigation record) {
+    public JsonResponse insert(Navigation record) {
         if(CommonUtil.checkParam(record, record.getName(), record.getValue())){
-            return null;
+            return JsonResponseTool.paramErr("参数错误");
         }
         Integer result = navigationMapper.insert(record);
         if(CommonUtil.checkResult(result)){
-            return null;
+            return JsonResponseTool.failure("添加失败");
         }else{
-            return record.getId();
+            return JsonResponseTool.success(record.getId());
         }
     }
 
@@ -53,11 +55,11 @@ public class NavigationServiceImpl implements NavigationService {
     }
 
     @Override
-    public Integer update(Navigation record) {
+    public JsonResponse update(Navigation record) {
         if(CommonUtil.checkParam(record, record.getId())){
-            return null;
+            return JsonResponseTool.paramErr("参数错误");
         }
-        return navigationMapper.update(record);
+        return CommonUtil.responseBack(navigationMapper.update(record));
     }
 
     @Override

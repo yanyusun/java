@@ -1,6 +1,7 @@
 package com.dqys.business.service.service.common;
 
 import com.dqys.business.orm.pojo.common.Announcement;
+import com.dqys.core.model.JsonResponse;
 
 import java.util.List;
 
@@ -14,14 +15,14 @@ public interface AnnouncementService {
      * @param id
      * @return
      */
-    Integer delete(Integer id);
+    JsonResponse delete(Integer id);
 
     /**
      * 新增
      * @param record
      * @return
      */
-    Integer insert(Announcement record);
+    JsonResponse insert(Announcement record);
 
     /**
      * 根据ID获取
@@ -35,7 +36,7 @@ public interface AnnouncementService {
      * @param record
      * @return
      */
-    Integer update(Announcement record);
+    JsonResponse update(Announcement record);
 
     /**
      * 根据用户信息查询通告
