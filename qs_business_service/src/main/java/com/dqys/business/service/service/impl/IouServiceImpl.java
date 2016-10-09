@@ -79,17 +79,17 @@ public class IouServiceImpl implements IouService {
         }
         IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
         iouInfo.setIouNo(RandomUtil.getCode(RandomUtil.IOU_CODE));
-        String typeStr = UserSession.getCurrent().getUserType();
-        UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
-        if(infoEnum != null){
-            if(UserInfoEnum.USER_TYPE_COLLECTION.getValue().equals(infoEnum.getValue())){
-                iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
-            }else if(UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().equals(infoEnum.getValue())){
-                iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
-            }else if(UserInfoEnum.USER_TYPE_JUDICIARY.getValue().equals(infoEnum.getValue())){
-                iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
-            }
-        }
+//        String typeStr = UserSession.getCurrent().getUserType();
+//        UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
+//        if(infoEnum != null){
+//            if(UserInfoEnum.USER_TYPE_COLLECTION.getValue().equals(infoEnum.getValue())){
+//                iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+//            }else if(UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().equals(infoEnum.getValue())){
+//                iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+//            }else if(UserInfoEnum.USER_TYPE_JUDICIARY.getValue().equals(infoEnum.getValue())){
+//                iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+//            }
+//        }
 
         Integer iouResult = iouInfoMapper.insert(iouInfo);
         if(!CommonUtil.checkResult(iouResult)){
