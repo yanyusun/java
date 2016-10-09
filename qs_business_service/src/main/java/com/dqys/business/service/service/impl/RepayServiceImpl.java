@@ -85,9 +85,9 @@ public class RepayServiceImpl implements RepayService {
         } catch (IOException e) {
             throw new UnexpectedRollbackException("保存附件异常");
         }
-        if (objectType == ObjectTypeEnum.IOU.getValue()) {
+        if (objectType == RepayEnum.OBJECT_IOU.getValue()) {
             businessLogService.add(objectId, ObjectTypeEnum.IOU.getValue(), IouEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
-        } else if (objectType == ObjectTypeEnum.PAWN.getValue()) {
+        } else if (objectType == RepayEnum.OBJECT_PAWN.getValue()) {
             businessLogService.add(objectId, ObjectTypeEnum.PAWN.getValue(), IouEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
         }
         Map map = new HashMap<>();
@@ -295,6 +295,7 @@ public class RepayServiceImpl implements RepayService {
     private Map getMap(Map map, BigDecimal paTotal) {
         map.put("result", "money_oversize");
         map.put("repayMoney", paTotal.doubleValue());
+        map.put("msg", "最高可还："+paTotal.doubleValue()+"元");
         return map;
     }
 
