@@ -310,7 +310,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("result", "no");
             return map;
         }
-        delRepetitionUserTeam(userTeam);//重新查询下，避免重复多条相同协作器
+//        delRepetitionUserTeam(userTeam);//重新查询下，避免重复多条相同协作器
         Map userAndCompany = coordinatorMapper.getUserAndCompanyByUserId(userId);
         for (Integer uid : userIds) {
             Integer flag = 0;
