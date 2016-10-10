@@ -163,4 +163,12 @@ public interface MessageService {
      */
     String collectiones(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, boolean modify);
 
+    /**
+     * 设置消息的操作状态
+     *
+     * @param id
+     * @param status
+     * @return
+     */
+    Map seOper(Integer id, Integer status);
 }

@@ -4,34 +4,39 @@
 
     <sql id="WHERE_QUERY">
         <where>
-            t.status!=2
+            status!=2
             <if test="type !=null">
-                and t.type=#{type}
+                and type=#{type}
             </if>
             <if test="status !=null">
-                and t.status=#{status}
+                and status=#{status}
             </if>
             <if test="receiveId !=null">
-                and t.receive_id=#{receiveId}
+                and receive_id=#{receiveId}
             </if>
         </where>
     </sql>
+    <sql id="QUERY_ALL">
+         id,content,label,receive_id receiveId ,sender_id senderId
+        ,status ,title,type,DATE_FORMAT( send_time,'%Y-%m-%d') sendTime,oper_url operUrl
+        ,business_type businessType,oper_status operStatus
+    </sql>
+
     <!--查询记录数量-->
     <select id="selectCount" parameterType="com.dqys.business.orm.pojo.message.Message"
             resultType="int">
         SELECT count(*) amount
-        from t_message t
+        from t_message
         <include refid="WHERE_QUERY"/>
     </select>
     <!--分页查询列表-->
     <select id="selectByMessage" parameterType="com.dqys.business.orm.pojo.message.Message"
             resultType="com.dqys.business.orm.pojo.message.Message">
-        SELECT t.id,t.content,t.label,t.receive_id receiveId ,t.sender_id senderId
-        ,t.status ,t.title,t.type,DATE_FORMAT( t.send_time,'%Y-%m-%d') sendTime,t.oper_url operUrl
-        ,t.business_type businessType
-        from t_message t
+        SELECT
+        <include refid="QUERY_ALL"/>
+        from t_message
         <include refid="WHERE_QUERY"/>
-        ORDER BY t.send_time DESC
+        ORDER BY send_time DESC
         LIMIT #{startPageNum},#{pageSize}
     </select>
     <!--标记为已读-->
@@ -114,5 +119,45 @@
         </trim>
     </insert>
 
+    <select id="get" resultType="com.dqys.business.orm.pojo.message.Message" parameterType="int">
+        SELECT
+        <include refid="QUERY_ALL"/>
+        FROM t_message
+        WHERE id=#{id,jdbcType=INTEGER}
+    </select>
+
+    <update id="update" parameterType="com.dqys.business.orm.pojo.message.Message">
+        UPDATE t_message
+        <trim prefix=" SET " suffixOverrides=",">
+            <if test="title !=null">
+                title=#{title},
+            </if>
+            <if test="content !=null">
+                content=#{content},
+            </if>
+            <if test="senderId !=null">
+                sender_id=#{senderId},0
+            </if>
+            <if test="receiveId !=null">
+                receive_id=#{receiveId},
+            </if>
+            <if test="label !=null">
+                label=#{label},
+            </if>
+            <if test="type !=null">
+                type=#{type},
+            </if>
+            <if test="businessType !=null">
+                business_type=#{businessType},
+            </if>
+            <if test="operUrl !=null">
+                oper_url=#{operUrl},
+            </if>
+            <if test="operStatus !=null">
+                oper_status=#{operStatus},
+            </if>
+        </trim>
+        WHERE id=#{id}
+    </update>
 
 </mapper>

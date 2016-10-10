@@ -30,6 +30,7 @@ import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -283,6 +284,21 @@ public class MessageServiceImpl implements MessageService {
             return "yes";
         }
         return "no";
+    }
+
+    @Override
+    public Map seOper(Integer id, Integer status) {
+        Map map = new HashMap<>();
+        map.put("result", "no");
+        Message message = messageMapper.get(id);
+        if (message == null) {
+            map.put("msg", "查询消息记录有误");
+        } else {
+            message.setOperStatus(status);
+            messageMapper.update(message);
+            map.put("result", "yes");
+        }
+        return map;
     }
 
     private boolean setJiGou(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, Integer userType, boolean modify) {

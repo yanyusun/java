@@ -140,5 +140,27 @@ public class MessageController {
         }
     }
 
+    /**
+     * @api {post} message/setOper 修改操作状态
+     * @apiParam {int} id 消息id
+     * @apiParam {int} status 操作状态（0默认未操作1同意2拒绝）
+     * @apiSampleRequest message/setOper
+     * @apiGroup Message
+     * @apiName message/setOper
+     */
+    @RequestMapping("/setOper")
+    @ResponseBody
+    public JsonResponse setOper(@RequestParam("id") Integer id, @RequestParam Integer status) {
+        if (status != 0 && status != 1 && status != 2) {
+            return JsonResponseTool.paramErr("操作状态有误");
+        }
+        Map map = messageService.seOper(id, status);
+        if ("yes".equals(MessageUtils.transMapToString(map, "result"))) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+        }
+    }
+
 
 }

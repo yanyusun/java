@@ -20,6 +20,15 @@ public class Message extends BaseQuery implements Serializable {
     private Integer status;//int(2) NOT NULL COMMENT '消息状态(0未读1已读2删除)',
     private Integer businessType;//int(2) NOT NULL COMMENT '业务类型：具体就看MessageBTEnum枚举'',
     private String operUrl;//int(2) NOT NULL COMMENT '操作地址'',
+    private Integer operStatus;//int(2) NOT NULL COMMENT '操作状态(0未操作1已同意2未同意)',
+
+    public Integer getOperStatus() {
+        return operStatus;
+    }
+
+    public void setOperStatus(Integer operStatus) {
+        this.operStatus = operStatus;
+    }
 
     public String getOperUrl() {
         return operUrl;

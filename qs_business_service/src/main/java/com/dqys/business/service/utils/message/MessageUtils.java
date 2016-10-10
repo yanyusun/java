@@ -44,6 +44,7 @@ public class MessageUtils {
             messageDTO.setLabel(m.getLabel() == null ? "" : m.getLabel());
             messageDTO.setBusinessType(m.getBusinessType());
             messageDTO.setOperUrl(m.getOperUrl());
+            messageDTO.setOperStatus(m.getOperStatus());
             list.add(messageDTO);
         }
         return list;

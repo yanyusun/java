@@ -34,14 +34,21 @@ public interface MessageMapper {
 
     /**
      * 添加消息信息
+     *
      * @param message
      * @return
      */
     Integer add(Message message);
+
     /**
-     *查询消息记录数
+     * 查询消息记录数
+     *
      * @param message
      * @return
      */
     Integer selectCount(Message message);
+
+    Message get(Integer id);
+
+    Integer update(Message message);
 }
