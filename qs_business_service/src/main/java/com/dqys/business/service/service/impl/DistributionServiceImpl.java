@@ -12,10 +12,7 @@ import com.dqys.business.orm.constant.business.ObjectUserStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectBusinessTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
-import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
-import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
-import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
-import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
+import com.dqys.business.orm.mapper.asset.*;
 import com.dqys.business.orm.mapper.business.BusinessMapper;
 import com.dqys.business.orm.mapper.business.BusinessObjReMapper;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
@@ -24,10 +21,7 @@ import com.dqys.business.orm.mapper.company.CompanyTeamMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.message.MessageMapper;
-import com.dqys.business.orm.pojo.asset.AssetInfo;
-import com.dqys.business.orm.pojo.asset.IOUInfo;
-import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.pojo.asset.PawnInfo;
+import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.pojo.business.Business;
 import com.dqys.business.orm.pojo.business.BusinessObjRe;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
@@ -35,6 +29,7 @@ import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
 import com.dqys.business.orm.pojo.message.Message;
+import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.orm.query.company.CompanyTeamReQuery;
 import com.dqys.business.service.constant.MessageBTEnum;
@@ -110,6 +105,8 @@ public class DistributionServiceImpl implements DistributionService {
     private CoordinatorService coordinatorService;
     @Autowired
     private BusinessLogService businessLogService;
+    @Autowired
+    private PiRelationMapper piRelationMapper;
 
     @Override
     public DistributionDTO listDistribution_tx(Integer type, Integer id) throws BusinessLogException {
@@ -1254,8 +1251,22 @@ public class DistributionServiceImpl implements DistributionService {
                     // 转换对象状态
                     if (type.equals(ObjectTypeEnum.PAWN.getValue())) {
                         changePawnBusiness(id, businessType, companyDetailInfo); // 当前流转的是抵押物
+                        // 修改相关联的借据类型
+                        RelationQuery query1 = new RelationQuery();
+                        query1.setPawnId(id);
+                        List<PiRelation> relationList = piRelationMapper.queryList(query1);
+                        relationList.forEach(relation -> {
+                            changeIouBusiness(relation.getIouId(), businessType, companyDetailInfo);
+                        });
                     } else if (type.equals(ObjectTypeEnum.IOU.getValue())) {
                         changeIouBusiness(id, businessType, companyDetailInfo); // 当前流转的是借据
+                        // 修改相关联的抵押物类型
+                        RelationQuery query1 = new RelationQuery();
+                        query1.setIouId(id);
+                        List<PiRelation> relationList = piRelationMapper.queryList(query1);
+                        relationList.forEach(relation -> {
+                            changePawnBusiness(relation.getPawnId(), businessType, companyDetailInfo);
+                        });
                     }
                 }
                 messageService.respondInvite(companyTeam.getObjectId(), companyTeam.getObjectType(), id, type, userInfo.getId(), companyTeamRe.getRequesterId(), status);
