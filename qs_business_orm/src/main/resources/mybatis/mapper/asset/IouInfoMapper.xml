@@ -433,4 +433,9 @@
             #{lenderId,jdbcType=INTEGER})
     </select>
 
+    <!--查询抵押物id下所有的借据-->
+    <select id="findByPawnId" parameterType="int" resultMap="BaseResultMap">
+        SELECT i.* from bt_iou i,bt_pi_relation pr WHERE pr.iou_id=i.id AND pr.pawn_id=#{pawnId}
+    </select>
+
 </mapper>

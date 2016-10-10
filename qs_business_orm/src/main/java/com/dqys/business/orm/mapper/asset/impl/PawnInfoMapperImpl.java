@@ -74,8 +74,13 @@ public class PawnInfoMapperImpl extends BaseDao implements PawnInfoMapper {
     }
 
     @Override
-    public List<PawnInfo> pawnListByLenderId(Integer lenderId, Integer userId, Integer objectType,Integer userType) {
-        return super.getSqlSession().getMapper(PawnInfoMapper.class).pawnListByLenderId(lenderId, userId, objectType,userType);
+    public List<PawnInfo> pawnListByLenderId(Integer lenderId, Integer userId, Integer objectType, Integer userType) {
+        return super.getSqlSession().getMapper(PawnInfoMapper.class).pawnListByLenderId(lenderId, userId, objectType, userType);
+    }
+
+    @Override
+    public List<PawnInfo> findByIouId(Integer iouId) {
+        return super.getSqlSession().getMapper(PawnInfoMapper.class).findByIouId(iouId);
     }
 
 }

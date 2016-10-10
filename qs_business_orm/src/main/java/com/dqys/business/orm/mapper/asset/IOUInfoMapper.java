@@ -9,6 +9,7 @@ import java.util.List;
 public interface IOUInfoMapper {
     /**
      * 逻辑删除
+     *
      * @param id
      * @return
      */
@@ -16,6 +17,7 @@ public interface IOUInfoMapper {
 
     /**
      * 新增
+     *
      * @param record
      * @return
      */
@@ -23,6 +25,7 @@ public interface IOUInfoMapper {
 
     /**
      * 获取单个
+     *
      * @param id
      * @return
      */
@@ -30,6 +33,7 @@ public interface IOUInfoMapper {
 
     /**
      * 修改
+     *
      * @param record
      * @return
      */
@@ -37,12 +41,14 @@ public interface IOUInfoMapper {
 
     /**
      * 统计所有的借据
+     *
      * @return
      */
     Integer count();
 
     /**
      * 查询借款人下的所有借据
+     *
      * @param lenderId
      * @return
      */
@@ -50,6 +56,7 @@ public interface IOUInfoMapper {
 
     /**
      * 多条件查询借据
+     *
      * @param IOUQuery
      * @return
      */
@@ -57,6 +64,7 @@ public interface IOUInfoMapper {
 
     /**
      * 多条件统计
+     *
      * @param iouQuery
      * @return
      */
@@ -64,6 +72,7 @@ public interface IOUInfoMapper {
 
     /**
      * 根据抵押物id获取抵押物下的所有借据
+     *
      * @param objectId 抵押物id
      * @return
      */
@@ -71,11 +80,12 @@ public interface IOUInfoMapper {
 
     /**
      * 查询特定借款人下的特定名称的借据
+     *
      * @param id
      * @param name
      * @return
      */
-    List<IOUInfo> listByName(@Param("lenderId")Integer id, @Param("name")String name);
+    List<IOUInfo> listByName(@Param("lenderId") Integer id, @Param("name") String name);
 
     /**
      * 获取当前用户的借款人下的借据信息
@@ -89,10 +99,16 @@ public interface IOUInfoMapper {
 
     /**
      * 获取所有借据
+     *
      * @param iouIds
      * @return
      */
     List<IOUInfo> selectIouInfoByObjectIds(List<Integer> iouIds);
 
-
+    /**
+     * 查询抵押物id关联的所有借据
+     *
+     * @return
+     */
+    List<IOUInfo> findByPawnId(Integer pawnId);
 }
