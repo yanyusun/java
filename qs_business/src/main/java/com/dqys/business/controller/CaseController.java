@@ -170,7 +170,7 @@ public class CaseController {
             return JsonResponseTool.paramErr("参数错误");
         }
 
-        return null;
+        return JsonResponseTool.success(caseService.listByLender(id));
     }
 
     /**
@@ -186,7 +186,7 @@ public class CaseController {
         if(caseService.get(id) == null){
             return JsonResponseTool.paramErr("案件不存在");
         }
-        return null;
+        return JsonResponseTool.success(caseService.listByCase(id));
     }
 
 }
