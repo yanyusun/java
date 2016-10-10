@@ -170,5 +170,5 @@ public interface MessageService {
      * @param status
      * @return
      */
-    Map seOper(Integer id, Integer status);
+    Map setOper(Integer id, Integer status);
 }

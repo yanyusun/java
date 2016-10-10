@@ -287,7 +287,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Map seOper(Integer id, Integer status) {
+    public Map setOper(Integer id, Integer status) {
         Map map = new HashMap<>();
         map.put("result", "no");
         Message message = messageMapper.get(id);

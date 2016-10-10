@@ -154,7 +154,7 @@ public class MessageController {
         if (status != 0 && status != 1 && status != 2) {
             return JsonResponseTool.paramErr("操作状态有误");
         }
-        Map map = messageService.seOper(id, status);
+        Map map = messageService.setOper(id, status);
         if ("yes".equals(MessageUtils.transMapToString(map, "result"))) {
             return JsonResponseTool.success(map);
         } else {

@@ -352,6 +352,8 @@ public class CoordinatorController {
      * @apiParam {int} operType     流转操作
      * @apiParam {int} receiveUserId 接收者id（请求公司）
      * @apiParam {int} status        状态（0拒绝1接收）
+     * @apiParam [{int}] messageId 消息id
+     * @apiParam [{int}] operStatus   操作状态
      * @apiSampleRequest coordinator/businessFlowResult
      * @apiGroup companyRelation
      * @apiName coordinator/businessFlowResult
@@ -361,12 +363,15 @@ public class CoordinatorController {
     public JsonResponse businessFlowResult(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType,
                                            @RequestParam("flowId") Integer flowId, @RequestParam("flowType") Integer flowType,
                                            @RequestParam("operType") Integer operType, @RequestParam("receiveUserId") Integer receiveUserId,
-                                           @RequestParam("status") Integer status) throws Exception {
+                                           @RequestParam("status") Integer status, Integer messageId, Integer operStatus) throws Exception {
         if (CommonUtil.checkParam(objectId, objectType, flowId, flowType, operType, receiveUserId, status)) {
             return JsonResponseTool.paramErr("参数有误");
         }
         if (status != 0 && status != 1) {
             return JsonResponseTool.paramErr("状态有误");
+        }
+        if (messageId != null && operStatus != null) {
+            messageService.setOper(messageId, operStatus);
         }
         Map map = coordinatorService.sendBusinessFlowResult(objectId, objectType, flowId, flowType, operType, receiveUserId, status);
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
@@ -392,7 +397,7 @@ public class CoordinatorController {
         if (CommonUtil.checkParam(objectId, objectType, dateTime)) {
             return JsonResponseTool.paramErr("参数有误");
         }
-        if(!FormatValidateTool.isDate(dateTime)){
+        if (!FormatValidateTool.isDate(dateTime)) {
             return JsonResponseTool.paramErr("日期格式有误");
         }
         Map map = coordinatorService.setDeadline(objectId, objectType, dateTime);
