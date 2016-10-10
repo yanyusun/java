@@ -295,7 +295,7 @@ public class RepayServiceImpl implements RepayService {
     private Map getMap(Map map, BigDecimal paTotal) {
         map.put("result", "money_oversize");
         map.put("repayMoney", paTotal.doubleValue());
-        map.put("msg", "最高可还："+paTotal.doubleValue()+"元");
+        map.put("msg", "最高可还：" + paTotal.doubleValue() + "元");
         return map;
     }
 
@@ -518,6 +518,10 @@ public class RepayServiceImpl implements RepayService {
                     throw new Exception();
                 }
             }
+            Repay repay = new Repay();
+            repay.setStatus(2);//还款无效
+            repay.setId(repayId);
+            repayMapper.updateByPrimaryKeySelective(repay);
             map.put("result", "yes");
         }
         return map;
