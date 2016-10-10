@@ -19,7 +19,7 @@ public class Repay implements Serializable {
     private Date updateAt;//datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
     private Long stateflag;//bigint(22) NOT NULL DEFAULT '0' COMMENT '数据状态：0-可用，非0不可用',
     private Integer repayFidType;//int(5) DEFAULT NULL COMMENT '还款主体类型（借据或抵押物）',
-    private Integer status;//'状态（0正常，2冲正）',
+    private Integer status;//'状态（0还清，1还部分 ,2无效）',
     private Integer lenderId;//借款人id
 
     public Integer getLenderId() {

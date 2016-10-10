@@ -61,7 +61,7 @@ public class RepayController {
      * "updateAt": "2016-09-22",//
      * "stateflag": 0,//
      * "repayFidType": 1,//还款主体类型（借据或抵押物）
-     * "status": 1,//状态（0正常，2冲正）
+     * "status": 1,//状态（0还清，1还部分，2还款无效）
      * "lenderId": 190//借款人id
      * }
      * ]
@@ -207,9 +207,9 @@ public class RepayController {
         try {
             Integer userId = UserSession.getCurrent().getUserId();
             map = repayService.repayMoney(userId, objectId, objectType, repayType, repayWay, money, remark, file);
-            if("yes".equals(MessageUtils.transMapToString(map,"result"))){
+            if ("yes".equals(MessageUtils.transMapToString(map, "result"))) {
                 return JsonResponseTool.success(map);
-            }else{
+            } else {
                 return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
             }
         } catch (Exception e) {
