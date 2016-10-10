@@ -3,6 +3,7 @@ package com.dqys.auth.service.impl;
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
+import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.auth.orm.query.TUserTagQuery;
@@ -12,11 +13,9 @@ import com.dqys.auth.service.facade.UserService;
 import com.dqys.auth.service.utils.UserUtils;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
+import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.ServiceResult;
-import com.dqys.core.utils.NoSQLWithRedisTool;
-import com.dqys.core.utils.RabbitMQProducerTool;
-import com.dqys.core.utils.SignatureTool;
-import com.dqys.core.utils.SysPropertyTool;
+import com.dqys.core.utils.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -214,6 +213,38 @@ public class UserServiceImpl implements UserService {
         return ServiceResult.success(tUserInfo);
     }
 
+    @Override
+    public JsonResponse registerStep5(Integer userId, String name, String introduction, Integer province, Integer city, Integer district) {
+        TUserInfo userInfo = queryUser(userId);
+        if(userInfo == null){
+            return JsonResponseTool.paramErr("用户信息错误，请重新登录");
+        }
+        if(userInfo.getCompanyId() == null){
+            return JsonResponseTool.failure("用户信息错误，请关联公司信息");
+        }else{
+            TCompanyInfo companyInfo = queryCompany(userInfo.getCompanyId());
+            if(companyInfo == null){
+                return JsonResponseTool.failure("公司不存在，请返回上一步完善公司信息");
+            }
+            // 修改用户信息
+            userInfo.setUserName(name);
+            Integer count = this.tUserInfoMapper.updateByPrimaryKeySelective(userInfo);
+            if (!count.equals(1)) {
+                return JsonResponseTool.failure("更新用户信息失败");
+            }
+            // 修改公司信息
+            companyInfo.setProvince(province);
+            companyInfo.setCity(city);
+            companyInfo.setArea(district);
+            companyInfo.setRemark(introduction);
+            count = this.tCompanyInfoMapper.updateByPrimaryKeySelective(companyInfo);
+            if (!count.equals(1)) {
+                return JsonResponseTool.failure("更新公司信息失败");
+            }
+        }
+        return JsonResponseTool.success(null);
+    }
+
     /* 验证用户存在性 */
     private TUserInfo queryUser(String account, String mobile, String email) throws Exception {
         List<TUserInfo> tUserInfos = this.tUserInfoMapper.verifyUser(account, mobile, email);
@@ -226,6 +257,10 @@ public class UserServiceImpl implements UserService {
 
     private TUserInfo queryUser(Integer uid) {
         return this.tUserInfoMapper.selectByPrimaryKey(uid);
+    }
+
+    private TCompanyInfo queryCompany(Integer companyId){
+        return this.tCompanyInfoMapper.selectByPrimaryKey(companyId);
     }
 
     /* 添加用户 */

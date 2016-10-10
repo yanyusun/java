@@ -1,7 +1,6 @@
 package com.dqys.auth.controller;
 
 import com.dqys.auth.orm.constant.CompanyTypeEnum;
-import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
@@ -33,7 +32,6 @@ import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBo
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
-import java.text.ParseException;
 import java.util.concurrent.Callable;
 
 /**
@@ -54,9 +52,6 @@ public class AuthController extends BaseApiContorller {
 
     @Autowired
     private TUserInfoMapper tUserInfoMapper;
-    @Autowired
-    private TCompanyInfoMapper tCompanyInfoMapper;
-
 
     /**
      * @api {GET} http://{url}/auth/captcha 图片验证码
@@ -650,17 +645,48 @@ public class AuthController extends BaseApiContorller {
     }
 
 
-    private String verifyUserStep(ServiceResult<UserDTO> userServiceResult) {
+    /**
+     * @api {POST} http://{url}/auth/fixCompanyInfo 完善公司以及管理人员信息
+     * @apiName register_admin
+     * @apiGroup Auth
+     * @apiParam {string} name 名称
+     * @apiParam {string} introduction 简介
+     * @apiParam {number} province 省份
+     * @apiParam {number} city 城市
+     * @apiParam {number} district 区域
+     * @apiSuccess {number} data 空返回值
+     */
+    @RequestMapping(value = "/fixCompanyInfo", method = RequestMethod.POST)
+    public JsonResponse fixCompanyInfo(String name, String introduction, Integer province, Integer city, Integer district){
+        if(CommonUtil.checkParam(name, introduction, province, city, district)){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+
+        Integer userId = UserSession.getCurrent().getUserId();
+        if(userId == null){
+            return JsonResponseTool.paramErr("用户信息错误，请重新登录");
+        }
+
+        return userService.registerStep5(userId, name, introduction, province, city, district);
+    }
+
+    private String verifyUserStep(ServiceResult<UserDTO> userServiceResult){
         // todo 验证注册信息是否完善<这里后期完善>
-        String step = "false"; // false:无效账户,active:激活邮箱,adminCompany:未完善信息,authentication:未认证,true:信息完善
+        String step = "false"; // false:无效账户,active:激活邮箱,company:完善公司信息,administrator:完善公司信息,authentication:未认证(暂时不校验),true:信息完善
+        if (!userServiceResult.getFlag()) {
+            return step;
+        }
         Integer status = userServiceResult.getData().getStatus();
         Integer companyId = userServiceResult.getData().getCompanyId();
-        if (status.equals(0)) {
+        String userName = userServiceResult.getData().getUserName();
+        if (status == null || status.equals(SysProperty.DEFAULT)) {
             step = "active";
         } else if (companyId == null || companyId.equals("")) {
-            step = "adminCompany";
-        } else if (companyService.get(companyId).getIsAuth().equals(0)) {
-            step = "authentication";
+            step = "company";
+        } else if (userName == null || userName.equals("")) {
+            step = "administrator";
+//        } else if (companyService.get(companyId).getIsAuth().equals(0)) {
+//            step = "authentication";
         } else {
             step = "true";
         }
