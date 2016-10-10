@@ -97,4 +97,11 @@ public interface PawnInfoMapper {
      */
     List<PawnInfo> pawnListByLenderId(@Param("lenderId") Integer lenderId, @Param("userId") Integer userId, @Param("objectType") Integer objectType, @Param("userType") Integer userType);
 
+    /**
+     * 查询借据id关联的所有抵押物
+     *
+     * @param iouId
+     * @return
+     */
+    List<PawnInfo> findByIouId(Integer iouId);
 }

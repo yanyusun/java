@@ -1053,6 +1053,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                     info.setOnLawyer(lay);
                     if (modify) {
                         pawnInfoMapper.update(info);//修改抵押物的机构处置状态
+                        setOnByPawnAndIou(flowId, flowType, coll, age, lay);
                     }
                 }
             } else if (flowType == ObjectTypeEnum.IOU.getValue()) {
@@ -1063,11 +1064,34 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                     info.setOnLawyer(lay);
                     if (modify) {
                         iouInfoMapper.update(info);//修改借据的机构处置状态
+                        setOnByPawnAndIou(flowId, flowType, coll, age, lay);
                     }
                 }
             }
         }
         return flag;
+    }
+
+    private void setOnByPawnAndIou(Integer id, Integer type, Integer coll, Integer age, Integer lay) {
+        if (type == ObjectTypeEnum.PAWN.getValue()) {
+            //同步修改抵押物下的所有借据状态（商定之后的修改）
+            List<IOUInfo> infos = iouInfoMapper.findByPawnId(id);
+            for (IOUInfo inf : infos) {
+                inf.setOnCollection(coll);
+                inf.setOnAgent(age);
+                inf.setOnLawyer(lay);
+                iouInfoMapper.update(inf);
+            }
+        } else if (type == ObjectTypeEnum.IOU.getValue()) {
+            //同步修改借据下的所有抵押物状态（商定之后的修改）
+            List<PawnInfo> infos = pawnInfoMapper.findByIouId(id);
+            for (PawnInfo inf : infos) {
+                inf.setOnCollection(coll);
+                inf.setOnAgent(age);
+                inf.setOnLawyer(lay);
+                pawnInfoMapper.update(inf);
+            }
+        }
     }
 
     @Override
