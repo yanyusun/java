@@ -1,6 +1,7 @@
 package com.dqys.auth.controller;
 
 import com.dqys.auth.orm.constant.CompanyTypeEnum;
+import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
@@ -30,7 +31,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.Callable;
 
@@ -52,6 +52,9 @@ public class AuthController extends BaseApiContorller {
 
     @Autowired
     private TUserInfoMapper tUserInfoMapper;
+
+    @Autowired
+    private TCompanyInfoMapper tCompanyInfoMapper;
 
     /**
      * @api {GET} http://{url}/auth/captcha 图片验证码
@@ -713,7 +716,7 @@ public class AuthController extends BaseApiContorller {
      */
     public JsonResponse addCompany_four(@RequestParam String companyName, @RequestParam String credential, @RequestParam String licence,
                                         @RequestParam Integer type, @RequestParam Integer userType, @RequestParam String realName,
-                                        @RequestParam String identity, @RequestParam String mobile, @RequestParam String smsCode) throws ParseException {
+                                        @RequestParam String identity, @RequestParam String mobile, @RequestParam String smsCode) throws Exception {
         Integer userId = UserSession.getCurrent() != null ? UserSession.getCurrent().getUserId() : 0;
         if (StringUtils.isBlank(companyName)) {
             return JsonResponseTool.paramErr("公司名不能为空");
