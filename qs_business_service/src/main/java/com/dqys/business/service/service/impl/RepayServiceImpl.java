@@ -266,16 +266,16 @@ public class RepayServiceImpl implements RepayService {
     }
 
     private List<IOUInfo> getIouInfos(Integer objectId, Integer objectType, List<IOUInfo> ious) {
-        if (objectType == RepayEnum.OBJECT_IOU.getValue()) {//借据
+        if (objectType == RepayEnum.OBJECT_IOU.getValue().intValue()) {//借据
             IOUInfo iou = iouInfoMapper.get(objectId);
             ious.add(iou);
-        } else if (objectType == RepayEnum.OBJECT_PAWN.getValue()) {//抵押物
+        } else if (objectType == RepayEnum.OBJECT_PAWN.getValue().intValue()) {//抵押物
             ious = iouInfoMapper.selectIouInfoByPawnId(objectId);
-        } else if (objectType == RepayEnum.OBJECT_UNLIMITED.getValue()) {//不限对象
+        } else if (objectType == RepayEnum.OBJECT_UNLIMITED.getValue().intValue()) {//不限对象
             Map map = new HashMap<>();
             getIouAndPawnByLender(objectId, map);//借款人下的所有借据和抵押物
             List<Map> iousList = (List<Map>) map.get("ious");
-            List<Map> pawnsList = (List<Map>) map.get("pawns");
+           // List<Map> pawnsList = (List<Map>) map.get("pawns");
             //一个借据必然对应一个抵押物
             List<Integer> iouIds = new ArrayList<>();
             if (iousList != null) {
