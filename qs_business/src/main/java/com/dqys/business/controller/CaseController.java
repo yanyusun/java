@@ -119,8 +119,8 @@ public class CaseController {
     /**
      * 拆分案件
      *
-     * @param id
-     * @param ids
+     * @param id 案件id
+     * @param ids 拆分之后的关联借据集合
      * @return
      * @throws BusinessLogException
      */
@@ -135,9 +135,9 @@ public class CaseController {
         }
         String[] pIouIds = caseDTO.getIouIds().split(",");
         String[] cIds = ids.split(",");
-        Boolean flag = true;
+        Boolean flag = true; // 判断参数是否全部属于该借据下
         for (String i : cIds) {
-            boolean flag1 = true;
+            boolean flag1 = true; // 判断该案件的借据中是否存在该Id
             for (String j : pIouIds) {
                 if (i.equals(j)) {
                     flag1 = false;
