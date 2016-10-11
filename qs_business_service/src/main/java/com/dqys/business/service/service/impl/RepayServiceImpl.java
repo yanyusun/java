@@ -428,10 +428,12 @@ public class RepayServiceImpl implements RepayService {
         DamageApply damageApply = repayMapper.getDamageApply(id);
         if (damageApply == null) {//无记录无效
             map.put("result", "no");
+            map.put("msg", "查询申请记录失败");
             return;
         }
         if (damageApply.getStatus() != 0) {//已经审核过得无效
             map.put("result", "no");
+            map.put("msg", "重复操作");
             return;
         }
 //        if(damageApply.getEaxm_user_id()!=userId){//不是要求的审核人
@@ -477,6 +479,7 @@ public class RepayServiceImpl implements RepayService {
             map.put("result", "yes");
         } else {
             map.put("result", "no");
+            map.put("msg", "修改失败");
         }
     }
 
