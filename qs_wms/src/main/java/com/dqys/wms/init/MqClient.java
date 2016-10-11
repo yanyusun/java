@@ -106,7 +106,7 @@ public class MqClient {
                  .append("\" target=\"_blank\">请点击确认</a></p>");
          return stringBuffer.toString();
      }*/
-    //TODO 去掉点解确认后的msg
+    //TODO 去掉点解确认后的msg 暂时用来显示短信的验证码
     private static String htmlMailBody(String msg, String mail) {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("<p>欢迎加入多清平台</p><p>以下是的验证链接，<a href=\"")
@@ -123,7 +123,7 @@ public class MqClient {
                 "    <span style=\"color: rgb(51, 51, 51);\">您的登陆邮箱为：</span><span style=\"color: rgb(0, 162, 202);\">" + mail + "</span><span style=\"color: rgb(51, 51, 51);\">。请点击一下链接激活账号：</span>\n" +
                 "</p>\n" +
                 "<p>\n" +
-                "    <span style=\"color: rgb(51, 51, 51);\"><a href=\"" + MqClientEnum.EMAIL_URL.getName() + msg + "\" target=\"_blank\">请点击确认</a></span>\n" +
+                "    <span style=\"color: rgb(51, 51, 51);\"><a href=\"" + MqClientEnum.EMAIL_URL.getName() + msg + "\" target=\"_blank\">请点击确认"+msg+"</a></span>\n" +
                 "</p>\n" +
                 "<p>\n" +
                 "</p>\n" +
