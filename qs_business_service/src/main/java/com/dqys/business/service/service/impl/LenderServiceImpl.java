@@ -976,7 +976,7 @@ public class LenderServiceImpl implements LenderService {
             }
             lenderQuery.setOperator(userInfo.getId());
             if (!flag) {
-//                if (isPlatformOrEntrust) {
+//                if (isPlatformOrEntrust) { // 修改于10.11
                     if (businessIds != null && businessIds.size() > 0) {
                         lenderQuery.setIds(businessIds);
                     } else {
