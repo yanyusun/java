@@ -275,7 +275,7 @@ public class RepayServiceImpl implements RepayService {
             Map map = new HashMap<>();
             getIouAndPawnByLender(objectId, map);//借款人下的所有借据和抵押物
             List<Map> iousList = (List<Map>) map.get("ious");
-           // List<Map> pawnsList = (List<Map>) map.get("pawns");
+            // List<Map> pawnsList = (List<Map>) map.get("pawns");
             //一个借据必然对应一个抵押物
             List<Integer> iouIds = new ArrayList<>();
             if (iousList != null) {
@@ -405,19 +405,20 @@ public class RepayServiceImpl implements RepayService {
         }
         if (num > 0) {
             id = damageApply.getId();
-            damage_date = DateFormatTool.format(damageApply.getDamage_date(), DateFormatTool.DATE_FORMAT_10_REG1);
-            original_time = DateFormatTool.format(damageApply.getOriginal_time(), DateFormatTool.DATE_FORMAT_10_REG1);
+            damage_date = DateFormatTool.format(damageApply.getDamage_date(), DateFormatTool.DATE_FORMAT_10_REG1);//申请时间
+            original_time = DateFormatTool.format(damageApply.getOriginal_time(), DateFormatTool.DATE_FORMAT_10_REG1);//原来时间
         }
-
         SmsUtil smsUtil = new SmsUtil();//发送短信通知
         Integer code = SmsEnum.POSTPONE_APPLY.getValue();
         Map userC = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getEaxm_user_id());//接收者
         Map oper = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getApply_user_id());//发送者
         String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
                 CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "realName"),
-                ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName(), coordinatorService.getObjectName(damageApply.getObject_type(), damageApply.getApply_object_id()), damage_date, original_time);
+                ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName(), coordinatorService.getObjectName(damageApply.getObject_type(), damageApply.getApply_object_id()), original_time, damage_date);
         String title = coordinatorService.getMessageTitle(damageApply.getApply_object_id(), damageApply.getObject_type(), MessageBTEnum.POSTPONE.getValue());
-        messageService.add(title, content, damageApply.getApply_user_id(), damageApply.getEaxm_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE.getValue(), "applyId=" + id);
+        String operUrl = MessageUtils.setOperUrl("/repay/auditPostpone?status=1&applyId=" + id, null, "/repay/auditPostpone?status=2&applyId=" + id, null, "");
+        messageService.add(title, content, damageApply.getApply_user_id(), damageApply.getEaxm_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE.getValue(), operUrl);
+
         map.put("result", "yes");
     }
 
