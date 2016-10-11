@@ -295,7 +295,7 @@ public class MessageServiceImpl implements MessageService {
             map.put("msg", "查询消息记录有误");
         } else {
             message.setOperStatus(status);
-            messageMapper.update(message);
+            messageMapper.updateOperStatus(message);
             map.put("result", "yes");
         }
         return map;

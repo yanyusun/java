@@ -50,5 +50,5 @@ public interface MessageMapper {
 
     Message get(Integer id);
 
-    Integer update(Message message);
+    Integer updateOperStatus(Message message);
 }

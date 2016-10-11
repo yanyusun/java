@@ -126,37 +126,9 @@
         WHERE id=#{id,jdbcType=INTEGER}
     </select>
 
-    <update id="update" parameterType="com.dqys.business.orm.pojo.message.Message">
+    <update id="updateOperStatus" parameterType="com.dqys.business.orm.pojo.message.Message">
         UPDATE t_message
-        <trim prefix=" SET " suffixOverrides=",">
-            <if test="title !=null">
-                title=#{title},
-            </if>
-            <if test="content !=null">
-                content=#{content},
-            </if>
-            <if test="senderId !=null">
-                sender_id=#{senderId},0
-            </if>
-            <if test="receiveId !=null">
-                receive_id=#{receiveId},
-            </if>
-            <if test="label !=null">
-                label=#{label},
-            </if>
-            <if test="type !=null">
-                type=#{type},
-            </if>
-            <if test="businessType !=null">
-                business_type=#{businessType},
-            </if>
-            <if test="operUrl !=null">
-                oper_url=#{operUrl},
-            </if>
-            <if test="operStatus !=null">
-                oper_status=#{operStatus},
-            </if>
-        </trim>
+       set oper_status=#{operStatus}
         WHERE id=#{id}
     </update>
 
