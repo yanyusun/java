@@ -384,8 +384,8 @@ public class CoordinatorController {
      * @apiParam {int} operType     流转操作
      * @apiParam {int} receiveUserId 接收者id（请求公司）
      * @apiParam {int} status        状态（0拒绝1接收）
-     * @apiParam [{int}] messageId 消息id
-     * @apiParam [{int}] operStatus   操作状态
+     * @apiParam {int} [messageId] 消息id
+     * @apiParam {int} [operStatus]   操作状态（0默认未操作1同意2拒绝）
      * @apiSampleRequest coordinator/businessFlowResult
      * @apiGroup companyRelation
      * @apiName coordinator/businessFlowResult

@@ -731,7 +731,7 @@ public class AuthController extends BaseApiContorller {
             if (CompanyTypeEnum.getCompanyTypeEnum(type) == null) {
                 return JsonResponseTool.paramErr("公司类型错误");
             }
-            if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, null, String.valueOf(userType)).isEmpty()) {
+            if ((userType == 1) || (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, null, String.valueOf(userType)).isEmpty())) {
                 return JsonResponseTool.paramErr("用户类型无效");
             }
             if (StringUtils.isBlank(companyName)) {
