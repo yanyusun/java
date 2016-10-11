@@ -368,9 +368,9 @@ public class RepayServiceImpl implements RepayService {
         Integer num = 0;
 
         if (MessageUtils.transMapToDou(map, "total") == null || MessageUtils.transMapToDou(map, "total") == 0) {
-            num = repayMapper.updateRepayStatus(id, type, 1);//完成
+            num = repayMapper.updateRepayStatus(id, type, RepayEnum.REPAY_STATUS_YES.getValue());//完成
         } else {
-            num = repayMapper.updateRepayStatus(id, type, 0);//没有完成
+            num = repayMapper.updateRepayStatus(id, type, RepayEnum.REPAY_STATUS_NO.getValue());//没有完成
         }
         if (num > 0) {
             return true;
