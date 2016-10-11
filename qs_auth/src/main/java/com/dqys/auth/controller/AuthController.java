@@ -714,6 +714,7 @@ public class AuthController extends BaseApiContorller {
      * @apiUse CommonHeader
      * @apiUse JsonResponse
      */
+    @RequestMapping(value = "/addCompany_four", method = RequestMethod.POST)
     public JsonResponse addCompany_four(@RequestParam String companyName, @RequestParam String credential, @RequestParam String licence,
                                         @RequestParam Integer type, @RequestParam Integer userType, @RequestParam String realName,
                                         @RequestParam String identity, @RequestParam String mobile, @RequestParam String smsCode) throws Exception {
