@@ -660,20 +660,20 @@ public class AuthController extends BaseApiContorller {
      * @apiSuccess {number} data 空返回值
      */
     @RequestMapping(value = "/fixCompanyInfo", method = RequestMethod.POST)
-    public JsonResponse fixCompanyInfo(String name, String introduction, Integer province, Integer city, Integer district){
-        if(CommonUtil.checkParam(name, introduction, province, city, district)){
+    public JsonResponse fixCompanyInfo(String name, String introduction, Integer province, Integer city, Integer district) {
+        if (CommonUtil.checkParam(name, introduction, province, city, district)) {
             return JsonResponseTool.paramErr("参数错误");
         }
 
         Integer userId = UserSession.getCurrent().getUserId();
-        if(userId == null){
+        if (userId == null) {
             return JsonResponseTool.paramErr("用户信息错误，请重新登录");
         }
 
         return userService.registerStep5(userId, name, introduction, province, city, district);
     }
 
-    private String verifyUserStep(ServiceResult<UserDTO> userServiceResult){
+    private String verifyUserStep(ServiceResult<UserDTO> userServiceResult) {
         // todo 验证注册信息是否完善<这里后期完善>
         String step = "false"; // false:无效账户,active:激活邮箱,company:完善公司信息,administrator:完善公司信息,authentication:未认证(暂时不校验),true:信息完善
         if (!userServiceResult.getFlag()) {
@@ -719,74 +719,70 @@ public class AuthController extends BaseApiContorller {
                                         @RequestParam Integer type, @RequestParam Integer userType, @RequestParam String realName,
                                         @RequestParam String identity, @RequestParam String mobile, @RequestParam String smsCode) throws Exception {
         Integer userId = UserSession.getCurrent() != null ? UserSession.getCurrent().getUserId() : 0;
-        if (StringUtils.isBlank(companyName)) {
-            return JsonResponseTool.paramErr("公司名不能为空");
-        }
-        if (StringUtils.isBlank(credential)) {
-            return JsonResponseTool.paramErr("统一信用代码不能为空");
-        }
-        if (StringUtils.isBlank(licence)) {
-            return JsonResponseTool.paramErr("营业执照未上传");
-        }
-        if (CompanyTypeEnum.getCompanyTypeEnum(type) == null) {
-            return JsonResponseTool.paramErr("公司类型错误");
-        }
         if (0 == userId) {
             return JsonResponseTool.paramErr("用户无效");
         }
-        if (!FormatValidateTool.checkMobile(mobile)) {
-            return JsonResponseTool.paramErr("手机号无效");
-        }
-        if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, null, String.valueOf(userType)).isEmpty()) {
-            return JsonResponseTool.paramErr("用户类型无效");
-        }
-        if (StringUtils.isBlank(realName)) {
-            return JsonResponseTool.paramErr("姓名无效");
-        }
-        String identityMsg = FormatValidateTool.idCardValidate(identity);
-        if (!StringUtils.isBlank(identityMsg)) {
-            return JsonResponseTool.paramErr("身份证无效," + identityMsg);
-        }
-        //验证手机短信验证码
-        ServiceResult codeValidResult = this.captchaService.validSmsCaptcha(mobile, smsCode);
-        if (!codeValidResult.getFlag()) {
-            return JsonResponseTool.paramErr(codeValidResult.getMessage());
-        }
-        ServiceResult<Integer> companyResult = new ServiceResult<>();
-        TCompanyInfo tCompanyInfo = new TCompanyInfo();
-        //公司信息
-        tCompanyInfo.setCompanyName(companyName);
-        tCompanyInfo.setCredential(credential);
-        tCompanyInfo.setLicence(licence);
-        tCompanyInfo.setType(type);
-        tCompanyInfo.setLegalPerson(realName);
+        //用户存在了继续下面的格式判断
         ServiceResult<TUserInfo> userServiceResult = this.userService.queryUserById(userId);      //userId优先
         if (!userServiceResult.getFlag()) {
             return JsonResponseTool.failure(userServiceResult.getMessage());
         } else {
             TUserInfo userInfo = userServiceResult.getData();
+            if (CompanyTypeEnum.getCompanyTypeEnum(type) == null) {
+                return JsonResponseTool.paramErr("公司类型错误");
+            }
+            if (SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, null, String.valueOf(userType)).isEmpty()) {
+                return JsonResponseTool.paramErr("用户类型无效");
+            }
+            if (StringUtils.isBlank(companyName)) {
+                return JsonResponseTool.paramErr("公司名不能为空");
+            }
+            if (StringUtils.isBlank(credential)) {
+                return JsonResponseTool.paramErr("营业执照注册号不能为空");
+            }
+            if (StringUtils.isBlank(licence)) {
+                return JsonResponseTool.paramErr("营业执照未上传");
+            }
+            if (StringUtils.isBlank(realName)) {
+                return JsonResponseTool.paramErr("姓名无效");
+            }
+            String identityMsg = FormatValidateTool.idCardValidate(identity);
+            if (!StringUtils.isBlank(identityMsg)) {
+                return JsonResponseTool.paramErr("身份证无效," + identityMsg);
+            }
+            if (!FormatValidateTool.checkMobile(mobile)) {
+                return JsonResponseTool.paramErr("手机号无效");
+            }
+            ServiceResult<Integer> companyResult = new ServiceResult<>();
+            //验证公司有效性
+            companyResult = companyService.validateCompany(credential);
+            if (companyResult.getFlag()) {//防止重复存在
+                //返回营业执照注册号已经注册
+                if (userInfo.getCompanyId() == null || companyResult.getData().intValue() != userInfo.getCompanyId().intValue()) {
+                    return JsonResponseTool.failure("营业执照注册号已经注册");
+                }
+            }
+            //验证手机短信验证码
+            ServiceResult codeValidResult = this.captchaService.validSmsCaptcha(mobile, smsCode);
+            if (!codeValidResult.getFlag()) {
+                return JsonResponseTool.paramErr(codeValidResult.getMessage());
+            }
+            TCompanyInfo tCompanyInfo = new TCompanyInfo();
+            //公司信息
+            tCompanyInfo.setCompanyName(companyName);
+            tCompanyInfo.setCredential(credential);
+            tCompanyInfo.setLicence(licence);
+            tCompanyInfo.setType(type);
+            tCompanyInfo.setLegalPerson(realName);
             if (userInfo.getCompanyId() != null) {
                 TCompanyInfo companyInfo = companyService.get(userInfo.getCompanyId());
                 if (companyInfo != null) {
-                    if (!companyInfo.getCredential().equals(credential)) {
-                        companyResult = companyService.validateCompany(credential);
-                        if (companyResult.getFlag()) {//防止重复存在
-                            //返回营业执照注册号已经注册
-                            return JsonResponseTool.failure("营业执照注册号已经注册");
-                        }
-                    }
                     //修改公司信息
                     Integer count = tCompanyInfoMapper.updateByPrimaryKeySelective(tCompanyInfo);
                 } else {
                     return JsonResponseTool.paramErr("公司信息修改失败");
                 }
             } else {
-                //验证公司有效性
-                companyResult = companyService.validateCompany(credential);
-                if (companyResult.getFlag()) {//防止重复存在
-                    //返回营业执照注册号已经注册
-                    return JsonResponseTool.failure("营业执照注册号已经注册");
-                }
                 companyResult = companyService.addCompany_tx(tCompanyInfo);//添加公司信息
                 if (!companyResult.getFlag()) {
                     return JsonResponseTool.failure(companyResult.getMessage());
