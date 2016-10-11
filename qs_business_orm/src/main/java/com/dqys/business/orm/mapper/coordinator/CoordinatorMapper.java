@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.coordinator;
 
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.coordinator.UserDetail;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.orm.pojo.zcy.dto.ZcyPawnDTO;
 import com.dqys.business.orm.query.coordinator.ZcyListQuery;
@@ -207,7 +208,7 @@ public interface CoordinatorMapper {
      * 资产源正在处置查询对象id
      *
      * @param userId
-     * @param value
+     * @param objectType
      * @return
      */
     List<Integer> findObjectIdByOURelationAndBusiness(@Param("userId") Integer userId, @Param("objectType") Integer objectType);
@@ -234,8 +235,16 @@ public interface CoordinatorMapper {
      * 获取资产源全部
      *
      * @param userId
-     * @param value
+     * @param objectType
      * @return
      */
-    List<Integer> findObjectIdByAssetSourceAll(@Param("userId")Integer userId, @Param("objectType")Integer objectType);
+    List<Integer> findObjectIdByAssetSourceAll(@Param("userId") Integer userId, @Param("objectType") Integer objectType);
+
+    /**
+     * 获取员工相关信息
+     *
+     * @param userId
+     * @return
+     */
+    UserDetail getUserDetail(Integer userId);
 }
