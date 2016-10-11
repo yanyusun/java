@@ -28,6 +28,7 @@ public class CompanyInterceptor extends AuthenticationInterceptor {
     public static final String API_LIST_RELATION_SERVICE = "listRelationByService";
     public static final String API_ADD_BUSINESS_SERVICE = "addBusinessService";
     public static final String API_DESIGN_BUSINESS_SERVICE = "designBusinessService";
+    public static final String API_EXIT_BUSINESS_SERVICE = "exitBusinessService";
 
 
     @Override
@@ -68,6 +69,8 @@ public class CompanyInterceptor extends AuthenticationInterceptor {
         } else if (API_ADD_BUSINESS_SERVICE.equals(path)) {
             return true;
         } else if (API_DESIGN_BUSINESS_SERVICE.equals(path)) {
+            return true;
+        } else if (API_EXIT_BUSINESS_SERVICE.equals(path)) {
             return true;
         } else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:" + url);

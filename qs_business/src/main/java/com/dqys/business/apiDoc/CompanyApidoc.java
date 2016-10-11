@@ -142,7 +142,17 @@ public class CompanyApidoc {
      */
 
     /**
-     * @api {get} /api/company/designBusinessService 被添加公司接受或者拒绝业务流转邀请
+     * @api {get} /api/company/exitBusinessService 被添加公司接受或者拒绝业务流转邀请
+     * @apiName exitBusinessService
+     * @apiGroup companyRelation
+     * @apiParam {number} id 分配器ID
+     * @apiParam {number} targetType 对象类型
+     * @apiParam {number} targetId 对象ID
+     * @apiSuccess {number} data 空值返回值
+     */
+
+    /**
+     * @api {get} /api/company/designBusinessService 删除被添加公司的业务流转
      * @apiName designBusinessService
      * @apiGroup companyRelation
      * @apiParam {number} type 业务流转类型

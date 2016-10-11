@@ -309,5 +309,24 @@ public class CompanyController {
         return distributionService.updateBusinessService(type, id, distributionId, businessType, status);
     }
 
+    /**
+     * 删除业务流转的被添加公司
+     *
+     * @param id         分配器成员id
+     * @param targetType 对象类型
+     * @param targetId   对象ID
+     * @return
+     * @throws BusinessLogException
+     */
+    @RequestMapping(value = "/exitBusinessService")
+    public JsonResponse exitBusinessService(@RequestParam(required = true) Integer id,
+                                            @RequestParam(required = true) Integer targetType,
+                                            @RequestParam(required = true) Integer targetId) throws BusinessLogException {
+        if (CommonUtil.checkParam(id, targetType, targetId)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return distributionService.exitBusinessService(id, targetType, targetId);
+    }
+
 
 }
