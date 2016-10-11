@@ -976,13 +976,13 @@ public class LenderServiceImpl implements LenderService {
             }
             lenderQuery.setOperator(userInfo.getId());
             if (!flag) {
-                if (isPlatformOrEntrust) {
+//                if (isPlatformOrEntrust) {
                     if (businessIds != null && businessIds.size() > 0) {
                         lenderQuery.setIds(businessIds);
                     } else {
                         lenderQuery.setId(SysProperty.NULL_DATA_ID);
                     }
-                }
+//                }
             }
         } else if (ObjectTabEnum.new48h.getValue().equals(tab)) {
             // 48h 新
