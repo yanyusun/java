@@ -368,9 +368,9 @@ public class RepayServiceImpl implements RepayService {
         Integer num = 0;
 
         if (MessageUtils.transMapToDou(map, "total") == null || MessageUtils.transMapToDou(map, "total") == 0) {
-            num = repayMapper.updateRepayStatus(id, type, 1);//完成
+            num = repayMapper.updateRepayStatus(id, type, RepayEnum.REPAY_STATUS_YES.getValue());//完成
         } else {
-            num = repayMapper.updateRepayStatus(id, type, 0);//没有完成
+            num = repayMapper.updateRepayStatus(id, type, RepayEnum.REPAY_STATUS_NO.getValue());//没有完成
         }
         if (num > 0) {
             return true;
@@ -388,9 +388,9 @@ public class RepayServiceImpl implements RepayService {
         List<DamageApply> damages = repayMapper.selectByDamageApply(damageApply1);
         Integer num = 0;
         Integer id = 0;
-        String damage_date = "";
-        String original_time = "";
-        if (damages.size() > 0) {
+        String damage_date = "";//申请时间
+        String original_time = "";//原来时间
+        if (damages.size() > 0) {//存在已经还未审核的记录就只是修改
             //修改申请记录
             DamageApply damage = damages.get(0);
             damage.setDamage_date(damageApply.getDamage_date());
@@ -400,13 +400,13 @@ public class RepayServiceImpl implements RepayService {
             original_time = DateFormatTool.format(damage.getOriginal_time(), DateFormatTool.DATE_FORMAT_10_REG1);
         } else {
             //添加申请记录
-            setDamage(damageApply);//设置
+            setDamage(damageApply);//完善申请记录信息
             num = repayMapper.addDamageApply(damageApply);
-        }
-        if (num > 0) {
-            id = damageApply.getId();
-            damage_date = DateFormatTool.format(damageApply.getDamage_date(), DateFormatTool.DATE_FORMAT_10_REG1);//申请时间
-            original_time = DateFormatTool.format(damageApply.getOriginal_time(), DateFormatTool.DATE_FORMAT_10_REG1);//原来时间
+            if (num > 0) {
+                id = damageApply.getId();
+                damage_date = DateFormatTool.format(damageApply.getDamage_date(), DateFormatTool.DATE_FORMAT_10_REG1);
+                original_time = DateFormatTool.format(damageApply.getOriginal_time(), DateFormatTool.DATE_FORMAT_10_REG1);
+            }
         }
         SmsUtil smsUtil = new SmsUtil();//发送短信通知
         Integer code = SmsEnum.POSTPONE_APPLY.getValue();
@@ -428,10 +428,12 @@ public class RepayServiceImpl implements RepayService {
         DamageApply damageApply = repayMapper.getDamageApply(id);
         if (damageApply == null) {//无记录无效
             map.put("result", "no");
+            map.put("msg", "查询申请记录失败");
             return;
         }
         if (damageApply.getStatus() != 0) {//已经审核过得无效
             map.put("result", "no");
+            map.put("msg", "重复操作");
             return;
         }
 //        if(damageApply.getEaxm_user_id()!=userId){//不是要求的审核人
@@ -477,6 +479,7 @@ public class RepayServiceImpl implements RepayService {
             map.put("result", "yes");
         } else {
             map.put("result", "no");
+            map.put("msg", "修改失败");
         }
     }
 
