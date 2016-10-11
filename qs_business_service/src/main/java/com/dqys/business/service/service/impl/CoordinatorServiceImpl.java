@@ -32,10 +32,7 @@ import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.business.Business;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.cases.CaseInfo;
-import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
-import com.dqys.business.orm.pojo.coordinator.OURelation;
-import com.dqys.business.orm.pojo.coordinator.TeammateRe;
-import com.dqys.business.orm.pojo.coordinator.UserTeam;
+import com.dqys.business.orm.pojo.coordinator.*;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.orm.pojo.zcy.ZcyEstates;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
@@ -1280,6 +1277,14 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
         }
         return null;
+    }
+
+    @Override
+    public Map getUserDetail(Integer userId) {
+        Map map = new HashMap<>();
+        UserDetail detail = coordinatorMapper.getUserDetail(userId);
+        map.put("detail",detail);
+        return map;
     }
 
     /**

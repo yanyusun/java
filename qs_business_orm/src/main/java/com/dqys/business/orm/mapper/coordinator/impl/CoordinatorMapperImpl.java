@@ -4,6 +4,7 @@ import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.coordinator.UserDetail;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.orm.pojo.zcy.dto.ZcyPawnDTO;
 import com.dqys.business.orm.query.coordinator.ZcyListQuery;
@@ -154,6 +155,11 @@ public class CoordinatorMapperImpl extends BaseDao implements CoordinatorMapper 
     @Override
     public List<Integer> findObjectIdByAssetSourceAll(Integer userId, Integer value) {
         return super.getSqlSession().getMapper(CoordinatorMapper.class).findObjectIdByAssetSourceAll(userId, value);
+    }
+
+    @Override
+    public UserDetail getUserDetail(Integer userId) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).getUserDetail(userId);
     }
 
 

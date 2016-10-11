@@ -454,6 +454,15 @@
         ON tut.user_id=ttr.accepter_id
         where tct.stateflag=0 AND ttr.stateflag=0 AND ttr.status=1 AND tct.object_id=#{objectId} and tct.object_type=#{objectType}
     </select>
+    <!--取员工相关信息-->
+    <select id="getUserDetail" resultType="com.dqys.business.orm.pojo.coordinator.UserDetail" parameterType="int">
+        SELECT tui.real_name realName,tui.avg,tui.mobile,tui.company_id companyId,tut.user_id userId,
+        tut.role_id roleType,tut.user_type userType,tut.occupation,tci.company_name companyName
+        from t_user_info tui LEFT JOIN t_user_tag tut
+        ON tut.user_id=tui.id LEFT JOIN t_company_info tci
+        ON tci.id=tui.company_id
+        WHERE tui.id=#{userId}
+    </select>
 
 
 </mapper>

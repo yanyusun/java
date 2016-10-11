@@ -211,4 +211,12 @@ public interface CoordinatorService {
      * @return
      */
     List<TeamDTO> getTeamList(Integer userId, Integer objectId, Integer objectType);
+
+    /**
+     * 获取员工明信片
+     *
+     * @param userId
+     * @return
+     */
+    Map getUserDetail(Integer userId);
 }

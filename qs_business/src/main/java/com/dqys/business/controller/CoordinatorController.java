@@ -106,6 +106,38 @@ public class CoordinatorController {
     }
 
     /**
+     * @api {post} coordinator/getUserDetail 获取员工明信片
+     * @apiParam {int} userId 用户id
+     * @apiSampleRequest coordinator/getUserDetail
+     * @apiGroup Coordinator
+     * @apiName coordinator/getUserDetail
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {
+     * "detail": {
+     * "userId": 285,
+     * "companyId": 409,
+     * "realName": "测试丰",//真实姓名
+     * "companyName": "风腾律所",//公司名称
+     * "mobile": "18267903327",//手机号
+     * "avg": null,//头像地址
+     * "roleType": 1,//角色类型（1-管理员;2-管理者;3-普通员工）
+     * "userType": 31,//用户类型（0普通用户1平台管理员2委托31催收32司法33中介）
+     * "occupation": null//职位
+     * }
+     * }
+     * }
+     */
+    @RequestMapping("/getUserDetail")
+    @ResponseBody
+    public JsonResponse getUserDetail(@RequestParam Integer userId) throws Exception {
+        Map map = coordinatorService.getUserDetail(userId);
+        return JsonResponseTool.success(map);
+    }
+
+    /**
      * @api {post} coordinator/userList 选择人员
      * @apiParam {string} realName 用户名称或真实姓名
      * @apiDescription 添加参与人的时候选择人员（公司所有员工）
