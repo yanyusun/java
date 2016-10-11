@@ -477,15 +477,15 @@ public class LenderServiceImpl implements LenderService {
         query.setObjectId(id);
         query.setUserId(userId);
         List<ObjectUserRelation> list = objectUserRelationMapper.list(query);
-        boolean flag = false;
+        boolean flag = false; // 是否业务流转
         if (list.size() > 0) {
             ObjectUserRelation our = list.get(0);
             if (our.getVisibleType() != null && our.getVisibleType() == 1) {
                 flag = true;
             }
         }
-        List<PawnInfo> pawnInfoList = new ArrayList<>();//抵押物
-        List<IOUInfo> iouList = new ArrayList<>();//借据
+        List<PawnInfo> pawnInfoList; //抵押物
+        List<IOUInfo> iouList; //借据
         if (flag) {
             pawnInfoList = pawnInfoMapper.pawnListByLenderId(id, userId, ObjectTypeEnum.PAWN.getValue(), MessageUtils.transStringToInt(userType));
             iouList = iouInfoMapper.iouListByLenderId(id, userId, ObjectTypeEnum.IOU.getValue(), MessageUtils.transStringToInt(userType));
