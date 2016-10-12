@@ -10,9 +10,12 @@ import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.business.service.service.AssetService;
 import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.service.UserService;
+<<<<<<< 077dd6bc01583822df3dbf40378a0ff7817124cc
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.business.service.utils.asset.IouServiceUtils;
 import com.dqys.business.service.utils.asset.LenderServiceUtils;
+=======
+>>>>>>> fix add asset.lender
 import com.dqys.business.service.utils.asset.PawnServiceUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
@@ -137,7 +140,11 @@ public class AssetController {
      */
     @RequestMapping(value = "/excelIn")
     public JsonResponse addLenders(@RequestParam(required = true) Integer id,
+<<<<<<< 077dd6bc01583822df3dbf40378a0ff7817124cc
                                    @RequestParam(required = true) String file) throws BusinessLogException {
+=======
+                                   @RequestParam(required = true) MultipartFile file) throws BusinessLogException {
+>>>>>>> fix add asset.lender
         if (CommonUtil.checkParam(id, file)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -179,6 +186,10 @@ public class AssetController {
      * @throws BusinessLogException
      */
     @RequestMapping(value = "/assignedBatch")
+<<<<<<< 077dd6bc01583822df3dbf40378a0ff7817124cc
+=======
+    @ResponseBody
+>>>>>>> fix add asset.lender
     public JsonResponse assignedBatch(@RequestParam("ids") String ids, @RequestParam("id") Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(ids, id)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -203,6 +214,7 @@ public class AssetController {
                 assetLenderInsertDTO.getLenderDTO(), assetLenderInsertDTO.getContactDTOList())) {
             return JsonResponseTool.paramErr("参数错误");
         }
+<<<<<<< 077dd6bc01583822df3dbf40378a0ff7817124cc
         String data = LenderServiceUtils.checkData(assetLenderInsertDTO.getLenderDTO());
         if (data != null) {
             return JsonResponseTool.paramErr(data);
@@ -223,11 +235,18 @@ public class AssetController {
                 return JsonResponseTool.paramErr(data);
             }
         }
+=======
+
+>>>>>>> fix add asset.lender
         return assetService.addLender_tx(assetLenderInsertDTO.getId(),
                 assetLenderInsertDTO.getContactDTOList(),
                 assetLenderInsertDTO.getLenderDTO(),
                 assetLenderInsertDTO.getPawnDTOList(),
                 assetLenderInsertDTO.getIouDTOList());
+<<<<<<< 077dd6bc01583822df3dbf40378a0ff7817124cc
+=======
+
+>>>>>>> fix add asset.lender
     }
 
 }

@@ -79,10 +79,21 @@ public class LenderController {
     }
 
     /**
+<<<<<<< 077dd6bc01583822df3dbf40378a0ff7817124cc
      * 新增借款人
      * @param lenderInsertDTO
      * @return
      * @throws BusinessLogException
+=======
+     * @api {post} http://{url}/lender/add 新增借款人
+     * @apiName add
+     * @apiGroup lender
+     * @apiParam {LenderDTO} lenderDTO 借款人基础信息
+     * @apiParam {ContactDTO} contactDTOs 联系人集合
+     * @apiUse LenderDTO
+     * @apiUse ContactDTO
+     * @apiSuccess {number} data 增加后的数据ID
+>>>>>>> fix add asset.lender
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
@@ -91,6 +102,7 @@ public class LenderController {
                 lenderInsertDTO.getContactDTOList().get(0))) {
             return JsonResponseTool.paramErr("参数错误");
         }
+<<<<<<< 077dd6bc01583822df3dbf40378a0ff7817124cc
         String data = LenderServiceUtils.checkData(lenderInsertDTO.getLenderDTO());
         if(data != null){
             return JsonResponseTool.paramErr(data);
@@ -99,6 +111,8 @@ public class LenderController {
         if(data != null){
             return JsonResponseTool.paramErr(data);
         }
+=======
+>>>>>>> fix add asset.lender
         return lenderService.add_tx(lenderInsertDTO.getContactDTOList(), lenderInsertDTO.getLenderDTO());
     }
 
@@ -127,6 +141,7 @@ public class LenderController {
     @ResponseBody
     public JsonResponse updateLenderRelation(@ModelAttribute LenderInsertDTO lenderInsertDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(
+<<<<<<< 077dd6bc01583822df3dbf40378a0ff7817124cc
                 lenderInsertDTO, lenderInsertDTO.getLenderDTO(), lenderInsertDTO.getLenderDTO().getId(),
                 lenderInsertDTO.getLenderDTO().getId())) {
             return JsonResponseTool.paramErr("参数错误");
@@ -139,6 +154,11 @@ public class LenderController {
         if(data != null){
             return JsonResponseTool.paramErr(data);
         }
+=======
+                lenderInsertDTO, lenderInsertDTO.getLenderDTO(), lenderInsertDTO.getLenderDTO().getId())) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+>>>>>>> fix add asset.lender
         return lenderService.update_tx(lenderInsertDTO.getContactDTOList(), lenderInsertDTO.getLenderDTO());
     }
 
