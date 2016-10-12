@@ -81,4 +81,16 @@ public interface DistributionService {
     JsonResponse updateBusinessService(Integer type, Integer id, Integer distributionId,
                                   Integer businessType, Integer status) throws BusinessLogException;
 
+    /**
+     * 删除业务流转的被添加公司
+     * @param id
+     * @param targetType
+     * @param targetId
+     * @return
+     * @throws BusinessLogException
+     */
+    JsonResponse exitBusinessService(Integer id, Integer targetType, Integer targetId) throws BusinessLogException;
+
+
+
 }

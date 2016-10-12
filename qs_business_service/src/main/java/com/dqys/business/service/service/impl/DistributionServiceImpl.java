@@ -37,7 +37,6 @@ import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.constant.ObjectLogEnum;
-import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.dto.company.BusinessServiceDTO;
 import com.dqys.business.service.dto.company.CompanyTeamReDTO;
 import com.dqys.business.service.dto.company.DistributionDTO;
@@ -53,10 +52,8 @@ import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
-import com.dqys.core.model.TSysProperty;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.*;
-import com.rabbitmq.http.client.domain.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -213,7 +210,8 @@ public class DistributionServiceImpl implements DistributionService {
                                 CompanyTeamRe ctr = companyTeamReList.get(keyMap.get(objectUserRelation.getUserId()));
                                 CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(ctr.getAcceptCompanyId());
                                 if (ctr != null && detail != null) {
-                                    serviceDTOList.add(createBSDTO(ctr, detail, pawnInfo.getName(), objectUserRelation.getCreateAt()));
+                                    serviceDTOList.add(createBSDTO(ctr, detail, pawnInfo.getId(), ObjectTypeEnum.PAWN.getValue(),
+                                            pawnInfo.getName(), objectUserRelation.getCreateAt()));
                                 }
                             }
                         }
@@ -222,7 +220,8 @@ public class DistributionServiceImpl implements DistributionService {
                             CompanyTeamRe ctr = companyTeamReList.get(keyMap.get(objectUserRelation.getUserId()));
                             CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(ctr.getAcceptCompanyId());
                             if (ctr != null && detail != null) {
-                                serviceDTOList.add(createBSDTO(ctr, detail, pawnInfo.getName(), objectUserRelation.getCreateAt()));
+                                serviceDTOList.add(createBSDTO(ctr, detail, ObjectTypeEnum.PAWN.getValue(),
+                                        pawnInfo.getId(), pawnInfo.getName(), objectUserRelation.getCreateAt()));
                             }
                         }
                     }
@@ -237,7 +236,8 @@ public class DistributionServiceImpl implements DistributionService {
                                 CompanyTeamRe ctr = companyTeamReList.get(keyMap.get(objectUserRelation.getUserId()));
                                 CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(ctr.getAcceptCompanyId());
                                 if (ctr != null && detail != null) {
-                                    serviceDTOList.add(createBSDTO(ctr, detail, iouInfo.getName(), objectUserRelation.getCreateAt()));
+                                    serviceDTOList.add(createBSDTO(ctr, detail, ObjectTypeEnum.IOU.getValue(),
+                                            iouInfo.getId(), iouInfo.getName(), objectUserRelation.getCreateAt()));
                                 }
                             }
                         }
@@ -246,7 +246,8 @@ public class DistributionServiceImpl implements DistributionService {
                             CompanyTeamRe ctr = companyTeamReList.get(keyMap.get(objectUserRelation.getUserId()));
                             CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(ctr.getAcceptCompanyId());
                             if (ctr != null && detail != null) {
-                                serviceDTOList.add(createBSDTO(ctr, detail, iouInfo.getName(), objectUserRelation.getCreateAt()));
+                                serviceDTOList.add(createBSDTO(ctr, detail, ObjectTypeEnum.IOU.getValue(),
+                                        iouInfo.getId(), iouInfo.getName(), objectUserRelation.getCreateAt()));
                             }
                         }
                     }
@@ -267,8 +268,8 @@ public class DistributionServiceImpl implements DistributionService {
      * @param time          业务流时间
      * @return
      */
-    private BusinessServiceDTO createBSDTO(CompanyTeamRe companyTeamRe, CompanyDetailInfo detail, String name,
-                                           Date time) {
+    private BusinessServiceDTO createBSDTO(CompanyTeamRe companyTeamRe, CompanyDetailInfo detail, Integer type,
+                                           Integer id, String name, Date time) {
         BusinessServiceDTO result = new BusinessServiceDTO();
 
         result.setId(companyTeamRe.getId());
@@ -276,13 +277,25 @@ public class DistributionServiceImpl implements DistributionService {
         result.setAvg(detail.getAvg());
 //        result.setType(detail.getType().toString());
         result.setName(detail.getCompanyName());
-        switch (detail.getType()){
-            case 1:result.setType("平台");break;
-            case 0:result.setType("普通用户");break;
-            case 31:result.setType("催收方");break;
-            case 32:result.setType("律所");break;
-            case 33:result.setType("中介");break;
-            case 2:result.setType("委托方");break;
+        switch (detail.getType()) {
+            case 1:
+                result.setType("平台");
+                break;
+            case 0:
+                result.setType("普通用户");
+                break;
+            case 31:
+                result.setType("催收方");
+                break;
+            case 32:
+                result.setType("律所");
+                break;
+            case 33:
+                result.setType("中介");
+                break;
+            case 2:
+                result.setType("委托方");
+                break;
         }
         result.setAddress(AreaTool.getAreaById(detail.getProvince()).getLabel()
                 + AreaTool.getAreaById(detail.getCity()).getLabel()
@@ -290,6 +303,7 @@ public class DistributionServiceImpl implements DistributionService {
         result.setRate(companyTeamRe.getStatus() + "/" + companyTeamRe.getVersion()); // 临时存储,version全部,status完成数
         result.setTask(companyTeamRe.getVersion() - companyTeamRe.getStatus());
         result.setTarget(name);
+        result.setTargetId(id);
         result.setTime(time);
 
         return result;
@@ -804,11 +818,17 @@ public class DistributionServiceImpl implements DistributionService {
         if (companyDetailInfo == null) {
             return JsonResponseTool.paramErr("信息错误，请联系管理员");
         }
+        // 校验是否为参加的处置方
+        if (companyTeamRe.getType().equals(ObjectBusinessTypeEnum.create.getValue())
+                || companyTeamRe.getAccepterId().equals(UserSession.getCurrent().getUserId())) {
+            return JsonResponseTool.failure("创建方和平台方无法删除");
+        }
         Integer result = companyTeamReMapper.deleteByPrimaryKey(id);
         if (CommonUtil.checkResult(result)) {
             return JsonResponseTool.failure("删除失败");
         } else {
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
+
             // 添加操作记录
             businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), ObjectLogEnum.exit.getValue(),
                     "", "移除分配器内容对象成员id:" + id, 0, 0);
@@ -855,7 +875,7 @@ public class DistributionServiceImpl implements DistributionService {
             messageMapper.add(message);
             // 去除介入信息
             if (companyTeam != null) {
-                // 删除操作者与操作事物的关联(包含业务流转)
+                // 删除操作者与操作事物的关联
                 if (companyTeam.getObjectType().equals(ObjectTypeEnum.ASSETPACKAGE.getValue())) {
                     deleteAssetObjectUserRelation(companyTeam.getObjectId(), companyTeam.getId(),
                             companyDetailInfo.getUserId());
@@ -986,15 +1006,16 @@ public class DistributionServiceImpl implements DistributionService {
 
     /**
      * 增加对象关系
-     * @param type 对象类型
-     * @param id 对象ID
-     * @param managerId 对方管理员
+     *
+     * @param type        对象类型
+     * @param id          对象ID
+     * @param managerId   对方管理员
      * @param companyTeam 分配器
-     * @param status 接收状态
-     * @param flag 是否开启增加其借款人的关联关系
+     * @param status      接收状态
+     * @param flag        是否开启增加其借款人的关联关系
      */
     private String addBusinessObjectUserRelation(Integer type, Integer id, Integer managerId,
-                                               CompanyTeam companyTeam, Integer status, boolean flag){
+                                                 CompanyTeam companyTeam, Integer status, boolean flag) {
 
         BusinessObjRe businessObjRe = businessObjReMapper.getByObject(companyTeam.getObjectType(), companyTeam.getObjectId());
         ObjectUserRelationQuery query = new ObjectUserRelationQuery();
@@ -1020,7 +1041,7 @@ public class DistributionServiceImpl implements DistributionService {
             objectUserRelation.setEmployerId(companyTeam.getId());
             objectUserRelation.setBusinessId(businessObjRe.getBusinessId());
             objectUserRelationMapper.insert(objectUserRelation);
-            if(flag){
+            if (flag) {
                 // 增加所属借款人的对象
                 query.setObjectType(ObjectTypeEnum.LENDER.getValue());
                 if (ObjectTypeEnum.IOU.getValue().equals(type)) {
@@ -1046,6 +1067,136 @@ public class DistributionServiceImpl implements DistributionService {
         }
         return null;
     }
+
+    @Override
+    public JsonResponse exitBusinessService(Integer id, Integer targetType, Integer targetId) throws BusinessLogException {
+        if (id == null || targetId == null) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if (!CommonUtil.isManage()) {
+            return JsonResponseTool.paramErr("权限错误，非平台管理员");
+        }
+        // 存在该分配数据
+        CompanyTeamRe companyTeamRe = companyTeamReMapper.get(id);
+        if (companyTeamRe == null) {
+            return JsonResponseTool.paramErr("参数错误，分配器成员不存在");
+        }
+        // 校验是否为业务流转类型
+        if (companyTeamRe.getType().equals(ObjectBusinessTypeEnum.mechanism.getValue())) {
+            return JsonResponseTool.failure("不是业务流转数据，无法删除");
+        }
+        Integer result = companyTeamReMapper.deleteByPrimaryKey(id);
+        if (CommonUtil.checkResult(result)) {
+            return JsonResponseTool.failure("删除失败");
+        } else {
+            CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
+            // 添加操作记录
+            businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), ObjectLogEnum.exit.getValue(),
+                    "", "移除业务流转对象对象成员id:" + id, 0, 0);
+            // 去除介入信息
+            if (companyTeam != null) {
+                // 删除操作者与操作事物的关联
+                clearBusinessObjectUserRelation(targetType, targetId, companyTeamRe.getRequesterId(), companyTeam);
+                // 清除相关联的抵押物或者借据状态值
+                clearObjectBusinessStatus(targetType, targetId);
+                RelationQuery relationQuery = new RelationQuery();
+                if(targetType.equals(ObjectTypeEnum.IOU.getValue())){
+                    relationQuery.setIouId(targetId);
+                    List<PiRelation> relationList = piRelationMapper.queryList(relationQuery);
+                    for (PiRelation piRelation : relationList) {
+                        clearObjectBusinessStatus(ObjectTypeEnum.PAWN.getValue(), piRelation.getPawnId());
+                    }
+                }else if(targetType.equals(ObjectTypeEnum.PAWN.getValue())){
+                    relationQuery.setPawnId(targetId);
+                    List<PiRelation> relationList = piRelationMapper.queryList(relationQuery);
+                    for (PiRelation piRelation : relationList) {
+                        clearObjectBusinessStatus(ObjectTypeEnum.IOU.getValue(), piRelation.getIouId());
+                    }
+                }
+            }
+            return JsonResponseTool.success(result);
+        }
+    }
+
+    /**
+     * 清除业务流转对象关系
+     *
+     * @param type        对象类型
+     * @param id          对象ID
+     * @param managerId   对方管理员
+     * @param companyTeam 分配器
+     */
+    private void clearBusinessObjectUserRelation(Integer type, Integer id, Integer managerId, CompanyTeam companyTeam) {
+
+        BusinessObjRe businessObjRe = businessObjReMapper.getByObject(companyTeam.getObjectType(), companyTeam.getObjectId());
+        ObjectUserRelationQuery query = new ObjectUserRelationQuery();
+        query.setType(type);
+        query.setId(id);
+        query.setUserId(managerId); // 只有管理员才可以接收
+        query.setType(BusinessRelationEnum.dispose.getValue());
+        query.setEmployerId(companyTeam.getId());
+        query.setBusinessId(businessObjRe.getBusinessId());
+        List<ObjectUserRelation> relationList = objectUserRelationMapper.list(query);
+        if (relationList != null && relationList.size() > 0) {
+            // 理论上只有一条
+            objectUserRelationMapper.deleteByPrimaryKey(relationList.get(0).getId());
+        }
+        // 判断是否为最后一个关联关系,是则删除该借款人的关联关系
+        Integer lenderId = null;
+        if (type.equals(ObjectTypeEnum.PAWN.getValue())) {
+            PawnInfo pawnInfo = pawnInfoMapper.get(id);
+            if (pawnInfo != null && pawnInfo.getLenderId() != null) {
+                lenderId = pawnInfo.getLenderId();
+            }
+        } else if (type.equals(ObjectTypeEnum.IOU.getValue())) {
+            IOUInfo iouInfo = iouInfoMapper.get(id);
+            if (iouInfo != null && iouInfo.getLenderId() != null) {
+                lenderId = iouInfo.getLenderId();
+            }
+        }
+        query.setType(null);
+        query.setId(null);
+        relationList = objectUserRelationMapper.list(query);
+        Boolean flag = true; // 是最后一个
+        if (relationList != null && relationList.size() > 1) {
+            for (ObjectUserRelation objectUserRelation : relationList) {
+                if(objectUserRelation.getType().equals(ObjectTypeEnum.PAWN.getValue())){
+                    if(pawnInfoMapper.get(objectUserRelation.getId()).getLenderId().equals(lenderId)){
+                        flag = false;break;
+                    }
+                }else if(objectUserRelation.getType().equals(ObjectTypeEnum.IOU.getValue())){
+                    if(iouInfoMapper.get(objectUserRelation.getId()).getLenderId().equals(lenderId)){
+                        flag = false;break;
+                    }
+                }
+            }
+        }
+        if (flag) {
+            query.setObjectType(ObjectTypeEnum.LENDER.getValue());
+            if (type.equals(ObjectTypeEnum.PAWN.getValue())) {
+                PawnInfo pawnInfo = pawnInfoMapper.get(id);
+                if (pawnInfo != null && pawnInfo.getLenderId() != null) {
+                    query.setId(pawnInfo.getLenderId());
+                    relationList = objectUserRelationMapper.list(query);
+                    if (relationList != null && relationList.size() > 0) {
+                        // 理论上只有一条
+                        objectUserRelationMapper.deleteByPrimaryKey(relationList.get(0).getId());
+                    }
+                }
+            } else if (type.equals(ObjectTypeEnum.IOU.getValue())) {
+                IOUInfo iouInfo = iouInfoMapper.get(id);
+                if (iouInfo != null && iouInfo.getLenderId() != null) {
+                    query.setId(iouInfo.getLenderId());
+                    relationList = objectUserRelationMapper.list(query);
+                    if (relationList != null && relationList.size() > 0) {
+                        // 理论上只有一条
+                        objectUserRelationMapper.deleteByPrimaryKey(relationList.get(0).getId());
+                    }
+                }
+            }
+        }
+    }
+
 
     /**
      * 平台为处置机构添加业务流转公司发送的短信接口
@@ -1148,9 +1299,9 @@ public class DistributionServiceImpl implements DistributionService {
                             List<PiRelation> relationList = piRelationMapper.queryList(query1);
                             relationList.forEach(piRelation -> {
                                 // 创建对象关联关系
-                                addBusinessObjectUserRelation(ObjectTypeEnum.IOU.getValue(), piRelation.getIouId(),
-                                        relation.getUserId(), companyTeam,
-                                        ObjectUserStatusEnum.accepted.getValue(), false);
+//                                addBusinessObjectUserRelation(ObjectTypeEnum.IOU.getValue(), piRelation.getIouId(),
+//                                        relation.getUserId(), companyTeam,
+//                                        ObjectUserStatusEnum.accepted.getValue(), false);
                                 // 修改关联借据的相关状态值
                                 changeIouBusiness(piRelation.getIouId(), businessType, companyDetailInfo);
                             });
@@ -1174,9 +1325,9 @@ public class DistributionServiceImpl implements DistributionService {
                             List<PiRelation> relationList = piRelationMapper.queryList(query1);
                             relationList.forEach(piRelation -> {
                                 // 创建对象关联关系
-                                addBusinessObjectUserRelation(ObjectTypeEnum.PAWN.getValue(), piRelation.getPawnId(),
-                                        relation.getUserId(), companyTeam,
-                                        ObjectUserStatusEnum.accepted.getValue(), false);
+//                                addBusinessObjectUserRelation(ObjectTypeEnum.PAWN.getValue(), piRelation.getPawnId(),
+//                                        relation.getUserId(), companyTeam,
+//                                        ObjectUserStatusEnum.accepted.getValue(), false);
                                 // 修改关联抵押物的关联状态值
                                 changePawnBusiness(piRelation.getPawnId(), businessType, companyDetailInfo);
                             });
@@ -1235,11 +1386,6 @@ public class DistributionServiceImpl implements DistributionService {
         }
     }
 
-
-    private String addRelationBusinessObject(){
-
-        return null;
-    }
 
     /**
      * 增加公司关联信息
@@ -1610,6 +1756,34 @@ public class DistributionServiceImpl implements DistributionService {
             }
         }
         return null;
+    }
+
+    /**
+     * 清除对象的业务流转状态值
+     *
+     * @param type 对象类型
+     * @param id   对象id
+     */
+    private void clearObjectBusinessStatus(Integer type, Integer id) {
+        if (!CommonUtil.checkParam(type, id)) {
+            if (type.equals(ObjectTypeEnum.PAWN.getValue())) {
+                PawnInfo pawnInfo = pawnInfoMapper.get(id);
+                if (pawnInfo != null) {
+                    pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+                    pawnInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+                    pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+                    pawnInfoMapper.update(pawnInfo);
+                }
+            } else if (type.equals(ObjectTypeEnum.IOU.getValue())) {
+                IOUInfo info = iouInfoMapper.get(id);
+                if (info != null) {
+                    info.setOnAgent(SysProperty.BOOLEAN_TRUE);
+                    info.setOnCollection(SysProperty.BOOLEAN_TRUE);
+                    info.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+                    iouInfoMapper.update(info);
+                }
+            }
+        }
     }
 
 }

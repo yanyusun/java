@@ -15,10 +15,29 @@ public class BusinessServiceDTO {
     private String address; // 地址
     private String rate; // 业绩比率
     private Integer task; // 正在进行的任务
+    private Integer targetType; // 针对对象类型
+    private Integer targetId; // 针对对象ID
     private String target; // 针对对象
     private Date time; // 接收时间
     private Integer stateflag; // 数据状态
     private Integer status; // 接受状态
+
+
+    public Integer getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(Integer targetType) {
+        this.targetType = targetType;
+    }
+
+    public Integer getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(Integer targetId) {
+        this.targetId = targetId;
+    }
 
     public Integer getStatus() {
         return status;
