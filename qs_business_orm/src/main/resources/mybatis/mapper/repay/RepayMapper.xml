@@ -17,6 +17,8 @@
         <result column="status" property="status" jdbcType="INTEGER"/>
         <result column="repay_fid_type" property="repayFidType" jdbcType="INTEGER"/>
         <result column="lender_id" property="lenderId" jdbcType="INTEGER"></result>
+        <result column="lenderName" property="lenderName" jdbcType="VARCHAR"/>
+        <result column="operUserName" property="operUserName" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap id="ResultMapWithBLOBs" type="com.dqys.business.orm.pojo.repay.Repay" extends="BaseResultMapRepay">
         <result column="repay_bills" property="repayBills" jdbcType="VARCHAR"/>
@@ -511,7 +513,9 @@
     </update>
     <!--还款记录列表-->
     <select id="selectByRepay" resultMap="BaseResultMapRepay" parameterType="com.dqys.business.orm.pojo.repay.Repay">
-        SELECT * from t_repay rep
+        SELECT rep.*,tui.real_name operUserName,bc.name lenderName from t_repay rep LEFT JOIN t_user_info tui
+        ON tui.id=rep.oper_user_id LEFT JOIN bt_contact bc
+        ON bc.mode=11 AND bc.mode_id=rep.lender_id AND bc.type=1
         where rep.stateflag=0
         <if test="repayType !=null">
             and rep.repay_type=#{repayType}
