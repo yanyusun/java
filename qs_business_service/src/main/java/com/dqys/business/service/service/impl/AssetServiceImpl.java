@@ -672,7 +672,8 @@ public class AssetServiceImpl implements AssetService {
             if (CommonUtil.checkParam(ids)) {
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
             } else {
-                assetQuery.setIds(ids);
+                // 这里引入业务的处置中状态
+                assetQuery.setIds(CommonUtil.unionList(ids, managerDisposeIds));
             }
             assetQuery.setTakePart(true);
         } else if (ObjectTabEnum.stop.getValue().equals(type)) {

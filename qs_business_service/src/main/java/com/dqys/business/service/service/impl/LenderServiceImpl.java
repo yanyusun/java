@@ -1043,7 +1043,8 @@ public class LenderServiceImpl implements LenderService {
             if (CommonUtil.checkParam(ids)) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             } else {
-                lenderQuery.setIds(ids);
+                // 这里引入业务的处置中状态
+                lenderQuery.setIds(CommonUtil.unionList(ids, managerDisposeIds));
             }
             lenderQuery.setIsTakePart(true);
         } else if (ObjectTabEnum.stop.getValue().equals(tab)) {

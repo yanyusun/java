@@ -21,6 +21,25 @@ public class Repay implements Serializable {
     private Integer repayFidType;//int(5) DEFAULT NULL COMMENT '还款主体类型（借据或抵押物）',
     private Integer status;//'状态（0还清，1还部分 ,2无效）',
     private Integer lenderId;//借款人id
+    private String lenderName;//借款人姓名
+    private String operUserName;//操作员姓名
+
+
+    public String getLenderName() {
+        return lenderName;
+    }
+
+    public void setLenderName(String lenderName) {
+        this.lenderName = lenderName;
+    }
+
+    public String getOperUserName() {
+        return operUserName;
+    }
+
+    public void setOperUserName(String operUserName) {
+        this.operUserName = operUserName;
+    }
 
     public Integer getLenderId() {
         return lenderId;

@@ -45,8 +45,8 @@ public class MessageMapperImpl extends BaseDao implements MessageMapper {
     }
 
     @Override
-    public Integer update(Message message) {
-        return super.getSqlSession().getMapper(MessageMapper.class).update(message);
+    public Integer updateOperStatus(Message message) {
+        return super.getSqlSession().getMapper(MessageMapper.class).updateOperStatus(message);
     }
 
 }
