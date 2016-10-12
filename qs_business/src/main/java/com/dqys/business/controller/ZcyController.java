@@ -273,6 +273,10 @@ public class ZcyController {
             return JsonResponseTool.paramErr("参数有误");
         }
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        String userType = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getUserType().split(",")[0];
+        if (CommonUtil.isManage()) {//平台方不用根据用户id查询
+            userId = null;
+        }
         Map map = new HashMap<>();
         if (zcyListQuery.getPage() < 0) {
             zcyListQuery.setPage(0);
