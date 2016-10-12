@@ -62,7 +62,9 @@ public class RepayController {
      * "stateflag": 0,//
      * "repayFidType": 1,//还款主体类型（借据或抵押物）
      * "status": 1,//状态（0还清，1还部分，2还款无效）
-     * "lenderId": 190//借款人id
+     * "lenderId": 346,//借款人id
+     * "lenderName": "1",//借款人姓名
+     * "operUserName": "催收测试" //操作员姓名
      * }
      * ]
      * }
