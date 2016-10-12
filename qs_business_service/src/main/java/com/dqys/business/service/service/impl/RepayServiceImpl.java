@@ -32,6 +32,7 @@ import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.utils.DateFormatTool;
 import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.SmsUtil;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.UnexpectedRollbackException;
@@ -545,7 +546,9 @@ public class RepayServiceImpl implements RepayService {
             repayMapper.deleteByRepay(repayId);//删除冲正后的还款记录，重新进行新还款操作
             map = repayMoney(userId, objectId, objectType, repayType, repayWay, money, remark, file);//还款
             if (!MessageUtils.transMapToString(map, "result").equals("yes")) {
-                throw new ArtificialException(map.toString(), 1001);
+//                ObjectMapper objectMapper = new ObjectMapper();
+//                String json = objectMapper.writeValueAsString(map);
+                throw new ArtificialException(MessageUtils.transMapToString(map, "msg"), 1001);
 //                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             }
         } else {
