@@ -25,7 +25,7 @@ public class ZcyPawnDTO implements Serializable {
     private Integer daiKan = 0;//带看
     private Integer daiKanLately = 0;//最近带看
     private Integer keKan = 0;//可看
-    private Integer shiKan = 0;//实勘
+    private Integer shiKan = 0;//实勘(添加的文件数量)
     private String maintaining;//维护人
     private Integer currentBooking = 0;//当前预约
     private Integer realityDynamic = 0;//实际动态

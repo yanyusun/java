@@ -727,7 +727,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         SmsUtil smsUtil = new SmsUtil();//发送短信通知
         for (Map receive_id : receive_ids) {
             Integer rec = MessageUtils.transMapToInt(receive_id, "user_id");
-            if (!rec.equals(userId)) {
+            if (rec != null && !userId.equals(rec)) {
                 Map userC = coordinatorMapper.getUserAndCompanyByUserId(rec);
                 Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);
                 String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
@@ -1283,7 +1283,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     public Map getUserDetail(Integer userId) {
         Map map = new HashMap<>();
         UserDetail detail = coordinatorMapper.getUserDetail(userId);
-        map.put("detail",detail);
+        map.put("detail", detail);
         return map;
     }
 
