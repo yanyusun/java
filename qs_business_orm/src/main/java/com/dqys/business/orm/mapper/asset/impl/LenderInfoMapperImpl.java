@@ -51,4 +51,8 @@ public class LenderInfoMapperImpl extends BaseDao implements LenderInfoMapper {
         return super.getSqlSession().getMapper(LenderInfoMapper.class).queryCount(lenderQuery);
     }
 
+    @Override
+    public List<Integer> likeList(String str) {
+        return super.getSqlSession().getMapper(LenderInfoMapper.class).likeList(str);
+    }
 }
