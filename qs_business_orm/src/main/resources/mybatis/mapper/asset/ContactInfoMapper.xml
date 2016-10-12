@@ -43,28 +43,28 @@
        AND id = #{id,jdbcType=INTEGER}
       </if>
       <if test="mode != null" >
-        mode = #{mode,jdbcType=VARCHAR},
+        AND mode = #{mode,jdbcType=VARCHAR}
       </if>
       <if test="modeId != null" >
-        mode_id = #{modeId,jdbcType=VARCHAR},
+        AND mode_id = #{modeId,jdbcType=VARCHAR}
       </if>
       <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
+        AND name = #{name,jdbcType=VARCHAR}
       </if>
       <if test="type != null" >
-        type = #{type,jdbcType=INTEGER},
+        AND type = #{type,jdbcType=INTEGER}
       </if>
       <if test="idCard != null" >
-        idcard = #{idCard,jdbcType=VARCHAR},
+        AND idcard = #{idCard,jdbcType=VARCHAR}
       </if>
       <if test="mobile != null" >
-        mobile = #{mobile,jdbcType=VARCHAR},
+        AND mobile = #{mobile,jdbcType=VARCHAR}
       </if>
       <if test="email != null" >
-        email = #{email,jdbcType=VARCHAR},
+        AND email = #{email,jdbcType=VARCHAR}
       </if>
       <if test="code != null" >
-        code = #{code,jdbcType=VARCHAR},
+        AND code = #{code,jdbcType=VARCHAR}
       </if>
 
       <if test="idCardLike != null">

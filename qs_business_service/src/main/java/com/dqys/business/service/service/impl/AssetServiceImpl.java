@@ -606,13 +606,13 @@ public class AssetServiceImpl implements AssetService {
             }
             assetQuery.setOperator(userInfo.getId());
             if (!flag) {
-                if (isPlatformOrEntrust) {
+//                if (isPlatformOrEntrust) { // 修改于10.11
                     if (businessIds != null && businessIds.size() > 0) {
                         assetQuery.setIds(businessIds);
                     } else {
                         assetQuery.setId(SysProperty.NULL_DATA_ID);
                     }
-                }
+//                }
             }
         } else if (ObjectTabEnum.new48h.getValue().equals(type)) {
             // 48h 新
