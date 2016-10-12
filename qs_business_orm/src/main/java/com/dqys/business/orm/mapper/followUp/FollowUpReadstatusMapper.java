@@ -37,4 +37,12 @@ public interface FollowUpReadstatusMapper {
     void deleteByOOL(@Param("objectId") int objectId, @Param("objectType") int objectType, @Param("liquidateStage") int liquidateStage,@Param("userId") int userId);
 
     List<Map<String, String>> getCountMap(@Param("objectId") int objectId, @Param("objectType") int objectType, @Param("userId") int userId);
+
+    /**
+     * 获取表object_user_relation 的userid
+     *
+     * @return
+     */
+    Integer countByTypeIdUser(@Param("objectId")Integer objectId, @Param("objectType")Integer objectType,
+                              @Param("userId")Integer userId);
 }

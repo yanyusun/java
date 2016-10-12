@@ -38,6 +38,8 @@
     <result column="is_lawyer" property="isLawyer" jdbcType="INTEGER" />
     <result column="is_stop" property="isStop" jdbcType="INTEGER" />
     <result column="repay_status" property="repayStatus" jdbcType="INTEGER" />
+    <result column="entrust_name" property="entrustName" jdbcType="VARCHAR" />
+    <result column="attribute" property="attribute" jdbcType="INTEGER" />
   </resultMap>
 
   <sql id="Base_Column_List" >
@@ -45,7 +47,7 @@
     end_at, operator, accrual, loan, appraisal, name, evaluate_excellent, evaluate_level, province,
     city, district, address, loan_organization, loan_organization_district, dispose_mode,
     tags, isshow, follow_up_time, follow_up_times, belong_up_time, belong_up_times, is_collection,
-    is_lawyer, is_stop, is_agent, repay_status
+    is_lawyer, is_stop, is_agent, repay_status, entrust_name, attribute
   </sql>
 
   <sql id="Query_Condition">
@@ -60,7 +62,7 @@
         AND type = #{type,jdbcType=TINYINT}
       </if>
       <if test="areaId != null">
-        AND city = #{areaId,jdbcType=INTEGER}
+        AND district = #{areaId,jdbcType=INTEGER}
       </if>
       <if test="operator != null">
         AND operator = #{operator,jdbcType=INTEGER}
@@ -70,6 +72,9 @@
       </if>
       <if test="repayStatus != null">
         AND repay_status = #{repayStatus,jdbcType=VARCHAR}
+      </if>
+      <if test="entrustName != null">
+        AND entrust_name = #{entrustName,jdbcType=VARCHAR}
       </if>
 
       <if test="outTime">
@@ -208,6 +213,12 @@
       <if test="repayStatus != null" >
         repay_status,
       </if>
+      <if test="entrustName != null" >
+        entrust_name,
+      </if>
+      <if test="attribute != null" >
+        attribute,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -299,6 +310,12 @@
       </if>
       <if test="repayStatus != null" >
         #{repayStatus,jdbcType=INTEGER},
+      </if>
+      <if test="entrustName != null" >
+        #{entrustName,jdbcType=VARCHAR},
+      </if>
+      <if test="attribute != null" >
+        #{attribute,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -406,6 +423,12 @@
       </if>
       <if test="repayStatus != null" >
         repay_status = #{repayStatus,jdbcType=INTEGER},
+      </if>
+      <if test="entrustName != null" >
+        entrust_name = #{entrustName,jdbcType=VARCHAR},
+      </if>
+      <if test="attribute != null" >
+        attribute = #{attribute,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER} AND stateflag = 0

@@ -258,21 +258,26 @@ public class LenderServiceUtils {
         if (lenderQuery.getId() == null && lenderListQuery.getId() != null) {
             lenderQuery.setId(lenderListQuery.getId());
         }
-        if (lenderListQuery.getIsOutTime() != null) {
+//        if (lenderListQuery.getIsOutTime() != null) {
+        if (lenderListQuery.isOutTime()) {
             lenderQuery.setIsOutTime(true);
         }
-        if ("1".equals(lenderListQuery.getIsOwn())) {
+//        if ("1".equals(lenderListQuery.getIsOwn())) {
+        if (lenderListQuery.isOwn()) {
             if (lenderQuery.getOperator() != null && !UserSession.getCurrent().getUserId().equals(lenderQuery.getOperator())) {
                 lenderQuery.setOperator(0);
             } else {
                 lenderQuery.setOperator(UserSession.getCurrent().getUserId());
             }
         }
-        if ("1".equals(lenderListQuery.getIsAsset())) {
+//        if ("1".equals(lenderListQuery.getIsAsset())) {
+        if (lenderListQuery.isAsset()) {
             lenderQuery.setIsAsset(true);
         }
-        lenderQuery.setCanContact(lenderListQuery.getCanContact());
-        lenderQuery.setIsWorth(lenderListQuery.getIsWorth());
+//        lenderQuery.setCanContact(lenderListQuery.getCanContact());
+        lenderQuery.setCanContact(lenderListQuery.isCanContact()?1:null);
+//        lenderQuery.setIsWorth(lenderListQuery.getIsWorth());
+        lenderQuery.setIsWorth(lenderListQuery.isWorth()?1:null);
         lenderQuery.setEntrustId(lenderListQuery.getEntrustId());
 
         return lenderQuery;

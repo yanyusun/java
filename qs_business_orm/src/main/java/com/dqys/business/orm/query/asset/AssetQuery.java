@@ -17,6 +17,7 @@ public class AssetQuery extends BaseQuery {
     private Integer operator; // 操作人
     private String code; // 资产包编号
     private Integer repayStatus; // 还款
+    private String entrustName; // 委托方名称
 
     private Date startAt; // 开始时间
     private Date endAt; // 结束时间
@@ -29,6 +30,14 @@ public class AssetQuery extends BaseQuery {
     private boolean noTakePart; // 没有处置方加入
     private boolean isStop; // 暂停
 
+
+    public String getEntrustName() {
+        return entrustName;
+    }
+
+    public void setEntrustName(String entrustName) {
+        this.entrustName = entrustName;
+    }
 
     public boolean isNoTakePart() {
         return noTakePart;

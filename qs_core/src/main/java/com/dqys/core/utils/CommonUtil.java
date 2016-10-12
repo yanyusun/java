@@ -111,6 +111,9 @@ public class CommonUtil {
             return false;
         }
         for (Double num : numArr) {
+            if(num/10/10 > 999999999){ // 少于百亿
+                return false;
+            }
             Double number = num * 1000;
             if (number % 10 > 0) {
                 return false;
