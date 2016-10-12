@@ -55,5 +55,10 @@ public interface LenderInfoMapper {
      */
     Integer queryCount(LenderQuery lenderQuery);
 
-
+    /**
+     * 模糊查询列表
+     * @param str
+     * @return
+     */
+    List<Integer> likeList(String str);
 }

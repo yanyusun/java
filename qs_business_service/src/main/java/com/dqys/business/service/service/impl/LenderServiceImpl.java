@@ -137,12 +137,15 @@ public class LenderServiceImpl implements LenderService {
             List<ContactInfo> contactInfoList = contactInfoMapper.queryList(contactQuery);
             List<Integer> ids = new ArrayList<>();
             contactInfoList.forEach(contactInfo -> {
-                ids.add(contactInfo.getId());
+                ids.add(contactInfo.getModeId());
             });
+//            lenderQuery.setListSearch(lenderListQuery.getSearch());
+            // 這裡模糊查询是或结构，故需要先查询出借款人的符合数据
+            List<Integer> listSearchIds = lenderInfoMapper.likeList(lenderListQuery.getSearch());
             if (!CommonUtil.checkParam(lenderQuery.getIds())) {
-                lenderQuery.setIds(CommonUtil.unionList(lenderQuery.getIds(), ids));
+                lenderQuery.setIds(CommonUtil.unionList(lenderQuery.getIds(),
+                        CommonUtil.pickList(listSearchIds, ids)));
             }
-            lenderQuery.setListSearch(lenderListQuery.getSearch());
         }
         if (lenderListQuery.getBelong() != null) {
             // 所属人

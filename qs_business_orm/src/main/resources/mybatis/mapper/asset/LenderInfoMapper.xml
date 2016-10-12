@@ -145,8 +145,8 @@
 
 
       <if test="listSearch != null">
-        AND (memo LIKE CONCAT('%', #{listSearch,jdbcType=VARHCAR} ,'%')
-        OR lender_no LIKE CONCAT('%', #{listSearch,jdbcType=VARHCAR} ,'%'))
+        AND (memo LIKE CONCAT('%', #{listSearch,jdbcType=VARCHAR} ,'%')
+        OR lender_no LIKE CONCAT('%', #{listSearch,jdbcType=VARCHAR} ,'%'))
       </if>
 
 
@@ -599,6 +599,11 @@
   <select id="queryCount" resultType="java.lang.Integer" parameterType="com.dqys.business.orm.query.asset.LenderQuery">
     SELECT COUNT(id) FROM bt_lender
     <include refid="Query_Condition" />
+  </select>
+
+  <select id="likeList" parameterType="java.lang.String" resultType="java.lang.Integer">
+    SELECT id from bt_lender where memo LIKE CONCAT('%', #{listSearch,jdbcType=VARCHAR} ,'%')
+        OR lender_no LIKE CONCAT('%', #{listSearch,jdbcType=VARCHAR} ,'%')
   </select>
   
 </mapper>
