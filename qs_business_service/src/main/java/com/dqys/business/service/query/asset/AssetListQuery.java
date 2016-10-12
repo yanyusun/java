@@ -12,16 +12,19 @@ public class AssetListQuery extends BasePagination {
 
     private Integer type; //资产包种类
     private Integer areaId; // 区域ID
-    private Integer operator; // 操作人
-    private Integer companyId; // 公司Id
+    private String entrustName; // 委托方名称
     private String code; // 资产包编号
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd 00:00:00")
     private Date startAt;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd 23:59:59")
     private Date endAt;
 
-    private boolean isOwn; // 是否自己创建的资产包(0未选中,1选中)
+    private boolean own; // 是否自己创建的资产包(0未选中,1选中)
+
+//    private Integer operator; // 操作人
+//    private Integer companyId; // 公司Id
+
 
     public Integer getType() {
         return type;
@@ -39,20 +42,12 @@ public class AssetListQuery extends BasePagination {
         this.areaId = areaId;
     }
 
-    public Integer getOperator() {
-        return operator;
+    public String getEntrustName() {
+        return entrustName;
     }
 
-    public void setOperator(Integer operator) {
-        this.operator = operator;
-    }
-
-    public Integer getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
+    public void setEntrustName(String entrustName) {
+        this.entrustName = entrustName;
     }
 
     public String getCode() {
@@ -80,10 +75,10 @@ public class AssetListQuery extends BasePagination {
     }
 
     public boolean isOwn() {
-        return isOwn;
+        return own;
     }
 
-    public void setIsOwn(boolean isOwn) {
-        this.isOwn = isOwn;
+    public void setOwn(boolean own) {
+        this.own = own;
     }
 }

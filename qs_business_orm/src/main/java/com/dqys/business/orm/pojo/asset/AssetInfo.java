@@ -30,6 +30,8 @@ public class AssetInfo extends BaseModel  {
     private String disposeMode;  // 处置方式
     private String tags;  //  标签
     private Integer isshow;  // 是否展示外网
+    private String entrustName; // 委托方名称
+    private Integer attribute; // 属性（0私有，1公有）
 
     private Integer followUpTimes;
     private Date followUpTime;
@@ -54,6 +56,23 @@ public class AssetInfo extends BaseModel  {
                 + ",tags:" + tags + ",isshow:" + isshow;
         string += "]";
         return string;
+    }
+
+
+    public String getEntrustName() {
+        return entrustName;
+    }
+
+    public void setEntrustName(String entrustName) {
+        this.entrustName = entrustName;
+    }
+
+    public Integer getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(Integer attribute) {
+        this.attribute = attribute;
     }
 
     public Integer getRepayStatus() {

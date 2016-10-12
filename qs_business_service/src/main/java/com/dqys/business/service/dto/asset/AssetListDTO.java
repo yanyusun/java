@@ -17,6 +17,8 @@ public class AssetListDTO {
     private Double appraisal; // 评估总价
     private String company; // 贷款机构
     private String city; // 行政区划
+    private String entrustName; // 委托方名称
+    private Integer attribute; // 属性
 
     private Long lessDay; // 剩余天数
     private String rate; // 完成率
@@ -25,6 +27,51 @@ public class AssetListDTO {
     private Date createAt; // 创建时间
     private String remark; // 备注
     private Integer flag; // 状态(有效|无效)
+
+    private Date lastFollowUpTime; // 最后跟进时间
+    private String belong; // 所属人
+    private Integer followNum; // 实时动态条数
+
+
+    public Integer getFollowNum() {
+        return followNum;
+    }
+
+    public void setFollowNum(Integer followNum) {
+        this.followNum = followNum;
+    }
+
+    public String getBelong() {
+        return belong;
+    }
+
+    public void setBelong(String belong) {
+        this.belong = belong;
+    }
+
+    public Date getLastFollowUpTime() {
+        return lastFollowUpTime;
+    }
+
+    public void setLastFollowUpTime(Date lastFollowUpTime) {
+        this.lastFollowUpTime = lastFollowUpTime;
+    }
+
+    public String getEntrustName() {
+        return entrustName;
+    }
+
+    public void setEntrustName(String entrustName) {
+        this.entrustName = entrustName;
+    }
+
+    public Integer getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(Integer attribute) {
+        this.attribute = attribute;
+    }
 
     public Integer getId() {
         return id;

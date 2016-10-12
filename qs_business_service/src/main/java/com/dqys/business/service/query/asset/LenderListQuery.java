@@ -16,16 +16,106 @@ public class LenderListQuery extends BasePagination{
     private Integer outDays; // N天以上未催收借款人
     private String assetNo; // 资产包编号
 
-    private Integer isOutTime; //逾期维护
-    private Integer canContact; // 可联系
-    private Integer isAssigned; // 已分配
-    private Integer isOwn; // 我录入
-    private Integer isAsset; // 非资产包借款人
-    private Integer passOut; // 转出的
-    private Integer passIn; // 转入的
-    private Integer isWorth; // 资不抵债
-    private Integer waitAssist; // 待协助的
-    private Integer assist; // 正在协助
+//    private Integer isOutTime; //逾期维护
+//    private Integer canContact; // 可联系
+//    private Integer isAssigned; // 已分配
+//    private Integer isOwn; // 我录入
+//    private Integer isAsset; // 非资产包借款人
+//    private Integer passOut; // 转出的
+//    private Integer passIn; // 转入的
+//    private Integer isWorth; // 资不抵债
+//    private Integer waitAssist; // 待协助的
+//    private Integer assist; // 正在协助
+    private boolean isOutTime; //逾期维护
+    private boolean canContact; // 可联系
+    private boolean isAssigned; // 已分配
+    private boolean isOwn; // 我录入
+    private boolean isAsset; // 非资产包借款人
+    private boolean passOut; // 转出的
+    private boolean passIn; // 转入的
+    private boolean isWorth; // 资不抵债
+    private boolean waitAssist; // 待协助的
+    private boolean assist; // 正在协助
+
+    public boolean isOutTime() {
+        return isOutTime;
+    }
+
+    public void setOutTime(boolean isOutTime) {
+        this.isOutTime = isOutTime;
+    }
+
+    public boolean isCanContact() {
+        return canContact;
+    }
+
+    public void setCanContact(boolean canContact) {
+        this.canContact = canContact;
+    }
+
+    public boolean isAssigned() {
+        return isAssigned;
+    }
+
+    public void setAssigned(boolean isAssigned) {
+        this.isAssigned = isAssigned;
+    }
+
+    public boolean isOwn() {
+        return isOwn;
+    }
+
+    public void setOwn(boolean isOwn) {
+        this.isOwn = isOwn;
+    }
+
+    public boolean isAsset() {
+        return isAsset;
+    }
+
+    public void setAsset(boolean isAsset) {
+        this.isAsset = isAsset;
+    }
+
+    public boolean isPassOut() {
+        return passOut;
+    }
+
+    public void setPassOut(boolean passOut) {
+        this.passOut = passOut;
+    }
+
+    public boolean isPassIn() {
+        return passIn;
+    }
+
+    public void setPassIn(boolean passIn) {
+        this.passIn = passIn;
+    }
+
+    public boolean isWorth() {
+        return isWorth;
+    }
+
+    public void setWorth(boolean isWorth) {
+        this.isWorth = isWorth;
+    }
+
+    public boolean isWaitAssist() {
+        return waitAssist;
+    }
+
+    public void setWaitAssist(boolean waitAssist) {
+        this.waitAssist = waitAssist;
+    }
+
+    public boolean isAssist() {
+        return assist;
+    }
+
+    public void setAssist(boolean assist) {
+        this.assist = assist;
+    }
 
     public Integer getId() {
         return id;
@@ -83,83 +173,83 @@ public class LenderListQuery extends BasePagination{
         this.assetNo = assetNo;
     }
 
-    public Integer getIsOutTime() {
-        return isOutTime;
-    }
-
-    public void setIsOutTime(Integer isOutTime) {
-        this.isOutTime = isOutTime;
-    }
-
-    public Integer getCanContact() {
-        return canContact;
-    }
-
-    public void setCanContact(Integer canContact) {
-        this.canContact = canContact;
-    }
-
-    public Integer getIsAssigned() {
-        return isAssigned;
-    }
-
-    public void setIsAssigned(Integer isAssigned) {
-        this.isAssigned = isAssigned;
-    }
-
-    public Integer getIsOwn() {
-        return isOwn;
-    }
-
-    public void setIsOwn(Integer isOwn) {
-        this.isOwn = isOwn;
-    }
-
-    public Integer getIsAsset() {
-        return isAsset;
-    }
-
-    public void setIsAsset(Integer isAsset) {
-        this.isAsset = isAsset;
-    }
-
-    public Integer getPassOut() {
-        return passOut;
-    }
-
-    public void setPassOut(Integer passOut) {
-        this.passOut = passOut;
-    }
-
-    public Integer getPassIn() {
-        return passIn;
-    }
-
-    public void setPassIn(Integer passIn) {
-        this.passIn = passIn;
-    }
-
-    public Integer getIsWorth() {
-        return isWorth;
-    }
-
-    public void setIsWorth(Integer isWorth) {
-        this.isWorth = isWorth;
-    }
-
-    public Integer getWaitAssist() {
-        return waitAssist;
-    }
-
-    public void setWaitAssist(Integer waitAssist) {
-        this.waitAssist = waitAssist;
-    }
-
-    public Integer getAssist() {
-        return assist;
-    }
-
-    public void setAssist(Integer assist) {
-        this.assist = assist;
-    }
+//    public Integer getIsOutTime() {
+//        return isOutTime;
+//    }
+//
+//    public void setIsOutTime(Integer isOutTime) {
+//        this.isOutTime = isOutTime;
+//    }
+//
+//    public Integer getCanContact() {
+//        return canContact;
+//    }
+//
+//    public void setCanContact(Integer canContact) {
+//        this.canContact = canContact;
+//    }
+//
+//    public Integer getIsAssigned() {
+//        return isAssigned;
+//    }
+//
+//    public void setIsAssigned(Integer isAssigned) {
+//        this.isAssigned = isAssigned;
+//    }
+//
+//    public Integer getIsOwn() {
+//        return isOwn;
+//    }
+//
+//    public void setIsOwn(Integer isOwn) {
+//        this.isOwn = isOwn;
+//    }
+//
+//    public Integer getIsAsset() {
+//        return isAsset;
+//    }
+//
+//    public void setIsAsset(Integer isAsset) {
+//        this.isAsset = isAsset;
+//    }
+//
+//    public Integer getPassOut() {
+//        return passOut;
+//    }
+//
+//    public void setPassOut(Integer passOut) {
+//        this.passOut = passOut;
+//    }
+//
+//    public Integer getPassIn() {
+//        return passIn;
+//    }
+//
+//    public void setPassIn(Integer passIn) {
+//        this.passIn = passIn;
+//    }
+//
+//    public Integer getIsWorth() {
+//        return isWorth;
+//    }
+//
+//    public void setIsWorth(Integer isWorth) {
+//        this.isWorth = isWorth;
+//    }
+//
+//    public Integer getWaitAssist() {
+//        return waitAssist;
+//    }
+//
+//    public void setWaitAssist(Integer waitAssist) {
+//        this.waitAssist = waitAssist;
+//    }
+//
+//    public Integer getAssist() {
+//        return assist;
+//    }
+//
+//    public void setAssist(Integer assist) {
+//        this.assist = assist;
+//    }
 }

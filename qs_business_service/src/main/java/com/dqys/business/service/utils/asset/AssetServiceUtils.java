@@ -1,19 +1,19 @@
 package com.dqys.business.service.utils.asset;
 
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.business.orm.pojo.asset.AssetInfo;
+import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.service.constant.asset.AssetTypeEnum;
 import com.dqys.business.service.constant.asset.ExcellentTypeEnum;
 import com.dqys.business.service.constant.asset.LenderTypeEnum;
+import com.dqys.business.service.dto.asset.AssetDTO;
+import com.dqys.business.service.dto.asset.AssetLenderDTO;
+import com.dqys.business.service.dto.asset.AssetListDTO;
 import com.dqys.business.service.query.asset.AssetListQuery;
-import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.TArea;
 import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
-import com.dqys.business.service.dto.asset.*;
-import com.dqys.business.orm.pojo.asset.*;
-import com.dqys.core.utils.DateFormatTool;
-import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,29 +22,14 @@ import java.util.List;
 /**
  * Created by Yvan on 16/6/16.
  */
-public class  AssetServiceUtils {
-    /**
-     * 批量资产包DTO转换DAO
-     * @param assetDTOList
-     * @return
-     */
-    public List<AssetInfo> toAssetInfo(List<AssetDTO> assetDTOList){
-        if(CommonUtil.checkParam(assetDTOList)){
-            return null;
-        }
-        List<AssetInfo> assetInfoList = new ArrayList<>();
-        assetDTOList.forEach(assetDTO -> {
-            assetInfoList.add(toAssetInfo(assetDTO));
-        });
-        return assetInfoList;
-    }
-
+public class AssetServiceUtils {
     /**
      * 将资产包DTO转换成DAO
+     *
      * @param assetDTO
      * @return
      */
-    public static AssetInfo toAssetInfo(AssetDTO assetDTO){
+    public static AssetInfo toAssetInfo(AssetDTO assetDTO) {
         AssetInfo assetInfo = new AssetInfo();
 
         assetInfo.setId(assetDTO.getId());
@@ -69,17 +54,20 @@ public class  AssetServiceUtils {
         assetInfo.setTags(assetDTO.getTags());
         assetInfo.setIsshow(assetDTO.getIsshow());
         assetInfo.setRepayStatus(assetDTO.getRepayStatus());
+        assetInfo.setEntrustName(assetDTO.getEntrustName());
+        assetInfo.setAttribute(assetDTO.getAttribute());
 
         return assetInfo;
     }
 
     /**
      * 批量资产包DAO转成DTO
+     *
      * @param assetInfoList
      * @return
      */
-    public static List<AssetDTO> toAssetDTO(List<AssetInfo> assetInfoList){
-        if(CommonUtil.checkParam(assetInfoList)){
+    public static List<AssetDTO> toAssetDTO(List<AssetInfo> assetInfoList) {
+        if (CommonUtil.checkParam(assetInfoList)) {
             return null;
         }
         List<AssetDTO> assetDTOList = new ArrayList<>();
@@ -91,10 +79,11 @@ public class  AssetServiceUtils {
 
     /**
      * 资产包DAO转成DTO
+     *
      * @param assetInfo
      * @return
      */
-    public static AssetDTO toAssetDTO(AssetInfo assetInfo){
+    public static AssetDTO toAssetDTO(AssetInfo assetInfo) {
         AssetDTO assetDTO = new AssetDTO();
 
         assetDTO.setId(assetInfo.getId());
@@ -119,20 +108,22 @@ public class  AssetServiceUtils {
         assetDTO.setTags(assetInfo.getTags());
         assetDTO.setIsshow(assetInfo.getIsshow());
         assetDTO.setRepayStatus(assetInfo.getRepayStatus());
+        assetDTO.setEntrustName(assetInfo.getEntrustName());
+        assetDTO.setAttribute(assetInfo.getAttribute());
 
         return assetDTO;
     }
 
-    public static AssetQuery toAssetQuery(AssetListQuery assetListQuery, AssetQuery assetQuery){
+    public static AssetQuery toAssetQuery(AssetListQuery assetListQuery, AssetQuery assetQuery) {
         // 分页
-        if(assetListQuery.getPage() != null || assetListQuery.getPageCount() != null){
+        if (assetListQuery.getPage() != null || assetListQuery.getPageCount() != null) {
             assetQuery.setIsPaging(true);
-            if(assetListQuery.getPage() != null && assetListQuery.getPage() > 0){
-                if(assetListQuery.getPageCount() != null){
+            if (assetListQuery.getPage() != null && assetListQuery.getPage() > 0) {
+                if (assetListQuery.getPageCount() != null) {
                     assetQuery.setStartPageNum(
                             (assetListQuery.getPage() - 1) * assetListQuery.getPageCount());
                 }
-            }else{
+            } else {
                 assetQuery.setStartPageNum(0);
             }
         }
@@ -143,12 +134,22 @@ public class  AssetServiceUtils {
         assetQuery.setStartAt(assetListQuery.getStartAt());
         assetQuery.setEndAt(assetListQuery.getEndAt());
         assetQuery.setCode(assetListQuery.getCode());
-        assetQuery.setOperator(assetListQuery.getOperator());
+        assetQuery.setEntrustName(assetListQuery.getEntrustName());
 
         return assetQuery;
     }
 
-    public static AssetListDTO toAssetListDTO(AssetInfo assetInfo, TUserInfo userInfo, String rate){
+    /**
+     * 将数据拼装成列表DTO
+     *
+     * @param assetInfo 资产包信息
+     * @param userInfo  创建人信息
+     * @param rate      业绩比例
+     * @param belong    所属人名称
+     * @return
+     */
+    public static AssetListDTO toAssetListDTO(AssetInfo assetInfo, TUserInfo userInfo, String rate,
+                                              String belong, Integer followNum) {
         AssetListDTO assetListDTO = new AssetListDTO();
 
         assetListDTO.setId(assetInfo.getId());
@@ -161,26 +162,30 @@ public class  AssetServiceUtils {
         assetListDTO.setCreateAt(assetInfo.getCreateAt());
         assetListDTO.setRemark(assetInfo.getRemark());
         assetListDTO.setOperatorId(assetInfo.getOperator());
+        assetListDTO.setEntrustName(assetInfo.getEntrustName());
+        assetListDTO.setAttribute(assetInfo.getAttribute());
+        assetListDTO.setLastFollowUpTime(assetInfo.getFollowUpTime());
         assetListDTO.setFlag(assetInfo.getStateflag().equals(0) ? 1 : 0);
-        if(assetInfo.getCity() != null){
-            TArea area = AreaTool.getAreaById(assetInfo.getCity());
-            if(area != null){
+        if (assetInfo.getCity() != null) {
+            TArea area = AreaTool.getAreaById(assetInfo.getDistrict());
+            if (area != null) {
                 assetListDTO.setCity(area.getLabel());
             }
         }
-
-        long dayTime = assetInfo.getEndAt().getTime()- Calendar.getInstance().getTime().getTime();
+        long dayTime = assetInfo.getEndAt().getTime() - Calendar.getInstance().getTime().getTime();
         assetListDTO.setLessDay(dayTime > 0 ? dayTime / 1000 / 3600 / 24 : 0);
 
         assetListDTO.setRate(rate);
         assetListDTO.setOperator(userInfo.getUserName());
         assetListDTO.setCompany(assetInfo.getLoanOrganization());
+        assetListDTO.setBelong(belong);
+        assetListDTO.setFollowNum(followNum);
 
         return assetListDTO;
     }
 
-    public static List<AssetLenderDTO> toAssetLenderDTO(List<LenderInfo> lenderInfoList){
-        if(lenderInfoList == null || lenderInfoList.size() == 0){
+    public static List<AssetLenderDTO> toAssetLenderDTO(List<LenderInfo> lenderInfoList) {
+        if (lenderInfoList == null || lenderInfoList.size() == 0) {
             return null;
         }
         List<AssetLenderDTO> assetLenderDTOList = new ArrayList<>();
@@ -190,8 +195,8 @@ public class  AssetServiceUtils {
         return assetLenderDTOList;
     }
 
-    public static AssetLenderDTO toAssetLenderDTO(LenderInfo lenderInfo){
-        if(lenderInfo == null){
+    public static AssetLenderDTO toAssetLenderDTO(LenderInfo lenderInfo) {
+        if (lenderInfo == null) {
             return null;
         }
         AssetLenderDTO assetLenderDTO = new AssetLenderDTO();
@@ -221,37 +226,54 @@ public class  AssetServiceUtils {
         return assetLenderDTO;
     }
 
-    public static String booleanBack(Integer value){
-        if(value.equals(1)){
+    public static String booleanBack(Integer value) {
+        if (value.equals(1)) {
             return "是";
-        }else{
+        } else {
             return "否";
         }
     }
 
-    public static String checkAssetData(AssetDTO assetDTO){
+    public static String checkAssetData(AssetDTO assetDTO) {
         if (CommonUtil.checkParam(assetDTO,
                 assetDTO.getType(), assetDTO.getStartAt(), assetDTO.getEndAt(),
                 assetDTO.getAccrual(), assetDTO.getLoan(), assetDTO.getAppraisal(),
                 assetDTO.getName(), assetDTO.getEvaluateExcellent(), assetDTO.getEvaluateLevel(),
                 assetDTO.getProvince(), assetDTO.getCity(), assetDTO.getDistrict(),
                 assetDTO.getAddress(), assetDTO.getLoanOrganization(), assetDTO.getLoanOrganizationDistrict(),
-                assetDTO.getDisposeMode())) {
+                assetDTO.getDisposeMode(), assetDTO.getEntrustName(), assetDTO.getAttribute())) {
             return "存在非法参数";
         }
-        if(ExcellentTypeEnum.getExcellentTypeEnum(assetDTO.getEvaluateExcellent()) == null){
+        if (ExcellentTypeEnum.getExcellentTypeEnum(assetDTO.getEvaluateExcellent()) == null) {
             return "评优类型参数错误";
         }
-        if(!CommonUtil.isExist(CommonUtil.UPLETTER, assetDTO.getEvaluateLevel())){
+        if (!CommonUtil.isExist(CommonUtil.UPLETTER, assetDTO.getEvaluateLevel())) {
             return "评级参数错误";
         }
-        if(!CommonUtil.isMoneyFormat(assetDTO.getAccrual(), assetDTO.getLoan(), assetDTO.getAppraisal())){
+        if (!CommonUtil.isMoneyFormat(assetDTO.getAccrual(), assetDTO.getLoan(), assetDTO.getAppraisal())) {
             return "存在非法金额参数";
         }
-        if(AreaTool.validateArea(assetDTO.getProvince(), assetDTO.getCity(), assetDTO.getDistrict()) != null){
+        if (AreaTool.validateArea(assetDTO.getProvince(), assetDTO.getCity(), assetDTO.getDistrict()) != null) {
             return "地区错误";
         }
         return null;
+    }
+
+    /**
+     * 批量资产包DTO转换DAO
+     *
+     * @param assetDTOList
+     * @return
+     */
+    public List<AssetInfo> toAssetInfo(List<AssetDTO> assetDTOList) {
+        if (CommonUtil.checkParam(assetDTOList)) {
+            return null;
+        }
+        List<AssetInfo> assetInfoList = new ArrayList<>();
+        assetDTOList.forEach(assetDTO -> {
+            assetInfoList.add(toAssetInfo(assetDTO));
+        });
+        return assetInfoList;
     }
 
 }

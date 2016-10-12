@@ -59,5 +59,10 @@ public class FollowUpReadstatusMapperImp extends BaseDao implements FollowUpRead
         return  super.getSqlSession().getMapper(FollowUpReadstatusMapper.class).getCountMap(objectId, objectType, userId);
     }
 
-
+    @Override
+    public Integer countByTypeIdUser(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType,
+                                     @Param("userId") Integer userId) {
+        return super.getSqlSession().getMapper(FollowUpReadstatusMapper.class)
+                .countByTypeIdUser(objectId, objectType, userId);
+    }
 }

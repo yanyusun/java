@@ -153,9 +153,16 @@ public class DistributionServiceImpl implements DistributionService {
         Map<Integer, Integer> keyMap = new HashMap<>();
         for (CompanyTeamRe companyTeamRe : companyTeamReList) {
             // 填充业绩比率,当前任务
-            Map<String, Object> map = coordinatorService.getTaskCount(1,
-                    UserSession.getCurrent().getUserId(),
-                    ObjectTypeEnum.ASSETPACKAGE.getValue());
+            Map<String, Object> map = new HashMap<>();
+            if(companyTeam.getObjectType().equals(ObjectTypeEnum.ASSETPACKAGE.getValue())){
+                map = coordinatorService.getTaskCount(companyTeamRe.getAcceptCompanyId(),
+                        UserSession.getCurrent().getUserId(),
+                        ObjectTypeEnum.ASSETPACKAGE.getValue());
+            }else if(companyTeam.getObjectType().equals(ObjectTypeEnum.LENDER.getValue())){
+                map = coordinatorService.getTaskCount(companyTeamRe.getAcceptCompanyId(),
+                        UserSession.getCurrent().getUserId(),
+                        ObjectTypeEnum.LENDER.getValue());
+            }
             Integer total = MessageUtils.transMapToInt(map, "total");
             Integer finish = MessageUtils.transMapToInt(map, "finish");
             String rate = "";

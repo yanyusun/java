@@ -156,5 +156,10 @@
         WHERE fur.object_id=#{objectId,jdbcType=INTEGER} and fur.object_type=#{objectType,jdbcType=INTEGER} and fur.user_id=#{userId,jdbcType=INTEGER}
         GROUP BY fur.moment
     </select>
+    
+    <select id="countByTypeIdUser" resultType="java.lang.Integer">
+        SELECT COUNT(id) from t_follow_up_readstatus where object_id = #{objectId,jdbcType=INTEGER}
+        AND object_type = #{objectType,jdbcType=INTEGER} AND user_id = #{userId,jdbcType=INTEGER}
+    </select>
 
 </mapper>

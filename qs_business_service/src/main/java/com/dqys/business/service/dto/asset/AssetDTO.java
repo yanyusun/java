@@ -35,10 +35,28 @@ public class AssetDTO {
     private Integer isshow;  // 是否展示外网
     private String memo;  // 备注
     private Integer repayStatus; // 还款
+    private String entrustName; // 委托方名称
+    private Integer attribute; // 属性（0私有，1公有）
 
     private Integer operatorId; // 操作人ID
     private UserDTO operator; // 操作人
 
+
+    public String getEntrustName() {
+        return entrustName;
+    }
+
+    public void setEntrustName(String entrustName) {
+        this.entrustName = entrustName;
+    }
+
+    public Integer getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(Integer attribute) {
+        this.attribute = attribute;
+    }
 
     public Integer getRepayStatus() {
         return repayStatus;
