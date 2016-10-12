@@ -364,6 +364,7 @@ public class RepayServiceImpl implements RepayService {
      */
 
     private boolean setRepayStatus(Integer id, Integer type) {
+        //计算借款人或是资产包或是借据的总金额，用于修改还款状态
         Map map = repayMapper.getSumMoney(id, type);
         Integer num = 0;
 
@@ -385,7 +386,7 @@ public class RepayServiceImpl implements RepayService {
         damageApply1.setApply_object_id(damageApply.getApply_object_id());
         damageApply1.setObject_type(damageApply.getObject_type());
         damageApply1.setApply_user_id(damageApply.getApply_user_id());
-        List<DamageApply> damages = repayMapper.selectByDamageApply(damageApply1);
+        List<DamageApply> damages = repayMapper.selectByDamageApply(damageApply1);//查询待审核的延期申请记录
         Integer num = 0;
         Integer id = 0;
         String damage_date = "";//申请时间
@@ -446,6 +447,7 @@ public class RepayServiceImpl implements RepayService {
         if (num > 0) {
             Integer result = 0;
             if (statuas == 1) {
+                //延期申请审核通过的就要修改相应对象的委托结束时间
                 if (damageApply.getObject_type() == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
                     AssetInfo assetInfo = new AssetInfo();
                     assetInfo.setId(damageApply.getApply_object_id());
@@ -494,7 +496,8 @@ public class RepayServiceImpl implements RepayService {
     @Override
     public Map reversal(Integer objectId, Integer objectType) throws Exception {
         Map map = new HashMap<>();
-        List<RepayRecord> res = repayMapper.getRepayRecord(objectId, objectType);
+        List<RepayRecord> res = repayMapper.getRepayRecord(objectId, objectType);//获取相关对象的还款记录
+        //存在还款记录就进行相应记录的冲正操作
         if (res.size() == 0) {
             map.put("result", "no");
         } else {
@@ -512,7 +515,8 @@ public class RepayServiceImpl implements RepayService {
     @Override
     public Map reversal(Integer repayId) throws Exception {
         Map map = new HashMap<>();
-        List<RepayRecord> res = repayMapper.getRepayRecordByRepayId(repayId);
+        List<RepayRecord> res = repayMapper.getRepayRecordByRepayId(repayId);//根据还款记录id获取还款详细信息
+        //存在还款记录就进行相应记录的冲正操作
         if (res.size() == 0) {
             map.put("result", "no");
         } else {
