@@ -24,7 +24,7 @@ public class SourceController {
      */
     @RequestMapping(value = "/listNavigation")
     public JsonResponse listNavigation(Integer lenderId, Integer estatesId, @RequestParam(defaultValue = "0") Integer type) {
-        if (CommonUtil.checkParam(lenderId, type)) {
+        if (CommonUtil.checkParam(type)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         if ((lenderId == null && estatesId == null) || (lenderId != null && estatesId != null)) {
@@ -70,9 +70,12 @@ public class SourceController {
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public JsonResponse add(@ModelAttribute SourceInfoDTO sourceInfoDTO) {
-        if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getLenderId(), sourceInfoDTO.getNavId(),
+        if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getNavId(),
                 sourceInfoDTO.getCode())) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        if ((sourceInfoDTO.getLenderId() == null && sourceInfoDTO.getEstatesId() == null) || (sourceInfoDTO.getLenderId() != null && sourceInfoDTO.getEstatesId() != null)) {
+            return JsonResponseTool.paramErr("资产源或借款人参数错误");
         }
         return sourceService.addSource(sourceInfoDTO);
     }
@@ -104,9 +107,12 @@ public class SourceController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public JsonResponse update(@ModelAttribute SourceInfoDTO sourceInfoDTO) {
-        if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getLenderId(), sourceInfoDTO.getNavId(),
+        if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getNavId(),
                 sourceInfoDTO.getCode())) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        if ((sourceInfoDTO.getLenderId() == null && sourceInfoDTO.getEstatesId() == null) || (sourceInfoDTO.getLenderId() != null && sourceInfoDTO.getEstatesId() != null)) {
+            return JsonResponseTool.paramErr("资产源或借款人参数错误");
         }
         return sourceService.updateSource(sourceInfoDTO);
     }
