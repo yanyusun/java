@@ -88,8 +88,8 @@ public class OperTypeUtile implements ApplicationContextAware {
     private static Integer[] nav8 = {102, 1110, 1615, 1310, 1213, 108, 1118, 1613, 139};//无效
     private static Integer[] nav9 = {102, 1110, 1615, 1310, 1213};//待参与
     private static Integer[] nav10 = {102, 1110, 1615, 1310, 1213};//已参与
-    private static Integer[] nav11 = {102, 1110, 1615, 1310, 1213, 103, 104, 169, 1610};//待审核
-    private static Integer[] nav12 = {102, 1110, 1615, 1310, 1213};//待处置
+    private static Integer[] nav11 = {102, 103, 104, 1110, 1113, 1114, 1615, 1310, 1213, 103, 104, 169, 1610};//待审核
+    private static Integer[] nav12 = {102, 1110, 1112, 1615, 1310, 1213};//待处置
     private static Integer[] nav13 = {102, 1110, 1615, 1310, 1213};//待分配
     private static Integer[] nav14 = {102, 1110, 1615, 1310, 1213};//48H 新
     private static Integer[] nav15 = {102, 1110, 1615, 1310, 1213, 100, 101, 103, 104, 105, 106, 107, 108, 109, 110,
