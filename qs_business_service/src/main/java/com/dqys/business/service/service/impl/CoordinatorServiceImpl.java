@@ -468,6 +468,10 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         teammateRe.setStatus(status);
         Integer result = teammateReMapper.updateByPrimaryKeySelective(teammateRe);
         if (status == 1 && result > 0) {
+            //是所属人的就进行修改对象的跟进时间
+//            if (teammateRe.getType() == TeammateReEnum.TYPE_AUXILIARY.getValue().intValue()) {
+//                setFollowUpTime(userTeam.getObjectId(), userTeam.getObjectType());
+//            }
             OURelation ouRelation = new OURelation();
             Integer object_oper_status = userTeam.getObjectOperStatus();//对象可操作状态:0拥有对其全部的操作1来自业务流转只对其下部分对象有操作权限',
             if (1 == object_oper_status) {
@@ -509,6 +513,28 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
         businessLogService.add(userTeam.getObjectId(), userTeam.getObjectType(), UserInfoEnum.UPDATE_COMMON_USER.getValue(), "被邀请人同意或拒绝", "", 0, userTeam.getId());
         return map;
+    }
+
+    /**
+     * 修改对象的跟进时间
+     *
+     * @param objectId
+     * @param objectType
+     */
+    private void setFollowUpTime(Integer objectId, Integer objectType) {
+        if (objectType == ObjectTypeEnum.LENDER.getValue().intValue()) {
+            LenderInfo info = lenderInfoMapper.get(objectId);
+            if (info != null) {
+                info.setBelongFollowTime(new Date());
+                lenderInfoMapper.update(info);
+            }
+        } else if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue().intValue()) {
+            AssetInfo info = assetInfoMapper.get(objectId);
+            if (info != null) {
+                info.setBelongUpTime(new Date());
+                assetInfoMapper.update(info);
+            }
+        }
     }
 
     /**
