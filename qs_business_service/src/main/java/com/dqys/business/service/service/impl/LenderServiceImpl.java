@@ -233,8 +233,8 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setIds(CommonUtil.unionList(lenderQuery.getIds(), ids));
             }
         }
-        if ("1".equals(lenderListQuery.getUrgeType())) {
-            // 转出 -- 创建分配器
+        if (lenderListQuery.isPassOut()) {
+            // 转出
             List<CompanyTeam> companyTeamList = companyTeamMapper.listBySendId(ObjectTypeEnum.LENDER.getValue(),
                     UserSession.getCurrent().getUserId());
             List<Integer> result = new ArrayList<>();
