@@ -82,7 +82,7 @@ public class SourceServiceUtls {
         sourceInfo.setShow(sourceInfoDTO.getIsshow());
         sourceInfo.setWatermark(sourceInfoDTO.getWatermark());
         sourceInfo.setMemo(sourceInfoDTO.getMemo());
-
+        sourceInfo.setEstatesId(sourceInfoDTO.getEstatesId());
         return sourceInfo;
     }
 
@@ -148,7 +148,7 @@ public class SourceServiceUtls {
         sourceInfoDTO.setSourceDTOList(toSourceDTOList(sourceList));
         sourceInfoDTO.setOpen(sourceInfo.getOpen());
         sourceInfoDTO.setMemo(sourceInfo.getMemo());
-
+        sourceInfoDTO.setEstatesId(sourceInfo.getEstatesId());
         return sourceInfoDTO;
     }
 

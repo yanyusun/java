@@ -77,8 +77,11 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public JsonResponse addSource(SourceInfoDTO sourceInfoDTO) {
         SourceInfo data = sourceInfoMapper.getByNavIdAndLenderId(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId(), sourceInfoDTO.getEstatesId());
-        if (data != null) {
-            return JsonResponseTool.failure("添加失败，该借款人载该分类下已经有资源信息，请修改！");
+        if (data != null && sourceInfoDTO.getLenderId() != null) {
+            return JsonResponseTool.failure("添加失败，该借款人在该分类下已经有资源信息，请修改！");
+        }
+        if (data != null && sourceInfoDTO.getEstatesId() != null) {
+            return JsonResponseTool.failure("添加失败，该资产源在该分类下已经有资源信息，请修改！");
         }
         SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO);
         if (sourceInfo == null) {
