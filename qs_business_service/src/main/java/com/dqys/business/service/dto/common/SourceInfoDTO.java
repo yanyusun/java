@@ -18,6 +18,15 @@ public class SourceInfoDTO {
     private Integer watermark; // 水印
     private Integer open; // 对外公开(默认1公开)
     private String memo; // 详情信息
+    private Integer estatesId; // 资产源ID
+
+    public Integer getEstatesId() {
+        return estatesId;
+    }
+
+    public void setEstatesId(Integer estatesId) {
+        this.estatesId = estatesId;
+    }
 
     public Integer getId() {
         return id;

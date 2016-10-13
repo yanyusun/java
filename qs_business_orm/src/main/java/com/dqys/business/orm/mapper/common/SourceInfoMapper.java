@@ -43,6 +43,6 @@ public interface SourceInfoMapper {
      * @param lenderId
      * @return
      */
-    SourceInfo getByNavIdAndLenderId(@Param("navId")Integer navId, @Param("lenderId")Integer lenderId);
+    SourceInfo getByNavIdAndLenderId(@Param("navId")Integer navId, @Param("lenderId")Integer lenderId,@Param("estatesId")Integer estatesId);
 
 }

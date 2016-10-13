@@ -17,11 +17,12 @@ public interface SourceService {
     /**
      * 获取借款人的分类列表
      *
-     * @param lenderId 借款人iD
-     * @param type     实勘1|证件合同0(默认)
+     * @param lenderId  借款人iD
+     * @param estatesId 资产源iD
+     * @param type      实勘1|证件合同0(默认)
      * @return
      */
-    List<SelectDTOList> listNavigation(Integer lenderId, Integer type);
+    List<SelectDTOList> listNavigation(Integer lenderId, Integer estatesId, Integer type);
 
     /**
      * 新增一个分类列表
@@ -54,7 +55,7 @@ public interface SourceService {
      * @param lenderId
      * @return
      */
-    SourceInfoDTO getSource(Integer navId, Integer lenderId);
+    SourceInfoDTO getSource(Integer navId, Integer lenderId, Integer estatesId);
 
     /**
      * 根据资源信息修改

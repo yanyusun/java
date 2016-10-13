@@ -35,7 +35,7 @@ public class SourceInfoMapperImpl extends BaseDao implements SourceInfoMapper {
     }
 
     @Override
-    public SourceInfo getByNavIdAndLenderId(@Param("navId") Integer navId, @Param("lenderId") Integer lenderId) {
-        return super.getSqlSession().getMapper(SourceInfoMapper.class).getByNavIdAndLenderId(navId, lenderId);
+    public SourceInfo getByNavIdAndLenderId(@Param("navId") Integer navId, @Param("lenderId") Integer lenderId,@Param("estatesId")Integer estatesId) {
+        return super.getSqlSession().getMapper(SourceInfoMapper.class).getByNavIdAndLenderId(navId, lenderId,estatesId);
     }
 }

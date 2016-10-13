@@ -13,6 +13,15 @@ public class SourceInfo extends BaseModel {
     private Integer watermark; // 水印(1)
     private Integer open; // 是否开放性资源(1)
     private String memo; // 备注
+    private Integer estatesId; // 资产源ID
+
+    public Integer getEstatesId() {
+        return estatesId;
+    }
+
+    public void setEstatesId(Integer estatesId) {
+        this.estatesId = estatesId;
+    }
 
     public Integer getNavId() {
         return navId;

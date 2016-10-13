@@ -12,6 +12,15 @@ public class SourceNavigation extends BaseModel {
     private Integer pid; // 上级ID
     private Integer lenderId; // 默认(0),传值时表示特殊分类,该借款人独有
     private Integer type; // 实勘1|证件合同0(默认)
+    private Integer estatesId; // 资产源id
+
+    public Integer getEstatesId() {
+        return estatesId;
+    }
+
+    public void setEstatesId(Integer estatesId) {
+        this.estatesId = estatesId;
+    }
 
     public Integer getId() {
         return id;

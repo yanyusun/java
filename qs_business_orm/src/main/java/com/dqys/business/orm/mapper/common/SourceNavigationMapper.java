@@ -42,7 +42,7 @@ public interface SourceNavigationMapper {
      * 获取借款人的可视化资料实勘分类列表
      * @return
      */
-    List<SourceNavigation> listByTypeAndLenderId(@Param("lenderId") Integer lenderId, @Param("type")Integer type);
+    List<SourceNavigation> listByTypeAndLenderId(@Param("lenderId") Integer lenderId,@Param("estatesId") Integer estatesId, @Param("type")Integer type);
 
     /**
      * 查询自定义或者公共的导航栏

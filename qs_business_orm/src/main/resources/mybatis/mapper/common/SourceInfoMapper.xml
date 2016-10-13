@@ -1,114 +1,133 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dqys.business.orm.mapper.common.SourceInfoMapper" >
+<mapper namespace="com.dqys.business.orm.mapper.common.SourceInfoMapper">
 
-  <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.common.SourceInfo" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="version" property="version" jdbcType="INTEGER" />
-    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
-    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
-    <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
-    <result column="remark" property="memo" jdbcType="VARCHAR" />
-    <result column="nav_id" property="navId" jdbcType="INTEGER" />
-    <result column="code" property="code" jdbcType="VARCHAR" />
-    <result column="lender_id" property="lenderId" jdbcType="INTEGER" />
-    <result column="isshow" property="show" jdbcType="INTEGER" />
-    <result column="open" property="open" jdbcType="INTEGER" />
-    <result column="watermark" property="watermark" jdbcType="INTEGER" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.common.SourceInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+        <result column="remark" property="memo" jdbcType="VARCHAR"/>
+        <result column="nav_id" property="navId" jdbcType="INTEGER"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="lender_id" property="lenderId" jdbcType="INTEGER"/>
+        <result column="isshow" property="show" jdbcType="INTEGER"/>
+        <result column="open" property="open" jdbcType="INTEGER"/>
+        <result column="watermark" property="watermark" jdbcType="INTEGER"/>
+        <result column="estates_id" property="estatesId" jdbcType="INTEGER"/>
+    </resultMap>
 
-  <sql id="Base_Column_List" >
+    <sql id="Base_Column_List">
     id, version, create_at, update_at, stateflag, remark, nav_id, code,
-    lender_id, isshow, watermark, open
+    lender_id, isshow, watermark, open,estates_id
   </sql>
 
-  <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
-    <include refid="Base_Column_List" />
-    from bt_source_info
-    where id = #{id,jdbcType=INTEGER}
-  </select>
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from bt_source_info
+        where id = #{id,jdbcType=INTEGER}
+    </select>
 
-  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     UPDATE bt_source_info SET stateflag = 0
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <insert id="insert" parameterType="com.dqys.business.orm.pojo.common.SourceInfo" useGeneratedKeys="true" keyProperty="id">
-    insert into bt_source_info
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="memo != null" >
-        remark,
-      </if>
-      <if test="navId != null" >
-        nav_id,
-      </if>
-      <if test="code != null" >
-        code,
-      </if>
-      <if test="lenderId != null" >
-        lender_id,
-      </if>
-      <if test="show != null" >
-        isshow,
-      </if>
-      <if test="watermark != null" >
-        watermark,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="memo != null" >
-        #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="navId != null" >
-        #{navId,jdbcType=INTEGER},
-      </if>
-      <if test="code != null" >
-        #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="lenderId != null" >
-        #{lenderId,jdbcType=INTEGER},
-      </if>
-      <if test="show != null" >
-        #{show,jdbcType=INTEGER},
-      </if>
-      <if test="watermark != null" >
-        #{watermark,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.common.SourceInfo" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into bt_source_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="memo != null">
+                remark,
+            </if>
+            <if test="navId != null">
+                nav_id,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="lenderId != null">
+                lender_id,
+            </if>
+            <if test="show != null">
+                isshow,
+            </if>
+            <if test="watermark != null">
+                watermark,
+            </if>
+            <if test="estatesId != null">
+                estates_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="memo != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="navId != null">
+                #{navId,jdbcType=INTEGER},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="lenderId != null">
+                #{lenderId,jdbcType=INTEGER},
+            </if>
+            <if test="show != null">
+                #{show,jdbcType=INTEGER},
+            </if>
+            <if test="watermark != null">
+                #{watermark,jdbcType=INTEGER},
+            </if>
+            <if test="estatesId != null">
+                #{estatesId,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
 
-  <update id="update" parameterType="com.dqys.business.orm.pojo.common.SourceInfo" >
-    update bt_source_info
-    <set >
-      <if test="memo != null" >
-        remark = #{memo,jdbcType=VARCHAR},
-      </if>
-      <if test="navId != null" >
-        nav_id = #{navId,jdbcType=INTEGER},
-      </if>
-      <if test="code != null" >
-        code = #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="lenderId != null" >
-        lender_id = #{lenderId,jdbcType=INTEGER},
-      </if>
-      <if test="show != null" >
-        isshow = #{show,jdbcType=INTEGER},
-      </if>
-      <if test="watermark != null" >
-        watermark = #{watermark,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+    <update id="update" parameterType="com.dqys.business.orm.pojo.common.SourceInfo">
+        update bt_source_info
+        <set>
+            <if test="memo != null">
+                remark = #{memo,jdbcType=VARCHAR},
+            </if>
+            <if test="navId != null">
+                nav_id = #{navId,jdbcType=INTEGER},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="lenderId != null">
+                lender_id = #{lenderId,jdbcType=INTEGER},
+            </if>
+            <if test="show != null">
+                isshow = #{show,jdbcType=INTEGER},
+            </if>
+            <if test="watermark != null">
+                watermark = #{watermark,jdbcType=INTEGER},
+            </if>
+            <if test="estatesId != null">
+                estates_id=#{estatesId,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 
-  <select id="getByNavIdAndLenderId" resultMap="BaseResultMap">
-    SELECT
-    <include refid="Base_Column_List" />
-    from bt_source_info
-    WHERE
-    stateflag = 0 AND lender_id = #{lenderId,jdbcType=INTEGER} AND nav_id = #{navId,jdbcType=INTEGER}
-  </select>
+    <select id="getByNavIdAndLenderId" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from bt_source_info
+        WHERE
+        stateflag = 0
+        <if test="lenderId !=null">
+            AND lender_id = #{lenderId,jdbcType=INTEGER}
+        </if>
+        <if test="estatesId !=null">
+            AND estates_id = #{estatesId,jdbcType=INTEGER}
+        </if>
+        AND nav_id = #{navId,jdbcType=INTEGER}
+
+    </select>
 
 </mapper>

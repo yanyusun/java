@@ -20,19 +20,23 @@ public class SourceController {
     private SourceService sourceService;
 
     /**
-     * 分类列表
-     *
-     * @param lenderId
-     * @param type
-     * @return
+     * @api {post} source/listNavigation 分类列表
+     * @apiParam {int} [lenderId] 借款人id（用于资产包或借款人的资料实堪）
+     * @apiParam {int} [estatesId] 资产源id（用于资产源的资料实堪）
+     * @apiParam {int} type 资源类型:实勘1|证件合同0(默认)|2根进
+     * @apiSampleRequest source/listNavigation
+     * @apiGroup source
+     * @apiName source/listNavigation
      */
     @RequestMapping(value = "/listNavigation")
-    public JsonResponse listNavigation(@RequestParam Integer lenderId, @RequestParam(defaultValue = "0") Integer type) {
+    public JsonResponse listNavigation(Integer lenderId, Integer estatesId, @RequestParam(defaultValue = "0") Integer type) {
         if (CommonUtil.checkParam(lenderId, type)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-
-        return JsonResponseTool.success(sourceService.listNavigation(lenderId, type));
+        if ((lenderId == null && estatesId == null) || (lenderId != null && estatesId != null)) {
+            return JsonResponseTool.paramErr("资产源或借款人参数错误");
+        }
+        return JsonResponseTool.success(sourceService.listNavigation(lenderId, estatesId, type));
     }
 
     /**
@@ -80,18 +84,24 @@ public class SourceController {
     }
 
     /**
-     * 获取资源信息
-     *
-     * @param lenderId
-     * @param navId
-     * @return
+     * @api {post} source/get 获取资源信息
+     * @apiParam {int} [lenderId] 借款人id（用于资产包或借款人的资料实堪）
+     * @apiParam {int} [estatesId] 资产源id（用于资产源的资料实堪）
+     * @apiParam {int} navId 分类id
+     * @apiSampleRequest source/get
+     * @apiGroup source
+     * @apiName source/get
+     * @apiSuccessExample {json} Data-Response:
      */
     @RequestMapping(value = "/get")
-    public JsonResponse get(@RequestParam Integer lenderId, @RequestParam Integer navId) {
-        if (CommonUtil.checkParam(navId, lenderId)) {
+    public JsonResponse get(Integer lenderId, Integer estatesId, @RequestParam Integer navId) {
+        if (CommonUtil.checkParam(navId)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return JsonResponseTool.success(sourceService.getSource(navId, lenderId));
+        if ((lenderId == null && estatesId == null) || (lenderId != null && estatesId != null)) {
+            return JsonResponseTool.paramErr("资产源或借款人参数错误");
+        }
+        return JsonResponseTool.success(sourceService.getSource(navId, lenderId, estatesId));
     }
 
     /**

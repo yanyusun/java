@@ -37,24 +37,24 @@ public class SourceServiceImpl implements SourceService {
 
 
     @Override
-    public List<SelectDTOList> listNavigation(Integer lenderId, Integer type) {
-        if(CommonUtil.checkParam(lenderId, type)){
+    public List<SelectDTOList> listNavigation(Integer lenderId, Integer estatesId, Integer type) {
+        if (CommonUtil.checkParam(type)) {
             return null;
         }
-        List<SourceNavigation> navigationList = sourceNavigationMapper.listByTypeAndLenderId(lenderId, type);
+        List<SourceNavigation> navigationList = sourceNavigationMapper.listByTypeAndLenderId(lenderId, estatesId, type);
         return SourceServiceUtls.toSelect(navigationList);
     }
 
     @Override
     public JsonResponse addNavigation(SourceNavigation sourceNavigation) {
-        if(CommonUtil.checkParam(sourceNavigation, sourceNavigation.getLenderId(), sourceNavigation.getName(),
-                sourceNavigation.getPid(), sourceNavigation.getType())){
+        if (CommonUtil.checkParam(sourceNavigation, sourceNavigation.getLenderId(), sourceNavigation.getName(),
+                sourceNavigation.getPid(), sourceNavigation.getType())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         Integer result = sourceNavigationMapper.insert(sourceNavigation);
-        if(CommonUtil.checkResult(result)){
+        if (CommonUtil.checkResult(result)) {
             return JsonResponseTool.failure("添加失败");
-        }else{
+        } else {
             return JsonResponseTool.success(sourceNavigation.getId());
         }
     }
@@ -62,40 +62,40 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public JsonResponse deleteNavigation(Integer navId) {
         // TODO 这里需要做权限校验
-        if(CommonUtil.checkParam(navId)){
+        if (CommonUtil.checkParam(navId)) {
             return JsonResponseTool.paramErr("参数错误！请确定分类列表");
         }
         SourceNavigation sourceNavigation = sourceNavigationMapper.get(navId);
-        if(sourceNavigation == null || sourceNavigation.getLenderId().equals(0)){
+        if (sourceNavigation == null || sourceNavigation.getLenderId().equals(0)) {
             // 分类不存在或者该分类属于公共模块的分类
             return JsonResponseTool.failure("删除失败！该分类不存在或者属于公共分类无法删除");
         }
         Integer result = sourceNavigationMapper.deleteByPrimaryKey(navId);
-        if(CommonUtil.checkResult(result)){
+        if (CommonUtil.checkResult(result)) {
             return JsonResponseTool.failure("删除失败,请重新再试");
-        }else{
+        } else {
             return JsonResponseTool.success(null);
         }
     }
 
     @Override
     public JsonResponse addSource(SourceInfoDTO sourceInfoDTO) {
-        if(CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getCode(), sourceInfoDTO.getNavId(),
-                sourceInfoDTO.getLenderId(), sourceInfoDTO.getSourceDTOList())){
+        if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getCode(), sourceInfoDTO.getNavId(),
+                sourceInfoDTO.getLenderId(), sourceInfoDTO.getSourceDTOList())) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        SourceInfo data = sourceInfoMapper.getByNavIdAndLenderId(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId());
-        if(data != null){
+        SourceInfo data = sourceInfoMapper.getByNavIdAndLenderId(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId(), sourceInfoDTO.getEstatesId());
+        if (data != null) {
             return JsonResponseTool.failure("添加失败，该借款人载该分类下已经有资源信息，请修改！");
         }
         SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO);
-        if(sourceInfo == null){
+        if (sourceInfo == null) {
             return JsonResponseTool.failure("参数转化失败");
         }
         Integer result = sourceInfoMapper.insert(sourceInfo);
-        if(CommonUtil.checkResult(result)){
+        if (CommonUtil.checkResult(result)) {
             return JsonResponseTool.failure("添加失败");
-        }else{
+        } else {
             Integer sourceInfoId = sourceInfo.getId();
             List<SourceSource> sourceList = SourceServiceUtls.toSourceSource(sourceInfoId, sourceInfoDTO);
             sourceList.forEach(sourceSource -> {
@@ -112,12 +112,12 @@ public class SourceServiceImpl implements SourceService {
     }
 
     @Override
-    public SourceInfoDTO getSource(Integer navId, Integer lenderId) {
-        if(CommonUtil.checkParam(navId, lenderId)){
+    public SourceInfoDTO getSource(Integer navId, Integer lenderId, Integer estatesId) {
+        if (CommonUtil.checkParam(navId, lenderId)) {
             return null;
         }
-        SourceInfo sourceInfo = sourceInfoMapper.getByNavIdAndLenderId(navId, lenderId);
-        if(sourceInfo == null){
+        SourceInfo sourceInfo = sourceInfoMapper.getByNavIdAndLenderId(navId, lenderId, estatesId);//根据借款人id或是资产源id查询资料实堪
+        if (sourceInfo == null) {
             return null;
         }
         Integer sourceId = sourceInfo.getId();
@@ -127,16 +127,16 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     public JsonResponse updateSource(SourceInfoDTO sourceInfoDTO) {
-        if(CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getId(), sourceInfoDTO.getSourceDTOList())){
+        if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getId(), sourceInfoDTO.getSourceDTOList())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         boolean flag = false; // 判断是否有做修改
         SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO);
-        if(sourceInfo == null){
+        if (sourceInfo == null) {
             return JsonResponseTool.failure("参数转化失败，请重新再试");
         }
         Integer update = sourceInfoMapper.update(sourceInfo);
-        if(!CommonUtil.checkResult(update)){
+        if (!CommonUtil.checkResult(update)) {
             flag = true;
         }
         List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceInfo.getId()); // 数据库数据
@@ -144,16 +144,16 @@ public class SourceServiceImpl implements SourceService {
         for (SourceSource sourceSource : sourceList) {
             boolean isExit = true;
             for (SourceSource source : sourceSources) {
-                if(source.getId() == null){
+                if (source.getId() == null) {
                     break;
-                }else{
-                    if(source.getId().equals(sourceSource.getId())){
+                } else {
+                    if (source.getId().equals(sourceSource.getId())) {
                         isExit = false;
                         update = sourceSourceMapper.update(source);
-                        if(!CommonUtil.checkResult(update)){
+                        if (!CommonUtil.checkResult(update)) {
                             flag = true;
                         }
-                        if(!source.getPath().equals(sourceSource.getPath())){
+                        if (!source.getPath().equals(sourceSource.getPath())) {
                             // 上传文件不一样,从新保存
                             try {
                                 FileTool.saveFileSync(source.getPath());
@@ -165,16 +165,16 @@ public class SourceServiceImpl implements SourceService {
                     }
                 }
             }
-            if(isExit){
+            if (isExit) {
                 // 说明该文件已经被删除了
                 sourceSourceMapper.deleteByPrimaryKey(sourceSource.getId());
                 flag = true;
             }
         }
         for (SourceSource sourceSource : sourceSources) {
-            if(sourceSource.getId() == null){
+            if (sourceSource.getId() == null) {
                 Integer add = sourceSourceMapper.insert(sourceSource);
-                if(!CommonUtil.checkResult(add)){
+                if (!CommonUtil.checkResult(add)) {
                     flag = true;
                 }
                 try {
@@ -184,7 +184,7 @@ public class SourceServiceImpl implements SourceService {
                 }
             }
         }
-        if(!flag){
+        if (!flag) {
             // 没有做任何修改
             return JsonResponseTool.failure("没有改动");
         }
