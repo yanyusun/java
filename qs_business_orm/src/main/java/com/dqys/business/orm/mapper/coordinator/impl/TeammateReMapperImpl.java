@@ -50,9 +50,9 @@ public class TeammateReMapperImpl extends BaseDao implements TeammateReMapper {
     }
 
     @Override
-    public List<Integer> listObjectIdByJoinType(@Param("type") Integer type, @Param("userId") Integer userId,
-                                                @Param("joinType") Integer joinType) {
-        return super.getSqlSession().getMapper(TeammateReMapper.class).listObjectIdByJoinType(type, userId, joinType);
+    public List<Integer> listObjectIdByType(@Param("objectType") Integer objectType, @Param("userId") Integer userId,
+                                                @Param("type") Integer type) {
+        return super.getSqlSession().getMapper(TeammateReMapper.class).listObjectIdByType(objectType, userId, type);
     }
 
     @Override

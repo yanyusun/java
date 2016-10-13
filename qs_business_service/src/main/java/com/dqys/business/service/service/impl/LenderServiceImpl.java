@@ -149,33 +149,42 @@ public class LenderServiceImpl implements LenderService {
         }
         if (lenderListQuery.getBelong() != null) {
             // 所属人
-            List<Integer> ids = teammateReMapper.listObjectIdByJoinType(ObjectTypeEnum.LENDER.getValue(),
-                    UserSession.getCurrent().getUserId(), TeammateReEnum.TYPE_AUXILIARY.getValue());
-            if (CommonUtil.checkParam(ids)) {
-                lenderQuery.setId(SysProperty.NULL_DATA_ID);
-            }
-            if (lenderQuery.getIds() != null) {
-                List<Integer> result = CommonUtil.unionList(ids, lenderQuery.getIds());
-                if (CommonUtil.checkParam(result)) {
-                    // 搜索不到数据,理论上不存在
+            List<Integer> userInfoIds = userInfoMapper.listIdByUserName(lenderListQuery.getBelong());
+            if(userInfoIds == null || userInfoIds.size() == 0){
+                return JsonResponseTool.successNullList();
+            }else{
+                List<Integer> result = new ArrayList<>();
+                for (Integer userInfoId : userInfoIds) {
+                    List<Integer> ids = teammateReMapper.listObjectIdByType(ObjectTypeEnum.LENDER.getValue(),
+                            userInfoId, TeammateReEnum.TYPE_AUXILIARY.getValue());
+                    result = CommonUtil.pickList(result, ids);
+                }
+                if(result == null || result.size() == 0){
                     return JsonResponseTool.successNullList();
-                } else {
-                    lenderQuery.setIds(result);
+                }
+                if(lenderQuery.getIds() != null){
+                    result = CommonUtil.unionList(result, lenderQuery.getIds());
+                    if (CommonUtil.checkParam(result)) {
+                        // 搜索不到数据,理论上不存在
+                        return JsonResponseTool.successNullList();
+                    } else {
+                        lenderQuery.setIds(result);
+                    }
                 }
             }
         }
         if (lenderListQuery.getUrgeType() != null) {
             // 催收阶段
             if (lenderListQuery.getUrgeType().equals(KeyEnum.U_TYPE_INTERMEDIARY)) {
-                lenderQuery.setIsAgent(true);
+                lenderQuery.setAgent(true);
             } else if (KeyEnum.U_TYPE_LAW.equals(lenderListQuery.getUrgeType())) {
-                lenderQuery.setIsLawyer(true);
+                lenderQuery.setLawyer(true);
             } else if (KeyEnum.U_TYPE_URGE.equals(lenderListQuery.getUrgeType())) {
-                lenderQuery.setIsCollection(true);
+                lenderQuery.setCollection(true);
             } else if ("0".equals(lenderListQuery.getUrgeType())) {
                 // 常规催收司法化解同时进行
-                lenderQuery.setIsLawyer(true);
-                lenderQuery.setIsCollection(true);
+                lenderQuery.setLawyer(true);
+                lenderQuery.setCollection(true);
             } else {
                 // 搜索不到数据,理论上不存在
                 return JsonResponseTool.successNullList();
@@ -185,9 +194,9 @@ public class LenderServiceImpl implements LenderService {
             // N天以上未催收借款人 > 受邀请时间
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_MONTH, 0 - lenderListQuery.getOutDays());
-            lenderQuery.setBelongFollowDate(calendar.getTime());
+            lenderQuery.setFollowDate(calendar.getTime());
         }
-//        if ("1".equals(lenderListQuery.getIsAssigned())) {
+
         if (lenderListQuery.isAssigned()) {
             // 已分配
             TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
@@ -211,7 +220,7 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setIds(CommonUtil.unionList(lenderQuery.getIds(), result));
             }
         }
-//        if ("1".equals(lenderListQuery.getPassIn())) {
+
         if (lenderListQuery.isPassIn()) {
             // 转入 -- 被邀请中接收的
             List<Integer> ids = companyTeamReMapper.listObjectIdByTypeAndManager(ObjectTypeEnum.LENDER.getValue(),
@@ -243,7 +252,7 @@ public class LenderServiceImpl implements LenderService {
 //        if ("1".equals(lenderListQuery.getWaitAssist())) {
         if (lenderListQuery.isWaitAssist()) {
             // 待协助 -- 协作器里面状态为参与者
-            List<Integer> ids = teammateReMapper.listObjectIdByJoinType(ObjectTypeEnum.LENDER.getValue(),
+            List<Integer> ids = teammateReMapper.listObjectIdByType(ObjectTypeEnum.LENDER.getValue(),
                     UserSession.getCurrent().getUserId(), TeammateReEnum.TYPE_PARTICIPATION.getValue());
             if (CommonUtil.checkParam(ids)) {
                 return JsonResponseTool.successNullList();
@@ -255,7 +264,7 @@ public class LenderServiceImpl implements LenderService {
 //        if ("1".equals(lenderListQuery.getAssist())) {
         if (lenderListQuery.isAssist()) {
             // 正在协助的 -- 协作器里面状态为所有人
-            List<Integer> ids = teammateReMapper.listObjectIdByJoinType(ObjectTypeEnum.LENDER.getValue(),
+            List<Integer> ids = teammateReMapper.listObjectIdByType(ObjectTypeEnum.LENDER.getValue(),
                     UserSession.getCurrent().getUserId(), TeammateReEnum.TYPE_AUXILIARY.getValue());
             if (CommonUtil.checkParam(ids)) {
                 return JsonResponseTool.successNullList();
@@ -841,7 +850,7 @@ public class LenderServiceImpl implements LenderService {
                 ids.add(objectUserRelation.getObjectId());
             });
             lenderQuery.setIds(ids);
-            lenderQuery.setIsOver(true);
+            lenderQuery.setOver(true);
         } else if (ObjectTabEnum.outTime.getValue().equals(tab)) {
             // 超时
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
@@ -859,7 +868,7 @@ public class LenderServiceImpl implements LenderService {
             } else {
                 lenderQuery.setIds(ids);
             }
-            lenderQuery.setIsOutTime(true);
+            lenderQuery.setOutTime(true);
         } else if (ObjectTabEnum.invalid.getValue().equals(tab)) {
             // 无效
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
@@ -873,7 +882,7 @@ public class LenderServiceImpl implements LenderService {
                 ids.add(objectUserRelation.getObjectId());
             });
             lenderQuery.setIds(ids);
-            lenderQuery.setStateflag(1);
+            lenderQuery.setStopStatus(2); // 这里表示无效， 暂停状态为1
         } else if (ObjectTabEnum.join.getValue().equals(tab)) {
             // 待参与
             UserTeamQuery query = new UserTeamQuery();
@@ -934,7 +943,7 @@ public class LenderServiceImpl implements LenderService {
                 // 找不到数据
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
-            lenderQuery.setIsNotAsset(true);
+            lenderQuery.setNotAsset(true);
             if (!flag) {
                 lenderQuery.setOperator(userInfo.getId());
             }
@@ -948,7 +957,7 @@ public class LenderServiceImpl implements LenderService {
                 // 找不到数据
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
-            lenderQuery.setIsNotAsset(true);
+            lenderQuery.setNotAsset(true);
             if (!flag) {
                 lenderQuery.setOperator(userInfo.getId());
             }
@@ -964,7 +973,7 @@ public class LenderServiceImpl implements LenderService {
                 // 找不到数据
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
-            lenderQuery.setIsNotAsset(true);
+            lenderQuery.setNotAsset(true);
         } else if (ObjectTabEnum.assign.getValue().equals(tab)) {
             // 待分配
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
@@ -1025,7 +1034,7 @@ public class LenderServiceImpl implements LenderService {
 //            objectUserRelationList.forEach(objectUserRelation -> {
 //                relationIds.add(objectUserRelation.getObjectId());
 //            });
-            List<Integer> teammateIds = teammateReMapper.listObjectIdByJoinType(ObjectTypeEnum.LENDER.getValue(),
+            List<Integer> teammateIds = teammateReMapper.listObjectIdByType(ObjectTypeEnum.LENDER.getValue(),
                     UserSession.getCurrent().getUserId(), TeammateReEnum.TYPE_AUXILIARY.getValue());
 //            List<Integer> ids = CommonUtil.unionList(relationIds, teammateIds);
             List<Integer> ids = teammateIds;
@@ -1053,7 +1062,7 @@ public class LenderServiceImpl implements LenderService {
                 // 这里引入业务的处置中状态
                 lenderQuery.setIds(CommonUtil.unionList(ids, managerDisposeIds));
             }
-            lenderQuery.setIsTakePart(true);
+            lenderQuery.setTakePart(true);
         } else if (ObjectTabEnum.stop.getValue().equals(tab)) {
             // 暂停
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
@@ -1067,7 +1076,7 @@ public class LenderServiceImpl implements LenderService {
                 ids.add(objectUserRelation.getObjectId());
             });
             lenderQuery.setIds(ids);
-            lenderQuery.setIsStop(true);
+            lenderQuery.setStop(true);
         } else if (ObjectTabEnum.myUrge.getValue().equals(tab)) {
             // 我的催收
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery(); // 对象关系表

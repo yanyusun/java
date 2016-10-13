@@ -153,10 +153,10 @@
         </where>
     </select>
 
-    <select id="listObjectIdByJoinType" resultType="java.lang.Integer">
-      SELECT object_id FROM t_user_team WHERE object_type = #{type,jdbcType=INTEGER} AND id IN (
+    <select id="listObjectIdByType" resultType="java.lang.Integer">
+      SELECT object_id FROM t_user_team WHERE object_type = #{objectType,jdbcType=INTEGER} AND id IN (
         SELECT user_team_id FROM t_teammate_re where user_id = #{userId,jdbcType=INTEGER}
-        AND join_type = #{joinType,jdbcType=INTEGER} AND stateflag = 0
+        AND type = #{type,jdbcType=INTEGER} AND stateflag = 0
       )AND stateflag = 0
     </select>
 

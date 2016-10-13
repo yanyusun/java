@@ -47,14 +47,15 @@ public interface TeammateReMapper {
     List<TeammateRe> selectSelective(TeammateRe teammateRe);
 
     /**
-     * 查询出当前用户创建的所有的特定参与的特定类型对象id
+     * 查询出当前用户创建的所有的特定身份类型对象id
      *
-     * @param type
+     * @param objectType
      * @param userId
+     * @param type
      * @return
      */
-    List<Integer> listObjectIdByJoinType(@Param("type") Integer type, @Param("userId") Integer userId,
-                                         @Param("joinType") Integer joinType);
+    List<Integer> listObjectIdByType(@Param("objectType") Integer objectType, @Param("userId") Integer userId,
+                                         @Param("type") Integer type);
 
     /**
      * @param objectType
