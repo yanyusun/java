@@ -21,7 +21,7 @@ public class AssetInterceptor extends AuthenticationInterceptor {
     public static final String API_EXCEL_IN = "excelIn";
     public static final String API_LIST_LENDER = "listLender";
     public static final String API_LIST = "list";
-    public static final String API_ASSIGNED_BATCH = "assignedBatch";
+//    public static final String API_ASSIGNED_BATCH = "assignedBatch";
     public static final String API_ADD_LENDER = "addLender";
 
     @Override
@@ -49,8 +49,8 @@ public class AssetInterceptor extends AuthenticationInterceptor {
             return true;
         }else if(API_LIST.equals(path)){
             return true;
-        }else if(API_ASSIGNED_BATCH.equals(path)){
-            return true;
+//        }else if(API_ASSIGNED_BATCH.equals(path)){
+//            return true;
         }else if(API_ADD_LENDER.equals(path)){
             return true;
         }else {

@@ -290,4 +290,8 @@
     )
   </update>
 
+  <select id="listIdByUserName" resultType="java.lang.Integer">
+    SELECT id from t_user_info where user_name = #{userName,jdbcType=VARCHAR} AND stateflag = 0
+  </select>
+
 </mapper>

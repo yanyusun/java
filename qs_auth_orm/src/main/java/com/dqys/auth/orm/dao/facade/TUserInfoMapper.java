@@ -24,4 +24,11 @@ public interface TUserInfoMapper {
     List<TUserInfo> queryList(TUserQuery tUserQuery);
 
     Integer queryUpdateStatus(@Param("ids")List<Integer> ids, @Param("status")Integer status);
+
+    /**
+     * 根据用户昵称查询用户ID
+     * @param userName
+     * @return
+     */
+    List<Integer> listIdByUserName(String userName);
 }

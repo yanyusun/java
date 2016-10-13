@@ -9,113 +9,23 @@ public class LenderListQuery extends BasePagination{
 
     private Integer id; // 主键
 
-    private Integer entrustId; // 委托方
+    private String entrustName; // 委托方
     private String search; // 客户编号|姓名|电话|注释?
-    private Integer belong; // 所属人
+    private String belong; // 所属人
     private Integer urgeType; // 催收阶段
     private Integer outDays; // N天以上未催收借款人
     private String assetNo; // 资产包编号
 
-//    private Integer isOutTime; //逾期维护
-//    private Integer canContact; // 可联系
-//    private Integer isAssigned; // 已分配
-//    private Integer isOwn; // 我录入
-//    private Integer isAsset; // 非资产包借款人
-//    private Integer passOut; // 转出的
-//    private Integer passIn; // 转入的
-//    private Integer isWorth; // 资不抵债
-//    private Integer waitAssist; // 待协助的
-//    private Integer assist; // 正在协助
-    private boolean isOutTime; //逾期维护
+    private boolean outTime; //逾期维护
     private boolean canContact; // 可联系
-    private boolean isAssigned; // 已分配
-    private boolean isOwn; // 我录入
-    private boolean isAsset; // 非资产包借款人
+    private boolean assigned; // 已分配
+    private boolean own; // 我录入
+    private boolean asset; // 非资产包借款人
     private boolean passOut; // 转出的
     private boolean passIn; // 转入的
-    private boolean isWorth; // 资不抵债
+    private boolean worth; // 资不抵债
     private boolean waitAssist; // 待协助的
     private boolean assist; // 正在协助
-
-    public boolean isOutTime() {
-        return isOutTime;
-    }
-
-    public void setOutTime(boolean isOutTime) {
-        this.isOutTime = isOutTime;
-    }
-
-    public boolean isCanContact() {
-        return canContact;
-    }
-
-    public void setCanContact(boolean canContact) {
-        this.canContact = canContact;
-    }
-
-    public boolean isAssigned() {
-        return isAssigned;
-    }
-
-    public void setAssigned(boolean isAssigned) {
-        this.isAssigned = isAssigned;
-    }
-
-    public boolean isOwn() {
-        return isOwn;
-    }
-
-    public void setOwn(boolean isOwn) {
-        this.isOwn = isOwn;
-    }
-
-    public boolean isAsset() {
-        return isAsset;
-    }
-
-    public void setAsset(boolean isAsset) {
-        this.isAsset = isAsset;
-    }
-
-    public boolean isPassOut() {
-        return passOut;
-    }
-
-    public void setPassOut(boolean passOut) {
-        this.passOut = passOut;
-    }
-
-    public boolean isPassIn() {
-        return passIn;
-    }
-
-    public void setPassIn(boolean passIn) {
-        this.passIn = passIn;
-    }
-
-    public boolean isWorth() {
-        return isWorth;
-    }
-
-    public void setWorth(boolean isWorth) {
-        this.isWorth = isWorth;
-    }
-
-    public boolean isWaitAssist() {
-        return waitAssist;
-    }
-
-    public void setWaitAssist(boolean waitAssist) {
-        this.waitAssist = waitAssist;
-    }
-
-    public boolean isAssist() {
-        return assist;
-    }
-
-    public void setAssist(boolean assist) {
-        this.assist = assist;
-    }
 
     public Integer getId() {
         return id;
@@ -125,12 +35,12 @@ public class LenderListQuery extends BasePagination{
         this.id = id;
     }
 
-    public Integer getEntrustId() {
-        return entrustId;
+    public String getEntrustName() {
+        return entrustName;
     }
 
-    public void setEntrustId(Integer entrustId) {
-        this.entrustId = entrustId;
+    public void setEntrustName(String entrustName) {
+        this.entrustName = entrustName;
     }
 
     public String getSearch() {
@@ -141,11 +51,11 @@ public class LenderListQuery extends BasePagination{
         this.search = search;
     }
 
-    public Integer getBelong() {
+    public String getBelong() {
         return belong;
     }
 
-    public void setBelong(Integer belong) {
+    public void setBelong(String belong) {
         this.belong = belong;
     }
 
@@ -173,83 +83,83 @@ public class LenderListQuery extends BasePagination{
         this.assetNo = assetNo;
     }
 
-//    public Integer getIsOutTime() {
-//        return isOutTime;
-//    }
-//
-//    public void setIsOutTime(Integer isOutTime) {
-//        this.isOutTime = isOutTime;
-//    }
-//
-//    public Integer getCanContact() {
-//        return canContact;
-//    }
-//
-//    public void setCanContact(Integer canContact) {
-//        this.canContact = canContact;
-//    }
-//
-//    public Integer getIsAssigned() {
-//        return isAssigned;
-//    }
-//
-//    public void setIsAssigned(Integer isAssigned) {
-//        this.isAssigned = isAssigned;
-//    }
-//
-//    public Integer getIsOwn() {
-//        return isOwn;
-//    }
-//
-//    public void setIsOwn(Integer isOwn) {
-//        this.isOwn = isOwn;
-//    }
-//
-//    public Integer getIsAsset() {
-//        return isAsset;
-//    }
-//
-//    public void setIsAsset(Integer isAsset) {
-//        this.isAsset = isAsset;
-//    }
-//
-//    public Integer getPassOut() {
-//        return passOut;
-//    }
-//
-//    public void setPassOut(Integer passOut) {
-//        this.passOut = passOut;
-//    }
-//
-//    public Integer getPassIn() {
-//        return passIn;
-//    }
-//
-//    public void setPassIn(Integer passIn) {
-//        this.passIn = passIn;
-//    }
-//
-//    public Integer getIsWorth() {
-//        return isWorth;
-//    }
-//
-//    public void setIsWorth(Integer isWorth) {
-//        this.isWorth = isWorth;
-//    }
-//
-//    public Integer getWaitAssist() {
-//        return waitAssist;
-//    }
-//
-//    public void setWaitAssist(Integer waitAssist) {
-//        this.waitAssist = waitAssist;
-//    }
-//
-//    public Integer getAssist() {
-//        return assist;
-//    }
-//
-//    public void setAssist(Integer assist) {
-//        this.assist = assist;
-//    }
+    public boolean isOutTime() {
+        return outTime;
+    }
+
+    public void setOutTime(boolean outTime) {
+        this.outTime = outTime;
+    }
+
+    public boolean isCanContact() {
+        return canContact;
+    }
+
+    public void setCanContact(boolean canContact) {
+        this.canContact = canContact;
+    }
+
+    public boolean isAssigned() {
+        return assigned;
+    }
+
+    public void setAssigned(boolean assigned) {
+        this.assigned = assigned;
+    }
+
+    public boolean isOwn() {
+        return own;
+    }
+
+    public void setOwn(boolean own) {
+        this.own = own;
+    }
+
+    public boolean isAsset() {
+        return asset;
+    }
+
+    public void setAsset(boolean asset) {
+        this.asset = asset;
+    }
+
+    public boolean isPassOut() {
+        return passOut;
+    }
+
+    public void setPassOut(boolean passOut) {
+        this.passOut = passOut;
+    }
+
+    public boolean isPassIn() {
+        return passIn;
+    }
+
+    public void setPassIn(boolean passIn) {
+        this.passIn = passIn;
+    }
+
+    public boolean isWorth() {
+        return worth;
+    }
+
+    public void setWorth(boolean worth) {
+        this.worth = worth;
+    }
+
+    public boolean isWaitAssist() {
+        return waitAssist;
+    }
+
+    public void setWaitAssist(boolean waitAssist) {
+        this.waitAssist = waitAssist;
+    }
+
+    public boolean isAssist() {
+        return assist;
+    }
+
+    public void setAssist(boolean assist) {
+        this.assist = assist;
+    }
 }

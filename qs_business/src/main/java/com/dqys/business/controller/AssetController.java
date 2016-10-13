@@ -180,18 +180,18 @@ public class AssetController {
      * @return
      * @throws BusinessLogException
      */
-    @RequestMapping(value = "/assignedBatch")
-    public JsonResponse assignedBatch(@RequestParam("ids") String ids, @RequestParam("id") Integer id) throws BusinessLogException {
-        if (CommonUtil.checkParam(ids, id)) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        // todo 校验id是否存在
-        if (userService.get(id).getData() == null) {
-            return JsonResponseTool.paramErr("用户ID参数错误");
-        }
-        // 分配
-        return assetService.assignedBatch(ids, id);
-    }
+//    @RequestMapping(value = "/assignedBatch")
+//    public JsonResponse assignedBatch(@RequestParam("ids") String ids, @RequestParam("id") Integer id) throws BusinessLogException {
+//        if (CommonUtil.checkParam(ids, id)) {
+//            return JsonResponseTool.paramErr("参数错误");
+//        }
+//        // todo 校验id是否存在
+//        if (userService.get(id).getData() == null) {
+//            return JsonResponseTool.paramErr("用户ID参数错误");
+//        }
+//        // 分配
+//        return assetService.assignedBatch(ids, id);
+//    }
 
     /**
      * 添加资产包借款人(整合版)

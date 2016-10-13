@@ -50,6 +50,9 @@
     <result column="belong_follow_times" property="belongFollowTimes" jdbcType="INTEGER" />
     <result column="repay_status" property="repayStatus" jdbcType="INTEGER" />
     <result column="lender_no" property="lenderNo" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="entrust_name" property="entrustName" jdbcType="VARCHAR" />
+    <result column="attribute" property="attribute" jdbcType="INTEGER" />
   </resultMap>
 
   <!-- 基础字段 -->
@@ -58,8 +61,9 @@
     accrual, loan, appraisal, loan_type, loan_mode, loan_name, evaluate_excellent, evaluate_level,
     dispose_mode, tags, urge_type, entrust_born_type, entrust_born, guarantee_type, guarantee_mode,
     guarantee_source, is_guarantee_connection, guarentee_economic, is_lawsuit, is_decision, real_urge_time,
-    phone_urge_time, entrust_urge_time, can_contact, can_pay, is_worth, memo, lender_no,is_collection, is_lawyer,
-    is_agent, follow_up_times, is_stop, follow_up_time, belong_follow_time, belong_follow_times, repay_status
+    phone_urge_time, entrust_urge_time, can_contact, can_pay, is_worth, memo, lender_no, is_collection, is_lawyer,
+    is_agent, follow_up_times, is_stop, follow_up_time, belong_follow_time, belong_follow_times, repay_status,
+    type, entrust_name, attribute
   </sql>
 
   <!-- 这里：stateflag(null有效状态，0全，非null非0为无效状态)
@@ -85,14 +89,17 @@
       <if test="isWorth != null">
         AND is_worth = #{isWorth,jdbcType=INTEGER}
       </if>
-      <if test="entrustId != null">
-        AND entrust_born = #{entrustId,jdbcType=INTEGER}
+      <if test="entrustName != null">
+        AND entrust_name = #{entrustName,jdbcType=VARCHAR}
       </if>
       <if test="repayStatus != null">
         AND repay_status = #{repayStatus,jdbcType=INTEGER}
       </if>
       <if test="operator != null">
         AND operator = #{operator,jdbcType=INTEGER}
+      </if>
+      <if test="stopStatus != null">
+        AND is_stop = #{stopStatus,jdbcType=INTEGER}
       </if>
 
 
@@ -102,46 +109,46 @@
       <if test="endAt != null">
         <![CDATA[ AND create_at <= #{endAt} ]]>
       </if>
-      <if test="belongFollowDate != null">
-        <![CDATA[ AND belong_follow_time >= #{belongFollowDate} ]]>
+      <if test="followDate != null">
+        <![CDATA[ AND belong_follow_time < #{followDate} ]]>
       </if>
 
 
-      <if test="isOver">
+      <if test="over">
         AND accrual = 0 AND loan = 0
       </if>
-      <if test="isAsset">
+      <if test="asset">
         AND asset_id > 0
       </if>
-      <if test="isCollection">
+      <if test="collection">
         AND is_collection > 0
       </if>
-      <if test="isAgent">
+      <if test="agent">
         AND is_agent > 0
       </if>
-      <if test="isLawyer">
+      <if test="lawyer">
         AND is_lawyer > 0
       </if>
-      <if test="isNotAsset">
+      <if test="notAsset">
         AND asset_id is NULL
       </if>
-      <if test="isStop">
-        AND is_stop > 0
+      <if test="stop">
+        AND is_stop = 1
       </if>
-      <if test="isTakePart">
+      <if test="!stop">
+        AND is_stop = 0
+      </if>
+      <if test="takePart">
         AND (is_collection = 1 OR is_lawyer = 1 OR is_agent = 1)
       </if>
-      <if test="isNoTakePart">
+      <if test="noTakePart">
         AND is_collection = 0 AND is_lawyer = 0 AND is_agent = 0
       </if>
-      <if test="isOutTime">
+      <if test="outTime">
         AND CURRENT_TIME > end_at
       </if>
 
 
-      <if test="!isStop">
-        AND is_stop = 0
-      </if>
 
 
       <if test="listSearch != null">
@@ -302,6 +309,15 @@
       <if test="lenderNo != null" >
         lender_no,
       </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="entrustName != null" >
+        entrust_name,
+      </if>
+      <if test="attribute != null" >
+        attribute,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="remark != null" >
@@ -429,6 +445,15 @@
       </if>
       <if test="lenderNo != null" >
         #{lenderNo,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="entrustName != null" >
+        #{entrustName,jdbcType=VARCHAR},
+      </if>
+      <if test="attribute != null" >
+        #{attribute,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -572,10 +597,19 @@
         belong_follow_time = #{belongFollowTime,jdbcType=TIMESTAMP},
       </if>
       <if test="belongFollowTimes != null" >
-        belong_follow_times = #{belongFollowTimes,jdbcType=TIMESTAMP},
+        belong_follow_times = #{belongFollowTimes,jdbcType=INTEGER},
       </if>
       <if test="repayStatus != null" >
-        repay_status = #{repayStatus,jdbcType=TIMESTAMP},
+        repay_status = #{repayStatus,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="entrustName != null" >
+        entrust_name = #{entrustName,jdbcType=VARCHAR},
+      </if>
+      <if test="attribute != null" >
+        attribute = #{attribute,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}

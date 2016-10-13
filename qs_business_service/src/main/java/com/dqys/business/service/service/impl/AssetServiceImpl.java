@@ -688,7 +688,7 @@ public class AssetServiceImpl implements AssetService {
             objectUserRelationList.forEach(objectUserRelation -> {
                 relationIds.add(objectUserRelation.getObjectId());
             });
-            List<Integer> teammateIds = teammateReMapper.listObjectIdByJoinType(ObjectTypeEnum.ASSETPACKAGE.getValue(),
+            List<Integer> teammateIds = teammateReMapper.listObjectIdByType(ObjectTypeEnum.ASSETPACKAGE.getValue(),
                     UserSession.getCurrent().getUserId(), TeammateReEnum.TYPE_AUXILIARY.getValue());
             List<Integer> ids = CommonUtil.unionList(relationIds, teammateIds);
             if (CommonUtil.checkParam(ids) || ids.size() == 0) {
@@ -893,19 +893,6 @@ public class AssetServiceImpl implements AssetService {
             jsonResponse.setMsg("格式内容出错");
             jsonResponse.setData(error);
             return jsonResponse;
-//            List<ExcelMessage> error = (List<ExcelMessage>)map.get("data");
-//            String errMsg = "[";
-//            for (ExcelMessage excelMessage : error) {
-//                errMsg += "{"
-//                        + "index:" + excelMessage.getIndex()
-//                        + ",excelName:" + excelMessage.getExcelName()
-//                        + ",site:" + excelMessage.getSite()
-//                        + ",fields:" + excelMessage.getFields()
-//                        + ",problem:" + excelMessage.getProblem()
-//                        + "}";
-//            }
-//            errMsg += "]";
-//            return JsonResponseTool.failure(errMsg);
         }
         List<ContactDTO> contactDTOList = (List<ContactDTO>) map.get("contactDTOs");
         List<LenderDTO> lenderDTOList = (List<LenderDTO>) map.get("lenderDTOs");
@@ -915,11 +902,20 @@ public class AssetServiceImpl implements AssetService {
             return JsonResponseTool.paramErr("参数错误");
         }
 
+        // 资产包信息
+        AssetInfo assetInfo = assetInfoMapper.get(id);
+        if(assetInfo == null){
+            return JsonResponseTool.paramErr("资产包信息错误，请重新操作");
+        }
+
         Map<Integer, Integer> idMap = new HashMap<>();
         // 增加借款人基础信息
         for (LenderDTO lenderDTO : lenderDTOList) {
+            // 增加继承信息
             lenderDTO.setAssetId(id);
             LenderInfo lenderInfo = LenderServiceUtils.toLenderInfo(lenderDTO);
+            lenderInfo.setAttribute(assetInfo.getAttribute()); // 借款人公私有继承自资产包
+            lenderInfo.setEntrustName(assetInfo.getEntrustName()); // 借款人委托方继承自资产包
             lenderInfo.setOperator(UserSession.getCurrent().getUserId());
             lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
             lenderInfo.setOperator(UserSession.getCurrent().getUserId());
@@ -968,17 +964,17 @@ public class AssetServiceImpl implements AssetService {
             pawnDTO.setLenderId(idMap.get(pawnDTO.getId()));
             PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
             pawnInfo.setPawnNo(RandomUtil.getCode(RandomUtil.PAWN_CODE));
-            String typeStr = UserSession.getCurrent().getUserType();
-            UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
-            if (infoEnum != null) {
-                if (UserInfoEnum.USER_TYPE_COLLECTION.getValue().equals(infoEnum.getValue())) {
-                    pawnInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
-                } else if (UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().equals(infoEnum.getValue())) {
-                    pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
-                } else if (UserInfoEnum.USER_TYPE_JUDICIARY.getValue().equals(infoEnum.getValue())) {
-                    pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
-                }
-            }
+//            String typeStr = UserSession.getCurrent().getUserType();
+//            UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
+//            if (infoEnum != null) {
+//                if (UserInfoEnum.USER_TYPE_COLLECTION.getValue().equals(infoEnum.getValue())) {
+//                    pawnInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+//                } else if (UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().equals(infoEnum.getValue())) {
+//                    pawnInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+//                } else if (UserInfoEnum.USER_TYPE_JUDICIARY.getValue().equals(infoEnum.getValue())) {
+//                    pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+//                }
+//            }
             Integer result = pawnInfoMapper.insert(pawnInfo);
             if (CommonUtil.checkResult(result)) {
                 return JsonResponseTool.failure("增加抵押物信息失败");
@@ -998,17 +994,17 @@ public class AssetServiceImpl implements AssetService {
             iouDTO.setLenderId(idMap.get(iouDTO.getId()));
             IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
             iouInfo.setIouNo(RandomUtil.getCode(RandomUtil.IOU_CODE));
-            String typeStr = UserSession.getCurrent().getUserType();
-            UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
-            if (infoEnum != null) {
-                if (UserInfoEnum.USER_TYPE_COLLECTION.getValue().equals(infoEnum.getValue())) {
-                    iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
-                } else if (UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().equals(infoEnum.getValue())) {
-                    iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
-                } else if (UserInfoEnum.USER_TYPE_JUDICIARY.getValue().equals(infoEnum.getValue())) {
-                    iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
-                }
-            }
+//            String typeStr = UserSession.getCurrent().getUserType();
+//            UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
+//            if (infoEnum != null) {
+//                if (UserInfoEnum.USER_TYPE_COLLECTION.getValue().equals(infoEnum.getValue())) {
+//                    iouInfo.setOnCollection(SysProperty.BOOLEAN_TRUE);
+//                } else if (UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().equals(infoEnum.getValue())) {
+//                    iouInfo.setOnAgent(SysProperty.BOOLEAN_TRUE);
+//                } else if (UserInfoEnum.USER_TYPE_JUDICIARY.getValue().equals(infoEnum.getValue())) {
+//                    iouInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);
+//                }
+//            }
             Integer result = iouInfoMapper.insert(iouInfo);
             if (CommonUtil.checkResult(result)) {
                 return JsonResponseTool.failure("增加借据信息失败");

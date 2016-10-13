@@ -69,6 +69,9 @@ public class LenderServiceUtils {
         lenderInfo.setIsWorth(lenderDTO.getIsWorth());
         lenderInfo.setMemo(lenderDTO.getMemo());
         lenderInfo.setRepayStatus(lenderDTO.getRepayStatus());
+        lenderInfo.setAttribute(lenderDTO.getAttribute());
+        lenderInfo.setEntrustName(lenderDTO.getEntrustName());
+        lenderInfo.setType(lenderDTO.getType());
 
         return lenderInfo;
     }
@@ -184,6 +187,9 @@ public class LenderServiceUtils {
         lenderDTO.setLastFollow(lenderInfo.getFollowUpDate());
         lenderDTO.setCreateAt(lenderInfo.getCreateAt());
         lenderDTO.setLenderNo(lenderInfo.getLenderNo());
+        lenderDTO.setType(lenderInfo.getType());
+        lenderDTO.setEntrustName(lenderInfo.getEntrustName());
+        lenderDTO.setAttribute(lenderInfo.getAttribute());
 
         return lenderDTO;
     }
@@ -258,11 +264,9 @@ public class LenderServiceUtils {
         if (lenderQuery.getId() == null && lenderListQuery.getId() != null) {
             lenderQuery.setId(lenderListQuery.getId());
         }
-//        if (lenderListQuery.getIsOutTime() != null) {
         if (lenderListQuery.isOutTime()) {
-            lenderQuery.setIsOutTime(true);
+            lenderQuery.setOutTime(true);
         }
-//        if ("1".equals(lenderListQuery.getIsOwn())) {
         if (lenderListQuery.isOwn()) {
             if (lenderQuery.getOperator() != null && !UserSession.getCurrent().getUserId().equals(lenderQuery.getOperator())) {
                 lenderQuery.setOperator(0);
@@ -270,15 +274,12 @@ public class LenderServiceUtils {
                 lenderQuery.setOperator(UserSession.getCurrent().getUserId());
             }
         }
-//        if ("1".equals(lenderListQuery.getIsAsset())) {
         if (lenderListQuery.isAsset()) {
-            lenderQuery.setIsAsset(true);
+            lenderQuery.setAsset(true);
         }
-//        lenderQuery.setCanContact(lenderListQuery.getCanContact());
         lenderQuery.setCanContact(lenderListQuery.isCanContact()?1:null);
-//        lenderQuery.setIsWorth(lenderListQuery.getIsWorth());
-        lenderQuery.setIsWorth(lenderListQuery.isWorth()?1:null);
-        lenderQuery.setEntrustId(lenderListQuery.getEntrustId());
+        lenderQuery.setIsWorth(lenderListQuery.isWorth()?0:null); // 0表示资不抵债
+        lenderQuery.setEntrustName(lenderListQuery.getEntrustName());
 
         return lenderQuery;
     }
@@ -314,6 +315,9 @@ public class LenderServiceUtils {
         }
         lenderListDTO.setLastFollow(lenderInfo.getFollowUpDate());
         lenderListDTO.setFollowTime(lenderInfo.getFollowUpTime());
+        lenderListDTO.setType(lenderInfo.getType());
+        lenderListDTO.setEntrustName(lenderInfo.getEntrustName());
+        lenderListDTO.setAttribute(lenderInfo.getAttribute());
         lenderListDTO.setMemo(lenderInfo.getMemo());
         lenderListDTO.setCoordinator(teamDTOList);
         if (teamDTOList != null && teamDTOList.size() > 0) {
@@ -324,24 +328,33 @@ public class LenderServiceUtils {
                 }
             });
         }
+        lenderListDTO.setStatus(getDisposeString(lenderInfo));
+        lenderListDTO.setManageTime(lenderInfo.getBelongFollowTimes() + lenderInfo.getFollowUpTime());// 所属人催收次数
 
-        lenderListDTO.setManageTime(lenderInfo.getBelongFollowTimes());// 所属人催收次数
-        if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsCollection()) &&
-                SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsLawsuit())) {
-            lenderListDTO.setStatus("常规催收司法化解同时进行");// 化解状态
-        } else if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsLawsuit())) {
-            lenderListDTO.setStatus("司法化解");
-        } else if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsAgent())) {
-            lenderListDTO.setStatus("市场处置");
-        } else if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsCollection())) {
-            lenderListDTO.setStatus("常规催收");
-        } else {
-            lenderListDTO.setStatus(null);
-        }
 
         lenderListDTO.setMessage(null);// 消息
 
         return lenderListDTO;
+    }
+
+    /**
+     * 根据借款人的三个处置状态展示处置阶段
+     * @param lenderInfo
+     * @return
+     */
+    private static String getDisposeString(LenderInfo lenderInfo){
+        if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsCollection()) &&
+                SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsLawsuit())) {
+            return "常规催收司法化解同时进行";
+        } else if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsLawsuit())) {
+            return "司法化解";
+        } else if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsAgent())) {
+            return "市场处置";
+        } else if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsCollection())) {
+            return "常规催收";
+        } else {
+            return null;
+        }
     }
 
     public static String checkData(LenderDTO lenderDTO) {
@@ -352,7 +365,8 @@ public class LenderServiceUtils {
                 lenderDTO.getEvaluateLevel(), lenderDTO.getDisposeMode(), lenderDTO.getUrgeType(),
                 lenderDTO.getEntrustBorn(), lenderDTO.getEntrustBornType(), lenderDTO.getIsGuaranteeConnection(),
                 lenderDTO.getIsLawsuit(), lenderDTO.getIsDecision(), lenderDTO.getCanContact(),
-                lenderDTO.getCanPay(), lenderDTO.getIsWorth()
+                lenderDTO.getCanPay(), lenderDTO.getIsWorth(), lenderDTO.getAttribute(),
+                lenderDTO.getEntrustName(), lenderDTO.getType()
         )) {
             return "参数错误";
         }

@@ -50,7 +50,7 @@ public class LenderInfoMapperImplTest extends BaseTest {
         Assert.assertEquals("1", String.valueOf(delete));
 
         LenderQuery lenderQuery = new LenderQuery();
-        lenderQuery.setIsNotAsset(true);
+        lenderQuery.setNotAsset(true);
         lenderQuery.setIds(new ArrayList<>());
         List<LenderInfo> list = lenderInfoMapper.queryList(lenderQuery);
         Assert.assertNotNull(list);

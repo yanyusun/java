@@ -32,7 +32,34 @@ public class LenderListDTO {
     private Integer message; // 实时动态
     private String memo; // 备注
     private List<TeamDTO> coordinator; // 协作器
+    private Integer type;  // 类型
+    private String entrustName;  // 委托方名称
+    private Integer attribute;  // 公私有属性
 
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getEntrustName() {
+        return entrustName;
+    }
+
+    public void setEntrustName(String entrustName) {
+        this.entrustName = entrustName;
+    }
+
+    public Integer getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(Integer attribute) {
+        this.attribute = attribute;
+    }
 
     public String getAvg() {
         return avg;

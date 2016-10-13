@@ -45,6 +45,9 @@ public class LenderDTO {
     private Integer isWorth;  // 抵押物是否能覆盖债务
     private String memo;  // 备注
     private Integer repayStatus;  // 还款
+    private Integer type;  // 类型
+    private String entrustName;  // 委托方名称
+    private Integer attribute;  // 公私有属性
 
     private Integer operatorId;  // 操作人Id
     private Integer assetId; // 资产包ID
@@ -60,6 +63,30 @@ public class LenderDTO {
     private Date createAt; // 录入时间
     private String assetCode; //资产包编号
 
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getEntrustName() {
+        return entrustName;
+    }
+
+    public void setEntrustName(String entrustName) {
+        this.entrustName = entrustName;
+    }
+
+    public Integer getAttribute() {
+        return attribute;
+    }
+
+    public void setAttribute(Integer attribute) {
+        this.attribute = attribute;
+    }
 
     public String getCurrentAddress() {
         return currentAddress;
