@@ -47,10 +47,6 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     public JsonResponse addNavigation(SourceNavigation sourceNavigation) {
-        if (CommonUtil.checkParam(sourceNavigation, sourceNavigation.getLenderId(), sourceNavigation.getName(),
-                sourceNavigation.getPid(), sourceNavigation.getType())) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
         Integer result = sourceNavigationMapper.insert(sourceNavigation);
         if (CommonUtil.checkResult(result)) {
             return JsonResponseTool.failure("添加失败");
@@ -80,10 +76,6 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     public JsonResponse addSource(SourceInfoDTO sourceInfoDTO) {
-        if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getCode(), sourceInfoDTO.getNavId(),
-                sourceInfoDTO.getLenderId(), sourceInfoDTO.getSourceDTOList())) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
         SourceInfo data = sourceInfoMapper.getByNavIdAndLenderId(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId(), sourceInfoDTO.getEstatesId());
         if (data != null) {
             return JsonResponseTool.failure("添加失败，该借款人载该分类下已经有资源信息，请修改！");
@@ -113,7 +105,7 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     public SourceInfoDTO getSource(Integer navId, Integer lenderId, Integer estatesId) {
-        if (CommonUtil.checkParam(navId, lenderId)) {
+        if (CommonUtil.checkParam(navId)) {
             return null;
         }
         SourceInfo sourceInfo = sourceInfoMapper.getByNavIdAndLenderId(navId, lenderId, estatesId);//根据借款人id或是资产源id查询资料实堪
