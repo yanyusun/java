@@ -20,13 +20,7 @@ public class SourceController {
     private SourceService sourceService;
 
     /**
-     * @api {post} source/listNavigation 分类列表
-     * @apiParam {int} [lenderId] 借款人id（用于资产包或借款人的资料实堪）
-     * @apiParam {int} [estatesId] 资产源id（用于资产源的资料实堪）
-     * @apiParam {int} type 资源类型:实勘1|证件合同0(默认)|2根进
-     * @apiSampleRequest source/listNavigation
-     * @apiGroup source
-     * @apiName source/listNavigation
+     * 分类列表
      */
     @RequestMapping(value = "/listNavigation")
     public JsonResponse listNavigation(Integer lenderId, Integer estatesId, @RequestParam(defaultValue = "0") Integer type) {
@@ -84,14 +78,12 @@ public class SourceController {
     }
 
     /**
-     * @api {post} source/get 获取资源信息
-     * @apiParam {int} [lenderId] 借款人id（用于资产包或借款人的资料实堪）
-     * @apiParam {int} [estatesId] 资产源id（用于资产源的资料实堪）
-     * @apiParam {int} navId 分类id
-     * @apiSampleRequest source/get
-     * @apiGroup source
-     * @apiName source/get
-     * @apiSuccessExample {json} Data-Response:
+     * 获取资源信息
+     *
+     * @param lenderId
+     * @param estatesId
+     * @param navId
+     * @return
      */
     @RequestMapping(value = "/get")
     public JsonResponse get(Integer lenderId, Integer estatesId, @RequestParam Integer navId) {

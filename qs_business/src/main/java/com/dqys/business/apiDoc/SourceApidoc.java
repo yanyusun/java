@@ -9,7 +9,8 @@ public class SourceApidoc {
      * @api {get} http://{url}/source/listNavigation 分类列表
      * @apiName listNavigation
      * @apiGroup source
-     * @apiParam {number} lenderId 借款人ID
+     * @apiParam {number} [lenderId] 借款人id（用于资产包或借款人的资料实堪）
+     * @apiParam {number} [estatesId] 资产源id（用于资产源的资料实堪）
      * @apiParam {number} type 实勘1|证件合同0(默认)
      * @apiSuccess {SelectonDTOList} data 分类详细信息
      * @apiUse SelectonDTOList
@@ -42,7 +43,8 @@ public class SourceApidoc {
      * @api {get} http://{url}/source/get 获取资源信息
      * @apiName get
      * @apiGroup source
-     * @apiParam {number} lenderId 借款人Id
+     * @apiParam {number} [lenderId] 借款人id（用于资产包或借款人的资料实堪）
+     * @apiParam {number} [estatesId] 资产源id（用于资产源的资料实堪）
      * @apiParam {number} navId 分类ID
      * @apiSuccess {SourceInfoDTO} data 资源信息
      * @apiUse SourceInfoDTO
@@ -112,7 +114,6 @@ public class SourceApidoc {
      * }
      * git地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/common/SourceDTO.java
      */
-
 
 
 }
