@@ -70,7 +70,7 @@ public class SourceServiceUtls {
      * @return
      */
     public static SourceInfo toSourceInfo(SourceInfoDTO sourceInfoDTO) {
-        if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getLenderId(), sourceInfoDTO.getNavId())) {
+        if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getNavId())) {
             return null;
         }
         SourceInfo sourceInfo = new SourceInfo();
