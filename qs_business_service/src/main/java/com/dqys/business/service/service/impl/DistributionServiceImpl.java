@@ -835,6 +835,14 @@ public class DistributionServiceImpl implements DistributionService {
             return JsonResponseTool.failure("删除失败");
         } else {
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
+            // 业务状态还原
+            BusinessObjRe businessObjRe =
+                    businessObjReMapper.getByObject(companyTeam.getObjectType(), companyTeam.getObjectId());
+            if (businessObjRe != null) {
+                Business business = businessMapper.get(businessObjRe.getBusinessId());
+                business.setStatus(BusinessStatusEnum.platform_pass.getValue());
+                businessMapper.update(business);
+            }
 
             // 添加操作记录
             businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), ObjectLogEnum.exit.getValue(),
