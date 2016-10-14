@@ -72,7 +72,7 @@ public class ZcyEstates implements Serializable {
 
     private Double sellingPrice;//平台售价(单位：万)
 
-    private String decade;//年代
+    private Integer decade;//年代
 
     private String property;//产权
 
@@ -127,6 +127,15 @@ public class ZcyEstates implements Serializable {
     private Integer status;//状态
 
     private Integer companyId;//公司id
+
+
+    public String getEntrustType() {
+        return entrustType;
+    }
+
+    public void setEntrustType(String entrustType) {
+        this.entrustType = entrustType;
+    }
 
     public Integer getStatus() {
         return status;
@@ -288,11 +297,11 @@ public class ZcyEstates implements Serializable {
         this.sellingPrice = sellingPrice;
     }
 
-    public String getDecade() {
+    public Integer getDecade() {
         return decade;
     }
 
-    public void setDecade(String decade) {
+    public void setDecade(Integer decade) {
         this.decade = decade;
     }
 

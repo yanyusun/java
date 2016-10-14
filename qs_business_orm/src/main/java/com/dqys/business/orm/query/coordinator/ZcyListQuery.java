@@ -8,7 +8,7 @@ import java.util.List;
  * Created by mkfeng on 2016/8/19.
  *
  * @apiDefine ZcyListQuery
- * @apiParam {int} status  状态（0待接收1带分配2正在处置3全部）
+ * @apiParam {int} status  状态（0待接收13待分配2正在处置99全部）
  * @apiParam {string} houses  楼盘小区名称
  * @apiParam {string} buildingNo  楼栋
  * @apiParam {string} startPriceTotal  总价（起始）

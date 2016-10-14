@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Created by Yvan on 16/7/19.
+ *
  * @apiDefine tabEnum
  * @apiParam {number} type 导航栏左侧tab git: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/constant/asset/ObjectTabEnum.java
  */
@@ -32,21 +33,21 @@ public enum ObjectTabEnum {
     task(15, "我的任务"),
     stop(18, "暂停"),
     gongingOn(19, "正在进行"),
-    myUrge(20, "我的催收")
-    ;
+    myUrge(20, "我的催收"),
+    all(99, "全部");
 
     private Integer value;
     private String name;
 
-    ObjectTabEnum(Integer value, String name){
+    ObjectTabEnum(Integer value, String name) {
         this.value = value;
         this.name = name;
     }
 
-    public static ObjectTabEnum getObjectTabEnum(Integer value){
-        if(value != null){
-            for(ObjectTabEnum objectTabEnum : ObjectTabEnum.values()){
-                if(objectTabEnum.getValue().equals(value)){
+    public static ObjectTabEnum getObjectTabEnum(Integer value) {
+        if (value != null) {
+            for (ObjectTabEnum objectTabEnum : ObjectTabEnum.values()) {
+                if (objectTabEnum.getValue().equals(value)) {
                     return objectTabEnum;
                 }
             }
@@ -54,9 +55,9 @@ public enum ObjectTabEnum {
         return null;
     }
 
-    public static List<BaseSelectonDTO> list(){
+    public static List<BaseSelectonDTO> list() {
         List<BaseSelectonDTO> selectonDTOList = new ArrayList<>();
-        for(ObjectTabEnum objectTabEnum : ObjectTabEnum.values()){
+        for (ObjectTabEnum objectTabEnum : ObjectTabEnum.values()) {
             BaseSelectonDTO selectonDTO = new BaseSelectonDTO();
             selectonDTO.setKey(objectTabEnum.getValue().toString());
             selectonDTO.setValue(objectTabEnum.getName());
