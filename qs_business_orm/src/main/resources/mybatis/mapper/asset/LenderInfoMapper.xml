@@ -135,9 +135,6 @@
       <if test="stop">
         AND is_stop = 1
       </if>
-      <if test="!stop">
-        AND is_stop = 0
-      </if>
       <if test="takePart">
         AND (is_collection = 1 OR is_lawyer = 1 OR is_agent = 1)
       </if>

@@ -540,7 +540,7 @@ public class AssetServiceImpl implements AssetService {
                 ids.add(objectUserRelation.getObjectId());
             });
             assetQuery.setIds(ids);
-            assetQuery.setStateflag(1);
+            assetQuery.setStopStatus(2);//这里表示无效， 暂停状态为1
         } else if (ObjectTabEnum.join.getValue().equals(type)) {
             // 待参与
             UserTeamQuery query = new UserTeamQuery();
@@ -716,6 +716,8 @@ public class AssetServiceImpl implements AssetService {
                 assetQuery.setIds(CommonUtil.unionList(ids, managerDisposeIds));
             }
             assetQuery.setTakePart(true);
+            assetQuery.setStop(false);
+            assetQuery.setStopStatus(0);//0正常1暂停2无效
         } else if (ObjectTabEnum.stop.getValue().equals(type)) {
             // 暂停
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();

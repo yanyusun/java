@@ -89,6 +89,9 @@
       <if test="isStop">
         AND is_stop = 1
       </if>
+      <if test="stopStatus !=null">
+        AND is_stop = #{stopStatus}
+      </if>
 
       <if test="startAt != null">
         <![CDATA[ AND create_at >= #{startAt} ]]>
