@@ -124,10 +124,19 @@ public class ZcyEstates implements Serializable {
 
     private String houseNo;//编号
 
-    private Integer status;//状态
+    private Integer status;//资产源来源状态(0默认1转来的）
 
     private Integer companyId;//公司id
 
+    private Integer resultStatus;//结果状态（0默认1暂停2无效3完成）
+
+    public Integer getResultStatus() {
+        return resultStatus;
+    }
+
+    public void setResultStatus(Integer resultStatus) {
+        this.resultStatus = resultStatus;
+    }
 
     public String getEntrustType() {
         return entrustType;

@@ -380,6 +380,9 @@
                 #{id}
             </foreach>
         </if>
+        <if test="zcyListQuery.resultStatus !=null and zcyListQuery.resultStatus !=0">
+            AND tze.result_status=#{zcyListQuery.resultStatus}
+        </if>
     </sql>
     <select id="selectByZCYListPage" resultType="com.dqys.business.orm.pojo.zcy.dto.ZcyPawnDTO">
         SELECT tze.id estatesId,tze.object_id

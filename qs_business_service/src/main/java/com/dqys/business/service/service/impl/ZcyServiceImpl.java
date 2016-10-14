@@ -368,14 +368,41 @@ public class ZcyServiceImpl implements ZcyService {
         if (zcyListQuery.getStatus() == ObjectTabEnum.accept.getValue().intValue()) {//待接收
             getWaitReceive(zcyListQuery, map);
         }
-        if (zcyListQuery.getStatus() ==  ObjectTabEnum.assign.getValue().intValue()) {//待分配
+        if (zcyListQuery.getStatus() == ObjectTabEnum.assign.getValue().intValue()) {//待分配
             getWaitAllot(zcyListQuery, map);
         }
-        if (zcyListQuery.getStatus() ==  ObjectTabEnum.handling_urge.getValue().intValue()) {//正在处置
+        if (zcyListQuery.getStatus() == ObjectTabEnum.handling_urge.getValue().intValue()) {//正在处置
             getZcyDispose(zcyListQuery, map);
         }
-        if (zcyListQuery.getStatus() ==  ObjectTabEnum.all.getValue().intValue()) {//全部
+        if (zcyListQuery.getStatus() == ObjectTabEnum.all.getValue().intValue()) {//全部
             getZcyAll(zcyListQuery, map);
+        }
+        if (zcyListQuery.getStatus() == ObjectTabEnum.invalid.getValue().intValue()) {//无效
+
+        }
+        if (zcyListQuery.getStatus() == ObjectTabEnum.apply.getValue().intValue()) {//待申请
+
+        }
+        if (zcyListQuery.getStatus() == ObjectTabEnum.new48h.getValue().intValue()) {//48H 新
+
+        }
+        if (zcyListQuery.getStatus() == ObjectTabEnum.focus.getValue().intValue()) {//聚焦
+
+        }
+        if (zcyListQuery.getStatus() == ObjectTabEnum.month.getValue().intValue()) {//当月
+
+        }
+        if (zcyListQuery.getStatus() == ObjectTabEnum.over.getValue().intValue()) {//完成
+
+        }
+        if (zcyListQuery.getStatus() == ObjectTabEnum.stop.getValue().intValue()) {//暂停
+
+        }
+        if (zcyListQuery.getStatus() == ObjectTabEnum.outTime.getValue().intValue()) {//超时
+
+        }
+        if (zcyListQuery.getStatus() == ObjectTabEnum.stock.getValue().intValue()) {//存量
+
         }
         map.put("result", "yes");
         return map;
@@ -402,8 +429,8 @@ public class ZcyServiceImpl implements ZcyService {
             setZcyPawnDTOs(zcyPawnDTOs);
         }
         //以下为转过来的抵押物待接收
-        List<Integer> objectIdList = coordinatorMapper.getObjectIdList(ObjectTypeEnum.PAWN.getValue(), zcyListQuery.getUserId(), 0);//查询分配器中的所有待接收的抵押物id
-        count = setWaitReceivePawn(zcyListQuery, zcyPawnDTOs, count, num, objectIdList);
+//        List<Integer> objectIdList = coordinatorMapper.getObjectIdList(ObjectTypeEnum.PAWN.getValue(), zcyListQuery.getUserId(), 0);//查询分配器中的所有待接收的抵押物id
+//        count = setWaitReceivePawn(zcyListQuery, zcyPawnDTOs, count, num, objectIdList);
         map.put("zcyPawnDTOs", zcyPawnDTOs);
         map.put("count", count);
     }
@@ -417,9 +444,17 @@ public class ZcyServiceImpl implements ZcyService {
     private void getZcyDispose(ZcyListQuery zcyListQuery, Map map) {
         List<ZcyPawnDTO> zcyPawnDTOs = new ArrayList<>();
         Integer count = 0;
-        zcyListQuery.setStartPage(zcyListQuery.getPage() * zcyListQuery.getPageCount());
-        List<Integer> objectIds = coordinatorMapper.findObjectIdByOURelationAndBusiness(zcyListQuery.getUserId(), ObjectTypeEnum.PAWN.getValue());
-        count = setWaitReceivePawn(zcyListQuery, zcyPawnDTOs, count, 0, objectIds);
+//        List<Integer> objectIds = coordinatorMapper.findObjectIdByOURelationAndBusiness(zcyListQuery.getUserId(), ObjectTypeEnum.PAWN.getValue());//针对抵押物的
+//        count = setWaitReceivePawn(zcyListQuery, zcyPawnDTOs, count, 0, objectIds);
+        List<Integer> objectIds = coordinatorMapper.findObjectIdByOURelationAndBusiness(zcyListQuery.getUserId(), ObjectTypeEnum.ASSETSOURCE.getValue());//针对资产源的
+        if (objectIds.size() > 0) {
+            zcyListQuery.setObjectIdList(objectIds);//设置显示的记录
+            zcyListQuery.setUserId(null);
+            zcyListQuery.setStartPage(zcyListQuery.getPage() * zcyListQuery.getPageCount());
+            count = coordinatorMapper.selectByZCYListPageCount(zcyListQuery);
+            zcyPawnDTOs = coordinatorMapper.selectByZCYListPage(zcyListQuery);
+            setZcyPawnDTOs(zcyPawnDTOs);
+        }
         map.put("zcyPawnDTOs", zcyPawnDTOs);
         map.put("count", count);
     }
@@ -458,7 +493,7 @@ public class ZcyServiceImpl implements ZcyService {
         List<ZcyPawnDTO> zcyPawnDTOs = new ArrayList<>();
         Integer count = 0;
         Integer num = 0;
-        List<Integer> objectIds = coordinatorMapper.getObjectIdList(ObjectTypeEnum.ASSETSOURCE.getValue(), zcyListQuery.getUserId(),0);
+        List<Integer> objectIds = coordinatorMapper.getObjectIdList(ObjectTypeEnum.ASSETSOURCE.getValue(), zcyListQuery.getUserId(), 0);
         if (objectIds.size() > 0) {
             zcyListQuery.setObjectIdList(objectIds);//设置资产源待接收
             zcyListQuery.setUserId(null);
@@ -469,8 +504,8 @@ public class ZcyServiceImpl implements ZcyService {
             setZcyPawnDTOs(zcyPawnDTOs);
         }
         //以下为转过来的抵押物待接收
-        List<Integer> objectIdList = coordinatorMapper.getObjectIdList(ObjectTypeEnum.PAWN.getValue(), zcyListQuery.getUserId(), 0);//查询分配器中的所有待接收的抵押物id
-        count = setWaitReceivePawn(zcyListQuery, zcyPawnDTOs, count, num, objectIdList);
+//        List<Integer> objectIdList = coordinatorMapper.getObjectIdList(ObjectTypeEnum.PAWN.getValue(), zcyListQuery.getUserId(), 0);//查询分配器中的所有待接收的抵押物id
+//        count = setWaitReceivePawn(zcyListQuery, zcyPawnDTOs, count, num, objectIdList);
         map.put("zcyPawnDTOs", zcyPawnDTOs);
         map.put("count", count);
     }
@@ -588,7 +623,8 @@ public class ZcyServiceImpl implements ZcyService {
         Map map = new HashMap<>();
         //转过来的抵押物加入到资产源
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
-        if (ObjectTypeEnum.PAWN.getValue() == objectType && status == 0) {//抵押物同意接收
+        //抵押物同意接收
+        if (ObjectTypeEnum.PAWN.getValue().intValue() == objectType && status == 0) {
             PawnInfo pawnInfo = pawnInfoMapper.get(objectId);
             if (pawnInfo == null) {
                 map.put("result", "no_exist");
@@ -597,6 +633,7 @@ public class ZcyServiceImpl implements ZcyService {
                 zcyEstates.setHouseNo(RandomUtil.getCode(RandomUtil.ESTATES_CODE));
                 zcyEstates.setObjectType(objectType);
                 zcyEstates.setObjectId(objectType);
+                zcyEstates.setStatus(1);//资产源来源是转过来
                 zcyEstates.setSellingPrice((pawnInfo.getWorth() / 10000));
                 if (pawnInfo.getSize().matches("\\d+([.]\\d+)?")) {
                     zcyEstates.setAcreage(Double.parseDouble(pawnInfo.getSize()));
@@ -629,7 +666,7 @@ public class ZcyServiceImpl implements ZcyService {
 
                 map.put("result", "yes");
             }
-        } else if (ObjectTypeEnum.ASSETSOURCE.getValue().equals(objectType) && status == 0) {//资产源同意接收
+        } else if (ObjectTypeEnum.ASSETSOURCE.getValue().intValue() == objectType && status == 0) {//资产源同意接收
 
         }
         return map;

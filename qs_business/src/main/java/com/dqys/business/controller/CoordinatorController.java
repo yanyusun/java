@@ -39,7 +39,7 @@ public class CoordinatorController {
      * @api {post} coordinator/list 协作器借款人或是资产包的参与者列表
      * @apiParam {int} companyId 公司ID
      * @apiParam {int} objectId 对象id
-     * @apiParam {int} type 请求类型（1借款人2资产包3抵押物）
+     * @apiParam {int} type 请求类型（1借款人2资产包3抵押物4资产源）
      * @apiDescription 查询借款人或是资产包信息
      * @apiSampleRequest coordinator/list
      * @apiGroup Coordinator
@@ -95,6 +95,8 @@ public class CoordinatorController {
             coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);//查询资产包团队
         } else if (objectId != null && type == 3) {
             coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.PAWN.getValue(), userId);//查询抵押物
+        } else if (objectId != null && type == 4) {
+            coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.ASSETSOURCE.getValue(), userId);//查询资产源
         } else {
             return JsonResponseTool.paramErr("参数错误");
         }
