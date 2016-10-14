@@ -33,10 +33,15 @@
     where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </select>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    UPDATE bt_case_court SET stateflag = 0
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    UPDATE bt_case_court SET stateflag = CURRENT_TIME
     where id = #{id,jdbcType=INTEGER} AND stateflag = 0
-  </delete>
+  </update>
+
+  <update id="deleteByCaseId" parameterType="java.lang.Integer" >
+    UPDATE bt_case_court SET stateflag = CURRENT_TIME
+    where case_id = #{id,jdbcType=INTEGER} AND stateflag = 0
+  </update>
 
   <insert id="insert" parameterType="com.dqys.business.orm.pojo.cases.CaseCourt" useGeneratedKeys="true" keyProperty="id">
     insert into bt_case_court
@@ -151,7 +156,7 @@
         other_lawyer = #{otherLawyer,jdbcType=LONGVARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </update>
 
   <select id="listByCaseId" parameterType="java.lang.Integer" resultMap="BaseResultMap">

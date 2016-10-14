@@ -104,6 +104,61 @@ public class CaseApidoc {
      */
 
     /**
+     * @api {post} /case/get 根据案件ID查询详细
+     * @apiName get
+     * @apiGroup case
+     * @apiParam {number} id 案件ID
+     * @apiSuccess {CaseDTO} data 案件信息
+     * @apiUse CaseDTO
+     * @apiUse CaseCourtDTO
+     */
+
+    /**
+     * @api {post} /case/updateCaseBase 修改案件基础信息
+     * @apiName updateCaseBase
+     * @apiGroup case
+     * @apiUse CaseBaseDTO
+     * @apiSuccess {Object} data 修改结果
+     */
+
+    /**
+     * @api {post} /case/updateCaseLawsuit 修改案件诉讼信息
+     * @apiName updateCaseLawsuit
+     * @apiGroup case
+     * @apiUse CaseLawsuitDTO
+     * @apiSuccess {Object} data 修改结果
+     */
+
+    /**
+     * @api {post} /case/updateCaseAttachment 修改案件查封保全信息
+     * @apiName updateCaseAttachment
+     * @apiGroup case
+     * @apiUse CaseAttachmentDTO
+     * @apiSuccess {Object} data 修改结果
+     */
+
+    /**
+     * @api {post} /case/updateCaseMemo 修改案件备注
+     * @apiName updateCaseMemo
+     * @apiGroup case
+     * @apiParam {number} id 案件ID
+     * @apiParam {string} memo 备注信息
+     * @apiSuccess {Object} data 修改结果
+     */
+
+    /**
+     * @api {post} /case/updateCaseCourt 修改案件备注
+     * @apiName updateCaseCourt
+     * @apiGroup case
+     * @apiUse CaseCourtsDTO
+     * @apiSuccess {Object} data 修改结果
+     * @apiUse CaseCourtDTO
+     */
+
+
+
+
+    /**
      * @apiDefine Case
      * @apiParam {number} [id] 主键ID(修改时必传,增加时可不传)
      * @apiParam {number} pawnId 抵押物ID
@@ -116,7 +171,6 @@ public class CaseApidoc {
      * @apiParam {string} mortgageTime 抵押次数
      * @apiParam {string} guarantor 保证人名称
      * @apiParam {string} mortgageTime 抵押次数
-     * @apiParam {string} guarantor 保证人
      * @apiParam {string} evaluateExcellent 评优
      * @apiParam {string} evaluateLevel 评级
      * @apiParam {number} lawsuitAmount 诉讼金额
@@ -126,7 +180,7 @@ public class CaseApidoc {
      * @apiParam {date} attachmentDate 查封时间
      * @apiParam {string} attachmentCourt 法院
      * @apiParam {number} attachmentTime 查封次数
-     * @apiParam {number} isPreservation 保全(1保全)
+     * @apiParam {number} preservation 保全(1保全)
      * @apiParam {date} preservationStart 保全开始时间
      * @apiParam {date} preservationStart 保全结束时间
      * @apiParam {string} preservationMemo 续保情况
@@ -139,6 +193,51 @@ public class CaseApidoc {
      * @apiParam {string} lawsuitMemo 诉讼备注
      * @apiParam {string} attachmentMemo 查封情况
      * @apiParam {CaseCourt} courtDTOList 相关联法院
+     */
+
+    /**
+     * @apiDefine CaseBaseDTO
+     * @apiParam {number} id 案件ID
+     * @apiParam {number} pawnId 抵押物ID
+     * @apiParam {number} iouIds 借据Ids(逗号隔开)
+     * @apiParam {string} plaintiff 原告
+     * @apiParam {string} defendant 被告
+     * @apiParam {string} spouse 配偶
+     * @apiParam {string} mortgagor 抵押人名称
+     * @apiParam {string} guarantor 保证人名称
+     * @apiParam {string} evaluateExcellent 评优
+     * @apiParam {string} evaluateLevel 评级
+     */
+
+    /**
+     * @apiDefine CaseLawsuitDTO
+     * @apiParam {number} id 案件ID
+     * @apiParam {number} lawsuitAmount 诉讼金额
+     * @apiParam {number} lawsuitCorpus 诉讼本金
+     * @apiParam {number} lawsuitAccrual 诉讼利息
+     */
+
+    /**
+     * @apiDefine CaseAttachmentDTO
+     * @apiParam {number} attachmentStatus 查封(1表示已查封)
+     * @apiParam {date} attachmentDate 查封时间
+     * @apiParam {string} attachmentCourt 法院
+     * @apiParam {number} attachmentTime 查封次数
+     * @apiParam {number} preservation 保全(1保全)
+     * @apiParam {date} preservationStart 保全开始时间
+     * @apiParam {date} preservationStart 保全结束时间
+     * @apiParam {string} preservationMemo 续保情况
+     * @apiParam {number} isFirst 首封(1)
+     * @apiParam {string} preservationCourt 执行保全法院
+     * @apiParam {string} firstAttachmentCode 法院案号
+     * @apiParam {date} firstAttachmentDate 查封时间
+     * @apiParam {string} attachmentMemo 查封情况
+     */
+
+    /**
+     * @apiDefine CaseCourtsDTO
+     * @apiParam {number} id 案件ID
+     * @apiParam {CaseCourtDTO} caseCourtDTOList 案件信息集合，详细参考下方DTO参数
      */
 
     /**

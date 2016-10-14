@@ -21,6 +21,11 @@ public class CaseCourtMapperImpl extends BaseDao implements CaseCourtMapper {
     }
 
     @Override
+    public Integer deleteByCaseId(Integer id) {
+        return super.getSqlSession().getMapper(CaseCourtMapper.class).deleteByCaseId(id);
+    }
+
+    @Override
     public Integer insert(CaseCourt record) {
         return super.getSqlSession().getMapper(CaseCourtMapper.class).insert(record);
     }

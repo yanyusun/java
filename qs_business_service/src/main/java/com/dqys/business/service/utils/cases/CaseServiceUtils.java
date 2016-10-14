@@ -2,24 +2,22 @@ package com.dqys.business.service.utils.cases;
 
 import com.dqys.business.orm.pojo.cases.CaseCourt;
 import com.dqys.business.orm.pojo.cases.CaseInfo;
-import com.dqys.business.service.dto.cases.CaseCourtDTO;
-import com.dqys.business.service.dto.cases.CaseDTO;
+import com.dqys.business.service.constant.asset.ExcellentTypeEnum;
+import com.dqys.business.service.dto.cases.*;
 import com.dqys.core.base.BaseSelectonDTO;
 import com.dqys.core.utils.CommonUtil;
-import com.dqys.core.utils.DateFormatTool;
-import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by Yvan on 16/7/26.
  */
 public class CaseServiceUtils {
 
-    public static CaseInfo toCaseInfo(CaseDTO caseDTO){
-        if(CommonUtil.checkParam(caseDTO, caseDTO.getPawnId())){
+
+    public static CaseInfo toCaseInfo(CaseDTO caseDTO) {
+        if (CommonUtil.checkParam(caseDTO, caseDTO.getPawnId())) {
             return null;
         }
         CaseInfo caseInfo = new CaseInfo();
@@ -46,7 +44,7 @@ public class CaseServiceUtils {
         caseInfo.setAttachmentDate(caseDTO.getAttachmentDate());
         caseInfo.setAttachmentCourt(caseDTO.getAttachmentCourt());
         caseInfo.setAttachmentTime(caseDTO.getAttachmentTime());
-        caseInfo.setIsPreservation(caseDTO.getIsPreservation());
+        caseInfo.setIsPreservation(caseDTO.getPreservation());
         caseInfo.setPreservationStart(caseDTO.getPreservationStart());
         caseInfo.setPreservationEnd(caseDTO.getPreservationEnd());
         caseInfo.setPreservationMemo(caseDTO.getPreservationMemo());
@@ -60,8 +58,8 @@ public class CaseServiceUtils {
         return caseInfo;
     }
 
-    public static CaseCourt toCaseCourt(CaseCourtDTO caseCourtDTO){
-        if(CommonUtil.checkParam(caseCourtDTO)){
+    public static CaseCourt toCaseCourt(CaseCourtDTO caseCourtDTO) {
+        if (CommonUtil.checkParam(caseCourtDTO)) {
             return null;
         }
         CaseCourt caseCourt = new CaseCourt();
@@ -82,7 +80,7 @@ public class CaseServiceUtils {
     }
 
     public static CaseDTO toCaseDTO(CaseInfo caseInfo, List<CaseCourt> caseCourtList,
-                                    String iouIds, List<BaseSelectonDTO> selectonDTOList){
+                                    String iouIds, List<BaseSelectonDTO> selectonDTOList) {
         CaseDTO caseDTO = new CaseDTO();
 
         caseDTO.setId(caseInfo.getId());
@@ -107,7 +105,7 @@ public class CaseServiceUtils {
         caseDTO.setAttachmentDate(caseInfo.getAttachmentDate());
         caseDTO.setAttachmentCourt(caseInfo.getAttachmentCourt());
         caseDTO.setAttachmentTime(caseInfo.getAttachmentTime());
-        caseDTO.setIsPreservation(caseInfo.getIsPreservation());
+        caseDTO.setPreservation(caseInfo.getIsPreservation());
         caseDTO.setPreservationStart(caseInfo.getPreservationStart());
         caseDTO.setPreservationEnd(caseInfo.getPreservationEnd());
         caseDTO.setPreservationMemo(caseInfo.getPreservationMemo());
@@ -125,17 +123,19 @@ public class CaseServiceUtils {
         return caseDTO;
     }
 
-    public static List<CaseCourtDTO> toCaseCourtDTO(List<CaseCourt> caseCourtList){
-        if(caseCourtList == null){
+    public static List<CaseCourtDTO> toCaseCourtDTO(List<CaseCourt> caseCourtList) {
+        if (caseCourtList == null) {
             return null;
         }
         List<CaseCourtDTO> caseCourtDTOList = new ArrayList<>();
-
+        for (CaseCourt caseCourt : caseCourtList) {
+            caseCourtDTOList.add(toCaseCourtDTO(caseCourt));
+        }
         return caseCourtDTOList;
     }
 
-    public static CaseCourtDTO toCaseCourtDTO(CaseCourt caseCourt){
-        if(CommonUtil.checkParam(caseCourt)){
+    public static CaseCourtDTO toCaseCourtDTO(CaseCourt caseCourt) {
+        if (CommonUtil.checkParam(caseCourt)) {
             return null;
         }
         CaseCourtDTO caseCourtDTO = new CaseCourtDTO();
@@ -153,6 +153,181 @@ public class CaseServiceUtils {
         caseCourtDTO.setOtherLawyer(caseCourt.getOtherLawyer());
 
         return caseCourtDTO;
+    }
+
+    /**
+     * 案件信息
+     *
+     * @param caseDTO
+     * @return
+     */
+    public static String checkData(CaseDTO caseDTO) {
+        if (CommonUtil.checkParam(caseDTO, caseDTO.getCaseName(), caseDTO.getPawnId(),
+                caseDTO.getPlaintiff(), caseDTO.getDefendant(), caseDTO.getGuarantor(),
+                caseDTO.getSpouse(), caseDTO.getMortgagor(), caseDTO.getEvaluateExcellent(),
+                caseDTO.getEvaluateLevel(), caseDTO.getIouIds(), caseDTO.getLawsuitAccrual(),
+                caseDTO.getLawsuitAmount(), caseDTO.getLawsuitCorpus())) {
+            return "基础信息缺失";
+        }
+        if(CommonUtil.checkParam(caseDTO.getCourtDTOList())){
+            return "案件关联法院信息缺失";
+        }
+        if(CommonUtil.checkParam(caseDTO, caseDTO.getAttachmentStatus(),
+                caseDTO.getAttachmentDate(), caseDTO.getAttachmentCourt(), caseDTO.getAttachmentTime(),
+                caseDTO.getPreservation(), caseDTO.getPreservationStart(), caseDTO.getPreservationEnd(),
+                caseDTO.getIsFirst(), caseDTO.getPreservationCourt(), caseDTO.getFirstAttachmentCode(),
+                caseDTO.getFirstAttachmentDate())){
+            return "案件查封保全信息缺失";
+        }
+        if (ExcellentTypeEnum.getExcellentTypeEnum(caseDTO.getEvaluateExcellent()) == null) {
+            return "评优类型参数错误";
+        }
+        if (!CommonUtil.isExist(CommonUtil.UPLETTER, caseDTO.getEvaluateLevel())) {
+            return "评级参数错误";
+        }
+        if (!CommonUtil.isMoneyFormat(caseDTO.getLawsuitAccrual(), caseDTO.getLawsuitAmount(),
+                caseDTO.getLawsuitCorpus())) {
+            return "存在非法金额参数";
+        }
+        return null;
+    }
+
+    /**
+     * 案件基础信息
+     *
+     * @param caseBaseDTO
+     * @return
+     */
+    public static String checkData(CaseBaseDTO caseBaseDTO) {
+        if (CommonUtil.checkParam(caseBaseDTO, caseBaseDTO.getId(), caseBaseDTO.getPawnId(),
+                caseBaseDTO.getPlaintiff(), caseBaseDTO.getDefendant(), caseBaseDTO.getGuarantor(),
+                caseBaseDTO.getSpouse(), caseBaseDTO.getMortgagor(), caseBaseDTO.getEvaluateExcellent(),
+                caseBaseDTO.getEvaluateLevel(), caseBaseDTO.getIouIds())) {
+            return "参数错误";
+        }
+        if (ExcellentTypeEnum.getExcellentTypeEnum(caseBaseDTO.getEvaluateExcellent()) == null) {
+            return "评优类型参数错误";
+        }
+        if (!CommonUtil.isExist(CommonUtil.UPLETTER, caseBaseDTO.getEvaluateLevel())) {
+            return "评级参数错误";
+        }
+        return null;
+    }
+
+    /**
+     * 案件基础信息转化成DAO
+     *
+     * @param caseBaseDTO
+     * @return
+     */
+    public static CaseInfo toCaseInfo(CaseBaseDTO caseBaseDTO) {
+        CaseInfo caseInfo = new CaseInfo();
+
+        caseInfo.setId(caseBaseDTO.getId());
+        caseInfo.setPawnId(caseBaseDTO.getPawnId());
+        caseInfo.setPlaintiff(caseBaseDTO.getPlaintiff());
+        caseInfo.setDefendant(caseBaseDTO.getDefendant());
+        caseInfo.setSpouse(caseBaseDTO.getSpouse());
+        caseInfo.setMortgagor(caseBaseDTO.getMortgagor());
+        caseInfo.setGuarantor(caseBaseDTO.getGuarantor());
+        caseInfo.setEvaluateExcellent(caseBaseDTO.getEvaluateExcellent());
+        caseInfo.setEvaluateLevel(caseBaseDTO.getEvaluateLevel());
+
+        return caseInfo;
+    }
+
+    /**
+     * 案件诉讼信息
+     *
+     * @param caseLawsuitDTO
+     * @return
+     */
+    public static String checkData(CaseLawsuitDTO caseLawsuitDTO) {
+        if (CommonUtil.checkParam(caseLawsuitDTO, caseLawsuitDTO.getId(), caseLawsuitDTO.getLawsuitAccrual(),
+                caseLawsuitDTO.getLawsuitAmount(), caseLawsuitDTO.getLawsuitCorpus())) {
+            return "参数错误";
+        }
+        if (!CommonUtil.isMoneyFormat(caseLawsuitDTO.getLawsuitAccrual(), caseLawsuitDTO.getLawsuitAmount(),
+                caseLawsuitDTO.getLawsuitCorpus())) {
+            return "存在非法金额参数";
+        }
+        return null;
+    }
+
+    /**
+     * 案件诉讼信息转化成DAO
+     *
+     * @param caseLawsuitDTO
+     * @return
+     */
+    public static CaseInfo toCaseInfo(CaseLawsuitDTO caseLawsuitDTO) {
+        CaseInfo caseInfo = new CaseInfo();
+
+        caseInfo.setId(caseLawsuitDTO.getId());
+        caseInfo.setLawsuitAccrual(caseLawsuitDTO.getLawsuitAccrual());
+        caseInfo.setLawsuitAmount(caseLawsuitDTO.getLawsuitAmount());
+        caseInfo.setLawsuitCorpus(caseLawsuitDTO.getLawsuitCorpus());
+        caseInfo.setLawsuitMemo(caseLawsuitDTO.getLawsuitMemo());
+
+        return caseInfo;
+    }
+
+    /**
+     * 案件查封保全信息
+     *
+     * @param caseAttachmentDTO
+     * @return
+     */
+    public static String checkData(CaseAttachmentDTO caseAttachmentDTO) {
+        if (CommonUtil.checkParam(caseAttachmentDTO, caseAttachmentDTO.getId(), caseAttachmentDTO.getAttachmentStatus(),
+                caseAttachmentDTO.getAttachmentDate(), caseAttachmentDTO.getAttachmentCourt(), caseAttachmentDTO.getAttachmentTime(),
+                caseAttachmentDTO.getPreservation(), caseAttachmentDTO.getPreservationStart(), caseAttachmentDTO.getPreservationEnd(),
+                caseAttachmentDTO.getIsFirst(), caseAttachmentDTO.getPreservationCourt(), caseAttachmentDTO.getFirstAttachmentCode(),
+                caseAttachmentDTO.getFirstAttachmentDate())) {
+            return "参数错误";
+        }
+        return null;
+    }
+
+    /**
+     * 案件查封保全信息转化成DAO
+     *
+     * @param caseAttachmentDTO
+     * @return
+     */
+    public static CaseInfo toCaseInfo(CaseAttachmentDTO caseAttachmentDTO) {
+        CaseInfo caseInfo = new CaseInfo();
+
+        caseInfo.setId(caseAttachmentDTO.getId());
+        caseInfo.setAttachmentStatus(caseAttachmentDTO.getAttachmentStatus());
+        caseInfo.setAttachmentDate(caseAttachmentDTO.getAttachmentDate());
+        caseInfo.setAttachmentCourt(caseAttachmentDTO.getAttachmentCourt());
+        caseInfo.setAttachmentTime(caseAttachmentDTO.getAttachmentTime());
+        caseInfo.setIsPreservation(caseAttachmentDTO.getPreservation());
+        caseInfo.setPreservationStart(caseAttachmentDTO.getPreservationStart());
+        caseInfo.setPreservationEnd(caseAttachmentDTO.getPreservationEnd());
+        caseInfo.setPreservationMemo(caseAttachmentDTO.getPreservationMemo());
+        caseInfo.setIsFirst(caseAttachmentDTO.getIsFirst());
+        caseInfo.setFirstAttachmentDate(caseAttachmentDTO.getFirstAttachmentDate());
+        caseInfo.setPreservationCourt(caseAttachmentDTO.getPreservationCourt());
+        caseInfo.setFirstAttachmentCode(caseAttachmentDTO.getFirstAttachmentCode());
+        caseInfo.setAttachmentMemo(caseAttachmentDTO.getAttachmentMemo());
+
+        return caseInfo;
+    }
+
+    /**
+     * 案件相关联法院信息
+     *
+     * @param caseCourtDTO
+     * @return
+     */
+    public static String checkData(CaseCourtDTO caseCourtDTO) {
+        if (CommonUtil.checkParam(caseCourtDTO, caseCourtDTO.getCourt(), caseCourtDTO.getCode(),
+                caseCourtDTO.getLawyer(), caseCourtDTO.getMobile(), caseCourtDTO.getGender())) {
+            return "参数错误";
+        }
+        return null;
     }
 
 }

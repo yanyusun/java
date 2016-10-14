@@ -1,7 +1,6 @@
 package com.dqys.business.service.service.cases;
 
-import com.dqys.business.service.dto.cases.CaseDTO;
-import com.dqys.business.service.dto.cases.CaseDTOList;
+import com.dqys.business.service.dto.cases.*;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.core.model.JsonResponse;
 import org.springframework.stereotype.Service;
@@ -104,4 +103,13 @@ public interface CaseService {
      */
     JsonResponse listAdd(CaseDTOList caseDTOList) throws BusinessLogException;
 
+    JsonResponse updateCaseBase(CaseBaseDTO caseBaseDTO);
+
+    JsonResponse updateCaseAttachment(CaseAttachmentDTO caseAttachmentDTO);
+
+    JsonResponse updateCaseLawsuit(CaseLawsuitDTO caseLawsuitDTO);
+
+    JsonResponse updateCaseMemo(Integer id, String memo);
+
+    JsonResponse updateCaseCourt(Integer id, List<CaseCourtDTO> caseCourtDTOList);
 }

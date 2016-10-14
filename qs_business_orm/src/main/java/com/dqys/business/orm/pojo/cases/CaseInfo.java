@@ -32,7 +32,7 @@ public class CaseInfo extends BaseModel  {
     private Date attachmentDate; // 查封时间
     private String attachmentCourt; // 查封法院
     private Integer attachmentTime; // 查封次数
-    private Boolean isPreservation; // 是否保全
+    private Integer isPreservation; // 是否保全
     private Date preservationStart; // 保全开始时间
     private Date preservationEnd; // 保全结束时间
     private String preservationMemo; // 续保情况
@@ -211,11 +211,11 @@ public class CaseInfo extends BaseModel  {
         this.attachmentTime = attachmentTime;
     }
 
-    public Boolean getIsPreservation() {
+    public Integer getIsPreservation() {
         return isPreservation;
     }
 
-    public void setIsPreservation(Boolean isPreservation) {
+    public void setIsPreservation(Integer isPreservation) {
         this.isPreservation = isPreservation;
     }
 

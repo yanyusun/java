@@ -1,9 +1,9 @@
 package com.dqys.business.controller;
 
-import com.dqys.business.service.dto.cases.CaseDTO;
-import com.dqys.business.service.dto.cases.CaseDTOList;
+import com.dqys.business.service.dto.cases.*;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.cases.CaseService;
+import com.dqys.business.service.utils.cases.CaseServiceUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Yvan on 16/7/26.
@@ -55,6 +56,20 @@ public class CaseController {
             return JsonResponseTool.paramErr("参数错误");
         }
         return caseService.listAdd(caseDTOList);
+    }
+
+
+    /**
+     * 根据案件Id获取案件详情
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/get")
+    public JsonResponse get(Integer id){
+        if(id == null){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return JsonResponseTool.success(caseService.get(id));
     }
 
     /**
@@ -188,5 +203,67 @@ public class CaseController {
         }
         return JsonResponseTool.success(caseService.listByCase(id));
     }
+
+    /**
+     * 修改案件的基础信息
+     * @param caseBaseDTO
+     * @return
+     */
+    @RequestMapping(value = "/updateCaseBase")
+    public JsonResponse updateCaseBase(CaseBaseDTO caseBaseDTO){
+        return caseService.updateCaseBase(caseBaseDTO);
+    }
+
+    /**
+     * 修改案件的查封保全信息
+     * @param caseAttachmentDTO
+     * @return
+     */
+    @RequestMapping(value = "/updateCaseAttachment")
+    public JsonResponse updateCaseAttachment(CaseAttachmentDTO caseAttachmentDTO){
+        return caseService.updateCaseAttachment(caseAttachmentDTO);
+    }
+
+    /**
+     * 修改案件的诉讼信息
+     * @param caseLawsuitDTO
+     * @return
+     */
+    @RequestMapping(value = "/updateCaseLawsuit")
+    public JsonResponse updateCaseLawsuit(CaseLawsuitDTO caseLawsuitDTO){
+        return caseService.updateCaseLawsuit(caseLawsuitDTO);
+    }
+
+    /**
+     * 修改案件的备注
+     * @param id
+     * @param memo
+     * @return
+     */
+    @RequestMapping(value = "/updateCaseMemo")
+    public JsonResponse updateCaseMemo(Integer id, String memo){
+        return caseService.updateCaseMemo(id, memo);
+    }
+
+    /**
+     * 修改案件的相关联法院
+     * @param caseCourtsDTO
+     * @return
+     */
+    @RequestMapping(value = "/updateCaseCourt")
+    public JsonResponse updateCaseCourt(CaseCourtsDTO caseCourtsDTO){
+        if(CommonUtil.checkParam(caseCourtsDTO, caseCourtsDTO.getId(), caseCourtsDTO.getCaseCourtDTOList())){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        for (CaseCourtDTO caseCourtDTO : caseCourtsDTO.getCaseCourtDTOList()) {
+            String error = CaseServiceUtils.checkData(caseCourtDTO);
+            if(error != null){
+                return JsonResponseTool.paramErr(error);
+            }
+        }
+        return caseService.updateCaseCourt(caseCourtsDTO.getId(), caseCourtsDTO.getCaseCourtDTOList());
+    }
+
+
 
 }
