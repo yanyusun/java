@@ -373,9 +373,9 @@
         <if test="zcyListQuery.houseCase != null and zcyListQuery.houseCase != ''">
             AND tzm.house_case=#{zcyListQuery.houseCase}
         </if>
-        <if test="zcyListQuery.objectIds !=null and zcyListQuery.objectIds.size !=0">
+        <if test="zcyListQuery.objectIdList !=null and zcyListQuery.objectIdList.size !=0">
             AND tze.id IN
-            <foreach collection="zcyListQuery.objectIds" separator="," index="index" item="id" open="("
+            <foreach collection="zcyListQuery.objectIdList" separator="," index="index" item="id" open="("
                      close=")">
                 #{id}
             </foreach>
