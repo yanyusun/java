@@ -20,6 +20,12 @@ public class CaseInterceptor extends AuthenticationInterceptor {
     public static final String API_LIST_CASE = "listCase";
     public static final String API_LIST_BY_LENDER = "listByLender";
     public static final String API_LIST_BY_CASE = "listByCase";
+    public static final String API_GET = "get";
+    public static final String API_UPDATE_CASE_BASE = "updateCaseBase";
+    public static final String API_UPDATE_CASE_ATTACHMENT = "updateCaseAttachment";
+    public static final String API_UPDATE_CASE_LAWSUIT = "updateCaseLawsuit";
+    public static final String API_UPDATE_CASE_MEMO = "updateCaseMemo";
+    public static final String API_UPDATE_CASE_COURT = "updateCaseCourt";
 
 
     @Override
@@ -44,6 +50,18 @@ public class CaseInterceptor extends AuthenticationInterceptor {
         } else if (API_LIST_BY_LENDER.equals(path)) {
             return true;
         } else if (API_LIST_BY_CASE.equals(path)) {
+            return true;
+        } else if (API_GET.equals(path)) {
+            return true;
+        } else if (API_UPDATE_CASE_BASE.equals(path)) {
+            return true;
+        } else if (API_UPDATE_CASE_ATTACHMENT.equals(path)) {
+            return true;
+        } else if (API_UPDATE_CASE_COURT.equals(path)) {
+            return true;
+        } else if (API_UPDATE_CASE_MEMO.equals(path)) {
+            return true;
+        } else if (API_UPDATE_CASE_LAWSUIT.equals(path)) {
             return true;
         } else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:" + url);

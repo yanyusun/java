@@ -44,7 +44,7 @@ public class CaseDTO {
     private Date attachmentDate; // 查封时间
     private String attachmentCourt; // 查封法院
     private Integer attachmentTime; // 查封次数
-    private Boolean isPreservation; // 是否保全
+    private Integer preservation; // 是否保全
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date preservationStart; // 保全开始时间
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -261,12 +261,12 @@ public class CaseDTO {
         this.attachmentTime = attachmentTime;
     }
 
-    public Boolean getIsPreservation() {
-        return isPreservation;
+    public Integer getPreservation() {
+        return preservation;
     }
 
-    public void setIsPreservation(Boolean isPreservation) {
-        this.isPreservation = isPreservation;
+    public void setPreservation(Integer preservation) {
+        this.preservation = preservation;
     }
 
     public Date getPreservationStart() {

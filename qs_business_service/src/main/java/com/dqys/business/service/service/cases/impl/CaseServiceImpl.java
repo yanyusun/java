@@ -11,9 +11,7 @@ import com.dqys.business.orm.pojo.cases.CaseCourt;
 import com.dqys.business.orm.pojo.cases.CaseInfo;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.service.constant.ObjectLogEnum;
-import com.dqys.business.service.dto.cases.CaseCourtDTO;
-import com.dqys.business.service.dto.cases.CaseDTO;
-import com.dqys.business.service.dto.cases.CaseDTOList;
+import com.dqys.business.service.dto.cases.*;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.BusinessService;
@@ -67,8 +65,9 @@ public class CaseServiceImpl implements CaseService {
 
     @Override
     public JsonResponse add_tx(CaseDTO caseDTO) throws BusinessLogException {
-        if (CommonUtil.checkParam(caseDTO, caseDTO.getIouIds(), caseDTO.getPawnId(), caseDTO.getCourtDTOList())) {
-            return JsonResponseTool.paramErr("参数错误");
+        String error = CaseServiceUtils.checkData(caseDTO);
+        if (error != null) {
+            return JsonResponseTool.paramErr(error);
         }
         // 案件基础信息
         CaseInfo caseInfo = CaseServiceUtils.toCaseInfo(caseDTO);
@@ -152,9 +151,12 @@ public class CaseServiceImpl implements CaseService {
 
     @Override
     public JsonResponse update_tx(CaseDTO caseDTO) throws BusinessLogException {
-        if (CommonUtil.checkParam(caseDTO, caseDTO.getIouIds(), caseDTO.getPawnId(), caseDTO.getCourtDTOList(),
-                caseDTO.getId())) {
+        if (caseDTO.getId() == null) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        String error = CaseServiceUtils.checkData(caseDTO);
+        if (error != null) {
+            return JsonResponseTool.paramErr(error);
         }
         // 案件基础信息
         CaseInfo caseInfo = CaseServiceUtils.toCaseInfo(caseDTO);
@@ -165,57 +167,18 @@ public class CaseServiceImpl implements CaseService {
         if (CommonUtil.checkParam(caseInfo1)) {
             return JsonResponseTool.paramErr("参数错误，案件信息未找到");
         }
-        Integer result = caseInfoMapper.update(caseInfo);
-        if (!CommonUtil.checkResult(result)) {
-            // 案件基础信息没有变动
-        }
+        caseInfoMapper.update(caseInfo);
         Integer caseId = caseInfo.getId();
         // 法院信息
-        List<CaseCourt> courtList = caseCourtMapper.listByCaseId(caseId);
-        courtList.forEach(court -> {
-            Boolean flag = true;
-            for (CaseCourtDTO caseCourtDTO : caseDTO.getCourtDTOList()) {
-                if (caseCourtDTO.getId() == null) {
-                    break;
-                }
-                CaseCourt caseCourt = CaseServiceUtils.toCaseCourt(caseCourtDTO);
-                caseCourt.setCaseId(caseId);
-                if (caseCourt.getId().equals(court.getId())) {
-                    if (!caseCourt.toCheckObject().equals(court.toCheckObject())) {
-                        // 存在改变
-                        Integer update = caseCourtMapper.update(caseCourt);
-                        if (CommonUtil.checkParam(update)) {
-                            // TODO 修改法院信息失败
-                        }
-                    }
-                    flag = false;
-                    break;
-                }
-            }
-            if (flag) {
-                // 说明已经被删除了
-                Integer delete = caseCourtMapper.deleteByPrimaryKey(court.getId());
-                if (CommonUtil.checkParam(delete)) {
-                    // TODO 删除法院信息失败
-                }
-            }
-        });
-        caseDTO.getCourtDTOList().forEach(caseCourtDTO -> {
-            if (caseCourtDTO.getId() == null) {
-                CaseCourt caseCourt = CaseServiceUtils.toCaseCourt(caseCourtDTO);
-                caseCourt.setCaseId(caseId);
-                Integer courtAdd = caseCourtMapper.insert(caseCourt);
-                if (CommonUtil.checkParam(courtAdd)) {
-                    // TODO 增加法院信息失败
-                }
-            }
-        });
+        caseCourtMapper.deleteByCaseId(caseId);
+        // 添加新的法院信息
+        for (CaseCourtDTO caseCourtDTO : caseDTO.getCourtDTOList()) {
+            caseCourtDTO.setCaseId(caseId);
+            caseCourtMapper.insert(CaseServiceUtils.toCaseCourt(caseCourtDTO));
+        }
 
         // 案件与借据
-        Integer delete = ciRelationMapper.deleteByCaseId(caseId);
-        if (CommonUtil.checkResult(delete)) {
-            // TODO 删除案件所有的关联数据失败
-        }
+        ciRelationMapper.deleteByCaseId(caseId);
         String[] idStr = caseDTO.getIouIds().split(",");
         CiRelation ciRelation = new CiRelation();
         ciRelation.setCaseId(caseId);
@@ -247,7 +210,7 @@ public class CaseServiceImpl implements CaseService {
             index = index - 1;
         }
         List<CaseInfo> list = caseInfoMapper.listByLender(id, index);
-        if(list == null || list.size() == 0){
+        if (list == null || list.size() == 0) {
             return null;
         }
         CaseInfo caseInfo = list.get(0);
@@ -273,7 +236,7 @@ public class CaseServiceImpl implements CaseService {
             index = index - 1;
         }
         List<CaseInfo> list = caseInfoMapper.listByCase(id, index);
-        if(list == null || list.size() == 0){
+        if (list == null || list.size() == 0) {
             return null;
         }
         CaseInfo caseInfo = list.get(0);
@@ -286,7 +249,7 @@ public class CaseServiceImpl implements CaseService {
 
     @Override
     public List<CaseDTO> listByLender(Integer id) {
-        if(id != null){
+        if (id != null) {
             List<CaseDTO> result = new ArrayList<>();
             List<CaseInfo> caseInfoList = caseInfoMapper.listByLender(id, null);
             caseInfoList.forEach(caseInfo -> {
@@ -299,7 +262,7 @@ public class CaseServiceImpl implements CaseService {
 
     @Override
     public List<CaseDTO> listByCase(Integer id) {
-        if(id != null){
+        if (id != null) {
             List<CaseDTO> result = new ArrayList<>();
             List<CaseInfo> caseInfoList = caseInfoMapper.listByCase(id, null);
             caseInfoList.forEach(caseInfo -> {
@@ -310,8 +273,74 @@ public class CaseServiceImpl implements CaseService {
         return null;
     }
 
+    @Override
+    public JsonResponse updateCaseBase(CaseBaseDTO caseBaseDTO) {
+        String error = CaseServiceUtils.checkData(caseBaseDTO);
+        if (error != null) {
+            return JsonResponseTool.paramErr(error);
+        }
+        caseInfoMapper.update(CaseServiceUtils.toCaseInfo(caseBaseDTO));
+        // 案件与借据
+        ciRelationMapper.deleteByCaseId(caseBaseDTO.getId());
+        String[] idStr = caseBaseDTO.getIouIds().split(",");
+        CiRelation ciRelation = new CiRelation();
+        ciRelation.setCaseId(caseBaseDTO.getId());
+        for (String string : idStr) {
+            ciRelation.setIouId(Integer.valueOf(string));
+            Integer ciAdd = ciRelationMapper.insert(ciRelation);
+            if (CommonUtil.checkResult(ciAdd)) {
+                return JsonResponseTool.failure("增加借据关联失败，请重新操作");
+            }
+        }
+        return JsonResponseTool.success(null);
+    }
+
+    @Override
+    public JsonResponse updateCaseAttachment(CaseAttachmentDTO caseAttachmentDTO) {
+        String error = CaseServiceUtils.checkData(caseAttachmentDTO);
+        if (error != null) {
+            return JsonResponseTool.paramErr(error);
+        }
+        return CommonUtil.responseBack(caseInfoMapper.update(CaseServiceUtils.toCaseInfo(caseAttachmentDTO)));
+    }
+
+    @Override
+    public JsonResponse updateCaseLawsuit(CaseLawsuitDTO caseLawsuitDTO) {
+        String error = CaseServiceUtils.checkData(caseLawsuitDTO);
+        if (error != null) {
+            return JsonResponseTool.paramErr(error);
+        }
+        return CommonUtil.responseBack(caseInfoMapper.update(CaseServiceUtils.toCaseInfo(caseLawsuitDTO)));
+    }
+
+    @Override
+    public JsonResponse updateCaseMemo(Integer id, String memo) {
+        if (memo == null || memo.equals("") || id == null) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        CaseInfo caseInfo = new CaseInfo();
+        caseInfo.setId(id);
+        caseInfo.setMemo(memo);
+        return CommonUtil.responseBack(caseInfoMapper.update(caseInfo));
+    }
+
+    @Override
+    public JsonResponse updateCaseCourt(Integer id, List<CaseCourtDTO> caseCourtDTOList) {
+        // 删除该案件的关联法院
+        caseCourtMapper.deleteByCaseId(id);
+        // 添加新的法院信息
+        for (CaseCourtDTO caseCourtDTO : caseCourtDTOList) {
+            caseCourtDTO.setCaseId(id);
+            Integer result = caseCourtMapper.insert(CaseServiceUtils.toCaseCourt(caseCourtDTO));
+            if (result == null || !result.equals(1)) {
+                return JsonResponseTool.failure("添加失败");
+            }
+        }
+        return JsonResponseTool.success(null);
+    }
+
     private CaseDTO createCaseDTOByInfo(CaseInfo caseInfo) {
-        if(caseInfo == null){
+        if (caseInfo == null) {
             return null;
         }
         // 法院信息

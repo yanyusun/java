@@ -15,6 +15,13 @@ public interface CaseCourtMapper {
     Integer deleteByPrimaryKey(Integer id);
 
     /**
+     * 根据案件ID删除相关联法院
+     * @param id
+     * @return
+     */
+    Integer deleteByCaseId(Integer id);
+
+    /**
      * 新增
      * @param record
      * @return
