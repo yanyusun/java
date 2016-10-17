@@ -75,9 +75,9 @@ public class MessageController {
         Message message = MessageUtils.transToMessage(messageQuery);
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         String userType = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getUserType();
-        if (!userType.equals(UserInfoEnum.USER_TYPE_ADMIN.getValue() + ",")) {
+//        if (!userType.equals(UserInfoEnum.USER_TYPE_ADMIN.getValue() + ",")) {//不是平台管理员，只能看自己的信息
             message.setReceiveId(userId);
-        }
+//        }
         List<Message> list = messageService.selectByMessage(message);
         if (list == null) {
             return JsonResponseTool.noData();
