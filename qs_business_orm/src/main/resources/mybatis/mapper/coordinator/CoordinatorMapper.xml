@@ -383,6 +383,15 @@
         <if test="zcyListQuery.resultStatus !=null and zcyListQuery.resultStatus !=0">
             AND tze.result_status=#{zcyListQuery.resultStatus}
         </if>
+        <if test="zcyListQuery.sameMonth !=null and zcyListQuery.sameMonth !='' ">
+            AND tze.create_at LIKE CONCAT('%',#{zcyListQuery.sameMonth},'%')
+        </if>
+        <if test="zcyListQuery.dayNum !=null ">
+            AND tze.create_at > date_sub(curdate(),interval #{zcyListQuery.dayNum} day)
+        </if>
+        <if test="zcyListQuery.hourNum !=null ">
+            AND tze.create_at &lt; date_sub(curdate(),interval #{zcyListQuery.hourNum} HOUR)
+        </if>
     </sql>
     <select id="selectByZCYListPage" resultType="com.dqys.business.orm.pojo.zcy.dto.ZcyPawnDTO">
         SELECT tze.id estatesId,tze.object_id
