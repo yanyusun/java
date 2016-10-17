@@ -10,6 +10,7 @@ import java.util.List;
  */
 public enum  CompanyTypeEnum {
 
+    plat(1,"清搜平台"),
     bank(21, "银行"),
     management(22, "资管公司"),
     court(23, "法院"),
