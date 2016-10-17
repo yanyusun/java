@@ -1,17 +1,12 @@
 package com.dqys.business.service.utils.common.buttonUtil;
 
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
-import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
-import com.dqys.business.service.constant.ObjectEnum.AssetSourceEnum;
-import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.exception.bean.UndefinitionTypeException;
 import com.dqys.core.constant.RoleTypeEnum;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -770,22 +765,22 @@ public class ListButtonShowerUtil {
      */
     public static void getHandling_entrust(ObjectTypeEnum objectTypeEnum) {
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
-                , getUserTeamBeanAdd(new ListButtonShowerBean()));
+                ,getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
-                , getUserTeamBeanAdd(new ListButtonShowerBean()));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , getUserTeamBeanAdd(new ListButtonShowerBean()));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
-                , getUserTeamBeanAdd(new ListButtonShowerBean()));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
 
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
-                , getUserTeamBeanAdd(new ListButtonShowerBean()));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
-                , getUserTeamBeanAdd(new ListButtonShowerBean()));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
-                , getUserTeamBeanAdd(new ListButtonShowerBean()));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_entrust, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
-                , getUserTeamBeanAdd(new ListButtonShowerBean()));
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
 
     }
 
