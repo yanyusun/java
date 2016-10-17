@@ -475,11 +475,15 @@ public class LenderServiceImpl implements LenderService {
             if (contactInfo.getType().equals(ContactTypeEnum.LENDER.getValue())
                     ) {
                 lenderDTO.setName(contactInfo.getName());
-                lenderDTO.setCurrentAddress(AreaTool.getAreaById(contactInfo.getProvince()).getLabel()
-                                + AreaTool.getAreaById(contactInfo.getCity()).getLabel()
-                                + AreaTool.getAreaById(contactInfo.getDistrict()).getLabel()
-                                + contactInfo.getAddress()
-                );
+                if(contactInfo.getProvince() != null
+                        && contactInfo.getProvince() != null
+                        && contactInfo.getDistrict() != null){
+                    lenderDTO.setCurrentAddress(AreaTool.getAreaById(contactInfo.getProvince()).getLabel()
+                                    + AreaTool.getAreaById(contactInfo.getCity()).getLabel()
+                                    + AreaTool.getAreaById(contactInfo.getDistrict()).getLabel()
+                                    + contactInfo.getAddress()
+                    );
+                }
                 break;
             }
         }
