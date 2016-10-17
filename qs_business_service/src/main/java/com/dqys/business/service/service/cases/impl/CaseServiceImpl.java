@@ -343,6 +343,8 @@ public class CaseServiceImpl implements CaseService {
         if (caseInfo == null) {
             return null;
         }
+        // 抵押物信息
+        String pawnName = pawnInfoMapper.get(caseInfo.getPawnId()).getName();
         // 法院信息
         List<CaseCourt> caseCourtList = caseCourtMapper.listByCaseId(caseInfo.getId());
         // 借据信息
@@ -359,7 +361,7 @@ public class CaseServiceImpl implements CaseService {
             selectDTOList.add(selectDTO);
         }
         ids.substring(0, ids.length() - 1); // 去除尾部逗号
-        return CaseServiceUtils.toCaseDTO(caseInfo, caseCourtList, ids, selectDTOList);
+        return CaseServiceUtils.toCaseDTO(caseInfo, caseCourtList, ids, selectDTOList, pawnName);
     }
 
 }

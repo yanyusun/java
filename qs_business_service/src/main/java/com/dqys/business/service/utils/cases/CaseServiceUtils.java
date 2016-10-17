@@ -80,7 +80,7 @@ public class CaseServiceUtils {
     }
 
     public static CaseDTO toCaseDTO(CaseInfo caseInfo, List<CaseCourt> caseCourtList,
-                                    String iouIds, List<BaseSelectonDTO> selectonDTOList) {
+                                    String iouIds, List<BaseSelectonDTO> selectonDTOList, String pawnName) {
         CaseDTO caseDTO = new CaseDTO();
 
         caseDTO.setId(caseInfo.getId());
@@ -119,6 +119,7 @@ public class CaseServiceUtils {
         caseDTO.setIouIds(iouIds);
         caseDTO.setIouList(selectonDTOList);
         caseDTO.setCourtDTOList(toCaseCourtDTO(caseCourtList));
+        caseDTO.setPawnName(pawnName);
 
         return caseDTO;
     }

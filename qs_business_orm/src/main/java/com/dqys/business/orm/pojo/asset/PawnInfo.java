@@ -6,7 +6,7 @@ public class PawnInfo extends BusinessFlowModel {
 
     private Integer lenderId;  // 借款人ID
     private String pawnNo;  // 编号
-    private String name;  // 借据名称
+    private String name;  // 抵押物名称
     private Double amount;  // 贷款金额
     private String type;  // 抵押物类型
     private String evaluateExcellent;  // 评优
