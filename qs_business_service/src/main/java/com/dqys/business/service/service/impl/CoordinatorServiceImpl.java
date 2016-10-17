@@ -41,10 +41,7 @@ import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.*;
 import com.dqys.business.service.dto.company.DistributionDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
-import com.dqys.business.service.service.BusinessLogService;
-import com.dqys.business.service.service.CoordinatorService;
-import com.dqys.business.service.service.DistributionService;
-import com.dqys.business.service.service.MessageService;
+import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
@@ -101,7 +98,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     private ObjectUserRelationMapper objectUserRelationMapper;
     @Autowired
     private DistributionService distributionService;
-
+    @Autowired
+    private ZcyService zcyService;
 
     @Override
     public void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType, Integer userid) {
@@ -111,7 +109,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             companyId = userInfo.getCompanyId();
         }
         //类型为抵押物的就查询抵押物的借款人
-        if (objectType == ObjectTypeEnum.PAWN.getValue()) {
+        if (objectType == ObjectTypeEnum.PAWN.getValue().intValue()) {
             PawnInfo info = pawnInfoMapper.get(objectId);
             if (info != null) {
                 objectId = info.getLenderId();
@@ -125,7 +123,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         userTeam.setCompanyId(companyId);
         UserTeam team = new UserTeam();
         team = userTeamMapper.selectByPrimaryKeySelective(userTeam);
-        if (objectType == ObjectTypeEnum.LENDER.getValue()) {//借款人
+        if (objectType == ObjectTypeEnum.LENDER.getValue().intValue()) {//借款人
             LenderInfo lenderInfo = getLenderInfo(map, objectId);//获取借款人信息
             if (lenderInfo == null) return;
 //            if (team == null&&lenderInfo.getAssetId()!=null) {
@@ -138,10 +136,12 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 //                }
 //            }
         }
-        if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {//资产包
+        if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue().intValue()) {//资产包
             if (getAsset(map, objectId)) return;
         }
-
+        if (objectType == ObjectTypeEnum.ASSETSOURCE.getValue().intValue()) {//资产源
+            if (getSource(map, objectId)) return;
+        }
         if (team == null) {//判断是否在t_user_team表中添加了记录，添加了返回信息，没添加的返回id
             //需要判断userId是否拥有创建的权限
             String role = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getRoleId();
@@ -197,6 +197,25 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
     }
 
+    /**
+     * 获取资产源的信息
+     *
+     * @param map
+     * @param objectId
+     * @return
+     */
+    private boolean getSource(Map<String, Object> map, Integer objectId) {
+        ZcyEstates zcyEstates = zcyEstatesMapper.selectByPrimaryKey(objectId);
+        if (zcyEstates == null) {
+            map.put("result", "no_asset");//资产源不存在
+            map.put("msg", "查询资产源信息失败");
+            return true;
+        } else {
+            map.putAll(zcyService.zcyDetail(objectId));
+        }
+        return false;
+    }
+
     //获取协作器团队信息
     private List<TeamDTO> getTeamDTOs(Integer companyId, UserTeam team) {
         List<TeamDTO> list = getLenderOrAsset(companyId, team.getObjectId(), team.getObjectType());//获取借款人或是资产包的团队信息
@@ -236,6 +255,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         AssetInfo assetInfo = assetInfoMapper.get(objectId);
         if (assetInfo == null) {
             map.put("result", "no_asset");//资产包不存在
+            map.put("msg", "查询资产包信息失败");
             return true;
         } else {
             map.put("name", assetInfo.getName());//资产包名称
@@ -262,6 +282,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         LenderInfo lenderInfo = lenderInfoMapper.get(objectId);
         if (lenderInfo == null) {
             map.put("result", "no_lender");//借款人不存在
+            map.put("msg", "查询借款人信息失败");
             return null;
         } else {
             map.put("name", lenderInfo.getLenderNo());//借款人名称
@@ -276,7 +297,6 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             int day = (int) (calendar.getTimeInMillis() - nowTime) / (1000 * 3600 * 24);
             map.put("dayCount", day > 0 ? day : 0);//逾期天数
         }
-
         return lenderInfo;
     }
 

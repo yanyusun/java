@@ -97,7 +97,7 @@ public interface ZcyService {
     Map addExpress(ZcyExpress zcyExpress);
 
     /**
-     * 中介列表
+     * 中介资产源列表
      */
     Map awaitReceive(ZcyListQuery zcyListQuery);
 

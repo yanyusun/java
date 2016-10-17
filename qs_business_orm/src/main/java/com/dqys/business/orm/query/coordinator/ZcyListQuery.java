@@ -63,6 +63,15 @@ public class ZcyListQuery extends BasePagination {
     private String startEntrust;//挂牌时间（起始）
     private String endEntrust;//挂牌时间（结束）
     private List<String> facilityList;//标签集合
+    private Integer resultStatus=0;//结果状态（0默认1暂停2无效3完成）
+
+    public Integer getResultStatus() {
+        return resultStatus;
+    }
+
+    public void setResultStatus(Integer resultStatus) {
+        this.resultStatus = resultStatus;
+    }
 
     public Integer getUserId() {
         return userId;

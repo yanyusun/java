@@ -1063,6 +1063,7 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setIds(CommonUtil.unionList(ids, managerDisposeIds));
             }
             lenderQuery.setTakePart(true);
+            lenderQuery.setStopStatus(0);
         } else if (ObjectTabEnum.stop.getValue().equals(tab)) {
             // 暂停
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();

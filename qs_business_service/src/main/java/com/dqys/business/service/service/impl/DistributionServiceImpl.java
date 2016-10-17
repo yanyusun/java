@@ -41,10 +41,7 @@ import com.dqys.business.service.dto.company.BusinessServiceDTO;
 import com.dqys.business.service.dto.company.CompanyTeamReDTO;
 import com.dqys.business.service.dto.company.DistributionDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
-import com.dqys.business.service.service.BusinessLogService;
-import com.dqys.business.service.service.CoordinatorService;
-import com.dqys.business.service.service.DistributionService;
-import com.dqys.business.service.service.MessageService;
+import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.company.CompanyServiceUtils;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.base.SysProperty;
@@ -52,6 +49,7 @@ import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.TSysProperty;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +102,8 @@ public class DistributionServiceImpl implements DistributionService {
     private BusinessLogService businessLogService;
     @Autowired
     private PiRelationMapper piRelationMapper;
+    @Autowired
+    private ZcyService zcyService;
 
     @Override
     public DistributionDTO listDistribution_tx(Integer type, Integer id) throws BusinessLogException {
@@ -154,11 +154,11 @@ public class DistributionServiceImpl implements DistributionService {
         for (CompanyTeamRe companyTeamRe : companyTeamReList) {
             // 填充业绩比率,当前任务
             Map<String, Object> map = new HashMap<>();
-            if(companyTeam.getObjectType().equals(ObjectTypeEnum.ASSETPACKAGE.getValue())){
+            if (companyTeam.getObjectType().equals(ObjectTypeEnum.ASSETPACKAGE.getValue())) {
                 map = coordinatorService.getTaskCount(companyTeamRe.getAcceptCompanyId(),
                         UserSession.getCurrent().getUserId(),
                         ObjectTypeEnum.ASSETPACKAGE.getValue());
-            }else if(companyTeam.getObjectType().equals(ObjectTypeEnum.LENDER.getValue())){
+            } else if (companyTeam.getObjectType().equals(ObjectTypeEnum.LENDER.getValue())) {
                 map = coordinatorService.getTaskCount(companyTeamRe.getAcceptCompanyId(),
                         UserSession.getCurrent().getUserId(),
                         ObjectTypeEnum.LENDER.getValue());
@@ -1115,13 +1115,13 @@ public class DistributionServiceImpl implements DistributionService {
                 // 清除相关联的抵押物或者借据状态值
                 clearObjectBusinessStatus(targetType, targetId);
                 RelationQuery relationQuery = new RelationQuery();
-                if(targetType.equals(ObjectTypeEnum.IOU.getValue())){
+                if (targetType.equals(ObjectTypeEnum.IOU.getValue())) {
                     relationQuery.setIouId(targetId);
                     List<PiRelation> relationList = piRelationMapper.queryList(relationQuery);
                     for (PiRelation piRelation : relationList) {
                         clearObjectBusinessStatus(ObjectTypeEnum.PAWN.getValue(), piRelation.getPawnId());
                     }
-                }else if(targetType.equals(ObjectTypeEnum.PAWN.getValue())){
+                } else if (targetType.equals(ObjectTypeEnum.PAWN.getValue())) {
                     relationQuery.setPawnId(targetId);
                     List<PiRelation> relationList = piRelationMapper.queryList(relationQuery);
                     for (PiRelation piRelation : relationList) {
@@ -1175,13 +1175,15 @@ public class DistributionServiceImpl implements DistributionService {
         Boolean flag = true; // 是最后一个
         if (relationList != null && relationList.size() > 1) {
             for (ObjectUserRelation objectUserRelation : relationList) {
-                if(objectUserRelation.getType().equals(ObjectTypeEnum.PAWN.getValue())){
-                    if(pawnInfoMapper.get(objectUserRelation.getId()).getLenderId().equals(lenderId)){
-                        flag = false;break;
+                if (objectUserRelation.getType().equals(ObjectTypeEnum.PAWN.getValue())) {
+                    if (pawnInfoMapper.get(objectUserRelation.getId()).getLenderId().equals(lenderId)) {
+                        flag = false;
+                        break;
                     }
-                }else if(objectUserRelation.getType().equals(ObjectTypeEnum.IOU.getValue())){
-                    if(iouInfoMapper.get(objectUserRelation.getId()).getLenderId().equals(lenderId)){
-                        flag = false;break;
+                } else if (objectUserRelation.getType().equals(ObjectTypeEnum.IOU.getValue())) {
+                    if (iouInfoMapper.get(objectUserRelation.getId()).getLenderId().equals(lenderId)) {
+                        flag = false;
+                        break;
                     }
                 }
             }
@@ -1349,6 +1351,12 @@ public class DistributionServiceImpl implements DistributionService {
                         }
                         // 添加公司之间的关系
                         addCompanyRelation(creator.getCompanyId(), companyTeamRe.getAcceptCompanyId());
+                        //是中介公司身份的流转需要把抵押物转变为资产源
+                        TSysProperty property = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY);
+                        String reg = property.getPropertyValue();
+                        if (UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().toString().equals(reg)) {
+                            zcyService.receivePawn(id, type, 0);//中介公司接受业务流转的抵押物添加到资产源信息
+                        }
                     }
                 } else {
                     if (list != null && list.size() > 0) {
