@@ -344,9 +344,9 @@ public class LenderServiceUtils {
      */
     private static String getDisposeString(LenderInfo lenderInfo){
         if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsCollection()) &&
-                SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsLawsuit())) {
+                SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsLawyer())) {
             return "常规催收司法化解同时进行";
-        } else if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsLawsuit())) {
+        } else if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsLawyer())) {
             return "司法化解";
         } else if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsAgent())) {
             return "市场处置";
