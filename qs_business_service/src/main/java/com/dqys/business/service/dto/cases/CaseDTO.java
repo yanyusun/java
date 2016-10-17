@@ -19,7 +19,7 @@ public class CaseDTO {
     private String type; // 案件类型(0母案件,1子案件)
     // 抵押物
     private Integer pawnId;  // 抵押物ID
-    private Integer pawnName; // 抵押物名称
+    private String pawnName; // 抵押物名称
     // 借据
     private String iouIds; // 借据集合(id之间","隔开)
     private List<BaseSelectonDTO> iouList; // 借据集合
@@ -101,11 +101,11 @@ public class CaseDTO {
         this.pawnId = pawnId;
     }
 
-    public Integer getPawnName() {
+    public String getPawnName() {
         return pawnName;
     }
 
-    public void setPawnName(Integer pawnName) {
+    public void setPawnName(String pawnName) {
         this.pawnName = pawnName;
     }
 
