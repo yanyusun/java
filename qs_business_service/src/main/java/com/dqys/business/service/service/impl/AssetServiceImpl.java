@@ -191,7 +191,7 @@ public class AssetServiceImpl implements AssetService {
             return JsonResponseTool.paramErr("参数错误");
         }
         AssetQuery assetQuery = createAssetQuery(type);
-        if (assetQuery.getId() != null && assetQuery.getId().equals(SysProperty.NULL_DATA_ID)) {
+        if (assetQuery == null || assetQuery.getId() != null && assetQuery.getId().equals(SysProperty.NULL_DATA_ID)) {
             return JsonResponseTool.successNullList();
         }
         if (assetListQuery != null) {
