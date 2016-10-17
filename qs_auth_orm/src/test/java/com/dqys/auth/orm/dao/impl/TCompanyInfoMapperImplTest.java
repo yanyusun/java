@@ -50,9 +50,9 @@ public class TCompanyInfoMapperImplTest extends BaseTest {
         count = tCompanyInfoMapper.deleteByPrimaryKey(tCompanyInfoSel.getId());
         Assert.assertNotNull(count);
 
-        CompanyDetailInfo companyDetailInfo = tCompanyInfoMapper.getDetailByCompanyId(120);
+        CompanyDetailInfo companyDetailInfo = tCompanyInfoMapper.getDetailByCompanyId(423);
         Assert.assertNotNull(companyDetailInfo);
-        CompanyDetailInfo companyDetailInfo1 = tCompanyInfoMapper.getDetailByUserId(11);
+        CompanyDetailInfo companyDetailInfo1 = tCompanyInfoMapper.getDetailByUserId(296);
         Assert.assertNotNull(companyDetailInfo1);
     }
 }
