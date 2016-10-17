@@ -63,7 +63,34 @@ public class ZcyListQuery extends BasePagination {
     private String startEntrust;//挂牌时间（起始）
     private String endEntrust;//挂牌时间（结束）
     private List<String> facilityList;//标签集合
-    private Integer resultStatus=0;//结果状态（0默认1暂停2无效3完成）
+    private Integer resultStatus = 0;//结果状态（0默认1暂停2无效3完成）
+    private String sameMonth;//当前年月(yyyyy-MM)
+    private Integer dayNum;//获取几天内的记录
+    private Integer hourNum;//获取超过几小时后的记录
+
+    public Integer getHourNum() {
+        return hourNum;
+    }
+
+    public void setHourNum(Integer hourNum) {
+        this.hourNum = hourNum;
+    }
+
+    public String getSameMonth() {
+        return sameMonth;
+    }
+
+    public void setSameMonth(String sameMonth) {
+        this.sameMonth = sameMonth;
+    }
+
+    public Integer getDayNum() {
+        return dayNum;
+    }
+
+    public void setDayNum(Integer dayNum) {
+        this.dayNum = dayNum;
+    }
 
     public Integer getResultStatus() {
         return resultStatus;

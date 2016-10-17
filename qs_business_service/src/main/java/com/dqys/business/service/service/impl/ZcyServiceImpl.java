@@ -377,31 +377,41 @@ public class ZcyServiceImpl implements ZcyService {
         if (zcyListQuery.getStatus() == ObjectTabEnum.all.getValue().intValue()) {//全部
             getZcyAll(zcyListQuery, map);
         }
-        if (zcyListQuery.getStatus() == ObjectTabEnum.invalid.getValue().intValue()) {//无效
-
-        }
-        if (zcyListQuery.getStatus() == ObjectTabEnum.apply.getValue().intValue()) {//待申请
-
-        }
         if (zcyListQuery.getStatus() == ObjectTabEnum.new48h.getValue().intValue()) {//48H 新
+            //当前时间减去两天，两天内的记录
+            zcyListQuery.setDayNum(2);
+            getZcyAll(zcyListQuery, map);
+        }
+        if (zcyListQuery.getStatus() == ObjectTabEnum.month.getValue().intValue()) {//当月
+            //用当前年月去查询录入时间
+            zcyListQuery.setSameMonth(DateFormatTool.format("yyyy-MM"));
+            getZcyAll(zcyListQuery, map);
+        }
+        if (zcyListQuery.getStatus() == ObjectTabEnum.over.getValue().intValue()) {//完成
+            zcyListQuery.setResultStatus(3);
+            getZcyAll(zcyListQuery, map);
+        }
+        if (zcyListQuery.getStatus() == ObjectTabEnum.stop.getValue().intValue()) {//暂停
+            //资产源的结果状态（0正常1暂停2无效3完成）
+            zcyListQuery.setResultStatus(1);
+            getZcyAll(zcyListQuery, map);
+        }
+        if (zcyListQuery.getStatus() == ObjectTabEnum.invalid.getValue().intValue()) {//无效
+            zcyListQuery.setResultStatus(2);
+            getZcyAll(zcyListQuery, map);
+        }
+        if (zcyListQuery.getStatus() == ObjectTabEnum.outTime.getValue().intValue()) {//超时
+            //任务超过六小时没有接收的
+            zcyListQuery.setHourNum(6);
+            getWaitReceive(zcyListQuery, map);
+        }
+        if (zcyListQuery.getStatus() == ObjectTabEnum.stock.getValue().intValue()) {//存量
 
         }
         if (zcyListQuery.getStatus() == ObjectTabEnum.focus.getValue().intValue()) {//聚焦
 
         }
-        if (zcyListQuery.getStatus() == ObjectTabEnum.month.getValue().intValue()) {//当月
-
-        }
-        if (zcyListQuery.getStatus() == ObjectTabEnum.over.getValue().intValue()) {//完成
-
-        }
-        if (zcyListQuery.getStatus() == ObjectTabEnum.stop.getValue().intValue()) {//暂停
-
-        }
-        if (zcyListQuery.getStatus() == ObjectTabEnum.outTime.getValue().intValue()) {//超时
-
-        }
-        if (zcyListQuery.getStatus() == ObjectTabEnum.stock.getValue().intValue()) {//存量
+        if (zcyListQuery.getStatus() == ObjectTabEnum.apply.getValue().intValue()) {//待申请
 
         }
         map.put("result", "yes");
