@@ -274,7 +274,7 @@ public class CaseController {
         if(id == null){
             return JsonResponseTool.paramErr("参数错误");
         }
-        return JsonResponseTool.success(caseService.listByCase(id));
+        return JsonResponseTool.success(caseService.listIouByCaseId(id));
     }
 
 }

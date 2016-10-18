@@ -35,12 +35,9 @@ public class UserController {
     @Autowired
     @Qualifier("b_loginService")
     private UserService userService;
-    @Autowired
-    @Qualifier("b_companyService")
-    private CompanyService companyService;
 
     /**
-     * 二级导航统计
+     * 二级导航统计(没用，先预留)
      */
     @RequestMapping(value = "/listData")
     @ResponseBody
@@ -71,7 +68,7 @@ public class UserController {
     }
 
     /**
-     * 获取公司
+     * 获取公司(没用，先预留)
      * @return
      */
     @RequestMapping(value = "/listUser")
@@ -130,8 +127,6 @@ public class UserController {
             return JsonResponseTool.paramErr("参数错误");
         }
         // 其他校验
-
-
         return userService.add(userInsertDTO);
     }
 
