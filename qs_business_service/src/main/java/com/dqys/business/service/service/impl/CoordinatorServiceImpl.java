@@ -1143,12 +1143,13 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         map.put("result", "no");
         if (companyTeamId == null) {
             CompanyTeam team = companyTeamMapper.getByTypeId(objectType, objectId);//分配器id参数为null，自己查询分配器id
-            if (team == null && objectType == ObjectTypeEnum.LENDER.getValue()) {//借款人分配器不存在，查询资产包的分配器
-                LenderInfo info = lenderInfoMapper.get(objectId);
-                if (info != null && info.getAssetId() != null) {
-                    team = companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETPACKAGE.getValue(), info.getAssetId());
-                }
-            }
+            //借款人分配器不存在，不去查询资产包的分配器（资产包里不需要看到业务流转的处置机构）
+//            if (team == null && objectType == ObjectTypeEnum.LENDER.getValue()) {
+//                LenderInfo info = lenderInfoMapper.get(objectId);
+//                if (info != null && info.getAssetId() != null) {
+//                    team = companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETPACKAGE.getValue(), info.getAssetId());
+//                }
+//            }
             if (team != null) {
                 companyTeamId = team.getId();
             } else {
