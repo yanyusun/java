@@ -219,13 +219,14 @@ public class CaseApidoc {
 
     /**
      * @apiDefine CaseAttachmentDTO
+     * @apiParam {number} id 借款人Id
      * @apiParam {number} attachmentStatus 查封(1表示已查封)
      * @apiParam {date} attachmentDate 查封时间
      * @apiParam {string} attachmentCourt 法院
      * @apiParam {number} attachmentTime 查封次数
      * @apiParam {number} preservation 保全(1保全)
      * @apiParam {date} preservationStart 保全开始时间
-     * @apiParam {date} preservationStart 保全结束时间
+     * @apiParam {date} preservationEnd 保全结束时间
      * @apiParam {string} preservationMemo 续保情况
      * @apiParam {number} isFirst 首封(1)
      * @apiParam {string} preservationCourt 执行保全法院
