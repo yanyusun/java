@@ -228,7 +228,7 @@ public class UserServiceImpl implements UserService {
         }
         // 校验邮箱是否存在
         List<TUserInfo> isExist = tUserInfoMapper.verifyUser(null, null, data.getEmail());
-        if(isExist != null || isExist.size() > 0){
+        if (isExist != null && isExist.size() > 0) {
             return JsonResponseTool.failure("邮箱已存在");
         }
         TCompanyInfo companyInfo = getCompanyByUserId(UserSession.getCurrent().getUserId());
@@ -414,10 +414,10 @@ public class UserServiceImpl implements UserService {
             return JsonResponseTool.paramErr("您不是管理员,没有权限导入成员");
         }
         TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(id);
-        if(userInfo == null){
+        if (userInfo == null) {
             return JsonResponseTool.failure("该用户不存在");
         }
-        if(userInfo.getCompanyId().equals(companyDetailInfo.getCompanyId())){
+        if (userInfo.getCompanyId().equals(companyDetailInfo.getCompanyId())) {
             return JsonResponseTool.failure("没有权限修改其他公司成员");
         }
         try {
@@ -459,13 +459,13 @@ public class UserServiceImpl implements UserService {
                     - Integer.valueOf(String.valueOf(assetMap.get("finish")).trim());
         }
         List<TUserTag> tagList = tUserTagMapper.selectByUserId(tUserInfo.getId());
-        if(tagList != null && tagList.size() > 0){
+        if (tagList != null && tagList.size() > 0) {
             userTag = tagList.get(0);
-            if(userTag.getApartmentId() != null){
+            if (userTag.getApartmentId() != null) {
                 OrganizationQuery query = new OrganizationQuery();
                 query.setId(userTag.getApartmentId());
                 List<Organization> organization = organizationMapper.list(query);
-                if(organization != null && organization.size() > 0){
+                if (organization != null && organization.size() > 0) {
                     apartment = organization.get(0).getName();
                 }
             }
@@ -500,7 +500,7 @@ public class UserServiceImpl implements UserService {
             return JsonResponseTool.paramErr("您不是管理员,没有权限导入成员");
         }
 
-        Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file,tUserInfoMapper);
+        Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file, tUserInfoMapper);
         if (map.get("result") == null || map.get("result").equals("error")) {
             List<ExcelMessage> error = (List<ExcelMessage>) map.get("data");
             JsonResponse jsonResponse = new JsonResponse();
