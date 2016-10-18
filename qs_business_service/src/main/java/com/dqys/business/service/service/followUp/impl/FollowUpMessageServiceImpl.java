@@ -185,9 +185,9 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             }
         } else {
             teamid = followUpMessageMapper.getTeamId(objectId, ObjectType, userId);
-            if(teamid == null){
-                teamid=0;
-            }
+        }
+        if(teamid == null){
+            teamid=0;
         }
         return teamid;
     }
