@@ -226,6 +226,9 @@ public class UserServiceImpl implements UserService {
         if (checkData != null) {
             return JsonResponseTool.paramErr(checkData);
         }
+        if(tUserInfoMapper.verifyUser(null, null, data.getEmail()) != null){
+            return JsonResponseTool.failure("邮箱已存在");
+        }
         TCompanyInfo companyInfo = getCompanyByUserId(UserSession.getCurrent().getUserId());
         if (companyInfo == null) {
             return JsonResponseTool.paramErr("当前用户存在数据异常");
