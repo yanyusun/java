@@ -333,5 +333,26 @@ public class RepayController {
         }
     }
 
+    /**
+     * @return
+     * @api {post} repay/caseRepayMoney 案件已还款操作
+     * @apiName repay/caseRepayMoney
+     * @apiSampleRequest repay/caseRepayMoney
+     * @apiParam {int} caseId 案件id
+     * @apiParam {string} fileName 图片名称
+     * @apiGroup Repay
+     */
+    @RequestMapping("/caseRepayMoney")
+    @ResponseBody
+    public JsonResponse caseRepayMoney(@RequestParam("caseId") Integer caseId, @RequestParam("fileName") Integer fileName) {
+        Map map = new HashMap<>();
+
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+        }
+    }
+
 
 }
