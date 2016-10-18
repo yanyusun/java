@@ -81,4 +81,7 @@ public interface UserTeamMapper {
      * @return
      */
     List<UserTeam> queryList(UserTeamQuery userTeamQuery);
+
+    UserTeam getTeam(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType, @Param("userId") Integer userId);
+
 }

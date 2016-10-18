@@ -219,4 +219,6 @@ public interface CoordinatorService {
      * @return
      */
     Map getUserDetail(Integer userId);
+
+    //UserTeam getTeam(Integer objectId, Integer objectType, int userId);
 }

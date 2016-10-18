@@ -73,4 +73,9 @@ public class UserTeamMapperImpl extends BaseDao implements UserTeamMapper {
     public List<UserTeam> queryList(UserTeamQuery userTeamQuery) {
         return super.getSqlSession().getMapper(UserTeamMapper.class).queryList(userTeamQuery);
     }
+
+    @Override
+    public UserTeam getTeam(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType, @Param("userId") Integer userId) {
+        return super.getSqlSession().getMapper(UserTeamMapper.class).getTeam(objectId, objectType, userId);
+    }
 }

@@ -247,4 +247,6 @@ public interface CoordinatorMapper {
      * @return
      */
     UserDetail getUserDetail(Integer userId);
+
+    //getTeam()
 }
