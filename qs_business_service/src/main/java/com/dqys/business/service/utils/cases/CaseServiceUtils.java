@@ -23,7 +23,7 @@ public class CaseServiceUtils {
         CaseInfo caseInfo = new CaseInfo();
 
         caseInfo.setId(caseDTO.getId());
-        caseInfo.setpId(caseDTO.getpId());
+        caseInfo.setPid(caseDTO.getpId());
         caseInfo.setName(caseDTO.getCaseName());
         caseInfo.setType(caseDTO.getType());
         caseInfo.setPawnId(caseDTO.getPawnId());
@@ -84,7 +84,7 @@ public class CaseServiceUtils {
         CaseDTO caseDTO = new CaseDTO();
 
         caseDTO.setId(caseInfo.getId());
-        caseDTO.setpId(caseInfo.getpId());
+        caseDTO.setpId(caseInfo.getPid());
         caseDTO.setType(caseInfo.getType());
         caseDTO.setCaseName(caseInfo.getName());
         caseDTO.setPawnId(caseInfo.getPawnId());

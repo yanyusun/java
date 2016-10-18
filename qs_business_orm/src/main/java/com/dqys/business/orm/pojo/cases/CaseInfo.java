@@ -12,7 +12,7 @@ public class CaseInfo extends BaseModel  {
 
     private String caseNo; // 编号(显示)
     private String name; // 名称
-    private Integer pId; // 父级案件ID
+    private Integer pid; // 父级案件ID
     private String type; // 案件类型(0母案件,1子案件)
     private Integer pawnId;  // 抵押物ID
     private String plaintiff; // 原告
@@ -51,12 +51,12 @@ public class CaseInfo extends BaseModel  {
         this.caseNo = caseNo;
     }
 
-    public Integer getpId() {
-        return pId;
+    public Integer getPid() {
+        return pid;
     }
 
-    public void setpId(Integer pId) {
-        this.pId = pId;
+    public void setPid(Integer pid) {
+        this.pid = pid;
     }
 
     public String getType() {

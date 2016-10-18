@@ -45,9 +45,9 @@ public class PawnApidoc {
      */
 
     /**
-     * @api {post} http://{url}/iou/listPawn 获取借款人的抵押物信息
+     * @api {post} http://{url}/pawn/listPawn 获取借款人的抵押物信息
      * @apiName listPawn
-     * @apiGroup iou
+     * @apiGroup pawn
      * @apiParam {number} id 借款人ID
      * @apiSuccess {PawnDTO} data 抵押物信息
      * @apiUse PawnDTO

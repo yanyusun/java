@@ -1508,68 +1508,68 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         return coordinatorMapper.companyList(objectId, objectType);
     }
 
-//    public UserTeam getTeam(Integer objectId, Integer objectType, int userId){
-//        ObjectTypeEnum objectTypeEnum = ObjectTypeEnum.getObjectTypeEnum(objectType);
-//        UserTeam lenderTeam;
-//        UserTeam assetTeam;
-//        UserTeam sourceTeam;
-//        LenderInfo lenderInfo;
-//        switch (objectTypeEnum){
-//            case PAWN:
-//                PawnInfo pawnInfo= pawnInfoMapper.get(objectId);
-//                lenderTeam=coordinatorMapper.getByTypeId(ObjectTypeEnum.LENDER.getValue(),pawnInfo.getLenderId());
-//                if(lenderTeam!=null){//返回借款人的team
-//                    return lenderTeam;
-//                }
-//                //查询上级资产包的team
-//                lenderInfo=lenderInfoMapper.get(pawnInfo.getLenderId());
-//                assetTeam=companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETPACKAGE.getValue(),lenderInfo.getAssetId());
-//                if(assetTeam!=null){
-//                    return assetTeam;
-//                }
-//                //// TODO: 16-10-8  查找资产源
-//                break;
-//            case IOU:
-//                IOUInfo iouInfo= iouInfoMapper.get(objectId);
-//                lenderTeam=companyTeamMapper.getByTypeId(ObjectTypeEnum.LENDER.getValue(),iouInfo.getLenderId());
-//                if(lenderTeam!=null){//返回借款人的team
-//                    return lenderTeam;
-//                }
-//                //查询上级资产包的team
-//                lenderInfo=lenderInfoMapper.get(iouInfo.getLenderId());
-//                assetTeam=companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETPACKAGE.getValue(),lenderInfo.getAssetId());
-//                if(assetTeam!=null){
-//                    return assetTeam;
-//                }
-//                break;
-//            case LENDER:
-//                lenderTeam=companyTeamMapper.getByTypeId(objectType,objectId);
-//                if(lenderTeam!=null){//返回借款人的team
-//                    return lenderTeam;
-//                }
-//                //查询上级资产包的team
-//                lenderInfo=lenderInfoMapper.get(objectId);
-//                assetTeam=companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETPACKAGE.getValue(),lenderInfo.getAssetId());
-//                if(assetTeam!=null){
-//                    return assetTeam;
-//                }
-//                break;
-//            case ASSETPACKAGE:
-//                assetTeam=companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETPACKAGE.getValue(),objectId);
-//                if(assetTeam!=null){
-//                    return assetTeam;
-//                }
-//                break;
-//            case ASSETSOURCE:
-//                sourceTeam=companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETSOURCE.getValue(),objectId);
-//                if(sourceTeam!=null){
-//                    return sourceTeam;
-//                }
-//                break;
-//        }
-//        return null;
-//    }
-//
-//}
+    public UserTeam getTeam(Integer objectId, Integer objectType, int userId) {
+        ObjectTypeEnum objectTypeEnum = ObjectTypeEnum.getObjectTypeEnum(objectType);
+        UserTeam lenderTeam;
+        UserTeam assetTeam;
+        UserTeam sourceTeam;
+        LenderInfo lenderInfo;
+        switch (objectTypeEnum) {
+            case PAWN:
+                PawnInfo pawnInfo = pawnInfoMapper.get(objectId);
+                lenderTeam = userTeamMapper.getTeam(pawnInfo.getLenderId(), ObjectTypeEnum.LENDER.getValue(), userId);
+                if (lenderTeam != null) {//返回借款人的team
+                    return lenderTeam;
+                }
+                //查询上级资产包的team
+                lenderInfo = lenderInfoMapper.get(pawnInfo.getLenderId());
+                assetTeam = userTeamMapper.getTeam(lenderInfo.getAssetId(),ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);
+                if (assetTeam != null) {
+                    return assetTeam;
+                }
+                //// TODO: 16-10-8  查找资产源
+                break;
+            case IOU:
+                IOUInfo iouInfo = iouInfoMapper.get(objectId);
+                lenderTeam = userTeamMapper.getTeam(iouInfo.getLenderId(),ObjectTypeEnum.LENDER.getValue(), userId);
+                if (lenderTeam != null) {//返回借款人的team
+                    return lenderTeam;
+                }
+                //查询上级资产包的team
+                lenderInfo = lenderInfoMapper.get(iouInfo.getLenderId());
+                assetTeam = userTeamMapper.getTeam(lenderInfo.getAssetId(),ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);
+                if (assetTeam != null) {
+                    return assetTeam;
+                }
+                break;
+            case LENDER:
+                lenderTeam = userTeamMapper.getTeam(objectId,objectType,userId);
+                if (lenderTeam != null) {//返回借款人的team
+                    return lenderTeam;
+                }
+                //查询上级资产包的team
+                lenderInfo = lenderInfoMapper.get(objectId);
+                assetTeam = userTeamMapper.getTeam(lenderInfo.getAssetId(),ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);
+                if (assetTeam != null) {
+                    return assetTeam;
+                }
+                break;
+            case ASSETPACKAGE:
+                assetTeam = userTeamMapper.getTeam(objectId,ObjectTypeEnum.ASSETPACKAGE.getValue(),userId);
+                if (assetTeam != null) {
+                    return assetTeam;
+                }
+                break;
+            case ASSETSOURCE:
+                sourceTeam = userTeamMapper.getTeam(objectId,ObjectTypeEnum.ASSETSOURCE.getValue(),userId );
+                if (sourceTeam != null) {
+                    return sourceTeam;
+                }
+                break;
+        }
+        return null;
+    }
+
+
 
 }

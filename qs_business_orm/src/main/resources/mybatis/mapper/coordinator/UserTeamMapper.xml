@@ -260,4 +260,14 @@
         WHERE tut.company_id=#{companyId,jdbcType=INTEGER}
     </update>
 
+    <!--查询当前用户已当前对象建立的所在协作器id-->
+    <select id="getTeam" resultMap="BaseResultMap">
+        SELECT tut.* from t_user_team tut
+        JOIN t_teammate_re ttr ON ttr.user_team_id=tut.id
+        WHERE tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} and ttr.user_id=#{userId,jdbcType=INTEGER}
+        UNION ALL
+        SELECT tut.* from t_user_team tut
+        WHERE tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} and tut.manger_id =#{userId,jdbcType=INTEGER}
+    </select>
+
 </mapper>

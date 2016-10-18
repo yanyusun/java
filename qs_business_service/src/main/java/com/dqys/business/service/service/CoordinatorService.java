@@ -1,6 +1,7 @@
 package com.dqys.business.service.service;
 
 import com.dqys.auth.orm.pojo.TUserTag;
+import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 
@@ -220,5 +221,5 @@ public interface CoordinatorService {
      */
     Map getUserDetail(Integer userId);
 
-    //UserTeam getTeam(Integer objectId, Integer objectType, int userId);
+    UserTeam getTeam(Integer objectId, Integer objectType, int userId);
 }
