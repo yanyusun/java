@@ -11,7 +11,7 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
     <result column="case_no" property="caseNo" jdbcType="VARCHAR" />
     <result column="type" property="type" jdbcType="VARCHAR" />
-    <result column="pid" property="pId" jdbcType="INTEGER" />
+    <result column="pid" property="pid" jdbcType="INTEGER" />
     <result column="pawn_id" property="pawnId" jdbcType="INTEGER" />
     <result column="plaintiff" property="plaintiff" jdbcType="VARCHAR" />
     <result column="defendant" property="defendant" jdbcType="VARCHAR" />
@@ -72,7 +72,7 @@
       <if test="type != null" >
         type,
       </if>
-      <if test="pId != null" >
+      <if test="pid != null" >
         pid,
       </if>
       <if test="pawnId != null" >
@@ -173,7 +173,7 @@
       <if test="type != null" >
         #{type,jdbcType=VARCHAR},
       </if>
-      <if test="pId != null" >
+      <if test="pid != null" >
         #{pid,jdbcType=INTEGER},
       </if>
       <if test="pawnId != null" >
@@ -281,8 +281,8 @@
       <if test="type != null" >
         type = #{type,jdbcType=VARCHAR},
       </if>
-      <if test="pId != null" >
-        pid = #{pId,jdbcType=INTEGER},
+      <if test="pid != null" >
+        pid = #{pid,jdbcType=INTEGER},
       </if>
       <if test="pawnId != null" >
         pawn_id = #{pawnId,jdbcType=INTEGER},
