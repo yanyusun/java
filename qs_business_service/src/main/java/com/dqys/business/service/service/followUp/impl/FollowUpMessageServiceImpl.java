@@ -13,10 +13,12 @@ import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.coordinator.OURelation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
+import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
+import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
 import com.dqys.business.service.utils.followUp.FollowUpUtil;
@@ -57,6 +59,9 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
 
     @Autowired
     private FollowUpSourceMapper followUpSourceMapper;
+
+    @Autowired
+    private CoordinatorService coordinatorService;
 
     @Override
     public int insert(FollowUpMessageDTO followUpMessageDTO) throws IOException {
@@ -177,19 +182,9 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
      */
     private int getTeamId(int objectId, int ObjectType, int userId) {
         Integer teamid = 0;
-        if (ObjectType == ObjectTypeEnum.LENDER.getValue()) {//当协作器是以借款人建立时先查借款人,没有就查资产包的协作器
-            teamid = followUpMessageMapper.getTeamId(objectId, ObjectType, userId);
-            if (teamid == null|| teamid==0) {
-                AssetInfo assetInfo = assetInfoMapper.get(objectId);
-                teamid = followUpMessageMapper.getTeamId(assetInfo.getId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);
-            }
-       // }else if(){
-
-        } else {
-            teamid = followUpMessageMapper.getTeamId(objectId, ObjectType, userId);
-        }
-        if(teamid == null){
-            teamid=0;
+        UserTeam userTeam=coordinatorService.getTeam(objectId,ObjectType,userId);
+        if(userTeam!=null){
+            teamid=userTeam.getId();
         }
         return teamid;
     }
