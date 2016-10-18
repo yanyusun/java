@@ -2,10 +2,12 @@ package com.dqys.business.service.service.cases.impl;
 
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.CiRelationMapper;
+import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.cases.CaseCourtMapper;
 import com.dqys.business.orm.mapper.cases.CaseInfoMapper;
 import com.dqys.business.orm.pojo.asset.CiRelation;
+import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.cases.CaseCourt;
 import com.dqys.business.orm.pojo.cases.CaseInfo;
@@ -45,6 +47,8 @@ public class CaseServiceImpl implements CaseService {
     private CiRelationMapper ciRelationMapper;
     @Autowired
     private PawnInfoMapper pawnInfoMapper;
+    @Autowired
+    private IOUInfoMapper iouInfoMapper;
 
     @Autowired
     private BusinessService businessService;
@@ -364,4 +368,21 @@ public class CaseServiceImpl implements CaseService {
         return CaseServiceUtils.toCaseDTO(caseInfo, caseCourtList, ids, selectDTOList, pawnName);
     }
 
+    @Override
+    public List<BaseSelectonDTO> listIouByCaseId(Integer id) {
+        List<BaseSelectonDTO> result = new ArrayList<>();
+        RelationQuery query = new RelationQuery();
+        query.setCaseId(id);
+        List<CiRelation> ciList = ciRelationMapper.queryList(query);
+        for (CiRelation ciRelation : ciList) {
+            IOUInfo info = iouInfoMapper.get(ciRelation.getIouId());
+            if(info != null){
+                BaseSelectonDTO selectDTO = new BaseSelectonDTO();
+                selectDTO.setKey(ciRelation.getIouId().toString());
+                selectDTO.setValue(info.getName());
+                result.add(selectDTO);
+            }
+        }
+        return result;
+    }
 }

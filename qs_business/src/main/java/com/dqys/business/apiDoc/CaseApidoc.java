@@ -155,6 +155,15 @@ public class CaseApidoc {
      * @apiUse CaseCourtDTO
      */
 
+    /**
+     * @api {post} /case/listIouByCase 查询案件的借据
+     * @apiName listIouByCase
+     * @apiGroup case
+     * @apiParam {number} id 案件ID
+     * @apiSuccess {SelectDTO} data key为案件ID，value为借据名称
+     * @apiUse SelectDTO
+     */
+
 
 
 
