@@ -1443,7 +1443,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
         } else {
             UserTeam userTeam = userTeamMapper.get(team.getUserTeamId());
-            if (!userTeam.getMangerId().equals(userId)) {
+            if (status == null && substitutionUid == null &&!userTeam.getMangerId().equals(userId)) {
                 map.put("code", "502");//不是管理员，没有权限
                 return map;
             }
