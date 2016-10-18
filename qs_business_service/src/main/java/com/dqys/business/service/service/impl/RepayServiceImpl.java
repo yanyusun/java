@@ -22,6 +22,7 @@ import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
 import com.dqys.business.service.constant.ObjectEnum.IouEnum;
 import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
+import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.exception.bean.ArtificialException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
@@ -33,6 +34,7 @@ import com.dqys.core.utils.DateFormatTool;
 import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.SmsUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.UnexpectedRollbackException;
@@ -89,7 +91,7 @@ public class RepayServiceImpl implements RepayService {
         if (objectType == RepayEnum.OBJECT_IOU.getValue()) {
             businessLogService.add(objectId, ObjectTypeEnum.IOU.getValue(), IouEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
         } else if (objectType == RepayEnum.OBJECT_PAWN.getValue()) {
-            businessLogService.add(objectId, ObjectTypeEnum.PAWN.getValue(), IouEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
+            businessLogService.add(objectId, ObjectTypeEnum.PAWN.getValue(), PawnEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
         }
         Map map = new HashMap<>();
         List<IOUInfo> ious = new ArrayList<>();
