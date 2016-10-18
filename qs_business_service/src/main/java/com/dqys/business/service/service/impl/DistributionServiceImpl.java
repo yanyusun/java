@@ -110,36 +110,11 @@ public class DistributionServiceImpl implements DistributionService {
         if (CommonUtil.checkParam(type, id)) {
             return null;
         }
-        // 查询分配器是否存在
-        CompanyTeam isExist = companyTeamMapper.getByTypeId(type, id);
-        if (isExist == null) {
-            // 分配器不存在,判断是否存在该对象
-            if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(type)) {
-                AssetInfo assetInfo = assetInfoMapper.get(id);
-                if (assetInfo != null) {
-                    // 对象存在，创建分配器
-                    JsonResponse result = addDistribution(type, id);
-                    if (result.getData() == null
-                            || CommonUtil.checkResult(Integer.valueOf(result.getData().toString()))) {
-                        return null;
-                    }
-                }
-            } else if (ObjectTypeEnum.LENDER.getValue().equals(type)) {
-                LenderInfo lenderInfo = lenderInfoMapper.get(id);
-                if (lenderInfo != null) {
-                    // 借款人存在，创建分配器
-                    JsonResponse result = addDistribution(type, id);
-                    if (result.getData() == null
-                            || CommonUtil.checkResult(Integer.valueOf(result.getData().toString()))) {
-                        return null;
-                    }
-                }
-            } else {
-                return null;
-            }
+        // 获取分配器
+        CompanyTeam companyTeam = getCompanyTeam(type, id);
+        if(companyTeam == null){
+            return null;
         }
-
-        CompanyTeam companyTeam = companyTeamMapper.getByTypeId(type, id);
         // 查询分配器成员
         CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
         companyTeamReQuery.setStateflag(SysProperty.DEFAULT); // null表示有效查询，0表示全查询，<>0表示已删除
@@ -201,12 +176,31 @@ public class DistributionServiceImpl implements DistributionService {
         distributionDTO.setCompanyTeamReDTOList(companyTeamReDTOList);
 
         // 添加业务流成员(objectUserRelation.UserId=CompanyTeamRe.acceptId & objectUserRelation.objectId的借款人ID=companyTeam.objectId)
+        if(type.equals(ObjectTypeEnum.LENDER.getValue())){
+            // 只有查询借款人分配器列表时候才显示
+            setBusinessServiceDTOList(userIds, companyTeam, companyTeamReList, keyMap, distributionDTO);
+        }
+
+        return distributionDTO;
+    }
+
+    /**
+     * 填充业务流转
+     * @param userIds 参与人集合
+     * @param companyTeam 分配器信息
+     * @param companyTeamReList 分配器参与成员信息(这里用来反馈流转公司的公司信息)
+     * @param keyMap 保存当前分配器成员ID在成员列表里面的下标值
+     * @param distributionDTO 分配器信息
+     */
+    private void setBusinessServiceDTOList(List<Integer> userIds, CompanyTeam companyTeam, List<CompanyTeamRe> companyTeamReList,
+                                           Map<Integer, Integer> keyMap, DistributionDTO distributionDTO){
         List<BusinessServiceDTO> serviceDTOList = new ArrayList<>();
         ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
         objectUserRelationQuery.setUserIds(userIds);
         objectUserRelationQuery.setType(BusinessRelationEnum.dispose.getValue());
         List<ObjectUserRelation> relationList = objectUserRelationMapper.list(objectUserRelationQuery);
         relationList.forEach(objectUserRelation -> {
+            // 对象遍历
             if (ObjectTypeEnum.PAWN.getValue().equals(objectUserRelation.getObjectType())) {
                 PawnInfo pawnInfo = pawnInfoMapper.get(objectUserRelation.getObjectId());
                 if (pawnInfo != null) {
@@ -262,9 +256,8 @@ public class DistributionServiceImpl implements DistributionService {
             }
         });
         distributionDTO.setBusinessServiceDTOList(serviceDTOList);
-
-        return distributionDTO;
     }
+
 
     /**
      * 创建业务流成员的书籍
@@ -314,6 +307,43 @@ public class DistributionServiceImpl implements DistributionService {
         result.setTime(time);
 
         return result;
+    }
+
+    /**
+     * 获取分配器
+     * @param type
+     * @param id
+     * @return
+     */
+    private CompanyTeam getCompanyTeam(Integer type, Integer id) throws BusinessLogException{
+        CompanyTeam isExist = companyTeamMapper.getByTypeId(type, id);
+        if (isExist == null) {
+            // 分配器不存在,判断是否存在该对象
+            if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(type)) {
+                AssetInfo assetInfo = assetInfoMapper.get(id);
+                if (assetInfo != null) {
+                    // 对象存在，创建分配器
+                    JsonResponse result = addDistribution(type, id);
+                    if (result.getData() == null
+                            || CommonUtil.checkResult(Integer.valueOf(result.getData().toString()))) {
+                        return null;
+                    }
+                }
+            } else if (ObjectTypeEnum.LENDER.getValue().equals(type)) {
+                LenderInfo lenderInfo = lenderInfoMapper.get(id);
+                if (lenderInfo != null) {
+                    // 借款人存在，创建分配器
+                    JsonResponse result = addDistribution(type, id);
+                    if (result.getData() == null
+                            || CommonUtil.checkResult(Integer.valueOf(result.getData().toString()))) {
+                        return null;
+                    }
+                }
+            } else {
+                return null;
+            }
+        }
+        return companyTeamMapper.getByTypeId(type, id);
     }
 
     @Override
