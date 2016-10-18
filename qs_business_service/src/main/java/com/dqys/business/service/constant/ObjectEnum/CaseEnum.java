@@ -18,7 +18,8 @@ public enum CaseEnum {
     LOOK_PARTICIPANTS(1511, "查看参与人员"),
     SPLIT(1512, "拆分"),
     REMARK(1513, "填写备注"),
-    ALLOT_CASE(1514, "分配案件"),;
+    ALLOT_CASE(1514, "分配案件"),
+    OPERATION_LOG(1515, "操作日志");
     private Integer value;
     private String name;
 
