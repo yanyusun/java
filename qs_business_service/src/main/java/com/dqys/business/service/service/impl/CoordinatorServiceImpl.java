@@ -142,6 +142,9 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         if (objectType == ObjectTypeEnum.ASSETSOURCE.getValue().intValue()) {//资产源
             if (getSource(map, objectId)) return;
         }
+        if (objectType == ObjectTypeEnum.CASE.getValue().intValue()) {//案件
+            if (getCase(map, objectId)) return;
+        }
         if (team == null) {//判断是否在t_user_team表中添加了记录，添加了返回信息，没添加的返回id
             //需要判断userId是否拥有创建的权限
             String role = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getRoleId();
@@ -195,6 +198,25 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("userTeamId", team.getId());
             map.put("result", "yes");
         }
+    }
+
+    /**
+     * 获取案件信息
+     *
+     * @param map
+     * @param objectId
+     * @return
+     */
+    private boolean getCase(Map<String, Object> map, Integer objectId) {
+        CaseInfo info = caseInfoMapper.get(objectId);
+        if (info == null) {
+            map.put("result", "no");//案件不存在
+            map.put("msg", "查询案件信息失败");
+            return true;
+        } else {
+            map.put("detail", info);
+        }
+        return false;
     }
 
     /**
@@ -442,7 +464,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     }
 
     /**
-     * 设定业务id
+     * 设定业务id （重复的不设置业务号，没有业务号就不添加事物关系信息）
      *
      * @param ouRelation
      * @return
@@ -899,7 +921,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                             throw new Exception();
                         }
                     }
-                }else {
+                } else {
                     map.put("result", "yes");
                 }
             } else {
@@ -1525,7 +1547,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 }
                 //查询上级资产包的team
                 lenderInfo = lenderInfoMapper.get(pawnInfo.getLenderId());
-                assetTeam = userTeamMapper.getTeam(lenderInfo.getAssetId(),ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);
+                assetTeam = userTeamMapper.getTeam(lenderInfo.getAssetId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);
                 if (assetTeam != null) {
                     return assetTeam;
                 }
@@ -1533,37 +1555,37 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 break;
             case IOU:
                 IOUInfo iouInfo = iouInfoMapper.get(objectId);
-                lenderTeam = userTeamMapper.getTeam(iouInfo.getLenderId(),ObjectTypeEnum.LENDER.getValue(), userId);
+                lenderTeam = userTeamMapper.getTeam(iouInfo.getLenderId(), ObjectTypeEnum.LENDER.getValue(), userId);
                 if (lenderTeam != null) {//返回借款人的team
                     return lenderTeam;
                 }
                 //查询上级资产包的team
                 lenderInfo = lenderInfoMapper.get(iouInfo.getLenderId());
-                assetTeam = userTeamMapper.getTeam(lenderInfo.getAssetId(),ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);
+                assetTeam = userTeamMapper.getTeam(lenderInfo.getAssetId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);
                 if (assetTeam != null) {
                     return assetTeam;
                 }
                 break;
             case LENDER:
-                lenderTeam = userTeamMapper.getTeam(objectId,objectType,userId);
+                lenderTeam = userTeamMapper.getTeam(objectId, objectType, userId);
                 if (lenderTeam != null) {//返回借款人的team
                     return lenderTeam;
                 }
                 //查询上级资产包的team
                 lenderInfo = lenderInfoMapper.get(objectId);
-                assetTeam = userTeamMapper.getTeam(lenderInfo.getAssetId(),ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);
+                assetTeam = userTeamMapper.getTeam(lenderInfo.getAssetId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);
                 if (assetTeam != null) {
                     return assetTeam;
                 }
                 break;
             case ASSETPACKAGE:
-                assetTeam = userTeamMapper.getTeam(objectId,ObjectTypeEnum.ASSETPACKAGE.getValue(),userId);
+                assetTeam = userTeamMapper.getTeam(objectId, ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);
                 if (assetTeam != null) {
                     return assetTeam;
                 }
                 break;
             case ASSETSOURCE:
-                sourceTeam = userTeamMapper.getTeam(objectId,ObjectTypeEnum.ASSETSOURCE.getValue(),userId );
+                sourceTeam = userTeamMapper.getTeam(objectId, ObjectTypeEnum.ASSETSOURCE.getValue(), userId);
                 if (sourceTeam != null) {
                     return sourceTeam;
                 }
@@ -1571,7 +1593,6 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
         return null;
     }
-
 
 
 }
