@@ -142,7 +142,7 @@ public class CompanyApidoc {
      */
 
     /**
-     * @api {get} /api/company/exitBusinessService 被添加公司接受或者拒绝业务流转邀请
+     * @api {get} /api/company/exitBusinessService 删除被添加公司的业务流转
      * @apiName exitBusinessService
      * @apiGroup companyRelation
      * @apiParam {number} id 分配器ID
@@ -152,7 +152,7 @@ public class CompanyApidoc {
      */
 
     /**
-     * @api {get} /api/company/designBusinessService 删除被添加公司的业务流转
+     * @api {get} /api/company/designBusinessService 被添加公司接受或者拒绝业务流转邀请
      * @apiName designBusinessService
      * @apiGroup companyRelation
      * @apiParam {number} type 业务流转类型
