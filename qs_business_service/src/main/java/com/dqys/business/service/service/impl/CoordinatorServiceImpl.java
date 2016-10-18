@@ -899,6 +899,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                             throw new Exception();
                         }
                     }
+                }else {
+                    map.put("result", "yes");
                 }
             } else {
                 map.put("result", "no_self");
@@ -915,7 +917,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 throw new Exception();
             } else if ("501".equals(code.get("code"))) {
                 map.put("result", "no");
-                map.put("msg", "删除失败,可能被替补人员有误");
+                map.put("msg", "查看您是否已经在团队中或被替补人员查询有误");
             } else if ("500".equals(code.get("code"))) {
                 map.put("result", "no_tiBu");
                 map.put("msg", "需要替补人");
