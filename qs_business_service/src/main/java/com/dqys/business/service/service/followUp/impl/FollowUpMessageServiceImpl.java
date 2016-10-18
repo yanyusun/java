@@ -183,6 +183,8 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
                 AssetInfo assetInfo = assetInfoMapper.get(objectId);
                 teamid = followUpMessageMapper.getTeamId(assetInfo.getId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);
             }
+       // }else if(){
+
         } else {
             teamid = followUpMessageMapper.getTeamId(objectId, ObjectType, userId);
         }

@@ -1496,68 +1496,68 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         return coordinatorMapper.companyList(objectId, objectType);
     }
 
-//    public UserTeam getTeam(Integer objectId, Integer objectType, int userId){
+//    public UserTeam getTeam(Integer objectId, Integer objectType, int userId) {
 //        ObjectTypeEnum objectTypeEnum = ObjectTypeEnum.getObjectTypeEnum(objectType);
 //        UserTeam lenderTeam;
 //        UserTeam assetTeam;
 //        UserTeam sourceTeam;
 //        LenderInfo lenderInfo;
-//        switch (objectTypeEnum){
+//        switch (objectTypeEnum) {
 //            case PAWN:
-//                PawnInfo pawnInfo= pawnInfoMapper.get(objectId);
-//                lenderTeam=coordinatorMapper.getByTypeId(ObjectTypeEnum.LENDER.getValue(),pawnInfo.getLenderId());
-//                if(lenderTeam!=null){//返回借款人的team
+//                PawnInfo pawnInfo = pawnInfoMapper.get(objectId);
+//                lenderTeam = userTeamMapper.getTeam(pawnInfo.getLenderId(), ObjectTypeEnum.LENDER.getValue(), userId);
+//                if (lenderTeam != null) {//返回借款人的team
 //                    return lenderTeam;
 //                }
 //                //查询上级资产包的team
-//                lenderInfo=lenderInfoMapper.get(pawnInfo.getLenderId());
-//                assetTeam=companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETPACKAGE.getValue(),lenderInfo.getAssetId());
-//                if(assetTeam!=null){
+//                lenderInfo = lenderInfoMapper.get(pawnInfo.getLenderId());
+//                assetTeam = userTeamMapper.getTeam(lenderInfo.getAssetId(),ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);
+//                if (assetTeam != null) {
 //                    return assetTeam;
 //                }
 //                //// TODO: 16-10-8  查找资产源
 //                break;
 //            case IOU:
-//                IOUInfo iouInfo= iouInfoMapper.get(objectId);
-//                lenderTeam=companyTeamMapper.getByTypeId(ObjectTypeEnum.LENDER.getValue(),iouInfo.getLenderId());
-//                if(lenderTeam!=null){//返回借款人的team
+//                IOUInfo iouInfo = iouInfoMapper.get(objectId);
+//                lenderTeam = userTeamMapper.getTeam(iouInfo.getLenderId(),ObjectTypeEnum.LENDER.getValue(), userId);
+//                if (lenderTeam != null) {//返回借款人的team
 //                    return lenderTeam;
 //                }
 //                //查询上级资产包的team
-//                lenderInfo=lenderInfoMapper.get(iouInfo.getLenderId());
-//                assetTeam=companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETPACKAGE.getValue(),lenderInfo.getAssetId());
-//                if(assetTeam!=null){
+//                lenderInfo = lenderInfoMapper.get(iouInfo.getLenderId());
+//                assetTeam = companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETPACKAGE.getValue(), lenderInfo.getAssetId());
+//                if (assetTeam != null) {
 //                    return assetTeam;
 //                }
 //                break;
 //            case LENDER:
-//                lenderTeam=companyTeamMapper.getByTypeId(objectType,objectId);
-//                if(lenderTeam!=null){//返回借款人的team
+//                lenderTeam = companyTeamMapper.getByTypeId(objectType, objectId);
+//                if (lenderTeam != null) {//返回借款人的team
 //                    return lenderTeam;
 //                }
 //                //查询上级资产包的team
-//                lenderInfo=lenderInfoMapper.get(objectId);
-//                assetTeam=companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETPACKAGE.getValue(),lenderInfo.getAssetId());
-//                if(assetTeam!=null){
+//                lenderInfo = lenderInfoMapper.get(objectId);
+//                assetTeam = companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETPACKAGE.getValue(), lenderInfo.getAssetId());
+//                if (assetTeam != null) {
 //                    return assetTeam;
 //                }
 //                break;
 //            case ASSETPACKAGE:
-//                assetTeam=companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETPACKAGE.getValue(),objectId);
-//                if(assetTeam!=null){
+//                assetTeam = companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETPACKAGE.getValue(), objectId);
+//                if (assetTeam != null) {
 //                    return assetTeam;
 //                }
 //                break;
 //            case ASSETSOURCE:
-//                sourceTeam=companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETSOURCE.getValue(),objectId);
-//                if(sourceTeam!=null){
+//                sourceTeam = companyTeamMapper.getByTypeId(ObjectTypeEnum.ASSETSOURCE.getValue(), objectId);
+//                if (sourceTeam != null) {
 //                    return sourceTeam;
 //                }
 //                break;
 //        }
 //        return null;
 //    }
-//
-//}
+
+
 
 }
