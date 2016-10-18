@@ -1,7 +1,9 @@
 package com.dqys.business.service.service.cases;
 
 import com.dqys.business.service.dto.cases.*;
+import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.exception.bean.BusinessLogException;
+import com.dqys.core.base.BaseSelectonDTO;
 import com.dqys.core.model.JsonResponse;
 import org.springframework.stereotype.Service;
 
@@ -112,4 +114,11 @@ public interface CaseService {
     JsonResponse updateCaseMemo(Integer id, String memo);
 
     JsonResponse updateCaseCourt(Integer id, List<CaseCourtDTO> caseCourtDTOList);
+
+    /**
+     * 根据案件ID查询借据
+     * @param id
+     * @return
+     */
+    List<BaseSelectonDTO> listIouByCaseId(Integer id);
 }

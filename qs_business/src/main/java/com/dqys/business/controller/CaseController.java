@@ -209,7 +209,7 @@ public class CaseController {
      * @param caseBaseDTO
      * @return
      */
-    @RequestMapping(value = "/updateCaseBase")
+    @RequestMapping(value = "/updateCaseBase", method = RequestMethod.POST)
     public JsonResponse updateCaseBase(CaseBaseDTO caseBaseDTO){
         return caseService.updateCaseBase(caseBaseDTO);
     }
@@ -219,7 +219,7 @@ public class CaseController {
      * @param caseAttachmentDTO
      * @return
      */
-    @RequestMapping(value = "/updateCaseAttachment")
+    @RequestMapping(value = "/updateCaseAttachment", method = RequestMethod.POST)
     public JsonResponse updateCaseAttachment(CaseAttachmentDTO caseAttachmentDTO){
         return caseService.updateCaseAttachment(caseAttachmentDTO);
     }
@@ -229,7 +229,7 @@ public class CaseController {
      * @param caseLawsuitDTO
      * @return
      */
-    @RequestMapping(value = "/updateCaseLawsuit")
+    @RequestMapping(value = "/updateCaseLawsuit", method = RequestMethod.POST)
     public JsonResponse updateCaseLawsuit(CaseLawsuitDTO caseLawsuitDTO){
         return caseService.updateCaseLawsuit(caseLawsuitDTO);
     }
@@ -240,7 +240,7 @@ public class CaseController {
      * @param memo
      * @return
      */
-    @RequestMapping(value = "/updateCaseMemo")
+    @RequestMapping(value = "/updateCaseMemo", method = RequestMethod.POST)
     public JsonResponse updateCaseMemo(Integer id, String memo){
         return caseService.updateCaseMemo(id, memo);
     }
@@ -250,7 +250,7 @@ public class CaseController {
      * @param caseCourtsDTO
      * @return
      */
-    @RequestMapping(value = "/updateCaseCourt")
+    @RequestMapping(value = "/updateCaseCourt", method = RequestMethod.POST)
     public JsonResponse updateCaseCourt(CaseCourtsDTO caseCourtsDTO){
         if(CommonUtil.checkParam(caseCourtsDTO, caseCourtsDTO.getId(), caseCourtsDTO.getCaseCourtDTOList())){
             return JsonResponseTool.paramErr("参数错误");
@@ -264,6 +264,17 @@ public class CaseController {
         return caseService.updateCaseCourt(caseCourtsDTO.getId(), caseCourtsDTO.getCaseCourtDTOList());
     }
 
-
+    /**
+     * 根据案件查询关联借据
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/listIouByCase")
+    public JsonResponse listIouByCase(Integer id){
+        if(id == null){
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return JsonResponseTool.success(caseService.listByCase(id));
+    }
 
 }
