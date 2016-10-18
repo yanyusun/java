@@ -853,41 +853,47 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             return map;
         }
         if (status == null && substitutionUid == null) {//删除协作器联系人
-            code = teamDel(userId, teamUserId, userTeamId, status, substitutionUid);
+            code = teamVerdict(userId, teamUserId, userTeamId, status, substitutionUid);//删除联系人判定
+            teamDel(code, teamUserId, userTeamId);
         } else if (status == null && substitutionUid != null) {//发送短信通知替补的人
-            SmsUtil smsUtil = new SmsUtil();//发送短信通知
-            Map userC = coordinatorMapper.getUserAndCompanyByUserId(substitutionUid);
-            Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);
-            String content = smsUtil.sendSms(SmsEnum.REPLACE_CONTACTS.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
-                    MessageUtils.transMapToString(oper, "realName"),
-                    ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(), getObjectName(userTeam.getObjectType(), userTeam.getObjectId()));
-            String title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.REPLACE_CONTACTS.getValue());
-            String url = MessageUtils.setOperUrl("/coordinator/delUser?status=0&teamUserId=" + teamUserId + "&userTeamId=" + userTeamId + "&substitutionUid=" + substitutionUid + "&operUserId=" + userId, null,
-                    "/coordinator/delUser?status=1&teamUserId=" + teamUserId + "&userTeamId=" + userTeamId + "&substitutionUid=" + substitutionUid + "&operUserId=" + userId, null, null);
-            messageService.add(title, content, userId, substitutionUid, "", MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE_CONTACTS.getValue(), url);//添加通知消息
-            map.put("result", "yes");
+            code = teamVerdict(userId, teamUserId, userTeamId, status, substitutionUid);//删除联系人判定
+            if ("200".equals(MessageUtils.transMapToString(code, "code"))) {
+                SmsUtil smsUtil = new SmsUtil();//发送短信通知
+                Map userC = coordinatorMapper.getUserAndCompanyByUserId(substitutionUid);
+                Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);
+                String content = smsUtil.sendSms(SmsEnum.REPLACE_CONTACTS.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
+                        MessageUtils.transMapToString(oper, "realName"),
+                        ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(), getObjectName(userTeam.getObjectType(), userTeam.getObjectId()));
+                String title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.REPLACE_CONTACTS.getValue());
+                String url = MessageUtils.setOperUrl("/coordinator/delUser?status=0&teamUserId=" + teamUserId + "&userTeamId=" + userTeamId + "&substitutionUid=" + substitutionUid + "&operUserId=" + userId, null,
+                        "/coordinator/delUser?status=1&teamUserId=" + teamUserId + "&userTeamId=" + userTeamId + "&substitutionUid=" + substitutionUid + "&operUserId=" + userId, null, null);
+                messageService.add(title, content, userId, substitutionUid, "", MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE_CONTACTS.getValue(), url);//添加通知消息
+                map.put("result", "yes");
+            }
         } else if (status != null && substitutionUid != null) {//替换协作器联系人
             if (userId.equals(substitutionUid)) {
-                if (status == TeammateReEnum.STATUS_ACCEPT.getValue()) {
-                    code = teamDel(userId, teamUserId, userTeamId, status, substitutionUid);//删除联系人
+                if (status == TeammateReEnum.STATUS_ACCEPT.getValue().intValue()) {
+                    code = teamVerdict(userId, teamUserId, userTeamId, status, substitutionUid);//删除联系人判定
+                    teamDel(code, teamUserId, userTeamId);//删除操作
                     if ("200".equals(code.get("code"))) {
-                        teamDel(userId, substitutionUid, userTeamId, null, null);//如果替换人在该团队已经存在，那么先删除之后
+                        teamVerdict(userId, substitutionUid, userTeamId, null, null);
+                        teamDel(code, teamUserId, userTeamId);//如果替换人在该团队已经存在，那么先删除之后
                         TeammateRe teammateRe = (TeammateRe) code.get("teammateRe");
                         teammateRe.setId(null);
-                        teammateRe.setUserId(substitutionUid);
+                        teammateRe.setUserId(userId);
                         teammateRe.setStatus(TeammateReEnum.STATUS_INIT.getValue());
                         teammateRe.setJoinType(TeammateReEnum.JOIN_TYPE_PASSIVITY.getValue());
                         teammateReMapper.insert(teammateRe);//添加到团队中
-                        Map res = isAccept(teammateRe.getId(), status, substitutionUid, operUserId);//需要进行一个同意操作
+                        Map res = isAccept(teammateRe.getId(), status, userId, operUserId);//需要进行一个同意操作
                         if (MessageUtils.transMapToString(res, "result").equals("yes")) {
                             SmsUtil smsUtil = new SmsUtil();//发送短信通知
                             Map userC = coordinatorMapper.getUserAndCompanyByUserId(teamUserId);
-                            Map oper = coordinatorMapper.getUserAndCompanyByUserId(substitutionUid);
+                            Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);
                             String content = smsUtil.sendSms(SmsEnum.REPLACE.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
                                     MessageUtils.transMapToString(oper, "realName"),
                                     ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(), getObjectName(userTeam.getObjectType(), userTeam.getObjectId()), TeammateReEnum.get(teammateRe.getType()));
                             String title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.REPLACE.getValue());
-                            messageService.add(title, content, userId, substitutionUid, "", MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE.getValue(), "");//添加通知消息
+                            messageService.add(title, content, userId, teamUserId, "", MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE.getValue(), "");//添加通知消息
                             map.put("result", "yes");
                         } else {
                             throw new Exception();
@@ -896,7 +902,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 }
             } else {
                 map.put("result", "no_self");
-                map.put("msg", "不正确的访问");
+                map.put("msg", "不正确的访问(非本人帐号)");
             }
         } else {
             map.put("result", "no_par");
@@ -1421,7 +1427,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
     }
 
-    private Map teamDel(Integer userId, Integer teamUserId, Integer userTeamId, Integer status, Integer substitutionUid) {
+    private Map teamVerdict(Integer userId, Integer teamUserId, Integer userTeamId, Integer status, Integer substitutionUid) {
         Map map = new HashMap<>();
         TeammateRe teammateRe = new TeammateRe();
         teammateRe.setUserId(teamUserId);
@@ -1434,16 +1440,15 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             return map;
         }
         TeammateRe team = list.get(0);
-        map.put("teammateRe", team);//参与处置的对象
         if (list1.size() > 0) {
             TeammateRe oper = list1.get(0);
-            if (status == null && substitutionUid == null && oper.getType() > team.getType()) {
+            if (status == null && oper.getType() > team.getType()) {
                 map.put("code", "502");//下级不能删除上级
                 return map;
             }
         } else {
             UserTeam userTeam = userTeamMapper.get(team.getUserTeamId());
-            if (status == null && substitutionUid == null &&!userTeam.getMangerId().equals(userId)) {
+            if (status == null && !userTeam.getMangerId().equals(userId)) {
                 map.put("code", "502");//不是管理员，没有权限
                 return map;
             }
@@ -1457,20 +1462,27 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("code", "503");//不能重复删除
             return map;
         }
+        map.put("teammateRe", team);//参与处置的对象
+        map.put("code", "200");//成功
+        return map;
+    }
+
+    private void teamDel(Map code, Integer teamUserId, Integer userTeamId) {
+        if (code == null) {
+            return;
+        }
+        TeammateRe team = (TeammateRe) code.get("teammateRe");
+        if (team == null) {
+            return;
+        }
         team.setStatus(TeammateReEnum.STATUS_DELETE.getValue());
         Integer result = teammateReMapper.updateByPrimaryKey(team);
-        if (result > 0) {
-            teammateReMapper.deleteByPrimaryKey(team.getId());
-            OURelation ouRelation = new OURelation();
-            ouRelation.setUserId(teamUserId);
-            ouRelation.setEmployerId(userTeamId);
-            ouRelation.setType(OURelationEnum.TYPE_ALLOCATION_TEAM.getValue());
-            Integer result1 = ouRelationMapper.deleteByPrimaryKey(ouRelation);
-            map.put("code", "200");//成功
-        } else {
-            map.put("code", "505");//数据操作有误
-        }
-        return map;
+        teammateReMapper.deleteByPrimaryKey(team.getId());
+        OURelation ouRelation = new OURelation();
+        ouRelation.setUserId(teamUserId);
+        ouRelation.setEmployerId(userTeamId);
+        ouRelation.setType(OURelationEnum.TYPE_ALLOCATION_TEAM.getValue());
+        Integer result1 = ouRelationMapper.deleteByPrimaryKey(ouRelation);
     }
 
     /**
