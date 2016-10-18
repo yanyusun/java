@@ -11,20 +11,14 @@ import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
 import com.dqys.business.orm.mapper.followUp.FollowUpSourceMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.coordinator.OURelation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
-import com.dqys.business.service.constant.SourceInfoEnum;
-import com.dqys.business.service.dto.common.SourceDTO;
-import com.dqys.business.service.dto.common.SourceInfoDTO;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
-import com.dqys.business.service.service.common.SourceService;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
-import com.dqys.business.service.utils.common.NavUtil;
 import com.dqys.business.service.utils.followUp.FollowUpUtil;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.FileTool;
@@ -34,7 +28,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -170,7 +163,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             followUpSource.setFollowUpMessageId(followUpId);
             followUpSourceMapper.insertSelective(followUpSource);
             //// TODO: 16-9-23 前端测试完必后去掉注释 
-            //FileTool.saveFileSync(followUpSource.getPathFilename());
+            FileTool.saveFileSync(followUpSource.getPathFilename());
         }
     }
 
@@ -183,15 +176,18 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
      * @return
      */
     private int getTeamId(int objectId, int ObjectType, int userId) {
-        int teamid = 0;
+        Integer teamid = 0;
         if (ObjectType == ObjectTypeEnum.LENDER.getValue()) {//当协作器是以借款人建立时先查借款人,没有就查资产包的协作器
             teamid = followUpMessageMapper.getTeamId(objectId, ObjectType, userId);
-            if (teamid == 0) {
+            if (teamid == null|| teamid==0) {
                 AssetInfo assetInfo = assetInfoMapper.get(objectId);
                 teamid = followUpMessageMapper.getTeamId(assetInfo.getId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);
             }
         } else {
             teamid = followUpMessageMapper.getTeamId(objectId, ObjectType, userId);
+            if(teamid == null){
+                teamid=0;
+            }
         }
         return teamid;
     }
