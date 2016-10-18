@@ -147,7 +147,7 @@ public class CaseApidoc {
      */
 
     /**
-     * @api {post} /case/updateCaseCourt 修改案件备注
+     * @api {post} /case/updateCaseCourt 修改案件关联法院
      * @apiName updateCaseCourt
      * @apiGroup case
      * @apiUse CaseCourtsDTO
