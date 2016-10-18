@@ -403,7 +403,7 @@
     SELECT COUNT (id) FROM bt_case WHERE stateflag = 0 AND pid = #{id,jdbcType=INTEGER}
   </select>
 
-  <select id="listByCase" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+  <select id="listByCase" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     SELECT
     <include refid="Base_Column_List" />
     FROM bt_case WHERE stateflag = 0 AND pid = #{id,jdbcType=INTEGER}
