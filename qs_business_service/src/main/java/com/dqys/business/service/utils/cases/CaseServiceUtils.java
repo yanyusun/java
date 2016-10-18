@@ -325,7 +325,7 @@ public class CaseServiceUtils {
      */
     public static String checkData(CaseCourtDTO caseCourtDTO) {
         if (CommonUtil.checkParam(caseCourtDTO, caseCourtDTO.getCourt(), caseCourtDTO.getCode(),
-                caseCourtDTO.getLawyer(), caseCourtDTO.getMobile(), caseCourtDTO.getGender())) {
+                caseCourtDTO.getLawyer(), caseCourtDTO.getMobile())) {
             return "参数错误";
         }
         return null;

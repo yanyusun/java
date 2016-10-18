@@ -820,6 +820,10 @@ public class DistributionServiceImpl implements DistributionService {
         if (companyTeamRe == null) {
             return JsonResponseTool.paramErr("参数错误，分配器成员不存在");
         }
+        // 已经移除
+        if(companyTeamRe.getStateflag() > 0){
+            return JsonResponseTool.failure("已经从分配器移除");
+        }
         // 校验公司是否存在
         CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(companyTeamRe.getAcceptCompanyId());
         if (companyDetailInfo == null) {
@@ -1095,6 +1099,10 @@ public class DistributionServiceImpl implements DistributionService {
         CompanyTeamRe companyTeamRe = companyTeamReMapper.get(id);
         if (companyTeamRe == null) {
             return JsonResponseTool.paramErr("参数错误，分配器成员不存在");
+        }
+        // 该数据已经删除
+        if(companyTeamRe.getStateflag() > 0){
+            return JsonResponseTool.failure("删除失败，已经从分配中移除");
         }
         // 校验是否为业务流转类型
         if (companyTeamRe.getType().equals(ObjectBusinessTypeEnum.mechanism.getValue())) {
