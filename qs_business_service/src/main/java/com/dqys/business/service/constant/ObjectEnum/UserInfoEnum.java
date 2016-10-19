@@ -11,7 +11,18 @@ public enum UserInfoEnum {
     UPDATE_ADMIN(994, "修改管理者账号"),
     LOOK_USER(995, "查看用户列表"),
 
+    COORDINATOR_ADD_USER(9901,"协作添加用户"),
+    COORDINATOR_DEL_USER(9902,"协作删除用户"),
+    COORDINATOR_REPLACE_USER(9903,"协作替换用户"),
+    COORDINATOR_ACCEPT_ADD_USER(9901,"协作同意被添加"),
+    COORDINATOR_REJECT_ADD_USER(9901,"协作拒绝被添加"),
 
+    DISTRIBUTION_ADD_THEIR(9904,"分配添加所属人"),
+    DISTRIBUTION_DEL_THEIR(9904,"分配删除所属人"),
+    DISTRIBUTION_ADD_GENERAL(9905,"分配添加业务流转用户"),
+    DISTRIBUTION_DEL_GENERAL(9906,"分配添加用户"),
+    DISTRIBUTION_ACCEPT_ADD(9904,"分配添加用户"),
+    DISTRIBUTION__DEL(9906,"分配添加用户"),
 
 
     USER_TYPE_COMMON(0,"普通员工"),
