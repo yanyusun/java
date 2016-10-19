@@ -53,6 +53,7 @@ public abstract class FormatValidateTool {
 //=======================(end)========================
 
 //================数字除最后以为都为数字================
+        idStr = idStr.toLowerCase();
         if (idStr.length() == 18) {
             ai = idStr.substring(0, 17);
         } else if (idStr.length() == 15) {
