@@ -22,4 +22,6 @@ public interface BusinessLogMapper {
 
     List<BusinessLog> list(BusinessLogQuery query);
 
+    int queryCount(BusinessLogQuery businessLogQuery);
+
 }

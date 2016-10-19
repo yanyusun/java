@@ -8,7 +8,9 @@ import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yan on 16-7-14.
@@ -53,8 +55,16 @@ public class BusinessLogController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse list(@ModelAttribute BusinessLogQuery businessLogQuery) {
-        List<BusinessLog> BusinessLogList= businessLogService.list(businessLogQuery);
-        return  JsonResponseTool.success(BusinessLogList);
+        List<BusinessLog> businessLogList= businessLogService.list(businessLogQuery);
+        if(businessLogQuery.getIsPaging()){
+            Map<String, Object> map = new HashMap<>();
+            map.put("data", businessLogList);
+            int total = businessLogService.queryCount(businessLogQuery);
+            map.put("total", total);
+            return  JsonResponseTool.success(map);
+        }else{
+            return  JsonResponseTool.success(businessLogList);
+        }
     }
 
 
