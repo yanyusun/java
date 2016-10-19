@@ -526,7 +526,7 @@
         <if test="lenderId !=null">
             and rep.lender_id =#{lenderId}
         </if>
-        ORDER BY rep.damage_date DESC
+        ORDER BY rep.id DESC
     </select>
 
     <select id="get" resultMap="BaseResultMapRepay">
