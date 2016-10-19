@@ -36,7 +36,6 @@ import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
-import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.dto.company.BusinessServiceDTO;
 import com.dqys.business.service.dto.company.CompanyTeamReDTO;
 import com.dqys.business.service.dto.company.DistributionDTO;
@@ -112,7 +111,7 @@ public class DistributionServiceImpl implements DistributionService {
         }
         // 获取分配器
         CompanyTeam companyTeam = getCompanyTeam(type, id);
-        if(companyTeam == null){
+        if (companyTeam == null) {
             return null;
         }
         // 查询分配器成员
@@ -176,7 +175,7 @@ public class DistributionServiceImpl implements DistributionService {
         distributionDTO.setCompanyTeamReDTOList(companyTeamReDTOList);
 
         // 添加业务流成员(objectUserRelation.UserId=CompanyTeamRe.acceptId & objectUserRelation.objectId的借款人ID=companyTeam.objectId)
-        if(type.equals(ObjectTypeEnum.LENDER.getValue())){
+        if (type.equals(ObjectTypeEnum.LENDER.getValue())) {
             // 只有查询借款人分配器列表时候才显示
             setBusinessServiceDTOList(userIds, companyTeam, companyTeamReList, keyMap, distributionDTO);
         }
@@ -186,14 +185,15 @@ public class DistributionServiceImpl implements DistributionService {
 
     /**
      * 填充业务流转
-     * @param userIds 参与人集合
-     * @param companyTeam 分配器信息
+     *
+     * @param userIds           参与人集合
+     * @param companyTeam       分配器信息
      * @param companyTeamReList 分配器参与成员信息(这里用来反馈流转公司的公司信息)
-     * @param keyMap 保存当前分配器成员ID在成员列表里面的下标值
-     * @param distributionDTO 分配器信息
+     * @param keyMap            保存当前分配器成员ID在成员列表里面的下标值
+     * @param distributionDTO   分配器信息
      */
     private void setBusinessServiceDTOList(List<Integer> userIds, CompanyTeam companyTeam, List<CompanyTeamRe> companyTeamReList,
-                                           Map<Integer, Integer> keyMap, DistributionDTO distributionDTO){
+                                           Map<Integer, Integer> keyMap, DistributionDTO distributionDTO) {
         List<BusinessServiceDTO> serviceDTOList = new ArrayList<>();
         ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
         objectUserRelationQuery.setUserIds(userIds);
@@ -311,11 +311,12 @@ public class DistributionServiceImpl implements DistributionService {
 
     /**
      * 获取分配器
+     *
      * @param type
      * @param id
      * @return
      */
-    private CompanyTeam getCompanyTeam(Integer type, Integer id) throws BusinessLogException{
+    private CompanyTeam getCompanyTeam(Integer type, Integer id) throws BusinessLogException {
         CompanyTeam isExist = companyTeamMapper.getByTypeId(type, id);
         if (isExist == null) {
             // 分配器不存在,判断是否存在该对象
@@ -402,7 +403,7 @@ public class DistributionServiceImpl implements DistributionService {
             }
             Integer teamId = companyTeam.getId();
             // 添加操作记录
-            businessLogService.add(id, type, ObjectLogEnum.add.getValue(),
+            businessLogService.add(id, type, UserInfoEnum.DISTRIBUTION_ADD_THEIR.getValue(),
                     "", "创建分配器", 0, 0);
             // 添加本家分配记录
             CompanyDetailInfo detailInfo = companyInfoMapper.getDetailByUserId(creatorId);
@@ -484,7 +485,7 @@ public class DistributionServiceImpl implements DistributionService {
                 return JsonResponseTool.failure("添加失败，请重新操作");
             } else {
                 // 添加操作记录
-                businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), ObjectLogEnum.join.getValue(),
+                businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_ADD_THEIR.getValue(),
                         "", "主动加入分配器, 公司ID：" + userInfo.getCompanyId() + "发起人ID：" + userInfo.getId(), 0, 0);
                 // 获取平台信息
                 List<TCompanyInfo> companyInfoList = companyInfoMapper.listByType(UserInfoEnum.USER_TYPE_ADMIN.getValue());
@@ -600,7 +601,7 @@ public class DistributionServiceImpl implements DistributionService {
             return JsonResponseTool.failure("邀请失败 ，请重新再试");
         } else {
             // 添加操作记录
-            businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), ObjectLogEnum.join.getValue(),
+            businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_ADD_THEIR.getValue(),
                     "", "邀请加入分配器，被邀请公司ID：" + companyId + "被邀请人ID：" + companyDetailInfo1.getUserId(), 0, 0);
             // 发送短信提醒
             SmsUtil smsUtil = new SmsUtil();
@@ -688,8 +689,15 @@ public class DistributionServiceImpl implements DistributionService {
         } else {
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId()); // 分配器信息
             // 添加操作记录
-            businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), ObjectLogEnum.update.getValue(),
-                    "", "决定接受与否分配器成员Id：" + id + "，接受状态（1接受）：" + status, 0, 0);
+            if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
+                // 接收
+                businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_ACCEPT_ADD.getValue(),
+                        "", "决定接受与否分配器成员Id：" + id + "，接受状态（1接受）：" + status, 0, 0);
+            } else {
+                // 拒绝
+                businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_REJECT_DEL.getValue(),
+                        "", "决定接受与否分配器成员Id：" + id + "，接受状态（1接受）：" + status, 0, 0);
+            }
             // 提醒消息
             String code = ""; // 对象编号
             if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
@@ -851,7 +859,7 @@ public class DistributionServiceImpl implements DistributionService {
             return JsonResponseTool.paramErr("参数错误，分配器成员不存在");
         }
         // 已经移除
-        if(companyTeamRe.getStateflag() > 0){
+        if (companyTeamRe.getStateflag() > 0) {
             return JsonResponseTool.failure("已经从分配器移除");
         }
         // 校验公司是否存在
@@ -879,7 +887,7 @@ public class DistributionServiceImpl implements DistributionService {
             }
 
             // 添加操作记录
-            businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), ObjectLogEnum.exit.getValue(),
+            businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_DEL_THEIR.getValue(),
                     "", "移除分配器内容对象成员id:" + id, 0, 0);
 
             // 发送短信提醒
@@ -1032,7 +1040,7 @@ public class DistributionServiceImpl implements DistributionService {
             } else {
                 // 添加操作记录
                 businessLogService.add(id, type,
-                        ObjectLogEnum.join.getValue(),
+                        UserInfoEnum.DISTRIBUTION_ADD_GENERAL.getValue(),
                         "", "增加业务流转", 0, 0);
                 // 发送短信提醒
                 String operUrl = MessageUtils.setOperUrl(
@@ -1131,7 +1139,7 @@ public class DistributionServiceImpl implements DistributionService {
             return JsonResponseTool.paramErr("参数错误，分配器成员不存在");
         }
         // 该数据已经删除
-        if(companyTeamRe.getStateflag() > 0){
+        if (companyTeamRe.getStateflag() > 0) {
             return JsonResponseTool.failure("删除失败，已经从分配中移除");
         }
         // 校验是否为业务流转类型
@@ -1144,7 +1152,7 @@ public class DistributionServiceImpl implements DistributionService {
         } else {
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
             // 添加操作记录
-            businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), ObjectLogEnum.exit.getValue(),
+            businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_DEL_GENERAL.getValue(),
                     "", "移除业务流转对象对象成员id:" + id, 0, 0);
             // 去除介入信息
             if (companyTeam != null) {
@@ -1308,8 +1316,15 @@ public class DistributionServiceImpl implements DistributionService {
             return JsonResponseTool.failure("操作失败，请重新再试");
         } else {
             // 添加操作记录
-            businessLogService.add(id, type, ObjectLogEnum.update.getValue(),
-                    "", "决定(同意|拒绝)加入业务流转,业务id：" + distributionId + ",状态(1接受):" + status, 0, 0);
+            if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
+                // 接收
+                businessLogService.add(id, type, UserInfoEnum.DISTRIBUTION_ACCEPT_ADD.getValue(),
+                        "", "决定(同意|拒绝)加入业务流转,业务id：" + distributionId + ",状态(1接受):" + status, 0, 0);
+            } else {
+                // 拒绝
+                businessLogService.add(id, type, UserInfoEnum.DISTRIBUTION_REJECT_DEL.getValue(),
+                        "", "决定(同意|拒绝)加入业务流转,业务id：" + distributionId + ",状态(1接受):" + status, 0, 0);
+            }
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
             if (companyTeam != null) {
                 // 获取平台信息
