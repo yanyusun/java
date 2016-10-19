@@ -529,4 +529,8 @@
         ORDER BY rep.damage_date DESC
     </select>
 
+    <select id="get" resultMap="BaseResultMapRepay">
+        SELECT * FROM  t_repay
+        where id=#{repayId}
+    </select>
 </mapper>

@@ -230,4 +230,6 @@ public interface RepayMapper {
      * @return
      */
     List<Repay> selectByRepay(Repay repay);
+
+    Repay get(Integer repayId);
 }

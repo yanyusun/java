@@ -147,4 +147,9 @@ public class RepayMapperImpl extends BaseDao implements RepayMapper {
     public List<Repay> selectByRepay(Repay repay) {
         return super.getSqlSession().getMapper(RepayMapper.class).selectByRepay(repay);
     }
+
+    @Override
+    public Repay get(Integer repayId) {
+        return super.getSqlSession().getMapper(RepayMapper.class).get(repayId);
+    }
 }

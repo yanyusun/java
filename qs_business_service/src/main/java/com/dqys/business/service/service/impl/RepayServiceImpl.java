@@ -546,32 +546,37 @@ public class RepayServiceImpl implements RepayService {
     @Override
     public Map reversal(Integer repayId) throws Exception {
         Map map = new HashMap<>();
+        map.put("result", "no");
+        Repay pay = repayMapper.get(repayId);
+        if (pay == null) {
+            map.put("msg", "查询还款记录失败");
+            return map;
+        }
+        if (pay.getStatus() == 2) {
+            map.put("msg", "已经设置为无效的还款记录");
+            return map;
+        }
         List<RepayRecord> res = repayMapper.getRepayRecordByRepayId(repayId);//根据还款记录id获取还款详细信息
         //存在还款记录就进行相应记录的冲正操作
-        if (res.size() == 0) {
-            map.put("result", "no");
-        } else {
-            for (RepayRecord re : res) {
-                boolean flag = reversalDispose(re);
-                if (!flag) {
-                    throw new Exception();
-                }
+        for (RepayRecord re : res) {
+            boolean flag = reversalDispose(re);
+            if (!flag) {
+                throw new Exception();
             }
-            Repay repay = new Repay();
-            repay.setStatus(2);//还款无效
-            repay.setId(repayId);
-            repayMapper.updateByPrimaryKeySelective(repay);
-            map.put("result", "yes");
         }
+        Repay repay = new Repay();
+        repay.setStatus(2);//还款无效
+        repay.setId(repayId);
+        repayMapper.updateByPrimaryKeySelective(repay);
+        map.put("result", "yes");
         return map;
     }
 
     @Override
     public Map updateRepayMoney(Integer repayId, Integer userId, Integer objectId, Integer objectType, Integer
             repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
-        Map map = new HashMap<>();
-        Map reversal = reversal(repayId);//冲正
-        if (MessageUtils.transMapToString(reversal, "result").equals("yes")) {
+        Map map = reversal(repayId);//冲正
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             setBusinessStatus(repayMapper.getIouIdByRecord(repayId));//设置业务状态
             repayMapper.deleteByRepay(repayId);//删除冲正后的还款记录，重新进行新还款操作
             map = repayMoney(userId, objectId, objectType, repayType, repayWay, money, remark, file);//还款
@@ -581,8 +586,6 @@ public class RepayServiceImpl implements RepayService {
                 throw new ArtificialException(MessageUtils.transMapToString(map, "msg"), 1001);
 //                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             }
-        } else {
-            map.put("result", "no");
         }
         return map;
     }

@@ -166,7 +166,11 @@ public class RepayController {
         Map map = new HashMap<>();
         Integer userId = UserSession.getCurrent().getUserId();
         map = repayService.updateRepayMoney(repayId, userId, objectId, objectType, repayType, repayWay, money, remark, file);
-        return JsonResponseTool.success(map);
+        if ("yes".equals(MessageUtils.transMapToString(map, "result"))) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+        }
     }
 
     /**
@@ -256,7 +260,11 @@ public class RepayController {
         Map map = new HashMap<>();
         try {
             map = repayService.reversal(repayId);
-            return JsonResponseTool.success(map);
+            if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+                return JsonResponseTool.success(map);
+            } else {
+                return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+            }
         } catch (Exception e) {
             map.put("result", "exception");
             return JsonResponseTool.serverErr();
@@ -295,7 +303,11 @@ public class RepayController {
             damageApply.setDamage_date(DateFormatTool.parse(postponeTime, DateFormatTool.DATE_FORMAT_10_REG1));
             damageApply.setObject_type(objectType);
             repayService.postpone(damageApply, map);
-            return JsonResponseTool.success(map);
+            if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+                return JsonResponseTool.success(map);
+            } else {
+                return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+            }
         } catch (Exception e) {
             map.put("result", "exception");
             return JsonResponseTool.serverErr();
