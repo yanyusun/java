@@ -358,7 +358,10 @@ public class RepayController {
      */
     @RequestMapping("/caseRepayMoney")
     @ResponseBody
-    public JsonResponse caseRepayMoney(@RequestParam("caseId") Integer caseId, String remark, @RequestParam("file") String file) throws Exception {
+    public JsonResponse caseRepayMoney(@RequestParam Integer caseId, @RequestParam String file, String remark) throws Exception {
+        if ("".equals(file.trim())) {
+            return JsonResponseTool.failure("请上传单据");
+        }
         Map map = repayService.caseRepayMoney(caseId, remark, file);
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             return JsonResponseTool.success(map);
