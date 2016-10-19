@@ -1,4 +1,3 @@
-
 package com.dqys.business.service.service.impl;
 
 
@@ -24,18 +23,24 @@ import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
-import com.dqys.business.orm.query.asset.*;
+import com.dqys.business.orm.query.asset.AssetQuery;
+import com.dqys.business.orm.query.asset.ContactQuery;
+import com.dqys.business.orm.query.asset.LenderQuery;
+import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.orm.query.coordinator.UserTeamQuery;
+import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
 import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
-import com.dqys.business.service.constant.ObjectLogEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.dto.asset.*;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.LenderListQuery;
-import com.dqys.business.service.service.*;
+import com.dqys.business.service.service.BusinessLogService;
+import com.dqys.business.service.service.BusinessService;
+import com.dqys.business.service.service.CoordinatorService;
+import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.utils.asset.IouServiceUtils;
 import com.dqys.business.service.utils.asset.LenderServiceUtils;
 import com.dqys.business.service.utils.asset.PawnServiceUtils;
@@ -150,19 +155,19 @@ public class LenderServiceImpl implements LenderService {
         if (lenderListQuery.getBelong() != null) {
             // 所属人
             List<Integer> userInfoIds = userInfoMapper.listIdByUserName(lenderListQuery.getBelong());
-            if(userInfoIds == null || userInfoIds.size() == 0){
+            if (userInfoIds == null || userInfoIds.size() == 0) {
                 return JsonResponseTool.successNullList();
-            }else{
+            } else {
                 List<Integer> result = new ArrayList<>();
                 for (Integer userInfoId : userInfoIds) {
                     List<Integer> ids = teammateReMapper.listObjectIdByType(ObjectTypeEnum.LENDER.getValue(),
                             userInfoId, TeammateReEnum.TYPE_AUXILIARY.getValue());
                     result = CommonUtil.pickList(result, ids);
                 }
-                if(result == null || result.size() == 0){
+                if (result == null || result.size() == 0) {
                     return JsonResponseTool.successNullList();
                 }
-                if(lenderQuery.getIds() != null){
+                if (lenderQuery.getIds() != null) {
                     result = CommonUtil.unionList(result, lenderQuery.getIds());
                     if (CommonUtil.checkParam(result)) {
                         // 搜索不到数据,理论上不存在
@@ -367,7 +372,7 @@ public class LenderServiceImpl implements LenderService {
                     ObjectTypeEnum.ASSETPACKAGE.getValue(), lenderDTO.getAssetId());
         }
         // 添加历史记录
-        businessLogService.add(lenderId, ObjectTypeEnum.LENDER.getValue(), ObjectLogEnum.add.getValue(),
+        businessLogService.add(lenderId, ObjectTypeEnum.LENDER.getValue(), AssetPackageEnum.add.getValue(),
                 "", "", 0, 0);
         return JsonResponseTool.success(lenderId);
     }
@@ -475,9 +480,9 @@ public class LenderServiceImpl implements LenderService {
             if (contactInfo.getType().equals(ContactTypeEnum.LENDER.getValue())
                     ) {
                 lenderDTO.setName(contactInfo.getName());
-                if(contactInfo.getProvince() != null
+                if (contactInfo.getProvince() != null
                         && contactInfo.getProvince() != null
-                        && contactInfo.getDistrict() != null){
+                        && contactInfo.getDistrict() != null) {
                     lenderDTO.setCurrentAddress(AreaTool.getAreaById(contactInfo.getProvince()).getLabel()
                                     + AreaTool.getAreaById(contactInfo.getCity()).getLabel()
                                     + AreaTool.getAreaById(contactInfo.getDistrict()).getLabel()
@@ -997,11 +1002,11 @@ public class LenderServiceImpl implements LenderService {
             lenderQuery.setOperator(userInfo.getId());
             if (!flag) {
 //                if (isPlatformOrEntrust) { // 修改于10.11
-                    if (businessIds != null && businessIds.size() > 0) {
-                        lenderQuery.setIds(businessIds);
-                    } else {
-                        lenderQuery.setId(SysProperty.NULL_DATA_ID);
-                    }
+                if (businessIds != null && businessIds.size() > 0) {
+                    lenderQuery.setIds(businessIds);
+                } else {
+                    lenderQuery.setId(SysProperty.NULL_DATA_ID);
+                }
 //                }
             }
         } else if (ObjectTabEnum.new48h.getValue().equals(tab)) {

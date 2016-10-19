@@ -25,9 +25,7 @@ import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.orm.query.coordinator.UserTeamQuery;
-import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
-import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
-import com.dqys.business.service.constant.ObjectLogEnum;
+import com.dqys.business.service.constant.ObjectEnum.*;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.dto.asset.*;
@@ -131,7 +129,7 @@ public class AssetServiceImpl implements AssetService {
 
             }
             // 增加操作记录
-            businessLogService.add(id, ObjectTypeEnum.ASSETPACKAGE.getValue(), ObjectLogEnum.add.getValue(),
+            businessLogService.add(id, ObjectTypeEnum.ASSETPACKAGE.getValue(), AssetPackageEnum.add.getValue(),
                     "", assetDTO.getMemo(), 0, 0);
             return JsonResponseTool.success(id);
         } else {
@@ -781,7 +779,7 @@ public class AssetServiceImpl implements AssetService {
         businessService.addServiceObject(ObjectTypeEnum.LENDER.getValue(), lenderId,
                 ObjectTypeEnum.ASSETPACKAGE.getValue(), lenderDTO.getAssetId());
         // 添加历史记录
-        businessLogService.add(lenderId, ObjectTypeEnum.LENDER.getValue(), ObjectLogEnum.add.getValue(),
+        businessLogService.add(lenderId, ObjectTypeEnum.LENDER.getValue(), LenderEnum.ADD.getValue(),
                 "", "", 0, 0);
 
         Map<Integer, String> pawnRelation = new HashMap<>();
@@ -803,7 +801,7 @@ public class AssetServiceImpl implements AssetService {
                 businessService.addServiceObject(ObjectTypeEnum.PAWN.getValue(), pawnInfo.getId(),
                         ObjectTypeEnum.LENDER.getValue(), pawnDTO.getLenderId());
                 // 增加操作记录
-                businessLogService.add(pawnInfo.getId(), ObjectTypeEnum.PAWN.getValue(), ObjectLogEnum.add.getValue(),
+                businessLogService.add(pawnInfo.getId(), ObjectTypeEnum.PAWN.getValue(), PawnEnum.ADD.getValue(),
                         "", pawnDTO.getMemo(), 0, 0);
                 if (pawnDTO.getIouNames() != null && pawnDTO.getIouNames().trim().length() > 0) {
                     pawnRelation.put(pawnInfo.getId(), pawnDTO.getIouNames().trim());
@@ -826,7 +824,7 @@ public class AssetServiceImpl implements AssetService {
                 businessService.addServiceObject(ObjectTypeEnum.IOU.getValue(), iouInfo.getId(),
                         ObjectTypeEnum.LENDER.getValue(), iouDTO.getLenderId());
                 // 添加操作记录
-                businessLogService.add(iouInfo.getId(), ObjectTypeEnum.IOU.getValue(), ObjectLogEnum.add.getValue(),
+                businessLogService.add(iouInfo.getId(), ObjectTypeEnum.IOU.getValue(), IouEnum.ADD.getValue(),
                         "", iouDTO.getMemo(), 0, 0);
                 if (iouDTO.getPawnNames() != null && iouDTO.getPawnNames().trim().length() > 0) {
                     iouRelation.put(iouInfo.getId(), iouDTO.getPawnNames().trim());
@@ -906,7 +904,7 @@ public class AssetServiceImpl implements AssetService {
 
         // 资产包信息
         AssetInfo assetInfo = assetInfoMapper.get(id);
-        if(assetInfo == null){
+        if (assetInfo == null) {
             return JsonResponseTool.paramErr("资产包信息错误，请重新操作");
         }
 
@@ -940,7 +938,7 @@ public class AssetServiceImpl implements AssetService {
             businessService.addServiceObject(ObjectTypeEnum.LENDER.getValue(), lenderInfo.getId(),
                     ObjectTypeEnum.ASSETPACKAGE.getValue(), lenderDTO.getAssetId());
             // 添加历史记录
-            businessLogService.add(lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue(), ObjectLogEnum.add.getValue(),
+            businessLogService.add(lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue(), LenderEnum.ADD.getValue(),
                     "", "", 0, 0);
             idMap.put(lenderDTO.getId(), lenderInfo.getId());
         }
@@ -984,7 +982,7 @@ public class AssetServiceImpl implements AssetService {
             businessService.addServiceObject(ObjectTypeEnum.PAWN.getValue(), pawnInfo.getId(),
                     ObjectTypeEnum.LENDER.getValue(), pawnDTO.getLenderId());
             // 增加操作记录
-            businessLogService.add(pawnInfo.getId(), ObjectTypeEnum.PAWN.getValue(), ObjectLogEnum.add.getValue(),
+            businessLogService.add(pawnInfo.getId(), ObjectTypeEnum.PAWN.getValue(), PawnEnum.ADD.getValue(),
                     "", pawnDTO.getMemo(), 0, 0);
             map.put(pawnDTO.getLenderId() + pawnDTO.getPawnName(), pawnInfo.getId());
         }
@@ -1015,7 +1013,7 @@ public class AssetServiceImpl implements AssetService {
             businessService.addServiceObject(ObjectTypeEnum.IOU.getValue(), iouInfo.getId(),
                     ObjectTypeEnum.LENDER.getValue(), iouDTO.getLenderId());
             // 添加操作记录
-            businessLogService.add(iouInfo.getId(), ObjectTypeEnum.IOU.getValue(), ObjectLogEnum.add.getValue(),
+            businessLogService.add(iouInfo.getId(), ObjectTypeEnum.IOU.getValue(), IouEnum.ADD.getValue(),
                     "", iouDTO.getMemo(), 0, 0);
             // 增加关联关系
             if (iouDTO.getPawnNames() != null && iouDTO.getPawnNames().length() > 0) {

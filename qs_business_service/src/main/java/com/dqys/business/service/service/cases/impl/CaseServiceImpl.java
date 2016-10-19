@@ -12,7 +12,7 @@ import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.cases.CaseCourt;
 import com.dqys.business.orm.pojo.cases.CaseInfo;
 import com.dqys.business.orm.query.asset.RelationQuery;
-import com.dqys.business.service.constant.ObjectLogEnum;
+import com.dqys.business.service.constant.ObjectEnum.CaseEnum;
 import com.dqys.business.service.dto.cases.*;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
@@ -61,7 +61,7 @@ public class CaseServiceImpl implements CaseService {
         if (CommonUtil.checkResult(result)) {
             return JsonResponseTool.failure("删除失败");
         } else {
-            businessLogService.add(id, ObjectTypeEnum.CASE.getValue(), ObjectLogEnum.delete.getValue(),
+            businessLogService.add(id, ObjectTypeEnum.CASE.getValue(), CaseEnum.DELETE.getValue(),
                     "", "", 0, 0);
             return JsonResponseTool.success(result);
         }
@@ -121,7 +121,7 @@ public class CaseServiceImpl implements CaseService {
             businessService.addServiceObject(ObjectTypeEnum.CASE.getValue(), caseId, null, null);
         }
         // 增加操作记录
-        businessLogService.add(caseId, ObjectTypeEnum.CASE.getValue(), ObjectLogEnum.add.getValue(), "", "", 0, 0);
+        businessLogService.add(caseId, ObjectTypeEnum.CASE.getValue(), CaseEnum.ADD.getValue(), "", "", 0, 0);
         return JsonResponseTool.success(caseId);
     }
 
@@ -194,7 +194,7 @@ public class CaseServiceImpl implements CaseService {
             }
         }
         // 增加操作记录
-        businessLogService.add(caseId, ObjectTypeEnum.CASE.getValue(), ObjectLogEnum.update.getValue(), "", "", 0, 0);
+        businessLogService.add(caseId, ObjectTypeEnum.CASE.getValue(), CaseEnum.UPDATE.getValue(), "", "", 0, 0);
         return JsonResponseTool.success(caseId);
     }
 
@@ -376,7 +376,7 @@ public class CaseServiceImpl implements CaseService {
         List<CiRelation> ciList = ciRelationMapper.queryList(query);
         for (CiRelation ciRelation : ciList) {
             IOUInfo info = iouInfoMapper.get(ciRelation.getIouId());
-            if(info != null){
+            if (info != null) {
                 BaseSelectonDTO selectDTO = new BaseSelectonDTO();
                 selectDTO.setKey(ciRelation.getIouId().toString());
                 selectDTO.setValue(info.getName());

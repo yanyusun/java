@@ -19,7 +19,10 @@ public enum CaseEnum {
     SPLIT(1512, "拆分"),
     REMARK(1513, "填写备注"),
     ALLOT_CASE(1514, "分配案件"),
-    OPERATION_LOG(1515, "操作日志");
+    OPERATION_LOG(1515, "操作日志"),
+    ADD(1516, "新增"),
+    UPDATE(1517, "修改"),
+    DELETE(1518, "删除");
     private Integer value;
     private String name;
 
