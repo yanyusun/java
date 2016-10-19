@@ -4,32 +4,26 @@ import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.repay.RepayEnum;
-import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
-import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
-import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
-import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
+import com.dqys.business.orm.mapper.asset.*;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.repay.RepayMapper;
-import com.dqys.business.orm.pojo.asset.AssetInfo;
-import com.dqys.business.orm.pojo.asset.IOUInfo;
-import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.pojo.asset.PawnInfo;
+import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
 import com.dqys.business.orm.pojo.repay.RepayRecord;
+import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
-import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
-import com.dqys.business.service.constant.ObjectEnum.IouEnum;
-import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
-import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
+import com.dqys.business.service.constant.ObjectEnum.*;
 import com.dqys.business.service.exception.bean.ArtificialException;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.service.RepayService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.SmsEnum;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.DateFormatTool;
 import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.SmsUtil;
@@ -78,6 +72,8 @@ public class RepayServiceImpl implements RepayService {
 
     @Autowired
     private CoordinatorService coordinatorService;
+    @Autowired
+    private CiRelationMapper ciRelationMapper;
 
     @Override
     public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
@@ -88,10 +84,12 @@ public class RepayServiceImpl implements RepayService {
         } catch (IOException e) {
             throw new UnexpectedRollbackException("保存附件异常");
         }
-        if (objectType == RepayEnum.OBJECT_IOU.getValue()) {
+        if (objectType == RepayEnum.OBJECT_IOU.getValue().intValue()) {
             businessLogService.add(objectId, ObjectTypeEnum.IOU.getValue(), IouEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
-        } else if (objectType == RepayEnum.OBJECT_PAWN.getValue()) {
+        } else if (objectType == RepayEnum.OBJECT_PAWN.getValue().intValue()) {
             businessLogService.add(objectId, ObjectTypeEnum.PAWN.getValue(), PawnEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
+        } else if (objectType == RepayEnum.OBJECT_CASE.getValue().intValue()) {
+            businessLogService.add(objectId, ObjectTypeEnum.CASE.getValue(), CaseEnum.REPAY_YET.getValue(), CaseEnum.REPAY_YET.getName(), "", 0, 0);//操作日志
         }
         Map map = new HashMap<>();
         List<IOUInfo> ious = new ArrayList<>();
@@ -100,6 +98,7 @@ public class RepayServiceImpl implements RepayService {
         BigDecimal principalTotal = BigDecimal.ZERO;//本金总和
         BigDecimal accrualTotal = BigDecimal.ZERO;//利息总和
         List<Integer> iouIds = new ArrayList<>();//用于查询业务是否需要改为已完成
+        //循环得出借据金额
         for (IOUInfo iou : ious) {
             iouIds.add(iou.getId());
             if (iou.getLessCorpus() == 0 && ((iou.getPenalty() == null && iou.getAccrualArrears() == 0) || (iou.getPenalty() != null && iou.getPenalty() == 0))) {//剔除不需要还款的借据
@@ -114,12 +113,16 @@ public class RepayServiceImpl implements RepayService {
         }
         Repay repay = new Repay();
         BigDecimal paTotal = principalTotal.add(accrualTotal);//本金利息总和
+        //只有是案件的时候还款金额赋值为借据本金利息总金额(还款类型：还利息加本金)
+        if (objectType == RepayEnum.OBJECT_CASE.getValue().intValue() && repayType == RepayEnum.TYPE_A_P.getValue().intValue()) {
+            money = paTotal.doubleValue();
+        }
         //判断所得金额是否大于还款金额
-        if (repayType == RepayEnum.TYPE_PRINCIPAL.getValue()) {
+        if (repayType == RepayEnum.TYPE_PRINCIPAL.getValue().intValue()) {
             if (getRepayStatus(money, principalTotal, repay)) return getMap(map, principalTotal);
-        } else if (repayType == RepayEnum.TYPE_ACCRUAL.getValue()) {
+        } else if (repayType == RepayEnum.TYPE_ACCRUAL.getValue().intValue()) {
             if (getRepayStatus(money, accrualTotal, repay)) return getMap(map, accrualTotal);
-        } else if (repayType == RepayEnum.TYPE_A_P.getValue()) {
+        } else if (repayType == RepayEnum.TYPE_A_P.getValue().intValue()) {
             if (getRepayStatus(money, paTotal, repay)) return getMap(map, paTotal);
         }
         //添加还款记录
@@ -216,14 +219,25 @@ public class RepayServiceImpl implements RepayService {
      * @param repay
      */
     private void setRepayLenderId(Repay repay) {
-        if (repay.getRepayFidType() == RepayEnum.OBJECT_IOU.getValue()) {
+        if (repay.getRepayFidType() == RepayEnum.OBJECT_IOU.getValue().intValue()) {
             IOUInfo iouInfo = iouInfoMapper.get(repay.getRepayFid());
             repay.setLenderId(iouInfo.getLenderId());
-        } else if (repay.getRepayFidType() == RepayEnum.OBJECT_PAWN.getValue()) {
+        } else if (repay.getRepayFidType() == RepayEnum.OBJECT_PAWN.getValue().intValue()) {
             PawnInfo pawnInfo = pawnInfoMapper.get(repay.getRepayFid());
             repay.setLenderId(pawnInfo.getLenderId());
-        } else if (repay.getRepayFidType() == RepayEnum.OBJECT_UNLIMITED.getValue()) {
+        } else if (repay.getRepayFidType() == RepayEnum.OBJECT_UNLIMITED.getValue().intValue()) {
             repay.setLenderId(repay.getRepayFid());
+        } else if (repay.getRepayFidType() == RepayEnum.OBJECT_CASE.getValue().intValue()) {
+            RelationQuery query = new RelationQuery();
+            query.setCaseId(repay.getRepayFid());
+            List<CiRelation> list = ciRelationMapper.queryList(query);
+            if (list.size() > 0) {
+                IOUInfo info = iouInfoMapper.get(list.get(0).getIouId());
+                if (info != null) {
+                    repay.setLenderId(info.getLenderId());
+                }
+            }
+
         }
     }
 
@@ -271,10 +285,13 @@ public class RepayServiceImpl implements RepayService {
     private List<IOUInfo> getIouInfos(Integer objectId, Integer objectType, List<IOUInfo> ious) {
         if (objectType == RepayEnum.OBJECT_IOU.getValue().intValue()) {//借据
             IOUInfo iou = iouInfoMapper.get(objectId);
-            ious.add(iou);
+            if (iou != null) {
+                ious.add(iou);
+            }
         } else if (objectType == RepayEnum.OBJECT_PAWN.getValue().intValue()) {//抵押物
             ious = iouInfoMapper.selectIouInfoByPawnId(objectId);
-        } else if (objectType == RepayEnum.OBJECT_UNLIMITED.getValue().intValue()) {//不限对象
+        } else if (objectType == RepayEnum.OBJECT_UNLIMITED.getValue().intValue()) {
+            //不限对象（objectId需要借款人id）
             Map map = new HashMap<>();
             getIouAndPawnByLender(objectId, map);//借款人下的所有借据和抵押物
             List<Map> iousList = (List<Map>) map.get("ious");
@@ -290,6 +307,17 @@ public class RepayServiceImpl implements RepayService {
             }
             if (iouIds.size() > 0) {
                 ious = iouInfoMapper.selectIouInfoByObjectIds(iouIds);//所有借据
+            }
+        } else if (objectType == RepayEnum.OBJECT_CASE.getValue().intValue()) {
+            //根据案件id相关联借据还款
+            RelationQuery query = new RelationQuery();
+            query.setCaseId(objectId);
+            List<CiRelation> list = ciRelationMapper.queryList(query);
+            for (CiRelation ci : list) {
+                IOUInfo info = iouInfoMapper.get(ci.getIouId());
+                if (info != null) {
+                    ious.add(info);
+                }
             }
         }
         return ious;
@@ -564,6 +592,13 @@ public class RepayServiceImpl implements RepayService {
         List<Repay> repays = repayMapper.selectByRepay(repay);
         map.put("result", "yes");
         map.put("repays", repays);
+    }
+
+    @Override
+    public Map caseRepayMoney(Integer caseId, String remark, String file) throws Exception {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        Map map = repayMoney(userId, caseId, RepayEnum.OBJECT_CASE.getValue(), RepayEnum.TYPE_A_P.getValue(), RepayEnum.WAY_DIRECT.getValue(), null, remark, file);
+        return map;
     }
 
 
