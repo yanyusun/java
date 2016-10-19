@@ -228,7 +228,7 @@ public class UserServiceImpl implements UserService {
         }
         // 校验邮箱是否存在
         List<TUserInfo> isExist = tUserInfoMapper.verifyUser(null, null, data.getEmail());
-        if(isExist != null || isExist.size() == 0){
+        if(isExist != null || isExist.size() > 0){
             return JsonResponseTool.failure("邮箱已存在");
         }
         TCompanyInfo companyInfo = getCompanyByUserId(UserSession.getCurrent().getUserId());
