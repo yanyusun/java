@@ -4,6 +4,7 @@ import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.repay.RepayEnum;
 import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.RepayService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.model.JsonResponse;
@@ -207,7 +208,7 @@ public class RepayController {
         }
         Map map = new HashMap<>();
         try {
-            Integer userId = UserSession.getCurrent().getUserId();
+            Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
             map = repayService.repayMoney(userId, objectId, objectType, repayType, repayWay, money, remark, file);
             if ("yes".equals(MessageUtils.transMapToString(map, "result"))) {
                 return JsonResponseTool.success(map);
@@ -286,7 +287,7 @@ public class RepayController {
         }
         Map map = new HashMap<>();
         try {
-            Integer userId = UserSession.getCurrent().getUserId();
+            Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
             DamageApply damageApply = new DamageApply();
             damageApply.setStatus(0);
             damageApply.setApply_object_id(objectId);
@@ -320,7 +321,7 @@ public class RepayController {
             return JsonResponseTool.paramErr("审批状态错误");
         }
         try {
-            Integer userId = UserSession.getCurrent().getUserId();
+            Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
             repayService.auditPostpone(applyId, status, userId, map);
             if (MessageUtils.transMapToString(map, "result").equals("yes")) {
                 return JsonResponseTool.success(map);
@@ -339,14 +340,14 @@ public class RepayController {
      * @apiName repay/caseRepayMoney
      * @apiSampleRequest repay/caseRepayMoney
      * @apiParam {int} caseId 案件id
-     * @apiParam {string} fileName 图片名称
+     * @apiParam {string} [remark] 备注
+     * @apiParam {string} file 单据图片
      * @apiGroup Repay
      */
     @RequestMapping("/caseRepayMoney")
     @ResponseBody
-    public JsonResponse caseRepayMoney(@RequestParam("caseId") Integer caseId, @RequestParam("fileName") Integer fileName) {
-        Map map = new HashMap<>();
-
+    public JsonResponse caseRepayMoney(@RequestParam("caseId") Integer caseId, String remark, @RequestParam("file") String file) throws Exception {
+        Map map = repayService.caseRepayMoney(caseId, remark, file);
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             return JsonResponseTool.success(map);
         } else {

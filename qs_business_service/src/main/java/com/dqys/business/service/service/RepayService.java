@@ -2,6 +2,7 @@ package com.dqys.business.service.service;
 
 import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
@@ -88,4 +89,10 @@ public interface RepayService {
      * @param map
      */
     void getRepayList(Repay repay, Map map);
+
+    /**
+     * 案件已还款操作（把案件对应的所有借据的金额还完）
+     * @return
+     */
+    Map caseRepayMoney(Integer caseId,String remark, String file) throws Exception;
 }
