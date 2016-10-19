@@ -117,6 +117,12 @@ public class RepayServiceImpl implements RepayService {
         if (objectType == RepayEnum.OBJECT_CASE.getValue().intValue() && repayType == RepayEnum.TYPE_A_P.getValue().intValue()) {
             money = paTotal.doubleValue();
         }
+        //还款金额为0就返回无需还款操作
+        if (money == 0) {
+            map.put("result", "no");
+            map.put("msg", "还款金额是为0，无效还款");
+            return map;
+        }
         //判断所得金额是否大于还款金额
         if (repayType == RepayEnum.TYPE_PRINCIPAL.getValue().intValue()) {
             if (getRepayStatus(money, principalTotal, repay)) return getMap(map, principalTotal);
