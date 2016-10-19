@@ -41,11 +41,12 @@ public interface OperTypeService {
 
     /**
      * 根据用户类型，角色id，操作类型获取对应权限;用户类型_角色id_操作类型
+     *
      * @param objectType 对象类型
      * @param objectId
      * @return
      */
-    public List<OperType> getOperType( Integer objectType,Integer objectId);
+    public List<OperType> getOperType(Integer objectType, Integer objectId);
 
     /**
      * 根据用户类型，角色id，操作类型获取对应权限;用户类型_角色id_操作类型
@@ -69,6 +70,10 @@ public interface OperTypeService {
      */
     public boolean checkOperType(Integer roleType, Integer userType, Integer objectType, Integer operType);
 
-
+    /**
+     * 查询全部操作权限
+     * @return
+     */
+    public List<OperType> getAll(OperType operType);
 
 }

@@ -30,5 +30,21 @@
     <select id="selectByObjectIds" resultType="int">
         SELECT ot.object_type objectIds FROM object_type ot GROUP BY ot.object_type
     </select>
+    <!--全部-->
+    <select id="getAll" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.pojo.operType.OperType">
+        SELECT * from oper_type
+        <where>
+            1=1
+            <if test="operType !=null and operType.operType !=null">
+                AND oper_type=#{operType}
+            </if>
+            <if test="operType !=null and operType.operName !=null">
+                AND oper_name=#{operName}
+            </if>
+            <if test="operType !=null and operType.id !=null">
+                AND id=#{id}
+            </if>
+        </where>
+    </select>
 
 </mapper>

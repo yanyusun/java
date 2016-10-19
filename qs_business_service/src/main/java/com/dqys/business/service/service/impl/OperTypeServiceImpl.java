@@ -67,43 +67,43 @@ public class OperTypeServiceImpl implements OperTypeService {
     }
 
     @Override
-    public List<OperType> getOperType( Integer objectType, Integer objectId) {
+    public List<OperType> getOperType(Integer objectType, Integer objectId) {
         UserSession userSession = UserSession.getCurrent();
         Integer userId = UserSession.getCurrent().getUserId();
         Integer roleId = UserServiceUtils.headerStringToInt(userSession.getRoleId());
         Integer userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
-            Integer flowId = objectId;
-            Integer flowType = objectType;
-            //对象类型为抵押物或借据，设置借款人的对象类型，协作器只能查资产包或借款人
-            if (ObjectTypeEnum.PAWN.getValue() == objectType) {
-                flowId = pawnInfoMapper.get(objectId).getLenderId();
-                flowType = ObjectTypeEnum.LENDER.getValue();
-            } else if (ObjectTypeEnum.IOU.getValue() == objectType) {
-                flowId = iouInfoMapper.get(objectId).getLenderId();
-                flowType = ObjectTypeEnum.LENDER.getValue();
-            }
-            //不是管理者的就是查询是否在团队中是所属人角色
-            if (roleId != RoleTypeEnum.ADMIN.getValue()) {
-                Map teamMap = new HashMap<>();
-                teamMap.put("objectId", flowId);
-                teamMap.put("objectType", flowType);
-                teamMap.put("userId", userId);
-                teamMap.put("type", TeammateReEnum.TYPE_AUXILIARY.getValue());
-                List<TeammateRe> teammateReList = teammateReMapper.selectSelectiveByUserTeam(teamMap);
+        Integer flowId = objectId;
+        Integer flowType = objectType;
+        //对象类型为抵押物或借据，设置借款人的对象类型，协作器只能查资产包或借款人
+        if (ObjectTypeEnum.PAWN.getValue() == objectType) {
+            flowId = pawnInfoMapper.get(objectId).getLenderId();
+            flowType = ObjectTypeEnum.LENDER.getValue();
+        } else if (ObjectTypeEnum.IOU.getValue() == objectType) {
+            flowId = iouInfoMapper.get(objectId).getLenderId();
+            flowType = ObjectTypeEnum.LENDER.getValue();
+        }
+        //不是管理者的就是查询是否在团队中是所属人角色
+        if (roleId != RoleTypeEnum.ADMIN.getValue()) {
+            Map teamMap = new HashMap<>();
+            teamMap.put("objectId", flowId);
+            teamMap.put("objectType", flowType);
+            teamMap.put("userId", userId);
+            teamMap.put("type", TeammateReEnum.TYPE_AUXILIARY.getValue());
+            List<TeammateRe> teammateReList = teammateReMapper.selectSelectiveByUserTeam(teamMap);
+            if (teammateReList.size() > 0) {
+                roleId = RoleTypeEnum.THEIR.getValue();
+            } else if (flowType == ObjectTypeEnum.LENDER.getValue()) {
+                //借款人的所属人查不到再去查资产包的所属人
+                LenderInfo info = lenderInfoMapper.get(flowId);
+                teamMap.put("objectId", info.getAssetId());
+                teamMap.put("objectType", ObjectTypeEnum.ASSETPACKAGE.getValue());
+                teammateReList = teammateReMapper.selectSelectiveByUserTeam(teamMap);
                 if (teammateReList.size() > 0) {
                     roleId = RoleTypeEnum.THEIR.getValue();
-                } else if (flowType == ObjectTypeEnum.LENDER.getValue()) {
-                    //借款人的所属人查不到再去查资产包的所属人
-                    LenderInfo info = lenderInfoMapper.get(flowId);
-                    teamMap.put("objectId", info.getAssetId());
-                    teamMap.put("objectType", ObjectTypeEnum.ASSETPACKAGE.getValue());
-                    teammateReList = teammateReMapper.selectSelectiveByUserTeam(teamMap);
-                    if (teammateReList.size() > 0) {
-                        roleId = RoleTypeEnum.THEIR.getValue();
-                    }
                 }
             }
-       // }
+        }
+        // }
         String userId_roleId_objectId = userType + "_" + roleId + "_" + objectType;
         List<OperType> list = NoSQLWithRedisTool.getValueObject(userId_roleId_objectId) == null ? new ArrayList<>() : NoSQLWithRedisTool.getValueObject(userId_roleId_objectId);
         if (list != null && list.size() != 0) {
@@ -127,8 +127,6 @@ public class OperTypeServiceImpl implements OperTypeService {
     }
 
 
-
-
     @Override
     public boolean checkOperType(Integer roleType, Integer userType, Integer objectType, Integer operType) {
         List<OperType> list = getOperType(roleType, userType, objectType);
@@ -138,6 +136,11 @@ public class OperTypeServiceImpl implements OperTypeService {
             }
         }
         return false;
+    }
+
+    @Override
+    public List<OperType> getAll(OperType operType) {
+        return operTypeMapper.getAll(operType);
     }
 
 

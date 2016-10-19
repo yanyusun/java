@@ -31,4 +31,9 @@ public class OperTypeMapperImpl extends BaseDao implements OperTypeMapper {
     public List<Integer> selectByObjectIds() {
         return super.getSqlSession().getMapper(OperTypeMapper.class).selectByObjectIds();
     }
+
+    @Override
+    public List<OperType> getAll(OperType operType) {
+        return super.getSqlSession().getMapper(OperTypeMapper.class).getAll(operType);
+    }
 }

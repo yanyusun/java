@@ -38,4 +38,11 @@ public interface OperTypeMapper {
      * @return
      */
     List<Integer> selectByObjectIds();
+
+    /**
+     * 获取全部操作权限
+     * @param operType
+     * @return
+     */
+    List<OperType> getAll(OperType operType);
 }

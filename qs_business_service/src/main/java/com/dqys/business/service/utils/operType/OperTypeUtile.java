@@ -1,11 +1,13 @@
 package com.dqys.business.service.utils.operType;
 
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.mapper.operType.OperTypeMapper;
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.constant.ObjectEnum.*;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.service.OperTypeService;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -34,6 +36,8 @@ public class OperTypeUtile implements ApplicationContextAware {
     }
 
     public void opertype() {
+        List<OperType> list = operTypeService.getAll(null);
+        redisTemplate.opsForValue().set("operTypeList", list);//获取全部的operType
         List<Integer> userIds = operTypeService.selectByUserIds();//?????
         List<Integer> roleIds = operTypeService.selectByRoleIds();
         List<Integer> objectIds = operTypeService.selectByObjectIds();
