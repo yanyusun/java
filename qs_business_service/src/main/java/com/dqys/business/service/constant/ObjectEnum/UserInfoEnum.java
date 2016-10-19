@@ -10,6 +10,10 @@ public enum UserInfoEnum {
     UPDATE_COMMON_USER(993, "修改普通用户"),
     UPDATE_ADMIN(994, "修改管理者账号"),
     LOOK_USER(995, "查看用户列表"),
+
+
+
+
     USER_TYPE_COMMON(0,"普通员工"),
     USER_TYPE_ADMIN(1,"平台管理员"),
     USER_TYPE_ENTRUST(2,"委托方"),
