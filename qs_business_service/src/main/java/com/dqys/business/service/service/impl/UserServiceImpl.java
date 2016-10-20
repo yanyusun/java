@@ -37,6 +37,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.UnexpectedRollbackException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -276,6 +277,15 @@ public class UserServiceImpl implements UserService {
         if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
         }
+        if (userInsertDTO.getAvg() != null && !userInsertDTO.getAvg().equals("")) {
+            try {
+                if (!FileTool.saveFileSync(userInsertDTO.getAvg())) {
+                    throw new UnexpectedRollbackException("保存附件失败");
+                }
+            } catch (IOException e) {
+                throw new UnexpectedRollbackException("保存附件异常");
+            }
+        }
         TUserTag tUserTag = new TUserTag();
         List<TUserTag> tUserTagList = tUserTagMapper.selectByUserId(userInsertDTO.getId());
         if (tUserTagList.size() > 0) {
@@ -414,10 +424,10 @@ public class UserServiceImpl implements UserService {
             return JsonResponseTool.paramErr("您不是管理员,没有权限导入成员");
         }
         TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(id);
-        if(userInfo == null){
+        if (userInfo == null) {
             return JsonResponseTool.failure("该用户不存在");
         }
-        if(userInfo.getCompanyId().equals(companyDetailInfo.getCompanyId())){
+        if (userInfo.getCompanyId().equals(companyDetailInfo.getCompanyId())) {
             return JsonResponseTool.failure("没有权限修改其他公司成员");
         }
         try {
@@ -459,13 +469,13 @@ public class UserServiceImpl implements UserService {
                     - Integer.valueOf(String.valueOf(assetMap.get("finish")).trim());
         }
         List<TUserTag> tagList = tUserTagMapper.selectByUserId(tUserInfo.getId());
-        if(tagList != null && tagList.size() > 0){
+        if (tagList != null && tagList.size() > 0) {
             userTag = tagList.get(0);
-            if(userTag.getApartmentId() != null){
+            if (userTag.getApartmentId() != null) {
                 OrganizationQuery query = new OrganizationQuery();
                 query.setId(userTag.getApartmentId());
                 List<Organization> organization = organizationMapper.list(query);
-                if(organization != null && organization.size() > 0){
+                if (organization != null && organization.size() > 0) {
                     apartment = organization.get(0).getName();
                 }
             }
@@ -500,7 +510,7 @@ public class UserServiceImpl implements UserService {
             return JsonResponseTool.paramErr("您不是管理员,没有权限导入成员");
         }
 
-        Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file,tUserInfoMapper);
+        Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file, tUserInfoMapper);
         if (map.get("result") == null || map.get("result").equals("error")) {
             List<ExcelMessage> error = (List<ExcelMessage>) map.get("data");
             JsonResponse jsonResponse = new JsonResponse();

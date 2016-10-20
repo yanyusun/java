@@ -186,7 +186,7 @@ public abstract class FormatValidateTool {
      * @param num 小数后面的位数
      * @return
      */
-    public static boolean isDecimals(String str, Integer num) {
+    public static boolean isDecimals(Object str, Integer num) {
         String msg = "";
         if (num == null) {
             msg = "[-]?[0-9]*([.]?[0-9]*)";
@@ -196,7 +196,7 @@ public abstract class FormatValidateTool {
             msg = "[-]?[0-9]*([.][0-9]{" + num + "})";
         }
         Pattern pattern = Pattern.compile(msg);
-        Matcher isNum = pattern.matcher(str);
+        Matcher isNum = pattern.matcher(str.toString());
         if (isNum.matches()) {
             return true;
         } else {
