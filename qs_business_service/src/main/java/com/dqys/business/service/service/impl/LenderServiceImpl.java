@@ -126,7 +126,7 @@ public class LenderServiceImpl implements LenderService {
             AssetQuery assetQuery = new AssetQuery();
             assetQuery.setCode(lenderListQuery.getAssetNo());
             List<AssetInfo> assetInfoList = assetInfoMapper.pageList(assetQuery);
-            if (assetInfoList == null) {
+            if (assetInfoList != null && assetInfoList.size() == 0) {
                 // 搜索不到数据
                 return JsonResponseTool.successNullList();
             } else {
