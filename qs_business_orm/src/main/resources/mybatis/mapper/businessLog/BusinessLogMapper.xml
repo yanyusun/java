@@ -266,22 +266,27 @@
     </if>
   </select>
 
-  <select id="listAllBy" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.query.businessLog.BusinessLogQuery" >
-    select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.iou_no  obj_no ,b.remark ,b.id,b.create_at
-    from t_business_log b , bt_iou  bt, oper_type o, t_user_info u, object_type obj
-    where b. object_type =13  and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id=bt.id and obj.object_type =b.object_type
-    <include refid="listAll_query_condition" />
-    UNION ALL
-    select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.lender_no obj_no ,b.remark ,b.id ,b.create_at
-    from t_business_log b , bt_lender bt, oper_type o, t_user_info u, object_type obj
-    where b. object_type =11 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
-    <include refid="listAll_query_condition" />
-    UNION ALL
-    select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.asset_no  obj_no ,b.remark ,b.id ,b.create_at
-    from t_business_log b , bt_asset  bt, oper_type o, t_user_info u, object_type obj
-    where b. object_type =10 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
-    <include refid="listAll_query_condition" />
-    UNION ALL
+  <select id="listAllByObjectType" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.query.businessLog.BusinessLogQuery" >
+    <if test="objectType == 13" >
+      select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.iou_no  obj_no ,b.remark ,b.id,b.create_at
+      from t_business_log b , bt_iou  bt, oper_type o, t_user_info u, object_type obj
+      where b. object_type =13  and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id=bt.id and obj.object_type =b.object_type
+      <include refid="listAll_query_condition" />
+    </if>
+    <if test="objectType == 11" >
+      select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.lender_no obj_no ,b.remark ,b.id ,b.create_at
+      from t_business_log b , bt_lender bt, oper_type o, t_user_info u, object_type obj
+      where b. object_type =11 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+      <include refid="listAll_query_condition" />
+    </if>
+    <if test="objectType == 10" >
+      select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.asset_no  obj_no ,b.remark ,b.id ,b.create_at
+      from t_business_log b , bt_asset  bt, oper_type o, t_user_info u, object_type obj
+      where b. object_type =10 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+      <include refid="listAll_query_condition" />
+    </if>
+    <if test="objectType == 12" >
+
     select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text ,  bt.pawn_no  obj_no ,b.remark ,b.id ,b.create_at
     from t_business_log b , bt_pawn bt, oper_type o, t_user_info u, object_type obj
     where b. object_type =12 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
