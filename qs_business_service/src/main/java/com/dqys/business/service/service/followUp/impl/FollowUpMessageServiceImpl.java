@@ -111,7 +111,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
                 }
                 assetInfo.setFollowUpTimes(afollowtime);
                 TeammateRe aTeammateRe = teammateReMapper.selectByObjectAndUser(ObjectTypeEnum.ASSETPACKAGE.getValue(), followUpMessage.getObjectId(), userSession.getUserId());
-                if (aTeammateRe != null & teammateRe.getType() == TeammateReEnum.TYPE_AUXILIARY.getValue()) {//如果是所属人增加所属人跟进次数
+                if (aTeammateRe != null && aTeammateRe.getType() == TeammateReEnum.TYPE_AUXILIARY.getValue()) {//如果是所属人增加所属人跟进次数
                     assetInfo.setBelongUpTime(curDate);
                     int aBelongFollowUpTime = 1;
                     if (assetInfo.getBelongUpTimes() != null && lenderInfo.getBelongFollowTimes() != 0) {
@@ -148,9 +148,9 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
         if (followUpMessageQuery.isMine()) {
             int userId = UserSession.getCurrent().getUserId();
             followUpMessageQuery.setUserId(userId);
-        } else if(followUpMessageQuery.isTeam()){
+        } else if (followUpMessageQuery.isTeam()) {
             int userId = UserSession.getCurrent().getUserId();
-            int teamId=getTeamId(followUpMessageQuery.getObjectId(),followUpMessageQuery.getObjectType(),userId);
+            int teamId = getTeamId(followUpMessageQuery.getObjectId(), followUpMessageQuery.getObjectType(), userId);
             followUpMessageQuery.setTeamId(teamId);
         }
         return followUpMessageMapper.getlistWithALL(followUpMessageQuery);
@@ -182,9 +182,9 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
      */
     private int getTeamId(int objectId, int ObjectType, int userId) {
         Integer teamid = 0;
-        UserTeam userTeam=coordinatorService.getTeam(objectId,ObjectType,userId);
-        if(userTeam!=null){
-            teamid=userTeam.getId();
+        UserTeam userTeam = coordinatorService.getTeam(objectId, ObjectType, userId);
+        if (userTeam != null) {
+            teamid = userTeam.getId();
         }
         return teamid;
     }
