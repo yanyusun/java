@@ -45,7 +45,7 @@ public class BusinessLogQuery extends BaseQuery {
     @DateTimeFormat( pattern = "yyyy-MM-dd" )
     private Date endDate;
 
-    private String
+    private String searchText;
 
     public Integer getId() {
         return id;
@@ -125,5 +125,13 @@ public class BusinessLogQuery extends BaseQuery {
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public String getSearchText() {
+        return searchText;
+    }
+
+    public void setSearchText(String searchText) {
+        this.searchText = searchText;
     }
 }
