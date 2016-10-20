@@ -88,6 +88,10 @@ public class BusinessLogServiceImp implements BusinessLogService {
 
     @Override
     public int queryCount(BusinessLogQuery query) {
+        if(query.getObjectType()==null){
+
+        }
+        businessLogMapper
         return businessLogMapper.queryCount(query);
     }
 }
