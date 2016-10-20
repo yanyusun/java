@@ -66,12 +66,12 @@ public class BusinessLogMapperImp extends BaseDao implements BusinessLogMapper {
     }
 
     @Override
-    public List<BusinessLog> allQueryCount(BusinessLogQuery query) {
+    public int allQueryCount(BusinessLogQuery query) {
         return super.getSqlSession().getMapper(BusinessLogMapper.class).allQueryCount(query);
     }
 
     @Override
-    public List<BusinessLog> allByObjectQueryCount(BusinessLogQuery query) {
+    public int allByObjectQueryCount(BusinessLogQuery query) {
         return super.getSqlSession().getMapper(BusinessLogMapper.class).allByObjectQueryCount(query);
     }
 }

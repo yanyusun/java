@@ -43,13 +43,13 @@ public interface BusinessLogMapper {
      * @param query
      * @return
      */
-    List<BusinessLog> allQueryCount(BusinessLogQuery query);
+    int allQueryCount(BusinessLogQuery query);
 
     /**
      * 查询前段需要展示的特定对象的数量
      * @param query
      * @return
      */
-    List<BusinessLog> allByObjectQueryCount(BusinessLogQuery query);
+    int allByObjectQueryCount(BusinessLogQuery query);
 
 }

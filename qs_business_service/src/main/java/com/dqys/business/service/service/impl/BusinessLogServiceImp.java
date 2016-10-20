@@ -44,7 +44,11 @@ public class BusinessLogServiceImp implements BusinessLogService {
 
     @Override
     public List<BusinessLog> list(BusinessLogQuery query) {
-        return businessLogMapper.list(query);
+        if(query.getObjectType()==null){
+            return businessLogMapper.listAll(query);
+        }else{
+            return businessLogMapper.listAllByObjectType(query);
+        }
     }
 
     @Override
@@ -88,10 +92,10 @@ public class BusinessLogServiceImp implements BusinessLogService {
 
     @Override
     public int queryCount(BusinessLogQuery query) {
-        if(query.getObjectType()==null){
-
+        if (query.getObjectType() == null) {
+            return businessLogMapper.allQueryCount(query);
+        } else {
+            return businessLogMapper.allByObjectQueryCount(query);
         }
-        businessLogMapper
-        return businessLogMapper.queryCount(query);
     }
 }
