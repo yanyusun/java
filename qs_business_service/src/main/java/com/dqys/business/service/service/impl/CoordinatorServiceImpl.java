@@ -104,7 +104,6 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType, Integer userid) {
-        OperTypeUtile.getInitBuisnesOperTypeList(objectType, objectId, ObjectTypeEnum.IOU.getValue());
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         if (companyId == null) {
             TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(userId);
