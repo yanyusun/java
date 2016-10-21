@@ -33,6 +33,16 @@ public class BusinessLog extends BaseModel{
 
     private Long stateflag;
 
+    private String objectShowName;//日志展示名称
+
+    private String userName;//操作用户名称
+
+    private String objectNo;//对象编号
+
+    private String operName;//操作名称
+
+    private String objectName;//对象名称
+
     public Integer getId() {
         return id;
     }
@@ -143,5 +153,41 @@ public class BusinessLog extends BaseModel{
 
     public void setStateflag(Long stateflag) {
         this.stateflag = stateflag;
+    }
+
+    public String getObjectShowName() {
+        return objectName+objectNo;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getObjectNo() {
+        return objectNo;
+    }
+
+    public void setObjectNo(String objectNo) {
+        this.objectNo = objectNo;
+    }
+
+    public String getOperName() {
+        return operName;
+    }
+
+    public void setOperName(String operName) {
+        this.operName = operName;
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+
+    public void setObjectName(String objectName) {
+        this.objectName = objectName;
     }
 }

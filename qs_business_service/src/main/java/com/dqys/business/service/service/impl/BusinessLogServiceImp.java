@@ -44,7 +44,11 @@ public class BusinessLogServiceImp implements BusinessLogService {
 
     @Override
     public List<BusinessLog> list(BusinessLogQuery query) {
-        return businessLogMapper.list(query);
+        if(query.getObjectType()==null){
+            return businessLogMapper.listAll(query);
+        }else{
+            return businessLogMapper.listAllByObjectType(query);
+        }
     }
 
     @Override
@@ -66,25 +70,32 @@ public class BusinessLogServiceImp implements BusinessLogService {
         }
         businessLog.setBusinessId(businessId);
         if (teamId == 0 && !CommonUtil.isManage()) {//当团队id为0时查询
-            if(ObjectTypeEnum.PAWN.getValue()==objectType){
-                objectId=pawnInfoMapper.get(objectId).getLenderId();
-                objectType=ObjectTypeEnum.LENDER.getValue();
-            }else if(ObjectTypeEnum.IOU.getValue()==objectType){
-                objectId=iouInfoMapper.get(objectId).getLenderId();
-                objectType=ObjectTypeEnum.LENDER.getValue();
+            if (ObjectTypeEnum.PAWN.getValue() == objectType) {
+                objectId = pawnInfoMapper.get(objectId).getLenderId();
+                objectType = ObjectTypeEnum.LENDER.getValue();
+            } else if (ObjectTypeEnum.IOU.getValue() == objectType) {
+                objectId = iouInfoMapper.get(objectId).getLenderId();
+                objectType = ObjectTypeEnum.LENDER.getValue();
             }
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setUserId(userId);
             objectUserRelationQuery.setObjectType(objectType);
             objectUserRelationQuery.setObjectId(objectId);
             List<ObjectUserRelation> objectUserRelationList = objectUserRelationMapper.list(objectUserRelationQuery);
-            if(objectUserRelationList!=null&&objectUserRelationList.size()!=0){//还为加入团队的情况
-                teamId=objectUserRelationList.get(0).getEmployerId();
+            if (objectUserRelationList != null && objectUserRelationList.size() != 0) {//还为加入团队的情况
+                teamId = objectUserRelationList.get(0).getEmployerId();
             }
         }
         businessLog.setTeamId(teamId);
         businessLogMapper.insert(businessLog);
     }
 
-
+    @Override
+    public int queryCount(BusinessLogQuery query) {
+        if (query.getObjectType() == null) {
+            return businessLogMapper.allQueryCount(query);
+        } else {
+            return businessLogMapper.allByObjectQueryCount(query);
+        }
+    }
 }

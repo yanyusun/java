@@ -19,6 +19,13 @@ public interface BusinessLogService {
     List<BusinessLog> list(BusinessLogQuery query);
 
     /**
+     * 查询数量
+     * @param query
+     * @return
+     */
+    int queryCount(BusinessLogQuery query);
+
+    /**
      * 添加操作日志
      *
      * @param objectId 对象id

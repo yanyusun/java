@@ -1,6 +1,9 @@
 package com.dqys.business.orm.query.businessLog;
 
 import com.dqys.core.base.BaseQuery;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 /**
  * Created by yan on 16-7-13.
@@ -16,6 +19,7 @@ import com.dqys.core.base.BaseQuery;
  * @apiParam {number} [startPageNum] 当前分页
  * @apiParam {number} [pageSize] 分页大小
  * @apiParam {date} [createAt] 创建时间
+ *
  */
 
 public class BusinessLogQuery extends BaseQuery {
@@ -34,6 +38,14 @@ public class BusinessLogQuery extends BaseQuery {
     private Integer businessId;
 
     private String text;
+
+    @DateTimeFormat( pattern = "yyyy-MM-dd" )
+    private Date beginDate;
+
+    @DateTimeFormat( pattern = "yyyy-MM-dd" )
+    private Date endDate;
+
+    private String searchText;
 
     public Integer getId() {
         return id;
@@ -97,5 +109,29 @@ public class BusinessLogQuery extends BaseQuery {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public Date getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(Date beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getSearchText() {
+        return searchText;
+    }
+
+    public void setSearchText(String searchText) {
+        this.searchText = searchText;
     }
 }
