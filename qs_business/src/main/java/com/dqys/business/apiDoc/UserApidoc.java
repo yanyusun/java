@@ -134,4 +134,12 @@ public class UserApidoc {
      * @apiParam {string} pwd 新密码
      */
 
+    /**
+     * @api {POST} http://{url}/api/user/leaveWord 用户留言信息
+     * @apiName leaveWord
+     * @apiGroup User
+     * @apiParam {number} userId 被留言用户
+     * @apiParam {string} content 留言内容
+     */
+
 }

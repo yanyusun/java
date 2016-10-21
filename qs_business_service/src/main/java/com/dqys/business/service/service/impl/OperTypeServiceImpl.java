@@ -4,22 +4,32 @@ import com.dqys.auth.orm.dao.facade.TUserTagMapper;
 import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
+import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.operType.OperTypeMapper;
+import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.operType.OperType;
+import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
+import com.dqys.business.service.constant.ObjectEnum.IouEnum;
+import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
+import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.service.OperTypeService;
+import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.business.service.utils.operType.OperTypeUtile;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.NoSQLWithRedisTool;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +48,8 @@ public class OperTypeServiceImpl implements OperTypeService {
     private TUserTagMapper tUserTagMapper;
     @Autowired
     private TeammateReMapper teammateReMapper;
-
+    @Autowired
+    private AssetInfoMapper assetInfoMapper;
     @Autowired
     private IOUInfoMapper iouInfoMapper;
     @Autowired
@@ -141,6 +152,99 @@ public class OperTypeServiceImpl implements OperTypeService {
     @Override
     public List<OperType> getAll(OperType operType) {
         return operTypeMapper.getAll(operType);
+    }
+
+    @Override
+    public List<OperType> getInitBuisnesOperTypeList(Integer objectType, Integer objectId, Integer flowType) {
+        List<Integer> dis = new ArrayList<>();//处置方式中的操作
+        if (objectType == ObjectTypeEnum.LENDER.getValue().intValue()) {//解析借款人的处置方式
+            LenderInfo info = lenderInfoMapper.get(objectId);
+            if (info != null) {
+                //[{"disMethod":"1","disQuota":1,"disVal":"100"}] 借款人的json格式
+                if (info.getDisposeMode() != null && !info.getDisposeMode().equals("")) {
+                    getValueByJson(dis, info.getDisposeMode(), "disMethod");
+                } else {
+                    //借款人的操作没有，准备查询资产包的
+                    if (info.getAssetId() != null) {
+                        objectType = ObjectTypeEnum.ASSETPACKAGE.getValue().intValue();
+                        objectId = info.getAssetId();
+                    }
+                }
+            }
+        }
+        if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue().intValue()) {//解析资产包的处置方式
+            AssetInfo info = assetInfoMapper.get(objectId);
+            if (info != null) {
+                //[{"dealWay":"1","payWay":"1","payValue":"11"}] 资产包的json格式
+                getValueByJson(dis, info.getDisposeMode(), "dealWay");
+            }
+        }
+        Object[] nav = getNav(dis, flowType);
+        List<OperType> operTypes = OperTypeUtile.getOperTypeList(nav, flowType);
+        return operTypes;
+    }
+
+    /**
+     * 获取对应的权限数组
+     *
+     * @param dis
+     * @param flowType
+     * @return
+     */
+    private Object[] getNav(List<Integer> dis, Integer flowType) {
+        List<Integer> iouNavs = new ArrayList<>();
+        List<Integer> pawnNavs = new ArrayList<>();
+        if (dis.contains(LenderEnum.STATUS_COLLECTION.getValue())) {//维持常规催收
+            iouNavs.add(IouEnum.MAINTAIN_REGULAR.getValue());
+            pawnNavs.add(PawnEnum.MAINTAIN_REGULAR.getValue());
+        }
+        if (dis.contains(LenderEnum.STATUS_JUDICIARY.getValue())) {//司法化解
+            iouNavs.add(IouEnum.EXECUTE_JUSTICE_RESOLVE.getValue());
+            pawnNavs.add(PawnEnum.EXECUTE_JUSTICE_RESOLVE.getValue());
+        }
+        if (dis.contains(LenderEnum.STATUS_BAZAAR.getValue())) {//市场处置
+            iouNavs.add(IouEnum.MARKET_DISPOSITION.getValue());
+            pawnNavs.add(PawnEnum.MARKET_DISPOSITION.getValue());
+        }
+        if (dis.contains(LenderEnum.STATUS_COLLECTION.getValue()) && dis.contains(LenderEnum.STATUS_JUDICIARY.getValue())) {//催收/司法化解同时进行
+            iouNavs.add(IouEnum.CJ_SIMULTANEOUS.getValue());
+            pawnNavs.add(PawnEnum.CJ_SIMULTANEOUS.getValue());
+        }
+        if (dis.contains(LenderEnum.STATUS_COLLECTION.getValue()) && dis.contains(LenderEnum.STATUS_BAZAAR.getValue())) {//催收/市场同时进行
+            iouNavs.add(IouEnum.CM_SIMULTANEOUS.getValue());
+            pawnNavs.add(PawnEnum.CM_SIMULTANEOUS.getValue());
+        }
+        if (dis.contains(LenderEnum.STATUS_COLLECTION.getValue()) && dis.contains(LenderEnum.STATUS_JUDICIARY.getValue()) && dis.contains(LenderEnum.STATUS_BAZAAR.getValue())) {//催收、市场、司法同时进行
+            iouNavs.add(IouEnum.CMJ_SIMULTANEOUS.getValue());
+            pawnNavs.add(PawnEnum.CMJ_SIMULTANEOUS.getValue());
+        }
+        if (flowType != null) {
+            if (flowType == ObjectTypeEnum.IOU.getValue().intValue()) {
+                return iouNavs.toArray();
+            } else if (flowType == ObjectTypeEnum.PAWN.getValue().intValue()) {
+                return pawnNavs.toArray();
+            }
+        }
+        return new Object[]{};
+    }
+
+    /**
+     * 解析处置方式的json
+     *
+     * @param dis
+     * @param json
+     * @param key
+     */
+    private void getValueByJson(List<Integer> dis, String json, String key) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            List<Map> modes = objectMapper.readValue(json, List.class);
+            for (Map m : modes) {
+                dis.add(MessageUtils.transMapToInt(m, key));
+            }
+        } catch (IOException e) {
+            return;
+        }
     }
 
 

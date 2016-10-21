@@ -161,7 +161,7 @@ public class CaseApidoc {
      * @apiGroup case
      * @apiParam {number} id 案件ID
      * @apiSuccess {SelectDTO} data key为案件ID，value为借据名称
-     * @apiUse SelectDTO
+//     * @apiUse SelectDTO
      */
 
 

@@ -6,6 +6,7 @@ import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.core.model.JsonResponse;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yvan on 16/6/29.
@@ -109,4 +110,12 @@ public interface UserService {
      * @return
      */
     TCompanyInfo getCompanyByUserId(Integer id);
+
+    /**
+     * 留言操作
+     * @param userId
+     * @param content
+     * @return
+     */
+    Map leaveWord(Integer userId, String content);
 }

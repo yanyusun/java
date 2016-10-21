@@ -26,6 +26,7 @@ public class UserInterceptor extends AuthenticationInterceptor {
     public static final String API_SEND_MSG = "sendMsg";
     public static final String API_SET_PWD_BATCH = "setPwdBatch";
     public static final String API_SET_PWD = "setPwd";
+    public static final String API_LEAVE_WORD = "leaveWord";
 
 
     @Override
@@ -62,6 +63,8 @@ public class UserInterceptor extends AuthenticationInterceptor {
         }else if(API_SET_PWD.equals(path)){
             return true;
         }else if(API_SET_PWD_BATCH.equals(path)){
+            return true;
+        }else if(API_LEAVE_WORD.equals(path)){
             return true;
         }else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:"+url);
