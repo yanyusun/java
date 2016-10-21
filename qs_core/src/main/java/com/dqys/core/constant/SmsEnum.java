@@ -30,7 +30,8 @@ public enum SmsEnum {
     RESPOND_INVITE_RESULT_NO(130, "被邀请公司拒绝,通知请求公司短信"),
     FlOW_OPER(131, "流转通知"),
     BUSINESS_INVALID(132, "平台业务无效"),
-    ADD_FLOW_COMPANY(133, "添加流转公司");
+    ADD_FLOW_COMPANY(133, "添加流转公司"),
+    LEAVE_WORD(134, "留言操作");;
 
     private Integer value;
     private String name;

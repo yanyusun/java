@@ -15,6 +15,10 @@
     <result column="create_at" jdbcType="TIMESTAMP" property="createAt" />
     <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
     <result column="stateflag" jdbcType="BIGINT" property="stateflag" />
+    <result column="obj_no" jdbcType="VARCHAR" property="objectNo" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="oper_name" jdbcType="VARCHAR" property="operName" />
+    <result column="object_name" jdbcType="VARCHAR" property="objectName" />
   </resultMap>
   <sql id="Base_Column_List">
     id, object_type, object_id, oper_type, remark, user_id, text, team_id, business_id,
@@ -175,4 +179,250 @@
       limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
     </if>
   </select>
+
+  <select id="queryCount" parameterType="com.dqys.business.orm.query.businessLog.BusinessLogQuery"  resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM t_business_log WHERE 1=1
+    <if test="objectType != null" >
+      AND object_type = #{objectType,jdbcType=INTEGER}
+    </if>
+    <if test="objectId != null" >
+      AND object_id = #{objectId,jdbcType=INTEGER}
+    </if>
+    <if test="operType != null" >
+      AND oper_type = #{operType,jdbcType=INTEGER}
+    </if>
+    <if test="userId != null" >
+      AND user_id = #{userId,jdbcType=INTEGER}
+    </if>
+    <if test="text != null" >
+      AND text = #{text,jdbcType=VARCHAR}
+    </if>
+    <if test="teamId != null" >
+      AND team_id = #{teamId,jdbcType=INTEGER}
+    </if>
+    <if test="businessId != null" >
+      AND business_id = #{businessId,jdbcType=INTEGER}
+    </if>
+
+  </select>
+
+
+  <sql id="listAll_query_condition">
+    <if test="objectId != null" >
+      AND b.object_id = #{objectId,jdbcType=INTEGER}
+    </if>
+    <if test="operType != null" >
+      AND b.oper_type = #{operType,jdbcType=INTEGER}
+    </if>
+    <if test="userId != null" >
+      AND b.user_id = #{userId,jdbcType=INTEGER}
+    </if>
+    <if test="text != null" >
+      AND b.text = #{text,jdbcType=VARCHAR}
+    </if>
+    <if test="teamId != null" >
+      AND b.team_id = #{teamId,jdbcType=INTEGER}
+    </if>
+    <if test="businessId != null" >
+      AND b.business_id = #{businessId,jdbcType=INTEGER}
+    </if>
+    <if test="beginDate != null">
+       AND b.create_at &gt; #{beginDate,jdbcType=DATE}
+    </if>
+    <if test="endDate != null">
+      AND b.create_at &lt;  #{endDate,jdbcType=DATE}
+    </if>
+
+  </sql>
+
+  <sql id="listAll_searchText_condition">
+    <if test="searchText != null">
+      WHERE  user_name LIKE CONCAT('%',#{searchText},'%' ) or text LIKE CONCAT('%',#{searchText},'%' )
+    </if>
+
+  </sql>
+
+
+
+  <select id="listAll" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.query.businessLog.BusinessLogQuery" >
+    select * from (
+      select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.iou_no  obj_no ,b.remark ,b.id,b.create_at
+      from t_business_log b , bt_iou  bt, oper_type o, t_user_info u, object_type obj
+      where b. object_type =13  and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id=bt.id and obj.object_type =b.object_type
+      <include refid="listAll_query_condition" />
+      UNION ALL
+      select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.lender_no obj_no ,b.remark ,b.id ,b.create_at
+      from t_business_log b , bt_lender bt, oper_type o, t_user_info u, object_type obj
+      where b. object_type =11 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+      <include refid="listAll_query_condition" />
+      UNION ALL
+      select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.asset_no  obj_no ,b.remark ,b.id ,b.create_at
+      from t_business_log b , bt_asset  bt, oper_type o, t_user_info u, object_type obj
+      where b. object_type =10 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+    <include refid="listAll_query_condition" />
+      UNION ALL
+      select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text ,  bt.pawn_no  obj_no ,b.remark ,b.id ,b.create_at
+      from t_business_log b , bt_pawn bt, oper_type o, t_user_info u, object_type obj
+      where b. object_type =12 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+    <include refid="listAll_query_condition" />
+      UNION ALL
+      select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.case_no obj_no ,b.remark ,b.id ,b.create_at
+      from t_business_log b , bt_case bt, oper_type o, t_user_info u, object_type obj
+      where b. object_type =15 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+    <include refid="listAll_query_condition" />
+      UNION ALL
+      select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text ,  bt.house_no  obj_no ,b.remark ,b.id ,b.create_at
+      from t_business_log b , t_zcy_estates bt, oper_type o, t_user_info u, object_type obj
+      where b. object_type =16 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+    <include refid="listAll_query_condition" />
+    )  as total
+    <include refid="listAll_searchText_condition" />
+    ORDER BY create_at DESC
+    <if test="isPaging">
+      limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <select id="listAllByObjectType" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.query.businessLog.BusinessLogQuery" >
+    <if test="objectType == 13" >
+      select * from (
+      select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.iou_no  obj_no ,b.remark ,b.id,b.create_at
+      from t_business_log b , bt_iou  bt, oper_type o, t_user_info u, object_type obj
+      where b. object_type =13  and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id=bt.id and obj.object_type =b.object_type
+      <include refid="listAll_query_condition" />
+      )  as total
+      <include refid="listAll_searchText_condition" />
+    </if>
+    <if test="objectType == 11" >
+      select * from (
+      select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.lender_no obj_no ,b.remark ,b.id ,b.create_at
+      from t_business_log b , bt_lender bt, oper_type o, t_user_info u, object_type obj
+      where b. object_type =11 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+      <include refid="listAll_query_condition" />
+      )  as total
+      <include refid="listAll_searchText_condition" />
+    </if>
+    <if test="objectType == 10" >
+      select * from (
+      select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.asset_no  obj_no ,b.remark ,b.id ,b.create_at
+      from t_business_log b , bt_asset  bt, oper_type o, t_user_info u, object_type obj
+      where b. object_type =10 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+      <include refid="listAll_query_condition" />
+      )  as total
+      <include refid="listAll_searchText_condition" />
+    </if>
+    <if test="objectType == 12" >
+      select * from (
+      select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text ,  bt.pawn_no  obj_no ,b.remark ,b.id ,b.create_at
+      from t_business_log b , bt_pawn bt, oper_type o, t_user_info u, object_type obj
+      where b. object_type =12 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+      <include refid="listAll_query_condition" />
+      )  as total
+      <include refid="listAll_searchText_condition" />
+    </if>
+    <if test="objectType == 15" >
+      select * from (
+      select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.case_no obj_no ,b.remark ,b.id ,b.create_at
+      from t_business_log b , bt_case bt, oper_type o, t_user_info u, object_type obj
+      where b. object_type =15 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+      <include refid="listAll_query_condition" />
+      )  as total
+      <include refid="listAll_searchText_condition" />
+    </if>
+    <if test="objectType == 16" >
+      select * from (
+      select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text ,  bt.house_no  obj_no ,b.remark ,b.id ,b.create_at
+      from t_business_log b , t_zcy_estates bt, oper_type o, t_user_info u, object_type obj
+      where b. object_type =16 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+      <include refid="listAll_query_condition" />
+      )  as total
+      <include refid="listAll_searchText_condition" />
+    </if>
+    ORDER BY create_at DESC
+    <if test="isPaging">
+      limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <select id="allQueryCount" parameterType="com.dqys.business.orm.query.businessLog.BusinessLogQuery"  resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM (
+    select * from(
+    select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.iou_no  obj_no ,b.remark ,b.id,b.create_at
+    from t_business_log b , bt_iou  bt, oper_type o, t_user_info u, object_type obj
+    where b. object_type =13  and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id=bt.id and obj.object_type =b.object_type
+    <include refid="listAll_query_condition" />
+    UNION ALL
+    select b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.lender_no obj_no ,b.remark ,b.id ,b.create_at
+    from t_business_log b , bt_lender bt, oper_type o, t_user_info u, object_type obj
+    where b. object_type =11 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+    <include refid="listAll_query_condition" />
+    UNION ALL
+    select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.asset_no  obj_no ,b.remark ,b.id ,b.create_at
+    from t_business_log b , bt_asset  bt, oper_type o, t_user_info u, object_type obj
+    where b. object_type =10 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+    <include refid="listAll_query_condition" />
+    UNION ALL
+    select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text ,  bt.pawn_no  obj_no ,b.remark ,b.id ,b.create_at
+    from t_business_log b , bt_pawn bt, oper_type o, t_user_info u, object_type obj
+    where b. object_type =12 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+    <include refid="listAll_query_condition" />
+    UNION ALL
+    select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.case_no obj_no ,b.remark ,b.id ,b.create_at
+    from t_business_log b , bt_case bt, oper_type o, t_user_info u, object_type obj
+    where b. object_type =15 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+    <include refid="listAll_query_condition" />
+    UNION ALL
+    select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text ,  bt.house_no  obj_no ,b.remark ,b.id ,b.create_at
+    from t_business_log b , t_zcy_estates bt, oper_type o, t_user_info u, object_type obj
+    where b. object_type =16 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+    <include refid="listAll_query_condition" />
+    ) as total <include refid="listAll_searchText_condition" />
+    ) as total
+
+  </select>
+
+  <select id="allByObjectQueryCount" parameterType="com.dqys.business.orm.query.businessLog.BusinessLogQuery"  resultType="java.lang.Integer">
+    SELECT COUNT(*) FROM (
+      select * FROM (
+      <if test="objectType == 13" >
+        select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.iou_no  obj_no ,b.remark ,b.id,b.create_at
+        from t_business_log b , bt_iou  bt, oper_type o, t_user_info u, object_type obj
+        where b. object_type =13  and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id=bt.id and obj.object_type =b.object_type
+        <include refid="listAll_query_condition" />
+      </if>
+      <if test="objectType == 11" >
+        select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.lender_no obj_no ,b.remark ,b.id ,b.create_at
+        from t_business_log b , bt_lender bt, oper_type o, t_user_info u, object_type obj
+        where b. object_type =11 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+        <include refid="listAll_query_condition" />
+      </if>
+      <if test="objectType == 10" >
+        select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.asset_no  obj_no ,b.remark ,b.id ,b.create_at
+        from t_business_log b , bt_asset  bt, oper_type o, t_user_info u, object_type obj
+        where b. object_type =10 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+        <include refid="listAll_query_condition" />
+      </if>
+      <if test="objectType == 12" >
+        select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text ,  bt.pawn_no  obj_no ,b.remark ,b.id ,b.create_at
+        from t_business_log b , bt_pawn bt, oper_type o, t_user_info u, object_type obj
+        where b. object_type =12 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+        <include refid="listAll_query_condition" />
+      </if>
+      <if test="objectType == 15" >
+        select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text , bt.case_no obj_no ,b.remark ,b.id ,b.create_at
+        from t_business_log b , bt_case bt, oper_type o, t_user_info u, object_type obj
+        where b. object_type =15 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+        <include refid="listAll_query_condition" />
+      </if>
+      <if test="objectType == 16" >
+        select  b.object_type ,o.oper_name ,u.user_name , obj.object_name ,b.text ,  bt.house_no  obj_no ,b.remark ,b.id ,b.create_at
+        from t_business_log b , t_zcy_estates bt, oper_type o, t_user_info u, object_type obj
+        where b. object_type =16 and o.oper_type =b.oper_type  and b.user_id =u.id  and b.object_id =bt.id and obj.object_type =b.object_type
+        <include refid="listAll_query_condition" />
+      </if>
+    )as total  <include refid="listAll_searchText_condition" />
+    )as total
+  </select>
+
+
 </mapper>

@@ -33,6 +33,11 @@ public class OperTypeUtile implements ApplicationContextAware {
         //opertype();
     }
 
+    public static List<OperType> getInitBuisnesOperTypeList(Integer objectType, Integer objectId, Integer flowType) {
+        List<OperType> list = operTypeService.getInitBuisnesOperTypeList(objectType, objectId, flowType);
+        return list;
+    }
+
     public void opertype() {
         List<OperType> list = operTypeService.getAll(null);
         redisTemplate.opsForValue().set("operTypeList", list);//获取全部的operType
@@ -95,13 +100,13 @@ public class OperTypeUtile implements ApplicationContextAware {
     private static Integer[] nav12 = {102, 1110, 1112, 1615, 1310, 1213};//待处置
     private static Integer[] nav13 = {102, 1110, 1615, 1310, 1213};//待分配
     private static Integer[] nav14 = {102, 1110, 1615, 1310, 1213};//48H 新
-    private static Integer[] nav15 = {102, 1110, 1615, 1310, 1213, 100, 101, 103, 104, 105, 106, 107, 108, 109, 110,
-            111, 112, 113, 114, 115, 116, 117, 118, 119, 1111, 1115, 1116, 1117, 1118,
+    private static Integer[] nav15 = {102, 1110, 1615, 1310, 1213, 100, 101, 103, 104, 105, 106, 107, 110,
+            111, 112, 113, 114, 115, 116, 117, 118, 119, 1111, 1115, 1116,
             161, 162, 163, 164, 165, 166, 167, 168, 169, 169, 1610, 1611, 1612, 1613, 1614,
             130, 131, 132, 133, 134, 135, 136, 137, 138, 1310, 1311, 1312,
             120, 121, 122, 123, 124, 125, 126, 127, 129, 1210, 1211, 1214, 1215, 1216, 1217, 1218, 1220};//我的任务
-    private static Integer[] nav16 = {102, 1110, 1615, 1310, 1213, 100, 101, 103, 104, 105, 106, 107, 108, 109, 110,
-            111, 112, 113, 114, 115, 116, 117, 118, 119, 1111, 1115, 1116, 1117, 1118,
+    private static Integer[] nav16 = {102, 1110, 1615, 1310, 1213, 100, 101, 103, 104, 105, 106, 107, 110,
+            111, 112, 113, 114, 115, 116, 117, 118, 119, 1111, 1115, 1116,
             161, 162, 163, 164, 165, 166, 167, 168, 169, 169, 1610, 1611, 1612, 1613, 1614,
             130, 131, 132, 133, 134, 135, 136, 137, 138, 1310, 1311, 1312,
             120, 121, 122, 123, 124, 125, 126, 127, 129, 1210, 1211, 1214, 1215, 1216, 1217, 1218, 1220};//处置中
@@ -185,12 +190,12 @@ public class OperTypeUtile implements ApplicationContextAware {
         return null;
     }
 
-    private static List<OperType> getOperTypeList(Integer[] navs, Integer objectType) {
+    public static List<OperType> getOperTypeList(Object[] navs, Integer objectType) {
         List<OperType> list = new ArrayList<>();
         if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
             for (AssetPackageEnum e : AssetPackageEnum.values()) {
                 OperType operType = new OperType();
-                for (Integer n : navs) {
+                for (Object n : navs) {
                     //遍历是否拥有权限，有权限的就加入
                     if (e.getValue().equals(n)) {
                         operType.setOperType(e.getValue());
@@ -204,7 +209,7 @@ public class OperTypeUtile implements ApplicationContextAware {
         if (objectType == ObjectTypeEnum.LENDER.getValue()) {
             for (LenderEnum e : LenderEnum.values()) {
                 OperType operType = new OperType();
-                for (Integer n : navs) {
+                for (Object n : navs) {
                     //遍历是否拥有权限，有权限的就加入
                     if (e.getValue().equals(n)) {
                         operType.setOperType(e.getValue());
@@ -218,7 +223,7 @@ public class OperTypeUtile implements ApplicationContextAware {
         if (objectType == ObjectTypeEnum.ASSETSOURCE.getValue()) {
             for (AssetSourceEnum e : AssetSourceEnum.values()) {
                 OperType operType = new OperType();
-                for (Integer n : navs) {
+                for (Object n : navs) {
                     //遍历是否拥有权限，有权限的就加入
                     if (e.getValue().equals(n)) {
                         operType.setOperType(e.getValue());
@@ -232,7 +237,7 @@ public class OperTypeUtile implements ApplicationContextAware {
         if (objectType == ObjectTypeEnum.PAWN.getValue()) {
             for (PawnEnum e : PawnEnum.values()) {
                 OperType operType = new OperType();
-                for (Integer n : navs) {
+                for (Object n : navs) {
                     //遍历是否拥有权限，有权限的就加入
                     if (e.getValue().equals(n)) {
                         operType.setOperType(e.getValue());
@@ -246,7 +251,7 @@ public class OperTypeUtile implements ApplicationContextAware {
         if (objectType == ObjectTypeEnum.IOU.getValue()) {
             for (IouEnum e : IouEnum.values()) {
                 OperType operType = new OperType();
-                for (Integer n : navs) {
+                for (Object n : navs) {
                     //遍历是否拥有权限，有权限的就加入
                     if (e.getValue().equals(n)) {
                         operType.setOperType(e.getValue());
@@ -260,7 +265,7 @@ public class OperTypeUtile implements ApplicationContextAware {
         if (objectType == ObjectTypeEnum.CASE.getValue()) {
             for (CaseEnum e : CaseEnum.values()) {
                 OperType operType = new OperType();
-                for (Integer n : navs) {
+                for (Object n : navs) {
                     //遍历是否拥有权限，有权限的就加入
                     if (e.getValue().equals(n)) {
                         operType.setOperType(e.getValue());

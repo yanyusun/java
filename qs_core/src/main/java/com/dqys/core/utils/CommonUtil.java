@@ -5,6 +5,7 @@ import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.TSysProperty;
 import com.dqys.core.model.UserSession;
+import org.aspectj.bridge.MessageUtil;
 
 import java.util.*;
 
@@ -88,10 +89,10 @@ public class CommonUtil {
      * @return
      */
     public static List<String> initLevel(Integer num) {
-        if(null != num){
+        if (null != num) {
             List<String> result = new ArrayList<>();
-            if(num > 0){
-                for (int i = 0; i < num % 26; i++){
+            if (num > 0) {
+                for (int i = 0; i < num % 26; i++) {
                     result.add(UPLETTER[i]);
                 }
             }
@@ -111,7 +112,7 @@ public class CommonUtil {
             return false;
         }
         for (Double num : numArr) {
-            if(num/10/10 > 999999999){ // 少于百亿
+            if (num / 10 / 10 > 999999999) { // 少于百亿
                 return false;
             }
             Double number = num * 1000;
@@ -308,7 +309,7 @@ public class CommonUtil {
         property = SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE, KeyEnum.ROLE_ADMINISTRATOR_KEY);
         String reg1 = property.getPropertyValue();
 
-        if(roleStr.equals(reg1 + ",") && typeStr.equals(reg + ",")){
+        if (roleStr.equals(reg1 + ",") && typeStr.equals(reg + ",")) {
             return true;
         }
         return false;
@@ -316,10 +317,11 @@ public class CommonUtil {
 
     /**
      * 判断用户类型是否为处置方
+     *
      * @param type
      * @return
      */
-    public static boolean isDispose(String type){
+    public static boolean isDispose(String type) {
         TSysProperty property = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY);
         String reg = property.getPropertyValue();
         TSysProperty property1 = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW);
@@ -327,7 +329,7 @@ public class CommonUtil {
         TSysProperty property2 = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE);
         String reg2 = property2.getPropertyValue();
 
-        if(type.equals(reg) || type.equals(reg1) || type.equals(reg2)){
+        if (type.equals(reg) || type.equals(reg1) || type.equals(reg2)) {
             return true;
         }
         return false;
@@ -396,5 +398,14 @@ public class CommonUtil {
 //        System.out.println(createCNANumber(305));
 //        System.out.println(createCNANumber("00234"));
 //    }
+
+    public static JsonResponse jsonResponse(Map map) {
+        if ("yes".equals(map.get("result"))) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure(map.get("msg") != null ? "" : map.get("msg").toString());
+        }
+    }
+
 
 }

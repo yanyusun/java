@@ -81,11 +81,11 @@ public class UserApidoc {
      */
 
     /**
-     * @param id
-     * @return
      * @api {get} http://{url}/api/user/delete 删除用户信息
      * @apiName delete
      * @apiGroup User
+     * @apiParam {number} id 用户ID
+     * @apiUse UserDTO
      */
 
     /**
@@ -126,12 +126,19 @@ public class UserApidoc {
      */
 
     /**
-     * @return
      * @api {POST} http://{url}/api/user/setPwd 重置密码
      * @apiName setPwd
      * @apiGroup User
      * @apiParam {number} id 被操作用户
      * @apiParam {string} pwd 新密码
+     */
+
+    /**
+     * @api {POST} http://{url}/api/user/leaveWord 用户留言信息
+     * @apiName leaveWord
+     * @apiGroup User
+     * @apiParam {number} userId 被留言用户
+     * @apiParam {string} content 留言内容
      */
 
 }

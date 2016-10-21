@@ -5,6 +5,7 @@ import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.business.service.service.CompanyService;
 import com.dqys.business.service.service.UserService;
+import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
@@ -69,6 +70,7 @@ public class UserController {
 
     /**
      * 获取公司(没用，先预留)
+     *
      * @return
      */
     @RequestMapping(value = "/listUser")
@@ -83,6 +85,7 @@ public class UserController {
 
     /**
      * 获取初始化列表
+     *
      * @return
      */
     @RequestMapping(value = "/getInit")
@@ -102,6 +105,7 @@ public class UserController {
 
     /**
      * 用户列表
+     *
      * @param userListQuery
      * @return
      */
@@ -113,6 +117,7 @@ public class UserController {
 
     /**
      * 增加用户
+     *
      * @param userInsertDTO
      * @return
      */
@@ -132,6 +137,7 @@ public class UserController {
 
     /**
      * 查看用户信息
+     *
      * @param id
      * @return
      */
@@ -146,6 +152,7 @@ public class UserController {
 
     /**
      * 修改用户信息
+     *
      * @param userInsertDTO
      * @return
      */
@@ -165,6 +172,7 @@ public class UserController {
 
     /**
      * 删除用户信息
+     *
      * @param id
      * @return
      */
@@ -180,6 +188,7 @@ public class UserController {
 
     /**
      * 批量分配<暂时不处理>
+     *
      * @param ids
      * @param id
      * @return
@@ -196,6 +205,7 @@ public class UserController {
 
     /**
      * 批量设置状态
+     *
      * @param ids
      * @param status
      * @return
@@ -212,6 +222,7 @@ public class UserController {
 
     /**
      * 成员信息excel导入
+     *
      * @param file
      * @return
      * @throws Exception
@@ -228,6 +239,7 @@ public class UserController {
 
     /**
      * 消息提醒(暂时废除)
+     *
      * @param ids
      * @return
      */
@@ -247,6 +259,7 @@ public class UserController {
 
     /**
      * 批量重置密码
+     *
      * @param ids
      * @return
      */
@@ -266,6 +279,7 @@ public class UserController {
 
     /**
      * 重置密码
+     *
      * @param id
      * @param pwd
      * @return
@@ -280,6 +294,20 @@ public class UserController {
             return JsonResponseTool.paramErr("密码最少6位数");
         }
         return userService.setPwd(id, pwd);
+    }
+
+    /**
+     * 用户留言
+     *
+     * @param userId
+     * @param content
+     * @return
+     */
+    @RequestMapping("/leaveWord")
+    @ResponseBody
+    public JsonResponse leaveWord(@RequestParam Integer userId, @RequestParam String content) {
+        Map map = userService.leaveWord(userId, content);
+        return CommonUtil.jsonResponse(map);
     }
 
 }
