@@ -11,7 +11,9 @@ import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.operType.OperTypeMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
+import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
@@ -157,6 +159,20 @@ public class OperTypeServiceImpl implements OperTypeService {
     @Override
     public List<OperType> getInitBuisnesOperTypeList(Integer objectType, Integer objectId, Integer flowType) {
         List<Integer> dis = new ArrayList<>();//处置方式中的操作
+        if (objectType == ObjectTypeEnum.PAWN.getValue().intValue()) {
+            PawnInfo info = pawnInfoMapper.get(objectId);
+            if (info != null) {
+                objectId = info.getLenderId();
+                objectType = ObjectTypeEnum.LENDER.getValue().intValue();
+            }
+        }
+        if (objectType == ObjectTypeEnum.IOU.getValue().intValue()) {
+            IOUInfo info = iouInfoMapper.get(objectId);
+            if (info != null) {
+                objectId = info.getLenderId();
+                objectType = ObjectTypeEnum.LENDER.getValue().intValue();
+            }
+        }
         if (objectType == ObjectTypeEnum.LENDER.getValue().intValue()) {//解析借款人的处置方式
             LenderInfo info = lenderInfoMapper.get(objectId);
             if (info != null) {
@@ -180,7 +196,12 @@ public class OperTypeServiceImpl implements OperTypeService {
             }
         }
         Object[] nav = getNav(dis, flowType);
-        List<OperType> operTypes = OperTypeUtile.getOperTypeList(nav, flowType);
+        List<OperType> operTypes = null;
+        if (flowType == null) {
+            operTypes = OperTypeUtile.getOperTypeList(nav, ObjectTypeEnum.IOU.getValue(), ObjectTypeEnum.PAWN.getValue());
+        } else {
+            operTypes = OperTypeUtile.getOperTypeList(nav, flowType);
+        }
         return operTypes;
     }
 
@@ -224,6 +245,11 @@ public class OperTypeServiceImpl implements OperTypeService {
             } else if (flowType == ObjectTypeEnum.PAWN.getValue().intValue()) {
                 return pawnNavs.toArray();
             }
+        } else {
+            List<Integer> sumNavs = new ArrayList<>();
+            sumNavs.addAll(pawnNavs);
+            sumNavs.addAll(iouNavs);
+            return sumNavs.toArray();
         }
         return new Object[]{};
     }
