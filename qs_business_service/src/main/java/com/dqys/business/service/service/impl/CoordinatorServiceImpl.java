@@ -43,6 +43,7 @@ import com.dqys.business.service.dto.company.DistributionDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.business.service.utils.operType.OperTypeUtile;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.model.UserSession;
@@ -103,6 +104,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType, Integer userid) {
+        OperTypeUtile.getInitBuisnesOperTypeList(objectType, objectId, ObjectTypeEnum.IOU.getValue());
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         if (companyId == null) {
             TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(userId);

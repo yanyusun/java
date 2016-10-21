@@ -72,8 +72,17 @@ public interface OperTypeService {
 
     /**
      * 查询全部操作权限
+     *
      * @return
      */
     public List<OperType> getAll(OperType operType);
 
+    /**
+     * 根据用户所录入的处置方式，组合成操作权限
+     *
+     * @param objectType
+     * @param objectId
+     * @return
+     */
+    List<OperType> getInitBuisnesOperTypeList(Integer objectType, Integer objectId, Integer flowType);
 }

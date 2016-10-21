@@ -77,13 +77,13 @@ public class RepayServiceImpl implements RepayService {
 
     @Override
     public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
-        try {
-            if (!FileTool.saveFileSync(file)) {
-                throw new UnexpectedRollbackException("保存附件失败");
-            }
-        } catch (IOException e) {
-            throw new UnexpectedRollbackException("保存附件异常");
-        }
+//        try {
+//            if (!FileTool.saveFileSync(file)) {
+//                throw new UnexpectedRollbackException("保存附件失败");
+//            }
+//        } catch (IOException e) {
+//            throw new UnexpectedRollbackException("保存附件异常");
+//        }
         if (objectType == RepayEnum.OBJECT_IOU.getValue().intValue()) {
             businessLogService.add(objectId, ObjectTypeEnum.IOU.getValue(), IouEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
         } else if (objectType == RepayEnum.OBJECT_PAWN.getValue().intValue()) {
@@ -94,6 +94,11 @@ public class RepayServiceImpl implements RepayService {
         Map map = new HashMap<>();
         List<IOUInfo> ious = new ArrayList<>();
         ious = getIouInfos(objectId, objectType, ious);//根据对象类型获取所有借据
+        if (ious == null || ious.size() == 0) {
+            map.put("result", "no");
+            map.put("msg", "查询不到对应的借据进行还款操作");
+            return map;
+        }
         //分别计算利息和本金的总金额
         BigDecimal principalTotal = BigDecimal.ZERO;//本金总和
         BigDecimal accrualTotal = BigDecimal.ZERO;//利息总和
@@ -295,7 +300,12 @@ public class RepayServiceImpl implements RepayService {
                 ious.add(iou);
             }
         } else if (objectType == RepayEnum.OBJECT_PAWN.getValue().intValue()) {//抵押物
-            ious = iouInfoMapper.selectIouInfoByPawnId(objectId);
+            List<IOUInfo> list = iouInfoMapper.selectIouInfoByPawnId(objectId);
+            for (IOUInfo info : list) {
+                if (info != null) {
+                    ious.add(info);
+                }
+            }
         } else if (objectType == RepayEnum.OBJECT_UNLIMITED.getValue().intValue()) {
             //不限对象（objectId需要借款人id）
             Map map = new HashMap<>();
@@ -312,7 +322,12 @@ public class RepayServiceImpl implements RepayService {
                 }
             }
             if (iouIds.size() > 0) {
-                ious = iouInfoMapper.selectIouInfoByObjectIds(iouIds);//所有借据
+                List<IOUInfo> list = iouInfoMapper.selectIouInfoByObjectIds(iouIds);//所有借据
+                for (IOUInfo info : list) {
+                    if (info != null) {
+                        ious.add(info);
+                    }
+                }
             }
         } else if (objectType == RepayEnum.OBJECT_CASE.getValue().intValue()) {
             //根据案件id相关联借据还款

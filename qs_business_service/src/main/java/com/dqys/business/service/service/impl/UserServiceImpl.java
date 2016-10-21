@@ -15,19 +15,21 @@ import com.dqys.business.orm.mapper.company.OrganizationMapper;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.pojo.company.Organization;
 import com.dqys.business.orm.query.company.OrganizationQuery;
+import com.dqys.business.service.constant.MessageEnum;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
 import com.dqys.business.service.dto.excel.ExcelMessage;
 import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;
 import com.dqys.business.service.query.user.UserListQuery;
+import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.service.UserService;
 import com.dqys.business.service.utils.excel.UserExcelUtil;
+import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.base.SysProperty;
-import com.dqys.core.constant.KeyEnum;
-import com.dqys.core.constant.ResponseCodeEnum;
-import com.dqys.core.constant.SysPropertyTypeEnum;
+import com.dqys.core.constant.*;
 import com.dqys.core.mapper.facade.TAreaMapper;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.TArea;
@@ -39,6 +41,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.UnexpectedRollbackException;
 
+import javax.mail.Session;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +67,9 @@ public class UserServiceImpl implements UserService {
     private OrganizationMapper organizationMapper;
     @Autowired
     private CoordinatorMapper coordinatorMapper;
+    @Autowired
+    private MessageService messageService;
+
 
     public static final String INIT_PASSSWORD = "123456";
 
@@ -219,6 +225,25 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         return tCompanyInfoMapper.selectByPrimaryKey(userInfo.getCompanyId());
+    }
+
+    @Override
+    public Map leaveWord(Integer userId, String content) {
+        Integer uid = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        Map map = new HashMap<>();
+        map.put("result", "no");
+        Map userC = coordinatorMapper.getUserAndCompanyByUserId(userId);
+        Map operC = coordinatorMapper.getUserAndCompanyByUserId(uid);
+        SmsUtil smsUtil = new SmsUtil();
+        Integer result = messageService.add(MessageUtils.transMapToString(operC, "realName") + "给您的留言信息", content, uid, userId, "", MessageEnum.SERVE.getValue(), null, "");
+        if (result > 0) {
+            smsUtil.sendSms(SmsEnum.LEAVE_WORD.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
+                    MessageUtils.transMapToString(operC, "companyName"), RoleTypeEnum.get(MessageUtils.transMapToInt(operC, "rold")), MessageUtils.transMapToString(operC, "realName"));
+            map.put("result", "yes");
+        } else {
+            map.put("msg", "请稍后再试");
+        }
+        return map;
     }
 
     @Override

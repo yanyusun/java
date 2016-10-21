@@ -54,7 +54,7 @@ public class MessageUtils {
         if (map == null) {
             return "";
         }
-        return map.get(key) == null ? "" : map.get(key).toString();
+        return map.get(key) == null ? "" : map.get(key).toString().trim();
     }
 
     public static Integer transStringToInt(Object obj) {
