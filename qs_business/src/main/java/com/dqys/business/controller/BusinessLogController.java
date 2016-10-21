@@ -28,28 +28,60 @@ public class BusinessLogController {
      * @apiGroup businessLog
      * @apiUse BusinessLogQuery
      * @apiSuccessExample {json} Data-Response:
+     * 不分页：
      * {
-        "code": 2000,
-        "msg": "成功",
-        "data": [
-            {
-            "id": 1,
-            "objectType": 1,
-            "objectId": 1,
-            "operType": 1,
-            "remark": "1",
-            "userId": 1,
-            "time": null,
-            "text": "1",
-            "teamId": 1,
-            "businessId": 1,
-            "version": 1,
-            "createAt": "2016-07-16",
-            "updateAt": "2016-07-16",
-            "stateflag": 1
-            }
-           ]
-         }
+    "code": 2000,
+    "msg": "成功",
+    "data": [
+    {
+    "id": 853,
+    "version": null,
+    "stateflag": null,
+    "createAt": "2016-10-21",
+    "updateAt": null,
+    "remark": "",
+    "objectType": 11,
+    "objectId": null,
+    "operType": null,
+    "userId": null,
+    "time": null,
+    "text": "协作删除用户",
+    "teamId": null,
+    "businessId": null,
+    "objectShowName": "借款人操作BO16100922",
+    "userName": "朱明",
+    "objectNo": "BO16100922",
+    "operName": "协作删除用户",
+    "objectName": "借款人操作"
+    }］｝
+     分页：
+    {
+    "code": 2000,
+    "msg": "成功",
+    "data": {
+    "total": 21,
+    "data": [
+    {
+    "id": 853,
+    "version": null,
+    "stateflag": null,
+    "createAt": "2016-10-21",
+    "updateAt": null,
+    "remark": "",
+    "objectType": 11,
+    "objectId": null,
+    "operType": null,
+    "userId": null,
+    "time": null,
+    "text": "协作删除用户",
+    "teamId": null,
+    "businessId": null,
+    "objectShowName": "借款人操作BO16100922",
+    "userName": "朱明",
+    "objectNo": "BO16100922",
+    "operName": "协作删除用户",
+    "objectName": "借款人操作"
+    },.....]}
      *
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)

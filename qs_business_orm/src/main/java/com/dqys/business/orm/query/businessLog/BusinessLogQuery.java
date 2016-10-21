@@ -10,15 +10,18 @@ import java.util.Date;
  *
  * @apiDefine BusinessLogQuery
  * @apiParam {number} [id] id
- * @apiParam {number} [objectType] 对象类型
- * @apiParam {number} [operType] 操作类型
- * @apiParam {number} [userId] 操作人员id
- * @apiParam {number} [teamId] 协作团队
- * @apiParam {number} [businessId] 业务号
- * @apiParam {boolean} [isPaging] 是否分页0分页，1不分页
- * @apiParam {number} [startPageNum] 当前分页
- * @apiParam {number} [pageSize] 分页大小
- * @apiParam {date} [createAt] 创建时间
+ * @apiParam {number} [objectType] objectType　对象类型
+ * @apiParam {number} [operType]　operType 操作类型
+ * @apiParam {number} [userId] userId　操作人员id
+ * @apiParam {number} [teamId] teamId　协作团队
+ * @apiParam {number} [businessId] businessId　业务号
+ * @apiParam {boolean} [isPaging] isPaging　是否分页0分页，1不分页
+ * @apiParam {number} [startPageNum] startPageNum　当前分页
+ * @apiParam {number} [pageSize] pageSize　分页大小
+ * @apiParam {date} [createAt] createAt　创建时间
+ * @apiParam {date} [beginDate] beginDate　开始时间
+ * @apiParam {date} [endDate] endDate　结束时间
+ * @apiParam {String} [searchText] searchText　操作者或者内容
  *
  */
 
