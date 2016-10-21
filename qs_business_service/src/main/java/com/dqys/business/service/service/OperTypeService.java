@@ -76,4 +76,12 @@ public interface OperTypeService {
      */
     public List<OperType> getAll(OperType operType);
 
+    /**
+     * 得到对象的初始化业务流转权限
+     * @param objectType
+     * @param objectId
+     * @return
+     */
+    public List<OperType> getInitBuisnesOperTypeList(Integer objectType,Integer objectId);
+
 }

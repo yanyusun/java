@@ -1,7 +1,6 @@
 package com.dqys.business.service.service.impl;
 
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
-import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
@@ -143,5 +142,8 @@ public class OperTypeServiceImpl implements OperTypeService {
         return operTypeMapper.getAll(operType);
     }
 
-
+    @Override
+    public List<OperType> getInitBuisnesOperTypeList(Integer objectType, Integer objectId) {
+        return null;
+    }
 }
