@@ -123,7 +123,7 @@ public class MqClient {
                 "    <span style=\"color: rgb(51, 51, 51);\">您的登陆邮箱为：</span><span style=\"color: rgb(0, 162, 202);\">" + mail + "</span><span style=\"color: rgb(51, 51, 51);\">。请点击一下链接激活账号：</span>\n" +
                 "</p>\n" +
                 "<p>\n" +
-                "    <span style=\"color: rgb(51, 51, 51);\"><a href=\"" + MqClientEnum.EMAIL_URL.getName() + msg + "\" target=\"_blank\">请点击确认"+msg+"</a></span>\n" +
+                "    <span style=\"color: rgb(51, 51, 51);\"><a href=\"" + MqClientEnum.EMAIL_URL.getName() + msg + "\" target=\"_blank\">"+ MqClientEnum.EMAIL_URL.getName()+msg+"</a></span>\n" +
                 "</p>\n" +
                 "<p>\n" +
                 "</p>\n" +
