@@ -1,8 +1,11 @@
 package com.dqys.auth.service.impl;
 
+import com.dqys.auth.orm.constant.CompanyTypeEnum;
+import com.dqys.auth.orm.dao.facade.TMessageMapper;
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
+import com.dqys.auth.orm.pojo.Message;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
@@ -10,8 +13,11 @@ import com.dqys.auth.orm.query.TUserTagQuery;
 import com.dqys.auth.service.constant.MailVerifyTypeEnum;
 import com.dqys.auth.service.dto.UserDTO;
 import com.dqys.auth.service.facade.UserService;
+import com.dqys.auth.service.utils.MessageUtils;
 import com.dqys.auth.service.utils.UserUtils;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.RoleTypeEnum;
+import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.ServiceResult;
@@ -45,6 +51,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private TCompanyInfoMapper tCompanyInfoMapper;
+    @Autowired
+    private TMessageMapper messageMapper;
 
     @Override
     public ServiceResult<Integer> validateUser(String account, String mobile, String email) throws Exception {
@@ -216,14 +224,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public JsonResponse registerStep5(Integer userId, String name, String introduction, Integer province, Integer city, Integer district) {
         TUserInfo userInfo = queryUser(userId);
-        if(userInfo == null){
+        if (userInfo == null) {
             return JsonResponseTool.paramErr("用户信息错误，请重新登录");
         }
-        if(userInfo.getCompanyId() == null){
+        if (userInfo.getCompanyId() == null) {
             return JsonResponseTool.failure("用户信息错误，请关联公司信息");
-        }else{
+        } else {
             TCompanyInfo companyInfo = queryCompany(userInfo.getCompanyId());
-            if(companyInfo == null){
+            if (companyInfo == null) {
                 return JsonResponseTool.failure("公司不存在，请返回上一步完善公司信息");
             }
             // 修改用户信息
@@ -241,6 +249,19 @@ public class UserServiceImpl implements UserService {
             if (!count.equals(1)) {
                 return JsonResponseTool.failure("更新公司信息失败");
             }
+            //发送消息给平台管理员请求认证
+            TUserTag tag = getAdmin();
+            if (tag != null) {
+                TUserInfo info = tUserInfoMapper.selectByPrimaryKey(tag.getUserId());
+                SmsUtil smsUtil = new SmsUtil();
+                String content = smsUtil.sendSms(SmsEnum.REGISTER_AUDIT.getValue(), info.getMobile(), info.getRealName(),
+                        companyInfo.getCompanyName(), CompanyTypeEnum.getCompanyTypeEnum(companyInfo.getType()).getName(), userInfo.getRealName());
+                String operUrl = MessageUtils.setOperUrl("/api/user/registerAudit?status=1&userId=" + userId, null,
+                        "/api/user/registerAudit?status=2&userId=" + userId, null, null);
+                Message message = new Message("注册请求认证", content, userId, info.getId(), null, null, 0, null, null, operUrl, 0);
+                messageMapper.add(message);
+            }
+
         }
         return JsonResponseTool.success(null);
     }
@@ -259,7 +280,7 @@ public class UserServiceImpl implements UserService {
         return this.tUserInfoMapper.selectByPrimaryKey(uid);
     }
 
-    private TCompanyInfo queryCompany(Integer companyId){
+    private TCompanyInfo queryCompany(Integer companyId) {
         return this.tCompanyInfoMapper.selectByPrimaryKey(companyId);
     }
 
@@ -300,5 +321,17 @@ public class UserServiceImpl implements UserService {
         }
 
         return null;
+    }
+
+    private TUserTag getAdmin() {
+        TUserTagQuery tUserTagQuery = new TUserTagQuery();
+        tUserTagQuery.setUserType(1);
+        tUserTagQuery.setRole(RoleTypeEnum.ADMIN.getValue());
+        List<TUserTag> list = tUserTagMapper.selectByQuery(tUserTagQuery);//查询平台管理员
+        if (list.size() > 0) {
+            return list.get(0);
+        } else {
+            return null;
+        }
     }
 }

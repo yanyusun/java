@@ -27,48 +27,51 @@ public class UserInterceptor extends AuthenticationInterceptor {
     public static final String API_SET_PWD_BATCH = "setPwdBatch";
     public static final String API_SET_PWD = "setPwd";
     public static final String API_LEAVE_WORD = "leaveWord";
+    public static final String API_REGISTER = "registerAudit";
 
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         String url = request.getRequestURI();
         String path = "";
-        if(url != null && url.length() > 0){
+        if (url != null && url.length() > 0) {
             path = url.substring(url.lastIndexOf("/") + 1, url.length());
         }
-        if(API_GET_INIT.equals(path)){//待后期完善根据业务号，团队id，操作对象，人员控制权限
+        if (API_GET_INIT.equals(path)) {//待后期完善根据业务号，团队id，操作对象，人员控制权限
             return true;
-        }else if(API_ADD.equals(path)){
+        } else if (API_ADD.equals(path)) {
             return true;
-        }else if(API_DELETE.equals(path)){
+        } else if (API_DELETE.equals(path)) {
             return true;
-        }else if(API_UPDATE.equals(path)){
+        } else if (API_UPDATE.equals(path)) {
             return true;
-        }else if(API_GET.equals(path)){
+        } else if (API_GET.equals(path)) {
             return true;
-        }else if(API_LIST_USER.equals(path)){
+        } else if (API_LIST_USER.equals(path)) {
             return true;
-        }else if(API_STATUS_BATCH.equals(path)){
+        } else if (API_STATUS_BATCH.equals(path)) {
             return true;
-        }else if(API_LIST_DATA.equals(path)){
+        } else if (API_LIST_DATA.equals(path)) {
             return true;
-        }else if(API_LIST.equals(path)){
+        } else if (API_LIST.equals(path)) {
             return true;
-        }else if(API_ASSIGNED_BATCH.equals(path)){
+        } else if (API_ASSIGNED_BATCH.equals(path)) {
             return true;
-        }else if(API_USER_EXCEL.equals(path)){
+        } else if (API_USER_EXCEL.equals(path)) {
             return true;
-        }else if(API_SEND_MSG.equals(path)){
+        } else if (API_SEND_MSG.equals(path)) {
             return true;
-        }else if(API_SET_PWD.equals(path)){
+        } else if (API_SET_PWD.equals(path)) {
             return true;
-        }else if(API_SET_PWD_BATCH.equals(path)){
+        } else if (API_SET_PWD_BATCH.equals(path)) {
             return true;
-        }else if(API_LEAVE_WORD.equals(path)){
+        } else if (API_LEAVE_WORD.equals(path)) {
             return true;
-        }else {
-            LogManager.getLogger("businessAsync").warn("未知请求链接错误:"+url);
-            throw new UrlException("未知请求链接错误",UrlException.UNKNOWN_URL_ERROR);
+        } else if (API_REGISTER.equals(path)) {
+            return true;
+        } else {
+            LogManager.getLogger("businessAsync").warn("未知请求链接错误:" + url);
+            throw new UrlException("未知请求链接错误", UrlException.UNKNOWN_URL_ERROR);
         }
     }
 }

@@ -106,6 +106,7 @@ public interface UserService {
 
     /**
      * 根据当前用户查出公司
+     *
      * @param id
      * @return
      */
@@ -113,9 +114,18 @@ public interface UserService {
 
     /**
      * 留言操作
+     *
      * @param userId
      * @param content
      * @return
      */
     Map leaveWord(Integer userId, String content);
+
+    /**
+     * 注册用户的审核
+     * @param userId
+     * @param status
+     * @return
+     */
+    Map registerAudit(Integer userId, Integer status);
 }

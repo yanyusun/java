@@ -1,6 +1,7 @@
 package com.dqys.auth.orm.pojo;
 
 import com.dqys.core.base.BaseModel;
+
 import java.io.Serializable;
 
 public class TCompanyInfo extends BaseModel implements Serializable {
@@ -20,7 +21,7 @@ public class TCompanyInfo extends BaseModel implements Serializable {
 
     private String address;
 
-    private Boolean isAuth;
+    private Integer isAuth;
     private Integer type; // 公司类型
 
     private static final long serialVersionUID = 1L;
@@ -89,11 +90,11 @@ public class TCompanyInfo extends BaseModel implements Serializable {
         this.address = address;
     }
 
-    public Boolean getIsAuth() {
+    public Integer getIsAuth() {
         return isAuth;
     }
 
-    public void setIsAuth(Boolean isAuth) {
+    public void setIsAuth(Integer isAuth) {
         this.isAuth = isAuth;
     }
 

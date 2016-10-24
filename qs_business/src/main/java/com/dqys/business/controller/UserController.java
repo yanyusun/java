@@ -310,4 +310,19 @@ public class UserController {
         return CommonUtil.jsonResponse(map);
     }
 
+
+    /**
+     * 注册用户审核
+     *
+     * @param userId
+     * @param status(0待审核1审核通过2审核不通过)
+     * @return
+     */
+    @RequestMapping("/registerAudit")
+    @ResponseBody
+    public JsonResponse registerAudit(@RequestParam Integer userId, @RequestParam Integer status) {
+        Map map = userService.registerAudit(userId, status);
+        return CommonUtil.jsonResponse(map);
+    }
+
 }
