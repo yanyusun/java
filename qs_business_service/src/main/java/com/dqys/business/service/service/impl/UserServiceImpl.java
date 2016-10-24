@@ -257,13 +257,14 @@ public class UserServiceImpl implements UserService {
             TCompanyInfo company = tCompanyInfoMapper.selectByPrimaryKey(info.getCompanyId());
             boolean flag = false;
             if (company != null) {
-                company.setIsAuth(status);
                 String text = "";
                 if (company.getIsAuth() == 0 && status == 1) {
                     text = "成功";
+                    company.setIsAuth(status);
                     flag = true;
                 } else if (company.getIsAuth() == 0 && status == 2) {
                     text = "失败";
+                    company.setIsAuth(status);
                     flag = true;
                 } else {
                     map.put("msg", "重复审核");
