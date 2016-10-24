@@ -255,7 +255,8 @@ public class UserServiceImpl implements UserService {
                 TUserInfo info = tUserInfoMapper.selectByPrimaryKey(tag.getUserId());
                 SmsUtil smsUtil = new SmsUtil();
                 String content = smsUtil.sendSms(SmsEnum.REGISTER_AUDIT.getValue(), info.getMobile(), info.getRealName(),
-                        companyInfo.getCompanyName(), CompanyTypeEnum.getCompanyTypeEnum(companyInfo.getType()).getName(), userInfo.getRealName());
+                        companyInfo.getCompanyName() == null ? "" : companyInfo.getCompanyName(), CompanyTypeEnum.getCompanyTypeEnum(companyInfo.getType()).getName(),
+                        userInfo.getRealName() == null ? "" : userInfo.getRealName());
                 String operUrl = MessageUtils.setOperUrl("/api/user/registerAudit?status=1&userId=" + userId, null,
                         "/api/user/registerAudit?status=2&userId=" + userId, null, null);
                 Message message = new Message("注册请求认证", content, userId, info.getId(), null, null, 0, null, null, operUrl, 0);
