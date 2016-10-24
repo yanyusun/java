@@ -3,14 +3,10 @@ package com.dqys.business.service.utils.permission;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
-import com.dqys.business.orm.pojo.asset.IOUInfo;
-import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.constant.ObjectEnum.IouEnum;
-import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
-import com.dqys.business.service.service.permission.Permission;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.base.BusinessFlowModel;
 import com.dqys.core.model.UserSession;
@@ -19,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * 是否在该机构的处置流程中
  * Created by yan on 16-10-4.
  */
 public class OnHandleOperTypeFilter extends OperTypeFilter {
