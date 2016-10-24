@@ -190,88 +190,90 @@ public class OperTypeUtile implements ApplicationContextAware {
         return null;
     }
 
-    public static List<OperType> getOperTypeList(Object[] navs, Integer objectType) {
+    public static List<OperType> getOperTypeList(Object[] navs, Integer... objectTypes) {
         List<OperType> list = new ArrayList<>();
-        if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
-            for (AssetPackageEnum e : AssetPackageEnum.values()) {
-                OperType operType = new OperType();
-                for (Object n : navs) {
-                    //遍历是否拥有权限，有权限的就加入
-                    if (e.getValue().equals(n)) {
-                        operType.setOperType(e.getValue());
-                        operType.setOperName(e.getName());
-                        list.add(operType);
-                        break;
+        for (Integer objectType : objectTypes) {
+            if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+                for (AssetPackageEnum e : AssetPackageEnum.values()) {
+                    OperType operType = new OperType();
+                    for (Object n : navs) {
+                        //遍历是否拥有权限，有权限的就加入
+                        if (e.getValue().equals(n)) {
+                            operType.setOperType(e.getValue());
+                            operType.setOperName(e.getName());
+                            list.add(operType);
+                            break;
+                        }
                     }
                 }
             }
-        }
-        if (objectType == ObjectTypeEnum.LENDER.getValue()) {
-            for (LenderEnum e : LenderEnum.values()) {
-                OperType operType = new OperType();
-                for (Object n : navs) {
-                    //遍历是否拥有权限，有权限的就加入
-                    if (e.getValue().equals(n)) {
-                        operType.setOperType(e.getValue());
-                        operType.setOperName(e.getName());
-                        list.add(operType);
-                        break;
+            if (objectType == ObjectTypeEnum.LENDER.getValue()) {
+                for (LenderEnum e : LenderEnum.values()) {
+                    OperType operType = new OperType();
+                    for (Object n : navs) {
+                        //遍历是否拥有权限，有权限的就加入
+                        if (e.getValue().equals(n)) {
+                            operType.setOperType(e.getValue());
+                            operType.setOperName(e.getName());
+                            list.add(operType);
+                            break;
+                        }
                     }
                 }
             }
-        }
-        if (objectType == ObjectTypeEnum.ASSETSOURCE.getValue()) {
-            for (AssetSourceEnum e : AssetSourceEnum.values()) {
-                OperType operType = new OperType();
-                for (Object n : navs) {
-                    //遍历是否拥有权限，有权限的就加入
-                    if (e.getValue().equals(n)) {
-                        operType.setOperType(e.getValue());
-                        operType.setOperName(e.getName());
-                        list.add(operType);
-                        break;
+            if (objectType == ObjectTypeEnum.ASSETSOURCE.getValue()) {
+                for (AssetSourceEnum e : AssetSourceEnum.values()) {
+                    OperType operType = new OperType();
+                    for (Object n : navs) {
+                        //遍历是否拥有权限，有权限的就加入
+                        if (e.getValue().equals(n)) {
+                            operType.setOperType(e.getValue());
+                            operType.setOperName(e.getName());
+                            list.add(operType);
+                            break;
+                        }
                     }
                 }
             }
-        }
-        if (objectType == ObjectTypeEnum.PAWN.getValue()) {
-            for (PawnEnum e : PawnEnum.values()) {
-                OperType operType = new OperType();
-                for (Object n : navs) {
-                    //遍历是否拥有权限，有权限的就加入
-                    if (e.getValue().equals(n)) {
-                        operType.setOperType(e.getValue());
-                        operType.setOperName(e.getName());
-                        list.add(operType);
-                        break;
+            if (objectType == ObjectTypeEnum.PAWN.getValue()) {
+                for (PawnEnum e : PawnEnum.values()) {
+                    OperType operType = new OperType();
+                    for (Object n : navs) {
+                        //遍历是否拥有权限，有权限的就加入
+                        if (e.getValue().equals(n)) {
+                            operType.setOperType(e.getValue());
+                            operType.setOperName(e.getName());
+                            list.add(operType);
+                            break;
+                        }
                     }
                 }
             }
-        }
-        if (objectType == ObjectTypeEnum.IOU.getValue()) {
-            for (IouEnum e : IouEnum.values()) {
-                OperType operType = new OperType();
-                for (Object n : navs) {
-                    //遍历是否拥有权限，有权限的就加入
-                    if (e.getValue().equals(n)) {
-                        operType.setOperType(e.getValue());
-                        operType.setOperName(e.getName());
-                        list.add(operType);
-                        break;
+            if (objectType == ObjectTypeEnum.IOU.getValue()) {
+                for (IouEnum e : IouEnum.values()) {
+                    OperType operType = new OperType();
+                    for (Object n : navs) {
+                        //遍历是否拥有权限，有权限的就加入
+                        if (e.getValue().equals(n)) {
+                            operType.setOperType(e.getValue());
+                            operType.setOperName(e.getName());
+                            list.add(operType);
+                            break;
+                        }
                     }
                 }
             }
-        }
-        if (objectType == ObjectTypeEnum.CASE.getValue()) {
-            for (CaseEnum e : CaseEnum.values()) {
-                OperType operType = new OperType();
-                for (Object n : navs) {
-                    //遍历是否拥有权限，有权限的就加入
-                    if (e.getValue().equals(n)) {
-                        operType.setOperType(e.getValue());
-                        operType.setOperName(e.getName());
-                        list.add(operType);
-                        break;
+            if (objectType == ObjectTypeEnum.CASE.getValue()) {
+                for (CaseEnum e : CaseEnum.values()) {
+                    OperType operType = new OperType();
+                    for (Object n : navs) {
+                        //遍历是否拥有权限，有权限的就加入
+                        if (e.getValue().equals(n)) {
+                            operType.setOperType(e.getValue());
+                            operType.setOperName(e.getName());
+                            list.add(operType);
+                            break;
+                        }
                     }
                 }
             }
