@@ -35,6 +35,7 @@ import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.TArea;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.*;
+import com.rabbitmq.http.client.domain.UserInfo;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -242,6 +243,43 @@ public class UserServiceImpl implements UserService {
             map.put("result", "yes");
         } else {
             map.put("msg", "请稍后再试");
+        }
+        return map;
+    }
+
+    @Override
+    public Map registerAudit(Integer userId, Integer status) {
+        Integer operId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        Map map = new HashMap<>();
+        map.put("result", "no");
+        TUserInfo info = tUserInfoMapper.selectByPrimaryKey(userId);
+        if (info != null && info.getCompanyId() != null) {
+            TCompanyInfo company = tCompanyInfoMapper.selectByPrimaryKey(info.getCompanyId());
+            boolean flag = false;
+            if (company != null) {
+                String text = "";
+                if (company.getIsAuth() == 0 && status == 1) {
+                    text = "成功";
+                    company.setIsAuth(status);
+                    flag = true;
+                } else if (company.getIsAuth() == 0 && status == 2) {
+                    text = "失败";
+                    company.setIsAuth(status);
+                    flag = true;
+                } else {
+                    map.put("msg", "重复审核");
+                }
+                if (flag && tCompanyInfoMapper.updateByPrimaryKeySelective(company) > 0) {
+                    map.put("result", "yes");
+                    Map userC = coordinatorMapper.getUserAndCompanyByUserId(userId);
+                    SmsUtil sms = new SmsUtil();
+                    String content = sms.sendSms(SmsEnum.REGISTER_AUDIT_RESULT.getValue(), MessageUtils.transMapToString(userC, "realName"),
+                            MessageUtils.transMapToString(userC, "companyName"), text);
+                    messageService.add("注册审核结果答复", content, operId, userId, "", MessageEnum.SERVE.getValue(), 0, "");
+                }
+            }
+        } else {
+            map.put("msg", "参数查询有误");
         }
         return map;
     }

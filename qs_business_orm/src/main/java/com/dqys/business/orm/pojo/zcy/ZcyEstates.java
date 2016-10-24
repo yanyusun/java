@@ -39,7 +39,8 @@ import java.util.Date;
  * @apiParam {string} heatingWay 供暖方式
  * @apiParam {string} metro 距地铁
  * @apiParam {string} schoolHouse 学区房
- * @apiParam {string} content 内容
+ * @apiParam {string} estateType 资产类型
+ * @apiParam {string} estateClassify 资产归类
  */
 public class ZcyEstates implements Serializable {
     private Integer id;
@@ -129,6 +130,26 @@ public class ZcyEstates implements Serializable {
     private Integer companyId;//公司id
 
     private Integer resultStatus;//结果状态（0默认1暂停2无效3完成）
+
+    private String estateType;// 资产类型
+
+    private String estateClassify;//资产归类
+
+    public String getEstateType() {
+        return estateType;
+    }
+
+    public void setEstateType(String estateType) {
+        this.estateType = estateType;
+    }
+
+    public String getEstateClassify() {
+        return estateClassify;
+    }
+
+    public void setEstateClassify(String estateClassify) {
+        this.estateClassify = estateClassify;
+    }
 
     public Integer getResultStatus() {
         return resultStatus;
