@@ -1,10 +1,14 @@
 package com.dqys.resource.controller;
 
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
-import com.dqys.core.utils.*;
+import com.dqys.core.utils.ApiParseTool;
+import com.dqys.core.utils.FileTool;
+import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.SysPropertyTool;
 import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -33,14 +37,40 @@ public class ResourceController {
         return () -> JsonResponseTool.success(ApiParseTool.parseApiList(SysPropertyTool.getProperty(SysPropertyTypeEnum.FILE_BUSINESS_TYPE), KeyEnum.API_SYS_PROPERTY_KEY));
     }
 
+//    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+//    public Callable<String> upload(@RequestParam  String type, MultipartFile file) {
+//        Integer userId = UserSession.getCurrent().getUserId();
+//        Integer status = UserSession.getCurrent().getStatus();
+//        return () -> {
+//            //正常状态的用户才能上传
+//            if(status.intValue() <= 0) {
+//                return JsonResponseTool.authFailure("该账户暂无权限");
+//            }
+//
+//
+//            String fileName = null;
+//            try {
+//                fileName = FileTool.saveFileSyncTmp(type, userId, file);
+//                if(fileName.startsWith("err:")) {
+//                    return JsonResponseTool.failure(fileName);
+//                }
+//            } catch (IOException e) {
+//                return JsonResponseTool.serverErr();
+//            }
+//
+//            return JsonResponseTool.success(fileName);
+//        };
+//    }
+
+
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public Callable<JsonResponse<String>> upload(@RequestParam  String type, MultipartFile file) {
+    public Callable<String> upload(@RequestParam  String type, MultipartFile file) {
         Integer userId = UserSession.getCurrent().getUserId();
         Integer status = UserSession.getCurrent().getStatus();
         return () -> {
             //正常状态的用户才能上传
             if(status.intValue() <= 0) {
-                return JsonResponseTool.authFailure("该账户暂无权限");
+                return getStringJson(ResponseCodeEnum.AUTH_FAILURE.getValue(),"该账户暂无权限",null);
             }
 
 
@@ -48,13 +78,13 @@ public class ResourceController {
             try {
                 fileName = FileTool.saveFileSyncTmp(type, userId, file);
                 if(fileName.startsWith("err:")) {
-                    return JsonResponseTool.failure(fileName);
+                    return getStringJson(ResponseCodeEnum.FAILURE.getValue(),fileName,null);
                 }
             } catch (IOException e) {
-                return JsonResponseTool.serverErr();
+                return getStringJson(ResponseCodeEnum.SERVER_ERR.getValue(),"服务器错误",null);
             }
 
-            return JsonResponseTool.success(fileName);
+            return getStringJson(ResponseCodeEnum.SUCCESS.getValue(),"成功",fileName);
         };
     }
 
@@ -75,4 +105,18 @@ public class ResourceController {
         return new ResponseEntity(bytes, httpHeaders, HttpStatus.OK);
     }
 
+    /**
+     * 解决一些浏览器在一些上传空间上试图转换成ｘｍｌ的问题，所以这里增加了手工
+     * @param code
+     * @param msg
+     * @param data
+     * @return
+     */
+    private String getStringJson(Integer code,String msg,String data){
+        String s ="{ \"code\":"+code+",\"msg\":\""+msg+"\",\"data\":\""+data+"\"}";
+        return s;
+    }
+
 }
+
+
