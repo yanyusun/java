@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.auth.orm.dao.facade.TMessageMapper">
+
+    <sql id="WHERE_QUERY">
+        <where>
+            status!=2
+            <if test="type !=null">
+                and type=#{type}
+            </if>
+            <if test="status !=null">
+                and status=#{status}
+            </if>
+            <if test="receiveId !=null">
+                and receive_id=#{receiveId}
+            </if>
+        </where>
+    </sql>
+    <sql id="QUERY_ALL">
+         id,content,label,receive_id receiveId ,sender_id senderId
+        ,status ,title,type,DATE_FORMAT( send_time,'%Y-%m-%d') sendTime,oper_url operUrl
+        ,business_type businessType,oper_status operStatus
+    </sql>
+
+    <!--查询记录数量-->
+    <select id="selectCount" parameterType="com.dqys.auth.orm.pojo.Message"
+            resultType="int">
+        SELECT count(*) amount
+        from t_message
+        <include refid="WHERE_QUERY"/>
+    </select>
+    <!--分页查询列表-->
+    <select id="selectByMessage" parameterType="com.dqys.auth.orm.pojo.Message"
+            resultType="com.dqys.auth.orm.pojo.Message">
+        SELECT
+        <include refid="QUERY_ALL"/>
+        from t_message
+        <include refid="WHERE_QUERY"/>
+        ORDER BY send_time DESC
+        LIMIT #{startPageNum},#{pageSize}
+    </select>
+    <!--标记为已读-->
+    <update id="readMessage">
+        UPDATE t_message SET status=1
+        <where>
+            status !=2 AND
+            id IN
+            <foreach collection="array" item="ids" index="index" open="(" close=")" separator=",">
+                #{ids}
+            </foreach>
+        </where>
+    </update>
+    <!--删除消息-->
+    <update id="del">
+        UPDATE t_message SET status=2
+        <where>
+            id IN
+            <foreach collection="array" item="ids" index="index" open="(" close=")" separator=",">
+                #{ids}
+            </foreach>
+        </where>
+    </update>
+    <!--添加消息-->
+    <insert id="add" parameterType="com.dqys.auth.orm.pojo.Message">
+        INSERT INTO t_message
+        <trim prefix="(" suffix=")">
+            <if test="title !=null">
+                title,
+            </if>
+            <if test="content !=null">
+                content,
+            </if>
+            <if test="senderId !=null">
+                sender_id,
+            </if>
+            <if test="receiveId !=null">
+                receive_id,
+            </if>
+            <if test="label !=null">
+                label,
+            </if>
+            <if test="type !=null">
+                type,
+            </if>
+            <if test="businessType !=null">
+                business_type,
+            </if>
+            <if test="operUrl !=null">
+                oper_url,
+            </if>
+            status,send_time
+        </trim>
+        <trim prefix=" values(" suffix=")">
+            <if test="title !=null">
+                #{title},
+            </if>
+            <if test="content !=null">
+                #{content},
+            </if>
+            <if test="senderId !=null">
+                #{senderId},
+            </if>
+            <if test="receiveId !=null">
+                #{receiveId},
+            </if>
+            <if test="label !=null">
+                #{label},
+            </if>
+            <if test="type !=null">
+                #{type},
+            </if>
+            <if test="businessType !=null">
+                #{businessType},
+            </if>
+            <if test="operUrl !=null">
+                #{operUrl},
+            </if>
+            0,now()
+        </trim>
+    </insert>
+
+    <select id="get" resultType="com.dqys.auth.orm.pojo.Message" parameterType="int">
+        SELECT
+        <include refid="QUERY_ALL"/>
+        FROM t_message
+        WHERE id=#{id,jdbcType=INTEGER}
+    </select>
+
+    <update id="updateOperStatus" parameterType="com.dqys.auth.orm.pojo.Message">
+        UPDATE t_message
+       set oper_status=#{operStatus}
+        WHERE id=#{id}
+    </update>
+
+</mapper>

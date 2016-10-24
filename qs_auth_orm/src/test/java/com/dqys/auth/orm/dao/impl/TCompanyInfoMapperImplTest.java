@@ -26,7 +26,7 @@ public class TCompanyInfoMapperImplTest extends BaseTest {
         tCompanyInfo.setProvince(110228);
         tCompanyInfo.setCompanyName("测试公司名");
         tCompanyInfo.setCredential("统一组织代码");
-        tCompanyInfo.setIsAuth(true);
+        tCompanyInfo.setIsAuth(1);
         tCompanyInfo.setLegalPerson("法人扫描件地址");
         tCompanyInfo.setLicence("营业执照扫描件地址");
         int count = tCompanyInfoMapper.insertSelective(tCompanyInfo);
@@ -41,7 +41,7 @@ public class TCompanyInfoMapperImplTest extends BaseTest {
         tCompanyInfoSel.setProvince(tCompanyInfoSel.getProvince() + 1);
         tCompanyInfoSel.setCompanyName(tCompanyInfoSel.getCompanyName() + 1);
         tCompanyInfoSel.setCredential(tCompanyInfoSel.getCredential() + 1);
-        tCompanyInfoSel.setIsAuth(false);
+        tCompanyInfoSel.setIsAuth(0);
         tCompanyInfoSel.setLegalPerson(tCompanyInfoSel.getLegalPerson() + 1);
         tCompanyInfoSel.setLicence(tCompanyInfoSel.getLicence() + 1);
         count = tCompanyInfoMapper.updateByPrimaryKeySelective(tCompanyInfoSel);

@@ -19,7 +19,7 @@
     <result column="city" property="city" jdbcType="INTEGER" />
     <result column="area" property="area" jdbcType="INTEGER" />
     <result column="address" property="address" jdbcType="VARCHAR" />
-    <result column="is_auth" property="isAuth" jdbcType="BIT" />
+    <result column="is_auth" property="isAuth" jdbcType="INTEGER" />
     <result column="type" property="type" jdbcType="INTEGER" />
   </resultMap>
 
@@ -150,7 +150,7 @@
         #{address,jdbcType=VARCHAR},
       </if>
       <if test="isAuth != null" >
-        #{isAuth,jdbcType=BIT},
+        #{isAuth,jdbcType=INTEGER},
       </if>
       <if test="type != null" >
         #{type,jdbcType=INTEGER},
@@ -192,7 +192,7 @@
         address = #{address,jdbcType=VARCHAR},
       </if>
       <if test="isAuth != null" >
-        is_auth = #{isAuth,jdbcType=BIT},
+        is_auth = #{isAuth,jdbcType=INTEGER},
       </if>
       <if test="type != null" >
         type = #{type,jdbcType=BIT},

@@ -649,6 +649,7 @@ public class AuthController extends BaseApiContorller {
 
 
     /**
+     * 第五步
      * @api {POST} http://{url}/auth/fixCompanyInfo 完善公司以及管理人员信息
      * @apiName register_admin
      * @apiGroup Auth
@@ -688,8 +689,10 @@ public class AuthController extends BaseApiContorller {
             step = "company";
         } else if (userName == null || userName.equals("")) {
             step = "administrator";
-//        } else if (companyService.get(companyId).getIsAuth().equals(0)) {
-//            step = "authentication";
+        } else if (companyService.get(companyId).getIsAuth().equals(0)) {
+            step = "authentication";
+        } else if (companyService.get(companyId).getIsAuth().equals(2)) {
+            step = "authentication_no";
         } else {
             step = "true";
         }
@@ -778,6 +781,10 @@ public class AuthController extends BaseApiContorller {
                 TCompanyInfo companyInfo = companyService.get(userInfo.getCompanyId());
                 if (companyInfo != null) {
                     //修改公司信息
+                    if (companyInfo.getIsAuth() == 2) {
+                        tCompanyInfo.setIsAuth(0);
+                    }
+                    tCompanyInfo.setId(companyInfo.getId());
                     Integer count = tCompanyInfoMapper.updateByPrimaryKeySelective(tCompanyInfo);
                 } else {
                     return JsonResponseTool.paramErr("公司信息修改失败");
