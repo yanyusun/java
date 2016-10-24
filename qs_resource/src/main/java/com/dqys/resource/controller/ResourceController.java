@@ -9,19 +9,17 @@ import com.dqys.core.utils.ApiParseTool;
 import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.SysPropertyTool;
-import org.apache.commons.io.FileUtils;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -88,21 +86,49 @@ public class ResourceController {
         };
     }
 
+//    @RequestMapping("/getSource")
+//    public ResponseEntity<byte[]> getTmpSource(@RequestParam String fileName, boolean isTmp) {
+//        File file = FileTool.getFile(fileName,isTmp);
+//        HttpHeaders httpHeaders = new HttpHeaders();
+//        httpHeaders.add("Content-Disposition", "attachment;filename="
+//                + fileName);
+//        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+//        byte[] bytes =null;
+//        try {
+//            bytes = FileUtils.readFileToByteArray(file);
+//        }catch (IOException e){
+//            e.printStackTrace();
+//            return new ResponseEntity(bytes, httpHeaders, HttpStatus.EXPECTATION_FAILED);
+//        }
+//        return new ResponseEntity(bytes, httpHeaders, HttpStatus.OK);
+//    }
     @RequestMapping("/getSource")
-    public ResponseEntity<byte[]> getTmpSource(@RequestParam String fileName, boolean isTmp) {
+    public String getRes(HttpServletResponse response, @RequestParam String fileName, boolean isTmp) {
         File file = FileTool.getFile(fileName,isTmp);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add("Content-Disposition", "attachment;filename="
-                + fileName);
-        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
-        byte[] bytes =null;
+
+        OutputStream os = null;
+        FileInputStream fis = null;
+
         try {
-            bytes = FileUtils.readFileToByteArray(file);
-        }catch (IOException e){
+            os = response.getOutputStream();
+            fis = new FileInputStream(file);
+            int count = 0;
+            byte[] buffer = new byte[1024 * 8];
+            while ((count = fis.read(buffer)) != -1) {
+                os.write(buffer, 0, count);
+                os.flush();
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity(bytes, httpHeaders, HttpStatus.EXPECTATION_FAILED);
         }
-        return new ResponseEntity(bytes, httpHeaders, HttpStatus.OK);
+        try {
+            fis.close();
+            os.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "ok";
     }
 
     /**
