@@ -10,10 +10,7 @@ import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.service.OperTypeService;
 import com.dqys.business.service.service.companyTeam.CompanyTeamService;
 import com.dqys.business.service.service.permission.Permission;
-import com.dqys.business.service.utils.permission.NavIdOperTypeFilter;
-import com.dqys.business.service.utils.permission.NotTheirOperTypeFilter;
-import com.dqys.business.service.utils.permission.OnHandleOperTypeFilter;
-import com.dqys.business.service.utils.permission.OriginOperTypeFiler;
+import com.dqys.business.service.utils.permission.*;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.model.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +18,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
+import static com.dqys.business.orm.constant.company.ObjectTypeEnum.PAWN;
 
 /**
  * Created by yan on 16-10-3.
@@ -59,12 +58,17 @@ public class PermissionImp implements Permission{
                             companyTeamService, companyTeamReMapper, tUserInfoMapper, objectType, objectId));
                     break;
                 case PAWN:
+                    originOperTypeFiler.decorate(new OnHandleOperTypeFilter(
+                            objectType, objectId, pawnInfoMapper, iouInfoMapper
+                    ));
+                    originOperTypeFiler.decorate(new InitBusinessOperTypeFilter(operTypeService,objectType,objectId,PAWN.getValue()));
+                    break;
                 case IOU:
                     originOperTypeFiler.decorate(new OnHandleOperTypeFilter(
                             objectType, objectId, pawnInfoMapper, iouInfoMapper
                     ));
+                    originOperTypeFiler.decorate(new InitBusinessOperTypeFilter(operTypeService,objectType,objectId,PAWN.getValue()));
                     break;
-
             }
         }
         List<OperType> operTypes = operTypeService
