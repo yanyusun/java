@@ -52,6 +52,10 @@ public class FollowUpMessageQuery extends BaseQuery {
 
     private boolean team;
 
+    private boolean COLLECTION;
+
+    private boolean JUDICIARY;
+
     @Override
     public Integer getId() {
         return id;
@@ -156,5 +160,21 @@ public class FollowUpMessageQuery extends BaseQuery {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public boolean isCOLLECTION() {
+        return COLLECTION;
+    }
+
+    public void setCOLLECTION(boolean COLLECTION) {
+        this.COLLECTION = COLLECTION;
+    }
+
+    public boolean isJUDICIARY() {
+        return JUDICIARY;
+    }
+
+    public void setJUDICIARY(boolean JUDICIARY) {
+        this.JUDICIARY = JUDICIARY;
     }
 }
