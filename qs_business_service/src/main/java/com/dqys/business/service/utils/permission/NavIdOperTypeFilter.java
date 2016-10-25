@@ -1,12 +1,12 @@
 package com.dqys.business.service.utils.permission;
 
 import com.dqys.business.orm.pojo.operType.OperType;
-import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.utils.operType.OperTypeUtile;
 
-import java.util.*;
+import java.util.List;
 
 /**
+ * 特定导航栏权限控制
  * Created by yan on 16-10-1.
  */
 public class NavIdOperTypeFilter extends OperTypeFilter {
