@@ -108,9 +108,11 @@ public class LenderServiceImpl implements LenderService {
         if (lenderQuery == null) {
             return null; // 类型不对,参数错误
         }
-        if (SysProperty.NULL_DATA_ID.equals(lenderQuery.getId())||lenderQuery.getId()==null) {
-            // 搜索不到数据
-            return JsonResponseTool.successNullList();
+        if(!CommonUtil.isManage()) {
+            if (SysProperty.NULL_DATA_ID.equals(lenderQuery.getId()) || lenderQuery.getId() == null) {
+                // 搜索不到数据
+                return JsonResponseTool.successNullList();
+            }
         }
         // 不同tag类型有不同的搜索条件
         lenderQuery.setIsPaging(true);
