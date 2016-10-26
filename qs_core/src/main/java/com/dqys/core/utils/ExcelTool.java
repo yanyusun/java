@@ -56,7 +56,7 @@ public class ExcelTool {
                 }
             }
         } catch (Exception e) {
-            return readExcelXSSFForList(filepath, filename, startrow, startcol, sheetnum);
+           e.printStackTrace();
         }
         return varList;
     }
@@ -67,7 +67,6 @@ public class ExcelTool {
     public static List<Map<String, Object>> readExcelXSSFForList(String filepath, String filename, int startrow, int startcol, int sheetnum) {
         List<Map<String, Object>> varList = new ArrayList<Map<String, Object>>();
         try {
-            File target = new File(filepath, filename);
             FileInputStream fi = new FileInputStream(filepath + filename);
             XSSFWorkbook wb = new XSSFWorkbook(fi);
             XSSFSheet sheet = wb.getSheetAt(sheetnum); // sheet 从0开始
