@@ -98,6 +98,13 @@ public class ExcelTool {
         return varList;
     }
 
+    public static void main(String[] args) {
+        List<Map<String, Object>> maps = readExcelXSSFForList("f://", "2.xlsx", 0, 0, 0);
+        for (Map map : maps) {
+            System.out.println(map.get("var1"));
+        }
+    }
+
     private static String getCellValue(Cell cell) {
         String ret;
         switch (cell.getCellType()) {
