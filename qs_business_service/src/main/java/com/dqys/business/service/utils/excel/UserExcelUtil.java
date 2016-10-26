@@ -110,7 +110,7 @@ public class UserExcelUtil {
     private static boolean checkUserExcel(List<Map<String, Object>> list, List<ExcelMessage> error, TUserInfoMapper tUserInfoMapper) {
         String[] str = {"序号", "*姓名", "*昵称", "*性别", "*自定义账号", "*微信号", "QQ号", "办公电话", "*手机号", "*工作邮箱", "*部门", "*职位名称",
                 "*职责名称", "职责描述", "*职责区域", "*系统角色", "从业年限(年）", "入职时间", "历史业绩（总数量）", "备注"};
-        ExcelUtilAsset.templateFormat(str, list.get(0), "用户", "表头信息错误", error);
+        ExcelUtilAsset.templateFormat(str, list.get(0), "用户", "字段名称不匹配", error);
         boolean flag = true;
         if (error != null && error.size() < 1) {
             //判断每个表格的数据类型
