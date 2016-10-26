@@ -604,7 +604,7 @@ public class RepayServiceImpl implements RepayService {
             if (!MessageUtils.transMapToString(map, "result").equals("yes")) {
 //                ObjectMapper objectMapper = new ObjectMapper();
 //                String json = objectMapper.writeValueAsString(map);
-                throw new ArtificialException(MessageUtils.transMapToString(map, "msg"), 1001);
+                throw new ArtificialException(MessageUtils.transMapToString(map, "msg"), ArtificialException.EXCEPTION_CODE);
 //                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
             }
         }
