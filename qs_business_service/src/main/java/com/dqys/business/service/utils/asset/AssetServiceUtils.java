@@ -239,9 +239,8 @@ public class AssetServiceUtils {
                 assetDTO.getType(), assetDTO.getStartAt(), assetDTO.getEndAt(),
                 assetDTO.getAccrual(), assetDTO.getLoan(), assetDTO.getAppraisal(),
                 assetDTO.getName(), assetDTO.getEvaluateExcellent(), assetDTO.getEvaluateLevel(),
-                assetDTO.getProvince(), assetDTO.getCity(), assetDTO.getDistrict(),
-                assetDTO.getAddress(), assetDTO.getLoanOrganization(), assetDTO.getLoanOrganizationDistrict(),
-                assetDTO.getDisposeMode(), assetDTO.getEntrustName(), assetDTO.getAttribute())) {
+                assetDTO.getProvince(), assetDTO.getAddress(), assetDTO.getLoanOrganization(),
+                assetDTO.getLoanOrganizationDistrict(),assetDTO.getDisposeMode(), assetDTO.getEntrustName(), assetDTO.getAttribute())) {
             return "存在非法参数";
         }
         if (ExcellentTypeEnum.getExcellentTypeEnum(assetDTO.getEvaluateExcellent()) == null) {
