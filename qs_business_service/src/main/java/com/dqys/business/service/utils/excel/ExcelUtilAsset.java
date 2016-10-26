@@ -384,10 +384,12 @@ public class ExcelUtilAsset {
      * @param fieldsName 字段名称
      * @param msg        错误内容
      */
-    private static void placeByExcel(List<ExcelMessage> error, String name,
-                                     Integer row, Integer col, String fieldsName, String msg) {
+    public static void placeByExcel(List<ExcelMessage> error, String name,
+                                    Integer row, Integer col, String fieldsName, String msg) {
 //        String[] str = {(error.size() + 1) + "", name, (row) + "行" + (col + 1) + "列", fieldsName, msg};
-        ExcelMessage excelMessage = new ExcelMessage((error.size() + 1), name, (row) + "行" + (col + 1) + "列", fieldsName, msg);
+        String[] letter = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
+                "W", "X", "Y", "Z"};
+        ExcelMessage excelMessage = new ExcelMessage((error.size() + 1), name, (row) + "行" + (letter[col]) + "列", fieldsName, msg);
         error.add(excelMessage);
     }
 

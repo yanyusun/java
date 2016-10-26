@@ -72,30 +72,30 @@ public class UserExcelUtil {
     private static void disposeUserExcele(List<Map<String, Object>> list, List<UserFileDTO> userFileDTOs) {
         for (int i = 1; i < list.size(); i++) {
             Map<String, Object> map0 = list.get(i);
-            if (transStringToInteger(transMapToString(map0, "var0")) == null) {
+            if (ExcelUtilAsset.transStringToInteger(ExcelUtilAsset.transMapToString(map0, "var0")) == null) {
                 continue;
             }
             UserFileDTO userFileDTO = new UserFileDTO();
-            userFileDTO.setRealName(transMapToString(map0, "var1"));//真实姓名
-            userFileDTO.setUserName(transMapToString(map0, "var2"));//用户昵称
-            userFileDTO.setSex(transMapToString(map0, "var3").equals("男") == true ? 1 : 0);//性别
-            userFileDTO.setAccount(transMapToString(map0, "var4")); //账号
-            userFileDTO.setWechat(transMapToString(map0, "var5")); //微信
-            userFileDTO.setQq(transMapToString(map0, "var6"));//QQ
-            userFileDTO.setOfficeTel(transMapToString(map0, "var7"));//办公电话
-            userFileDTO.setMobile(transMapToString(map0, "var8"));//手机号
-            userFileDTO.setEmail(transMapToString(map0, "var9"));//邮箱
-            userFileDTO.setApartment(transMapToString(map0, "var10"));// 部门
-            userFileDTO.setOccupation(transMapToString(map0, "var11"));// 职位
-            userFileDTO.setDuty(transMapToString(map0, "var12"));//职责名称
-            userFileDTO.setDutyMark(transMapToString(map0, "var13"));//职责介绍
-            userFileDTO.setDutyArea(transMapToString(map0, "var14"));//负责区域
-            userFileDTO.setRole(transMapToString(map0, "var15").equals("管理员") == true ? 1 : transMapToString(map0, "var15").equals("管理者") == true ? 2 : 3);//角色
-            userFileDTO.setYear(transStringToInteger(transMapToString(map0, "var16")));// 职业年限
-            if (!transMapToString(map0, "var17").equals("")) {
-                userFileDTO.setJoinAt(DateFormatTool.parse(transMapToString(map0, "var17"), DateFormatTool.DATE_FORMAT_10_REG2)); //入职时间
+            userFileDTO.setRealName(ExcelUtilAsset.transMapToString(map0, "var1"));//真实姓名
+            userFileDTO.setUserName(ExcelUtilAsset.transMapToString(map0, "var2"));//用户昵称
+            userFileDTO.setSex(ExcelUtilAsset.transMapToString(map0, "var3").equals("男") == true ? 1 : 0);//性别
+            userFileDTO.setAccount(ExcelUtilAsset.transMapToString(map0, "var4")); //账号
+            userFileDTO.setWechat(ExcelUtilAsset.transMapToString(map0, "var5")); //微信
+            userFileDTO.setQq(ExcelUtilAsset.transMapToString(map0, "var6"));//QQ
+            userFileDTO.setOfficeTel(ExcelUtilAsset.transMapToString(map0, "var7"));//办公电话
+            userFileDTO.setMobile(ExcelUtilAsset.transMapToString(map0, "var8"));//手机号
+            userFileDTO.setEmail(ExcelUtilAsset.transMapToString(map0, "var9"));//邮箱
+            userFileDTO.setApartment(ExcelUtilAsset.transMapToString(map0, "var10"));// 部门
+            userFileDTO.setOccupation(ExcelUtilAsset.transMapToString(map0, "var11"));// 职位
+            userFileDTO.setDuty(ExcelUtilAsset.transMapToString(map0, "var12"));//职责名称
+            userFileDTO.setDutyMark(ExcelUtilAsset.transMapToString(map0, "var13"));//职责介绍
+            userFileDTO.setDutyArea(ExcelUtilAsset.transMapToString(map0, "var14"));//负责区域
+            userFileDTO.setRole(ExcelUtilAsset.transMapToString(map0, "var15").equals("管理员") == true ? 1 : ExcelUtilAsset.transMapToString(map0, "var15").equals("管理者") == true ? 2 : 3);//角色
+            userFileDTO.setYear(ExcelUtilAsset.transStringToInteger(ExcelUtilAsset.transMapToString(map0, "var16")));// 职业年限
+            if (!ExcelUtilAsset.transMapToString(map0, "var17").equals("")) {
+                userFileDTO.setJoinAt(DateFormatTool.parse(ExcelUtilAsset.transMapToString(map0, "var17"), DateFormatTool.DATE_FORMAT_10_REG2)); //入职时间
             }
-            userFileDTO.setRemark(transMapToString(map0, "var19"));//备注
+            userFileDTO.setRemark(ExcelUtilAsset.transMapToString(map0, "var19"));//备注
             userFileDTOs.add(userFileDTO);
         }
     }
@@ -130,148 +130,71 @@ public class UserExcelUtil {
         List<String> emailList = new ArrayList<>();
         for (int i = 1; i < list.size(); i++) {
             Map<String, Object> l = list.get(i);
-            if (transStringToInteger(transMapToString(l, "var0")) == null) {
+            if (ExcelUtilAsset.transStringToInteger(ExcelUtilAsset.transMapToString(l, "var0")) == null) {
                 continue;
             }
-            if (!FormatValidateTool.isDecimals(transMapToString(l, "var0"), 0)) {
-                placeByExcel(error, name, i, 0, transMapToString(map, "var0"), "格式错误");
+            if (!FormatValidateTool.isDecimals(ExcelUtilAsset.transMapToString(l, "var0"), 0)) {
+                ExcelUtilAsset.placeByExcel(error, name, i, 0, ExcelUtilAsset.transMapToString(map, "var0"), "格式错误");
             }
-            if (transMapToString(l, "var1").equals("")) {//*姓名
-                placeByExcel(error, name, i, 1, transMapToString(map, "var1"), "不能为空");
-                ;
+            if (ExcelUtilAsset.transMapToString(l, "var1").equals("")) {//*姓名
+                ExcelUtilAsset.placeByExcel(error, name, i, 1, ExcelUtilAsset.transMapToString(map, "var1"), "不能为空");
             }
-            if (transMapToString(l, "var2").equals("")) {//*昵称
-                placeByExcel(error, name, i, 2, transMapToString(map, "var2"), "不能为空");
-                ;
+            if (ExcelUtilAsset.transMapToString(l, "var2").equals("")) {//*昵称
+                ExcelUtilAsset.placeByExcel(error, name, i, 2, ExcelUtilAsset.transMapToString(map, "var2"), "不能为空");
             }
-            if (transMapToString(l, "var3").equals("")) {//*性别
-                placeByExcel(error, name, i, 3, transMapToString(map, "var3"), "不能为空");
-                ;
+            if (ExcelUtilAsset.transMapToString(l, "var3").equals("")) {//*性别
+                ExcelUtilAsset.placeByExcel(error, name, i, 3, ExcelUtilAsset.transMapToString(map, "var3"), "不能为空");
             }
-            if (transMapToString(l, "var4").equals("")) {//*自定义账号
-                placeByExcel(error, name, i, 4, transMapToString(map, "var4"), "不能为空");
-                ;
+            if (ExcelUtilAsset.transMapToString(l, "var4").equals("")) {//*自定义账号
+                ExcelUtilAsset.placeByExcel(error, name, i, 4, ExcelUtilAsset.transMapToString(map, "var4"), "不能为空");
             }
-            if (transMapToString(l, "var5").equals("")) {//*微信号
-                placeByExcel(error, name, i, 5, transMapToString(map, "var5"), "不能为空");
-                ;
+            if (ExcelUtilAsset.transMapToString(l, "var5").equals("")) {//*微信号
+                ExcelUtilAsset.placeByExcel(error, name, i, 5, ExcelUtilAsset.transMapToString(map, "var5"), "不能为空");
             }
-            if (!transMapToString(l, "var6").equals("") && !FormatValidateTool.isNumeric(transMapToString(l, "var6"))) {//QQ号
-                placeByExcel(error, name, i, 6, transMapToString(map, "var6"), "格式错误");
-                ;
+            if (!ExcelUtilAsset.transMapToString(l, "var6").equals("") && !FormatValidateTool.isNumeric(ExcelUtilAsset.transMapToString(l, "var6"))) {//QQ号
+                ExcelUtilAsset.placeByExcel(error, name, i, 6, ExcelUtilAsset.transMapToString(map, "var6"), "格式错误");
             }
-            if (!transMapToString(l, "var7").equals("") && !FormatValidateTool.checkPhone(transMapToString(l, "var7"))) {//办公电话
-                placeByExcel(error, name, i, 7, transMapToString(map, "var7"), "格式错误");
-                ;
+            if (!ExcelUtilAsset.transMapToString(l, "var7").equals("") && !FormatValidateTool.checkPhone(ExcelUtilAsset.transMapToString(l, "var7"))) {//办公电话
+                ExcelUtilAsset.placeByExcel(error, name, i, 7, ExcelUtilAsset.transMapToString(map, "var7"), "格式错误");
             }
-            if (!FormatValidateTool.checkMobile(transMapToString(l, "var8"))) {//*手机号
-                placeByExcel(error, name, i, 8, transMapToString(map, "var8"), "不能为空");
-                ;
+            if (!FormatValidateTool.checkMobile(ExcelUtilAsset.transMapToString(l, "var8"))) {//*手机号
+                ExcelUtilAsset.placeByExcel(error, name, i, 8, ExcelUtilAsset.transMapToString(map, "var8"), "不能为空");
             }
-            if (!FormatValidateTool.checkEmail(transMapToString(l, "var9"))) {//*工作邮箱
-                placeByExcel(error, name, i, 9, transMapToString(map, "var9"), "格式错误");
-                ;
+            if (!FormatValidateTool.checkEmail(ExcelUtilAsset.transMapToString(l, "var9"))) {//*工作邮箱
+                ExcelUtilAsset.placeByExcel(error, name, i, 9, ExcelUtilAsset.transMapToString(map, "var9"), "格式错误");
             } else {
                 //判断excel表里的邮箱是否 重复
-                if (emailList.contains(transMapToString(l, "var9"))) {
-                    placeByExcel(error, name, i, 9, transMapToString(map, "var9"), "表内邮箱重复");
+                if (emailList.contains(ExcelUtilAsset.transMapToString(l, "var9"))) {
+                    ExcelUtilAsset.placeByExcel(error, name, i, 9, ExcelUtilAsset.transMapToString(map, "var9"), "表内邮箱重复");
                 } else {
-                    emailList.add(transMapToString(l, "var9"));//
+                    emailList.add(ExcelUtilAsset.transMapToString(l, "var9"));//
                     //判断库里的邮箱是否重复
-                    if (verifyUser(tUserInfoMapper, null, null, transMapToString(l, "var9"))) {
-                        placeByExcel(error, name, i, 9, transMapToString(map, "var9"), "该邮箱已注册");
+                    if (verifyUser(tUserInfoMapper, null, null, ExcelUtilAsset.transMapToString(l, "var9"))) {
+                        ExcelUtilAsset.placeByExcel(error, name, i, 9, ExcelUtilAsset.transMapToString(map, "var9"), "该邮箱已注册");
                     }
                 }
             }
-            if (transMapToString(l, "var10").equals("")) {//*部门
-                placeByExcel(error, name, i, 10, transMapToString(map, "var10"), "不能为空");
-                ;
+            if (ExcelUtilAsset.transMapToString(l, "var10").equals("")) {//*部门
+                ExcelUtilAsset.placeByExcel(error, name, i, 10, ExcelUtilAsset.transMapToString(map, "var10"), "不能为空");
             }
-            if (transMapToString(l, "var11").equals("")) {//*职位名称
-                placeByExcel(error, name, i, 11, transMapToString(map, "var11"), "不能为空");
-                ;
+            if (ExcelUtilAsset.transMapToString(l, "var11").equals("")) {//*职位名称
+                ExcelUtilAsset.placeByExcel(error, name, i, 11, ExcelUtilAsset.transMapToString(map, "var11"), "不能为空");
             }
-            if (transMapToString(l, "var12").equals("")) {//*职责名称
-                placeByExcel(error, name, i, 12, transMapToString(map, "var12"), "不能为空");
-                ;
+            if (ExcelUtilAsset.transMapToString(l, "var12").equals("")) {//*职责名称
+                ExcelUtilAsset.placeByExcel(error, name, i, 12, ExcelUtilAsset.transMapToString(map, "var12"), "不能为空");
             }
-            if (transMapToString(l, "var14").equals("")) {//*职责区域
-                placeByExcel(error, name, i, 14, transMapToString(map, "var14"), "不能为空");
-                ;
+            if (ExcelUtilAsset.transMapToString(l, "var14").equals("")) {//*职责区域
+                ExcelUtilAsset.placeByExcel(error, name, i, 14, ExcelUtilAsset.transMapToString(map, "var14"), "不能为空");
             }
-            if (transMapToString(l, "var15").equals("")) {//*系统角色
-                placeByExcel(error, name, i, 15, transMapToString(map, "var15"), "不能为空");
-                ;
+            if (ExcelUtilAsset.transMapToString(l, "var15").equals("")) {//*系统角色
+                ExcelUtilAsset.placeByExcel(error, name, i, 15, ExcelUtilAsset.transMapToString(map, "var15"), "不能为空");
             }
-            if (!transMapToString(l, "var16").equals("") && !FormatValidateTool.isNumeric(transMapToString(l, "var16"))) {//从业年限(年）
-                placeByExcel(error, name, i, 16, transMapToString(map, "var16"), "格式错误");
-                ;
+            if (!ExcelUtilAsset.transMapToString(l, "var16").equals("") && !FormatValidateTool.isNumeric(ExcelUtilAsset.transMapToString(l, "var16"))) {//从业年限(年）
+                ExcelUtilAsset.placeByExcel(error, name, i, 16, ExcelUtilAsset.transMapToString(map, "var16"), "格式错误");
             }
-            if (!transMapToString(l, "var17").equals("") && !FormatValidateTool.isDate(transMapToString(l, "var17"))) {//入职时间
-                placeByExcel(error, name, i, 17, transMapToString(map, "var16"), "格式错误");
-                ;
+            if (!ExcelUtilAsset.transMapToString(l, "var17").equals("") && !FormatValidateTool.isDate(ExcelUtilAsset.transMapToString(l, "var17"))) {//入职时间
+                ExcelUtilAsset.placeByExcel(error, name, i, 17, ExcelUtilAsset.transMapToString(map, "var16"), "格式错误");
             }
-        }
-    }
-
-    /**
-     * @param error      错误信息集合
-     * @param name       　表名称
-     * @param row        行数
-     * @param col        列数
-     * @param fieldsName 字段名称
-     * @param msg        错误内容
-     */
-    private static void placeByExcel(List<ExcelMessage> error, String name, Integer row, Integer col, String fieldsName, String msg) {
-//        String[] str = {(error.size() + 1) + "", name, (row) + "行" + (col + 1) + "列", fieldsName, msg};
-        ExcelMessage excelMessage = new ExcelMessage((error.size() + 1), name, (row) + "行" + (col + 1) + "列", fieldsName, msg);
-        error.add(excelMessage);
-    }
-
-    /**
-     * 模板格式判断
-     *
-     * @param strs 要求模板字段属性
-     * @param map  模板第一行对应的属性名称
-     * @param str  说明
-     */
-    public static String templateFormat(String[] strs, Map<String, Object> map, String str) {
-        String msg = "";
-        for (int i = 0; i < strs.length; i++) {
-            if (!transMapToString(map, "var" + i).equals(strs[i])) {
-                msg = str;
-                break;
-            }
-        }
-        return msg;
-    }
-
-    /**
-     * 从map中获取字符
-     */
-    public static String transMapToString(Map<String, Object> map, String key) {
-        return map.get(key) == null ? "" : map.get(key).toString().trim();
-    }
-
-    /**
-     * 字符转为Integer
-     */
-    public static Integer transStringToInteger(String str) {
-        if (str != "" && str.matches("[0-9]*")) {
-            return Integer.parseInt(str);
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * 字符转为double
-     */
-    public static Double transStringToDouble(String str) {
-        if (str != "" && str.matches("[0-9]*([.][0-9]*)?")) {
-            return Double.parseDouble(str);
-        } else {
-            return null;
         }
     }
 
