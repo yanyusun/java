@@ -5,15 +5,15 @@ import com.dqys.business.service.exception.bean.base.BussinessException;
 /**
  * Created by mkfeng on 2016/8/5.
  */
-public class ArtificialException extends Exception implements BussinessException {
+public class LenderException extends Exception implements BussinessException {
     /**
      * 业务日志异常名称
      */
-    public static String EXCEPTION_NAME = "ARTIFICIAL_EXCEPTION";
-    public static Integer EXCEPTION_CODE = 1001;
+    public static String EXCEPTION_NAME = "LENDER_EXCEPTION";
+    public static Integer EXCEPTION_CODE = 1002;
     public int exceptionCode;
 
-    public ArtificialException(String msg, int exceptionCode) {
+    public LenderException(String msg, int exceptionCode) {
         super(msg);
         this.exceptionCode = exceptionCode;
 

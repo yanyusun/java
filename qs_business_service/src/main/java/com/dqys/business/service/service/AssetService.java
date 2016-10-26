@@ -3,6 +3,7 @@ package com.dqys.business.service.service;
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.service.dto.asset.*;
 import com.dqys.business.service.exception.bean.BusinessLogException;
+import com.dqys.business.service.exception.bean.LenderException;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.core.model.JsonResponse;
 
@@ -96,6 +97,6 @@ public interface AssetService {
      * @param file
      * @return
      */
-    JsonResponse excelImport_tx(Integer id, String file) throws BusinessLogException;
+    JsonResponse excelImport_tx(Integer id, String file) throws BusinessLogException, LenderException;
 
 }

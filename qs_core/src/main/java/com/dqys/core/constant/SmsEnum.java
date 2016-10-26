@@ -33,7 +33,8 @@ public enum SmsEnum {
     ADD_FLOW_COMPANY(133, "添加流转公司"),
     LEAVE_WORD(134, "留言操作"),
     REGISTER_AUDIT(135, "注册请求审核"),
-    REGISTER_AUDIT_RESULT(136, "注册审核结果");
+    REGISTER_AUDIT_RESULT(136, "注册审核结果"),
+    ACTIVATION_INFORM(137, "组织架构导入通知激活");
 
     private Integer value;
     private String name;

@@ -31,6 +31,7 @@ import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.dto.asset.*;
 import com.dqys.business.service.dto.excel.ExcelMessage;
 import com.dqys.business.service.exception.bean.BusinessLogException;
+import com.dqys.business.service.exception.bean.LenderException;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.business.service.service.AssetService;
 import com.dqys.business.service.service.BusinessLogService;
@@ -881,7 +882,7 @@ public class AssetServiceImpl implements AssetService {
     }
 
     @Override
-    public JsonResponse excelImport_tx(Integer id, String file) throws BusinessLogException {
+    public JsonResponse excelImport_tx(Integer id, String file) throws BusinessLogException, LenderException {
         if (CommonUtil.checkParam(id, file)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -945,21 +946,21 @@ public class AssetServiceImpl implements AssetService {
         // 增加借款人的相关联系人
         for (ContactDTO contactDTO : contactDTOList) {
             if (idMap.get(contactDTO.getId()) == null) {
-                return JsonResponseTool.failure("借款人的相关联系人序号关联不对");
+                throw new LenderException("借款人的相关联系人序号关联不对", LenderException.EXCEPTION_CODE);
             }
             contactDTO.setMode(ObjectTypeEnum.LENDER.getValue().toString());
             contactDTO.setModeId(idMap.get(contactDTO.getId()));
             ContactInfo contactInfo = LenderServiceUtils.toContactInfo(contactDTO);
             Integer result = contactInfoMapper.insert(contactInfo);
             if (CommonUtil.checkResult(result)) {
-                return JsonResponseTool.failure("增加借款人相关联系人基础信息失败");
+                throw new LenderException("增加借款人相关联系人基础信息失败", LenderException.EXCEPTION_CODE);
             }
         }
         // 增加抵押物
         Map<String, Integer> keyMap = new HashMap<>(); // 增加关联关系映射，这里的以抵押物名称，借据中的的映射为准
         for (PawnDTO pawnDTO : pawnDTOList) {
             if (idMap.get(pawnDTO.getId()) == null) {
-                return JsonResponseTool.failure("借款人的相关联系人序号关联不对");
+                throw new LenderException("借款人的相关联系人序号关联不对", LenderException.EXCEPTION_CODE);
             }
             pawnDTO.setLenderId(idMap.get(pawnDTO.getId()));
             PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
@@ -977,7 +978,7 @@ public class AssetServiceImpl implements AssetService {
 //            }
             Integer result = pawnInfoMapper.insert(pawnInfo);
             if (CommonUtil.checkResult(result)) {
-                return JsonResponseTool.failure("增加抵押物信息失败");
+                throw new LenderException("增加抵押物信息失败", LenderException.EXCEPTION_CODE);
             }
             businessService.addServiceObject(ObjectTypeEnum.PAWN.getValue(), pawnInfo.getId(),
                     ObjectTypeEnum.LENDER.getValue(), pawnDTO.getLenderId());
@@ -989,7 +990,7 @@ public class AssetServiceImpl implements AssetService {
         // 增加借据
         for (IouDTO iouDTO : iouDTOList) {
             if (idMap.get(iouDTO.getId()) == null) {
-                return JsonResponseTool.failure("借款人的相关联系人序号关联不对");
+                throw new LenderException("借款人的相关联系人序号关联不对", LenderException.EXCEPTION_CODE);
             }
             iouDTO.setLenderId(idMap.get(iouDTO.getId()));
             IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
@@ -1007,7 +1008,7 @@ public class AssetServiceImpl implements AssetService {
 //            }
             Integer result = iouInfoMapper.insert(iouInfo);
             if (CommonUtil.checkResult(result)) {
-                return JsonResponseTool.failure("增加借据信息失败");
+                throw new LenderException("增加借据信息失败", LenderException.EXCEPTION_CODE);
             }
             // 添加业务
             businessService.addServiceObject(ObjectTypeEnum.IOU.getValue(), iouInfo.getId(),
