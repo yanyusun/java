@@ -99,7 +99,7 @@ public class ExcelTool {
     }
 
     public static void main(String[] args) {
-        List<Map<String, Object>> maps = readExcelXSSFForList("f://", "2.xlsx", 0, 0, 0);
+        List<Map<String, Object>> maps = readExcelXSSFForList("/home/pan/t/", "1.xlsx", 0, 0, 0);
         for (Map map : maps) {
             System.out.println(map.get("var1"));
         }
