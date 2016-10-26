@@ -108,7 +108,7 @@ public class LenderServiceImpl implements LenderService {
         if (lenderQuery == null) {
             return null; // 类型不对,参数错误
         }
-        if (SysProperty.NULL_DATA_ID.equals(lenderQuery.getId())) {
+        if (SysProperty.NULL_DATA_ID.equals(lenderQuery.getId())||lenderQuery.getId()==null) {
             // 搜索不到数据
             return JsonResponseTool.successNullList();
         }
