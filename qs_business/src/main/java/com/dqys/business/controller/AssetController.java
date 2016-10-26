@@ -138,7 +138,7 @@ public class AssetController {
      */
     @RequestMapping(value = "/excelIn")
     public JsonResponse addLenders(@RequestParam(required = true) Integer id,
-                                   @RequestParam(required = true) String file) throws BusinessLogException {
+                                   @RequestParam(required = true) String file) throws Exception {
 
         if (CommonUtil.checkParam(id, file)) {
             return JsonResponseTool.paramErr("参数错误");
