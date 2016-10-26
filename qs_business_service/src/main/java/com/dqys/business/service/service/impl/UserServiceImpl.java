@@ -273,9 +273,9 @@ public class UserServiceImpl implements UserService {
                     map.put("result", "yes");
                     Map userC = coordinatorMapper.getUserAndCompanyByUserId(userId);
                     SmsUtil sms = new SmsUtil();
-                    String content = sms.sendSms(SmsEnum.REGISTER_AUDIT_RESULT.getValue(), MessageUtils.transMapToString(userC, "realName"),
-                            MessageUtils.transMapToString(userC, "companyName"), text);
-                    messageService.add("注册审核结果答复", content, operId, userId, "", MessageEnum.SERVE.getValue(), 0, "");
+                    String content = sms.sendSms(SmsEnum.REGISTER_AUDIT_RESULT.getValue(), MessageUtils.transMapToString(userC, "mobile"),
+                            MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(userC, "companyName"), text);
+                    messageService.add("注册审核结果答复", content, operId, userId, "", MessageEnum.SERVE.getValue(), null, "");
                 }
             }
         } else {
