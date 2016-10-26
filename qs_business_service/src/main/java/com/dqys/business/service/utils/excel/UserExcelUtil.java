@@ -42,7 +42,7 @@ public class UserExcelUtil {
             // 临时文件地址
             String path = SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_FILE_UPLOAD_PATH_KEY).getPropertyValue()
                     + "/temp/" + type + "/" + userId + "/";
-            List<Map<String, Object>> list = ExcelTool.readExcelXSSFForList(path, fileName, 1, 0, 0);//借款人
+            List<Map<String, Object>> list = ExcelTool.readExcelForList(path, fileName, 1, 0, 0);//借款人
             //判断文件的字段格式
             List<ExcelMessage> error = new ArrayList<ExcelMessage>();//错误信息
             if (!checkUserExcel(list, error, tUserInfoMapper)) {
