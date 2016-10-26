@@ -56,7 +56,7 @@ public class ExcelTool {
                 }
             }
         } catch (Exception e) {
-           e.printStackTrace();
+            readExcelXSSFForList(filepath, filename, startrow, startcol, sheetnum);
         }
         return varList;
     }
