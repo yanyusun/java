@@ -153,11 +153,12 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             int teamId = getTeamId(followUpMessageQuery.getObjectId(), followUpMessageQuery.getObjectType(), userId);
             followUpMessageQuery.setTeamId(teamId);
         }
-        if(followUpMessageQuery.isCOLLECTION()){//与当前用户合作的催收公司
-
-        }else if(followUpMessageQuery.isJUDICIARY()){//与当前用户合作的司法机构
-
-        }
+        // TODO: 16-10-27 预留字段目前需求不必使用也能完成 
+//        if(followUpMessageQuery.isCollection()){//与当前用户合作的催收公司
+//
+//        }else if(followUpMessageQuery.isJudiciary()){//与当前用户合作的司法机构
+//
+//        }
         return followUpMessageMapper.getlistWithALL(followUpMessageQuery);
     }
 
