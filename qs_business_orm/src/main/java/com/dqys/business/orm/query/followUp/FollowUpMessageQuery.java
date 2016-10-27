@@ -18,6 +18,8 @@ import com.dqys.core.base.BaseQuery;
  * @apiParam {number} [sendStatus] 发送状态
  * @apiParam {boolean} [mine] 只查自己
  * @apiParam {boolean} [team] 只查团队
+ * @apiParam {boolean} [collection] 催收ｔａｂ
+ * @apiParam {boolean} [team] 司法ｔａｂ
  * @apiParam {boolean} isPaging 是否分页true分页,false不分页c_pageList请求必传
  * @apiParam {number} [startPageNum] 当前分页
  * @apiParam {number} [pageSize] 分页大小
@@ -52,9 +54,9 @@ public class FollowUpMessageQuery extends BaseQuery {
 
     private boolean team;
 
-    private boolean COLLECTION;
+    private boolean collection;
 
-    private boolean JUDICIARY;
+    private boolean judiciary;
 
     @Override
     public Integer getId() {
@@ -162,19 +164,21 @@ public class FollowUpMessageQuery extends BaseQuery {
         this.userId = userId;
     }
 
-    public boolean isCOLLECTION() {
-        return COLLECTION;
+    public boolean isCollection() {
+        return collection;
     }
 
-    public void setCOLLECTION(boolean COLLECTION) {
-        this.COLLECTION = COLLECTION;
+    public void setCollection(boolean collection) {
+        this.collection = collection;
     }
 
-    public boolean isJUDICIARY() {
-        return JUDICIARY;
+    public boolean isJudiciary() {
+        return judiciary;
     }
 
-    public void setJUDICIARY(boolean JUDICIARY) {
-        this.JUDICIARY = JUDICIARY;
+    public void setJudiciary(boolean judiciary) {
+        this.judiciary = judiciary;
     }
 }
+
+

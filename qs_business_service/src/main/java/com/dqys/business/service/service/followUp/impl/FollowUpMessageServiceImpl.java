@@ -145,17 +145,17 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
 
     @Override
     public List<FollowUpMessage> getlistWithAll(FollowUpMessageQuery followUpMessageQuery) {
-        if (followUpMessageQuery.isMine()) {
+        if (followUpMessageQuery.isMine()) {//只看自己
             int userId = UserSession.getCurrent().getUserId();
             followUpMessageQuery.setUserId(userId);
-        } else if (followUpMessageQuery.isTeam()) {
+        } else if (followUpMessageQuery.isTeam()) {//只看自己协作器的团队
             int userId = UserSession.getCurrent().getUserId();
             int teamId = getTeamId(followUpMessageQuery.getObjectId(), followUpMessageQuery.getObjectType(), userId);
             followUpMessageQuery.setTeamId(teamId);
         }
-        if(followUpMessageQuery.isCOLLECTION()){
+        if(followUpMessageQuery.isCOLLECTION()){//与当前用户合作的催收公司
 
-        }else if(followUpMessageQuery.isJUDICIARY()){
+        }else if(followUpMessageQuery.isJUDICIARY()){//与当前用户合作的司法机构
 
         }
         return followUpMessageMapper.getlistWithALL(followUpMessageQuery);
