@@ -31,7 +31,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.UnexpectedRollbackException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -262,9 +264,10 @@ public class UserServiceImpl implements UserService {
                 Message message = new Message("注册请求认证", content, userId, info.getId(), null, null, 0, null, 0, operUrl, 0);
                 messageMapper.add(message);
             }
-
         }
-        return JsonResponseTool.success(null);
+        Map map=new HashMap<>();
+        map.put("realName",userInfo.getRealName());
+        return JsonResponseTool.success(map);
     }
 
     /* 验证用户存在性 */

@@ -56,7 +56,7 @@ public class ExcelTool {
                 }
             }
         } catch (Exception e) {
-            readExcelXSSFForList(filepath, filename, startrow, startcol, sheetnum);
+            return readExcelXSSFForList(filepath, filename, startrow, startcol, sheetnum);
         }
         return varList;
     }
