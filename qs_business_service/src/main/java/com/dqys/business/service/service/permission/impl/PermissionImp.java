@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static com.dqys.business.orm.constant.company.ObjectTypeEnum.IOU;
 import static com.dqys.business.orm.constant.company.ObjectTypeEnum.PAWN;
 
 /**
@@ -67,7 +68,7 @@ public class PermissionImp implements Permission{
                     originOperTypeFiler.decorate(new OnHandleOperTypeFilter(
                             objectType, objectId, pawnInfoMapper, iouInfoMapper
                     ));
-                    originOperTypeFiler.decorate(new InitBusinessOperTypeFilter(operTypeService,objectType,objectId,PAWN.getValue()));
+                    originOperTypeFiler.decorate(new InitBusinessOperTypeFilter(operTypeService,objectType,objectId, IOU.getValue()));
                     break;
             }
         }
