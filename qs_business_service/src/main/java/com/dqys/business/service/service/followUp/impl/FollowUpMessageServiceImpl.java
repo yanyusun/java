@@ -153,6 +153,11 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             int teamId = getTeamId(followUpMessageQuery.getObjectId(), followUpMessageQuery.getObjectType(), userId);
             followUpMessageQuery.setTeamId(teamId);
         }
+        if(followUpMessageQuery.isCOLLECTION()){
+
+        }else if(followUpMessageQuery.isJUDICIARY()){
+
+        }
         return followUpMessageMapper.getlistWithALL(followUpMessageQuery);
     }
 
