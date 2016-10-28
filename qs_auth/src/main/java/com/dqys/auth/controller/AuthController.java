@@ -894,7 +894,7 @@ public class AuthController extends BaseApiContorller {
      * @apiName validMailCode
      * @apiGroup Auth
      * @apiParam {string} email 邮箱
-     * @apiParam {string} mailCode 验证码
+     * @apiParam {string} mailCode 邮件验证码
      * @apiParam {int} mailType 验证码类型（101重置密码）
      */
     @RequestMapping(value = "/validMailCode", method = RequestMethod.POST)
@@ -935,7 +935,7 @@ public class AuthController extends BaseApiContorller {
      * @apiName verifyEmailAndCode
      * @apiGroup Auth
      * @apiParam {string} email 邮箱
-     * @apiParam {string} mailCode 邮箱验证码
+     * @apiParam {string} mailCode 邮件验证码
      * @apiParam {string} code 验证码
      * @apiParam {string} captchaKey 图片验证码的key
      */
@@ -958,7 +958,7 @@ public class AuthController extends BaseApiContorller {
      * @apiName resetMail
      * @apiGroup Auth
      * @apiParam {string} email 邮箱
-     * @apiParam {string} mailCode 验证码
+     * @apiParam {string} mailCode 邮件验证码
      * @apiParam {string} pwd 密码
      */
     @RequestMapping(value = "/resetMail", method = RequestMethod.POST)
@@ -1000,7 +1000,7 @@ public class AuthController extends BaseApiContorller {
      * @apiName resetMobile
      * @apiGroup Auth
      * @apiParam {string} email 邮箱
-     * @apiParam {string} smsCode 验证码
+     * @apiParam {string} smsCode 手机验证码
      * @apiParam {string} pwd 密码
      */
     @RequestMapping(value = "/resetMobile", method = RequestMethod.POST)
@@ -1074,7 +1074,7 @@ public class AuthController extends BaseApiContorller {
      * @apiName validSmsCode
      * @apiGroup Auth
      * @apiParam {string} mobile 手机号
-     * @apiParam {string} smsCode 验证码
+     * @apiParam {string} smsCode 手机验证码
      * @apiParam {int} smsType 验证码类型（101注册验证码。138找回密码）
      */
     @RequestMapping(value = "/validSmsCode", method = RequestMethod.POST)
@@ -1112,5 +1112,28 @@ public class AuthController extends BaseApiContorller {
             return JsonResponseTool.failure("邮箱帐号有误");
         }
     }
+
+    /**
+     * @api {POST} http://{url}/auth/validSmsCodeByEmail 根据邮箱获取手机号，并手机验证码进行验证
+     * @apiName validSmsCodeByEmail
+     * @apiGroup Auth
+     * @apiParam {string} email 邮箱
+     * @apiParam {string} smsCode 手机验证码
+     */
+    @RequestMapping(value = "/validSmsCodeByEmail", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse validSmsCodeByEmail(@RequestParam String email, @RequestParam String smsCode) {
+        if (!FormatValidateTool.checkEmail(email)) {
+            return JsonResponseTool.failure("邮箱无效");
+        }
+        List<TUserInfo> infos = tUserInfoMapper.verifyUser(null, null, email);
+        if (infos != null && infos.size() > 0) {
+            TUserInfo info = infos.get(0);
+            return validSmsCode(info.getMobile(), smsCode, SmsEnum.RESET_PAWW.getValue());
+        } else {
+            return JsonResponseTool.failure("邮箱帐号有误");
+        }
+    }
+
 
 }
