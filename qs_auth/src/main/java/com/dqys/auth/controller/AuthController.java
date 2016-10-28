@@ -12,6 +12,8 @@ import com.dqys.auth.service.facade.UserService;
 import com.dqys.captcha.service.facade.CaptchaService;
 import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.base.SysProperty;
+import com.dqys.core.constant.MailEnum;
+import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.ServiceResult;
@@ -24,14 +26,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -374,7 +374,7 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
-     * @api {POST} http://{url}/auth/reset_mobile 手机重置密码
+     * @api {POST} http://{url}/auth/reset_mobile 使用手机短信验证码来重置密码
      * @apiName reset_mobile
      * @apiGroup Auth
      * @apiParam {String} mobile 手机号
@@ -397,7 +397,7 @@ public class AuthController extends BaseApiContorller {
             }
 
             //校验验证码
-            ServiceResult validServiceResult = this.captchaService.validSmsCaptcha(mobile, smsCode);
+            ServiceResult validServiceResult = this.captchaService.validSmsCaptcha(mobile, smsCode, SmsEnum.RESET_PAWW.getValue());
             if (!validServiceResult.getFlag()) {
                 return JsonResponseTool.paramErr(validServiceResult.getMessage());
             }
@@ -650,6 +650,7 @@ public class AuthController extends BaseApiContorller {
 
     /**
      * 第五步
+     *
      * @api {POST} http://{url}/auth/fixCompanyInfo 完善公司以及管理人员信息
      * @apiName register_admin
      * @apiGroup Auth
@@ -807,4 +808,309 @@ public class AuthController extends BaseApiContorller {
             return JsonResponseTool.success("成功");
         }
     }
+
+    /**
+     * @api {POST} http://{url}/auth/verifyLoginName 验证自定义帐号、邮箱、手机号三者唯一性，
+     * 只是验证其中一个唯一性的就传相应的参数即可
+     * @apiName verifyLoginName
+     * @apiGroup Auth
+     * @apiParam {string} [account] 自定义帐号
+     * @apiParam {string} [mobile] 手机号
+     * @apiParam {string} [email] 邮箱
+     */
+    @RequestMapping(value = "/verifyLoginName", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse verifyLoginName(String account, String mobile, String email) throws Exception {
+        String msg = "";
+        TUserInfo info = null;
+        if (account != null && !"".equals(account)) {
+            info = userService.queryUser(account, null, null);
+            if (info != null) {
+                msg += "自定义帐号已存在;";
+            }
+        }
+        if (mobile != null && !"".equals(mobile)) {
+            if (!FormatValidateTool.checkMobile(mobile)) {
+                msg = "手机号格式错误";
+                return JsonResponseTool.failure(msg);
+            } else {
+                info = userService.queryUser(null, mobile, null);
+                if (info != null) {
+                    msg += "手机号已存在;";
+                }
+            }
+        }
+        if (email != null && !"".equals(email)) {
+            if (!FormatValidateTool.checkEmail(email)) {
+                msg = "邮箱格式错误";
+                return JsonResponseTool.failure(msg);
+            } else {
+                info = userService.queryUser(null, null, email);
+                if (info != null) {
+                    msg += "邮箱已存在;";
+                }
+            }
+        }
+        if ("".equals(msg)) {
+            return JsonResponseTool.success(null);
+        } else {
+            return JsonResponseTool.failure(msg);
+        }
+    }
+
+    /**
+     * @api {POST} http://{url}/auth/sendEmaiCode 发送邮箱邮件验证码
+     * @apiName sendEmaiCode
+     * @apiGroup Auth
+     * @apiParam {string} email 邮箱
+     * @apiParam {int} mailType 邮箱验证码类型（101重置密码）
+     */
+    @RequestMapping(value = "/sendEmaiCode", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse sendEmaiCode(@RequestParam String email, @RequestParam Integer mailType) {
+        //发送邮箱验证码
+        if (!FormatValidateTool.checkEmail(email)) {
+            return JsonResponseTool.failure("邮箱无效");
+        }
+        ServiceResult<String> serviceResult = captchaService.createMailCode(email, mailType);
+        if (serviceResult.getFlag()) {
+            String mailCode = serviceResult.getData();
+            MailUtil mailUtil = new MailUtil();
+            boolean flag = false;
+            if (mailType == MailEnum.RESET_PAWW.getValue().intValue()) {//重置密码邮件验证码
+                flag = true;
+            }
+            if (flag) {
+                mailUtil.sendMail(mailType, email, mailCode);
+            }
+            return JsonResponseTool.success(null);
+        } else {
+            return JsonResponseTool.failure("验证码生成失败");
+        }
+    }
+
+    /**
+     * @api {POST} http://{url}/auth/validMailCode 验证邮箱邮件验证码
+     * @apiName validMailCode
+     * @apiGroup Auth
+     * @apiParam {string} email 邮箱
+     * @apiParam {string} mailCode 验证码
+     * @apiParam {int} mailType 验证码类型（101重置密码）
+     */
+    @RequestMapping(value = "/validMailCode", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse validMailCode(@RequestParam String email, @RequestParam String mailCode, @RequestParam Integer mailType) {
+        if (!FormatValidateTool.checkEmail(email)) {
+            return JsonResponseTool.paramErr("邮箱无效");
+        }
+        ServiceResult result = captchaService.validMailCaptcha(email, mailCode, mailType);
+        if (result.getFlag()) {
+            ServiceResult<String> resultTwo = captchaService.createMailCode(email, mailType);
+            return JsonResponseTool.success(resultTwo.getData());
+        } else {
+            return JsonResponseTool.failure(result.getMessage());
+        }
+    }
+
+    /**
+     * @api {POST} http://{url}/auth/verifyImgCode 验证图片验证码
+     * @apiName verifyImgCode
+     * @apiGroup Auth
+     * @apiParam {string} code 验证码
+     * @apiParam {string} captchaKey 图片验证码的key
+     */
+    @RequestMapping(value = "/verifyImgCode", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse verifyImgCode(@RequestParam String captchaKey, @RequestParam String code) {
+        ServiceResult result = captchaService.validImgCaptcha(captchaKey, code);
+        if (result.getFlag()) {
+            return JsonResponseTool.success(null);
+        } else {
+            return JsonResponseTool.failure(result.getMessage());
+        }
+    }
+
+    /**
+     * @api {POST} http://{url}/auth/verifyEmailAndCode 找回密码，邮箱邮件验证码验证
+     * @apiName verifyEmailAndCode
+     * @apiGroup Auth
+     * @apiParam {string} email 邮箱
+     * @apiParam {string} mailCode 邮箱验证码
+     * @apiParam {string} code 验证码
+     * @apiParam {string} captchaKey 图片验证码的key
+     */
+    @RequestMapping(value = "/verifyEmailAndCode", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse verifyEmailAndCode(@RequestParam String email, @RequestParam String mailCode, @RequestParam String captchaKey, @RequestParam String code) {
+        if (!FormatValidateTool.checkEmail(email)) {
+            return JsonResponseTool.failure("邮箱无效");
+        }
+        ServiceResult result = captchaService.validImgCaptcha(captchaKey, code);
+        if (result.getFlag()) {
+            return validMailCode(email, mailCode, MailEnum.RESET_PAWW.getValue());
+        } else {
+            return JsonResponseTool.failure("图片验证码输入错误");
+        }
+    }
+
+    /**
+     * @api {POST} http://{url}/auth/resetMail 邮箱重置密码
+     * @apiName resetMail
+     * @apiGroup Auth
+     * @apiParam {string} email 邮箱
+     * @apiParam {string} mailCode 验证码
+     * @apiParam {string} pwd 密码
+     */
+    @RequestMapping(value = "/resetMail", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse resetMail(@RequestParam String email, @RequestParam String mailCode, @RequestParam String pwd) throws Exception {
+        if (!FormatValidateTool.checkEmail(email)) {
+            return JsonResponseTool.failure("邮箱无效");
+        }
+        ServiceResult result = captchaService.validMailCaptcha(email, mailCode, MailEnum.RESET_PAWW.getValue());
+        if (!result.getFlag()) {
+            return JsonResponseTool.failure(result.getMessage());
+        }
+        List<TUserInfo> infos = tUserInfoMapper.verifyUser(null, null, email);
+        if (infos != null && infos.size() > 0) {
+            //修改密码
+            TUserInfo info = infos.get(0);
+            info.setPassword(SignatureTool.md5Encode(SignatureTool.md5Encode(pwd, "utf-8") + info.getSalt(), "utf-8"));
+            tUserInfoMapper.updateByPrimaryKeySelective(info);
+            //登录
+            ServiceResult<UserDTO> userServiceResult = this.userService.userLogin(info.getId(), null, null, null, pwd);
+            if (!userServiceResult.getFlag()) {
+                return JsonResponseTool.authFailure(userServiceResult.getMessage());
+            }
+            return JsonResponseTool.success(ProtocolTool.createUserHeader(
+                    userServiceResult.getData().getUserId(),
+                    userServiceResult.getData().getUserTypes(),
+                    userServiceResult.getData().getRoleIds(),
+                    userServiceResult.getData().getIsCertifieds(),
+                    userServiceResult.getData().getStatus(),
+                    verifyUserStep(userServiceResult)
+            ));
+        } else {
+            return JsonResponseTool.failure("重置密码失败，邮箱填写错误");
+        }
+    }
+
+    /**
+     * @api {POST} http://{url}/auth/resetMobile 根据邮箱进行手机验证码重置密码
+     * @apiName resetMobile
+     * @apiGroup Auth
+     * @apiParam {string} email 邮箱
+     * @apiParam {string} smsCode 验证码
+     * @apiParam {string} pwd 密码
+     */
+    @RequestMapping(value = "/resetMobile", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse resetMobile(@RequestParam String email, @RequestParam String smsCode, @RequestParam String pwd) throws Exception {
+        if (!FormatValidateTool.checkEmail(email)) {
+            return JsonResponseTool.failure("邮箱无效");
+        }
+        List<TUserInfo> infos = tUserInfoMapper.verifyUser(null, null, email);
+        if (infos != null && infos.size() > 0) {
+            //修改密码
+            TUserInfo info = infos.get(0);
+            ServiceResult result = captchaService.validSmsCaptcha(info.getMobile(), smsCode, SmsEnum.RESET_PAWW.getValue());
+            if (!result.getFlag()) {
+                return JsonResponseTool.failure(result.getMessage());
+            }
+            info.setPassword(SignatureTool.md5Encode(SignatureTool.md5Encode(pwd, "utf-8") + info.getSalt(), "utf-8"));
+            tUserInfoMapper.updateByPrimaryKeySelective(info);
+            //登录
+            ServiceResult<UserDTO> userServiceResult = this.userService.userLogin(info.getId(), null, null, null, pwd);
+            if (!userServiceResult.getFlag()) {
+                return JsonResponseTool.authFailure(userServiceResult.getMessage());
+            }
+            return JsonResponseTool.success(ProtocolTool.createUserHeader(
+                    userServiceResult.getData().getUserId(),
+                    userServiceResult.getData().getUserTypes(),
+                    userServiceResult.getData().getRoleIds(),
+                    userServiceResult.getData().getIsCertifieds(),
+                    userServiceResult.getData().getStatus(),
+                    verifyUserStep(userServiceResult)
+            ));
+        } else {
+            return JsonResponseTool.failure("重置密码失败，邮箱填写错误");
+        }
+    }
+
+    /**
+     * @api {POST} http://{url}/auth/sendSmsByCode 发送手机短信验证吗
+     * @apiName sendSmsByCode
+     * @apiGroup Auth
+     * @apiParam {string} mobile 手机号
+     * @apiParam {int} smsType 验证码类型（101注册验证码。138找回密码）
+     */
+    @RequestMapping(value = "/sendSmsByCode", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse sendSmsByCode(@RequestParam String mobile, @RequestParam Integer smsType) {
+        if (!FormatValidateTool.checkMobile(mobile)) {
+            return JsonResponseTool.failure("手机号无效");
+        }
+        ServiceResult<String> result = captchaService.createSmsCode(mobile, smsType);
+        if (result.getFlag()) {
+            String code = result.getData();//验证码
+            SmsUtil smsUtil = new SmsUtil();
+            boolean flag = false;
+            if (smsType == SmsEnum.REGISTER.getValue().intValue()) {//注册短信验证码
+                flag = true;
+            } else if (smsType == SmsEnum.RESET_PAWW.getValue().intValue()) {//找回密码，重置密码短信
+                flag = true;
+            }
+            if (flag) {
+                smsUtil.sendSms(smsType, mobile, code);
+            }
+            return JsonResponseTool.success(null);
+        } else {
+            return JsonResponseTool.failure("验证码生成失败");
+        }
+    }
+
+    /**
+     * @api {POST} http://{url}/auth/validSmsCode 验证手机短信验证吗
+     * @apiName validSmsCode
+     * @apiGroup Auth
+     * @apiParam {string} mobile 手机号
+     * @apiParam {string} smsCode 验证码
+     * @apiParam {int} smsType 验证码类型（101注册验证码。138找回密码）
+     */
+    @RequestMapping(value = "/validSmsCode", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse validSmsCode(@RequestParam String mobile, @RequestParam String smsCode, @RequestParam Integer smsType) {
+        if (!FormatValidateTool.checkMobile(mobile)) {
+            return JsonResponseTool.paramErr("手机号无效");
+        }
+        ServiceResult result = captchaService.validSmsCaptcha(mobile, smsCode, smsType);
+        if (result.getFlag()) {
+            ServiceResult<String> resultTwo = captchaService.createSmsCode(mobile, smsType);
+            return JsonResponseTool.success(resultTwo.getData());
+        } else {
+            return JsonResponseTool.failure(result.getMessage());
+        }
+    }
+
+    /**
+     * @api {POST} http://{url}/auth/sendSmsCodeByEmail 根据邮箱发送手机验证码进行重置密码操作
+     * @apiName sendSmsCodeByEmail
+     * @apiGroup Auth
+     * @apiParam {string} email 邮箱
+     */
+    @RequestMapping(value = "/sendSmsCodeByEmail", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse sendSmsCodeByEmail(@RequestParam String email) {
+        if (!FormatValidateTool.checkEmail(email)) {
+            return JsonResponseTool.failure("邮箱无效");
+        }
+        List<TUserInfo> infos = tUserInfoMapper.verifyUser(null, null, email);
+        if (infos != null && infos.size() > 0) {
+            TUserInfo info = infos.get(0);
+            return sendSmsByCode(info.getMobile(), SmsEnum.RESET_PAWW.getValue());
+        } else {
+            return JsonResponseTool.failure("邮箱帐号有误");
+        }
+    }
+
 }

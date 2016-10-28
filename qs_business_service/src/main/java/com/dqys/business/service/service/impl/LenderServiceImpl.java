@@ -133,6 +133,7 @@ public class LenderServiceImpl implements LenderService {
                 // 搜索不到数据
                 return JsonResponseTool.successNullList();
             } else {
+                lenderQuery.setNotAsset(false);
                 lenderQuery.setAssetId(assetInfoList.get(0).getId());
             }
         }
@@ -234,7 +235,7 @@ public class LenderServiceImpl implements LenderService {
             List<Integer> ids = companyTeamReMapper.listObjectIdByTypeAndManager(ObjectTypeEnum.LENDER.getValue(),
                     ObjectAcceptTypeEnum.accept.getValue(), userId
             );
-            if (CommonUtil.checkParam(ids) || ids.size()==0) {
+            if (CommonUtil.checkParam(ids) || ids.size() == 0) {
                 return JsonResponseTool.successNullList();
             }
             if (!CommonUtil.checkParam(lenderQuery.getIds())) {
@@ -262,7 +263,7 @@ public class LenderServiceImpl implements LenderService {
             // 待协助 -- 协作器里面状态为参与者
             List<Integer> ids = teammateReMapper.listObjectIdByType(ObjectTypeEnum.LENDER.getValue(),
                     userId, TeammateReEnum.TYPE_PARTICIPATION.getValue());
-            if (CommonUtil.checkParam(ids) || ids.size()==0) {
+            if (CommonUtil.checkParam(ids) || ids.size() == 0) {
                 return JsonResponseTool.successNullList();
             }
             if (!CommonUtil.checkParam(lenderQuery.getIds())) {
@@ -274,7 +275,7 @@ public class LenderServiceImpl implements LenderService {
             // 正在协助的 -- 协作器里面状态为所有人
             List<Integer> ids = teammateReMapper.listObjectIdByType(ObjectTypeEnum.LENDER.getValue(),
                     userId, TeammateReEnum.TYPE_AUXILIARY.getValue());
-            if (CommonUtil.checkParam(ids) || ids.size()==0) {
+            if (CommonUtil.checkParam(ids) || ids.size() == 0) {
                 return JsonResponseTool.successNullList();
             }
             if (!CommonUtil.checkParam(lenderQuery.getIds())) {
@@ -957,7 +958,9 @@ public class LenderServiceImpl implements LenderService {
                 // 找不到数据
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
-            lenderQuery.setNotAsset(true);
+            if (lenderQuery.getAssetId() == null) {
+                lenderQuery.setNotAsset(true);
+            }
             if (!flag) {
                 lenderQuery.setOperator(userInfo.getId());
             }
@@ -971,7 +974,9 @@ public class LenderServiceImpl implements LenderService {
                 // 找不到数据
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
-            lenderQuery.setNotAsset(true);
+            if (lenderQuery.getAssetId() == null) {
+                lenderQuery.setNotAsset(true);
+            }
             if (!flag) {
                 lenderQuery.setOperator(userInfo.getId());
             }
@@ -987,7 +992,9 @@ public class LenderServiceImpl implements LenderService {
                 // 找不到数据
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
-            lenderQuery.setNotAsset(true);
+            if (lenderQuery.getAssetId() == null) {
+                lenderQuery.setNotAsset(true);
+            }
         } else if (ObjectTabEnum.assign.getValue().equals(tab)) {
             // 待分配
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
@@ -1052,7 +1059,7 @@ public class LenderServiceImpl implements LenderService {
                     userId, TeammateReEnum.TYPE_AUXILIARY.getValue());
 //            List<Integer> ids = CommonUtil.unionList(relationIds, teammateIds);
             List<Integer> ids = teammateIds;
-            if (CommonUtil.checkParam(ids) || ids.size()==0 ) {
+            if (CommonUtil.checkParam(ids) || ids.size() == 0) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             } else {
                 lenderQuery.setIds(ids);
@@ -1070,7 +1077,7 @@ public class LenderServiceImpl implements LenderService {
             objectUserRelationList.forEach(objectUserRelation -> {
                 ids.add(objectUserRelation.getObjectId());
             });
-            if (CommonUtil.checkParam(ids) || ids.size()==0) {
+            if (CommonUtil.checkParam(ids) || ids.size() == 0) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             } else {
                 // 这里引入业务的处置中状态

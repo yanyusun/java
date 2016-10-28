@@ -108,4 +108,6 @@ public interface UserService {
      */
     JsonResponse registerStep5(Integer userId, String name, String introduction, Integer province, Integer city, Integer district);
 
+    /* 验证用户存在性 */
+    TUserInfo queryUser(String account, String mobile, String email) throws Exception;
 }

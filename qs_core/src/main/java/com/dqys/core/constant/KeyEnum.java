@@ -16,6 +16,7 @@ public class KeyEnum {
     public static final String SYS_MAIL_AUTH_PASSWORD = "sys_mail_auth_password";       //发送邮件密码
     public static final String SYS_CAPTCHA_FRE_LIMIT = "sys_captcha_fre_limit";     //图片验证码生成频率
     public static final String SYS_SMS_FRE_LIMIT = "sys_sms_fre_limit";     //短信验证码发送频率
+    public static final String SYS_MAIL_FRE_LIMIT = "sys_mail_fre_limit";     //短信验证码发送频率
     public static final String SYS_FILE_UPLOAD_PATH_KEY = "sys_uploadPath";     //上传文件路径
     public static final String SYS_FILE_OPEN_PATH_KEY = "sys_file_open_Path";     //上传文件路径(对外开放)
     public static final String SYS_TMP_DEL_TIMER_KEY = "sys_file_tmp_del_timer";        //临时文件自动删除时间 hour

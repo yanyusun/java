@@ -271,7 +271,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /* 验证用户存在性 */
-    private TUserInfo queryUser(String account, String mobile, String email) throws Exception {
+    @Override
+    public TUserInfo queryUser(String account, String mobile, String email) throws Exception {
         List<TUserInfo> tUserInfos = this.tUserInfoMapper.verifyUser(account, mobile, email);
         if (null == tUserInfos || tUserInfos.isEmpty()) {
             return null;
