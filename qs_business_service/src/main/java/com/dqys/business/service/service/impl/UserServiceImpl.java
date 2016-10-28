@@ -24,6 +24,7 @@ import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;
 import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.business.service.service.MessageService;
+import com.dqys.business.service.service.OperLogService;
 import com.dqys.business.service.service.UserService;
 import com.dqys.business.service.utils.excel.UserExcelUtil;
 import com.dqys.business.service.utils.message.MessageUtils;
@@ -43,6 +44,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.UnexpectedRollbackException;
 
 import javax.mail.Session;
+import javax.servlet.jsp.tagext.TagInfo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,7 +72,8 @@ public class UserServiceImpl implements UserService {
     private CoordinatorMapper coordinatorMapper;
     @Autowired
     private MessageService messageService;
-
+    @Autowired
+    private OperLogService operLogService;
 
     public static final String INIT_PASSSWORD = "123456";
 
@@ -382,8 +385,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JsonResponse delete(Integer uId) {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         if (CommonUtil.checkParam(uId) || tUserInfoMapper.selectByPrimaryKey(uId) == null) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        if (userId.intValue() == uId.intValue()) {
+            return JsonResponseTool.failure("无法删除自己");
+        }
+        List<TUserTag> tags = tUserTagMapper.selectByUserId(uId);
+        if (tags.size() > 0) {
+            TUserTag tag = tags.get(0);
+            if (tag.getRoleId().intValue() == RoleTypeEnum.ADMIN.getValue().intValue()) {
+                return JsonResponseTool.failure("管理员帐号无法删除");
+            }
         }
         TUserTag tUserTag = new TUserTag();
         List<TUserTag> tUserTagList = tUserTagMapper.selectByUserId(uId);
@@ -396,11 +410,13 @@ public class UserServiceImpl implements UserService {
 
         Integer userResult = tUserInfoMapper.deleteByPrimaryKey(uId);
         if (userResult > 0) {
+            operLogService.addOperLog("组织架构的用户信息删除操作", uId, ObjectTypeEnum.USER_INFO.getValue(), UserInfoEnum.DEL_USER.getValue(), userId);
             tUserTagMapper.deleteByPrimaryKey(tUserTag.getId());
             return JsonResponseTool.success(null);
         } else {
             return JsonResponseTool.failure("删除失败");
         }
+
     }
 
     @Override
