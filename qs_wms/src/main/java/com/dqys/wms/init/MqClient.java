@@ -63,7 +63,7 @@ public class MqClient {
             value = @Queue(value = "follow_message_online", durable = "true"),
             exchange = @Exchange(value = "followMessageExchange"))
     )
-    public void setUnreadFollowMessage(String[] msg) throws Exception {
+    public void setUnreadFollowMessage(String[] msg) {
         // TODO: 16-8-11
         followUpReadStatus.addUnReadMessage(msg);
     }
