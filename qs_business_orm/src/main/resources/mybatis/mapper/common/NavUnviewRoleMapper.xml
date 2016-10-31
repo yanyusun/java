@@ -19,13 +19,13 @@
     delete from t_source_unview_role
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewRole">
+  <insert id="insert" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
     insert into t_source_unview_role (id, source_id, role_type
       )
     values (#{id,jdbcType=INTEGER}, #{sourceId,jdbcType=INTEGER}, #{roleType,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewRole">
+  <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
     insert into t_source_unview_role
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -50,7 +50,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewRole">
+  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
     update t_source_unview_role
     <set>
       <if test="sourceId != null">
@@ -62,13 +62,13 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewRole">
+  <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
     update t_source_unview_role
     set source_id = #{sourceId,jdbcType=INTEGER},
       role_type = #{roleType,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <resultMap id="BaseResultMap" type="com.chebaiyong.biz.asset.domain.NavUnviewRole">
+  <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.common.NavUnviewRole">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="nav_id" jdbcType="INTEGER" property="navId" />
     <result column="role_type" jdbcType="BIT" property="roleType" />
@@ -86,13 +86,13 @@
     delete from t_nav_unview_role
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewRole">
+  <insert id="insert" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
     insert into t_nav_unview_role (id, nav_id, role_type
       )
     values (#{id,jdbcType=INTEGER}, #{navId,jdbcType=INTEGER}, #{roleType,jdbcType=BIT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewRole">
+  <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
     insert into t_nav_unview_role
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -117,7 +117,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewRole">
+  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
     update t_nav_unview_role
     <set>
       <if test="navId != null">
@@ -129,7 +129,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewRole">
+  <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
     update t_nav_unview_role
     set nav_id = #{navId,jdbcType=INTEGER},
       role_type = #{roleType,jdbcType=BIT}
