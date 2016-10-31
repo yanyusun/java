@@ -1,4 +1,4 @@
-package com.dqys.wms.constant;
+package com.dqys.core.constant;
 
 /**
  * Created by mkfeng on 2016/8/29.

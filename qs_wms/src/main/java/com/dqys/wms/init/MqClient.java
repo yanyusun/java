@@ -4,7 +4,7 @@ import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.utils.SysPropertyTool;
-import com.dqys.wms.constant.MqClientEnum;
+import com.dqys.core.constant.MqClientEnum;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
@@ -89,7 +89,7 @@ public class MqClient {
 
             emailClient.addTo(to);
             emailClient.setSubject("多清平台帐号验证邮件");
-            emailClient.setMsg(htmlMailBody(msg, to));
+            emailClient.setMsg(msg);
             emailClient.send();
         } catch (EmailException e) {
             e.printStackTrace();
@@ -115,29 +115,18 @@ public class MqClient {
 
         String str = "<p>\n" +
                 "    您好！\n" +
-                "</p>\n" +
                 "<p>\n" +
                 "    <span style=\"color: rgb(51, 51, 51);\">感谢您注册清搜公众平台。</span>\n" +
-                "</p>\n" +
                 "<p>\n" +
                 "    <span style=\"color: rgb(51, 51, 51);\">您的登陆邮箱为：</span><span style=\"color: rgb(0, 162, 202);\">" + mail + "</span><span style=\"color: rgb(51, 51, 51);\">。请点击一下链接激活账号：</span>\n" +
-                "</p>\n" +
                 "<p>\n" +
                 "    <span style=\"color: rgb(51, 51, 51);\"><a href=\"" + MqClientEnum.EMAIL_URL.getName() + msg + "\" target=\"_blank\">"+ MqClientEnum.EMAIL_URL.getName()+msg+"</a></span>\n" +
-                "</p>\n" +
-                "<p>\n" +
-                "</p>\n" +
                 "<p>\n" +
                 "    如果以上链接无法点击，请将上面的地址复制到您的浏览器（如IE）的地址栏进入清搜公众平台。（该链接4小时内有效，48小时候需要重新注册）\n" +
-                "</p>\n" +
-                "<p>\n" +
-                "</p>\n" +
                 "<p>\n" +
                 "    清搜产品经理\n" +
-                "</p>\n" +
                 "<p>\n" +
                 "    lbw@iqingsou.com\n" +
-                "</p>\n" +
                 "<p>\n" +
                 "    <br/>\n" +
                 "</p>";
