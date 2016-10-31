@@ -3,7 +3,7 @@ package com.dqys.business.orm.pojo.common;
 public class NavUnviewRole {
     private Integer id;
 
-    private Integer sourceId;
+    private Integer navId;
 
     private Integer roleType;
 
@@ -15,12 +15,12 @@ public class NavUnviewRole {
         this.id = id;
     }
 
-    public Integer getSourceId() {
-        return sourceId;
+    public Integer getNavId() {
+        return navId;
     }
 
-    public void setSourceId(Integer sourceId) {
-        this.sourceId = sourceId;
+    public void setNavId(Integer navId) {
+        this.navId = navId;
     }
 
     public Integer getRoleType() {
