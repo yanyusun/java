@@ -19,13 +19,13 @@
     delete from t_nav_unview_userinfo
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewUserInfo" >
+  <insert id="insert" parameterType="com.dqys.business.orm.pojo.common.NavUnviewUserInfo" >
     insert into t_nav_unview_userinfo (id, nav_id, user_id
       )
     values (#{id,jdbcType=INTEGER}, #{navId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewUserInfo" >
+  <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.common.NavUnviewUserInfo" >
     insert into t_nav_unview_userinfo
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -50,7 +50,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewUserInfo" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.common.NavUnviewUserInfo" >
     update t_nav_unview_userinfo
     <set >
       <if test="navId != null" >
@@ -62,7 +62,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewUserInfo" >
+  <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.common.NavUnviewUserInfo" >
     update t_nav_unview_userinfo
     set nav_id = #{navId,jdbcType=INTEGER},
       user_id = #{userId,jdbcType=INTEGER}

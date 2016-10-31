@@ -19,13 +19,13 @@
     delete from t_nav_unview_company
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewCompany" >
+  <insert id="insert" parameterType="com.dqys.business.orm.pojo.common..NavUnviewCompany" >
     insert into t_nav_unview_company (id, nav_id, company_id
       )
     values (#{id,jdbcType=INTEGER}, #{navId,jdbcType=INTEGER}, #{companyId,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewCompany" >
+  <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.common..NavUnviewCompany" >
     insert into t_nav_unview_company
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -50,7 +50,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewCompany" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.common..NavUnviewCompany" >
     update t_nav_unview_company
     <set >
       <if test="navId != null" >
@@ -62,7 +62,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.chebaiyong.biz.asset.domain.NavUnviewCompany" >
+  <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.common..NavUnviewCompany" >
     update t_nav_unview_company
     set nav_id = #{navId,jdbcType=INTEGER},
       company_id = #{companyId,jdbcType=INTEGER}
