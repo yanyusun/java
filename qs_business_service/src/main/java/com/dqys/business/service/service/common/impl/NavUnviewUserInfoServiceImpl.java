@@ -1,6 +1,6 @@
 package com.dqys.business.service.service.common.impl;
 
-import com.dqys.business.orm.mapper.common.NavUnviewCompanyMapper;
+import com.dqys.business.orm.mapper.common.NavUnviewUserInfoMapper;
 import com.dqys.business.orm.mapper.common.SourceNavigationMapper;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
@@ -19,7 +19,7 @@ import java.util.Map;
 //// TODO: 16-10-28  mkf
 public class NavUnviewUserInfoServiceImpl implements NavUnviewRoleService {
     @Autowired
-    private NavUnviewCompanyMapper navUnviewCompanyMapper;
+    private NavUnviewUserInfoMapper navUnviewUserInfoMapper;
 
     @Autowired
     private SourceNavigationMapper sourceNavigationMapper;
@@ -54,7 +54,7 @@ public class NavUnviewUserInfoServiceImpl implements NavUnviewRoleService {
     }
 
     private void setSelectDtoList(List<SelectDto> dtos, List<Integer> navIds) {
-        List<Map> list = navUnviewCompanyMapper.findNavNameByNavId(navIds);
+        List<Map> list = navUnviewUserInfoMapper.findNavNameByNavId(navIds);
         for (Map m : list) {
             SelectDto dto = new SelectDto(MessageUtils.transMapToInt(m, "id"), MessageUtils.transMapToString(m, "name"));
             dtos.add(dto);
@@ -69,11 +69,11 @@ public class NavUnviewUserInfoServiceImpl implements NavUnviewRoleService {
     @Override
     public void del(Integer navId) {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
-        navUnviewCompanyMapper.delByNavId(navId, userId);
+        navUnviewUserInfoMapper.delByNavId(navId, userId);
     }
 
     @Override
     public void add(Integer navId, List<Integer> unviewList) {
-        navUnviewCompanyMapper.insertSelectiveByCompanyId(navId, unviewList);
+        navUnviewUserInfoMapper.insertSelectiveByUserInfo(navId, unviewList);
     }
 }
