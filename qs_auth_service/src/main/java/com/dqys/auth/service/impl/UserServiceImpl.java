@@ -15,10 +15,7 @@ import com.dqys.auth.service.dto.UserDTO;
 import com.dqys.auth.service.facade.UserService;
 import com.dqys.auth.service.utils.MessageUtils;
 import com.dqys.auth.service.utils.UserUtils;
-import com.dqys.core.constant.KeyEnum;
-import com.dqys.core.constant.RoleTypeEnum;
-import com.dqys.core.constant.SmsEnum;
-import com.dqys.core.constant.SysPropertyTypeEnum;
+import com.dqys.core.constant.*;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.ServiceResult;
 import com.dqys.core.utils.*;
@@ -136,8 +133,8 @@ public class UserServiceImpl implements UserService {
         if (null != tUserInfo && StringUtils.isNotBlank(tUserInfo.getEmail())) {
             String code = RandomStringUtils.randomAlphanumeric(20) + e.getValue();
             //NoSQLWithRedisTool.sendMailToChannel(tUserInfo.getEmail(), code);     //redis
-
-            RabbitMQProducerTool.addToMailSendQueue(tUserInfo.getEmail(), code);
+            MailUtil mailUtil = new MailUtil();
+            mailUtil.sendMail(MailEnum.ACTIVATE.getValue(), tUserInfo.getEmail(), tUserInfo.getEmail(), MqClientEnum.EMAIL_URL.getName() + code);
             NoSQLWithRedisTool.setValueObject(MAIL_CONFIRM_KEY + tUserInfo.getEmail(), code, 1, TimeUnit.DAYS);
         }
     }
@@ -265,8 +262,8 @@ public class UserServiceImpl implements UserService {
                 messageMapper.add(message);
             }
         }
-        Map map=new HashMap<>();
-        map.put("realName",userInfo.getRealName());
+        Map map = new HashMap<>();
+        map.put("realName", userInfo.getRealName());
         return JsonResponseTool.success(map);
     }
 

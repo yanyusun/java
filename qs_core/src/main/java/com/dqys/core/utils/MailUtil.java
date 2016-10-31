@@ -67,7 +67,7 @@ public class MailUtil {
         }
         if (email != null && FormatValidateTool.checkEmail(email.trim())) {
             //发送邮件接口
-            RabbitMQProducerTool.addToMailSendQueue(email.trim(), msg);//加入短信队列
+            RabbitMQProducerTool.addToMailSendQueue(email.trim(), msg);//加入邮箱队列
         }
         return msg;
     }
