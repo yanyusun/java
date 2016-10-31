@@ -69,7 +69,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-    <delete id="delBySourceId">
+    <delete id="delByNavId">
     UPDATE t_nav_unview_userinfo SET stateflag=now(),oper_user=#{userId}  WHERE nav_id=#{navId}
   </delete>
 
@@ -80,7 +80,8 @@
     </insert>
 
     <select id="findNavNameByNavId" resultType="java.util.Map">
-        SELECT nuu.id,nuu.user_id name from t_nav_unview_userinfo nuu
+        SELECT nuu.id,tui.real_name name from t_nav_unview_userinfo nuu LEFT JOIN t_user_info tui
+        ON tui.id=nuu.user_id
         WHERE nur.nav_id IN
         <if test="navIds !=null and navIds.size>0">
             <foreach collection="navIds" index="index" item="id" open="(" close=")" separator=",">

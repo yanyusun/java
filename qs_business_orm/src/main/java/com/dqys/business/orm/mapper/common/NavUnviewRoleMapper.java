@@ -1,6 +1,7 @@
 package com.dqys.business.orm.mapper.common;
 
 import com.dqys.business.orm.pojo.common.NavUnviewRole;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -22,9 +23,9 @@ public interface NavUnviewRoleMapper {
 
     int updateByPrimaryKey(NavUnviewRole record);
 
-    Integer delByNavId(Integer navId, Integer userId);
+    Integer delByNavId(@Param("navId") Integer navId, @Param("userId") Integer userId);
 
-    Integer insertSelectiveByRoleType(Integer navId, List<Integer> unviewList);
+    Integer insertSelectiveByRoleType(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList);
 
     List<Map> findNavNameByNavId(List<Integer> navIds);
 
