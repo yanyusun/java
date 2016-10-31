@@ -5,9 +5,17 @@ package com.dqys.business.service.dto.sourceAuth;
  * Created by yan on 16-10-28.
  */
 public class SelectDto {
-    private Integer id;
+    private Integer id;//
 
     private String showName;
+
+    public SelectDto(Integer id, String showName) {
+        this.id = id;
+        this.showName = showName;
+    }
+
+    public SelectDto() {
+    }
 
     public Integer getId() {
         return id;

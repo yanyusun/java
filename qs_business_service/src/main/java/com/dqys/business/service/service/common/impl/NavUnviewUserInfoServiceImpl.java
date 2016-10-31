@@ -4,9 +4,7 @@ import com.dqys.business.orm.mapper.common.NavUnviewCompanyMapper;
 import com.dqys.business.orm.mapper.common.SourceNavigationMapper;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
-import com.dqys.business.service.service.OperLogService;
-import com.dqys.business.service.service.common.NavUnviewCompanyService;
-import com.dqys.business.service.service.common.SourceService;
+import com.dqys.business.service.service.common.NavUnviewRoleService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.model.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +17,7 @@ import java.util.Map;
  * Created by yan on 16-10-28.
  */
 //// TODO: 16-10-28  mkf
-public class NavUnviewCompanyServiceImpl implements NavUnviewCompanyService {
+public class NavUnviewUserInfoServiceImpl implements NavUnviewRoleService {
     @Autowired
     private NavUnviewCompanyMapper navUnviewCompanyMapper;
 

@@ -1,19 +1,13 @@
 package com.dqys.business.orm.pojo.common;
 
-public class NavUnviewCompany {
-    private Integer id;
+import com.dqys.core.base.BaseModel;
+
+public class NavUnviewCompany extends BaseModel {
 
     private Integer navId;
 
     private Integer companyId;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public Integer getNavId() {
         return navId;

@@ -15,14 +15,14 @@ public interface NavUnviewService {
      * @param navId 资料实勘分类id
      * @return
      */
-    List<SelectDto> getALLParentList(String navId);
+    List<SelectDto> getALLParentList(Integer navId);
 
     /**
      * 得到当前不可见的项
      * @param navId 资料实勘分类id
      * @return
      */
-    List<SelectDto> getList(String navId);
+    List<SelectDto> getList(Integer navId);
 
     /**
      * 得到初始化化信息

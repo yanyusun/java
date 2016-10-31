@@ -2,14 +2,12 @@ package com.dqys.business.service.service.followUp.impl;
 
 import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
 import com.dqys.business.orm.mapper.followUp.FollowUpReadstatusMapper;
-import com.dqys.business.orm.mapper.followUp.impl.FollowUpMessageMapperImpl;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.pojo.followUp.FollowUpReadstatus;
 import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.model.UserSession;
-import com.sun.org.apache.xalan.internal.xsltc.util.IntegerArray;
-import org.aspectj.bridge.MessageUtil;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -41,23 +39,30 @@ public class FollowUpReadStatusServiceImpl implements FollowUpReadStatusService 
          *
          */
         List<Integer> userIdList = null;
-        userIdList = followUpReadstatusMapper.selectByUseridList(Integer.parseInt(msg[0]),Integer.parseInt(msg[1]));
-        //循环调用
-        for (Integer userid : userIdList) {
-            //生成
-            FollowUpReadstatus record = new FollowUpReadstatus();
-            record.setUserId(userid);
-            record.setObjectId(MessageUtils.transStringToInt(msg[0]));
-            record.setObjectType(MessageUtils.transStringToInt(msg[1]));
-            record.setMoment(MessageUtils.transStringToInt(msg[2]));
-            insert(record);
-            FollowUpMessage followUpMessage = new FollowUpMessage();
-            followUpMessage.setObjectType(record.getObjectType());
-            followUpMessage.setObjectId(record.getObjectId());
-            followUpMessage.setUserId(record.getUserId());
-            followUpMessage.setSendStatus(1);
-            followUpMessageMapper.updateBySendStatus(followUpMessage);
+
+        try {
+            userIdList = followUpReadstatusMapper.selectByUseridList(Integer.parseInt(msg[0]),Integer.parseInt(msg[1]));
+            //循环调用
+            for (Integer userid : userIdList) {
+                //生成
+                FollowUpReadstatus record = new FollowUpReadstatus();
+                record.setUserId(userid);
+                record.setObjectId(MessageUtils.transStringToInt(msg[0]));
+                record.setObjectType(MessageUtils.transStringToInt(msg[1]));
+                record.setMoment(MessageUtils.transStringToInt(msg[2]));
+                insert(record);
+                FollowUpMessage followUpMessage = new FollowUpMessage();
+                followUpMessage.setObjectType(record.getObjectType());
+                followUpMessage.setObjectId(record.getObjectId());
+                followUpMessage.setUserId(record.getUserId());
+                followUpMessage.setSendStatus(1);
+                followUpMessageMapper.updateBySendStatus(followUpMessage);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            LogManager.getRootLogger().error("跟进未读处理失败"+msg);
         }
+
 
     }
 
