@@ -228,7 +228,7 @@
             </if>
             <if test="estateType != null">
                 estate_type,
-            </if>
+            </if>7
             <if test="estateClassify != null">
                 estate_classify,
             </if>
@@ -472,10 +472,10 @@
                 object_type=#{objectType,jdbcType=INTEGER},
             </if>
             <if test="estateType != null">
-                estate_type=#{estate_type,jdbcType=INTEGER},
+                estate_type=#{estateType,jdbcType=INTEGER},
             </if>
             <if test="estateClassify != null">
-                estate_classify=#{estate_classify,jdbcType=INTEGER},
+                estate_classify=#{estateClassify,jdbcType=INTEGER},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

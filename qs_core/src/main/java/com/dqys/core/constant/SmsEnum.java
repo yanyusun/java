@@ -34,7 +34,8 @@ public enum SmsEnum {
     LEAVE_WORD(134, "留言操作"),
     REGISTER_AUDIT(135, "注册请求审核"),
     REGISTER_AUDIT_RESULT(136, "注册审核结果"),
-    ACTIVATION_INFORM(137, "组织架构导入通知激活");
+    ACTIVATION_INFORM(137, "组织架构导入通知激活"),
+    RESET_PAWW(138, "重置密码");
 
     private Integer value;
     private String name;

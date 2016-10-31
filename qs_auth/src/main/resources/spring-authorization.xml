@@ -22,6 +22,14 @@
             <mvc:exclude-mapping path="/auth/reset_mobile"/>
             <mvc:exclude-mapping path="/auth/reset_mail"/>
             <mvc:exclude-mapping path="/auth/validate_user"/>
+            <mvc:exclude-mapping path="/auth/sendEmaiCode"/>
+            <mvc:exclude-mapping path="/auth/validMailCode"/>
+            <mvc:exclude-mapping path="/auth/resetMail"/>
+            <mvc:exclude-mapping path="/auth/verifyImgCode"/>
+            <mvc:exclude-mapping path="/auth/sendSmsCodeByEmail"/>
+            <mvc:exclude-mapping path="/auth/resetMobile"/>
+            <mvc:exclude-mapping path="/auth/validSmsCodeByEmail"/>
+            <mvc:exclude-mapping path="/auth/verifyLoginName"/>
 
             <mvc:exclude-mapping path="/err/err"/>
 
