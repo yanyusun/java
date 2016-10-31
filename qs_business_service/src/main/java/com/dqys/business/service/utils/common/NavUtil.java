@@ -23,21 +23,22 @@ public class NavUtil implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         redisTemplate = (RedisTemplate) applicationContext.getBean("redisTemplate");
         sourceNavigationMapper = applicationContext.getBean(SourceNavigationMapper.class);
-
         this.loadCommonNav();
     }
 
     /**
-     * 加载公共资源实勘分类
+     * 加载公共资源实勘分类,已即对应的不可见关系
      */
     public static void loadCommonNav(){
         List<SourceNavigation> list=sourceNavigationMapper.ListByIsCustom(isCustom);
-        for(SourceNavigation navigation:list){
+       /* for(SourceNavigation navigation:list){
             redisTemplate.boundHashOps(NavUtil.COMMON_SOURCE_NAV_KEY+SourceNavigation.class.getName())
-                    .put(NavUtil.COMMON_SOURCE_NAV_KEY+navigation.getType(), navigation);
-        }
+                    .put(NavUtil.COMMON_SOURCE_NAV_KEY+navigation.getType()+"_"+navigation.getName(), navigation);
+        }*/
     }
 
+    // TODO: 16-10-31　加载公共资源分类 Map<List<SourceNavigation> navigationList>
+    // TODO: 16-10-31  加载
     /**
      * 得到其中一个公共资源分类
      * @param navType 资源类型
