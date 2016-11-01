@@ -5,11 +5,11 @@ package com.dqys.business.service.dto.sourceAuth;
  * Created by yan on 16-10-28.
  */
 public class SelectDto {
-    private Integer id;//
+    private Integer id;//不可见关系表ｉｄ
+    private Integer reId;//关联对象ｉｄ或者枚举
+    private String showName;//前台展示名称
 
-    private String showName;
-
-    private boolean visible;
+    private boolean visible=false;
 
     public SelectDto(Integer id, String showName) {
         this.id = id;
@@ -41,5 +41,13 @@ public class SelectDto {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public Integer getReId() {
+        return reId;
+    }
+
+    public void setReId(Integer reId) {
+        this.reId = reId;
     }
 }

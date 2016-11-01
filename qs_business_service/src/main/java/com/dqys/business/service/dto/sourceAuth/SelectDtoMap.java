@@ -8,11 +8,13 @@ import java.util.List;
  */
 public class SelectDtoMap {
 
+
     private List<SelectDto> companyList;
 
     private List<SelectDto> roleList;
 
     private List<SelectDto> userList;
+
 
     public List<SelectDto> getCompanyList() {
         return companyList;

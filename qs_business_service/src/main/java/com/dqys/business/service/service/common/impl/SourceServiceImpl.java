@@ -8,6 +8,7 @@ import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.common.SourceSource;
 import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
+import com.dqys.business.service.service.common.NavUnviewManagerService;
 import com.dqys.business.service.service.common.SourceService;
 import com.dqys.business.service.utils.common.NavUtil;
 import com.dqys.business.service.utils.common.SourceServiceUtls;
@@ -35,6 +36,8 @@ public class SourceServiceImpl implements SourceService {
     private SourceInfoMapper sourceInfoMapper;
     @Autowired
     private SourceSourceMapper sourceSourceMapper;
+    @Autowired
+    private NavUnviewManagerService navUnviewManagerService;
 
 
     @Override
@@ -127,6 +130,7 @@ public class SourceServiceImpl implements SourceService {
         if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getId(), sourceInfoDTO.getSourceDTOList())) {
             return JsonResponseTool.paramErr("参数错误");
         }
+        navUnviewManagerService.setALL(sourceInfoDTO.getNavId(),sourceInfoDTO.getSelectDtoMap());//重新设置权限；
         boolean flag = false; // 判断是否有做修改
         SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO);
         if (sourceInfo == null) {

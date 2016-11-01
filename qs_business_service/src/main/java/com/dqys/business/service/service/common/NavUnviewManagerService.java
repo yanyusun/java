@@ -28,10 +28,9 @@ public interface NavUnviewManagerService {
 
     /**
      * 重新设置自定义不可见项
+     *
      * @param navId
-     * @param companyList
-     * @param roleList
-     * @param userList
+     * @param selectDtoMap
      */
-    void setALL(String navId,List<Integer> companyList,List<Integer> roleList,List<Integer> userList);
+    void setALL(Integer navId,SelectDtoMap selectDtoMap);
 }
