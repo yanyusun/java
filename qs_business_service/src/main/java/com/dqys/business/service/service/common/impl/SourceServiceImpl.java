@@ -9,6 +9,7 @@ import com.dqys.business.orm.pojo.common.SourceSource;
 import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
 import com.dqys.business.service.service.common.SourceService;
+import com.dqys.business.service.utils.common.NavUtil;
 import com.dqys.business.service.utils.common.SourceServiceUtls;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
@@ -41,7 +42,8 @@ public class SourceServiceImpl implements SourceService {
         if (CommonUtil.checkParam(type)) {
             return null;
         }
-        List<SourceNavigation> navigationList = sourceNavigationMapper.listByTypeAndLenderId(lenderId, estatesId, type);
+        List<SourceNavigation> navigationList = NavUtil.getSourceNavigationList(type);
+        navigationList.addAll(sourceNavigationMapper.listByTypeAndLenderId(lenderId, estatesId, type));
         return SourceServiceUtls.toSelect(navigationList);
     }
 
