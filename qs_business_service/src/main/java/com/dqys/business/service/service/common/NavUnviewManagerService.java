@@ -16,7 +16,7 @@ public interface NavUnviewManagerService {
      * @param navId 资料实勘分类ｉｄ
      * @return
      */
-    SelectDtoMap getAll(String navId);
+    SelectDtoMap getAll(String navId,Integer object,Integer objectId);
 
     /**
      * 得到用户ｌｉｓｔ
@@ -32,5 +32,5 @@ public interface NavUnviewManagerService {
      * @param navId
      * @param selectDtoMap
      */
-    void setALL(Integer navId,SelectDtoMap selectDtoMap);
+    void setALL(Integer navId,Integer object,Integer objectId,SelectDtoMap selectDtoMap);
 }

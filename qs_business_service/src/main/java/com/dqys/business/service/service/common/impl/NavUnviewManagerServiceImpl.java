@@ -30,7 +30,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService{
 
 
     @Override
-    public SelectDtoMap getAll(String navId) {
+    public SelectDtoMap getAll(String navId,Integer object,Integer objectId) {
         return null;
     }
 
@@ -39,8 +39,10 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService{
         return null;
     }
 
+
+
     @Override
-    public void setALL(Integer navId, SelectDtoMap selectDtoMap) {
+    public void setALL(Integer navId,Integer object,Integer objectId, SelectDtoMap selectDtoMap) {
 
     }
 }

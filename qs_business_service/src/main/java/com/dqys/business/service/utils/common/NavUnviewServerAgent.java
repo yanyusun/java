@@ -13,8 +13,11 @@ public class NavUnviewServerAgent {
 
     private NavUnviewService navUnviewService;
 
-    public NavUnviewServerAgent(NavUnviewService navUnviewService) {
+    private  List<SelectDto> intList;
+
+    public NavUnviewServerAgent(NavUnviewService navUnviewService, List<SelectDto> intList) {
         this.navUnviewService = navUnviewService;
+        this.intList = intList;
     }
 
     /**
@@ -22,7 +25,8 @@ public class NavUnviewServerAgent {
      * @param navId 分类ｉｄ
      * @return
      */
-    public List<SelectDto> getSelectedDtoList(Integer navId){
+    public List<SelectDto> getSelectedDtoList(Integer navId,Integer object,Integer objectId){
+
         return null;
     };
 
@@ -31,7 +35,7 @@ public class NavUnviewServerAgent {
      * @param navId 分类ｉｄ
      * @return
      */
-    public List<SelectDto> getSelectOptions(Integer navId){
+    public List<SelectDto> getSelectOptions(Integer navId,Integer object,Integer objectId){
         return null;
     }
 
@@ -40,7 +44,30 @@ public class NavUnviewServerAgent {
      * @param navId
      * @param list
      */
-    public void reset(Integer navId,List<Integer> list){
+    public void reset(Integer navId,Integer object,Integer objectId,List<SelectDto> list){
 
+        if(){}
+        navUnviewService.del();
+    }
+
+//    /**
+//     *
+//     * @param aLLParentList 所有父未选项
+//     * @param list　接收到的未选项
+//     * @return 当前分类的未选项
+//     */
+//    public List<Integer> getNewList(List<Integer> aLLParentList,List<Integer> list){
+//        return null;
+//    }
+//
+
+    /**
+     * 比较oldList与newList的是否相同
+     * @param oldList
+     * @param newList
+     * @return true相同，ｆａｌｓｅ不同
+     */
+    public boolean hasChange(List<SelectDto> oldList,List<SelectDto> newList){
+        return false;
     }
 }
