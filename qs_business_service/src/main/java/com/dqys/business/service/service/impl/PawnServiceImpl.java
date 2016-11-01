@@ -159,19 +159,6 @@ public class PawnServiceImpl implements PawnService {
         return JsonResponseTool.success(null);
     }
 
-    @Override
-    public JsonResponse listAdd(List<PawnDTO> pawnDTOList) throws BusinessLogException {
-        if(CommonUtil.checkParam(pawnDTOList)){
-            return JsonResponseTool.failure("参数错误");
-        }
-        for (PawnDTO pawnDTO : pawnDTOList) {
-            JsonResponse response = add_tx(pawnDTO);
-            if(!response.getCode().equals(ResponseCodeEnum.SUCCESS.getValue())){
-                return JsonResponseTool.failure("添加失败");
-            }
-        }
-        return JsonResponseTool.success(null);
-    }
 
     @Override
     public JsonResponse update_tx(PawnDTO pawnDTO) throws BusinessLogException {
