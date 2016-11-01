@@ -15,7 +15,7 @@ public interface NavUnviewService {
      * @param navId 资料实勘分类id
      * @return
      */
-    List<SelectDto> getALLParentList(Integer navId);
+    List<SelectDto> getALLParentList(Integer navId,Integer operUser);
 
     /**
      * 得到当前不可见的项

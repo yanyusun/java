@@ -91,7 +91,7 @@ public class NavUtil implements ApplicationContextAware {
 
     ;
 
-    // TODO: 16-11-1 根据 navId_type获取List<SelectDto>(对应的NavUnviewEnum枚举)
+    // TODO: 16-11-1 根据 navId_type获取List<SelectDto>(对应的NavUnviewEnum枚举),查询operUser为ｏ的记录，ｏ公共默认
     public static List<SelectDto> getSelectDtoList(String navId_type) {
         List<SelectDto> dtos = NoSQLWithRedisTool.getValueObject(navId_type);
         if (dtos == null) {
