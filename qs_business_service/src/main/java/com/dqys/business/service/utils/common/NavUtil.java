@@ -54,11 +54,11 @@ public class NavUtil implements ApplicationContextAware {
         return sourceNavigation;
     }
     // TODO: 16-11-1  根据ｔｙｐｅ获取公共资源分类
-    public List<SourceNavigation> getSourceNavigationList(String type){
+    public static List<SourceNavigation> getSourceNavigationList(String type){
         return null;
     };
     // TODO: 16-11-1 根据 navId_type获取List<SelectDto>
-    List<SelectDto> getSelectDtoList(String navId_type){
+    public static List<SelectDto> getSelectDtoList(String navId_type){
         return null;
     };
 }

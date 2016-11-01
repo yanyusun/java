@@ -26,5 +26,12 @@ public interface NavUnviewManagerService {
      */
     List<SelectDto> getUserList(List<Integer> companyList,List<Integer> roleList);
 
-
+    /**
+     * 重新设置自定义不可见项
+     * @param navId
+     * @param companyList
+     * @param roleList
+     * @param userList
+     */
+    void setALL(String navId,List<Integer> companyList,List<Integer> roleList,List<Integer> userList);
 }

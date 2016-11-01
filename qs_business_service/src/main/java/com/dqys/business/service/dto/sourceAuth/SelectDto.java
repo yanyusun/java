@@ -9,6 +9,8 @@ public class SelectDto {
 
     private String showName;
 
+    private boolean visible;
+
     public SelectDto(Integer id, String showName) {
         this.id = id;
         this.showName = showName;
@@ -31,5 +33,13 @@ public class SelectDto {
 
     public void setShowName(String showName) {
         this.showName = showName;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }
