@@ -37,8 +37,8 @@ public class NavUtil implements ApplicationContextAware {
         }*/
     }
 
-    // TODO: 16-10-31　加载公共资源分类 Map<List<SourceNavigation> navigationList>
-    // TODO: 16-10-31  加载
+    // TODO: 16-10-31　加载公共资源分类 Map<String type,List<SourceNavigation> navigationList>　ｔｙｐｅ与bt_source_nav的ｔｙｐｅ一致
+    // TODO: 16-10-31  加载Map<String navId_type,List<SelectDto>>  其中type为公司类型，公司，角色，人员；公司类型关系表参考角色表自己建
     /**
      * 得到其中一个公共资源分类
      * @param navType 资源类型
@@ -49,4 +49,7 @@ public class NavUtil implements ApplicationContextAware {
                 ,NavUtil.COMMON_SOURCE_NAV_KEY+navType);
         return sourceNavigation;
     }
+    // TODO: 16-11-1  根据ｔｙｐｅ获取公共资源分类
+    // TODO: 16-11-1 根据 navId_type获取List<SelectDto>
+
 }
