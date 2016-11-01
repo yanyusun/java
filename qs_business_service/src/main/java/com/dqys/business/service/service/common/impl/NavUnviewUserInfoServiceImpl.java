@@ -28,7 +28,7 @@ public class NavUnviewUserInfoServiceImpl implements NavUnviewRoleService {
     private SourceNavigationMapper sourceNavigationMapper;
 
     @Override
-    public List<SelectDto> getALLParentList(Integer navId) {
+    public List<SelectDto> getALLParentList(Integer navId,Integer object,Integer objectId) {
         List<SelectDto> dtos = new ArrayList<>();
         List<Integer> navIds = new ArrayList<>();
         boolean flag = true;
@@ -48,7 +48,7 @@ public class NavUnviewUserInfoServiceImpl implements NavUnviewRoleService {
     }
 
     @Override
-    public List<SelectDto> getList(Integer navId) {
+    public List<SelectDto> getList(Integer navId,Integer object,Integer objectId) {
         List<SelectDto> dtos = new ArrayList<>();
         List<Integer> navIds = new ArrayList<>();
         navIds.add(navId);
@@ -72,13 +72,13 @@ public class NavUnviewUserInfoServiceImpl implements NavUnviewRoleService {
     }
 
     @Override
-    public void del(Integer navId) {
+    public void del(Integer navId,Integer object,Integer objectId) {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         navUnviewUserInfoMapper.delByNavId(navId, userId);
     }
 
     @Override
-    public void add(Integer navId, List<Integer> unviewList) {
+    public void add(Integer navId,Integer object,Integer objectId,List<Integer> unviewList) {
         navUnviewUserInfoMapper.insertSelectiveByUserInfo(navId, unviewList);
     }
 }
