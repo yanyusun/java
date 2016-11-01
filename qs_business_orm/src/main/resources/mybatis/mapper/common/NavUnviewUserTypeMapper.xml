@@ -125,4 +125,28 @@
       oper_user = #{operUser,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <delete id="delByNavId">
+    UPDATE t_nav_unview_usertype SET stateflag=now(),oper_user=#{userId}  WHERE nav_id=#{navId}
+  </delete>
+
+  <insert id="insertSelectiveByUserType">
+    <foreach collection="list" item="unviewList.userType" index="index">
+      INSERT INTO t_nav_unview_usertype(nav_id,user_type) VALUES(#{navId},#{userType})
+    </foreach>
+  </insert>
+
+  <select id="findNavNameByNavId" resultType="java.util.Map">
+    SELECT nuu.id,nuu.user_type name from t_nav_unview_usertype nuu
+    WHERE nuu.nav_id IN
+    <if test="navIds !=null and navIds.size>0">
+      <foreach collection="navIds" index="index" item="id" open="(" close=")" separator=",">
+        #{id}
+      </foreach>
+    </if>
+    <if test="navIds ==null">
+      (0)
+    </if>
+  </select>
+
 </mapper>

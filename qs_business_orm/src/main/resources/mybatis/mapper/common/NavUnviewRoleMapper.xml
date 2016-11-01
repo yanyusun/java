@@ -82,7 +82,7 @@
   </insert>
 
   <select id="findNavNameByNavId" resultType="java.util.Map">
-    SELECT nur.id,nuc.role_type name name from t_nav_unview_role nur
+    SELECT nur.id,nuc.role_type name from t_nav_unview_role nur
     WHERE  nur.nav_id IN
     <if test="navIds !=null and navIds.size>0">
       <foreach collection="navIds" index="index" item="id" open="(" close=")" separator=",">
