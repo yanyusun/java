@@ -5,9 +5,19 @@ package com.dqys.business.service.dto.sourceAuth;
  * Created by yan on 16-10-28.
  */
 public class SelectDto {
-    private Integer id;
+    private Integer id;//
 
     private String showName;
+
+    private boolean visible;
+
+    public SelectDto(Integer id, String showName) {
+        this.id = id;
+        this.showName = showName;
+    }
+
+    public SelectDto() {
+    }
 
     public Integer getId() {
         return id;
@@ -23,5 +33,13 @@ public class SelectDto {
 
     public void setShowName(String showName) {
         this.showName = showName;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 }

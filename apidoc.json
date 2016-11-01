@@ -1,0 +1,8 @@
+{
+  "name": "business",
+  "description": "apiDoc basic example",
+  "version": "0.1.0",
+  "title": "API",
+  "url" : "http://192.168.1.48:8080/",
+  "sampleUrl": "http://192.168.1.48:8080/"
+}
