@@ -1,5 +1,7 @@
 package com.dqys.business.service.dto.common;
 
+import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
+
 import java.util.List;
 
 /**
@@ -19,6 +21,10 @@ public class SourceInfoDTO {
     private Integer open; // 对外公开(默认1公开)
     private String memo; // 详情信息
     private Integer estatesId; // 资产源ID
+
+    private SelectDtoMap selectDtoMap;//资料实勘不可见权限关系
+
+
 
     public Integer getEstatesId() {
         return estatesId;
@@ -106,5 +112,13 @@ public class SourceInfoDTO {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public SelectDtoMap getSelectDtoMap() {
+        return selectDtoMap;
+    }
+
+    public void setSelectDtoMap(SelectDtoMap selectDtoMap) {
+        this.selectDtoMap = selectDtoMap;
     }
 }

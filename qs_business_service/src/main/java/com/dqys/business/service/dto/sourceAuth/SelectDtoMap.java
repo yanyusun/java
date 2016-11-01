@@ -3,6 +3,7 @@ package com.dqys.business.service.dto.sourceAuth;
 import java.util.List;
 
 /**
+ * 资料实勘不可见权限关系
  * Created by yan on 16-10-28.
  */
 public class SelectDtoMap {
