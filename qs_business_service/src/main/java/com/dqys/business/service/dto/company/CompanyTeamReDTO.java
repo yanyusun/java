@@ -18,6 +18,15 @@ public class CompanyTeamReDTO {
     private Integer status; // 接受状态
     private Date time; // 接收时间
     private Integer stateflag; // 数据状态
+    private Integer userId;//联系人id
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public Integer getStatus() {
         return status;

@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class CompanyServiceUtils {
 
-    public static List<CompanyDTO> toCompanyDTO(List<TCompanyInfo> companyInfos){
+    public static List<CompanyDTO> toCompanyDTO(List<TCompanyInfo> companyInfos) {
         List<CompanyDTO> companyDTOList = new ArrayList<>();
         companyInfos.forEach(companyInfo -> {
             companyDTOList.add(toCompanyDTO(companyInfo));
@@ -30,8 +30,8 @@ public class CompanyServiceUtils {
         return companyDTOList;
     }
 
-    public static CompanyDTO toCompanyDTO(TCompanyInfo companyInfo){
-        if(companyInfo == null){
+    public static CompanyDTO toCompanyDTO(TCompanyInfo companyInfo) {
+        if (companyInfo == null) {
             return null;
         }
         CompanyDTO companyDTO = new CompanyDTO();
@@ -45,18 +45,18 @@ public class CompanyServiceUtils {
         return companyDTO;
     }
 
-    public static List<OrganizationDTO> toOrganizationDTO(List<Organization> organizationList){
+    public static List<OrganizationDTO> toOrganizationDTO(List<Organization> organizationList) {
         List<OrganizationDTO> organizationDTOList = new ArrayList<>();
 
         organizationList.forEach(organization -> {
             organizationDTOList.add(toOrganizationDTO(organization));
         });
-        
+
         return organizationDTOList;
     }
 
-    public static Organization toOrganization(OrganizationInsertDTO organizationInsertDTO){
-        if(organizationInsertDTO == null){
+    public static Organization toOrganization(OrganizationInsertDTO organizationInsertDTO) {
+        if (organizationInsertDTO == null) {
             return null;
         }
         Organization organization = new Organization();
@@ -71,8 +71,8 @@ public class CompanyServiceUtils {
         return organization;
     }
 
-    public static OrganizationDTO toOrganizationDTO(Organization organization){
-        if(organization == null){
+    public static OrganizationDTO toOrganizationDTO(Organization organization) {
+        if (organization == null) {
             return null;
         }
         OrganizationDTO organizationDTO = new OrganizationDTO();
@@ -86,11 +86,12 @@ public class CompanyServiceUtils {
 
     /**
      * 转化公司关系为DTO
+     *
      * @param companyRelationList
      * @return
      */
-    public static List<CompanyRelationDTO> toCompanyRelationDTO(List<CompanyRelation> companyRelationList){
-        if(companyRelationList == null || companyRelationList.size() == 0){
+    public static List<CompanyRelationDTO> toCompanyRelationDTO(List<CompanyRelation> companyRelationList) {
+        if (companyRelationList == null || companyRelationList.size() == 0) {
             return null;
         }
         List<CompanyRelationDTO> companyRelationDTOList = new ArrayList<>();
@@ -102,13 +103,14 @@ public class CompanyServiceUtils {
 
     /**
      * 转化公司关系为DTO
+     *
      * @param companyRelation
      * @param aName
      * @param bName
      * @return
      */
-    public static CompanyRelationDTO toCompanyRelationDTO(CompanyRelation companyRelation, String aName, String bName){
-        if(companyRelation == null){
+    public static CompanyRelationDTO toCompanyRelationDTO(CompanyRelation companyRelation, String aName, String bName) {
+        if (companyRelation == null) {
             return null;
         }
         CompanyRelationDTO companyRelationDTO = new CompanyRelationDTO();
@@ -124,17 +126,18 @@ public class CompanyServiceUtils {
     }
 
     public static CompanyTeamReDTO toCompanyTeamReDTO(CompanyTeamRe companyTeamRe, CompanyDetailInfo companyDetailInfo,
-                                                      String rate, Integer task){
-        if(companyTeamRe == null){
+                                                      String rate, Integer task) {
+        if (companyTeamRe == null) {
             return null;
         }
-        if(companyDetailInfo == null){
+        if (companyDetailInfo == null) {
             companyDetailInfo = new CompanyDetailInfo();
         }
         CompanyTeamReDTO companyTeamReDTO = new CompanyTeamReDTO();
 
         companyTeamReDTO.setId(companyTeamRe.getId());
         companyTeamReDTO.setTime(companyTeamRe.getUpdateAt());
+        companyTeamReDTO.setUserId(companyTeamRe.getAccepterId());
         companyTeamReDTO.setAvg(companyDetailInfo.getAvg());
         companyTeamReDTO.setAddress(AreaTool.getAreaById(companyDetailInfo.getProvince()).getLabel()
                 + AreaTool.getAreaById(companyDetailInfo.getCity()).getLabel()
@@ -144,13 +147,25 @@ public class CompanyServiceUtils {
         companyTeamReDTO.setStatus(companyTeamRe.getStatus());
         companyTeamReDTO.setTask(task);
         companyTeamReDTO.setStateflag(companyTeamRe.getStateflag().intValue());
-        switch (companyDetailInfo.getType()){
-            case 1:companyTeamReDTO.setType("平台");break;
-            case 0:companyTeamReDTO.setType("普通用户");break;
-            case 31:companyTeamReDTO.setType("催收方");break;
-            case 32:companyTeamReDTO.setType("律所");break;
-            case 33:companyTeamReDTO.setType("中介");break;
-            case 2:companyTeamReDTO.setType("委托方");break;
+        switch (companyDetailInfo.getType()) {
+            case 1:
+                companyTeamReDTO.setType("平台");
+                break;
+            case 0:
+                companyTeamReDTO.setType("普通用户");
+                break;
+            case 31:
+                companyTeamReDTO.setType("催收方");
+                break;
+            case 32:
+                companyTeamReDTO.setType("律所");
+                break;
+            case 33:
+                companyTeamReDTO.setType("中介");
+                break;
+            case 2:
+                companyTeamReDTO.setType("委托方");
+                break;
         }
         return companyTeamReDTO;
     }
