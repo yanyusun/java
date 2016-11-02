@@ -134,5 +134,30 @@ public class MqClient {
         return str;
     }
 
+//    public static void main(String[] args) {
+//        try {
+//            Email emailClient = new HtmlEmail();
+//            emailClient.setCharset("UTF-8");
+//            emailClient.setHostName("smtp.exmail.qq.com");
+//            emailClient.setSmtpPort(465);
+//            emailClient.setSslSmtpPort("465");
+//            emailClient.setSSLOnConnect(true);
+//            emailClient.setFrom("admin@iqingsou.com");
+//            emailClient.setAuthenticator(new DefaultAuthenticator(
+//                    "admin@iqingsou.com",
+//                    "Iqingsou123456"
+//            ));
+//
+//            emailClient.addTo("342088816@qq.com");
+//            emailClient.setSubject("多清平台帐号验证邮件");
+//            emailClient.setMsg("dsdsd");
+//            emailClient.send();
+//        } catch (EmailException e) {
+//            e.printStackTrace();
+//            LogManager.getLogger("bizAsync").debug("发送邮件失败,目标:" + "sdsdsd");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 }
