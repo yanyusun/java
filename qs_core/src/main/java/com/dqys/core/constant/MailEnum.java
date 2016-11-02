@@ -4,7 +4,8 @@ package com.dqys.core.constant;
  * Created by mkfeng on 2016/10/27.
  */
 public enum MailEnum {
-    RESET_PAWW(101, "重置密码");
+    RESET_PAWW(101, "重置密码"),
+    ACTIVATE(102, "邮箱激活");
     private Integer value;
     private String name;
 
