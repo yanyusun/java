@@ -24,13 +24,9 @@ public interface NavUnviewCompanyMapper {
 
     int updateByPrimaryKey(NavUnviewCompany record);
 
-    Integer delByNavId(@Param("navId") Integer navId, @Param("userId") Integer userId);
+    Integer delByNavId(@Param("navId") Integer navId, @Param("userId") Integer userId, @Param("object") Integer object, @Param("objectId") Integer objectId);
 
-    Integer insertSelectiveByCompanyId(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList);
+    Integer insertSelectiveByCompanyId(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList, @Param("object") Integer object, @Param("objectId") Integer objectId);
 
-    /**
-     * @param navId
-     * @return bt_source_nav表的name和id
-     */
-    List<Map> findNavNameByNavId(List<Integer> navIds);
+    List<Map> findNavNameByNavId(@Param("navIds") List<Integer> navIds, @Param("object") Integer object, @Param("objectId") Integer objectId);
 }

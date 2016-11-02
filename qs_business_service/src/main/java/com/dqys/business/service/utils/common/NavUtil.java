@@ -71,17 +71,17 @@ public class NavUtil implements ApplicationContextAware {
     }
 
     // TODO: 16-11-1  根据ｔｙｐｅ获取公共资源分类，实勘1|证件合同0(默认)|2根进'
-    public static List<SourceNavigation> getSourceNavigationList(Integer type) {
+    public static List<SourceNavigation> getSourceNavigationList(Integer type, Integer objectType, Integer objectId) {
         List<SourceNavigation> list = null;
         list = NoSQLWithRedisTool.getValueObject(type.toString());
         if (list == null) {
             list = sourceNavigationMapper.listByTypeAndLenderId(0, null, type);
             for (SourceNavigation sour : list) {
                 if (sour != null) {
-                    navUnviewCompanyService.getList(sour.getId());
-                    navUnviewRoleService.getList(sour.getId());
-                    navUnviewUserInfoService.getList(sour.getId());
-                    navUnviewUserTypeService.getList(sour.getId());
+                    navUnviewCompanyService.getList(sour.getId(), objectType, objectId);
+                    navUnviewRoleService.getList(sour.getId(), objectType, objectId);
+                    navUnviewUserInfoService.getList(sour.getId(), objectType, objectId);
+                    navUnviewUserTypeService.getList(sour.getId(), objectType, objectId);
                 }
             }
             NoSQLWithRedisTool.setValueObject(type.toString(), list, 31L, TimeUnit.DAYS);
@@ -92,20 +92,20 @@ public class NavUtil implements ApplicationContextAware {
     ;
 
     // TODO: 16-11-1 根据 navId_type获取List<SelectDto>(对应的NavUnviewEnum枚举),查询operUser为ｏ的记录，ｏ公共默认
-    public static List<SelectDto> getSelectDtoList(String navId_type) {
+    public static List<SelectDto> getSelectDtoList(String navId_type, Integer objectType, Integer objectId) {
         List<SelectDto> dtos = NoSQLWithRedisTool.getValueObject(navId_type);
         if (dtos == null) {
             String[] str = navId_type.split("_");
             if (str.length == 2) {
                 String type = str[1];
                 if (type.equals(NavUnviewEnum.COMPANY.getValue().toString())) {
-                    dtos = navUnviewCompanyService.getList(Integer.parseInt(str[0]));
+                    dtos = navUnviewCompanyService.getList(Integer.parseInt(str[0]), objectType, objectId);
                 } else if (type.equals(NavUnviewEnum.USER_INFO.getValue().toString())) {
-                    dtos = navUnviewUserInfoService.getList(Integer.parseInt(str[0]));
+                    dtos = navUnviewUserInfoService.getList(Integer.parseInt(str[0]), objectType, objectId);
                 } else if (type.equals(NavUnviewEnum.ROLE.getValue().toString())) {
-                    dtos = navUnviewRoleService.getList(Integer.parseInt(str[0]));
+                    dtos = navUnviewRoleService.getList(Integer.parseInt(str[0]), objectType, objectId);
                 } else if (type.equals(NavUnviewEnum.USER_TYPE.getValue().toString())) {
-                    dtos = navUnviewUserTypeService.getList(Integer.parseInt(str[0]));
+                    dtos = navUnviewUserTypeService.getList(Integer.parseInt(str[0]), objectType, objectId);
                 }
             }
         }

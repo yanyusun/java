@@ -1,6 +1,7 @@
 package com.dqys.business.orm.mapper.common;
 
 import com.dqys.business.orm.pojo.common.NavUnviewUserInfo;
+import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -24,9 +25,11 @@ public interface NavUnviewUserInfoMapper {
 
     int updateByPrimaryKey(NavUnviewUserInfo record);
 
-    Integer delByNavId(@Param("navId") Integer navId, @Param("userId") Integer userId);
+    Integer delByNavId(@Param("navId") Integer navId, @Param("userId") Integer userId, @Param("object") Integer object, @Param("objectId") Integer objectId);
 
-    Integer insertSelectiveByUserInfo(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList);
+    Integer insertSelectiveByUserInfo(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList, @Param("object") Integer object, @Param("objectId") Integer objectId);
 
-    List<Map> findNavNameByNavId(List<Integer> navIds);
+    List<Map> findNavNameByNavId(@Param("navIds") List<Integer> navIds, @Param("object") Integer object, @Param("objectId") Integer objectId);
+
+    TeammateRe findUserTeamReByObject(@Param("userId") Integer userId, @Param("object") Integer object, @Param("objectId") Integer objectId);
 }

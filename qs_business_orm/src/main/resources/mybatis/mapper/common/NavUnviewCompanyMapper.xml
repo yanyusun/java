@@ -70,20 +70,37 @@
   </update>
 
     <delete id="delByNavId">
-    UPDATE t_nav_unview_company SET stateflag=now(),oper_user=#{userId}  WHERE nav_id=#{navId}
-  </delete>
+        UPDATE t_nav_unview_company SET stateflag=now(),oper_user=#{userId} WHERE stateflag=0
+        <if test="object !=null">
+            AND object_type=#{object}
+        </if>
+        <if test="objectId !=null">
+            AND object_id=#{objectId}
+        </if>
+        AND nav_id=#{navId}
+    </delete>
 
     <insert id="insertSelectiveByCompanyId">
         <foreach collection="list" item="companyId" index="index">
-            INSERT INTO t_nav_unview_company(nav_id,company_id) VALUES(#{navId},#{companyId})
+            INSERT INTO t_nav_unview_company(nav_id,company_id,object_type,object_id)
+            VALUES(#{navId},#{companyId},#{object},#{objectId})
         </foreach>
     </insert>
 
     <select id="findNavNameByNavId" resultType="java.util.Map">
-        SELECT nuc.id,ci.company_name name from t_nav_unview_company nuc LEFT JOIN t_company_info ci
-        ON ci.id=nuc.company_id AND nuc.nav_id IN
+        SELECT nuc.id,nuc.company_id reId,ci.company_name showName from t_nav_unview_company nuc LEFT JOIN
+        t_company_info ci
+        ON ci.id=nuc.company_id
+        WHERE nuc.stateflag=0
+        <if test="object !=null">
+            AND nuc.object_type=#{object}
+        </if>
+        <if test="objectId !=null">
+            AND nuc.object_id=#{objectId}
+        </if>
+        AND nuc.nav_id IN
         <if test="navIds !=null and navIds.size>0">
-            <foreach collection="navIds" index="index" item="id" open="(" close=")" separator=",">
+            <foreach collection="list" index="index" item="navIds.id" open="(" close=")" separator=",">
                 #{id}
             </foreach>
         </if>

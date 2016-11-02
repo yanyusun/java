@@ -28,7 +28,7 @@ public class NavUnviewCompanyServiceImpl implements NavUnviewCompanyService {
     private SourceNavigationMapper sourceNavigationMapper;
 
     @Override
-    public List<SelectDto> getALLParentList(Integer navId,Integer object,Integer objectId) {
+    public List<SelectDto> getALLParentList(Integer navId, Integer object, Integer objectId) {
         List<SelectDto> dtos = new ArrayList<>();
         List<Integer> navIds = new ArrayList<>();
         boolean flag = true;
@@ -43,25 +43,25 @@ public class NavUnviewCompanyServiceImpl implements NavUnviewCompanyService {
                 }
             }
         }
-        setSelectDtoList(dtos, navIds);
+        setSelectDtoList(dtos, navIds, object, objectId);
         return dtos;
     }
 
     @Override
-    public List<SelectDto> getList(Integer navId,Integer object,Integer objectId) {
+    public List<SelectDto> getList(Integer navId, Integer object, Integer objectId) {
         List<SelectDto> dtos = new ArrayList<>();
         List<Integer> navIds = new ArrayList<>();
         navIds.add(navId);
-        setSelectDtoList(dtos, navIds);
+        setSelectDtoList(dtos, navIds, object, objectId);
         NoSQLWithRedisTool.removeValueObject(navId + "_" + NavUnviewEnum.COMPANY);
         NoSQLWithRedisTool.setValueObject(navId + "_" + NavUnviewEnum.COMPANY, dtos, 31L, TimeUnit.DAYS);
         return dtos;
     }
 
-    private void setSelectDtoList(List<SelectDto> dtos, List<Integer> navIds) {
-        List<Map> list = navUnviewCompanyMapper.findNavNameByNavId(navIds);
+    private void setSelectDtoList(List<SelectDto> dtos, List<Integer> navIds, Integer object, Integer objectId) {
+        List<Map> list = navUnviewCompanyMapper.findNavNameByNavId(navIds, object, objectId);
         for (Map m : list) {
-            SelectDto dto = new SelectDto(MessageUtils.transMapToInt(m, "id"), MessageUtils.transMapToString(m, "name"));
+            SelectDto dto = new SelectDto(MessageUtils.transMapToInt(m, "id"), MessageUtils.transMapToInt(m, "reId"), MessageUtils.transMapToString(m, "showName"));
             dtos.add(dto);
         }
     }
@@ -72,13 +72,13 @@ public class NavUnviewCompanyServiceImpl implements NavUnviewCompanyService {
     }
 
     @Override
-    public void del(Integer navId,Integer object,Integer objectId) {
+    public void del(Integer navId, Integer object, Integer objectId) {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
-        navUnviewCompanyMapper.delByNavId(navId, userId);
+        navUnviewCompanyMapper.delByNavId(navId, userId, object, objectId);
     }
 
     @Override
-    public void add(Integer navId, Integer object,Integer objectId,List<Integer> unviewList) {
-        navUnviewCompanyMapper.insertSelectiveByCompanyId(navId, unviewList);
+    public void add(Integer navId, Integer object, Integer objectId, List<Integer> unviewList) {
+        navUnviewCompanyMapper.insertSelectiveByCompanyId(navId, unviewList, object, objectId);
     }
 }
