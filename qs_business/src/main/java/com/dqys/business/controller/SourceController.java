@@ -2,8 +2,9 @@ package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
-import com.dqys.business.service.service.common.NavUnviewManagerService;
+import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.service.common.SourceService;
+import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
@@ -15,13 +16,10 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping(value = "/source")
-public class SourceController {
+public class SourceController extends BaseApiContorller {
 
     @Autowired
     private SourceService sourceService;
-
-    @Autowired
-    private NavUnviewManagerService navUnviewManagerService;
 
     /**
      * 分类列表
@@ -45,10 +43,6 @@ public class SourceController {
      */
     @RequestMapping(value = "/addNavigation", method = RequestMethod.POST)
     public JsonResponse addNavigation(@ModelAttribute SourceNavigation sourceNavigation) {
-        if (CommonUtil.checkParam(sourceNavigation, sourceNavigation.getType(), sourceNavigation.getPid(),
-                sourceNavigation.getName())) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
         return sourceService.addNavigation(sourceNavigation);
     }
 
@@ -129,14 +123,11 @@ public class SourceController {
      */
     @RequestMapping(value = "/getNewNavAll", method = RequestMethod.POST)
     public JsonResponse getNewNavAll(@ModelAttribute SourceInfoDTO sourceInfoDTO) {
-        if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getNavId(),
-                sourceInfoDTO.getCode())) {
-            return JsonResponseTool.paramErr("参数错误");
+        SelectDtoMap selectDtoMap = sourceService.getNewNavALL(sourceInfoDTO);
+        if (selectDtoMap==null) {
+            JsonResponseTool.failure("最新实勘权限获取异常");
         }
-        if ((sourceInfoDTO.getLenderId() == null && sourceInfoDTO.getEstatesId() == null) || (sourceInfoDTO.getLenderId() != null && sourceInfoDTO.getEstatesId() != null)) {
-            return JsonResponseTool.paramErr("资产源或借款人参数错误");
-        }
-        return sourceService.updateSource(sourceInfoDTO);
+        return JsonResponseTool.success(selectDtoMap);
     }
 
 

@@ -3,6 +3,7 @@ package com.dqys.business.service.service.common;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
+import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.core.model.JsonResponse;
 
 import java.util.List;
@@ -64,5 +65,12 @@ public interface SourceService {
      * @return
      */
     JsonResponse updateSource(SourceInfoDTO sourceInfoDTO);
+
+    /**
+     * 得到重新设置后的ｎａｖｉｄ关联的所有可选内容
+     * @param dto
+     * @return
+     */
+    SelectDtoMap getNewNavALL(SourceInfoDTO dto);
 
 }

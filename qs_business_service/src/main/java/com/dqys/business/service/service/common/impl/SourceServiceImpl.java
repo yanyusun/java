@@ -218,11 +218,32 @@ public class SourceServiceImpl implements SourceService {
 //        return false;
 //    }
 
+    /**
+     * 得到ｎａｖｉｄ关联的所有可选内容
+     * @param navId
+     * @param lenderId
+     * @param estatesId
+     * @return
+     */
     public SelectDtoMap getNavAuthAll(Integer navId,Integer lenderId,Integer estatesId ){
         if (lenderId != null && lenderId != 0) {//得到资产源的资料实勘权限
            return navUnviewManagerService.getAll(navId, ObjectTypeEnum.LENDER.getValue(),lenderId);
         } else if (estatesId != null && estatesId != 0) {//得到借款人的资料实勘权限
             return navUnviewManagerService.getAll(navId, ObjectTypeEnum.ASSETSOURCE.getValue(), estatesId);//重新设置权限；
+        }
+        return null;
+    }
+
+    /**
+     * 得到重新设置后的ｎａｖｉｄ关联的所有可选内容
+     * @param dto
+     * @return
+     */
+    public SelectDtoMap getNewNavALL(SourceInfoDTO dto){
+        if (dto.getLenderId() != null && dto.getLenderId() != 0) {//得到资产源的资料实勘权限
+            return navUnviewManagerService.getNewALL(dto.getNavId(), ObjectTypeEnum.LENDER.getValue(),dto.getLenderId(),dto.getSelectDtoMap());
+        } else if (dto.getEstatesId()!= null && dto.getEstatesId() != 0) {//得到借款人的资料实勘权限
+            return navUnviewManagerService.getNewALL(dto.getNavId(), ObjectTypeEnum.LENDER.getValue(),dto.getLenderId(),dto.getSelectDtoMap());
         }
         return null;
     }
