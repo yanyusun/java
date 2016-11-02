@@ -2,10 +2,8 @@ package com.dqys.business.service.service.common.impl;
 
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
-import com.dqys.business.service.service.common.NavUnviewCompanyService;
-import com.dqys.business.service.service.common.NavUnviewManagerService;
-import com.dqys.business.service.service.common.NavUnviewRoleService;
-import com.dqys.business.service.service.common.NavUnviewUserInfoService;
+import com.dqys.business.service.service.common.*;
+import com.dqys.business.service.utils.common.NavUnviewServerAgent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -20,29 +18,31 @@ import java.util.List;
 @Primary
 public class NavUnviewManagerServiceImpl implements NavUnviewManagerService{
     @Autowired
+    private NavUnviewUserTypeService navUnviewUserTypeService;
+    @Autowired
     private NavUnviewCompanyService navUnviewCompanyService;
     @Autowired
     private NavUnviewRoleService navUnviewRoleService;
     @Autowired
     private NavUnviewUserInfoService navUnviewUserInfoService;
-    @Autowired
-    private NavUnviewManagerService navUnviewManagerService;
 
 
     @Override
-    public SelectDtoMap getAll(String navId,Integer object,Integer objectId) {
+    public SelectDtoMap getAll(Integer navId, Integer object, Integer objectId) {
+        List<SelectDto> userTypeIntList = null;
+        NavUnviewServerAgent UserTypeAgent = new NavUnviewServerAgent(navUnviewUserTypeService,userTypeIntList);
+        UserTypeAgent.getSelectOptions(navId,object,objectId);
         return null;
     }
 
     @Override
-    public List<SelectDto> getUserList(List<Integer> companyList, List<Integer> roleList) {
+    public SelectDtoMap getNewALL(Integer navId, Integer object, Integer objectId, SelectDtoMap selectDtoMap) {
+        List<SelectDto> userTypeIntList = null;
+        NavUnviewServerAgent UserTypeAgent = new NavUnviewServerAgent(navUnviewUserTypeService,userTypeIntList);
+        UserTypeAgent.reset(navId, object, objectId,getUnvisableList(selectDtoMap.getUserTypeList()));
         return null;
     }
-
-
-
-    @Override
-    public void setALL(Integer navId,Integer object,Integer objectId, SelectDtoMap selectDtoMap) {
-
+    private List<Integer> getUnvisableList(List<SelectDto> selectDtoList){
+        return  null;
     }
 }

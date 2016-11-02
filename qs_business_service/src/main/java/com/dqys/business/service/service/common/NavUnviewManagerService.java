@@ -15,19 +15,6 @@ public interface NavUnviewManagerService {
      */
     SelectDtoMap getAll(Integer navId,Integer object,Integer objectId);
 
-//    /**
-//     * 得到用户ｌｉｓｔ
-//     * @param companyList　选中的公司list
-//     * @param roleList　选中的角色list
-//     * @return
-//     */
-//    List<SelectDto> getUserList(List<Integer> companyList,List<Integer> roleList);
-//
-//    /**
-//     *
-//     * @return
-//     */
-//    List<SelectDto> getCompanyList(List);
 
     /**
      * 得到重新设置后的ｎａｖｉｄ关联的所有可选内容
@@ -46,5 +33,5 @@ public interface NavUnviewManagerService {
      * @param navId
      * @param selectDtoMap
      */
-    void setALL(Integer navId,Integer object,Integer objectId,SelectDtoMap selectDtoMap);
+   // void setALL(Integer navId,Integer object,Integer objectId,SelectDtoMap selectDtoMap);
 }

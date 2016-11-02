@@ -116,7 +116,7 @@ public class SourceController extends BaseApiContorller {
     }
 
     /**
-     * 修改资源信息
+     * 获取资料实勘最新权限
      *
      * @param sourceInfoDTO
      * @return

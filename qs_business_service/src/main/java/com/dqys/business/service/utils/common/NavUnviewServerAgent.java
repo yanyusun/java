@@ -58,16 +58,6 @@ public class NavUnviewServerAgent {
         }
     }
 
-//    /**
-//     *
-//     * @param aLLParentList 所有父未选项
-//     * @param list　接收到的未选项
-//     * @return 当前分类的未选项
-//     */
-//    public List<Integer> getNewList(List<Integer> aLLParentList,List<Integer> list){
-//        return null;
-//    }
-//
 
     /**
      * 比较oldList与newList的是否相同
