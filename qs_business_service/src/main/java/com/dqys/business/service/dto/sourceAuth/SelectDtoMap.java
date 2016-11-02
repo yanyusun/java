@@ -8,6 +8,7 @@ import java.util.List;
  */
 public class SelectDtoMap {
 
+    private List<SelectDto> userTypeList;
 
     private List<SelectDto> companyList;
 
@@ -38,5 +39,13 @@ public class SelectDtoMap {
 
     public void setUserList(List<SelectDto> userList) {
         this.userList = userList;
+    }
+
+    public List<SelectDto> getUserTypeList() {
+        return userTypeList;
+    }
+
+    public void setUserTypeList(List<SelectDto> userTypeList) {
+        this.userTypeList = userTypeList;
     }
 }

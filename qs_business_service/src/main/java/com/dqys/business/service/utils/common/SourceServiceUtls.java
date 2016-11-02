@@ -6,6 +6,7 @@ import com.dqys.business.orm.pojo.common.SourceSource;
 import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.dto.common.SourceDTO;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
+import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.core.utils.CommonUtil;
 
 import java.util.*;
@@ -151,6 +152,22 @@ public class SourceServiceUtls {
         sourceInfoDTO.setEstatesId(sourceInfo.getEstatesId());
         return sourceInfoDTO;
     }
+    /**
+     * DAO 转 DTO
+     *
+     * @param sourceInfo
+     * @param sourceList
+     * @return
+     */
+    public static SourceInfoDTO toSourceInfoDTO(SourceInfo sourceInfo, List<SourceSource> sourceList, SelectDtoMap selectDtoMap) {
+        SourceInfoDTO sourceInfoDTO = toSourceInfoDTO(sourceInfo,sourceList);
+        sourceInfoDTO.setSelectDtoMap(selectDtoMap);
+        return sourceInfoDTO;
+    }
+
+
+
+
 
     /**
      * DAO 转 DTO

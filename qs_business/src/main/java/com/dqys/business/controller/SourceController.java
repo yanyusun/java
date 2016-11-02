@@ -2,6 +2,7 @@ package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
+import com.dqys.business.service.service.common.NavUnviewManagerService;
 import com.dqys.business.service.service.common.SourceService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
@@ -18,6 +19,9 @@ public class SourceController {
 
     @Autowired
     private SourceService sourceService;
+
+    @Autowired
+    private NavUnviewManagerService navUnviewManagerService;
 
     /**
      * 分类列表
@@ -107,6 +111,24 @@ public class SourceController {
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public JsonResponse update(@ModelAttribute SourceInfoDTO sourceInfoDTO) {
+        if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getNavId(),
+                sourceInfoDTO.getCode())) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if ((sourceInfoDTO.getLenderId() == null && sourceInfoDTO.getEstatesId() == null) || (sourceInfoDTO.getLenderId() != null && sourceInfoDTO.getEstatesId() != null)) {
+            return JsonResponseTool.paramErr("资产源或借款人参数错误");
+        }
+        return sourceService.updateSource(sourceInfoDTO);
+    }
+
+    /**
+     * 修改资源信息
+     *
+     * @param sourceInfoDTO
+     * @return
+     */
+    @RequestMapping(value = "/getNewNavAll", method = RequestMethod.POST)
+    public JsonResponse getNewNavAll(@ModelAttribute SourceInfoDTO sourceInfoDTO) {
         if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getNavId(),
                 sourceInfoDTO.getCode())) {
             return JsonResponseTool.paramErr("参数错误");

@@ -9,6 +9,7 @@ import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.common.SourceSource;
 import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
+import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.service.common.NavUnviewManagerService;
 import com.dqys.business.service.service.common.SourceService;
 import com.dqys.business.service.utils.common.NavUtil;
@@ -130,18 +131,16 @@ public class SourceServiceImpl implements SourceService {
         if (sourceInfo == null) {
             return null;
         }
+
         Integer sourceId = sourceInfo.getId();
         List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceId);
-        return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList);
+        return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList,getNavAuthAll(navId, lenderId, estatesId));
     }
 
     @Override
     public JsonResponse updateSource(SourceInfoDTO sourceInfoDTO) {
         if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getId(), sourceInfoDTO.getSourceDTOList())) {
             return JsonResponseTool.paramErr("参数错误");
-        }
-        if (!setNavAuth(sourceInfoDTO)) {
-            return JsonResponseTool.failure("设置资料实勘的权限异常");
         }
         boolean flag = false; // 判断是否有做修改
         SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO);
@@ -204,18 +203,27 @@ public class SourceServiceImpl implements SourceService {
         return JsonResponseTool.success(sourceInfo.getId());
     }
 
-    /**
-     * 跟据值改变资产源或者借款人的资料实勘权限状态
-     *
-     * @param sourceInfoDTO
-     * @return 失败返回ｆａｌｓｅ，成功返回ｔｒｕｅ
-     */
-    public boolean setNavAuth(SourceInfoDTO sourceInfoDTO) {
-        if (sourceInfoDTO.getEstatesId() != null && sourceInfoDTO.getEstatesId() != 0) {//设置资产源的资料实勘权限
-            navUnviewManagerService.setALL(sourceInfoDTO.getNavId(), ObjectTypeEnum.LENDER.getValue(), sourceInfoDTO.getEstatesId(), sourceInfoDTO.getSelectDtoMap());//重新设置权限；
-        } else if (sourceInfoDTO.getLenderId() != null && sourceInfoDTO.getLenderId() != 0) {//设置借款人的资料实勘权限
-            navUnviewManagerService.setALL(sourceInfoDTO.getNavId(), ObjectTypeEnum.ASSETSOURCE.getValue(), sourceInfoDTO.getEstatesId(), sourceInfoDTO.getSelectDtoMap());//重新设置权限；
+//    /**
+//     * 跟据值改变资产源或者借款人的资料实勘权限状态
+//     *
+//     * @param sourceInfoDTO
+//     * @return 失败返回ｆａｌｓｅ，成功返回ｔｒｕｅ
+//     */
+//    public boolean setNavAuth(SourceInfoDTO sourceInfoDTO) {
+//        if (sourceInfoDTO.getEstatesId() != null && sourceInfoDTO.getEstatesId() != 0) {//设置资产源的资料实勘权限
+//            navUnviewManagerService.setALL(sourceInfoDTO.getNavId(), ObjectTypeEnum.LENDER.getValue(), sourceInfoDTO.getEstatesId(), sourceInfoDTO.getSelectDtoMap());//重新设置权限；
+//        } else if (sourceInfoDTO.getLenderId() != null && sourceInfoDTO.getLenderId() != 0) {//设置借款人的资料实勘权限
+//            navUnviewManagerService.setALL(sourceInfoDTO.getNavId(), ObjectTypeEnum.ASSETSOURCE.getValue(), sourceInfoDTO.getEstatesId(), sourceInfoDTO.getSelectDtoMap());//重新设置权限；
+//        }
+//        return false;
+//    }
+
+    public SelectDtoMap getNavAuthAll(Integer navId,Integer lenderId,Integer estatesId ){
+        if (lenderId != null && lenderId != 0) {//得到资产源的资料实勘权限
+           return navUnviewManagerService.getAll(navId, ObjectTypeEnum.LENDER.getValue(),lenderId);
+        } else if (estatesId != null && estatesId != 0) {//得到借款人的资料实勘权限
+            return navUnviewManagerService.getAll(navId, ObjectTypeEnum.ASSETSOURCE.getValue(), estatesId);//重新设置权限；
         }
-        return false;
+        return null;
     }
 }
