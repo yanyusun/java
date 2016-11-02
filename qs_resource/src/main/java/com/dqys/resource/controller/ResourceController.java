@@ -9,6 +9,11 @@ import com.dqys.core.utils.ApiParseTool;
 import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.SysPropertyTool;
+import org.apache.commons.io.FileUtils;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,7 +34,6 @@ import java.util.concurrent.Callable;
 @RestController
 @RequestMapping("/res")
 public class ResourceController {
-
     @RequestMapping("/res_types")
     public Callable<JsonResponse<List>> businessResTypes() {
         return () -> JsonResponseTool.success(ApiParseTool.parseApiList(SysPropertyTool.getProperty(SysPropertyTypeEnum.FILE_BUSINESS_TYPE), KeyEnum.API_SYS_PROPERTY_KEY));
@@ -86,24 +90,41 @@ public class ResourceController {
         };
     }
 
-//    @RequestMapping("/getSource")
-//    public ResponseEntity<byte[]> getTmpSource(@RequestParam String fileName, boolean isTmp) {
-//        File file = FileTool.getFile(fileName,isTmp);
-//        HttpHeaders httpHeaders = new HttpHeaders();
-//        httpHeaders.add("Content-Disposition", "attachment;filename="
-//                + fileName);
-//        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
-//        byte[] bytes =null;
-//        try {
-//            bytes = FileUtils.readFileToByteArray(file);
-//        }catch (IOException e){
-//            e.printStackTrace();
-//            return new ResponseEntity(bytes, httpHeaders, HttpStatus.EXPECTATION_FAILED);
-//        }
-//        return new ResponseEntity(bytes, httpHeaders, HttpStatus.OK);
-//    }
+
+
+
+    /**
+     * 用于下载
+     * @param fileName
+     * @param isTmp
+     * @return
+     */
+    @RequestMapping("/download")
+    public ResponseEntity<byte[]> download(@RequestParam String fileName, boolean isTmp) {
+        File file = FileTool.getFile(fileName,isTmp);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Content-Disposition", "attachment;filename="
+                + fileName);
+        httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
+        byte[] bytes =null;
+        try {
+            bytes = FileUtils.readFileToByteArray(file);
+        }catch (IOException e){
+            e.printStackTrace();
+            return new ResponseEntity(bytes, httpHeaders, HttpStatus.EXPECTATION_FAILED);
+        }
+        return new ResponseEntity(bytes, httpHeaders, HttpStatus.OK);
+    }
+
+    /**
+     * 用与显示
+     * @param response
+     * @param fileName
+     * @param isTmp
+     * @return
+     */
     @RequestMapping("/getSource")
-    public String getRes(HttpServletResponse response, @RequestParam String fileName, boolean isTmp) {
+    public String showPic(HttpServletResponse response, @RequestParam String fileName, boolean isTmp) {
         File file = FileTool.getFile(fileName,isTmp);
 
         OutputStream os = null;

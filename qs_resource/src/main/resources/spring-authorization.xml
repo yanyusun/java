@@ -9,7 +9,7 @@
             <mvc:mapping path="/**"/>
             <bean class="com.dqys.core.interceptor.CrossOriginIntercetpor"/>
         </mvc:interceptor>
-      <mvc:interceptor>
+         <mvc:interceptor>
 
             <mvc:mapping path="/**"/>
 
@@ -21,8 +21,14 @@
             <mvc:exclude-mapping path="/script/locales/*"/>
             <mvc:exclude-mapping path="/html/*"/>
             <mvc:exclude-mapping path="/res/getSource"/>
+            <mvc:exclude-mapping path="/res/download"/>
+            <mvc:exclude-mapping path="/res/showPic"/>
 
             <bean class="com.dqys.core.interceptor.HeaderInterceptor"/>
+        </mvc:interceptor>
+        <mvc:interceptor>
+            <mvc:mapping path="/res/getSource"/>
+            <bean class="com.dqys.resource.interceptor.GetResourceIntercetpor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 
