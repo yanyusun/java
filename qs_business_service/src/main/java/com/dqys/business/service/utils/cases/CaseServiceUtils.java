@@ -170,14 +170,12 @@ public class CaseServiceUtils {
                 caseDTO.getLawsuitAmount(), caseDTO.getLawsuitCorpus())) {
             return "基础信息缺失";
         }
-        if(CommonUtil.checkParam(caseDTO.getCourtDTOList())){
+        if (CommonUtil.checkParam(caseDTO.getCourtDTOList())) {
             return "案件关联法院信息缺失";
         }
-        if(CommonUtil.checkParam(caseDTO, caseDTO.getAttachmentStatus(),
-                caseDTO.getAttachmentDate(), caseDTO.getAttachmentCourt(), caseDTO.getAttachmentTime(),
-                caseDTO.getPreservation(), caseDTO.getPreservationStart(), caseDTO.getPreservationEnd(),
-                caseDTO.getIsFirst(), caseDTO.getPreservationCourt(), caseDTO.getFirstAttachmentCode(),
-                caseDTO.getFirstAttachmentDate())){
+        if (CommonUtil.checkParam(caseDTO, caseDTO.getAttachmentStatus(),
+                caseDTO.getPreservation(),
+                caseDTO.getIsFirst())) {
             return "案件查封保全信息缺失";
         }
         if (ExcellentTypeEnum.getExcellentTypeEnum(caseDTO.getEvaluateExcellent()) == null) {
@@ -281,10 +279,8 @@ public class CaseServiceUtils {
      */
     public static String checkData(CaseAttachmentDTO caseAttachmentDTO) {
         if (CommonUtil.checkParam(caseAttachmentDTO, caseAttachmentDTO.getId(), caseAttachmentDTO.getAttachmentStatus(),
-                caseAttachmentDTO.getAttachmentDate(), caseAttachmentDTO.getAttachmentCourt(), caseAttachmentDTO.getAttachmentTime(),
-                caseAttachmentDTO.getPreservation(), caseAttachmentDTO.getPreservationStart(), caseAttachmentDTO.getPreservationEnd(),
-                caseAttachmentDTO.getIsFirst(), caseAttachmentDTO.getPreservationCourt(), caseAttachmentDTO.getFirstAttachmentCode(),
-                caseAttachmentDTO.getFirstAttachmentDate())) {
+                caseAttachmentDTO.getPreservation(),
+                caseAttachmentDTO.getIsFirst())) {
             return "参数错误";
         }
         return null;
