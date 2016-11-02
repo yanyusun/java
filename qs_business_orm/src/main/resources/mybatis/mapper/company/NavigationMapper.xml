@@ -27,7 +27,8 @@
   </sql>
 
     <sql id="Base_Condition">
-        <where>1=1
+        <where>
+            is_show=0
             <if test="id != null">
                 AND id = #{id,jdbcType=INTEGER}
             </if>
