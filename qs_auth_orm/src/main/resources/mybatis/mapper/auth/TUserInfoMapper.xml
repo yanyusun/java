@@ -1,296 +1,299 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dqys.auth.orm.dao.facade.TUserInfoMapper" >
+<mapper namespace="com.dqys.auth.orm.dao.facade.TUserInfoMapper">
 
-  <!--<cache type="com.dqys.core.cache.MybatisRedisCache" eviction="LRU"/>-->
+    <!--<cache type="com.dqys.core.cache.MybatisRedisCache" eviction="LRU"/>-->
 
-  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.TUserInfo" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="version" property="version" jdbcType="INTEGER" />
-    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
-    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
-    <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="user_name" property="userName" jdbcType="VARCHAR" />
-    <result column="real_name" property="realName" jdbcType="VARCHAR" />
-    <result column="account" property="account" jdbcType="VARCHAR" />
-    <result column="sex" property="sex" jdbcType="BIT" />
-    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
-    <result column="email" property="email" jdbcType="VARCHAR" />
-    <result column="password" property="password" jdbcType="VARCHAR" />
-    <result column="salt" property="salt" jdbcType="VARCHAR" />
-    <result column="identity" property="identity" jdbcType="VARCHAR" />
-    <result column="company_id" property="companyId" jdbcType="INTEGER" />
-    <result column="status" property="status" jdbcType="BIT" />
-    <result column="avg" property="avg" jdbcType="VARCHAR" />
-    <result column="QQ" property="QQ" jdbcType="VARCHAR" />
-    <result column="wechat" property="wechat" jdbcType="VARCHAR" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.TUserInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="BIT"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="salt" property="salt" jdbcType="VARCHAR"/>
+        <result column="identity" property="identity" jdbcType="VARCHAR"/>
+        <result column="company_id" property="companyId" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="BIT"/>
+        <result column="avg" property="avg" jdbcType="VARCHAR"/>
+        <result column="QQ" property="QQ" jdbcType="VARCHAR"/>
+        <result column="wechat" property="wechat" jdbcType="VARCHAR"/>
+    </resultMap>
 
-  <!-- 基础字段 -->
-  <sql id="Base_Column_List" >
+    <!-- 基础字段 -->
+    <sql id="Base_Column_List">
     id, version, create_at, update_at, stateflag, remark, user_name, real_name, sex, 
     mobile, email, password, salt, identity, company_id, status, account, wechat, QQ,
     avg
   </sql>
 
-  <!-- 搜索条件 -->
-  <sql id="Query_Condition">
-    <where>
-      stateflag = 0
-      <if test="userName != null">
-        AND user_name = #{userName,jdbcType=VARCHAR}
-      </if>
-      <if test="status != null">
-        AND status = #{status,jdbcType=INTEGER}
-      </if>
-      <if test="companyId != null">
-        AND company_id = #{companyId,jdbcType=INTEGER}
-      </if>
+    <!-- 搜索条件 -->
+    <sql id="Query_Condition">
+        <where>
+            stateflag = 0
+            <if test="userName != null">
+                AND user_name = #{userName,jdbcType=VARCHAR}
+            </if>
+            <if test="status != null">
+                AND status = #{status,jdbcType=INTEGER}
+            </if>
+            <if test="companyId != null">
+                AND company_id = #{companyId,jdbcType=INTEGER}
+            </if>
 
 
-      <if test="userNameLike != null">
-        AND user_name LIKE CONCAT('%', #{userName,jdbcType=VARCHAR}, '%')
-      </if>
+            <if test="userNameLike != null">
+                AND (user_name LIKE CONCAT('%', #{nameLike,jdbcType=VARCHAR}, '%')
+                OR account LIKE CONCAT('%', #{nameLike,jdbcType=VARCHAR}, '%')
+                OR real_name LIKE CONCAT('%', #{nameLike,jdbcType=VARCHAR}, '%'))
+            </if>
 
-      <if test="statuss != null and statuss.size() > 0">
-        AND status IN
-        <foreach collection="statuss" open="(" close=")" separator="," item="s">
-          #{s}
-        </foreach>
-      </if>
-      <if test="ids != null and ids.size() > 0">
-        AND id IN
-        <foreach collection="ids" open="(" close=")" separator="," item="id">
-          #{id}
-        </foreach>
-      </if>
-      <if test="companyIds != null and companyIds.size() > 0">
-        AND company_id IN
-        <foreach collection="companyIds" open="(" close=")" separator="," item="cId">
-          #{cId}
-        </foreach>
-      </if>
+            <if test="statuss != null and statuss.size() > 0">
+                AND status IN
+                <foreach collection="statuss" open="(" close=")" separator="," item="s">
+                    #{s}
+                </foreach>
+            </if>
+            <if test="ids != null and ids.size() > 0">
+                AND id IN
+                <foreach collection="ids" open="(" close=")" separator="," item="id">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="companyIds != null and companyIds.size() > 0">
+                AND company_id IN
+                <foreach collection="companyIds" open="(" close=")" separator="," item="cId">
+                    #{cId}
+                </foreach>
+            </if>
 
-    </where>
-  </sql>
+        </where>
+    </sql>
 
-  <!-- 根据ID获取 -->
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from t_user_info
-    where id = #{id,jdbcType=INTEGER} AND stateflag = 0
-  </select>
+    <!-- 根据ID获取 -->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_info
+        where id = #{id,jdbcType=INTEGER} AND stateflag = 0
+    </select>
 
-  <!-- 根据ID删除 -->
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <!-- 根据ID删除 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     update t_user_info set stateflag=CURRENT_TIMESTAMP
     where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </delete>
 
-  <!-- 新增 -->
-  <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.TUserInfo" useGeneratedKeys="true" keyProperty="id" >
-    insert into t_user_info
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="remark != null" >
-        remark,
-      </if>
-      <if test="userName != null" >
-        user_name,
-      </if>
-      <if test="realName != null" >
-        real_name,
-      </if>
-      <if test="account != null" >
-        account,
-      </if>
-      <if test="sex != null" >
-        sex,
-      </if>
-      <if test="mobile != null" >
-        mobile,
-      </if>
-      <if test="email != null" >
-        email,
-      </if>
-      <if test="password != null" >
-        password,
-      </if>
-      <if test="salt != null" >
-        salt,
-      </if>
-      <if test="identity != null" >
-        identity,
-      </if>
-      <if test="companyId != null" >
-        company_id,
-      </if>
-      <if test="status != null" >
-        status,
-      </if>
-      <if test="avg != null" >
-        avg,
-      </if>
-      <if test="wechat != null" >
-        wechat,
-      </if>
-      <if test="QQ != null" >
-        QQ,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="remark != null" >
-        #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="userName != null" >
-        #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="realName != null" >
-        #{realName,jdbcType=VARCHAR},
-      </if>
-      <if test="account != null" >
-        #{account,jdbcType=VARCHAR},
-      </if>
-      <if test="sex != null" >
-        #{sex,jdbcType=BIT},
-      </if>
-      <if test="mobile != null" >
-        #{mobile,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null" >
-        #{email,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="salt != null" >
-        #{salt,jdbcType=VARCHAR},
-      </if>
-      <if test="identity != null" >
-        #{identity,jdbcType=VARCHAR},
-      </if>
-      <if test="companyId != null" >
-        #{companyId,jdbcType=INTEGER},
-      </if>
-      <if test="status != null" >
-        #{status,jdbcType=BIT},
-      </if>
-      <if test="avg != null" >
-        #{avg,jdbcType=VARCHAR},
-      </if>
-      <if test="wechat != null" >
-        #{wechat,jdbcType=VARCHAR},
-      </if>
-      <if test="QQ != null" >
-        #{QQ,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
+    <!-- 新增 -->
+    <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.TUserInfo" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into t_user_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="userName != null">
+                user_name,
+            </if>
+            <if test="realName != null">
+                real_name,
+            </if>
+            <if test="account != null">
+                account,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="salt != null">
+                salt,
+            </if>
+            <if test="identity != null">
+                identity,
+            </if>
+            <if test="companyId != null">
+                company_id,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="avg != null">
+                avg,
+            </if>
+            <if test="wechat != null">
+                wechat,
+            </if>
+            <if test="QQ != null">
+                QQ,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null">
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=BIT},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="identity != null">
+                #{identity,jdbcType=VARCHAR},
+            </if>
+            <if test="companyId != null">
+                #{companyId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=BIT},
+            </if>
+            <if test="avg != null">
+                #{avg,jdbcType=VARCHAR},
+            </if>
+            <if test="wechat != null">
+                #{wechat,jdbcType=VARCHAR},
+            </if>
+            <if test="QQ != null">
+                #{QQ,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
 
-  <!-- 根据ID修改 -->
-  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.TUserInfo" >
-    update t_user_info
-    <set >
-      version = version+1,
-      update_at = CURRENT_TIMESTAMP ,
-      <if test="remark != null" >
-        remark = #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="userName != null" >
-        user_name = #{userName,jdbcType=VARCHAR},
-      </if>
-      <if test="realName != null" >
-        real_name = #{realName,jdbcType=VARCHAR},
-      </if>
-      <if test="account != null" >
-        account = #{account,jdbcType=VARCHAR},
-      </if>
-      <if test="sex != null" >
-        sex = #{sex,jdbcType=BIT},
-      </if>
-      <if test="mobile != null" >
-        mobile = #{mobile,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null" >
-        email = #{email,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null" >
-        password = #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="salt != null" >
-        salt = #{salt,jdbcType=VARCHAR},
-      </if>
-      <if test="identity != null" >
-        identity = #{identity,jdbcType=VARCHAR},
-      </if>
-      <if test="companyId != null" >
-        company_id = #{companyId,jdbcType=INTEGER},
-      </if>
-      <if test="status != null" >
-        status = #{status,jdbcType=BIT},
-      </if>
-      <if test="avg != null" >
-        avg = #{avg,jdbcType=VARCHAR},
-      </if>
-      <if test="wechat != null" >
-        wechat = #{wechat,jdbcType=VARCHAR},
-      </if>
-      <if test="QQ != null" >
-        QQ = #{QQ,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-    and stateflag=0
-  </update>
+    <!-- 根据ID修改 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.TUserInfo">
+        update t_user_info
+        <set>
+            version = version+1,
+            update_at = CURRENT_TIMESTAMP ,
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null">
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="realName != null">
+                real_name = #{realName,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null">
+                account = #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=BIT},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                salt = #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="identity != null">
+                identity = #{identity,jdbcType=VARCHAR},
+            </if>
+            <if test="companyId != null">
+                company_id = #{companyId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=BIT},
+            </if>
+            <if test="avg != null">
+                avg = #{avg,jdbcType=VARCHAR},
+            </if>
+            <if test="wechat != null">
+                wechat = #{wechat,jdbcType=VARCHAR},
+            </if>
+            <if test="QQ != null">
+                QQ = #{QQ,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+        and stateflag=0
+    </update>
 
-  <!-- 检验账号是否存在 -->
-  <select id="verifyUser" resultMap="BaseResultMap" parameterType="java.lang.String">
-    select
-    <include refid="Base_Column_List" />
-    from t_user_info
-    where
-    ( 1=2
-    <if test="account != null">
-      or account = #{account,jdbcType=VARCHAR}
-    </if>
-    <if test="mobile != null">
-      or mobile = #{mobile,jdbcType=VARCHAR}
-    </if>
-    <if test="email != null">
-      or email = #{email,jdbcType=VARCHAR}
-    </if>
-    )
-    and stateflag=0
-  </select>
+    <!-- 检验账号是否存在 -->
+    <select id="verifyUser" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_info
+        where
+        ( 1=2
+        <if test="account != null">
+            or account = #{account,jdbcType=VARCHAR}
+        </if>
+        <if test="mobile != null">
+            or mobile = #{mobile,jdbcType=VARCHAR}
+        </if>
+        <if test="email != null">
+            or email = #{email,jdbcType=VARCHAR}
+        </if>
+        )
+        and stateflag=0
+    </select>
 
-  <!-- 多条件统计 -->
-  <select id="queryCount" parameterType="com.dqys.auth.orm.query.TUserQuery" resultType="java.lang.Integer">
-    SELECT COUNT(id) FROM t_user_info
-    <include refid="Query_Condition" />
-  </select>
+    <!-- 多条件统计 -->
+    <select id="queryCount" parameterType="com.dqys.auth.orm.query.TUserQuery" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM t_user_info
+        <include refid="Query_Condition"/>
+    </select>
 
-  <!-- 多条件遍历用户 -->
-  <select id="queryList" parameterType="com.dqys.auth.orm.query.TUserQuery" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from t_user_info
-    <include refid="Query_Condition" />
-    ORDER BY id DESC
-    <if test="isPaging">
-      limit #{startPageNum,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
-    </if>
-  </select>
+    <!-- 多条件遍历用户 -->
+    <select id="queryList" parameterType="com.dqys.auth.orm.query.TUserQuery" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_info
+        <include refid="Query_Condition"/>
+        ORDER BY id DESC
+        <if test="isPaging">
+            limit #{startPageNum,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+        </if>
+    </select>
 
-  <update id="queryUpdateStatus">
-    UPDATE t_user_info set status = #{status,jdbcType=INTEGER} where id IN (
-      <foreach collection="ids" item="i" separator=",">
-        #{i}
-      </foreach>
-    )
-  </update>
+    <update id="queryUpdateStatus">
+        UPDATE t_user_info set status = #{status,jdbcType=INTEGER} where id IN (
+        <foreach collection="ids" item="i" separator=",">
+            #{i}
+        </foreach>
+        )
+    </update>
 
-  <select id="listIdByUserName" resultType="java.lang.Integer">
+    <select id="listIdByUserName" resultType="java.lang.Integer">
     SELECT id from t_user_info where user_name = #{userName,jdbcType=VARCHAR} AND stateflag = 0
   </select>
 
