@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *分类角色不可见关系
+ * 分类角色不可见关系
  * Created by yan on 16/10/27.
  */
 public interface NavUnviewRoleMapper {
@@ -23,10 +23,10 @@ public interface NavUnviewRoleMapper {
 
     int updateByPrimaryKey(NavUnviewRole record);
 
-    Integer delByNavId(@Param("navId") Integer navId, @Param("userId") Integer userId);
+    Integer delByNavId(@Param("navId") Integer navId, @Param("userId") Integer userId, @Param("object") Integer object, @Param("objectId") Integer objectId);
 
-    Integer insertSelectiveByRoleType(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList);
+    Integer insertSelectiveByRoleType(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList, @Param("object") Integer object, @Param("objectId") Integer objectId);
 
-    List<Map> findNavNameByNavId(List<Integer> navIds);
+    List<Map> findNavNameByNavId(@Param("navIds") List<Integer> navIds, @Param("object") Integer object, @Param("objectId") Integer objectId);
 
 }

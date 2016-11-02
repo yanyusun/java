@@ -11,8 +11,9 @@ public class SelectDto {
 
     private boolean visible=false;
 
-    public SelectDto(Integer id, String showName) {
+    public SelectDto(Integer id, Integer reId, String showName) {
         this.id = id;
+        this.reId = reId;
         this.showName = showName;
     }
 

@@ -19,9 +19,9 @@ public interface NavUnviewUserTypeMapper {
 
     int updateByPrimaryKey(NavUnviewUserType record);
 
-    Integer insertSelectiveByUserType(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList);
+    Integer delByNavId(@Param("navId") Integer navId, @Param("userId") Integer userId, @Param("object") Integer object, @Param("objectId") Integer objectId);
 
-    List<Map> findNavNameByNavId(List<Integer> navIds);
+    Integer insertSelectiveByUserType(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList, @Param("object") Integer object, @Param("objectId") Integer objectId);
 
-    Integer delByNavId(@Param("navId") Integer navId, @Param("userId") Integer userId);
+    List<Map> findNavNameByNavId(@Param("navIds") List<Integer> navIds, @Param("object") Integer object, @Param("objectId") Integer objectId);
 }

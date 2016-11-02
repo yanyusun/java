@@ -46,8 +46,7 @@ public class NavUnviewServerAgent {
      */
     public void reset(Integer navId,Integer object,Integer objectId,List<SelectDto> list){
 
-//        if(){}
-//        navUnviewService.del();
+        navUnviewService.del(navId,object,objectId);
     }
 
 //    /**

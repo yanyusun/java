@@ -1,6 +1,5 @@
 package com.dqys.business.orm.mapper.common.impl;
 
-import com.dqys.business.orm.mapper.common.NavUnviewUserInfoMapper;
 import com.dqys.business.orm.mapper.common.NavUnviewUserTypeMapper;
 import com.dqys.business.orm.pojo.common.NavUnviewUserType;
 import com.dqys.core.base.BaseDao;
@@ -44,17 +43,17 @@ public class NavUnviewUserTypeMapperImpl extends BaseDao implements NavUnviewUse
     }
 
     @Override
-    public Integer delByNavId(Integer navId, Integer userId) {
-        return super.getSqlSession().getMapper(NavUnviewUserTypeMapper.class).delByNavId(navId, userId);
+    public Integer delByNavId(@Param("navId") Integer navId, @Param("userId") Integer userId, @Param("object") Integer object, @Param("objectId") Integer objectId) {
+        return super.getSqlSession().getMapper(NavUnviewUserTypeMapper.class).delByNavId(navId, userId, object, objectId);
     }
 
     @Override
-    public Integer insertSelectiveByUserType(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList) {
-        return super.getSqlSession().getMapper(NavUnviewUserTypeMapper.class).insertSelectiveByUserType(navId, unviewList);
+    public Integer insertSelectiveByUserType(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList, @Param("object") Integer object, @Param("objectId") Integer objectId) {
+        return super.getSqlSession().getMapper(NavUnviewUserTypeMapper.class).insertSelectiveByUserType(navId, unviewList, object, objectId);
     }
 
     @Override
-    public List<Map> findNavNameByNavId(List<Integer> navIds) {
-        return super.getSqlSession().getMapper(NavUnviewUserTypeMapper.class).findNavNameByNavId(navIds);
+    public List<Map> findNavNameByNavId(@Param("navIds") List<Integer> navIds, @Param("object") Integer object, @Param("objectId") Integer objectId) {
+        return super.getSqlSession().getMapper(NavUnviewUserTypeMapper.class).findNavNameByNavId(navIds, object, objectId);
     }
 }
