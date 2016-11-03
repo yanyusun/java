@@ -357,7 +357,7 @@
                 #{estateType,jdbcType=INTEGER},
             </if>
             <if test="estateClassify != null">
-                #{estate_classify,jdbcType=INTEGER},
+                #{estateClassify,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
