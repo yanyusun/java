@@ -341,7 +341,9 @@ public class LenderServiceImpl implements LenderService {
         }
         // 添加借款人基础信息
         LenderInfo lenderInfo = LenderServiceUtils.toLenderInfo(lenderDTO);
-        lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
+        if (lenderInfo.getLenderNo() == null) {
+            lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
+        }
         lenderInfo.setOperator(userId);
         String typeStr = UserSession.getCurrent().getUserType();
         UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));

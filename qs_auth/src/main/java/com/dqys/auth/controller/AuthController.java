@@ -2,7 +2,9 @@ package com.dqys.auth.controller;
 
 import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
+import com.dqys.auth.orm.dao.facade.TMessageMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.pojo.LoginLog;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.service.constant.MailVerifyTypeEnum;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -55,6 +58,8 @@ public class AuthController extends BaseApiContorller {
 
     @Autowired
     private TCompanyInfoMapper tCompanyInfoMapper;
+    @Autowired
+    private TMessageMapper messageMapper;
 
     /**
      * @api {GET} http://{url}/auth/captcha 图片验证码
@@ -274,7 +279,8 @@ public class AuthController extends BaseApiContorller {
                                             @RequestParam String pwd,
                                             @RequestParam(required = false) String smsCode,
                                             @RequestParam(required = false) String captcha,
-                                            @RequestParam(required = false) String captchaKey) {
+                                            @RequestParam(required = false) String captchaKey,
+                                            HttpServletRequest request) {
 
         return () -> {
             if (StringUtils.isBlank(userName) && StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
@@ -317,7 +323,11 @@ public class AuthController extends BaseApiContorller {
             if (!userServiceResult.getFlag()) {
                 return JsonResponseTool.authFailure(userServiceResult.getMessage());
             }
-
+            LoginLog log = new LoginLog();
+            log.setUserId(userServiceResult.getData().getUserId());
+            String ip = request.getRemoteAddr().toString();
+            log.setIp(ip);
+            messageMapper.addLoginLog(log);//添加登入记录
             return JsonResponseTool.success(ProtocolTool.createUserHeader(
                             userServiceResult.getData().getUserId(),
                             userServiceResult.getData().getUserTypes(),

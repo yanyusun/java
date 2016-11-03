@@ -132,4 +132,8 @@
         WHERE id=#{id}
     </update>
 
+    <insert id="addLoginLog" parameterType="com.dqys.auth.orm.pojo.LoginLog">
+        INSERT INTO t_login_log(user_id,time,ip) VALUES(#{userId},now(),#{ip})
+    </insert>
+
 </mapper>

@@ -160,31 +160,15 @@ public class ZcyServiceImpl implements ZcyService {
         return map;
     }
 
-    private String getHouseNo() {
-        ZcyEstates estates = new ZcyEstates();
-        for (int i = 0; i < 5; i++) {
-            String houseNo = "ZC" + DateFormatTool.format(new Date(), "yyMM") + CommonUtil.getRandomNum(10000);//资产编号
-            estates.setHouseNo(houseNo);
-            List<ZcyEstates> estateses = zcyEstatesMapper.selectBySelective(estates);
-            if (estateses.size() == 0) {
-                return houseNo;
-            }
-        }
-        return null;
-    }
-
-
     @Override
     public Map addEstates(ZcyEstates zcyEstates, List<ZcyEstatesAddress> address, List<ZcyEstatesFacility> facilities) throws BusinessLogException {
         Map map = new HashMap<>();
         Integer result = 0;
         if (zcyEstates.getId() == null) {
             //添加资产源信息，并且加入到业务对象中，状态为正在处置
-            String codeNo = RandomUtil.getCode(RandomUtil.ESTATES_CODE);//缓存中取编号
-            if (codeNo == null) {
-                codeNo = getHouseNo();
+            if (zcyEstates.getHouseNo() == null) {
+                zcyEstates.setHouseNo(RandomUtil.getCode(RandomUtil.ESTATES_CODE));//缓存中取编号
             }
-            zcyEstates.setHouseNo(codeNo);
             TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(MessageUtils.transStringToInt(zcyEstates.getOperator()));
             if (tUserInfo != null) {
                 zcyEstates.setCompanyId(tUserInfo.getCompanyId());

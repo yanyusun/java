@@ -84,7 +84,9 @@ public class CaseServiceImpl implements CaseService {
             return JsonResponseTool.paramErr("参数错误，请检查抵押物关联正确性");
         }
         // 创建案件的编号
-        caseInfo.setCaseNo(RandomUtil.getCode(RandomUtil.CASE_CODE));
+        if (caseInfo.getCaseNo() == null) {
+            caseInfo.setCaseNo(RandomUtil.getCode(RandomUtil.CASE_CODE));
+        }
         // 增加案件基础信息
         Integer result = caseInfoMapper.insert(caseInfo);
         if (CommonUtil.checkResult(result)) {

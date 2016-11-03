@@ -69,7 +69,9 @@ public class PawnServiceImpl implements PawnService {
         }
         PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
         // 统计当前借款人已经具有的抵押物数量
-        pawnInfo.setPawnNo(RandomUtil.getCode(RandomUtil.PAWN_CODE));
+        if (pawnInfo.getPawnNo() == null) {
+            pawnInfo.setPawnNo(RandomUtil.getCode(RandomUtil.PAWN_CODE));
+        }
 //        String typeStr = UserSession.getCurrent().getUserType();
 //        UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
 //        if(infoEnum != null){

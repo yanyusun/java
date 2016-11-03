@@ -4,6 +4,7 @@ import com.dqys.business.service.service.index.IndexService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +36,17 @@ public class IndexController {
      * "await": 0,//待完成任务-------------
      * "finish": 0,//已完成------------
      * "unfinished": 2,//正在进行中------------
-     * "join": 1 //参与的任务
+     * "join": 1, //参与的任务
+     * "detail": {
+     * "roleName": "管理员",//角色类型
+     * "realName": "测试丰",//姓名
+     * "finishRate": "0%",//业绩比率
+     * "lastTime": null,//上一次登入时间
+     * "province": "北京市",//省份
+     * "city": "市辖区",//城市
+     * "area": "东城区",//区县
+     * "address": null //地址
+     * }
      * }
      * }
      */
@@ -52,4 +63,24 @@ public class IndexController {
         }
         return JsonResponseTool.success(map);
     }
+
+    /**
+     * @api {post} index/getObjectNo 获取各种编号
+     * @apiSampleRequest index/getObjectNo
+     * @apiGroup INDEX
+     * @apiName index/getObjectNo
+     * @apiParam {string} code 编号规则（QS：资产包；LC：案件；IO：借据；BO：借款人；CO：抵押物；ZC：资产源；YZ：业主 ；CZ：个人债权；QZ：企业债权；YQ：逾期贷款）
+     */
+    @RequestMapping("/getObjectNo")
+    @ResponseBody
+    public JsonResponse getObjectNo(String code) {
+        String no = RandomUtil.getCode(code);
+        if (no == null) {
+            return JsonResponseTool.failure("参数有误");
+        } else {
+            return JsonResponseTool.success(no);
+        }
+    }
+
+
 }
