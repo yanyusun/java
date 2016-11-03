@@ -7,10 +7,10 @@ import com.dqys.business.orm.mapper.common.SourceSourceMapper;
 import com.dqys.business.orm.pojo.common.SourceInfo;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.common.SourceSource;
+import com.dqys.business.service.dto.common.NavUnviewDTO;
 import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
-import com.dqys.business.service.dto.sourceAuth.UnviewReIdMap;
 import com.dqys.business.service.service.common.NavUnviewManagerService;
 import com.dqys.business.service.service.common.SourceService;
 import com.dqys.business.service.utils.common.NavUtil;
@@ -204,20 +204,6 @@ public class SourceServiceImpl implements SourceService {
         return JsonResponseTool.success(sourceInfo.getId());
     }
 
-//    /**
-//     * 跟据值改变资产源或者借款人的资料实勘权限状态
-//     *
-//     * @param sourceInfoDTO
-//     * @return 失败返回ｆａｌｓｅ，成功返回ｔｒｕｅ
-//     */
-//    public boolean setNavAuth(SourceInfoDTO sourceInfoDTO) {
-//        if (sourceInfoDTO.getEstatesId() != null && sourceInfoDTO.getEstatesId() != 0) {//设置资产源的资料实勘权限
-//            navUnviewManagerService.setALL(sourceInfoDTO.getNavId(), ObjectTypeEnum.LENDER.getValue(), sourceInfoDTO.getEstatesId(), sourceInfoDTO.getSelectDtoMap());//重新设置权限；
-//        } else if (sourceInfoDTO.getLenderId() != null && sourceInfoDTO.getLenderId() != 0) {//设置借款人的资料实勘权限
-//            navUnviewManagerService.setALL(sourceInfoDTO.getNavId(), ObjectTypeEnum.ASSETSOURCE.getValue(), sourceInfoDTO.getEstatesId(), sourceInfoDTO.getSelectDtoMap());//重新设置权限；
-//        }
-//        return false;
-//    }
 
     /**
      * 得到ｎａｖｉｄ关联的所有可选内容
@@ -235,18 +221,27 @@ public class SourceServiceImpl implements SourceService {
         return null;
     }
 
+//    /**
+//     * 得到重新设置后的ｎａｖｉｄ关联的所有可选内容
+//     * @param dto
+//     * @return
+//     */
+//    public SelectDtoMap getNewNavALL(SourceInfoDTO dto){
+//        if (dto.getLenderId() != null && dto.getLenderId() != 0) {//得到资产源的资料实勘权限
+//            return navUnviewManagerService.getNewALL(dto.getNavId(), ObjectTypeEnum.LENDER.getValue(),dto.getLenderId(),dto.getSelect);
+//        } else if (dto.getEstatesId()!= null && dto.getEstatesId() != 0) {//得到借款人的资料实勘权限
+//            return navUnviewManagerService.getNewALL(dto.getNavId(), ObjectTypeEnum.LENDER.getValue(),dto.getLenderId(),dto.getSelectDtoMap());
+//        }
+//        return null;
+//    }
+
     /**
      * 得到重新设置后的ｎａｖｉｄ关联的所有可选内容
      * @param dto
      * @return
      */
-    public SelectDtoMap getNewNavALL(SourceInfoDTO dto){
-        if (dto.getLenderId() != null && dto.getLenderId() != 0) {//得到资产源的资料实勘权限
-            return navUnviewManagerService.getNewALL(dto.getNavId(), ObjectTypeEnum.LENDER.getValue(),dto.getLenderId(),dto.getSelectDtoMap());
-        } else if (dto.getEstatesId()!= null && dto.getEstatesId() != 0) {//得到借款人的资料实勘权限
-            return navUnviewManagerService.getNewALL(dto.getNavId(), ObjectTypeEnum.LENDER.getValue(),dto.getLenderId(),dto.getSelectDtoMap());
-        }
-        return null;
+    public SelectDtoMap getNewNavALL(NavUnviewDTO dto){
+        return navUnviewManagerService.getNewALL(dto.getNavId(),dto.getObjectType(),dto.getObjectId(),dto.getUnviewReIdMap());
     }
 
 }

@@ -9,7 +9,7 @@ public class SelectDto {
     private Integer reId;//关联对象ｉｄ或者枚举
     private String showName;//前台展示名称
 
-    private boolean visible=false;
+    private boolean visible=true;
 
     public SelectDto(Integer id, Integer reId, String showName) {
         this.id = id;

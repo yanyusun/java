@@ -1,6 +1,7 @@
 package com.dqys.business.service.service.common;
 
 import com.dqys.business.orm.pojo.common.SourceNavigation;
+import com.dqys.business.service.dto.common.NavUnviewDTO;
 import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
@@ -71,6 +72,6 @@ public interface SourceService {
      * @param dto
      * @return
      */
-    SelectDtoMap getNewNavALL(SourceInfoDTO dto);
+    SelectDtoMap getNewNavALL(NavUnviewDTO dto);
 
 }
