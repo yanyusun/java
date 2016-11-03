@@ -381,7 +381,7 @@
   </select>
 
   <select id="countByLender" parameterType="java.lang.Integer" resultType="java.lang.Integer">
-    SELECT COUNT(id) FROM bt_case WHERE type = 0 AND pawn_id in (
+    SELECT COUNT(id) FROM bt_case WHERE stateflag = 0 AND type = 0 AND pawn_id in (
       SELECT id FROM bt_pawn WHERE stateflag = 0 AND lender_id = #{id,jdbcType=INTEGER}
     )
   </select>
@@ -390,7 +390,7 @@
     SELECT
     <include refid="Base_Column_List" />
     FROM bt_case
-    WHERE type = 0 AND pawn_id in (
+    WHERE stateflag = 0 AND type = 0 AND pawn_id in (
       SELECT id FROM bt_pawn WHERE stateflag = 0 AND lender_id = #{id,jdbcType=INTEGER}
     )
     ORDER by id DESC

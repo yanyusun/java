@@ -47,5 +47,15 @@
         SELECT count(*) count from object_user_relation our
         where our.object_type=11 and our.user_id=1
     </select>
+    <!--用户相关信息-->
+    <select id="selectByUser" resultType="com.dqys.business.orm.pojo.index.UserMessage">
+      SELECT tui.real_name realName,IF(tut.role_id=1,'管理员',IF(tut.role_id=2,'管理者','普通员工')) roleName,
+        tci.province,tci.city,tci.area,tci.address,DATE_FORMAT(tll.time,'%Y-%m-%d %H:%i:%s') lastTime
+        from t_user_info tui LEFT JOIN t_user_tag tut
+        ON tut.user_id=tui.id LEFT JOIN t_company_info tci
+        ON tci.id=tui.company_id LEFT JOIN (SELECT * from t_login_log log ORDER BY log.time desc LIMIT 0,1) tll
+        ON tll.user_id=tui.id
+        WHERE tui.id=#{userId}
+    </select>
 
 </mapper>

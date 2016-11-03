@@ -46,6 +46,7 @@ public class IndexController {
         try {
             Integer userId = UserSession.getCurrent().getUserId();
             indexSerice.getStatistic(map, userId);
+            indexSerice.getUserDetail(map, userId);
         } catch (Exception e) {
             e.printStackTrace();
         }

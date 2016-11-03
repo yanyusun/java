@@ -1,6 +1,7 @@
 package com.dqys.business.orm.mapper.index.impl;
 
 import com.dqys.business.orm.mapper.index.IndexMapper;
+import com.dqys.business.orm.pojo.index.UserMessage;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -46,5 +47,10 @@ public class IndexMapperImpl extends BaseDao implements IndexMapper {
     @Override
     public Map getPawnTotalTask(@Param("objectType") Integer objectType, @Param("userId") Integer userId) {
         return super.getSqlSession().getMapper(IndexMapper.class).getPawnTotalTask(objectType, userId);
+    }
+
+    @Override
+    public UserMessage selectByUser(Integer userId) {
+        return super.getSqlSession().getMapper(IndexMapper.class).selectByUser(userId);
     }
 }
