@@ -61,12 +61,13 @@ public class CaseController {
 
     /**
      * 根据案件Id获取案件详情
+     *
      * @param id
      * @return
      */
     @RequestMapping(value = "/get")
-    public JsonResponse get(Integer id){
-        if(id == null){
+    public JsonResponse get(Integer id) {
+        if (id == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return JsonResponseTool.success(caseService.get(id));
@@ -134,7 +135,7 @@ public class CaseController {
     /**
      * 拆分案件
      *
-     * @param id 案件id
+     * @param id  案件id
      * @param ids 拆分之后的关联借据集合
      * @return
      * @throws BusinessLogException
@@ -176,12 +177,13 @@ public class CaseController {
 
     /**
      * 根据借款人信息查询案件信息
+     *
      * @param id
      * @return
      */
     @RequestMapping(value = "/listByLender")
-    public JsonResponse listByLender(Integer id){
-        if(CommonUtil.checkParam(id)){
+    public JsonResponse listByLender(Integer id) {
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
 
@@ -190,15 +192,16 @@ public class CaseController {
 
     /**
      * 根据母案件查询子案件
+     *
      * @param id
      * @return
      */
     @RequestMapping(value = "/listByCase")
-    public JsonResponse listByCase(Integer id){
-        if(CommonUtil.checkParam(id)){
+    public JsonResponse listByCase(Integer id) {
+        if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        if(caseService.get(id) == null){
+        if (caseService.get(id) == null) {
             return JsonResponseTool.paramErr("案件不存在");
         }
         return JsonResponseTool.success(caseService.listByCase(id));
@@ -206,58 +209,63 @@ public class CaseController {
 
     /**
      * 修改案件的基础信息
+     *
      * @param caseBaseDTO
      * @return
      */
     @RequestMapping(value = "/updateCaseBase", method = RequestMethod.POST)
-    public JsonResponse updateCaseBase(CaseBaseDTO caseBaseDTO){
+    public JsonResponse updateCaseBase(CaseBaseDTO caseBaseDTO) {
         return caseService.updateCaseBase(caseBaseDTO);
     }
 
     /**
      * 修改案件的查封保全信息
+     *
      * @param caseAttachmentDTO
      * @return
      */
     @RequestMapping(value = "/updateCaseAttachment", method = RequestMethod.POST)
-    public JsonResponse updateCaseAttachment(CaseAttachmentDTO caseAttachmentDTO){
+    public JsonResponse updateCaseAttachment(CaseAttachmentDTO caseAttachmentDTO) {
         return caseService.updateCaseAttachment(caseAttachmentDTO);
     }
 
     /**
      * 修改案件的诉讼信息
+     *
      * @param caseLawsuitDTO
      * @return
      */
     @RequestMapping(value = "/updateCaseLawsuit", method = RequestMethod.POST)
-    public JsonResponse updateCaseLawsuit(CaseLawsuitDTO caseLawsuitDTO){
+    public JsonResponse updateCaseLawsuit(CaseLawsuitDTO caseLawsuitDTO) {
         return caseService.updateCaseLawsuit(caseLawsuitDTO);
     }
 
     /**
      * 修改案件的备注
+     *
      * @param id
      * @param memo
      * @return
      */
     @RequestMapping(value = "/updateCaseMemo", method = RequestMethod.POST)
-    public JsonResponse updateCaseMemo(Integer id, String memo){
+    public JsonResponse updateCaseMemo(Integer id, String memo) {
         return caseService.updateCaseMemo(id, memo);
     }
 
     /**
      * 修改案件的相关联法院
+     *
      * @param caseCourtsDTO
      * @return
      */
     @RequestMapping(value = "/updateCaseCourt", method = RequestMethod.POST)
-    public JsonResponse updateCaseCourt(CaseCourtsDTO caseCourtsDTO){
-        if(CommonUtil.checkParam(caseCourtsDTO, caseCourtsDTO.getId(), caseCourtsDTO.getCaseCourtDTOList())){
+    public JsonResponse updateCaseCourt(CaseCourtsDTO caseCourtsDTO) {
+        if (CommonUtil.checkParam(caseCourtsDTO, caseCourtsDTO.getId(), caseCourtsDTO.getCaseCourtDTOList())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         for (CaseCourtDTO caseCourtDTO : caseCourtsDTO.getCaseCourtDTOList()) {
             String error = CaseServiceUtils.checkData(caseCourtDTO);
-            if(error != null){
+            if (error != null) {
                 return JsonResponseTool.paramErr(error);
             }
         }
@@ -266,15 +274,31 @@ public class CaseController {
 
     /**
      * 根据案件查询关联借据
+     *
      * @param id
      * @return
      */
     @RequestMapping(value = "/listIouByCase")
-    public JsonResponse listIouByCase(Integer id){
-        if(id == null){
+    public JsonResponse listIouByCase(Integer id) {
+        if (id == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
         return JsonResponseTool.success(caseService.listIouByCaseId(id));
     }
+
+    /**
+     * @api {post} /case/delete 根据案件id删除
+     * @apiName delete
+     * @apiGroup case
+     * @apiParam {int} id 案件id
+     */
+    @RequestMapping(value = "/delete")
+    public JsonResponse delete(Integer id) {
+        if (id == null) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return JsonResponseTool.success(caseService.delete(id));
+    }
+
 
 }

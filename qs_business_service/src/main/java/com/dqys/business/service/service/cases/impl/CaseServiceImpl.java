@@ -390,4 +390,9 @@ public class CaseServiceImpl implements CaseService {
         }
         return result;
     }
+
+    @Override
+    public Object delete(Integer id) {
+        return caseInfoMapper.deleteByPrimaryKey(id);
+    }
 }

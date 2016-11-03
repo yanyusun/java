@@ -121,4 +121,6 @@ public interface CaseService {
      * @return
      */
     List<BaseSelectonDTO> listIouByCaseId(Integer id);
+
+    Object delete(Integer id);
 }

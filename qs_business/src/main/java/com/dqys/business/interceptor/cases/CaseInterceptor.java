@@ -27,6 +27,7 @@ public class CaseInterceptor extends AuthenticationInterceptor {
     public static final String API_UPDATE_CASE_MEMO = "updateCaseMemo";
     public static final String API_UPDATE_CASE_COURT = "updateCaseCourt";
     public static final String API_LIST_IOU_BY_CASE = "listIouByCase";
+    public static final String API_DELETE = "delete";
 
 
     @Override
@@ -65,6 +66,8 @@ public class CaseInterceptor extends AuthenticationInterceptor {
         } else if (API_UPDATE_CASE_LAWSUIT.equals(path)) {
             return true;
         } else if (API_LIST_IOU_BY_CASE.equals(path)) {
+            return true;
+        } else if (API_DELETE.equals(path)) {
             return true;
         } else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:" + url);
