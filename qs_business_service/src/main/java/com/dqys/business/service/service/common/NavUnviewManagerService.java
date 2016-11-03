@@ -1,6 +1,7 @@
 package com.dqys.business.service.service.common;
 
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
+import com.dqys.business.service.dto.sourceAuth.UnviewReIdMap;
 
 /**
  * 资料实勘权限管理
@@ -21,17 +22,17 @@ public interface NavUnviewManagerService {
      * @param navId
      * @param object
      * @param objectId
-     * @param selectDtoMap
+     * @param unviewReIdMap
      * @return
      */
-    SelectDtoMap getNewALL(Integer navId,Integer object,Integer objectId,SelectDtoMap selectDtoMap);
+    SelectDtoMap getNewALL(Integer navId,Integer object,Integer objectId,UnviewReIdMap unviewReIdMap);
 
 
     /**
      * 重新设置自定义不可见项
      *
      * @param navId
-     * @param selectDtoMap
+     * @param selectDtoMap 前端选中不可件的项
      */
    // void setALL(Integer navId,Integer object,Integer objectId,SelectDtoMap selectDtoMap);
 }

@@ -24,12 +24,12 @@ public interface NavUnviewService {
      */
     List<SelectDto> getList(Integer navId,Integer object,Integer objectId);
 
-    /**
-     * 得到初始化化信息
-     * @param o
-     * @return
-     */
-    List<SelectDto> getIntList(Object o);
+//    /**
+//     * 得到初始化化信息
+//     * @param o
+//     * @return
+//     */
+//    List<SelectDto> getIntList(T o);
 
     /**
      *  删除该分类下的所有不可见

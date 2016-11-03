@@ -10,6 +10,7 @@ import com.dqys.business.orm.pojo.common.SourceSource;
 import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
+import com.dqys.business.service.dto.sourceAuth.UnviewReIdMap;
 import com.dqys.business.service.service.common.NavUnviewManagerService;
 import com.dqys.business.service.service.common.SourceService;
 import com.dqys.business.service.utils.common.NavUtil;
@@ -246,5 +247,10 @@ public class SourceServiceImpl implements SourceService {
             return navUnviewManagerService.getNewALL(dto.getNavId(), ObjectTypeEnum.LENDER.getValue(),dto.getLenderId(),dto.getSelectDtoMap());
         }
         return null;
+    }
+    private UnviewReIdMap getUnviewReIdMap(SelectDtoMap selectDtoMap){
+        for(S){
+
+        }
     }
 }

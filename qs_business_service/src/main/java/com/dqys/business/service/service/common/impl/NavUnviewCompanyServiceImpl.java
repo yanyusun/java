@@ -67,7 +67,7 @@ public class NavUnviewCompanyServiceImpl implements NavUnviewCompanyService {
     }
 
     @Override
-    public List<SelectDto> getIntList(Object o) {
+    public List<SelectDto> getIntList(List<SelectDto> selectUserTypeList) {
         return null;
     }
 

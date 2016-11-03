@@ -5,7 +5,6 @@ import com.dqys.business.orm.mapper.common.NavUnviewUserInfoMapper;
 import com.dqys.business.orm.mapper.common.SourceNavigationMapper;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
-import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.common.NavUnviewRoleService;
@@ -86,10 +85,7 @@ public class NavUnviewUserInfoServiceImpl implements NavUnviewRoleService {
         }
     }
 
-    @Override
-    public List<SelectDto> getIntList(Object o) {
-        return null;
-    }
+
 
     @Override
     public void del(Integer navId, Integer object, Integer objectId) {

@@ -66,10 +66,6 @@ public class NavUnviewUserTypeServiceImpl implements NavUnviewUserTypeService {
         }
     }
 
-    @Override
-    public List<SelectDto> getIntList(Object o) {
-        return null;
-    }
 
     @Override
     public void del(Integer navId, Integer object, Integer objectId) {
