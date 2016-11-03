@@ -137,4 +137,13 @@ public interface UserService {
      * @return
      */
     Map activateReminder(List<Integer> userIds);
+
+    /**
+     * 设置帐号使用状态
+     *
+     * @param userIds
+     * @param useStatus
+     * @return
+     */
+    Map updateAccountUse(List<Integer> userIds, Integer useStatus);
 }

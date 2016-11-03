@@ -1,6 +1,7 @@
 package com.dqys.auth.orm.pojo;
 
 import com.dqys.core.base.BaseModel;
+
 import java.io.Serializable;
 
 public class TUserInfo extends BaseModel implements Serializable {
@@ -29,8 +30,17 @@ public class TUserInfo extends BaseModel implements Serializable {
     private Integer companyId;
 
     private Integer status;
+    private Integer useStatus;
 
     private static final long serialVersionUID = 1L;
+
+    public Integer getUseStatus() {
+        return useStatus;
+    }
+
+    public void setUseStatus(Integer useStatus) {
+        this.useStatus = useStatus;
+    }
 
     public String getUserName() {
         return userName;

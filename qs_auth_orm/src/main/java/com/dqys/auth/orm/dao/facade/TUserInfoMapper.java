@@ -41,4 +41,5 @@ public interface TUserInfoMapper {
      */
     List<TUserInfo> findAccountByStatus(@Param("userIds") List<Integer> userIds, @Param("status") Integer status);
 
+    void updateAccountUse(@Param("userIds") List<Integer> userIds, @Param("useStatus") Integer useStatus);
 }

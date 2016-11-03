@@ -340,4 +340,22 @@ public class UserController {
         return CommonUtil.jsonResponse(map);
     }
 
+    /**
+     * @api {post} api/user/updateAccountUse 设置帐号使用状态
+     * @apiParam {int[]} userIds[i] 用户集合
+     * @apiParam {int} useStatus 状态（0默认正常，定义>0都无法登入，1帐号停用，2帐号禁止登入）
+     * @apiSampleRequest api/user/updateAccountUse
+     * @apiGroup User
+     * @apiName api/user/updateAccountUse
+     */
+    @RequestMapping("/updateAccountUse")
+    @ResponseBody
+    public JsonResponse updateAccountUse(@ModelAttribute UserInsertDTO userInsertDTO) {
+        if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getUserIds(), userInsertDTO.getUseStatus())) {
+            return JsonResponseTool.paramErr("参数有误");
+        }
+        Map map = userService.updateAccountUse(userInsertDTO.getUserIds(), userInsertDTO.getUseStatus() );
+        return CommonUtil.jsonResponse(map);
+    }
+
 }

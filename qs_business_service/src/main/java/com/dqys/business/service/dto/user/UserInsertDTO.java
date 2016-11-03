@@ -79,9 +79,18 @@ public class UserInsertDTO {
     private String remark; // 备注
     private Integer userType; //用户类型(必填)
 
+    private Integer useStatus; //帐号使用状态
     private Integer companyId; // 公司Id
 
     private List<Integer> userIds;//多个用户存储
+
+    public Integer getUseStatus() {
+        return useStatus;
+    }
+
+    public void setUseStatus(Integer useStatus) {
+        this.useStatus = useStatus;
+    }
 
     public List<Integer> getUserIds() {
         return userIds;

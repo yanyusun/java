@@ -308,6 +308,18 @@ public class UserServiceImpl implements UserService {
         return map;
     }
 
+    @Override
+    public Map updateAccountUse(List<Integer> userIds, Integer useStatus) {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        Map map = new HashMap<>();
+        map.put("result", "yes");
+        if (userIds.contains(userId)) {
+            userIds.remove(userId);
+        }
+        tUserInfoMapper.updateAccountUse(userIds, useStatus);
+        return map;
+    }
+
     //邮箱激活通知
     private void sendActivate(Integer sendUser, Integer receiveUser) {
         Map userC = coordinatorMapper.getUserAndCompanyByUserId(receiveUser);//接收者

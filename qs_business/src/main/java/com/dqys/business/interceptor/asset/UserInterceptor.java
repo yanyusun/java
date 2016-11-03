@@ -29,7 +29,7 @@ public class UserInterceptor extends AuthenticationInterceptor {
     public static final String API_LEAVE_WORD = "leaveWord";
     public static final String API_REGISTER = "registerAudit";
     public static final String API_ACTIVATE = "activateReminder";
-
+    public static final String API_ACTIVATE_USE= "updateAccountUse";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
@@ -71,6 +71,8 @@ public class UserInterceptor extends AuthenticationInterceptor {
         } else if (API_REGISTER.equals(path)) {
             return true;
         }else if (API_ACTIVATE.equals(path)) {
+            return true;
+        }else if (API_ACTIVATE_USE.equals(path)) {
             return true;
         } else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:" + url);
