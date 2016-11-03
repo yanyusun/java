@@ -23,8 +23,21 @@ public class TCompanyInfo extends BaseModel implements Serializable {
 
     private Integer isAuth;
     private Integer type; // 公司类型
+    private Integer businessType;//业务类型(目前含义与用户类型一致)
 
     private static final long serialVersionUID = 1L;
+
+    public Integer getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(Integer businessType) {
+        this.businessType = businessType;
+    }
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public String getCompanyName() {
         return companyName;

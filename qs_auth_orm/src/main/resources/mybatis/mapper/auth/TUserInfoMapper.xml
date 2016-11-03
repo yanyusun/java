@@ -25,13 +25,14 @@
         <result column="avg" property="avg" jdbcType="VARCHAR"/>
         <result column="QQ" property="QQ" jdbcType="VARCHAR"/>
         <result column="wechat" property="wechat" jdbcType="VARCHAR"/>
+        <result column="use_status" property="useStatus" jdbcType="INTEGER"/>
     </resultMap>
 
     <!-- 基础字段 -->
     <sql id="Base_Column_List">
     id, version, create_at, update_at, stateflag, remark, user_name, real_name, sex, 
     mobile, email, password, salt, identity, company_id, status, account, wechat, QQ,
-    avg
+    avg,use_status
   </sql>
 
     <!-- 搜索条件 -->
@@ -296,5 +297,31 @@
     <select id="listIdByUserName" resultType="java.lang.Integer">
     SELECT id from t_user_info where user_name = #{userName,jdbcType=VARCHAR} AND stateflag = 0
   </select>
+
+    <select id="findAccountByStatus" resultMap="BaseResultMap">
+        SELECT * FROM t_user_info tui
+        WHERE tui.status=#{status} AND tui.id IN
+        <if test="userIds!=null and userIds.size >0">
+            <foreach collection="userIds" item="id" index="index" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="userIds==null">
+            (0)
+        </if>
+    </select>
+
+    <update id="updateAccountUse">
+        UPDATE t_user_info set use_status=#{useStatus}
+        WHERE id IN
+        <if test="userIds!=null and userIds.size >0">
+            <foreach collection="userIds" item="id" index="index" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="userIds==null">
+            (0)
+        </if>
+    </update>
 
 </mapper>

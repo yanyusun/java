@@ -23,12 +23,23 @@ public interface TUserInfoMapper {
 
     List<TUserInfo> queryList(TUserQuery tUserQuery);
 
-    Integer queryUpdateStatus(@Param("ids")List<Integer> ids, @Param("status")Integer status);
+    Integer queryUpdateStatus(@Param("ids") List<Integer> ids, @Param("status") Integer status);
 
     /**
      * 根据用户昵称查询用户ID
+     *
      * @param userName
      * @return
      */
     List<Integer> listIdByUserName(String userName);
+
+    /**
+     * 查询相应状态的用户信息
+     *
+     * @param userIds
+     * @return
+     */
+    List<TUserInfo> findAccountByStatus(@Param("userIds") List<Integer> userIds, @Param("status") Integer status);
+
+    void updateAccountUse(@Param("userIds") List<Integer> userIds, @Param("useStatus") Integer useStatus);
 }

@@ -60,4 +60,14 @@ public class TUserInfoMapperImpl extends BaseDao implements TUserInfoMapper {
     public List<Integer> listIdByUserName(String userName) {
         return super.getSqlSession().getMapper(TUserInfoMapper.class).listIdByUserName(userName);
     }
+
+    @Override
+    public List<TUserInfo> findAccountByStatus(@Param("userIds") List<Integer> userIds, @Param("status") Integer status) {
+        return super.getSqlSession().getMapper(TUserInfoMapper.class).findAccountByStatus(userIds, status);
+    }
+
+    @Override
+    public void updateAccountUse(@Param("userIds") List<Integer> userIds, @Param("useStatus") Integer useStatus) {
+        super.getSqlSession().getMapper(TUserInfoMapper.class).updateAccountUse(userIds, useStatus);
+    }
 }

@@ -97,7 +97,9 @@ public class UserServiceImpl implements UserService {
         if (!tUserInfo.getPassword().equals(this.encodePassword(pwd, tUserInfo.getSalt()))) {
             return ServiceResult.failure("密码错误", ObjectUtils.NULL);
         }
-
+        if (tUserInfo.getUseStatus() != null && tUserInfo.getUseStatus() > 0) {
+            return ServiceResult.failure("该帐号已被禁止登入，请联系管理员", ObjectUtils.NULL);
+        }
         List<TUserTag> tUserTags = this.tUserTagMapper.selectByUserId(tUserInfo.getId());
         if (null == tUserTags) {
             return ServiceResult.failure("用户数据异常", ObjectUtils.NULL);

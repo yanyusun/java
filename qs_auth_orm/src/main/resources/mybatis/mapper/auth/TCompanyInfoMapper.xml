@@ -1,230 +1,241 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dqys.auth.orm.dao.facade.TCompanyInfoMapper" >
+<mapper namespace="com.dqys.auth.orm.dao.facade.TCompanyInfoMapper">
 
- <!-- <cache type="com.dqys.core.cache.MybatisRedisCache" eviction="LRU"/>-->
+    <!-- <cache type="com.dqys.core.cache.MybatisRedisCache" eviction="LRU"/>-->
 
-  <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.TCompanyInfo" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="version" property="version" jdbcType="INTEGER" />
-    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
-    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
-    <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
-    <result column="credential" property="credential" jdbcType="VARCHAR" />
-    <result column="licence" property="licence" jdbcType="VARCHAR" />
-    <result column="legal_person" property="legalPerson" jdbcType="VARCHAR" />
-    <result column="province" property="province" jdbcType="INTEGER" />
-    <result column="city" property="city" jdbcType="INTEGER" />
-    <result column="area" property="area" jdbcType="INTEGER" />
-    <result column="address" property="address" jdbcType="VARCHAR" />
-    <result column="is_auth" property="isAuth" jdbcType="INTEGER" />
-    <result column="type" property="type" jdbcType="INTEGER" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.TCompanyInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="company_name" property="companyName" jdbcType="VARCHAR"/>
+        <result column="credential" property="credential" jdbcType="VARCHAR"/>
+        <result column="licence" property="licence" jdbcType="VARCHAR"/>
+        <result column="legal_person" property="legalPerson" jdbcType="VARCHAR"/>
+        <result column="province" property="province" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="INTEGER"/>
+        <result column="area" property="area" jdbcType="INTEGER"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="is_auth" property="isAuth" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="business_type" property="businessType" jdbcType="INTEGER"/>
+    </resultMap>
 
-  <resultMap id="CompanyDetailMap" type="com.dqys.auth.orm.pojo.CompanyDetailInfo">
-    <id column="id" property="companyId" jdbcType="INTEGER" />
-    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
-    <result column="company_name" property="companyName" jdbcType="VARCHAR" />
-    <result column="province" property="province" jdbcType="INTEGER" />
-    <result column="city" property="city" jdbcType="INTEGER" />
-    <result column="area" property="district" jdbcType="INTEGER" />
-    <result column="address" property="address" jdbcType="VARCHAR" />
-    <result column="is_auth" property="isAuth" jdbcType="BIT" />
-    <result column="user_id" property="userId" jdbcType="INTEGER" />
-    <result column="avg" property="avg" jdbcType="VARCHAR" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="phone" property="phone" jdbcType="VARCHAR" />
-    <result column="type" property="type" jdbcType="VARCHAR" />
-    <result column="company_type" property="companyType" jdbcType="INTEGER" />
-  </resultMap>
+    <resultMap id="CompanyDetailMap" type="com.dqys.auth.orm.pojo.CompanyDetailInfo">
+        <id column="id" property="companyId" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="company_name" property="companyName" jdbcType="VARCHAR"/>
+        <result column="province" property="province" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="INTEGER"/>
+        <result column="area" property="district" jdbcType="INTEGER"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="is_auth" property="isAuth" jdbcType="BIT"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="avg" property="avg" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="company_type" property="companyType" jdbcType="INTEGER"/>
+    </resultMap>
 
-  <!-- 基础字段 -->
-  <sql id="Base_Column_List" >
+    <!-- 基础字段 -->
+    <sql id="Base_Column_List">
     id, version, create_at, update_at, stateflag, remark, company_name, credential, licence, 
-    legal_person, province, city, area, address, is_auth, type
+    legal_person, province, city, area, address, is_auth, type,business_type
   </sql>
 
-  <!-- 条件查询 -->
-  <sql id="Query_Condition">
-    <where>
-      stateflag = 0
-      <if test="credential != null">
-        AND credential = #{credential,jdbcType=VARCHAR}
-      </if>
-      <if test="province != null">
-        AND province = #{province,jdbcType=VARCHAR}
-      </if>
-      <if test="city != null">
-        AND city = #{city,jdbcType=VARCHAR}
-      </if>
-      <if test="district != null">
-        AND district = #{district,jdbcType=VARCHAR}
-      </if>
+    <!-- 条件查询 -->
+    <sql id="Query_Condition">
+        <where>
+            stateflag = 0
+            <if test="credential != null">
+                AND credential = #{credential,jdbcType=VARCHAR}
+            </if>
+            <if test="province != null">
+                AND province = #{province,jdbcType=VARCHAR}
+            </if>
+            <if test="city != null">
+                AND city = #{city,jdbcType=VARCHAR}
+            </if>
+            <if test="district != null">
+                AND district = #{district,jdbcType=VARCHAR}
+            </if>
 
-      <if test="nameLike != null">
-        AND company_name LIKE CONCAT('%', #{nameLike,jdbcType=VARCHAR}, '%')
-      </if>
-    </where>
-  </sql>
+            <if test="nameLike != null">
+                AND company_name LIKE CONCAT('%', #{nameLike,jdbcType=VARCHAR}, '%')
+            </if>
+        </where>
+    </sql>
 
-  <!-- 根据ID获取 -->
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from t_company_info
-    where id = #{id,jdbcType=INTEGER}
-  </select>
+    <!-- 根据ID获取 -->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_company_info
+        where id = #{id,jdbcType=INTEGER}
+    </select>
 
-  <!-- 逻辑删除 -->
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <!-- 逻辑删除 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     update t_company_info set stateflag=CURRENT_TIMESTAMP
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
-  <!-- 新增 -->
-  <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.TCompanyInfo" useGeneratedKeys="true" keyProperty="id" >
-    insert into t_company_info
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="remark != null" >
-        remark,
-      </if>
-      <if test="companyName != null" >
-        company_name,
-      </if>
-      <if test="credential != null" >
-        credential,
-      </if>
-      <if test="licence != null" >
-        licence,
-      </if>
-      <if test="legalPerson != null" >
-        legal_person,
-      </if>
-      <if test="province != null" >
-        province,
-      </if>
-      <if test="city != null" >
-        city,
-      </if>
-      <if test="area != null" >
-        area,
-      </if>
-      <if test="address != null" >
-        address,
-      </if>
-      <if test="isAuth != null" >
-        is_auth,
-      </if>
-      <if test="type != null" >
-        type,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="remark != null" >
-        #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="companyName != null" >
-        #{companyName,jdbcType=VARCHAR},
-      </if>
-      <if test="credential != null" >
-        #{credential,jdbcType=VARCHAR},
-      </if>
-      <if test="licence != null" >
-        #{licence,jdbcType=VARCHAR},
-      </if>
-      <if test="legalPerson != null" >
-        #{legalPerson,jdbcType=VARCHAR},
-      </if>
-      <if test="province != null" >
-        #{province,jdbcType=INTEGER},
-      </if>
-      <if test="city != null" >
-        #{city,jdbcType=INTEGER},
-      </if>
-      <if test="area != null" >
-        #{area,jdbcType=INTEGER},
-      </if>
-      <if test="address != null" >
-        #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="isAuth != null" >
-        #{isAuth,jdbcType=INTEGER},
-      </if>
-      <if test="type != null" >
-        #{type,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
+    <!-- 新增 -->
+    <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.TCompanyInfo" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into t_company_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="companyName != null">
+                company_name,
+            </if>
+            <if test="credential != null">
+                credential,
+            </if>
+            <if test="licence != null">
+                licence,
+            </if>
+            <if test="legalPerson != null">
+                legal_person,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="area != null">
+                area,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="isAuth != null">
+                is_auth,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="businessType != null">
+                business_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="companyName != null">
+                #{companyName,jdbcType=VARCHAR},
+            </if>
+            <if test="credential != null">
+                #{credential,jdbcType=VARCHAR},
+            </if>
+            <if test="licence != null">
+                #{licence,jdbcType=VARCHAR},
+            </if>
+            <if test="legalPerson != null">
+                #{legalPerson,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null">
+                #{province,jdbcType=INTEGER},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=INTEGER},
+            </if>
+            <if test="area != null">
+                #{area,jdbcType=INTEGER},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="isAuth != null">
+                #{isAuth,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="businessType != null">
+                #{businessType,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
 
-  <!-- 修改 -->
-  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.TCompanyInfo" >
-    update t_company_info
-    <set >
-      version = version+1,
-      update_at = CURRENT_TIMESTAMP ,
-      <if test="remark != null" >
-        remark = #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="companyName != null" >
-        company_name = #{companyName,jdbcType=VARCHAR},
-      </if>
-      <if test="credential != null" >
-        credential = #{credential,jdbcType=VARCHAR},
-      </if>
-      <if test="licence != null" >
-        licence = #{licence,jdbcType=VARCHAR},
-      </if>
-      <if test="legalPerson != null" >
-        legal_person = #{legalPerson,jdbcType=VARCHAR},
-      </if>
-      <if test="province != null" >
-        province = #{province,jdbcType=INTEGER},
-      </if>
-      <if test="city != null" >
-        city = #{city,jdbcType=INTEGER},
-      </if>
-      <if test="area != null" >
-        area = #{area,jdbcType=INTEGER},
-      </if>
-      <if test="address != null" >
-        address = #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="isAuth != null" >
-        is_auth = #{isAuth,jdbcType=INTEGER},
-      </if>
-      <if test="type != null" >
-        type = #{type,jdbcType=BIT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-    and version = #{version,jdbcType=INTEGER}
-    and stateflag=0
-  </update>
+    <!-- 修改 -->
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.TCompanyInfo">
+        update t_company_info
+        <set>
+            version = version+1,
+            update_at = CURRENT_TIMESTAMP ,
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="companyName != null">
+                company_name = #{companyName,jdbcType=VARCHAR},
+            </if>
+            <if test="credential != null">
+                credential = #{credential,jdbcType=VARCHAR},
+            </if>
+            <if test="licence != null">
+                licence = #{licence,jdbcType=VARCHAR},
+            </if>
+            <if test="legalPerson != null">
+                legal_person = #{legalPerson,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null">
+                province = #{province,jdbcType=INTEGER},
+            </if>
+            <if test="city != null">
+                city = #{city,jdbcType=INTEGER},
+            </if>
+            <if test="area != null">
+                area = #{area,jdbcType=INTEGER},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="isAuth != null">
+                is_auth = #{isAuth,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=BIT},
+            </if>
+            <if test="businessType != null">
+                business_type = #{businessType,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+        and version = #{version,jdbcType=INTEGER}
+        and stateflag=0
+    </update>
 
-  <!-- 条件统计 -->
-  <select id="countByQuery" parameterType="com.dqys.auth.orm.query.CompanyQuery" resultType="int">
-    select
-    count(id)
-    from t_company_info
-    <include refid="Query_Condition" />
-  </select>
+    <!-- 条件统计 -->
+    <select id="countByQuery" parameterType="com.dqys.auth.orm.query.CompanyQuery" resultType="int">
+        select
+        count(id)
+        from t_company_info
+        <include refid="Query_Condition"/>
+    </select>
 
-  <!-- 条件查询 -->
-  <select id="queryList" parameterType="com.dqys.auth.orm.query.CompanyQuery" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from t_company_info
-    <include refid="Query_Condition" />
-    ORDER by id DESC
-    <if test="isPaging">
-      limit #{startPageNum,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
-    </if>
-  </select>
+    <!-- 条件查询 -->
+    <select id="queryList" parameterType="com.dqys.auth.orm.query.CompanyQuery" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_company_info
+        <include refid="Query_Condition"/>
+        ORDER by id DESC
+        <if test="isPaging">
+            limit #{startPageNum,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+        </if>
+    </select>
 
-  <!-- 根据公司ID获取详情 -->
-  <select id="getDetailByCompanyId" parameterType="java.lang.Integer" resultMap="CompanyDetailMap">
+    <!-- 根据公司ID获取详情 -->
+    <select id="getDetailByCompanyId" parameterType="java.lang.Integer" resultMap="CompanyDetailMap">
     SELECT tci.id as id,create_at,company_name,province,city,area,is_auth,address,type as company_type,
       res.id as user_id,res.avg,res.user_name as name,res.phone,res.user_type as type
     from t_company_info tci
@@ -238,8 +249,8 @@
       res.company_id = tci.id AND tci.stateflag = 0 AND tci.id = #{id,jdbcType=INTEGER};
   </select>
 
-  <!-- 根据用户ID获取详情 -->
-  <select id="getDetailByUserId" parameterType="java.lang.Integer" resultMap="CompanyDetailMap">
+    <!-- 根据用户ID获取详情 -->
+    <select id="getDetailByUserId" parameterType="java.lang.Integer" resultMap="CompanyDetailMap">
     SELECT tci.id as id,create_at,company_name,province,city,area,is_auth,address,type as company_type,
       res.id as user_id,res.avg,res.real_name as name,res.phone,res.user_type as type
     from t_company_info tci
@@ -255,19 +266,19 @@
       );
   </select>
 
-  <select id="listByType" resultMap="BaseResultMap">
-    SELECT
-    <include refid="Base_Column_List" />
-    FROM t_company_info where id in (
-      SELECT company_id FROM t_user_info where id in (
+    <select id="listByType" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_company_info where id in (
+        SELECT company_id FROM t_user_info where id in (
         SELECT user_id from t_user_tag
         WHERE role_id = 1 AND stateflag = 0
         <if test="typeId != null">
-          AND user_type = #{typeId,jdbcType=INTEGER}
+            AND user_type = #{typeId,jdbcType=INTEGER}
         </if>
-      )
-    )
-  </select>
+        )
+        )
+    </select>
 
 
 </mapper>

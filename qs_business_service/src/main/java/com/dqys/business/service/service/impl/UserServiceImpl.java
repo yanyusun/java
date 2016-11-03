@@ -15,6 +15,7 @@ import com.dqys.business.orm.mapper.company.OrganizationMapper;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.pojo.company.Organization;
 import com.dqys.business.orm.query.company.OrganizationQuery;
+import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
@@ -285,6 +286,48 @@ public class UserServiceImpl implements UserService {
             map.put("msg", "参数查询有误");
         }
         return map;
+    }
+
+    @Override
+    public Map activateReminder(List<Integer> userIds) {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        Map map = new HashMap<>();
+        map.put("result", "no");
+        Integer status = 0;//帐号未激活的用户
+        List<TUserInfo> infos = tUserInfoMapper.findAccountByStatus(userIds, status);
+        if (infos == null || infos.size() == 0) {
+            map.put("msg", "未发现需要激活的帐号");
+        } else {
+            map.put("result", "yes");
+            for (TUserInfo info : infos) {
+                if (info != null) {
+                    sendActivate(userId, info.getId());
+                }
+            }
+        }
+        return map;
+    }
+
+    @Override
+    public Map updateAccountUse(List<Integer> userIds, Integer useStatus) {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        Map map = new HashMap<>();
+        map.put("result", "yes");
+        if (userIds.contains(userId)) {
+            userIds.remove(userId);
+        }
+        tUserInfoMapper.updateAccountUse(userIds, useStatus);
+        return map;
+    }
+
+    //邮箱激活通知
+    private void sendActivate(Integer sendUser, Integer receiveUser) {
+        Map userC = coordinatorMapper.getUserAndCompanyByUserId(receiveUser);//接收者
+        Map operC = coordinatorMapper.getUserAndCompanyByUserId(sendUser);//发送者
+        SmsUtil smsUtil = new SmsUtil();
+        String content = smsUtil.sendSms(SmsEnum.ACTIVATE_ACCOUNT.getValue(), MessageUtils.transMapToString(userC, "mobile"),
+                MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(operC, "realName"), MessageUtils.transMapToString(userC, "email"));
+//        messageService.add("帐号激活提醒", content, sendUser, receiveUser, "", MessageEnum.SERVE.getValue(), null, "");
     }
 
     @Override

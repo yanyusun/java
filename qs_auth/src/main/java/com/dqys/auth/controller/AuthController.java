@@ -778,6 +778,7 @@ public class AuthController extends BaseApiContorller {
             tCompanyInfo.setLicence(licence);
             tCompanyInfo.setType(type);
             tCompanyInfo.setLegalPerson(realName);
+            tCompanyInfo.setBusinessType(userType);
             if (userInfo.getCompanyId() != null) {
                 TCompanyInfo companyInfo = companyService.get(userInfo.getCompanyId());
                 if (companyInfo != null) {

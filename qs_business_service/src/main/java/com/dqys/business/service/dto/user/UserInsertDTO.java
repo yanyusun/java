@@ -28,6 +28,8 @@ package com.dqys.business.service.dto.user;
  * git 地址: http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/user/UserInsertDTO.java
  */
 
+import java.util.List;
+
 /**
  * @apiDefine UserInsert
  * @apiParam {number} [id] 主键
@@ -77,7 +79,26 @@ public class UserInsertDTO {
     private String remark; // 备注
     private Integer userType; //用户类型(必填)
 
+    private Integer useStatus; //帐号使用状态
     private Integer companyId; // 公司Id
+
+    private List<Integer> userIds;//多个用户存储
+
+    public Integer getUseStatus() {
+        return useStatus;
+    }
+
+    public void setUseStatus(Integer useStatus) {
+        this.useStatus = useStatus;
+    }
+
+    public List<Integer> getUserIds() {
+        return userIds;
+    }
+
+    public void setUserIds(List<Integer> userIds) {
+        this.userIds = userIds;
+    }
 
     public String getAvg() {
         return avg;

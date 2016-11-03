@@ -132,7 +132,12 @@ public class CaseServiceImpl implements CaseService {
             return JsonResponseTool.paramErr("参数错误");
         }
         for (CaseDTO caseDTO : caseDTOList.getCaseDTOList()) {
-            JsonResponse add = add_tx(caseDTO);
+            JsonResponse add = null;
+            if (caseDTO.getId() != null) {
+                add = update_tx(caseDTO);
+            } else {
+                add = add_tx(caseDTO);
+            }
             if (!add.getCode().equals(ResponseCodeEnum.SUCCESS.getValue())) {
                 return JsonResponseTool.failure("添加失败");
             }
@@ -384,5 +389,10 @@ public class CaseServiceImpl implements CaseService {
             }
         }
         return result;
+    }
+
+    @Override
+    public Object delete(Integer id) {
+        return caseInfoMapper.deleteByPrimaryKey(id);
     }
 }

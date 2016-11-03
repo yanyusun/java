@@ -403,7 +403,7 @@ public class CommonUtil {
         if ("yes".equals(map.get("result"))) {
             return JsonResponseTool.success(map);
         } else {
-            return JsonResponseTool.failure(map.get("msg") != null ? "" : map.get("msg").toString());
+            return JsonResponseTool.failure(map.get("msg") == null ? "" : map.get("msg").toString());
         }
     }
 

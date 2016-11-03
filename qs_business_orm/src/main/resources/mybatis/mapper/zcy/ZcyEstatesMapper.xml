@@ -228,7 +228,7 @@
             </if>
             <if test="estateType != null">
                 estate_type,
-            </if>7
+            </if>
             <if test="estateClassify != null">
                 estate_classify,
             </if>
@@ -354,7 +354,7 @@
                 #{companyId,jdbcType=INTEGER},
             </if>
             <if test="estateType != null">
-                #{estate_type,jdbcType=INTEGER},
+                #{estateType,jdbcType=INTEGER},
             </if>
             <if test="estateClassify != null">
                 #{estate_classify,jdbcType=INTEGER},

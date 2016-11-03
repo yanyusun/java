@@ -152,7 +152,12 @@ public class IouServiceImpl implements IouService {
             return JsonResponseTool.paramErr("参数错误");
         }
         for (IouDTO iouDTO : iouDTOList) {
-            JsonResponse response = add_tx(iouDTO);
+            JsonResponse response = null;
+            if (iouDTO.getId() != null) {
+                response = update_tx(iouDTO);
+            } else {
+                response = add_tx(iouDTO);
+            }
             if (!response.getCode().equals(ResponseCodeEnum.SUCCESS.getValue())) {
                 return JsonResponseTool.failure("新增失败");
             }

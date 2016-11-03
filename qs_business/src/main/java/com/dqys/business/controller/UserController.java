@@ -3,9 +3,7 @@ package com.dqys.business.controller;
 import com.dqys.business.service.constant.UserStatusTypeEnum;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.query.user.UserListQuery;
-import com.dqys.business.service.service.CompanyService;
 import com.dqys.business.service.service.UserService;
-import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
@@ -322,6 +320,41 @@ public class UserController {
     @ResponseBody
     public JsonResponse registerAudit(@RequestParam Integer userId, @RequestParam Integer status) {
         Map map = userService.registerAudit(userId, status);
+        return CommonUtil.jsonResponse(map);
+    }
+
+    /**
+     * @api {post} api/user/activateReminder 邮箱激活短信提醒，只会发送到未激活的用户手机号
+     * @apiParam {int[]} userIds[i] 用户集合
+     * @apiSampleRequest api/user/activateReminder
+     * @apiGroup User
+     * @apiName api/user/activateReminder
+     */
+    @RequestMapping("/activateReminder")
+    @ResponseBody
+    public JsonResponse activateReminder(@ModelAttribute UserInsertDTO userInsertDTO) {
+        if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getUserIds())) {
+            return JsonResponseTool.paramErr("参数有误");
+        }
+        Map map = userService.activateReminder(userInsertDTO.getUserIds());
+        return CommonUtil.jsonResponse(map);
+    }
+
+    /**
+     * @api {post} api/user/updateAccountUse 设置帐号使用状态
+     * @apiParam {int[]} userIds[i] 用户集合
+     * @apiParam {int} useStatus 状态（0默认正常，定义>0都无法登入，1帐号停用，2帐号禁止登入）
+     * @apiSampleRequest api/user/updateAccountUse
+     * @apiGroup User
+     * @apiName api/user/updateAccountUse
+     */
+    @RequestMapping("/updateAccountUse")
+    @ResponseBody
+    public JsonResponse updateAccountUse(@ModelAttribute UserInsertDTO userInsertDTO) {
+        if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getUserIds(), userInsertDTO.getUseStatus())) {
+            return JsonResponseTool.paramErr("参数有误");
+        }
+        Map map = userService.updateAccountUse(userInsertDTO.getUserIds(), userInsertDTO.getUseStatus() );
         return CommonUtil.jsonResponse(map);
     }
 
