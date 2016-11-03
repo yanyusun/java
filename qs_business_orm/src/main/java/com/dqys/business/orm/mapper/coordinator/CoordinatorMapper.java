@@ -154,7 +154,7 @@ public interface CoordinatorMapper {
 
     /**
      * 根据用户id获取相应的用户信息和公司信息
-     * 返回Map  参数（userId 用户id，mobile 手机号，realName 真实姓名，rold 角色ID，userType 用户类型，companyName 公司名称，companyType 公司类型）
+     * 返回Map  参数（userId 用户id，mobile 手机号，email 邮箱，realName 真实姓名，rold 角色ID，userType 用户类型，companyName 公司名称，companyType 公司类型）
      */
     Map<String, Object> getUserAndCompanyByUserId(Integer userId);
 

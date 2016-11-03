@@ -123,9 +123,18 @@ public interface UserService {
 
     /**
      * 注册用户的审核
+     *
      * @param userId
      * @param status
      * @return
      */
     Map registerAudit(Integer userId, Integer status);
+
+    /**
+     * 帐号激活提醒
+     *
+     * @param userIds
+     * @return
+     */
+    Map activateReminder(List<Integer> userIds);
 }

@@ -28,6 +28,7 @@ public class UserInterceptor extends AuthenticationInterceptor {
     public static final String API_SET_PWD = "setPwd";
     public static final String API_LEAVE_WORD = "leaveWord";
     public static final String API_REGISTER = "registerAudit";
+    public static final String API_ACTIVATE = "activateReminder";
 
 
     @Override
@@ -68,6 +69,8 @@ public class UserInterceptor extends AuthenticationInterceptor {
         } else if (API_LEAVE_WORD.equals(path)) {
             return true;
         } else if (API_REGISTER.equals(path)) {
+            return true;
+        }else if (API_ACTIVATE.equals(path)) {
             return true;
         } else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:" + url);

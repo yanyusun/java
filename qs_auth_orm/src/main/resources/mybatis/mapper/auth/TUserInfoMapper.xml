@@ -297,4 +297,17 @@
     SELECT id from t_user_info where user_name = #{userName,jdbcType=VARCHAR} AND stateflag = 0
   </select>
 
+    <select id="findAccountByStatus" resultMap="BaseResultMap">
+        SELECT * FROM t_user_info tui
+        WHERE tui.status=#{status} AND tui.id IN
+        <if test="userIds!=null and userIds.size >0">
+            <foreach collection="userIds" item="id" index="index" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="userIds==null">
+            (0)
+        </if>
+    </select>
+
 </mapper>

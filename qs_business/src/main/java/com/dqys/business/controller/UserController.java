@@ -3,9 +3,7 @@ package com.dqys.business.controller;
 import com.dqys.business.service.constant.UserStatusTypeEnum;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.query.user.UserListQuery;
-import com.dqys.business.service.service.CompanyService;
 import com.dqys.business.service.service.UserService;
-import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
@@ -322,6 +320,23 @@ public class UserController {
     @ResponseBody
     public JsonResponse registerAudit(@RequestParam Integer userId, @RequestParam Integer status) {
         Map map = userService.registerAudit(userId, status);
+        return CommonUtil.jsonResponse(map);
+    }
+
+    /**
+     * @api {post} api/user/activateReminder 邮箱激活短信提醒，只会发送到未激活的用户手机号
+     * @apiParam {int[]} userIds[i] 用户集合
+     * @apiSampleRequest api/user/activateReminder
+     * @apiGroup User
+     * @apiName api/user/activateReminder
+     */
+    @RequestMapping("/activateReminder")
+    @ResponseBody
+    public JsonResponse activateReminder(@ModelAttribute UserInsertDTO userInsertDTO) {
+        if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getUserIds())) {
+            return JsonResponseTool.paramErr("参数有误");
+        }
+        Map map = userService.activateReminder(userInsertDTO.getUserIds());
         return CommonUtil.jsonResponse(map);
     }
 
