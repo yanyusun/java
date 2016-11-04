@@ -40,13 +40,17 @@ public class IndexController {
      * "detail": {
      * "roleName": "管理员",//角色类型
      * "realName": "测试丰",//姓名
+     * "adminName": "测试丰",//管理员姓名
      * "finishRate": "0%",//业绩比率
      * "lastTime": null,//上一次登入时间
      * "province": "北京市",//省份
      * "city": "市辖区",//城市
      * "area": "东城区",//区县
      * "address": null //地址
-     * }
+     * },
+     * "notActivated": 0,//未激活的员工人数
+     * "enterToday": 3,//当天登入的员工人数
+     * "totalPeople": 2 //公司总人数
      * }
      * }
      */

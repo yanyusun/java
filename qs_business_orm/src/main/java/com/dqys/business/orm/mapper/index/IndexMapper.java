@@ -55,4 +55,21 @@ public interface IndexMapper {
      * @return
      */
     UserMessage selectByUser(Integer userId);
+
+    /**
+     * 获取公司下某天登入的人数
+     *
+     * @param time
+     * @param companyId
+     * @return
+     */
+    Integer getLoginByTime(@Param("time") String time, @Param("companyId") Integer companyId);
+
+    /**
+     * 获取公司下未分配部门的员工人数
+     *
+     * @param companyId
+     * @return
+     */
+    Integer getAbsent(Integer companyId);
 }

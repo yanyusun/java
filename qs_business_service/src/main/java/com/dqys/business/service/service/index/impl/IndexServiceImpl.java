@@ -6,6 +6,7 @@ import com.dqys.auth.orm.dao.facade.TUserTagMapper;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
+import com.dqys.auth.orm.query.TUserQuery;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.index.IndexMapper;
@@ -17,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -99,6 +102,15 @@ public class IndexServiceImpl implements IndexService {
             DecimalFormat formatDec = new DecimalFormat("0.00");
             message.setFinishRate(formatDec.format(finish / total * 100) + "%");
         }
-        map.put("detail", message);
+        map.put("detail", message);//员工基础信息
+        TUserQuery query = new TUserQuery();
+        query.setCompanyId(info.getCompanyId());
+        query.setStatus(0);//未激活
+        List<TUserInfo> userInfos = tUserInfoMapper.queryList(query);
+        map.put("notActivated", userInfos.size());//统计员工未激活人数
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        map.put("enterToday", indexMapper.getLoginByTime(sdf.format(new Date()), info.getCompanyId()));//当天登入人数
+        map.put("totalPeople", indexMapper.getAbsent(info.getCompanyId()));//公司总人数
+
     }
 }

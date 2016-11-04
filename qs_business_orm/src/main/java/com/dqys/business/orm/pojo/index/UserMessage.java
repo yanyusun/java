@@ -12,6 +12,15 @@ public class UserMessage {
     private String city;//城市
     private String area;//区/县
     private String address;//地址
+    private String adminName;//管理员姓名
+
+    public String getAdminName() {
+        return adminName;
+    }
+
+    public void setAdminName(String adminName) {
+        this.adminName = adminName;
+    }
 
     public String getProvince() {
         return province;
