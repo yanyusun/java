@@ -3,8 +3,16 @@ package com.dqys.business.service.dto.common;
 import com.dqys.business.service.dto.sourceAuth.UnviewReIdMap;
 
 /**
+ *
  * 用于资料实勘实时更新的操作
  * Created by yan on 16-11-3.
+ *
+ * @apiDefine NavUnviewDTO
+ * @apiParam {number} [navId] 资料实勘分类id
+ * @apiParam {number} [objectId] 对象id
+ * @apiParam {number} [objectType] 对象类型(借款人,资产源)
+ * @apiUse UnviewReIdMap
+ *
  */
 public class NavUnviewDTO {
     private Integer navId;

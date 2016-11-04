@@ -5,6 +5,13 @@ import java.util.List;
 /**
  * 不可见关联对象map
  * Created by yan on 16-11-3.
+ *
+ * @apiDefine UnviewReIdMap
+ * @apiParam {list} [userTypeList] 资料实勘分类id
+ * @apiParam {list} [companyList] 对象id
+ * @apiParam {list} [roleList] 对象类型(借款人,资产源)
+ * @apiParam {list} [userList] 对象类型(借款人,资产源)
+ *
  */
 public class UnviewReIdMap {
     private List<Integer> userTypeList;
