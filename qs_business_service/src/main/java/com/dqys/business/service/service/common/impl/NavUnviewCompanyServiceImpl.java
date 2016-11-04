@@ -84,6 +84,15 @@ public class NavUnviewCompanyServiceImpl implements NavUnviewCompanyService {
 
     @Override
     public SelectDto get(Integer navId, Integer object, Integer objectId, Integer reId) {
+        List<SelectDto> dtos = new ArrayList<>();
+        List<Integer> navIds = new ArrayList<>();
+        navIds.add(navId);
+        setSelectDtoList(dtos, navIds, object, objectId);
+        for (SelectDto dto : dtos) {
+            if (dto.getReId().intValue() == reId) {
+                return dto;
+            }
+        }
         return null;
     }
 
