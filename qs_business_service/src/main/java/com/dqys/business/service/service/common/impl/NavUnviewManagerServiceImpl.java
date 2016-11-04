@@ -177,7 +177,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
      * @return
      */
     public List<SelectDto> getUserInitList(List<SelectDto> selectRoleList,List<SelectDto> selectCompanyList){
-        //// TODO: 16-11-3 mkf 
+        //// TODO: 16-11-3 mkf
        return null;
     }
 
