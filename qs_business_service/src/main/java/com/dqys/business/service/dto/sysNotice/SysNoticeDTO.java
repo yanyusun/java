@@ -1,7 +1,5 @@
 package com.dqys.business.service.dto.sysNotice;
 
-import java.util.Date;
-
 /**
  * Created by yan on 16-9-7.
  * @apiDefine SysNoticeDTO
@@ -10,6 +8,7 @@ import java.util.Date;
  * @apiParam {string} content 内容
  * @apiParam {number} [type] 通知类型:0系统消息
  * @apiParam {string} [picname] 图片名称
+ * @apiParam {number} [introduce] 发布状态:0未发布,1已发布
  */
 public class SysNoticeDTO {
     private Integer id;
@@ -21,6 +20,8 @@ public class SysNoticeDTO {
     private Integer type;
 
     private String picname;
+
+    private Integer introduce;
 
     public Integer getId() {
         return id;
@@ -62,4 +63,11 @@ public class SysNoticeDTO {
         this.picname = picname;
     }
 
+    public Integer getIntroduce() {
+        return introduce;
+    }
+
+    public void setIntroduce(Integer introduce) {
+        this.introduce = introduce;
+    }
 }
