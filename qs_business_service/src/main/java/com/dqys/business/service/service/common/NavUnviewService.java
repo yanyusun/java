@@ -24,12 +24,17 @@ public interface NavUnviewService {
      */
     List<SelectDto> getList(Integer navId,Integer object,Integer objectId);
 
-//    /**
-//     * 得到初始化化信息
-//     * @param o
-//     * @return
-//     */
-//    List<SelectDto> getIntList(T o);
+    // TODO: 16-11-4 mkf
+    /**
+     * 查询某一个不可见对象
+     * @param navId
+     * @param object
+     * @param objectId
+     * @param reId
+     * @return
+     */
+    SelectDto get(Integer navId,Integer object,Integer objectId,Integer reId);
+
 
     /**
      *  删除该分类下的所有不可见
@@ -37,10 +42,32 @@ public interface NavUnviewService {
      */
     void del(Integer navId,Integer object,Integer objectId);
 
+    // TODO: 16-11-4 mkf
+    /**
+     * 删除对应的不可见对象
+     * @param navId
+     * @param object
+     * @param objectId
+     * @param reId 关联对象id
+     */
+    void del(Integer navId,Integer object,Integer objectId,Integer reId);
+
     /**
      * 对navId添加所有unviewList的选项
      * @param navId
      * @param unviewList
      */
     void add(Integer navId,Integer object,Integer objectId,List<Integer> unviewList);
+
+    // TODO: 16-11-4 mkf
+    /**
+     * 添加一个不可见对象
+     * @param navId
+     * @param object
+     * @param objectId
+     * @param reId
+     */
+    void add(Integer navId,Integer object,Integer objectId,Integer reId);
+
+
 }

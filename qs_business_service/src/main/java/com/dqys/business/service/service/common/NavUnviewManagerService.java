@@ -27,12 +27,4 @@ public interface NavUnviewManagerService {
      */
     SelectDtoMap getNewALL(Integer navId,Integer object,Integer objectId,UnviewReIdMap unviewReIdMap);
 
-
-    /**
-     * 重新设置自定义不可见项
-     *
-     * @param navId
-     * @param selectDtoMap 前端选中不可件的项
-     */
-   // void setALL(Integer navId,Integer object,Integer objectId,SelectDtoMap selectDtoMap);
 }

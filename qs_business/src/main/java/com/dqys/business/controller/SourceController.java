@@ -3,7 +3,6 @@ package com.dqys.business.controller;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.service.dto.common.NavUnviewDTO;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
-import com.dqys.business.service.dto.sourceAuth.SelectDto;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.service.common.SourceService;
 import com.dqys.core.base.BaseApiContorller;
@@ -12,9 +11,6 @@ import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Yvan on 16/8/1.
@@ -93,35 +89,13 @@ public class SourceController extends BaseApiContorller {
      */
     @RequestMapping(value = "/get")
     public JsonResponse get(Integer lenderId, Integer estatesId, @RequestParam Integer navId) {
-//        if (CommonUtil.checkParam(navId)) {
-//            return JsonResponseTool.paramErr("参数错误");
-//        }
-//        if ((lenderId == null && estatesId == null) || (lenderId != null && estatesId != null)) {
-//            return JsonResponseTool.paramErr("资产源或借款人参数错误");
-//        }
-        SourceInfoDTO sourceInfoDTO = new SourceInfoDTO();
-        sourceInfoDTO.setLenderId(1);
-        SelectDtoMap selectDtoMap = new SelectDtoMap();
-        SelectDto selectDto = new SelectDto();
-        selectDto.setId(1);
-        selectDto.setReId(323);
-        selectDto.setShowName("select框展示名称");
-        List<SelectDto> userTypeList=new ArrayList<>();
-        userTypeList.add(selectDto);
-        List<SelectDto> companyList=new ArrayList<>();
-        companyList.add(selectDto);
-        List<SelectDto> roleList=new ArrayList<>();
-        roleList.add(selectDto);
-        List<SelectDto> userList=new ArrayList<>();
-        userList.add(selectDto);
-        selectDtoMap.setUserList(userList);
-        selectDtoMap.setUserTypeList(userTypeList);
-        selectDtoMap.setCompanyList(companyList);
-        selectDtoMap.setRoleList(roleList);
-        sourceInfoDTO.setSelectDtoMap(selectDtoMap);
-
-//        return JsonResponseTool.success(sourceService.getSource(navId, lenderId, estatesId));
-        return JsonResponseTool.success(sourceInfoDTO);
+        if (CommonUtil.checkParam(navId)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if ((lenderId == null && estatesId == null) || (lenderId != null && estatesId != null)) {
+            return JsonResponseTool.paramErr("资产源或借款人参数错误");
+        }
+        return JsonResponseTool.success(sourceService.getSource(navId, lenderId, estatesId));
     }
 
     /**
@@ -150,27 +124,10 @@ public class SourceController extends BaseApiContorller {
      */
     @RequestMapping(value = "/getNewNavAll", method = RequestMethod.POST)
     public JsonResponse getNewNavAll(@ModelAttribute NavUnviewDTO dto) {
-//        SelectDtoMap selectDtoMap = sourceService.getNewNavALL(dto);
-//        if (selectDtoMap == null) {
-//            JsonResponseTool.failure("最新实勘权限获取异常");
-//        }
-        SelectDtoMap selectDtoMap = new SelectDtoMap();
-        SelectDto selectDto = new SelectDto();
-        selectDto.setId(1);
-        selectDto.setReId(323);
-        selectDto.setShowName("select框展示名称");
-        List<SelectDto> userTypeList=new ArrayList<>();
-        userTypeList.add(selectDto);
-        List<SelectDto> companyList=new ArrayList<>();
-        companyList.add(selectDto);
-        List<SelectDto> roleList=new ArrayList<>();
-        roleList.add(selectDto);
-        List<SelectDto> userList=new ArrayList<>();
-        userList.add(selectDto);
-        selectDtoMap.setUserList(userList);
-        selectDtoMap.setUserTypeList(userTypeList);
-        selectDtoMap.setCompanyList(companyList);
-        selectDtoMap.setRoleList(roleList);
+        SelectDtoMap selectDtoMap = sourceService.getNewNavALL(dto);
+        if (selectDtoMap == null) {
+            JsonResponseTool.failure("最新实勘权限获取异常");
+        }
         return JsonResponseTool.success(selectDtoMap);
     }
 

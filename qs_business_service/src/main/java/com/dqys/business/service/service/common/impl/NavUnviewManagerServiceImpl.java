@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
     /**
      * 所有可以选择的角色类型
      */
-    private List<SelectDto> roleInitList=null;
+    private List<SelectDto> roleInitList = null;
 
 
     @Override
@@ -58,6 +59,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
     public SelectDtoMap getNewALL(Integer navId, Integer object, Integer objectId, UnviewReIdMap unviewReIdMap) {
         return getAll(navId, object, objectId, unviewReIdMap);
     }
+
 
     /**
      * 根据unviewReIdMap的值判断是否需要更新,并返回最新结果
@@ -73,32 +75,39 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         //角色列表
         List<SelectDto> userTypeInitList = getUserTypeInitList();
         NavUnviewServerAgent userTypeAgent = new NavUnviewServerAgent(navUnviewUserTypeService, userTypeInitList);
-        if (unviewReIdMap.getUserTypeList() != null && unviewReIdMap.getUserTypeList().size() == 0) {//判断是否要更新
-            userTypeAgent.reset(navId, object, objectId, unviewReIdMap.getUserTypeList());
+        if (unviewReIdMap!=null&&unviewReIdMap.getUserType() != null) {//判断是否要更新
+            userTypeAgent.reset(navId, object, objectId, unviewReIdMap.getUserType());
         }
         selectDtoMap.setUserTypeList(userTypeAgent.getSelectOptions(navId, object, objectId));
         //公司列表
         List<SelectDto> companyInitList = getCompanyInitList(userTypeAgent.getSelectedDtoList(navId, object, objectId));
+        if(unviewReIdMap!=null&&unviewReIdMap.getCompanySearchKey()!=null){
+            filter(companyInitList,unviewReIdMap.getCompanySearchKey());
+        }
         NavUnviewServerAgent companyAgent = new NavUnviewServerAgent(navUnviewCompanyService, companyInitList);
-        if (unviewReIdMap.getCompanyList() != null && unviewReIdMap.getCompanyList().size() == 0) {
-            companyAgent.reset(navId, object, objectId, unviewReIdMap.getCompanyList());
+        if (unviewReIdMap!=null&&unviewReIdMap.getCompanyId() != null) {
+            companyAgent.reset(navId, object, objectId, unviewReIdMap.getCompanyId());
         }
         selectDtoMap.setCompanyList(companyAgent.getSelectOptions(navId, object, objectId));
         //角色列表
         List<SelectDto> roleInitList = getRoleInitList();
         NavUnviewServerAgent roleAgent = new NavUnviewServerAgent(navUnviewRoleService, roleInitList);
-        if (unviewReIdMap.getRoleList() != null && unviewReIdMap.getRoleList().size() == 0) {
-            roleAgent.reset(navId, object, objectId, unviewReIdMap.getRoleList());
+        if (unviewReIdMap!=null&&unviewReIdMap.getRoleType() != null) {
+            roleAgent.reset(navId, object, objectId, unviewReIdMap.getRoleType());
         }
         selectDtoMap.setRoleList(roleAgent.getSelectOptions(navId, object, objectId));
         //用户列表
         List<SelectDto> userInfoInitList = getUserInitList(
                 roleAgent.getSelectedDtoList(navId, object, objectId), companyAgent.getSelectedDtoList(navId, object, objectId)
                 , object, objectId);
-        NavUnviewServerAgent userInfoAgent = new NavUnviewServerAgent(navUnviewUserInfoService, userInfoInitList);
-        if (unviewReIdMap.getUserList() != null && unviewReIdMap.getUserList().size() == 0) {
-            userInfoAgent.reset(navId, object, objectId, unviewReIdMap.getUserList());
+        if(unviewReIdMap!=null&&unviewReIdMap.getUserSearchKey()!=null){
+            filter(userInfoInitList,unviewReIdMap.getUserSearchKey());
         }
+        NavUnviewServerAgent userInfoAgent = new NavUnviewServerAgent(navUnviewUserInfoService, userInfoInitList);
+        if (unviewReIdMap!=null&&unviewReIdMap.getUserId() != null) {
+            userInfoAgent.reset(navId, object, objectId, unviewReIdMap.getUserId());
+        }
+
         selectDtoMap.setUserList(userInfoAgent.getSelectOptions(navId, object, objectId));
         return selectDtoMap;
     }
@@ -226,6 +235,24 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         }
         // TODO: 16-11-4 mkf 查询对象的所属人,建议所属人单独查询,如果需要先查询到分配器,那就再协作器service增加 list<协作器>f(objectType,objectId的方法)
         return dtos;
+    }
+
+    /**
+     * 根据key过滤掉不包含key信息的对象
+     *
+     * @param key
+     * @return
+     */
+    private void filter(List<SelectDto> selectDtoList, String key) {
+        if (key != null && !key.equalsIgnoreCase("")) {
+            Iterator<SelectDto> iter = selectDtoList.iterator();
+            while (iter.hasNext()) {
+                if (!iter.next().getShowName().contains(key)) {
+                    iter.remove();
+                }
+            }
+        }
+
     }
 
 }

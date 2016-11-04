@@ -81,4 +81,19 @@ public class NavUnviewUserTypeServiceImpl implements NavUnviewUserTypeService {
     public void add(Integer navId, Integer object, Integer objectId, List<Integer> unviewList) {
         navUnviewUserTypeMapper.insertSelectiveByUserType(navId, unviewList, object, objectId);
     }
+
+    @Override
+    public SelectDto get(Integer navId, Integer object, Integer objectId, Integer reId) {
+        return null;
+    }
+
+    @Override
+    public void del(Integer navId, Integer object, Integer objectId, Integer reId) {
+
+    }
+
+    @Override
+    public void add(Integer navId, Integer object, Integer objectId, Integer reId) {
+
+    }
 }
