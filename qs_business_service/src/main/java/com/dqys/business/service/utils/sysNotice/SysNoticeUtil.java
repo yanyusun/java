@@ -19,6 +19,7 @@ public class SysNoticeUtil {
             sysNotice.setTitle(sysNoticeDTO.getTitle());
             sysNotice.setType(sysNoticeDTO.getType());
             sysNotice.setUserId(UserSession.getCurrent().getUserId());
+            sysNotice.setIntroduce(sysNoticeDTO.getIntroduce());
             return sysNotice;
         }
 
