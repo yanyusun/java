@@ -32,4 +32,6 @@ public interface NavUnviewUserInfoMapper {
     List<Map> findNavNameByNavId(@Param("navIds") List<Integer> navIds, @Param("object") Integer object, @Param("objectId") Integer objectId);
 
     TeammateRe findUserTeamReByObject(@Param("userId") Integer userId, @Param("object") Integer object, @Param("objectId") Integer objectId);
+
+    List<Map> selectUserInfoByRoleAndCompanyId(@Param("roles") List<Integer> roles, @Param("companyIds") List<Integer> companyIds);
 }

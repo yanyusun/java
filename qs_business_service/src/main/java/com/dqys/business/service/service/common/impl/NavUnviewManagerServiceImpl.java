@@ -1,18 +1,23 @@
 package com.dqys.business.service.service.common.impl;
 
+import com.dqys.business.orm.mapper.common.NavUnviewCompanyMapper;
+import com.dqys.business.orm.mapper.common.NavUnviewUserInfoMapper;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.dto.sourceAuth.UnviewReIdMap;
 import com.dqys.business.service.service.common.*;
 import com.dqys.business.service.utils.common.NavUnviewServerAgent;
+import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.RoleTypeEnum;
+import com.dqys.core.utils.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 资料实勘权限管理者
@@ -29,6 +34,11 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
     private NavUnviewRoleService navUnviewRoleService;
     @Autowired
     private NavUnviewUserInfoService navUnviewUserInfoService;
+    @Autowired
+    private NavUnviewCompanyMapper navUnviewCompanyMapper;
+    @Autowired
+    private NavUnviewUserInfoMapper navUnviewUserInfoMapper;
+
     /**
      * 所有可以选择的用户类型
      */
@@ -38,7 +48,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
      * 所有可以选择的角色类型
      */
     @Autowired
-    private List<SelectDto> roleInitList=null;
+    private List<SelectDto> roleInitList = null;
 
 
     @Override
@@ -86,7 +96,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         selectDtoMap.setRoleList(roleAgent.getSelectOptions(navId, object, objectId));
         //用户列表
         List<SelectDto> userInfoInitList = getUserInitList(
-                roleAgent.getSelectedDtoList(navId, object, objectId),companyAgent.getSelectedDtoList(navId, object, objectId));
+                roleAgent.getSelectedDtoList(navId, object, objectId), companyAgent.getSelectedDtoList(navId, object, objectId));
         NavUnviewServerAgent userInfoAgent = new NavUnviewServerAgent(navUnviewUserInfoService, userInfoInitList);
         if (unviewReIdMap.getUserList() != null && unviewReIdMap.getUserList().size() == 0) {
             userInfoAgent.reset(navId, object, objectId, unviewReIdMap.getUserList());
@@ -134,18 +144,30 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
 
     /**
      * 根据用户类型list查找对应的所有公司
+     *
      * @param selectUserTypeList
      * @return
      */
-    private List<SelectDto> getCompanyInitList(List<SelectDto> selectUserTypeList){
-        // TODO: 16-11-3 mkf 
-
-        return null;
+    private List<SelectDto> getCompanyInitList(List<SelectDto> selectUserTypeList) {
+        // TODO: 16-11-3 mkf
+        List<Integer> userTypes = null;//用户类型
+        List<SelectDto> dtos = new ArrayList<>();
+        for (SelectDto dto : selectUserTypeList) {
+            if (!userTypes.contains(dto.getReId())) {
+                userTypes.add(dto.getReId());
+            }
+        }
+        List<Map> list = navUnviewCompanyMapper.selectCompanyByUserType(userTypes);//查询对应类型的所有公司
+        for (Map m : list) {
+            SelectDto dto = new SelectDto(null, MessageUtils.transMapToInt(m, "reId"), MessageUtils.transMapToString(m, "showName"));
+            dtos.add(dto);
+        }
+        return dtos;
     }
 
     public List<SelectDto> getRoleInitList() {
-        if(roleInitList==null){
-            roleInitList=new ArrayList<>();
+        if (roleInitList == null) {
+            roleInitList = new ArrayList<>();
             //管理员
             SelectDto adminSelectDto = new SelectDto();
             adminSelectDto.setReId(RoleTypeEnum.ADMIN.getValue());
@@ -172,13 +194,32 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
 
     /**
      * 得到对应公司的对应角色的所有用户
-     * @param selectRoleList 用户角色list
+     *
+     * @param selectRoleList    用户角色list
      * @param selectCompanyList 公司list
      * @return
      */
-    public List<SelectDto> getUserInitList(List<SelectDto> selectRoleList,List<SelectDto> selectCompanyList){
+    public List<SelectDto> getUserInitList(List<SelectDto> selectRoleList, List<SelectDto> selectCompanyList) {
         //// TODO: 16-11-3 mkf
-       return null;
+        List<Integer> roles = null;//角色
+        List<Integer> companyIds = null;//公司
+        List<SelectDto> dtos = new ArrayList<>();
+        for (SelectDto dto : selectRoleList) {
+            if (!roles.contains(dto.getReId())) {
+                roles.add(dto.getReId());
+            }
+        }
+        for (SelectDto dto : selectCompanyList) {
+            if (!companyIds.contains(dto.getReId())) {
+                companyIds.add(dto.getReId());
+            }
+        }
+        List<Map> list = navUnviewUserInfoMapper.selectUserInfoByRoleAndCompanyId(roles, companyIds);
+        for (Map m : list) {
+            SelectDto dto = new SelectDto(null, MessageUtils.transMapToInt(m, "reId"), MessageUtils.transMapToString(m, "showName"));
+            dtos.add(dto);
+        }
+        return dtos;
     }
 
 }

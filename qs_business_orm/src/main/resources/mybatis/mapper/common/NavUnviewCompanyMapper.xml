@@ -81,7 +81,7 @@
     </delete>
 
     <insert id="insertSelectiveByCompanyId">
-        <foreach collection="list" item="companyId" index="index">
+        <foreach collection="unviewList" item="companyId" index="index">
             INSERT INTO t_nav_unview_company(nav_id,company_id,object_type,object_id)
             VALUES(#{navId},#{companyId},#{object},#{objectId})
         </foreach>
@@ -100,11 +100,23 @@
         </if>
         AND nuc.nav_id IN
         <if test="navIds !=null and navIds.size>0">
-            <foreach collection="list" index="index" item="navIds.id" open="(" close=")" separator=",">
+            <foreach collection="navIds" index="index" item="id" open="(" close=")" separator=",">
                 #{id}
             </foreach>
         </if>
         <if test="navIds ==null">
+            (0)
+        </if>
+    </select>
+
+    <select id="selectCompanyByUserType" resultType="java.util.Map">
+        SELECT tci.id reId,tci.company_name showName FROM t_company_info tci WHERE tci.business_type IN
+        <if test="userTypes !=null and userTypes.size>0">
+            <foreach collection="userTypes" index="index" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        <if test="userTypes ==null">
             (0)
         </if>
     </select>

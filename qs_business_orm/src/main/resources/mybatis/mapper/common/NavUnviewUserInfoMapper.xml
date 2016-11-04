@@ -81,7 +81,7 @@
     </delete>
 
     <insert id="insertSelectiveByUserInfo">
-        <foreach collection="list" item="unviewList.userId" index="index">
+        <foreach collection="unviewList" item="userId" index="index">
             INSERT INTO t_nav_unview_userinfo(nav_id,user_id,object_type,object_id)
             VALUES(#{navId},#{userId},#{object},#{objectId})
         </foreach>
@@ -105,7 +105,7 @@
         </if>
         AND nuu.nav_id IN
         <if test="navIds !=null and navIds.size >0">
-            <foreach collection="list" index="index" item="navIds.id" open="(" close=")" separator=",">
+            <foreach collection="navIds" index="index" item="id" open="(" close=")" separator=",">
                 #{id}
             </foreach>
         </if>
@@ -120,6 +120,10 @@
         WHERE ttr.stateflag=0 AND ttr.status=1 AND ttr.user_id=#{userId}
             AND tut.object_type=#{object}
             AND tut.object_id=#{objectId}
+    </select>
+
+    <select id="selectUserInfoByRoleAndCompanyId" resultType="java.util.Map">
+
     </select>
 
 </mapper>

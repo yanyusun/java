@@ -29,4 +29,6 @@ public interface NavUnviewCompanyMapper {
     Integer insertSelectiveByCompanyId(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList, @Param("object") Integer object, @Param("objectId") Integer objectId);
 
     List<Map> findNavNameByNavId(@Param("navIds") List<Integer> navIds, @Param("object") Integer object, @Param("objectId") Integer objectId);
+
+    List<Map> selectCompanyByUserType(List<Integer> userTypes);
 }
