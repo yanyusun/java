@@ -53,4 +53,14 @@ public class IndexMapperImpl extends BaseDao implements IndexMapper {
     public UserMessage selectByUser(Integer userId) {
         return super.getSqlSession().getMapper(IndexMapper.class).selectByUser(userId);
     }
+
+    @Override
+    public Integer getLoginByTime(@Param("time") String time, @Param("companyId") Integer companyId) {
+        return super.getSqlSession().getMapper(IndexMapper.class).getLoginByTime(time, companyId);
+    }
+
+    @Override
+    public Integer getAbsent(Integer companyId) {
+        return super.getSqlSession().getMapper(IndexMapper.class).getAbsent(companyId);
+    }
 }

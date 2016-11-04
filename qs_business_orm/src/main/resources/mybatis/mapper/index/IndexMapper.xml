@@ -50,12 +50,26 @@
     <!--用户相关信息-->
     <select id="selectByUser" resultType="com.dqys.business.orm.pojo.index.UserMessage">
       SELECT tui.real_name realName,IF(tut.role_id=1,'管理员',IF(tut.role_id=2,'管理者','普通员工')) roleName,
-        tci.province,tci.city,tci.area,tci.address,DATE_FORMAT(tll.time,'%Y-%m-%d %H:%i:%s') lastTime
+        tci.province,tci.city,tci.area,tci.address,DATE_FORMAT(tll.time,'%Y-%m-%d %H:%i:%s') lastTime,
+        (SELECT tui2.real_name from t_user_info tui2,t_user_tag tut2 WHERE tut2.user_id=tui2.id AND tui2.company_id=tui.company_id AND tut2.role_id=1 LIMIT 0,1) adminName
         from t_user_info tui LEFT JOIN t_user_tag tut
         ON tut.user_id=tui.id LEFT JOIN t_company_info tci
         ON tci.id=tui.company_id LEFT JOIN (SELECT * from t_login_log log WHERE log.user_id=#{userId} ORDER BY log.time desc LIMIT 1,1) tll
         ON tll.user_id=tui.id
         WHERE tui.id=#{userId}
+    </select>
+    <!--获取公司下某天登入的人数-->
+    <select id="getLoginByTime" resultType="int">
+       SELECT COUNT(t_user.user_id) num FROM
+        (SELECT tll.user_id FROM t_login_log tll, t_user_info tui
+        WHERE tui.stateflag=0 AND tui.id=tll.user_id AND tui.company_id=#{companyId}
+        AND DATE_FORMAT(tll.time,'%Y-%m-%d') like #{time} GROUP BY tll.user_id) t_user
+    </select>
+    <!--获取公司下未分配部门的员工人数-->
+    <select id="getAbsent" resultType="int">
+        SELECT COUNT(tui.id) num FROM t_user_info tui LEFT JOIN t_user_tag tut
+        ON tut.user_id=tui.id
+        WHERE tui.stateflag=0 AND tui.company_id=#{companyId}
     </select>
 
 </mapper>
