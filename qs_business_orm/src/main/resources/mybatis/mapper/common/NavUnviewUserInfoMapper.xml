@@ -123,7 +123,42 @@
     </select>
 
     <select id="selectUserInfoByRoleAndCompanyId" resultType="java.util.Map">
-
+        SELECT tui.id reId,tui.real_name showName from t_user_info tui LEFT JOIN t_user_tag tut
+        ON tui.id=tut.user_id
+        WHERE tui.stateflag=0 AND tut.role_id in
+        <if test="roles !=null and roles.size >0">
+            <foreach collection="roles" index="index" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        <if test="roles ==null">
+            (0)
+        </if>
+        AND tui.company_id IN
+        <if test="companyIds !=null and companyIds.size >0">
+            <foreach collection="companyIds" index="index" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        <if test="companyIds ==null">
+            (0)
+        </if>
+        <if test="their !=null and their.objectId !=null and their.objectType !=null">
+            UNION
+            SELECT tui.id reId,tui.real_name showName from t_user_team tut LEFT JOIN t_teammate_re ttr
+            ON ttr.user_team_id=tut.id LEFT JOIN t_user_info tui
+            ON tui.id=ttr.user_id
+            WHERE tui.stateflag=0 AND tut.company_id IN
+            <if test="companyIds !=null and companyIds.size >0">
+                <foreach collection="companyIds" index="index" item="id" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="companyIds ==null">
+                (0)
+            </if>
+            AND tut.object_id=#{their.objectId} AND tut.object_type=their.objectType AND ttr.type=1
+        </if>
     </select>
 
 </mapper>

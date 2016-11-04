@@ -65,7 +65,7 @@ public class NavUnviewUserInfoMapperImpl extends BaseDao implements NavUnviewUse
     }
 
     @Override
-    public List<Map> selectUserInfoByRoleAndCompanyId(@Param("roles") List<Integer> roles, @Param("companyIds") List<Integer> companyIds) {
-        return super.getSqlSession().getMapper(NavUnviewUserInfoMapper.class).selectUserInfoByRoleAndCompanyId(roles, companyIds);
+    public List<Map> selectUserInfoByRoleAndCompanyId(@Param("roles") List<Integer> roles, @Param("companyIds") List<Integer> companyIds, @Param("their") Map their) {
+        return super.getSqlSession().getMapper(NavUnviewUserInfoMapper.class).selectUserInfoByRoleAndCompanyId(roles, companyIds, their);
     }
 }
