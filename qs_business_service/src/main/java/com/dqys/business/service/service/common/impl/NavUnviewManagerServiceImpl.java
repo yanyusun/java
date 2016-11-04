@@ -32,12 +32,10 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
     /**
      * 所有可以选择的用户类型
      */
-    @Autowired
     private List<SelectDto> userTypeInitList = null;
     /**
      * 所有可以选择的角色类型
      */
-    @Autowired
     private List<SelectDto> roleInitList=null;
 
 

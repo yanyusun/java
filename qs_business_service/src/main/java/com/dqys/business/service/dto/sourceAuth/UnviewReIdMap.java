@@ -7,13 +7,19 @@ import java.util.List;
  * Created by yan on 16-11-3.
  *
  * @apiDefine UnviewReIdMap
- * @apiParam {list} [userTypeList] 资料实勘分类id
- * @apiParam {list} [companyList] 对象id
- * @apiParam {list} [roleList] 对象类型(借款人,资产源)
- * @apiParam {list} [userList] 对象类型(借款人,资产源)
+ * @apiParam {string} [companySearchKey] g公司不可见对象查询关键字
+ * @apiParam {string} [userSearchKey] 人员不可见对象查询关键字
+ * @apiParam {list} [userTypeList] 公司类型不可见对象list
+ * @apiParam {list} [companyList] 公司不可见对象list
+ * @apiParam {list} [roleList] 角色不可见对象list
+ * @apiParam {list} [userList] 用户不可见对象list
  *
  */
 public class UnviewReIdMap {
+    private String companySearchKey;
+
+    private String userSearchKey;
+
     private List<Integer> userTypeList;
 
     private List<Integer> companyList;
@@ -52,5 +58,21 @@ public class UnviewReIdMap {
 
     public void setUserList(List<Integer> userList) {
         this.userList = userList;
+    }
+
+    public String getCompanySearchKey() {
+        return companySearchKey;
+    }
+
+    public void setCompanySearchKey(String companySearchKey) {
+        this.companySearchKey = companySearchKey;
+    }
+
+    public String getUserSearchKey() {
+        return userSearchKey;
+    }
+
+    public void setUserSearchKey(String userSearchKey) {
+        this.userSearchKey = userSearchKey;
     }
 }

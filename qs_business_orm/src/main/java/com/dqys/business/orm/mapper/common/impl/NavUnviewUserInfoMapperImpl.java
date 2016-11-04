@@ -1,11 +1,12 @@
 package com.dqys.business.orm.mapper.common.impl;
 
-import com.dqys.business.orm.mapper.common.NavUnviewRoleMapper;
 import com.dqys.business.orm.mapper.common.NavUnviewUserInfoMapper;
 import com.dqys.business.orm.pojo.common.NavUnviewUserInfo;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,8 @@ import java.util.Map;
 /**
  * Created by Administrator on 2016/10/31.
  */
+@Repository
+@Primary
 public class NavUnviewUserInfoMapperImpl extends BaseDao implements NavUnviewUserInfoMapper {
     @Override
     public int deleteByPrimaryKey(Integer id) {

@@ -18,6 +18,7 @@ public class SourceInterceptor extends AuthenticationInterceptor {
     private static final String API_ADD  = "add";
     private static final String API_GET  = "get";
     private static final String API_UPDATE  = "update";
+    private static final String API_GET_NEW_NAV_ALL="getNewNavAll";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
@@ -37,6 +38,8 @@ public class SourceInterceptor extends AuthenticationInterceptor {
         } else if (API_ADD.equals(path)) {
             return true;
         } else if (API_GET.equals(path)) {
+            return true;
+        } else if(API_GET_NEW_NAV_ALL.equals(path)){
             return true;
         } else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:" + url);

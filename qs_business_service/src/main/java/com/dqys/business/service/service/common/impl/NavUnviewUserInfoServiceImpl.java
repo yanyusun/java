@@ -7,7 +7,7 @@ import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
 import com.dqys.business.service.service.CoordinatorService;
-import com.dqys.business.service.service.common.NavUnviewRoleService;
+import com.dqys.business.service.service.common.NavUnviewUserInfoService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.NavUnviewEnum;
 import com.dqys.core.model.UserSession;
@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 //// TODO: 16-10-28  mkf
 @Repository
 @Primary
-public class NavUnviewUserInfoServiceImpl implements NavUnviewRoleService {
+public class NavUnviewUserInfoServiceImpl implements NavUnviewUserInfoService{
     @Autowired
     private NavUnviewUserInfoMapper navUnviewUserInfoMapper;
 

@@ -4,6 +4,8 @@ import com.dqys.business.orm.mapper.common.NavUnviewUserTypeMapper;
 import com.dqys.business.orm.pojo.common.NavUnviewUserType;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,8 @@ import java.util.Map;
 /**
  * Created by Administrator on 2016/11/1.
  */
+@Repository
+@Primary
 public class NavUnviewUserTypeMapperImpl extends BaseDao implements NavUnviewUserTypeMapper {
     @Override
     public int deleteByPrimaryKey(Integer id) {
