@@ -3,95 +3,110 @@
 <mapper namespace="com.dqys.business.orm.mapper.common.NavUnviewRoleMapper">
 
 
-  <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.common.NavUnviewRole">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="nav_id" jdbcType="INTEGER" property="navId" />
-    <result column="role_type" jdbcType="BIT" property="roleType" />
-  </resultMap>
-  <sql id="Base_Column_List">
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.common.NavUnviewRole">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="nav_id" jdbcType="INTEGER" property="navId"/>
+        <result column="role_type" jdbcType="BIT" property="roleType"/>
+    </resultMap>
+    <sql id="Base_Column_List">
     id, nav_id, role_type
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from t_nav_unview_role
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_nav_unview_role
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from t_nav_unview_role
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
     insert into t_nav_unview_role (id, nav_id, role_type
       )
     values (#{id,jdbcType=INTEGER}, #{navId,jdbcType=INTEGER}, #{roleType,jdbcType=BIT}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
-    insert into t_nav_unview_role
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="navId != null">
-        nav_id,
-      </if>
-      <if test="roleType != null">
-        role_type,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="navId != null">
-        #{navId,jdbcType=INTEGER},
-      </if>
-      <if test="roleType != null">
-        #{roleType,jdbcType=BIT},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
-    update t_nav_unview_role
-    <set>
-      <if test="navId != null">
-        nav_id = #{navId,jdbcType=INTEGER},
-      </if>
-      <if test="roleType != null">
-        role_type = #{roleType,jdbcType=BIT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
+    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
+        insert into t_nav_unview_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="navId != null">
+                nav_id,
+            </if>
+            <if test="roleType != null">
+                role_type,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="navId != null">
+                #{navId,jdbcType=INTEGER},
+            </if>
+            <if test="roleType != null">
+                #{roleType,jdbcType=BIT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
+        update t_nav_unview_role
+        <set>
+            <if test="navId != null">
+                nav_id = #{navId,jdbcType=INTEGER},
+            </if>
+            <if test="roleType != null">
+                role_type = #{roleType,jdbcType=BIT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.common.NavUnviewRole">
     update t_nav_unview_role
     set nav_id = #{navId,jdbcType=INTEGER},
       role_type = #{roleType,jdbcType=BIT}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <delete id="delByNavId">
-    UPDATE t_nav_unview_role SET stateflag=now(),oper_user=#{userId}  WHERE nav_id=#{navId}
-  </delete>
+    <delete id="delByNavId">
+        UPDATE t_nav_unview_role SET stateflag=now(),oper_user=#{userId} WHERE stateflag=0
+        <if test="object !=null">
+            AND object_type=#{object}
+        </if>
+        <if test="objectId !=null">
+            AND object_id=#{objectId}
+        </if>
+        AND nav_id=#{navId}
+    </delete>
 
-  <insert id="insertSelectiveByRoleType">
-    <foreach collection="list" item="unviewList.roleType" index="index">
-      INSERT INTO t_nav_unview_role(nav_id,role_type) VALUES(#{navId},#{roleType})
-    </foreach>
-  </insert>
+    <insert id="insertSelectiveByRoleType">
+        <foreach collection="unviewList" item="roleType" index="index">
+            INSERT INTO t_nav_unview_role(nav_id,role_type,object_type,object_id) VALUES(#{navId},#{roleType},#{object},#{objectId})
+        </foreach>
+    </insert>
 
-  <select id="findNavNameByNavId" resultType="java.util.Map">
-    SELECT nur.id,nuc.role_type name name from t_nav_unview_role nur
-    WHERE  nur.nav_id IN
-    <if test="navIds !=null and navIds.size>0">
-      <foreach collection="navIds" index="index" item="id" open="(" close=")" separator=",">
-        #{id}
-      </foreach>
-    </if>
-    <if test="navIds ==null">
-      (0)
-    </if>
-  </select>
+    <select id="findNavNameByNavId" resultType="java.util.Map">
+        SELECT nur.id,nur.role_type reId,IF(nur.role_type=1,'管理员',if(nur.role_type=2,'管理者','普通')) showName from
+        t_nav_unview_role nur
+        WHERE nur.stateflag=0
+        <if test="object !=null">
+            AND nur.object_type=#{object}
+        </if>
+        <if test="objectId !=null">
+            AND nur.object_id=#{objectId}
+        </if>
+        AND nur.nav_id IN
+        <if test="navIds !=null and navIds.size>0">
+            <foreach collection="navIds" index="index" item="id" open="(" close=")" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        <if test="navIds ==null">
+            (0)
+        </if>
+    </select>
 
 </mapper>

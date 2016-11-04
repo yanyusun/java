@@ -48,17 +48,22 @@ public class NavUnviewCompanyMapperImpl extends BaseDao implements NavUnviewComp
     }
 
     @Override
-    public Integer delByNavId(Integer navId, Integer userId) {
-        return super.getSqlSession().getMapper(NavUnviewCompanyMapper.class).delByNavId(navId, userId);
+    public Integer delByNavId(@Param("navId") Integer navId, @Param("userId") Integer userId, @Param("object") Integer object, @Param("objectId") Integer objectId) {
+        return super.getSqlSession().getMapper(NavUnviewCompanyMapper.class).delByNavId(navId, userId, object, objectId);
     }
 
     @Override
-    public Integer insertSelectiveByCompanyId(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList) {
-        return super.getSqlSession().getMapper(NavUnviewCompanyMapper.class).insertSelectiveByCompanyId(navId, unviewList);
+    public Integer insertSelectiveByCompanyId(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList, @Param("object") Integer object, @Param("objectId") Integer objectId) {
+        return super.getSqlSession().getMapper(NavUnviewCompanyMapper.class).insertSelectiveByCompanyId(navId, unviewList, object, objectId);
     }
 
     @Override
-    public List<Map> findNavNameByNavId(List<Integer> navIds) {
-        return super.getSqlSession().getMapper(NavUnviewCompanyMapper.class).findNavNameByNavId(navIds);
+    public List<Map> findNavNameByNavId(@Param("navIds") List<Integer> navIds, @Param("object") Integer object, @Param("objectId") Integer objectId) {
+        return super.getSqlSession().getMapper(NavUnviewCompanyMapper.class).findNavNameByNavId(navIds, object, objectId);
+    }
+
+    @Override
+    public List<Map> selectCompanyByUserType(List<Integer> userTypes) {
+        return super.getSqlSession().getMapper(NavUnviewCompanyMapper.class).selectCompanyByUserType(userTypes);
     }
 }

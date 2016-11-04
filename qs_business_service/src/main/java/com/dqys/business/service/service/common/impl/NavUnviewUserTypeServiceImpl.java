@@ -1,10 +1,10 @@
 package com.dqys.business.service.service.common.impl;
 
-import com.dqys.business.orm.mapper.common.NavUnviewRoleMapper;
+import com.dqys.business.orm.mapper.common.NavUnviewUserTypeMapper;
 import com.dqys.business.orm.mapper.common.SourceNavigationMapper;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
-import com.dqys.business.service.service.common.NavUnviewRoleService;
+import com.dqys.business.service.service.common.NavUnviewUserTypeService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.NavUnviewEnum;
 import com.dqys.core.model.UserSession;
@@ -19,14 +19,14 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by yan on 16-10-28.
+ * Created by Administrator on 2016/11/1.
  */
-//// TODO: 16-10-28  mkf
 @Repository
 @Primary
-public class NavUnviewRoleServiceImpl implements NavUnviewRoleService {
+public class NavUnviewUserTypeServiceImpl implements NavUnviewUserTypeService {
+
     @Autowired
-    private NavUnviewRoleMapper navUnviewRoleMapper;
+    private NavUnviewUserTypeMapper navUnviewUserTypeMapper;
 
     @Autowired
     private SourceNavigationMapper sourceNavigationMapper;
@@ -57,13 +57,13 @@ public class NavUnviewRoleServiceImpl implements NavUnviewRoleService {
         List<Integer> navIds = new ArrayList<>();
         navIds.add(navId);
         setSelectDtoList(dtos, navIds, object, objectId);
-        NoSQLWithRedisTool.removeValueObject(navId + "_" + NavUnviewEnum.ROLE);
-        NoSQLWithRedisTool.setValueObject(navId + "_" + NavUnviewEnum.ROLE, dtos, 31L, TimeUnit.DAYS);
+        NoSQLWithRedisTool.removeValueObject(navId + "_" + NavUnviewEnum.USER_TYPE);
+        NoSQLWithRedisTool.setValueObject(navId + "_" + NavUnviewEnum.USER_TYPE, dtos, 31L, TimeUnit.DAYS);
         return dtos;
     }
 
     private void setSelectDtoList(List<SelectDto> dtos, List<Integer> navIds, Integer object, Integer objectId) {
-        List<Map> list = navUnviewRoleMapper.findNavNameByNavId(navIds, object, objectId);
+        List<Map> list = navUnviewUserTypeMapper.findNavNameByNavId(navIds, object, objectId);
         for (Map m : list) {
             SelectDto dto = new SelectDto(MessageUtils.transMapToInt(m, "id"), MessageUtils.transMapToInt(m, "reId"), MessageUtils.transMapToString(m, "showName"));
             dtos.add(dto);
@@ -74,11 +74,11 @@ public class NavUnviewRoleServiceImpl implements NavUnviewRoleService {
     @Override
     public void del(Integer navId, Integer object, Integer objectId) {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
-        navUnviewRoleMapper.delByNavId(navId, userId, object, objectId);
+        navUnviewUserTypeMapper.delByNavId(navId, userId, object, objectId);
     }
 
     @Override
     public void add(Integer navId, Integer object, Integer objectId, List<Integer> unviewList) {
-        navUnviewRoleMapper.insertSelectiveByRoleType(navId, unviewList, object, objectId);
+        navUnviewUserTypeMapper.insertSelectiveByUserType(navId, unviewList, object, objectId);
     }
 }

@@ -4,6 +4,8 @@ import com.dqys.business.orm.mapper.common.NavUnviewRoleMapper;
 import com.dqys.business.orm.pojo.common.NavUnviewRole;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,8 @@ import java.util.Map;
 /**
  * Created by Administrator on 2016/10/31.
  */
+@Repository
+@Primary
 public class NavUnviewRoleMapperImpl extends BaseDao implements NavUnviewRoleMapper {
     @Override
     public int deleteByPrimaryKey(Integer id) {
@@ -43,17 +47,17 @@ public class NavUnviewRoleMapperImpl extends BaseDao implements NavUnviewRoleMap
     }
 
     @Override
-    public Integer delByNavId(Integer navId, Integer userId) {
-        return super.getSqlSession().getMapper(NavUnviewRoleMapper.class).delByNavId(navId, userId);
+    public Integer delByNavId(@Param("navId") Integer navId, @Param("userId") Integer userId, @Param("object") Integer object, @Param("objectId") Integer objectId) {
+        return super.getSqlSession().getMapper(NavUnviewRoleMapper.class).delByNavId(navId, userId, object, objectId);
     }
 
     @Override
-    public Integer insertSelectiveByRoleType(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList) {
-        return super.getSqlSession().getMapper(NavUnviewRoleMapper.class).insertSelectiveByRoleType(navId, unviewList);
+    public Integer insertSelectiveByRoleType(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList, @Param("object") Integer object, @Param("objectId") Integer objectId) {
+        return super.getSqlSession().getMapper(NavUnviewRoleMapper.class).insertSelectiveByRoleType(navId, unviewList, object, objectId);
     }
 
     @Override
-    public List<Map> findNavNameByNavId(List<Integer> navIds) {
-        return super.getSqlSession().getMapper(NavUnviewRoleMapper.class).findNavNameByNavId(navIds);
+    public List<Map> findNavNameByNavId(@Param("navIds") List<Integer> navIds, @Param("object") Integer object, @Param("objectId") Integer objectId) {
+        return super.getSqlSession().getMapper(NavUnviewRoleMapper.class).findNavNameByNavId(navIds, object, objectId);
     }
 }

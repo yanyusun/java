@@ -1,9 +1,7 @@
 package com.dqys.business.service.service.common;
 
-import com.dqys.business.service.dto.sourceAuth.SelectDto;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
-
-import java.util.List;
+import com.dqys.business.service.dto.sourceAuth.UnviewReIdMap;
 
 /**
  * 资料实勘权限管理
@@ -16,22 +14,25 @@ public interface NavUnviewManagerService {
      * @param navId 资料实勘分类ｉｄ
      * @return
      */
-    SelectDtoMap getAll(String navId);
+    SelectDtoMap getAll(Integer navId,Integer object,Integer objectId);
+
 
     /**
-     * 得到用户ｌｉｓｔ
-     * @param companyList　选中的公司list
-     * @param roleList　选中的角色list
+     * 得到重新设置后的ｎａｖｉｄ关联的所有可选内容
+     * @param navId
+     * @param object
+     * @param objectId
+     * @param unviewReIdMap
      * @return
      */
-    List<SelectDto> getUserList(List<Integer> companyList,List<Integer> roleList);
+    SelectDtoMap getNewALL(Integer navId,Integer object,Integer objectId,UnviewReIdMap unviewReIdMap);
+
 
     /**
      * 重新设置自定义不可见项
+     *
      * @param navId
-     * @param companyList
-     * @param roleList
-     * @param userList
+     * @param selectDtoMap 前端选中不可件的项
      */
-    void setALL(String navId,List<Integer> companyList,List<Integer> roleList,List<Integer> userList);
+   // void setALL(Integer navId,Integer object,Integer objectId,SelectDtoMap selectDtoMap);
 }

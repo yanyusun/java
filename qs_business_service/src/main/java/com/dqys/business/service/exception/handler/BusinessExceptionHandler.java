@@ -59,16 +59,19 @@ public class BusinessExceptionHandler implements HandlerExceptionResolver {
         model.put("exMsg", ResponseCodeEnum.BUSINESS_ERROR.getText());
         model.put("exCode", ResponseCodeEnum.BUSINESS_ERROR.getValue());
         String msg = e.getMessage();
-        model.put("msg",  e.getMessage());
         String name = UNKOWN_EXCEPTION_NAME;
         int code = UNKOWN_ERROR;
         if (e instanceof BussinessException) {
+            model.put("msg",  e.getMessage());
             name = ((BussinessException) e).getExceptionName();
             code = ((BussinessException) e).getExceptionCode();
+        }else{
+            model.put("msg", "业务操作产生的未做处理异常");
         }
         model.put("name",name);
         model.put("code", code);
         model.put("exception" ,e);
+        model.put("exceptionMsg",e.getMessage());
         MappingJackson2JsonView jw = new MappingJackson2JsonView();
         LogManager.getLogger("businessErrorAsync").error("name:" + name + ",code:" + code + ",msg:" + msg + "exception:" + e);
         jw.setAttributesMap(model);

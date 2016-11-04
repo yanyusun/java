@@ -1,14 +1,19 @@
 package com.dqys.business.service.service.common.impl;
 
+import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.common.SourceInfoMapper;
 import com.dqys.business.orm.mapper.common.SourceNavigationMapper;
 import com.dqys.business.orm.mapper.common.SourceSourceMapper;
 import com.dqys.business.orm.pojo.common.SourceInfo;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.common.SourceSource;
+import com.dqys.business.service.dto.common.NavUnviewDTO;
 import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
+import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
+import com.dqys.business.service.service.common.NavUnviewManagerService;
 import com.dqys.business.service.service.common.SourceService;
+import com.dqys.business.service.utils.common.NavUtil;
 import com.dqys.business.service.utils.common.SourceServiceUtls;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
@@ -34,6 +39,8 @@ public class SourceServiceImpl implements SourceService {
     private SourceInfoMapper sourceInfoMapper;
     @Autowired
     private SourceSourceMapper sourceSourceMapper;
+    @Autowired
+    private NavUnviewManagerService navUnviewManagerService;
 
 
     @Override
@@ -41,7 +48,17 @@ public class SourceServiceImpl implements SourceService {
         if (CommonUtil.checkParam(type)) {
             return null;
         }
-        List<SourceNavigation> navigationList = sourceNavigationMapper.listByTypeAndLenderId(lenderId, estatesId, type);
+        Integer objectType = null;
+        Integer objectId = null;
+        if (lenderId != null) {
+            objectType = ObjectTypeEnum.LENDER.getValue();
+            objectId = lenderId;
+        } else if (estatesId != null) {
+            objectType = ObjectTypeEnum.ASSETSOURCE.getValue();
+            objectId = estatesId;
+        }
+        List<SourceNavigation> navigationList = NavUtil.getSourceNavigationList(type, objectType, objectId);
+        navigationList.addAll(sourceNavigationMapper.listByTypeAndLenderId(lenderId, estatesId, type));
         return SourceServiceUtls.toSelect(navigationList);
     }
 
@@ -115,9 +132,10 @@ public class SourceServiceImpl implements SourceService {
         if (sourceInfo == null) {
             return null;
         }
+
         Integer sourceId = sourceInfo.getId();
         List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceId);
-        return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList);
+        return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList,getNavAuthAll(navId, lenderId, estatesId));
     }
 
     @Override
@@ -185,4 +203,45 @@ public class SourceServiceImpl implements SourceService {
         }
         return JsonResponseTool.success(sourceInfo.getId());
     }
+
+
+    /**
+     * 得到ｎａｖｉｄ关联的所有可选内容
+     * @param navId
+     * @param lenderId
+     * @param estatesId
+     * @return
+     */
+    public SelectDtoMap getNavAuthAll(Integer navId,Integer lenderId,Integer estatesId ){
+        if (lenderId != null && lenderId != 0) {//得到资产源的资料实勘权限
+           return navUnviewManagerService.getAll(navId, ObjectTypeEnum.LENDER.getValue(),lenderId);
+        } else if (estatesId != null && estatesId != 0) {//得到借款人的资料实勘权限
+            return navUnviewManagerService.getAll(navId, ObjectTypeEnum.ASSETSOURCE.getValue(), estatesId);//重新设置权限；
+        }
+        return null;
+    }
+
+//    /**
+//     * 得到重新设置后的ｎａｖｉｄ关联的所有可选内容
+//     * @param dto
+//     * @return
+//     */
+//    public SelectDtoMap getNewNavALL(SourceInfoDTO dto){
+//        if (dto.getLenderId() != null && dto.getLenderId() != 0) {//得到资产源的资料实勘权限
+//            return navUnviewManagerService.getNewALL(dto.getNavId(), ObjectTypeEnum.LENDER.getValue(),dto.getLenderId(),dto.getSelect);
+//        } else if (dto.getEstatesId()!= null && dto.getEstatesId() != 0) {//得到借款人的资料实勘权限
+//            return navUnviewManagerService.getNewALL(dto.getNavId(), ObjectTypeEnum.LENDER.getValue(),dto.getLenderId(),dto.getSelectDtoMap());
+//        }
+//        return null;
+//    }
+
+    /**
+     * 得到重新设置后的ｎａｖｉｄ关联的所有可选内容
+     * @param dto
+     * @return
+     */
+    public SelectDtoMap getNewNavALL(NavUnviewDTO dto){
+        return navUnviewManagerService.getNewALL(dto.getNavId(),dto.getObjectType(),dto.getObjectId(),dto.getUnviewReIdMap());
+    }
+
 }
