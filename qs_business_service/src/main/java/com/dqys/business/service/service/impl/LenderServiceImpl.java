@@ -341,7 +341,9 @@ public class LenderServiceImpl implements LenderService {
         }
         // 添加借款人基础信息
         LenderInfo lenderInfo = LenderServiceUtils.toLenderInfo(lenderDTO);
-        lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
+        if (lenderInfo.getLenderNo() == null) {
+            lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
+        }
         lenderInfo.setOperator(userId);
         String typeStr = UserSession.getCurrent().getUserType();
         UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
@@ -634,18 +636,18 @@ public class LenderServiceImpl implements LenderService {
             RelationQuery relationQuery = new RelationQuery();
             relationQuery.setIouId(iouInfo.getId());
             List<PiRelation> piRelationList = piRelationMapper.queryList(relationQuery);
-            piRelationList.forEach(piRelation -> {
+            for (PiRelation piRelation : piRelationList) {
                 PawnInfo pawnInfo = pawnInfoMapper.get(piRelation.getPawnId());
                 if (pawnInfo != null) {
                     if (iouDTO.getPawnNames() == null) {
                         iouDTO.setPawnNames(pawnInfo.getName());
-                        iouDTO.setPawnIds("" + pawnInfo.getId());
+                        iouDTO.setPawnIds(pawnInfo.getId().toString());
                     } else {
-                        iouDTO.setPawnIds("," + pawnInfo.getId());
-                        iouDTO.setPawnNames("," + pawnInfo.getName());
+                        iouDTO.setPawnIds(iouDTO.getPawnIds() == null ? "" : iouDTO.getPawnIds() + "," + pawnInfo.getId());
+                        iouDTO.setPawnNames(iouDTO.getPawnNames() == null ? "" : iouDTO.getPawnNames() + "," + pawnInfo.getName());
                     }
                 }
-            });
+            }
             return iouDTO;
         }
         return null;

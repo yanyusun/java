@@ -1,14 +1,22 @@
 package com.dqys.business.service.service.index.impl;
 
+import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
+import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
+import com.dqys.auth.orm.pojo.TCompanyInfo;
+import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.index.IndexMapper;
+import com.dqys.business.orm.pojo.index.UserMessage;
 import com.dqys.business.service.service.index.IndexService;
 import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.core.utils.AreaTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +31,12 @@ public class IndexServiceImpl implements IndexService {
 
     @Autowired
     private TUserTagMapper tUserTagMapper;
+    @Autowired
+    private TUserInfoMapper tUserInfoMapper;
+    @Autowired
+    private TCompanyInfoMapper tCompanyInfoMapper;
+    @Autowired
+    private CoordinatorMapper coordinatorMapper;
 
     @Override
     public void getStatistic(Map map, Integer userId) {
@@ -67,5 +81,24 @@ public class IndexServiceImpl implements IndexService {
         }
         map.put("finish", finish);//已完成------------
         map.put("unfinished", unfinished);//正在进行中------------
+    }
+
+    @Override
+    public void getUserDetail(Map map, Integer userId) {
+        TUserInfo info = tUserInfoMapper.selectByPrimaryKey(userId);
+        UserMessage message = indexMapper.selectByUser(userId);
+        message.setProvince(AreaTool.getAreaById(MessageUtils.transStringToInt(message.getProvince())).getLabel());
+        message.setCity(AreaTool.getAreaById(MessageUtils.transStringToInt(message.getCity())).getLabel());
+        message.setArea(AreaTool.getAreaById(MessageUtils.transStringToInt(message.getArea())).getLabel());
+        Map taskMap = coordinatorMapper.getTaskRatio(info.getCompanyId(), userId, ObjectTypeEnum.LENDER.getValue());
+        Integer finish = MessageUtils.transMapToInt(taskMap, "finish") == null ? 0 : MessageUtils.transMapToInt(taskMap, "finish");
+        Integer total = MessageUtils.transMapToInt(taskMap, "total") == null ? 0 : MessageUtils.transMapToInt(taskMap, "total");
+        if (total == 0) {
+            message.setFinishRate(0 + "%");
+        } else {
+            DecimalFormat formatDec = new DecimalFormat("0.00");
+            message.setFinishRate(formatDec.format(finish / total * 100) + "%");
+        }
+        map.put("detail", message);
     }
 }

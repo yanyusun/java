@@ -68,7 +68,9 @@ public class IouServiceImpl implements IouService {
             return JsonResponseTool.paramErr("参数错误");
         }
         IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
-        iouInfo.setIouNo(RandomUtil.getCode(RandomUtil.IOU_CODE));
+        if (iouInfo.getIouNo() == null) {
+            iouInfo.setIouNo(RandomUtil.getCode(RandomUtil.IOU_CODE));
+        }
 //        String typeStr = UserSession.getCurrent().getUserType();
 //        UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
 //        if(infoEnum != null){

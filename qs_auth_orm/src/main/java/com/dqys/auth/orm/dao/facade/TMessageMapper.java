@@ -1,7 +1,7 @@
 package com.dqys.auth.orm.dao.facade;
 
 
-
+import com.dqys.auth.orm.pojo.LoginLog;
 import com.dqys.auth.orm.pojo.Message;
 
 import java.util.List;
@@ -53,4 +53,11 @@ public interface TMessageMapper {
     Message get(Integer id);
 
     Integer updateOperStatus(Message message);
+
+    /**
+     * 添加登入日志
+     *
+     * @param log
+     */
+    void addLoginLog(LoginLog log);
 }

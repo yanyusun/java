@@ -17,7 +17,7 @@
         <result column="quota" property="quota" jdbcType="VARCHAR"/>
         <result column="acreage" property="acreage" jdbcType="DOUBLE"/>
         <result column="selling_price" property="sellingPrice" jdbcType="DOUBLE"/>
-        <result column="decade" property="decade" jdbcType="VARCHAR"/>
+        <result column="decade" property="decade" jdbcType="INTEGER"/>
         <result column="property" property="property" jdbcType="VARCHAR"/>
         <result column="orientation" property="orientation" jdbcType="VARCHAR"/>
         <result column="guide_price" property="guidePrice" jdbcType="DOUBLE"/>
@@ -52,7 +52,7 @@
     </resultMap>
     <sql id="Base_Column_List">
     id, create_at, update_at, stateflag, annotation,deck, replenish, house_s, house_t, house_c,
-    house_w, house_remark, quota, acreage, selling_price, DATE_FORMAT(decade,'%Y-%m-%d') decade, property, orientation,
+    house_w, house_remark, quota, acreage, selling_price, decade, property, orientation,
     guide_price, guide_remark, decorate_price, tenement_price, facility,
     internal_number, title, decorate_type, decorate_case, decorate_time, build_type, 
     house_belong, house_use, heating_way, metro, school_house, version,entrust_type,operator,object_id,object_type,

@@ -120,7 +120,9 @@ public class AssetServiceImpl implements AssetService {
                 assetInfo.setIsLawyer(SysProperty.BOOLEAN_TRUE);
             }
         }
-        assetInfo.setAssetNo(RandomUtil.getCode(RandomUtil.ASSET_CODE));
+        if (assetInfo.getAssetNo() == null) {
+            assetInfo.setAssetNo(RandomUtil.getCode(RandomUtil.ASSET_CODE));
+        }
         Integer addResult = assetInfoMapper.insert(assetInfo);
         if (addResult.equals(1)) {
             Integer id = assetInfo.getId();
@@ -205,7 +207,7 @@ public class AssetServiceImpl implements AssetService {
         Map<String, Object> map = new HashMap<>();
         if (!CommonUtil.checkParam(assetQuery.getIds(), assetQuery.getExceptIds())) {
             List<Integer> ids = CommonUtil.exceptList(assetQuery.getIds(), assetQuery.getExceptIds());
-            if (CommonUtil.checkParam(ids) || ids.size()==0) {
+            if (CommonUtil.checkParam(ids) || ids.size() == 0) {
                 return JsonResponseTool.successNullList();
             } else {
                 assetQuery.setIds(ids);
@@ -712,7 +714,7 @@ public class AssetServiceImpl implements AssetService {
             objectUserRelationList.forEach(objectUserRelation -> {
                 ids.add(objectUserRelation.getObjectId());
             });
-            if (CommonUtil.checkParam(ids) || ids.size()==0) {
+            if (CommonUtil.checkParam(ids) || ids.size() == 0) {
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
             } else {
                 // 这里引入业务的处置中状态
@@ -751,7 +753,9 @@ public class AssetServiceImpl implements AssetService {
         // 借款人信息
         lenderDTO.setAssetId(id);
         LenderInfo lenderInfo = LenderServiceUtils.toLenderInfo(lenderDTO);
-        lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
+        if (lenderInfo.getLenderNo() == null) {
+            lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
+        }
         lenderInfo.setOperator(userId);
         String typeStr = UserSession.getCurrent().getUserType();
         UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
@@ -798,7 +802,9 @@ public class AssetServiceImpl implements AssetService {
             for (PawnDTO pawnDTO : pawnDTOList) {
                 pawnDTO.setLenderId(lenderId);
                 PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
-                pawnInfo.setPawnNo(RandomUtil.getCode(RandomUtil.PAWN_CODE));
+                if (pawnInfo.getPawnNo() == null) {
+                    pawnInfo.setPawnNo(RandomUtil.getCode(RandomUtil.PAWN_CODE));
+                }
                 result = pawnInfoMapper.insert(pawnInfo);
                 if (CommonUtil.checkResult(result)) {
                     // 添加失败
@@ -820,7 +826,9 @@ public class AssetServiceImpl implements AssetService {
             for (IouDTO iouDTO : iouDTOList) {
                 iouDTO.setLenderId(lenderId);
                 IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
-                iouInfo.setIouNo(RandomUtil.getCode(RandomUtil.IOU_CODE));
+                if (iouInfo.getIouNo() == null) {
+                    iouInfo.setIouNo(RandomUtil.getCode(RandomUtil.IOU_CODE));
+                }
                 result = iouInfoMapper.insert(iouInfo);
                 if (CommonUtil.checkResult(result)) {
                     // 添加失败
@@ -924,7 +932,9 @@ public class AssetServiceImpl implements AssetService {
             lenderInfo.setAttribute(assetInfo.getAttribute()); // 借款人公私有继承自资产包
             lenderInfo.setEntrustName(assetInfo.getEntrustName()); // 借款人委托方继承自资产包
             lenderInfo.setOperator(userId);
-            lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
+            if (lenderInfo.getLenderNo() == null) {
+                lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
+            }
             lenderInfo.setOperator(userId);
             String typeStr = UserSession.getCurrent().getUserType();
             UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
@@ -970,7 +980,9 @@ public class AssetServiceImpl implements AssetService {
             }
             pawnDTO.setLenderId(idMap.get(pawnDTO.getId()));
             PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
-            pawnInfo.setPawnNo(RandomUtil.getCode(RandomUtil.PAWN_CODE));
+            if (pawnInfo.getPawnNo() == null) {
+                pawnInfo.setPawnNo(RandomUtil.getCode(RandomUtil.PAWN_CODE));
+            }
 //            String typeStr = UserSession.getCurrent().getUserType();
 //            UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
 //            if (infoEnum != null) {
@@ -1000,7 +1012,9 @@ public class AssetServiceImpl implements AssetService {
             }
             iouDTO.setLenderId(idMap.get(iouDTO.getId()));
             IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
-            iouInfo.setIouNo(RandomUtil.getCode(RandomUtil.IOU_CODE));
+            if (iouInfo.getIouNo() == null) {
+                iouInfo.setIouNo(RandomUtil.getCode(RandomUtil.IOU_CODE));
+            }
 //            String typeStr = UserSession.getCurrent().getUserType();
 //            UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
 //            if (infoEnum != null) {

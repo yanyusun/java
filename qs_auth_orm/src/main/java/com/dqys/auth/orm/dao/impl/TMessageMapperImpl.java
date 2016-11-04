@@ -1,6 +1,7 @@
 package com.dqys.auth.orm.dao.impl;
 
 import com.dqys.auth.orm.dao.facade.TMessageMapper;
+import com.dqys.auth.orm.pojo.LoginLog;
 import com.dqys.auth.orm.pojo.Message;
 import com.dqys.core.base.BaseDao;
 import org.springframework.stereotype.Repository;
@@ -47,6 +48,11 @@ public class TMessageMapperImpl extends BaseDao implements TMessageMapper {
     @Override
     public Integer updateOperStatus(Message message) {
         return super.getSqlSession().getMapper(TMessageMapper.class).updateOperStatus(message);
+    }
+
+    @Override
+    public void addLoginLog(LoginLog log) {
+        super.getSqlSession().getMapper(TMessageMapper.class).addLoginLog(log);
     }
 
 }

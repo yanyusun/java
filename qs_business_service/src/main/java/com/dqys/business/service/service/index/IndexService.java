@@ -11,6 +11,13 @@ public interface IndexService {
      *
      * @param userId
      */
-    void getStatistic(Map map,Integer userId);
+    void getStatistic(Map map, Integer userId);
 
+    /**
+     * 获取用户个人信息
+     *
+     * @param map
+     * @param userId
+     */
+    void getUserDetail(Map map, Integer userId);
 }

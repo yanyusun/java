@@ -21,7 +21,7 @@ public class CaseServiceUtils {
             return null;
         }
         CaseInfo caseInfo = new CaseInfo();
-
+        caseInfo.setCaseNo(caseDTO.getCaseNo());
         caseInfo.setId(caseDTO.getId());
         caseInfo.setPid(caseDTO.getpId());
         caseInfo.setName(caseDTO.getCaseName());

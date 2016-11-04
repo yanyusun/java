@@ -1,5 +1,6 @@
 package com.dqys.business.orm.mapper.index;
 
+import com.dqys.business.orm.pojo.index.UserMessage;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Map;
@@ -46,4 +47,12 @@ public interface IndexMapper {
     Map getPawnAllotByOCIsUnfinished(@Param("objectType") Integer objectType, @Param("userId") Integer userId);
 
     Map getPawnTotalTask(@Param("objectType") Integer objectType, @Param("userId") Integer userId);
+
+    /**
+     * 获取用户的相关信息
+     *
+     * @param userId
+     * @return
+     */
+    UserMessage selectByUser(Integer userId);
 }
