@@ -61,4 +61,9 @@ public class NavUnviewCompanyMapperImpl extends BaseDao implements NavUnviewComp
     public List<Map> findNavNameByNavId(@Param("navIds") List<Integer> navIds, @Param("object") Integer object, @Param("objectId") Integer objectId) {
         return super.getSqlSession().getMapper(NavUnviewCompanyMapper.class).findNavNameByNavId(navIds, object, objectId);
     }
+
+    @Override
+    public List<Map> selectCompanyByUserType(List<Integer> userTypes) {
+        return super.getSqlSession().getMapper(NavUnviewCompanyMapper.class).selectCompanyByUserType(userTypes);
+    }
 }

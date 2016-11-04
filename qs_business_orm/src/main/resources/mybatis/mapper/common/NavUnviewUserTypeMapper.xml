@@ -138,7 +138,7 @@
     </delete>
 
     <insert id="insertSelectiveByUserType">
-        <foreach collection="list" item="unviewList.userType" index="index">
+        <foreach collection="unviewList" item="userType" index="index">
             INSERT INTO t_nav_unview_usertype(nav_id,user_type,object_type,object_id)
             VALUES(#{navId},#{userType},#{object},#{objectId})
         </foreach>
@@ -159,7 +159,7 @@
         </if>
         AND nuu.nav_id IN
         <if test="navIds !=null and navIds.size>0">
-            <foreach collection="list" index="index" item="navIds.id" open="(" close=")" separator=",">
+            <foreach collection="navIds" index="index" item="id" open="(" close=")" separator=",">
                 #{id}
             </foreach>
         </if>

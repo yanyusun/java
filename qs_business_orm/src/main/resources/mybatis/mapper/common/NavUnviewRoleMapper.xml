@@ -83,7 +83,7 @@
     </delete>
 
     <insert id="insertSelectiveByRoleType">
-        <foreach collection="list" item="unviewList.roleType" index="index">
+        <foreach collection="unviewList" item="roleType" index="index">
             INSERT INTO t_nav_unview_role(nav_id,role_type,object_type,object_id) VALUES(#{navId},#{roleType},#{object},#{objectId})
         </foreach>
     </insert>
@@ -100,7 +100,7 @@
         </if>
         AND nur.nav_id IN
         <if test="navIds !=null and navIds.size>0">
-            <foreach collection="list" index="index" item="navIds.id" open="(" close=")" separator=",">
+            <foreach collection="navIds" index="index" item="id" open="(" close=")" separator=",">
                 #{id}
             </foreach>
         </if>

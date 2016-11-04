@@ -6,6 +6,7 @@ import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.dto.sourceAuth.UnviewReIdMap;
 import com.dqys.business.service.service.common.*;
 import com.dqys.business.service.utils.common.NavUnviewServerAgent;
+import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.RoleTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 资料实勘权限管理者
@@ -29,6 +31,11 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
     private NavUnviewRoleService navUnviewRoleService;
     @Autowired
     private NavUnviewUserInfoService navUnviewUserInfoService;
+    @Autowired
+    private NavUnviewCompanyMapper navUnviewCompanyMapper;
+    @Autowired
+    private NavUnviewUserInfoMapper navUnviewUserInfoMapper;
+
     /**
      * 所有可以选择的用户类型
      */
@@ -84,7 +91,8 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         selectDtoMap.setRoleList(roleAgent.getSelectOptions(navId, object, objectId));
         //用户列表
         List<SelectDto> userInfoInitList = getUserInitList(
-                roleAgent.getSelectedDtoList(navId, object, objectId),companyAgent.getSelectedDtoList(navId, object, objectId));
+                roleAgent.getSelectedDtoList(navId, object, objectId), companyAgent.getSelectedDtoList(navId, object, objectId)
+                , object, objectId);
         NavUnviewServerAgent userInfoAgent = new NavUnviewServerAgent(navUnviewUserInfoService, userInfoInitList);
         if (unviewReIdMap.getUserList() != null && unviewReIdMap.getUserList().size() == 0) {
             userInfoAgent.reset(navId, object, objectId, unviewReIdMap.getUserList());
@@ -132,18 +140,30 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
 
     /**
      * 根据用户类型list查找对应的所有公司
+     *
      * @param selectUserTypeList
      * @return
      */
-    private List<SelectDto> getCompanyInitList(List<SelectDto> selectUserTypeList){
-        // TODO: 16-11-3 mkf 
-
-        return null;
+    private List<SelectDto> getCompanyInitList(List<SelectDto> selectUserTypeList) {
+        // TODO: 16-11-3 mkf
+        List<Integer> userTypes = null;//用户类型
+        List<SelectDto> dtos = new ArrayList<>();
+        for (SelectDto dto : selectUserTypeList) {
+            if (!userTypes.contains(dto.getReId())) {
+                userTypes.add(dto.getReId());
+            }
+        }
+        List<Map> list = navUnviewCompanyMapper.selectCompanyByUserType(userTypes);//查询对应类型的所有公司
+        for (Map m : list) {
+            SelectDto dto = new SelectDto(null, MessageUtils.transMapToInt(m, "reId"), MessageUtils.transMapToString(m, "showName"));
+            dtos.add(dto);
+        }
+        return dtos;
     }
 
     public List<SelectDto> getRoleInitList() {
-        if(roleInitList==null){
-            roleInitList=new ArrayList<>();
+        if (roleInitList == null) {
+            roleInitList = new ArrayList<>();
             //管理员
             SelectDto adminSelectDto = new SelectDto();
             adminSelectDto.setReId(RoleTypeEnum.ADMIN.getValue());
@@ -170,13 +190,40 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
 
     /**
      * 得到对应公司的对应角色的所有用户
-     * @param selectRoleList 用户角色list
+     *
+     * @param selectRoleList    用户角色list
      * @param selectCompanyList 公司list
+     * @param objectType        对象类型:借款人,资料源
+     * @param objectId          对象id
      * @return
      */
-    public List<SelectDto> getUserInitList(List<SelectDto> selectRoleList,List<SelectDto> selectCompanyList){
+    public List<SelectDto> getUserInitList(List<SelectDto> selectRoleList, List<SelectDto> selectCompanyList, Integer objectType, Integer objectId) {
         //// TODO: 16-11-3 mkf
-       return null;
+        List<Integer> roles = null;//角色
+        List<Integer> companyIds = null;//公司
+        List<SelectDto> dtos = new ArrayList<>();
+        for (SelectDto dto : selectRoleList) {
+            if (!roles.contains(dto.getReId())) {
+                roles.add(dto.getReId());
+            }
+        }
+        for (SelectDto dto : selectCompanyList) {
+            if (!companyIds.contains(dto.getReId())) {
+                companyIds.add(dto.getReId());
+            }
+        }
+        Map their = null;
+        if (roles.contains(RoleTypeEnum.THEIR.getValue())) {
+            their.put("objectId", objectId);
+            their.put("objectType", objectType);
+        }
+        List<Map> list = navUnviewUserInfoMapper.selectUserInfoByRoleAndCompanyId(roles, companyIds, their);//根据角色和公司获取相应用户信息，角色中存在所属人就去查询协作器
+        for (Map m : list) {
+            SelectDto dto = new SelectDto(null, MessageUtils.transMapToInt(m, "reId"), MessageUtils.transMapToString(m, "showName"));
+            dtos.add(dto);
+        }
+        // TODO: 16-11-4 mkf 查询对象的所属人,建议所属人单独查询,如果需要先查询到分配器,那就再协作器service增加 list<协作器>f(objectType,objectId的方法)
+        return dtos;
     }
 
 }
