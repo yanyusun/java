@@ -10,7 +10,6 @@ import com.dqys.business.service.service.common.*;
 import com.dqys.business.service.utils.common.NavUnviewServerAgent;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.RoleTypeEnum;
-import com.dqys.core.utils.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -96,7 +95,8 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         selectDtoMap.setRoleList(roleAgent.getSelectOptions(navId, object, objectId));
         //用户列表
         List<SelectDto> userInfoInitList = getUserInitList(
-                roleAgent.getSelectedDtoList(navId, object, objectId), companyAgent.getSelectedDtoList(navId, object, objectId));
+                roleAgent.getSelectedDtoList(navId, object, objectId), companyAgent.getSelectedDtoList(navId, object, objectId)
+                    ,object,objectId);
         NavUnviewServerAgent userInfoAgent = new NavUnviewServerAgent(navUnviewUserInfoService, userInfoInitList);
         if (unviewReIdMap.getUserList() != null && unviewReIdMap.getUserList().size() == 0) {
             userInfoAgent.reset(navId, object, objectId, unviewReIdMap.getUserList());
@@ -197,9 +197,11 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
      *
      * @param selectRoleList    用户角色list
      * @param selectCompanyList 公司list
+     * @param objectType    对象类型:借款人,资料源
+     * @param ObjectId 对象id
      * @return
      */
-    public List<SelectDto> getUserInitList(List<SelectDto> selectRoleList, List<SelectDto> selectCompanyList) {
+    public List<SelectDto> getUserInitList(List<SelectDto> selectRoleList, List<SelectDto> selectCompanyList,Integer objectType,Integer ObjectId) {
         //// TODO: 16-11-3 mkf
         List<Integer> roles = null;//角色
         List<Integer> companyIds = null;//公司
@@ -219,6 +221,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
             SelectDto dto = new SelectDto(null, MessageUtils.transMapToInt(m, "reId"), MessageUtils.transMapToString(m, "showName"));
             dtos.add(dto);
         }
+        // TODO: 16-11-4 mkf 查询对象的所属人,建议所属人单独查询,如果需要先查询到分配器,那就再协作器service增加 list<协作器>f(objectType,objectId的方法)
         return dtos;
     }
 
