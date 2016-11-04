@@ -1,6 +1,7 @@
 package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.common.SourceNavigation;
+import com.dqys.business.service.dto.common.NavUnviewDTO;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.service.common.SourceService;
@@ -118,12 +119,12 @@ public class SourceController extends BaseApiContorller {
     /**
      * 获取资料实勘最新权限
      *
-     * @param sourceInfoDTO
+     * @param dto 没有被勾选的对象
      * @return
      */
     @RequestMapping(value = "/getNewNavAll", method = RequestMethod.POST)
-    public JsonResponse getNewNavAll(@ModelAttribute SourceInfoDTO sourceInfoDTO) {
-        SelectDtoMap selectDtoMap = sourceService.getNewNavALL(sourceInfoDTO);
+    public JsonResponse getNewNavAll(@ModelAttribute NavUnviewDTO dto) {
+        SelectDtoMap selectDtoMap = sourceService.getNewNavALL(dto);
         if (selectDtoMap==null) {
             JsonResponseTool.failure("最新实勘权限获取异常");
         }
