@@ -13,6 +13,8 @@ import com.dqys.core.constant.NavUnviewEnum;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.NoSQLWithRedisTool;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,8 @@ import java.util.concurrent.TimeUnit;
  * Created by yan on 16-10-28.
  */
 //// TODO: 16-10-28  mkf
+@Repository
+@Primary
 public class NavUnviewUserInfoServiceImpl implements NavUnviewRoleService {
     @Autowired
     private NavUnviewUserInfoMapper navUnviewUserInfoMapper;
