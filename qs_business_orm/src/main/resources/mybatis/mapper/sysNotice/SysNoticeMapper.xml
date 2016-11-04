@@ -12,6 +12,7 @@
     <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
     <result column="version" property="version" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="introduce" property="introduce" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, title, content, type, picName, create_at, update_at, stateflag, version, user_id
@@ -34,7 +35,7 @@
     values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
       #{type,jdbcType=INTEGER}, #{picname,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, 
       #{updateAt,jdbcType=TIMESTAMP}, #{stateflag,jdbcType=BIGINT}, #{version,jdbcType=INTEGER}, 
-      #{userId,jdbcType=INTEGER})
+      #{userId,jdbcType=INTEGER},#{introduce,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.sysNotice.SysNotice" >
     insert into t_sys_notice
@@ -128,6 +129,9 @@
       </if>
       <if test="userId != null" >
         user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="introduce != null" >
+        introduce = #{introduce,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
