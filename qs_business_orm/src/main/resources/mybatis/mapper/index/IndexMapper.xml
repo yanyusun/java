@@ -53,7 +53,7 @@
         tci.province,tci.city,tci.area,tci.address,DATE_FORMAT(tll.time,'%Y-%m-%d %H:%i:%s') lastTime
         from t_user_info tui LEFT JOIN t_user_tag tut
         ON tut.user_id=tui.id LEFT JOIN t_company_info tci
-        ON tci.id=tui.company_id LEFT JOIN (SELECT * from t_login_log log WHERE log.user_id=#{userId} ORDER BY log.time desc LIMIT 0,1) tll
+        ON tci.id=tui.company_id LEFT JOIN (SELECT * from t_login_log log WHERE log.user_id=#{userId} ORDER BY log.time desc LIMIT 1,1) tll
         ON tll.user_id=tui.id
         WHERE tui.id=#{userId}
     </select>
