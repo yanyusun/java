@@ -581,39 +581,39 @@ public class ZcyServiceImpl implements ZcyService {
         if (CommonUtil.checkParam(zcyEstates)) {
             return getMap(map, "信息不可为空");
         }
-        if (zcyEstates.getAnnotation() != null && zcyEstates.getAnnotation().getBytes().length > 200) {
+        if (zcyEstates.getAnnotation() != null && zcyEstates.getAnnotation().length() > 200) {
             msg = setMsg(msg, "注释");
             return getMap(map, msg);
         }
-        if (zcyEstates.getReplenish() != null && zcyEstates.getReplenish().getBytes().length > 20) {
+        if (zcyEstates.getReplenish() != null && zcyEstates.getReplenish().length() > 20) {
             msg = setMsg(msg, "补充");
             return getMap(map, msg);
         }
-        if (zcyEstates.getHouseS() != null && zcyEstates.getHouseS().getBytes().length > 5) {
+        if (zcyEstates.getHouseS() != null && zcyEstates.getHouseS().length() > 5) {
             msg = setMsg(msg, "户型（室）");
             return getMap(map, msg);
         }
-        if (zcyEstates.getHouseT() != null && zcyEstates.getHouseT().getBytes().length > 5) {
+        if (zcyEstates.getHouseT() != null && zcyEstates.getHouseT().length() > 5) {
             msg = setMsg(msg, "户型（厅）");
             return getMap(map, msg);
         }
-        if (zcyEstates.getHouseC() != null && zcyEstates.getHouseC().getBytes().length > 5) {
+        if (zcyEstates.getHouseC() != null && zcyEstates.getHouseC().length() > 5) {
             msg = setMsg(msg, "户型（厨）");
             return getMap(map, msg);
         }
-        if (zcyEstates.getHouseW() != null && zcyEstates.getHouseW().getBytes().length > 5) {
+        if (zcyEstates.getHouseW() != null && zcyEstates.getHouseW().length() > 5) {
             msg = setMsg(msg, "户型（卫）");
             return getMap(map, msg);
         }
-        if (zcyEstates.getHouseRemark() != null && zcyEstates.getHouseRemark().getBytes().length > 255) {
+        if (zcyEstates.getHouseRemark() != null && zcyEstates.getHouseRemark().length() > 255) {
             msg = setMsg(msg, "户型备注");
             return getMap(map, msg);
         }
-        if (zcyEstates.getDeck() != null && zcyEstates.getDeck().getBytes().length > 10) {
+        if (zcyEstates.getDeck() != null && zcyEstates.getDeck().length() > 10) {
             msg = setMsg(msg, "层面");
             return getMap(map, msg);
         }
-        if (zcyEstates.getQuota() != null && zcyEstates.getQuota().getBytes().length > 5) {
+        if (zcyEstates.getQuota() != null && zcyEstates.getQuota().length() > 5) {
             msg = setMsg(msg, "限购");
             return getMap(map, msg);
         }
@@ -629,11 +629,11 @@ public class ZcyServiceImpl implements ZcyService {
             msg = setMsg(msg, "年代");
             return getMap(map, msg);
         }
-        if (zcyEstates.getProperty() != null && zcyEstates.getProperty().getBytes().length > 50) {
+        if (zcyEstates.getProperty() != null && zcyEstates.getProperty().length() > 50) {
             msg = setMsg(msg, "产权");
             return getMap(map, msg);
         }
-        if (zcyEstates.getOrientation() != null && zcyEstates.getOrientation().getBytes().length > 50) {
+        if (zcyEstates.getOrientation() != null && zcyEstates.getOrientation().length() > 50) {
             msg = setMsg(msg, "朝向");
             return getMap(map, msg);
         }
@@ -641,11 +641,11 @@ public class ZcyServiceImpl implements ZcyService {
             msg = setMsg(msg, "过户指导价");
             return getMap(map, msg);
         }
-        if (zcyEstates.getGuideRemark() != null && zcyEstates.getGuideRemark().getBytes().length > 255) {
+        if (zcyEstates.getGuideRemark() != null && zcyEstates.getGuideRemark().length() > 255) {
             msg = setMsg(msg, "过户指导价备注");
             return getMap(map, msg);
         }
-        if (zcyEstates.getEntrustType() != null && zcyEstates.getEntrustType().getBytes().length > 255) {
+        if (zcyEstates.getEntrustType() != null && zcyEstates.getEntrustType().length() > 255) {
             msg = setMsg(msg, "委托类型");
             return getMap(map, msg);
         }
@@ -657,51 +657,51 @@ public class ZcyServiceImpl implements ZcyService {
             msg = setMsg(msg, "物业费");
             return getMap(map, msg);
         }
-        if (zcyEstates.getFacility() != null && zcyEstates.getFacility().getBytes().length > 255) {
+        if (zcyEstates.getFacility() != null && zcyEstates.getFacility().length() > 255) {
             msg = setMsg(msg, "嫌恶设施");
             return getMap(map, msg);
         }
-        if (zcyEstates.getInternalNumber() != null && zcyEstates.getInternalNumber().getBytes().length > 100) {
+        if (zcyEstates.getInternalNumber() != null && zcyEstates.getInternalNumber().length() > 100) {
             msg = setMsg(msg, "内部编号");
             return getMap(map, msg);
         }
-        if (zcyEstates.getTitle() != null && zcyEstates.getTitle().getBytes().length > 255) {
+        if (zcyEstates.getTitle() != null && zcyEstates.getTitle().length() > 255) {
             msg = setMsg(msg, "标题");
             return getMap(map, msg);
         }
-        if (zcyEstates.getDecorateType() != null && zcyEstates.getDecorateType().getBytes().length > 50) {
+        if (zcyEstates.getDecorateType() != null && zcyEstates.getDecorateType().length() > 50) {
             msg = setMsg(msg, "装修类型");
             return getMap(map, msg);
         }
-        if (zcyEstates.getDecorateCase() != null && zcyEstates.getDecorateCase().getBytes().length > 100) {
+        if (zcyEstates.getDecorateCase() != null && zcyEstates.getDecorateCase().length() > 100) {
             msg = setMsg(msg, "装修情况");
             return getMap(map, msg);
         }
-        if (zcyEstates.getDecorateTime() != null && zcyEstates.getDecorateTime().getBytes().length > 50) {
+        if (zcyEstates.getDecorateTime() != null && zcyEstates.getDecorateTime().length() > 50) {
             msg = setMsg(msg, "装修时间");
             return getMap(map, msg);
         }
-        if (zcyEstates.getBuildType() != null && zcyEstates.getBuildType().getBytes().length > 50) {
+        if (zcyEstates.getBuildType() != null && zcyEstates.getBuildType().length() > 50) {
             msg = setMsg(msg, "建筑类型");
             return getMap(map, msg);
         }
-        if (zcyEstates.getHouseBelong() != null && zcyEstates.getHouseBelong().getBytes().length > 50) {
+        if (zcyEstates.getHouseBelong() != null && zcyEstates.getHouseBelong().length() > 50) {
             msg = setMsg(msg, "房屋权属");
             return getMap(map, msg);
         }
-        if (zcyEstates.getHouseUse() != null && zcyEstates.getHouseUse().getBytes().length > 50) {
+        if (zcyEstates.getHouseUse() != null && zcyEstates.getHouseUse().length() > 50) {
             msg = setMsg(msg, "房屋用途");
             return getMap(map, msg);
         }
-        if (zcyEstates.getHeatingWay() != null && zcyEstates.getHeatingWay().getBytes().length > 50) {
+        if (zcyEstates.getHeatingWay() != null && zcyEstates.getHeatingWay().length() > 50) {
             msg = setMsg(msg, "供暖方式");
             return getMap(map, msg);
         }
-        if (zcyEstates.getMetro() != null && zcyEstates.getMetro().getBytes().length > 50) {
+        if (zcyEstates.getMetro() != null && zcyEstates.getMetro().length() > 50) {
             msg = setMsg(msg, "距地铁");
             return getMap(map, msg);
         }
-        if (zcyEstates.getSchoolHouse() != null && zcyEstates.getSchoolHouse().getBytes().length > 50) {
+        if (zcyEstates.getSchoolHouse() != null && zcyEstates.getSchoolHouse().length() > 50) {
             msg = setMsg(msg, "学区房");
             return getMap(map, msg);
         }
@@ -720,39 +720,39 @@ public class ZcyServiceImpl implements ZcyService {
         if (CommonUtil.checkParam(zcyOwner)) {
             return getMap(map, "信息不可为空");
         }
-        if (zcyOwner.getSellPrice() != null && !"".equals(zcyOwner.getSellPrice()) && (!FormatValidateTool.isDecimals(zcyOwner.getSellPrice(), null) || zcyOwner.getSellPrice().toString().getBytes().length > 10)) {
+        if (zcyOwner.getSellPrice() != null && !"".equals(zcyOwner.getSellPrice()) && (!FormatValidateTool.isDecimals(zcyOwner.getSellPrice(), null) || zcyOwner.getSellPrice().toString().length() > 10)) {
             msg = setMsg(msg, "出售价格");
             return getMap(map, msg);
         }
-        if (zcyOwner.getOwnerPrice() != null && !"".equals(zcyOwner.getOwnerPrice()) && (!FormatValidateTool.isDecimals(zcyOwner.getOwnerPrice(), null) || zcyOwner.getOwnerPrice().toString().getBytes().length > 10)) {
+        if (zcyOwner.getOwnerPrice() != null && !"".equals(zcyOwner.getOwnerPrice()) && (!FormatValidateTool.isDecimals(zcyOwner.getOwnerPrice(), null) || zcyOwner.getOwnerPrice().toString().length() > 10)) {
             msg = setMsg(msg, "业主净得价");
             return getMap(map, msg);
         }
-        if (zcyOwner.getAnnotationName() != null && zcyOwner.getAnnotationName().getBytes().length > 255) {
+        if (zcyOwner.getAnnotationName() != null && zcyOwner.getAnnotationName().length() > 255) {
             msg = setMsg(msg, "注释名称");
             return getMap(map, msg);
         }
-        if (zcyOwner.getAnnotationContent() != null && zcyOwner.getAnnotationContent().getBytes().length > 255) {
+        if (zcyOwner.getAnnotationContent() != null && zcyOwner.getAnnotationContent().length() > 255) {
             msg = setMsg(msg, "注释内容");
             return getMap(map, msg);
         }
-        if (zcyOwner.getOwnerNumber() != null && zcyOwner.getOwnerNumber().getBytes().length > 100) {
+        if (zcyOwner.getOwnerNumber() != null && zcyOwner.getOwnerNumber().length() > 100) {
             msg = setMsg(msg, "业主编号");
             return getMap(map, msg);
         }
-        if (zcyOwner.getEntrustSource() != null && zcyOwner.getEntrustSource().getBytes().length > 10) {
+        if (zcyOwner.getEntrustSource() != null && zcyOwner.getEntrustSource().length() > 10) {
             msg = setMsg(msg, "委托来源");
             return getMap(map, msg);
         }
-        if (zcyOwner.getEntrustDetail() != null && zcyOwner.getEntrustDetail().getBytes().length > 10) {
+        if (zcyOwner.getEntrustDetail() != null && zcyOwner.getEntrustDetail().length() > 10) {
             msg = setMsg(msg, "详细来源");
             return getMap(map, msg);
         }
-        if (zcyOwner.getOwnerMariage() != null && zcyOwner.getOwnerMariage().getBytes().length > 5) {
+        if (zcyOwner.getOwnerMariage() != null && zcyOwner.getOwnerMariage().length() > 5) {
             msg = setMsg(msg, "业主婚姻");
             return getMap(map, msg);
         }
-        if (zcyOwner.getSpecialHouse() != null && zcyOwner.getSpecialHouse().getBytes().length > 5) {
+        if (zcyOwner.getSpecialHouse() != null && zcyOwner.getSpecialHouse().length() > 5) {
             msg = setMsg(msg, "特殊房源");
             return getMap(map, msg);
         }
@@ -771,151 +771,151 @@ public class ZcyServiceImpl implements ZcyService {
         if (CommonUtil.checkParam(zcyMaintain)) {
             return getMap(map, "信息不可为空");
         }
-        if (zcyMaintain.getOriginalPrice() != null && !"".equals(zcyMaintain.getOriginalPrice()) && (!FormatValidateTool.isDecimals(zcyMaintain.getOriginalPrice(), null) || zcyMaintain.getOriginalPrice().toString().getBytes().length > 10)) {
+        if (zcyMaintain.getOriginalPrice() != null && !"".equals(zcyMaintain.getOriginalPrice()) && (!FormatValidateTool.isDecimals(zcyMaintain.getOriginalPrice(), null) || zcyMaintain.getOriginalPrice().toString().length() > 10)) {
             msg = setMsg(msg, "原购房价格");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getMarketPrice() != null && !"".equals(zcyMaintain.getMarketPrice()) && (!FormatValidateTool.isDecimals(zcyMaintain.getMarketPrice(), null) || zcyMaintain.getMarketPrice().toString().getBytes().length > 10)) {
+        if (zcyMaintain.getMarketPrice() != null && !"".equals(zcyMaintain.getMarketPrice()) && (!FormatValidateTool.isDecimals(zcyMaintain.getMarketPrice(), null) || zcyMaintain.getMarketPrice().toString().length() > 10)) {
             msg = setMsg(msg, "市场评估价");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getAgencyPrice() != null && !"".equals(zcyMaintain.getAgencyPrice()) && (!FormatValidateTool.isDecimals(zcyMaintain.getAgencyPrice(), null) || zcyMaintain.getAgencyPrice().toString().getBytes().length > 10)) {
+        if (zcyMaintain.getAgencyPrice() != null && !"".equals(zcyMaintain.getAgencyPrice()) && (!FormatValidateTool.isDecimals(zcyMaintain.getAgencyPrice(), null) || zcyMaintain.getAgencyPrice().toString().length() > 10)) {
             msg = setMsg(msg, "代理价格");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getProfitPrice() != null && !"".equals(zcyMaintain.getProfitPrice()) && (!FormatValidateTool.isDecimals(zcyMaintain.getProfitPrice(), null) || zcyMaintain.getProfitPrice().toString().getBytes().length > 10)) {
+        if (zcyMaintain.getProfitPrice() != null && !"".equals(zcyMaintain.getProfitPrice()) && (!FormatValidateTool.isDecimals(zcyMaintain.getProfitPrice(), null) || zcyMaintain.getProfitPrice().toString().length() > 10)) {
             msg = setMsg(msg, "建议设置利润价");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getRemodelingsPrice() != null && !"".equals(zcyMaintain.getRemodelingsPrice()) && (!FormatValidateTool.isDecimals(zcyMaintain.getRemodelingsPrice(), null) || zcyMaintain.getRemodelingsPrice().toString().getBytes().length > 10)) {
+        if (zcyMaintain.getRemodelingsPrice() != null && !"".equals(zcyMaintain.getRemodelingsPrice()) && (!FormatValidateTool.isDecimals(zcyMaintain.getRemodelingsPrice(), null) || zcyMaintain.getRemodelingsPrice().toString().length() > 10)) {
             msg = setMsg(msg, "装修费用");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getLoanAmount() != null && !"".equals(zcyMaintain.getLoanAmount()) && (!FormatValidateTool.isDecimals(zcyMaintain.getLoanAmount(), null) || zcyMaintain.getLoanAmount().toString().getBytes().length > 10)) {
+        if (zcyMaintain.getLoanAmount() != null && !"".equals(zcyMaintain.getLoanAmount()) && (!FormatValidateTool.isDecimals(zcyMaintain.getLoanAmount(), null) || zcyMaintain.getLoanAmount().toString().length() > 10)) {
             msg = setMsg(msg, "贷款金额");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getAdvantage() != null && zcyMaintain.getAdvantage().getBytes().length > 255) {
+        if (zcyMaintain.getAdvantage() != null && zcyMaintain.getAdvantage().length() > 255) {
             msg = setMsg(msg, "优劣势");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getAdaptability() != null && zcyMaintain.getAdaptability().getBytes().length > 255) {
+        if (zcyMaintain.getAdaptability() != null && zcyMaintain.getAdaptability().length() > 255) {
             msg = setMsg(msg, "配合度");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getProposition() != null && zcyMaintain.getProposition().getBytes().length > 255) {
+        if (zcyMaintain.getProposition() != null && zcyMaintain.getProposition().length() > 255) {
             msg = setMsg(msg, "销售建议");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getBonusPacks() != null && zcyMaintain.getBonusPacks().getBytes().length > 255) {
+        if (zcyMaintain.getBonusPacks() != null && zcyMaintain.getBonusPacks().length() > 255) {
             msg = setMsg(msg, "附加赠送");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getOwnerClaim() != null && zcyMaintain.getOwnerClaim().getBytes().length > 255) {
+        if (zcyMaintain.getOwnerClaim() != null && zcyMaintain.getOwnerClaim().length() > 255) {
             msg = setMsg(msg, "业主要求");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getWarn() != null && zcyMaintain.getWarn().getBytes().length > 255) {
+        if (zcyMaintain.getWarn() != null && zcyMaintain.getWarn().length() > 255) {
             msg = setMsg(msg, "特别提醒");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getReplenish() != null && zcyMaintain.getReplenish().getBytes().length > 255) {
+        if (zcyMaintain.getReplenish() != null && zcyMaintain.getReplenish().length() > 255) {
             msg = setMsg(msg, "补充");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getFulls() != null && zcyMaintain.getFulls().getBytes().length > 2) {
+        if (zcyMaintain.getFulls() != null && zcyMaintain.getFulls().length() > 2) {
             msg = setMsg(msg, "满几年");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getSole() != null && zcyMaintain.getSole().getBytes().length > 2) {
+        if (zcyMaintain.getSole() != null && zcyMaintain.getSole().length() > 2) {
             msg = setMsg(msg, "唯一");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getAccount() != null && zcyMaintain.getAccount().getBytes().length > 5) {
+        if (zcyMaintain.getAccount() != null && zcyMaintain.getAccount().length() > 5) {
             msg = setMsg(msg, "户口状况");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getOwned() != null && zcyMaintain.getOwned().getBytes().length > 5) {
+        if (zcyMaintain.getOwned() != null && zcyMaintain.getOwned().length() > 5) {
             msg = setMsg(msg, "是否共有");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getHouseCase() != null && zcyMaintain.getHouseCase().getBytes().length > 5) {
-            msg = setMsg(msg, "房屋状况");
-            return getMap(map, msg);
-        }
-        if (zcyMaintain.getDecorateCase() != null && zcyMaintain.getDecorateCase().getBytes().length > 2) {
+//        if (zcyMaintain.getHouseCase() != null && zcyMaintain.getHouseCase().length() > 5) {
+//            msg = setMsg(msg, "房屋状况");
+//            return getMap(map, msg);
+//        }
+        if (zcyMaintain.getDecorateCase() != null && zcyMaintain.getDecorateCase().length() > 2) {
             msg = setMsg(msg, "装修状况");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getDecorateType() != null && zcyMaintain.getDecorateType().getBytes().length > 2) {
+        if (zcyMaintain.getDecorateType() != null && zcyMaintain.getDecorateType().length() > 2) {
             msg = setMsg(msg, "装修类型");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getDecorateTime() != null && zcyMaintain.getDecorateTime().getBytes().length > 20) {
+        if (zcyMaintain.getDecorateTime() != null && zcyMaintain.getDecorateTime().length() > 20) {
             msg = setMsg(msg, "装修时间");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getSchoolHouseNumber() != null && zcyMaintain.getSchoolHouseNumber().getBytes().length > 10) {
+        if (zcyMaintain.getSchoolHouseNumber() != null && zcyMaintain.getSchoolHouseNumber().length() > 10) {
             msg = setMsg(msg, "学区房名额");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getKeyes() != null && zcyMaintain.getKeyes().getBytes().length > 2) {
+        if (zcyMaintain.getKeyes() != null && zcyMaintain.getKeyes().length() > 2) {
             msg = setMsg(msg, "是否能留钥匙");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getLookHouseTime() != null && zcyMaintain.getLookHouseTime().getBytes().length > 20) {
+        if (zcyMaintain.getLookHouseTime() != null && zcyMaintain.getLookHouseTime().length() > 20) {
             msg = setMsg(msg, "看房时间");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getCertificateComplete() != null && zcyMaintain.getCertificateComplete().getBytes().length > 2) {
+        if (zcyMaintain.getCertificateComplete() != null && zcyMaintain.getCertificateComplete().length() > 2) {
             msg = setMsg(msg, "两证是否齐全");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getEquityNum() != null && zcyMaintain.getEquityNum().getBytes().length > 20) {
+        if (zcyMaintain.getEquityNum() != null && zcyMaintain.getEquityNum().length() > 20) {
             msg = setMsg(msg, "产权共有人数");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getSign() != null && zcyMaintain.getSign().getBytes().length > 2) {
+        if (zcyMaintain.getSign() != null && zcyMaintain.getSign().length() > 2) {
             msg = setMsg(msg, "签约当日能否到场");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getLoan() != null && zcyMaintain.getLoan().getBytes().length > 2) {
+        if (zcyMaintain.getLoan() != null && zcyMaintain.getLoan().length() > 2) {
             msg = setMsg(msg, "是否有贷款");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getLoanPrice() != null && !"".equals(zcyMaintain.getLoanPrice()) && (!FormatValidateTool.isDecimals(zcyMaintain.getLoanPrice(), null) || zcyMaintain.getLoanPrice().getBytes().length > 10)) {
+        if (zcyMaintain.getLoanPrice() != null && !"".equals(zcyMaintain.getLoanPrice()) && (!FormatValidateTool.isDecimals(zcyMaintain.getLoanPrice(), null) || zcyMaintain.getLoanPrice().length() > 10)) {
             msg = setMsg(msg, "贷款金额");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getInHouse() != null && zcyMaintain.getInHouse().getBytes().length > 2) {
+        if (zcyMaintain.getInHouse() != null && zcyMaintain.getInHouse().length() > 2) {
             msg = setMsg(msg, "户口是否在本房屋内");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getGive() != null && zcyMaintain.getGive().getBytes().length > 2) {
+        if (zcyMaintain.getGive() != null && zcyMaintain.getGive().length() > 2) {
             msg = setMsg(msg, "家具家电是否赠送");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getCarport() != null && zcyMaintain.getCarport().getBytes().length > 255) {
+        if (zcyMaintain.getCarport() != null && zcyMaintain.getCarport().length() > 255) {
             msg = setMsg(msg, "是否有车位");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getHouseOccupy() != null && zcyMaintain.getHouseOccupy().getBytes().length > 2) {
+        if (zcyMaintain.getHouseOccupy() != null && zcyMaintain.getHouseOccupy().length() > 2) {
             msg = setMsg(msg, "学区房是否被占用");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getOccupyTime() != null && zcyMaintain.getOccupyTime().getBytes().length > 2) {
+        if (zcyMaintain.getOccupyTime() != null && zcyMaintain.getOccupyTime().length() > 2) {
             msg = setMsg(msg, "已占用多久");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getExpectTime() != null && zcyMaintain.getExpectTime().getBytes().length > 20) {
+        if (zcyMaintain.getExpectTime() != null && zcyMaintain.getExpectTime().length() > 20) {
             msg = setMsg(msg, "预期售房时间");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getFullFive() != null && zcyMaintain.getFullFive().getBytes().length > 2) {
+        if (zcyMaintain.getFullFive() != null && zcyMaintain.getFullFive().length() > 2) {
             msg = setMsg(msg, "是否满五唯一");
             return getMap(map, msg);
         }
-        if (zcyMaintain.getPayWay() != null && zcyMaintain.getPayWay().getBytes().length > 10) {
+        if (zcyMaintain.getPayWay() != null && zcyMaintain.getPayWay().length() > 10) {
             msg = setMsg(msg, "付款方式有何要求");
             return getMap(map, msg);
         }
@@ -934,27 +934,27 @@ public class ZcyServiceImpl implements ZcyService {
         if (CommonUtil.checkParam(zcyKey)) {
             return getMap(map, "信息不可为空");
         }
-        if (zcyKey.getProtocolNo() != null && zcyKey.getProtocolNo().getBytes().length > 20) {
+        if (zcyKey.getProtocolNo() != null && zcyKey.getProtocolNo().length() > 20) {
             msg = setMsg(msg, "协议编号");
             return getMap(map, msg);
         }
-        if (zcyKey.getEntrustProtocolTime() != null && zcyKey.getEntrustProtocolTime().getBytes().length > 20) {
+        if (zcyKey.getEntrustProtocolTime() != null && zcyKey.getEntrustProtocolTime().length() > 20) {
             msg = setMsg(msg, "委托协议时间");
             return getMap(map, msg);
         }
-        if (zcyKey.getEntrustAbortTime() != null && zcyKey.getEntrustAbortTime().getBytes().length > 20) {
+        if (zcyKey.getEntrustAbortTime() != null && zcyKey.getEntrustAbortTime().length() > 20) {
             msg = setMsg(msg, "委托截止时间");
             return getMap(map, msg);
         }
-        if (zcyKey.getKeyNum() != null && zcyKey.getKeyNum().getBytes().length > 255) {
+        if (zcyKey.getKeyNum() != null && zcyKey.getKeyNum().length() > 255) {
             msg = setMsg(msg, "钥匙套数");
             return getMap(map, msg);
         }
-        if (zcyKey.getKeyPlace() != null && zcyKey.getKeyPlace().getBytes().length > 100) {
+        if (zcyKey.getKeyPlace() != null && zcyKey.getKeyPlace().length() > 100) {
             msg = setMsg(msg, "钥匙存放位置");
             return getMap(map, msg);
         }
-        if (zcyKey.getKeyFollow() != null && zcyKey.getKeyFollow().getBytes().length > 255) {
+        if (zcyKey.getKeyFollow() != null && zcyKey.getKeyFollow().length() > 255) {
             msg = setMsg(msg, "钥匙跟进");
             return getMap(map, msg);
         }
@@ -973,31 +973,31 @@ public class ZcyServiceImpl implements ZcyService {
         if (CommonUtil.checkParam(zcyExpress)) {
             return getMap(map, "信息不可为空");
         }
-        if (zcyExpress.getProtocolNo().getBytes().length > 20) {
+        if (zcyExpress.getProtocolNo().length() > 20) {
             msg = setMsg(msg, "协议编号");
         }
-        if (!FormatValidateTool.isDecimals(zcyExpress.getExpressPrice(), null) || zcyExpress.getExpressPrice().getBytes().length > 10) {
+        if (!FormatValidateTool.isDecimals(zcyExpress.getExpressPrice(), null) || zcyExpress.getExpressPrice().length() > 10) {
             msg = setMsg(msg, "速卖价格");
         }
-        if (zcyExpress.getEntrustAbortTime().getBytes().length > 20) {
+        if (zcyExpress.getEntrustAbortTime().length() > 20) {
             msg = setMsg(msg, "速卖委托截止时间");
         }
-        if (zcyExpress.getEntrustProtocolTime().getBytes().length > 20) {
+        if (zcyExpress.getEntrustProtocolTime().length() > 20) {
             msg = setMsg(msg, "速卖委托协议时间");
         }
-        if (!FormatValidateTool.isDecimals(zcyExpress.getEntrustDeposit(), null) || zcyExpress.getEntrustDeposit().getBytes().length > 10) {
+        if (!FormatValidateTool.isDecimals(zcyExpress.getEntrustDeposit(), null) || zcyExpress.getEntrustDeposit().length() > 10) {
             msg = setMsg(msg, "委托保证金");
         }
-        if (zcyExpress.getExpressPeople().getBytes().length > 20) {
+        if (zcyExpress.getExpressPeople().length() > 20) {
             msg = setMsg(msg, "速 卖 人");
         }
-        if (zcyExpress.getTeam().getBytes().length > 10) {
+        if (zcyExpress.getTeam().length() > 10) {
             msg = setMsg(msg, "所属团队");
         }
-        if (zcyExpress.getExpressFollow().getBytes().length > 255) {
+        if (zcyExpress.getExpressFollow().length() > 255) {
             msg = setMsg(msg, "速卖跟进");
         }
-        if (zcyExpress.getImgUrl().getBytes().length > 50) {
+        if (zcyExpress.getImgUrl().length() > 50) {
             msg = setMsg(msg, "协议扫描件");
         }
         if (!"".equals(msg)) {
