@@ -2,6 +2,7 @@ package com.dqys.auth.orm.dao.impl;
 
 import com.dqys.auth.orm.base.BaseTest;
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -13,8 +14,8 @@ public class TCompanyInfoMapperImplTest extends BaseTest {
     @Autowired
     private TCompanyInfoMapper tCompanyInfoMapper;
 
-//    @Test
-//    public void test() throws Exception {
+    @Test
+    public void test() throws Exception {
 //        TCompanyInfo tCompanyInfo = new TCompanyInfo();
 //        tCompanyInfo.setAddress("详细地址");
 //        tCompanyInfo.setArea(11);
@@ -50,5 +51,5 @@ public class TCompanyInfoMapperImplTest extends BaseTest {
 //        Assert.assertNotNull(companyDetailInfo);
 //        CompanyDetailInfo companyDetailInfo1 = tCompanyInfoMapper.getDetailByUserId(296);
 //        Assert.assertNotNull(companyDetailInfo1);
-//    }
+    }
 }
