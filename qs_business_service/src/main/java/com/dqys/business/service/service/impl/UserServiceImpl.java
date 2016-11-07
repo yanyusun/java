@@ -332,10 +332,23 @@ public class UserServiceImpl implements UserService {
         if (checkData != null) {
             return JsonResponseTool.paramErr(checkData);
         }
+        if (data.getAvg() != null && !data.getAvg().equals("")) {
+            try {
+                if (!FileTool.saveFileSync(data.getAvg())) {
+                    throw new UnexpectedRollbackException("保存附件失败");
+                }
+            } catch (IOException e) {
+                throw new UnexpectedRollbackException("保存附件异常");
+            }
+        }
         // 校验邮箱是否存在
         List<TUserInfo> isExist = tUserInfoMapper.verifyUser(null, null, data.getEmail());
         if (isExist != null && isExist.size() > 0) {
             return JsonResponseTool.failure("邮箱已存在");
+        }
+        List<TUserInfo> isExist2 = tUserInfoMapper.verifyUser(data.getAccount(), null, null);
+        if (isExist2 != null && isExist2.size() > 0) {
+            return JsonResponseTool.failure("帐号已存在");
         }
         TCompanyInfo companyInfo = getCompanyByUserId(UserSession.getCurrent().getUserId());
         if (companyInfo == null) {
@@ -399,7 +412,19 @@ public class UserServiceImpl implements UserService {
         if (tUserTag == null) {
             return JsonResponseTool.failure("修改失败");
         }
-
+        // 校验邮箱和帐号是否存在
+        List<TUserInfo> isExist = tUserInfoMapper.verifyUser(null, null, userInsertDTO.getEmail());
+        if (isExist != null && isExist.size() > 0) {
+            if (isExist.get(0).getId().intValue() != tUserTag.getUserId()) {
+                return JsonResponseTool.failure("邮箱已存在");
+            }
+        }
+        List<TUserInfo> isExist2 = tUserInfoMapper.verifyUser(userInsertDTO.getAccount(), null, null);
+        if (isExist2 != null && isExist2.size() > 0) {
+            if (isExist2.get(0).getId().intValue() != tUserTag.getUserId()) {
+                return JsonResponseTool.failure("帐号已存在");
+            }
+        }
         boolean flag = false;
 
         TUserInfo userInfo = UserServiceUtils.toTUserInfo(userInsertDTO);
@@ -569,6 +594,7 @@ public class UserServiceImpl implements UserService {
      * @param tUserInfo
      * @return
      */
+
     private UserListDTO _get(TUserInfo tUserInfo) {
         TCompanyInfo tCompanyInfo = null;
         TUserTag userTag = null;
