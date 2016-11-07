@@ -2,6 +2,7 @@ package com.dqys.business.service.utils.common;
 
 import com.dqys.business.orm.mapper.common.SourceNavigationMapper;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
+import com.dqys.business.service.constant.SourceInfoEnum;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
 import com.dqys.business.service.service.common.NavUnviewCompanyService;
 import com.dqys.business.service.service.common.NavUnviewRoleService;
@@ -14,8 +15,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
 /**
  * 导航栏工具
@@ -23,6 +26,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class NavUtil implements ApplicationContextAware {
     private static final String COMMON_SOURCE_NAV_KEY = "common_source_nav_";//公共资源实勘分类
+    private static final String COMMON_SOURCE_NAV_LIST_TYPE = "nav_list_type";//资料实勘列表类型
+    private static final String COMMON_SOURCE_NAV_LIST_TYPE_MAP = "nav_list_type_map";//资料实勘根据type分类的map
+    private static final String COMMON_SOURCE_NAV_TYPE_UNVIEW_MAP = "nav_type_unview_map";//资料实勘对应导航对应权限的不可见内容map
     private static RedisTemplate<String, Object> redisTemplate;
     private static SourceNavigationMapper sourceNavigationMapper;
     private static NavUnviewRoleService navUnviewRoleService;
@@ -30,6 +36,8 @@ public class NavUtil implements ApplicationContextAware {
     private static NavUnviewUserInfoService navUnviewUserInfoService;
     private static NavUnviewUserTypeService navUnviewUserTypeService;
     private static int isCustom = 1;//是否是用户自定义导航栏,0是,1不是
+    private static int CERTIFICATE_TYPE = SourceInfoEnum.CERTIFICATE_TYPE.getValue();//合同类型
+    private static int ENTITY_TYPE = SourceInfoEnum.ENTITY_TYPE.getValue();//资料实勘类型
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -47,16 +55,31 @@ public class NavUtil implements ApplicationContextAware {
      */
     public static void loadCommonNav() {
         List<SourceNavigation> list = sourceNavigationMapper.ListByIsCustom(isCustom);
-       /* for(SourceNavigation navigation:list){
-            redisTemplate.boundHashOps(NavUtil.COMMON_SOURCE_NAV_KEY+SourceNavigation.class.getName())
-                    .put(NavUtil.COMMON_SOURCE_NAV_KEY+navigation.getType()+"_"+navigation.getName(), navigation);
-        }*/
+        List<SourceNavigation> certificateList = new LinkedList<>();
+        List<SourceNavigation> entityTypeLsit = new LinkedList<>();
+        Map<String, List<SourceNavigation>> commomNavMap = new HashMap<>();
+        Map<String ,List<SelectDto>> selectDtoListMap = new HashMap<>();
+        for (SourceNavigation navigation : list) {
+            if (navigation.getType() == CERTIFICATE_TYPE) {//添加分类导航
+                certificateList.add(navigation);
+                setNavIdSelectDto(selectDtoListMap,navigation.getId());
+            } else if (navigation.getType() == ENTITY_TYPE) {//添加实勘分类导航
+                entityTypeLsit.add(navigation);
+                setNavIdSelectDto(selectDtoListMap,navigation.getId());
+            }
+        }
+        commomNavMap.put(COMMON_SOURCE_NAV_LIST_TYPE + "_" + CERTIFICATE_TYPE, certificateList);
+        commomNavMap.put(COMMON_SOURCE_NAV_LIST_TYPE + "_" + ENTITY_TYPE, entityTypeLsit);
+        // 载公共资源分类 Map<String type,List<SourceNavigation> navigationList>　ｔｙｐｅ与bt_source_nav的ｔｙｐｅ一致
+        redisTemplate.boundHashOps(NavUtil.COMMON_SOURCE_NAV_KEY + SourceNavigation.class.getName())
+                .put(COMMON_SOURCE_NAV_LIST_TYPE_MAP, commomNavMap);
+        //  16-10-31  加载Map<String navId_type,List<SelectDto>>  其中type为公司类型，公司，角色，人员；
+        redisTemplate.boundHashOps(NavUtil.COMMON_SOURCE_NAV_KEY + SourceNavigation.class.getName())
+                .put(COMMON_SOURCE_NAV_TYPE_UNVIEW_MAP, selectDtoListMap);
     }
 
-    // TODO: 16-10-31　加载公共资源分类 Map<String type,List<SourceNavigation> navigationList>　ｔｙｐｅ与bt_source_nav的ｔｙｐｅ一致
 
 
-    // TODO: 16-10-31  加载Map<String navId_type,List<SelectDto>>  其中type为公司类型，公司，角色，人员；公司类型关系表参考角色表自己建
 
     /**
      * 得到其中一个公共资源分类
@@ -64,67 +87,56 @@ public class NavUtil implements ApplicationContextAware {
      * @param navType 资源类型
      * @return
      */
-    public static SourceNavigation getCommonSourceNavigation(Integer navType) {
-        SourceNavigation sourceNavigation = NoSQLWithRedisTool.getHashObject(NavUtil.COMMON_SOURCE_NAV_KEY + SourceNavigation.class.getName()
-                , NavUtil.COMMON_SOURCE_NAV_KEY + navType);
-        return sourceNavigation;
-    }
-
-    // TODO: 16-11-1  根据ｔｙｐｅ获取公共资源分类，实勘1|证件合同0(默认)|2根进'
-    public static List<SourceNavigation> getSourceNavigationList(Integer type, Integer objectType, Integer objectId) {
-        List<SourceNavigation> list = null;
-        list = NoSQLWithRedisTool.getValueObject(type.toString());
-        if (list == null) {
-            list = sourceNavigationMapper.listByTypeAndLenderId(0, null, type);
-            for (SourceNavigation sour : list) {
-                if (sour != null) {
-                    navUnviewCompanyService.getList(sour.getId(), objectType, objectId);
-                    navUnviewRoleService.getList(sour.getId(), objectType, objectId);
-                    navUnviewUserInfoService.getList(sour.getId(), objectType, objectId);
-                    navUnviewUserTypeService.getList(sour.getId(), objectType, objectId);
-                }
-            }
-            NoSQLWithRedisTool.setValueObject(type.toString(), list, 31L, TimeUnit.DAYS);
+    public static  List<SourceNavigation> getCommonSourceNavigation(Integer navType) {
+        Map<String, List<SourceNavigation>> commomNavMap = NoSQLWithRedisTool.getHashObject(NavUtil.COMMON_SOURCE_NAV_KEY + SourceNavigation.class.getName()
+                , COMMON_SOURCE_NAV_LIST_TYPE_MAP);
+        if(commomNavMap!=null){
+            return commomNavMap.get(COMMON_SOURCE_NAV_LIST_TYPE+"_"+navType);
+        }else{
+            loadCommonNav();
+            return sourceNavigationMapper.listByTypeAndLenderId(0, null, navType);
         }
-        return list;
     }
-
 
 
     // TODO: 16-11-1 根据 navId_type获取List<SelectDto>(对应的NavUnviewEnum枚举),查询operUser为ｏ的记录，ｏ公共默认
-    public static List<SelectDto> getSelectDtoList(String navId_type, Integer objectType, Integer objectId) {
-        List<SelectDto> dtos = NoSQLWithRedisTool.getValueObject(navId_type);
-        if (dtos == null) {
-            String[] str = navId_type.split("_");
-            if (str.length == 2) {
-                String type = str[1];
-                if (type.equals(NavUnviewEnum.COMPANY.getValue().toString())) {
-                    dtos = navUnviewCompanyService.getList(Integer.parseInt(str[0]), objectType, objectId);
-                } else if (type.equals(NavUnviewEnum.USER_INFO.getValue().toString())) {
-                    dtos = navUnviewUserInfoService.getList(Integer.parseInt(str[0]), objectType, objectId);
-                } else if (type.equals(NavUnviewEnum.ROLE.getValue().toString())) {
-                    dtos = navUnviewRoleService.getList(Integer.parseInt(str[0]), objectType, objectId);
-                } else if (type.equals(NavUnviewEnum.USER_TYPE.getValue().toString())) {
-                    dtos = navUnviewUserTypeService.getList(Integer.parseInt(str[0]), objectType, objectId);
-                }
-            }
-        }
-        return dtos;
+    public static List<SelectDto> getSelectDtoList(int navId,int type) {
+        Map<String ,List<SelectDto>> selectDtoListMap = NoSQLWithRedisTool.getHashObject(NavUtil.COMMON_SOURCE_NAV_KEY + SourceNavigation.class.getName(),COMMON_SOURCE_NAV_TYPE_UNVIEW_MAP);
+        return selectDtoListMap.get(getNavIdTypeKey(navId,type));
+    }
+
+    private static String getNavIdTypeKey(int navId,int type){
+        return navId+"_"+type;
     }
 
     /**
-     * 过滤掉对当前用户不可见的资料实勘目录
-     * @param list 公共分类
-     * @param userSession
+     * 设置某一个navId的
+     * @param selectDtoListMap
+     * @param navId
      */
-//    public void commonSourceNavigationFilter(List<SourceNavigation>  list, UserSession userSession){
-//        Iterator<SourceNavigation> iter = list.iterator();
-//        while (iter.hasNext()) {
-//            String company_cahce_key = iter.next().getId()+"_"
-//
-//        }
-//    }
+    private static void setNavIdSelectDto(Map<String ,List<SelectDto>> selectDtoListMap,Integer navId){
+        selectDtoListMap.put(getNavIdTypeKey(navId,NavUnviewEnum.USER_TYPE.getValue())
+                ,navUnviewUserTypeService.getInit(navId));
+        selectDtoListMap.put(getNavIdTypeKey(navId,NavUnviewEnum.COMPANY.getValue())
+                ,navUnviewCompanyService.getInit(navId));
+        selectDtoListMap.put(getNavIdTypeKey(navId,NavUnviewEnum.ROLE.getValue())
+                ,navUnviewRoleService.getInit(navId));
+        selectDtoListMap.put(getNavIdTypeKey(navId,NavUnviewEnum.USER_INFO.getValue())
+                ,navUnviewUserInfoService.getInit(navId));
+    }
+    /**
+     * 加入处reId外的值
+     *
+     * @param selectDtos
+     * @return
+     */
+    public static List<Integer> selectDtosToIntegers(List<SelectDto> selectDtos) {
+        List<Integer> integers = new LinkedList<>();
+        for (SelectDto selectDto : selectDtos) {
+            integers.add(selectDto.getReId());
 
-
+        }
+        return integers;
+    }
 
 }

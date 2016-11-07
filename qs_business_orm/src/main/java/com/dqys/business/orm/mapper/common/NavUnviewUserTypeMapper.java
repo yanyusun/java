@@ -1,6 +1,7 @@
 package com.dqys.business.orm.mapper.common;
 
 import com.dqys.business.orm.pojo.common.NavUnviewUserType;
+import com.dqys.business.orm.query.common.NavUnviewUserTypeQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -24,4 +25,6 @@ public interface NavUnviewUserTypeMapper {
     Integer insertSelectiveByUserType(@Param("navId") Integer navId, @Param("unviewList") List<Integer> unviewList, @Param("object") Integer object, @Param("objectId") Integer objectId);
 
     List<Map> findNavNameByNavId(@Param("navIds") List<Integer> navIds, @Param("object") Integer object, @Param("objectId") Integer objectId);
+
+    int queryCount(NavUnviewUserTypeQuery query);
 }

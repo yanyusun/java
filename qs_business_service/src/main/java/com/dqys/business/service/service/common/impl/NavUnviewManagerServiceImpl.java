@@ -72,11 +72,11 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
      */
     private SelectDtoMap getAll(Integer navId, Integer object, Integer objectId, UnviewReIdMap unviewReIdMap) {
         SelectDtoMap selectDtoMap = new SelectDtoMap();
-        //角色列表
+        //用户类型列表
         List<SelectDto> userTypeInitList = getUserTypeInitList();
         NavUnviewServerAgent userTypeAgent = new NavUnviewServerAgent(navUnviewUserTypeService, userTypeInitList);
         if (unviewReIdMap!=null&&unviewReIdMap.getUserType() != null) {//判断是否要更新
-            userTypeAgent.reset(navId, object, objectId, unviewReIdMap.getUserType());
+            userTypeAgent.initCacheReset(navId, object, objectId, unviewReIdMap.getUserType());
         }
         selectDtoMap.setUserTypeList(userTypeAgent.getSelectOptions(navId, object, objectId));
         //公司列表

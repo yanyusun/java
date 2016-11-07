@@ -10,6 +10,7 @@ import java.util.List;
  */
 public interface NavUnviewService {
 
+
     /**
      *得到所有父级不可见的项
      * @param navId 资料实勘分类id
@@ -69,5 +70,17 @@ public interface NavUnviewService {
      */
     void add(Integer navId,Integer object,Integer objectId,Integer reId);
 
+    /**
+     * 是否自定义过不可选的项
+     * @param navId
+     * @param object
+     * @param objectId
+     * @return
+     */
+    boolean hasDiy(Integer navId,Integer object,Integer objectId);
+
+    List<SelectDto> getInit(Integer navId);
+
+    int getType();
 
 }
