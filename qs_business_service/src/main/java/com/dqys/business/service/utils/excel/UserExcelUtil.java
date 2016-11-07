@@ -28,7 +28,7 @@ public class UserExcelUtil {
      *
      * @return
      */
-    public static Map<String, Object> upLoadUserExcel(String fileName, TUserInfoMapper tUserInfoMapper) {
+    public static Map<String, Object> upLoadUserExcel(String fileName, TUserInfoMapper tUserInfoMapper, Integer accountVerifyStatus) {
         Map<String, Object> map = new HashMap<String, Object>();
         String name[] = fileName.split("_");
         if (name.length != 3) {
@@ -45,7 +45,7 @@ public class UserExcelUtil {
             List<Map<String, Object>> list = ExcelTool.readExcelForList(path, fileName, 1, 0, 0);//借款人
             //判断文件的字段格式
             List<ExcelMessage> error = new ArrayList<ExcelMessage>();//错误信息
-            if (!checkUserExcel(list, error, tUserInfoMapper)) {
+            if (!checkUserExcel(list, error, tUserInfoMapper, accountVerifyStatus)) {
                 //文件的写出成表格文件
                 map.put("result", "error");
                 map.put("data", error);
@@ -107,14 +107,14 @@ public class UserExcelUtil {
      * @param error
      * @return
      */
-    private static boolean checkUserExcel(List<Map<String, Object>> list, List<ExcelMessage> error, TUserInfoMapper tUserInfoMapper) {
+    private static boolean checkUserExcel(List<Map<String, Object>> list, List<ExcelMessage> error, TUserInfoMapper tUserInfoMapper, Integer accountVerifyStatus) {
         String[] str = {"序号", "*姓名", "*昵称", "*性别", "*自定义账号", "*微信号", "QQ号", "办公电话", "*手机号", "*工作邮箱", "*部门", "*职位名称",
                 "*职责名称", "职责描述", "*职责区域", "*系统角色", "从业年限(年）", "入职时间", "历史业绩（总数量）", "备注"};
         ExcelUtilAsset.templateFormat(str, list.get(0), "用户", "字段名称不匹配", error);
         boolean flag = true;
         if (error != null && error.size() < 1) {
             //判断每个表格的数据类型
-            checkUser(error, list, tUserInfoMapper);
+            checkUser(error, list, tUserInfoMapper, accountVerifyStatus);
             if (error.size() > 0) {
                 flag = false;
             }
@@ -124,10 +124,11 @@ public class UserExcelUtil {
         return flag;
     }
 
-    private static void checkUser(List<ExcelMessage> error, List<Map<String, Object>> list, TUserInfoMapper tUserInfoMapper) {
+    private static void checkUser(List<ExcelMessage> error, List<Map<String, Object>> list, TUserInfoMapper tUserInfoMapper, Integer accountVerifyStatus) {
         String name = "用户信息表";
         Map<String, Object> map = list.get(0);
-        List<String> emailList = new ArrayList<>();
+        List<String> emailList = new ArrayList<>();//邮箱集合
+        List<String> accountList = new ArrayList<>();//自定义帐号集合
         for (int i = 1; i < list.size(); i++) {
             Map<String, Object> l = list.get(i);
             if (ExcelUtilAsset.transStringToInteger(ExcelUtilAsset.transMapToString(l, "var0")) == null) {
@@ -147,6 +148,19 @@ public class UserExcelUtil {
             }
             if (ExcelUtilAsset.transMapToString(l, "var4").equals("")) {//*自定义账号
                 ExcelUtilAsset.placeByExcel(error, name, i, 4, ExcelUtilAsset.transMapToString(map, "var4"), "不能为空");
+            } else {
+                //判断excel表里的自定义帐号是否 重复
+                if (accountList.contains(ExcelUtilAsset.transMapToString(l, "var4"))) {
+                    ExcelUtilAsset.placeByExcel(error, name, i, 4, ExcelUtilAsset.transMapToString(map, "var9"), "表内自定义帐号重复");
+                } else {
+                    accountList.add(ExcelUtilAsset.transMapToString(l, "var4"));//
+                    if (accountVerifyStatus == null || accountVerifyStatus != 1) {
+                        //判断库里的自定义帐号是否重复
+                        if (verifyUser(tUserInfoMapper, ExcelUtilAsset.transMapToString(l, "var4"), null, null)) {
+                            ExcelUtilAsset.placeByExcel(error, name, i, 4, ExcelUtilAsset.transMapToString(map, "var4"), "该自定义帐号已注册");
+                        }
+                    }
+                }
             }
             if (ExcelUtilAsset.transMapToString(l, "var5").equals("")) {//*微信号
                 ExcelUtilAsset.placeByExcel(error, name, i, 5, ExcelUtilAsset.transMapToString(map, "var5"), "不能为空");
@@ -168,9 +182,11 @@ public class UserExcelUtil {
                     ExcelUtilAsset.placeByExcel(error, name, i, 9, ExcelUtilAsset.transMapToString(map, "var9"), "表内邮箱重复");
                 } else {
                     emailList.add(ExcelUtilAsset.transMapToString(l, "var9"));//
-                    //判断库里的邮箱是否重复
-                    if (verifyUser(tUserInfoMapper, null, null, ExcelUtilAsset.transMapToString(l, "var9"))) {
-                        ExcelUtilAsset.placeByExcel(error, name, i, 9, ExcelUtilAsset.transMapToString(map, "var9"), "该邮箱已注册");
+                    if (accountVerifyStatus == null || accountVerifyStatus != 1) {
+                        //判断库里的邮箱是否重复
+                        if (verifyUser(tUserInfoMapper, null, null, ExcelUtilAsset.transMapToString(l, "var9"))) {
+                            ExcelUtilAsset.placeByExcel(error, name, i, 9, ExcelUtilAsset.transMapToString(map, "var9"), "该邮箱已注册");
+                        }
                     }
                 }
             }

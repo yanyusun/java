@@ -100,9 +100,11 @@ public interface UserService {
      * excel导入用户数据
      *
      * @param file
+     * @param sendSmsStatus 值为1表示发送短信通知
+     * @param accountStatus 值为1表示不验证库里的帐号唯一性
      * @return
      */
-    JsonResponse excelImport_tx(String file) throws Exception;
+    JsonResponse excelImport_tx(String file, Integer sendSmsStatus, Integer accountStatus) throws Exception;
 
     /**
      * 根据当前用户查出公司
