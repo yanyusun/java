@@ -2,10 +2,6 @@ package com.dqys.auth.orm.dao.impl;
 
 import com.dqys.auth.orm.base.BaseTest;
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
-import com.dqys.auth.orm.pojo.CompanyDetailInfo;
-import com.dqys.auth.orm.pojo.TCompanyInfo;
-import org.junit.Assert;
-import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -17,42 +13,42 @@ public class TCompanyInfoMapperImplTest extends BaseTest {
     @Autowired
     private TCompanyInfoMapper tCompanyInfoMapper;
 
-    @Test
-    public void test() throws Exception {
-        TCompanyInfo tCompanyInfo = new TCompanyInfo();
-        tCompanyInfo.setAddress("详细地址");
-        tCompanyInfo.setArea(11);
-        tCompanyInfo.setCity(1102);
-        tCompanyInfo.setProvince(110228);
-        tCompanyInfo.setCompanyName("测试公司名");
-        tCompanyInfo.setCredential("统一组织代码");
-        tCompanyInfo.setIsAuth(1);
-        tCompanyInfo.setLegalPerson("法人扫描件地址");
-        tCompanyInfo.setLicence("营业执照扫描件地址");
-        int count = tCompanyInfoMapper.insertSelective(tCompanyInfo);
-        Assert.assertEquals(1, count);
-
-        TCompanyInfo tCompanyInfoSel = tCompanyInfoMapper.selectByPrimaryKey(tCompanyInfo.getId());
-        Assert.assertNotNull(tCompanyInfoSel);
-
-        tCompanyInfoSel.setAddress(tCompanyInfoSel.getAddress() + 1);
-        tCompanyInfoSel.setArea(tCompanyInfoSel.getArea() + 1);
-        tCompanyInfoSel.setCity(tCompanyInfoSel.getCity() + 1);
-        tCompanyInfoSel.setProvince(tCompanyInfoSel.getProvince() + 1);
-        tCompanyInfoSel.setCompanyName(tCompanyInfoSel.getCompanyName() + 1);
-        tCompanyInfoSel.setCredential(tCompanyInfoSel.getCredential() + 1);
-        tCompanyInfoSel.setIsAuth(0);
-        tCompanyInfoSel.setLegalPerson(tCompanyInfoSel.getLegalPerson() + 1);
-        tCompanyInfoSel.setLicence(tCompanyInfoSel.getLicence() + 1);
-        count = tCompanyInfoMapper.updateByPrimaryKeySelective(tCompanyInfoSel);
-        Assert.assertNotNull(count);
-
-        count = tCompanyInfoMapper.deleteByPrimaryKey(tCompanyInfoSel.getId());
-        Assert.assertNotNull(count);
-
-        CompanyDetailInfo companyDetailInfo = tCompanyInfoMapper.getDetailByCompanyId(423);
-        Assert.assertNotNull(companyDetailInfo);
-        CompanyDetailInfo companyDetailInfo1 = tCompanyInfoMapper.getDetailByUserId(296);
-        Assert.assertNotNull(companyDetailInfo1);
-    }
+//    @Test
+//    public void test() throws Exception {
+//        TCompanyInfo tCompanyInfo = new TCompanyInfo();
+//        tCompanyInfo.setAddress("详细地址");
+//        tCompanyInfo.setArea(11);
+//        tCompanyInfo.setCity(1102);
+//        tCompanyInfo.setProvince(110228);
+//        tCompanyInfo.setCompanyName("测试公司名");
+//        tCompanyInfo.setCredential("统一组织代码");
+//        tCompanyInfo.setIsAuth(1);
+//        tCompanyInfo.setLegalPerson("法人扫描件地址");
+//        tCompanyInfo.setLicence("营业执照扫描件地址");
+//        int count = tCompanyInfoMapper.insertSelective(tCompanyInfo);
+//        Assert.assertEquals(1, count);
+//
+//        TCompanyInfo tCompanyInfoSel = tCompanyInfoMapper.selectByPrimaryKey(tCompanyInfo.getId());
+//        Assert.assertNotNull(tCompanyInfoSel);
+//
+//        tCompanyInfoSel.setAddress(tCompanyInfoSel.getAddress() + 1);
+//        tCompanyInfoSel.setArea(tCompanyInfoSel.getArea() + 1);
+//        tCompanyInfoSel.setCity(tCompanyInfoSel.getCity() + 1);
+//        tCompanyInfoSel.setProvince(tCompanyInfoSel.getProvince() + 1);
+//        tCompanyInfoSel.setCompanyName(tCompanyInfoSel.getCompanyName() + 1);
+//        tCompanyInfoSel.setCredential(tCompanyInfoSel.getCredential() + 1);
+//        tCompanyInfoSel.setIsAuth(0);
+//        tCompanyInfoSel.setLegalPerson(tCompanyInfoSel.getLegalPerson() + 1);
+//        tCompanyInfoSel.setLicence(tCompanyInfoSel.getLicence() + 1);
+//        count = tCompanyInfoMapper.updateByPrimaryKeySelective(tCompanyInfoSel);
+//        Assert.assertNotNull(count);
+//
+//        count = tCompanyInfoMapper.deleteByPrimaryKey(tCompanyInfoSel.getId());
+//        Assert.assertNotNull(count);
+//
+//        CompanyDetailInfo companyDetailInfo = tCompanyInfoMapper.getDetailByCompanyId(423);
+//        Assert.assertNotNull(companyDetailInfo);
+//        CompanyDetailInfo companyDetailInfo1 = tCompanyInfoMapper.getDetailByUserId(296);
+//        Assert.assertNotNull(companyDetailInfo1);
+//    }
 }
