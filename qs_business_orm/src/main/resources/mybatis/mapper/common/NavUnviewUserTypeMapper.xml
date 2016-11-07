@@ -180,4 +180,29 @@
         </if>
     </select>
 
+    <select id="queryCount" parameterType="com.dqys.business.orm.query.common.NavUnviewUserTypeQuery"  resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM t_nav_unview_usertype where 1=1
+        <include refid="query_condition" />
+    </select>
+
+    <sql id="query_condition">
+        <if test="navId != null" >
+            AND nav_id = #{navId,jdbcType=INTEGER}
+        </if>
+        <if test="userType != null" >
+            AND user_type = #{userType,jdbcType=INTEGER}
+        </if>
+        <if test="objectId != null" >
+            AND object_id = #{objectId,jdbcType=INTEGER}
+        </if>
+        <if test="object != null" >
+            AND object_type = #{object,jdbcType=INTEGER}
+        </if>
+    </sql>
+
+
+
+
+
+
 </mapper>

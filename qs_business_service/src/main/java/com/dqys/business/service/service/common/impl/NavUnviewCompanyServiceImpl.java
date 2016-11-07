@@ -9,7 +9,6 @@ import com.dqys.business.service.service.common.NavUnviewCompanyService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.NavUnviewEnum;
 import com.dqys.core.model.UserSession;
-import com.dqys.core.utils.NoSQLWithRedisTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by yan on 16-10-28.
@@ -58,8 +56,8 @@ public class NavUnviewCompanyServiceImpl implements NavUnviewCompanyService {
         List<Integer> navIds = new ArrayList<>();
         navIds.add(navId);
         setSelectDtoList(dtos, navIds, object, objectId);
-        NoSQLWithRedisTool.removeValueObject(navId + "_" + NavUnviewEnum.COMPANY);
-        NoSQLWithRedisTool.setValueObject(navId + "_" + NavUnviewEnum.COMPANY, dtos, 31L, TimeUnit.DAYS);
+//        NoSQLWithRedisTool.removeValueObject(navId + "_" + NavUnviewEnum.COMPANY);
+//        NoSQLWithRedisTool.setValueObject(navId + "_" + NavUnviewEnum.COMPANY, dtos, 31L, TimeUnit.DAYS);
         return dtos;
     }
 
@@ -113,5 +111,20 @@ public class NavUnviewCompanyServiceImpl implements NavUnviewCompanyService {
         nav.setObject(object);
         nav.setObjectId(objectId);
         navUnviewCompanyMapper.insertSelective(nav);
+    }
+
+    @Override
+    public boolean hasDiy(Integer navId, Integer object, Integer objectId) {
+        return true;
+    }
+
+    @Override
+    public List<SelectDto> getInit(Integer navId) {
+        return null;
+    }
+
+    @Override
+    public int getType() {
+        return NavUnviewEnum.COMPANY.getValue();
     }
 }

@@ -12,7 +12,6 @@ import com.dqys.business.service.service.common.NavUnviewUserInfoService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.NavUnviewEnum;
 import com.dqys.core.model.UserSession;
-import com.dqys.core.utils.NoSQLWithRedisTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -20,7 +19,6 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by yan on 16-10-28.
@@ -64,8 +62,8 @@ public class NavUnviewUserInfoServiceImpl implements NavUnviewUserInfoService {
         List<Integer> navIds = new ArrayList<>();
         navIds.add(navId);
         setSelectDtoList(dtos, navIds, object, objectId);
-        NoSQLWithRedisTool.removeValueObject(navId + "_" + NavUnviewEnum.USER_INFO);
-        NoSQLWithRedisTool.setValueObject(navId + "_" + NavUnviewEnum.USER_INFO, dtos, 31L, TimeUnit.DAYS);
+//        NoSQLWithRedisTool.removeValueObject(navId + "_" + NavUnviewEnum.USER_INFO);
+//        NoSQLWithRedisTool.setValueObject(navId + "_" + NavUnviewEnum.USER_INFO, dtos, 31L, TimeUnit.DAYS);
         return dtos;
     }
 
@@ -132,5 +130,20 @@ public class NavUnviewUserInfoServiceImpl implements NavUnviewUserInfoService {
         nav.setObject(object);
         nav.setObjectId(objectId);
         navUnviewUserInfoMapper.insertSelective(nav);
+    }
+
+    @Override
+    public boolean hasDiy(Integer navId, Integer object, Integer objectId) {
+        return true;
+    }
+
+    @Override
+    public List<SelectDto> getInit(Integer navId) {
+        return null;
+    }
+
+    @Override
+    public int getType() {
+        return NavUnviewEnum.USER_INFO.getValue();
     }
 }

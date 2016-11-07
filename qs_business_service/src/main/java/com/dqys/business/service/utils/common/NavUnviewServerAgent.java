@@ -25,12 +25,12 @@ public class NavUnviewServerAgent {
     /**
      * 所有父类不可见项
      */
-    private List<SelectDto> allParentList=null;
+    private List<SelectDto> allParentList = null;
 
     /**
      * 当前分类的不可见项
      */
-    private List<SelectDto> navlist=null;
+    private List<SelectDto> navlist = null;
 
     /**
      * 已选项
@@ -67,14 +67,14 @@ public class NavUnviewServerAgent {
                 for (SelectDto parentUnview : allParentList) {
                     if (intIter.next().getReId().intValue() == parentUnview.getReId()) {
                         intIter.remove();
-                        continue;
+                        break;
                     }
                 }
                 //是子类的去除
-                for(SelectDto navUnview :navlist){
-                    if(intIter.next().getReId().intValue()==navUnview.getReId()){
+                for (SelectDto navUnview : navlist) {
+                    if (intIter.next().getReId().intValue() == navUnview.getReId()) {
                         intIter.remove();
-                        continue;
+                        break;
                     }
                 }
             }
@@ -102,14 +102,14 @@ public class NavUnviewServerAgent {
                 for (SelectDto parentUnview : allParentList) {
                     if (intIter.next().getReId().intValue() == parentUnview.getReId()) {
                         intIter.remove();
-                        continue;
+                        break;
                     }
                 }
                 //是子类的就可见为false
-                for(SelectDto navUnview :navlist){
-                    if(intIter.next().getReId().intValue()==navUnview.getReId()){
+                for (SelectDto navUnview : navlist) {
+                    if (intIter.next().getReId().intValue() == navUnview.getReId()) {
                         intIter.next().setVisible(false);
-                        continue;
+                        break;
                     }
                 }
             }
@@ -118,9 +118,8 @@ public class NavUnviewServerAgent {
     }
 
 
-
     /**
-     * 重新设置已选的内容
+     * 重新设置不可选的内容
      *
      * @param navId
      * @param list
@@ -133,13 +132,50 @@ public class NavUnviewServerAgent {
         }
     }
 
-    public void reset(Integer navId,Integer object,Integer objectId,Integer reId){
-       SelectDto selectDto=navUnviewService.get(navId,object,objectId,reId);
-        if(selectDto==null){
-            navUnviewService.add(navId,object,objectId,reId);
-        }else{
-            navUnviewService.del( navId, object, objectId,reId);
+    public void reset(Integer navId, Integer object, Integer objectId, Integer reId) {
+        SelectDto selectDto = navUnviewService.get(navId, object, objectId, reId);
+        if (selectDto == null) {
+            navUnviewService.add(navId, object, objectId, reId);
+        } else {
+            navUnviewService.del(navId, object, objectId, reId);
         }
+    }
+
+    /**
+     * 当类别有初始化缓存时重新不可选的内容
+     *
+     * @param navId
+     * @param object
+     * @param objectId
+     * @param reId
+     */
+    public void initCacheReset(Integer navId, Integer object, Integer objectId, Integer reId) {
+        if (navUnviewService.hasDiy(navId, object, objectId)) {//如果已经进行了重新设置
+            reset(navId, object, objectId, reId);
+        } else {
+            List<SelectDto> selectDtos = NavUtil.getSelectDtoList(navId, navUnviewService.getType());
+            if (selectDtos == null) {//如果没有初始化缓存
+                reset(navId, object, objectId, reId);
+            } else {
+                boolean isInInitCache = false;//是否在缓存里已存在
+                for (SelectDto selectDto : selectDtos) {
+                    if (selectDto.getReId() == reId.intValue()) {
+                        isInInitCache = true;
+                        break;
+                    }
+                }
+                List<Integer> list=null;
+                if (isInInitCache) {//如果在缓存里已经有值,将缓存中的其他值加入数据库
+                    list=NavUtil.selectDtosToIntegers(selectDtos);
+                    list.remove(reId);
+                } else {//将缓存中的值和当前的值加入数据库
+                    list=NavUtil.selectDtosToIntegers(selectDtos);
+                    list.add(reId);
+                }
+                navUnviewService.add(navId, object, objectId,list);
+            }
+        }
+
     }
 
 
@@ -157,7 +193,7 @@ public class NavUnviewServerAgent {
                 for (Integer newId : newList) {
                     if (dto.getReId().intValue() == newId) {
                         hasFind = true;
-                        continue;
+                        break;
                     }
                 }
                 if (!hasFind) {//只要有一次没找到就说明不一样
@@ -168,12 +204,15 @@ public class NavUnviewServerAgent {
         }
         return true;
     }
-    public void init(Integer navId, Integer object, Integer objectId){
-        if(allParentList==null){
+
+    public void init(Integer navId, Integer object, Integer objectId) {
+        if (allParentList == null) {
             allParentList = navUnviewService.getALLParentList(navId, object, objectId);
         }
-        if(navlist==null){
-            navlist=navUnviewService.getList(navId, object, objectId);
+        if (navlist == null) {
+            navlist = navUnviewService.getList(navId, object, objectId);
         }
     }
+
+
 }

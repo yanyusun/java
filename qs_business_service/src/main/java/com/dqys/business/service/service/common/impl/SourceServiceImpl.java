@@ -58,7 +58,7 @@ public class SourceServiceImpl implements SourceService {
             objectType = ObjectTypeEnum.ASSETSOURCE.getValue();
             objectId = estatesId;
         }
-        List<SourceNavigation> navigationList = NavUtil.getSourceNavigationList(type, objectType, objectId);
+        List<SourceNavigation> navigationList = NavUtil.getCommonSourceNavigation(type);
         navigationList.addAll(sourceNavigationMapper.listByTypeAndLenderId(lenderId, estatesId, type));
         return SourceServiceUtls.toSelect(navigationList);
     }

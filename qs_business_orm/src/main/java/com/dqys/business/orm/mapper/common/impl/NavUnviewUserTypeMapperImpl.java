@@ -60,4 +60,5 @@ public class NavUnviewUserTypeMapperImpl extends BaseDao implements NavUnviewUse
     public List<Map> findNavNameByNavId(@Param("navIds") List<Integer> navIds, @Param("object") Integer object, @Param("objectId") Integer objectId) {
         return super.getSqlSession().getMapper(NavUnviewUserTypeMapper.class).findNavNameByNavId(navIds, object, objectId);
     }
+
 }
