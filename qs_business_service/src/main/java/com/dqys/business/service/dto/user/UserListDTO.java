@@ -3,21 +3,22 @@ package com.dqys.business.service.dto.user;
 /**
  * Created by Yvan on 16/6/22.
  * 用户模块用户列表数据传输对象
+ *
  * @apiDefine UserList
  * @apiSuccessExample {json} UserList:
  * {
- *      id:1,
- *      status:1,
- *      avg:"http://114.215.239.181:9988/html/jiagoutu.png",
- *      sex:1,
- *      userName:"userName",
- *      realName:"realName",
- *      account:"",
- *      mobile:"",
- *      email:"",
- *      area:"",
- *      company:"",
- *      taskNum:0
+ * id:1,
+ * status:1,
+ * avg:"http://114.215.239.181:9988/html/jiagoutu.png",
+ * sex:1,
+ * userName:"userName",
+ * realName:"realName",
+ * account:"",
+ * mobile:"",
+ * email:"",
+ * area:"",
+ * company:"",
+ * taskNum:0
  * }
  * git 地址 : http://114.215.239.181:6080/qs_plat/java/blob/master/qs_business_service/src/main/java/com/dqys/business/service/dto/user/UserListDTO.java
  */
@@ -43,9 +44,18 @@ public class UserListDTO {
     private String duty; // 职责名称
     private Integer work; // 在职状态
     private Integer onGoingNum; // 正在进行任务数
+    private Integer useStatus; // 帐号使用状态（1帐号停用，2帐号禁止登入）
 
     // 待定二维码<暂未提供>
 
+
+    public Integer getUseStatus() {
+        return useStatus;
+    }
+
+    public void setUseStatus(Integer useStatus) {
+        this.useStatus = useStatus;
+    }
 
     public String getRoleName() {
         return roleName;

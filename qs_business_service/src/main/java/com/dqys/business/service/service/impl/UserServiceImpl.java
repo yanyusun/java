@@ -15,7 +15,6 @@ import com.dqys.business.orm.mapper.company.OrganizationMapper;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.pojo.company.Organization;
 import com.dqys.business.orm.query.company.OrganizationQuery;
-import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
@@ -37,15 +36,12 @@ import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.TArea;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.*;
-import com.rabbitmq.http.client.domain.UserInfo;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.UnexpectedRollbackException;
 
-import javax.mail.Session;
-import javax.servlet.jsp.tagext.TagInfo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -336,10 +332,23 @@ public class UserServiceImpl implements UserService {
         if (checkData != null) {
             return JsonResponseTool.paramErr(checkData);
         }
+        if (data.getAvg() != null && !data.getAvg().equals("")) {
+            try {
+                if (!FileTool.saveFileSync(data.getAvg())) {
+                    throw new UnexpectedRollbackException("保存附件失败");
+                }
+            } catch (IOException e) {
+                throw new UnexpectedRollbackException("保存附件异常");
+            }
+        }
         // 校验邮箱是否存在
         List<TUserInfo> isExist = tUserInfoMapper.verifyUser(null, null, data.getEmail());
         if (isExist != null && isExist.size() > 0) {
             return JsonResponseTool.failure("邮箱已存在");
+        }
+        List<TUserInfo> isExist2 = tUserInfoMapper.verifyUser(data.getAccount(), null, null);
+        if (isExist2 != null && isExist2.size() > 0) {
+            return JsonResponseTool.failure("帐号已存在");
         }
         TCompanyInfo companyInfo = getCompanyByUserId(UserSession.getCurrent().getUserId());
         if (companyInfo == null) {
@@ -403,7 +412,19 @@ public class UserServiceImpl implements UserService {
         if (tUserTag == null) {
             return JsonResponseTool.failure("修改失败");
         }
-
+        // 校验邮箱和帐号是否存在
+        List<TUserInfo> isExist = tUserInfoMapper.verifyUser(null, null, userInsertDTO.getEmail());
+        if (isExist != null && isExist.size() > 0) {
+            if (isExist.get(0).getId().intValue() != tUserTag.getUserId()) {
+                return JsonResponseTool.failure("邮箱已存在");
+            }
+        }
+        List<TUserInfo> isExist2 = tUserInfoMapper.verifyUser(userInsertDTO.getAccount(), null, null);
+        if (isExist2 != null && isExist2.size() > 0) {
+            if (isExist2.get(0).getId().intValue() != tUserTag.getUserId()) {
+                return JsonResponseTool.failure("帐号已存在");
+            }
+        }
         boolean flag = false;
 
         TUserInfo userInfo = UserServiceUtils.toTUserInfo(userInsertDTO);
@@ -573,6 +594,7 @@ public class UserServiceImpl implements UserService {
      * @param tUserInfo
      * @return
      */
+
     private UserListDTO _get(TUserInfo tUserInfo) {
         TCompanyInfo tCompanyInfo = null;
         TUserTag userTag = null;
@@ -623,7 +645,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public JsonResponse excelImport_tx(String file) throws Exception {
+    public JsonResponse excelImport_tx(String file, Integer sendSmsStatus, Integer accountStatus) throws Exception {
         if (CommonUtil.checkParam(file)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -632,7 +654,7 @@ public class UserServiceImpl implements UserService {
             return JsonResponseTool.paramErr("您不是管理员,没有权限导入成员");
         }
 
-        Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file, tUserInfoMapper);
+        Map<String, Object> map = UserExcelUtil.upLoadUserExcel(file, tUserInfoMapper, accountStatus);
         if (map.get("result") == null || map.get("result").equals("error")) {
             List<ExcelMessage> error = (List<ExcelMessage>) map.get("data");
             JsonResponse jsonResponse = new JsonResponse();
@@ -646,7 +668,16 @@ public class UserServiceImpl implements UserService {
             if (userFileDTOList == null || userFileDTOList.size() == 0) {
                 return JsonResponseTool.failure("没有数据添加");
             }
+            List<Map<String, Object>> users = new ArrayList<>();//所有需要短信通知的用户
+            StringBuffer buff = new StringBuffer();//成功的人员
+            StringBuffer buffTotal = new StringBuffer();//导入总人员
             for (UserFileDTO userFileDTO : userFileDTOList) {
+                //用于短信通知
+                Map<String, Object> user = new HashMap<>();
+                user.put("mobile", userFileDTO.getMobile() == null ? "" : userFileDTO.getMobile());
+                user.put("realName", userFileDTO.getRealName() == null ? "" : userFileDTO.getRealName());
+                user.put("email", userFileDTO.getEmail() == null ? "" : userFileDTO.getEmail());
+                users.add(user);
                 // 用户基础信息
                 TUserInfo userInfo = UserServiceUtils.toUserInfo(userFileDTO);
                 userInfo.setCompanyId(companyDetailInfo.getCompanyId());
@@ -681,19 +712,64 @@ public class UserServiceImpl implements UserService {
                         userTag.setApartmentId(id);
                     }
                 }
-                Integer userAdd = tUserInfoMapper.insertSelective(userInfo);
-                if (CommonUtil.checkResult(userAdd)) {
-                    return JsonResponseTool.failure("添加用户信息失败");
+                buffTotal.append(userInfo.getRealName() + ";");
+                //进行数据入库
+                String result = userAddOrEdit(userInfo, userTag, accountStatus);
+                if ("yes".equals(result)) {
+                    buff.append(userInfo.getRealName() + ";");
                 }
-                Integer userId = userInfo.getId();
-                userTag.setUserId(userId);
-                Integer tagAdd = tUserTagMapper.insertSelective(userTag);
-                if (CommonUtil.checkResult(tagAdd)) {
-                    return JsonResponseTool.failure("添加用户信息失败");
+            }
+            if (sendSmsStatus == 1) {
+                //发送帐号激活通知
+                SmsUtil smsUtil = new SmsUtil();
+                Map operC = coordinatorMapper.getUserAndCompanyByUserId(UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId());//发送邀请人
+                for (Map m : users) {
+                    smsUtil.sendSms(SmsEnum.ACTIVATE_ACCOUNT.getValue(), MessageUtils.transMapToString(m, "mobile"),
+                            MessageUtils.transMapToString(m, "realName"), MessageUtils.transMapToString(operC, "realName"),
+                            MessageUtils.transMapToString(m, "email"));
+                }
+            }
+
+            operLogService.addOperLog("导入总人员：" + buffTotal.toString() + "//其中导入成功人员：" + buff.toString(), null, ObjectTypeEnum.USER_INFO.getValue(),
+                    UserInfoEnum.ADD_COMMON_USER.getValue(), UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId());//操作日志
+        }
+        return JsonResponseTool.success("操作成功");
+    }
+
+    private String userAddOrEdit(TUserInfo userInfo, TUserTag userTag, Integer accountStatus) {
+        TUserInfo info = null;
+        boolean flag = true;//是否新增用户信息（默认：是）
+        int result = 0;
+        if (accountStatus == 1) {
+            //修改操作
+            List<TUserInfo> infos = tUserInfoMapper.verifyUser(userInfo.getAccount(), null, userInfo.getEmail());
+            if (infos != null & infos.size() > 0) {
+                flag = false;
+                info = infos.get(0);
+                if (info.getAccount().equals(userInfo.getAccount()) && info.getEmail().equals(userInfo.getEmail())) {
+                    userInfo.setId(info.getId());
+                    result = tUserInfoMapper.updateByPrimaryKeySelective(userInfo);
+                    List<TUserTag> tags = tUserTagMapper.selectByUserId(userInfo.getId());
+                    if (tags != null && tags.size() > 0) {
+                        userTag.setId(tags.get(0).getId());
+                        tUserTagMapper.updateByPrimaryKeySelective(userTag);
+                    }
                 }
             }
         }
-        return JsonResponseTool.success("添加成功");
+        //添加操作
+        if (flag) {
+            result = tUserInfoMapper.insertSelective(userInfo);
+            if (result > 0) {
+                Integer userId = userInfo.getId();
+                userTag.setUserId(userId);
+                tUserTagMapper.insertSelective(userTag);
+            }
+        }
+        if (result > 0) {
+            return "yes";
+        }
+        return "no";
     }
 
 }

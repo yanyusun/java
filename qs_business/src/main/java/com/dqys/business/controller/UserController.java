@@ -222,17 +222,19 @@ public class UserController {
      * 成员信息excel导入
      *
      * @param file
+     * @param sendSmsStatus 是否发送短信(1是，其它值为否)
+     * @param accountStatus 是否覆盖同帐号资料(1是，其它值为否)
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/userExcel")
     @ResponseBody
-    public JsonResponse userExcel(@RequestParam String file) throws Exception {
+    public JsonResponse userExcel(@RequestParam String file, @RequestParam Integer sendSmsStatus, @RequestParam Integer accountStatus) throws Exception {
         if (CommonUtil.checkParam(file)) {
             return JsonResponseTool.paramErr("未上传文件");
         }
 
-        return userService.excelImport_tx(file);
+        return userService.excelImport_tx(file, sendSmsStatus, accountStatus);
     }
 
     /**
@@ -354,7 +356,7 @@ public class UserController {
         if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getUserIds(), userInsertDTO.getUseStatus())) {
             return JsonResponseTool.paramErr("参数有误");
         }
-        Map map = userService.updateAccountUse(userInsertDTO.getUserIds(), userInsertDTO.getUseStatus() );
+        Map map = userService.updateAccountUse(userInsertDTO.getUserIds(), userInsertDTO.getUseStatus());
         return CommonUtil.jsonResponse(map);
     }
 

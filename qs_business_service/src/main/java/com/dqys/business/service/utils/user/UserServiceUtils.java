@@ -40,7 +40,7 @@ public class UserServiceUtils {
         userListDTO.setOccupation(userTag.getOccupation());
         userListDTO.setDuty(userTag.getDuty());
         userListDTO.setRoleName(RoleTypeEnum.get(Integer.valueOf(userTag.getRoleId())));
-
+        userListDTO.setUseStatus(userInfo.getUseStatus());
         if (companyInfo != null) {
             userListDTO.setCompany(companyInfo.getCompanyName());
             userListDTO.setArea(AreaTool.getAreaById(companyInfo.getProvince()).getLabel()
@@ -166,7 +166,7 @@ public class UserServiceUtils {
         return null;
     }
 
-    public static Integer headerStringToInt(String head){
+    public static Integer headerStringToInt(String head) {
         String s = head.split(",")[0];
         return Integer.valueOf(s);
     }
