@@ -135,7 +135,8 @@ public class SourceServiceImpl implements SourceService {
         }
 
         Integer sourceId = sourceInfo.getId();
-        List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceId);
+        //List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceId);
+        List<SourceSource> sourceList = null;
         return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList,getNavAuthAll(navId, lenderId, estatesId));
     }
 
@@ -242,7 +243,8 @@ public class SourceServiceImpl implements SourceService {
      * @return
      */
     public SelectDtoMap getNewNavALL(NavUnviewDTO dto){
-        return navUnviewManagerService.getNewALL(dto.getNavId(),dto.getObjectType(),dto.getObjectId(),dto.getUnviewReIdMap());
+        //return navUnviewManagerService.getNewALL(dto.getNavId(),dto.getObjectType(),dto.getObjectId(),dto.getUnviewReIdMap());
+        return null;
     }
 
     /**
