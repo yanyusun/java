@@ -8,6 +8,25 @@ public class NavUnviewCompany extends BaseModel {
 
     private Integer companyId;
 
+    private Integer object;
+
+    private Integer objectId;
+
+    public Integer getObject() {
+        return object;
+    }
+
+    public void setObject(Integer object) {
+        this.object = object;
+    }
+
+    public Integer getObjectId() {
+        return objectId;
+    }
+
+    public void setObjectId(Integer objectId) {
+        this.objectId = objectId;
+    }
 
     public Integer getNavId() {
         return navId;

@@ -2,6 +2,8 @@ package com.dqys.business.service.service.common.impl;
 
 import com.dqys.business.orm.mapper.common.NavUnviewRoleMapper;
 import com.dqys.business.orm.mapper.common.SourceNavigationMapper;
+import com.dqys.business.orm.pojo.common.NavUnviewCompany;
+import com.dqys.business.orm.pojo.common.NavUnviewRole;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
 import com.dqys.business.service.service.common.NavUnviewRoleService;
@@ -84,16 +86,33 @@ public class NavUnviewRoleServiceImpl implements NavUnviewRoleService {
 
     @Override
     public SelectDto get(Integer navId, Integer object, Integer objectId, Integer reId) {
+        List<SelectDto> dtos = new ArrayList<>();
+        List<Integer> navIds = new ArrayList<>();
+        navIds.add(navId);
+        setSelectDtoList(dtos, navIds, object, objectId);
+        for (SelectDto dto : dtos) {
+            if (dto != null && dto.getReId().intValue() == reId) {
+                return dto;
+            }
+        }
         return null;
     }
 
     @Override
     public void del(Integer navId, Integer object, Integer objectId, Integer reId) {
-
+        SelectDto dto = get(navId, object, objectId, reId);
+        if (dto != null) {
+            navUnviewRoleMapper.deleteByPrimaryKey(dto.getId());
+        }
     }
 
     @Override
     public void add(Integer navId, Integer object, Integer objectId, Integer reId) {
-
+        NavUnviewRole nav = new NavUnviewRole();
+        nav.setRoleType(reId);
+        nav.setNavId(navId);
+        nav.setObject(object);
+        nav.setObjectId(objectId);
+        navUnviewRoleMapper.insertSelective(nav);
     }
 }
