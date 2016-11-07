@@ -44,7 +44,7 @@ public class UserListDTO {
     private String duty; // 职责名称
     private Integer work; // 在职状态
     private Integer onGoingNum; // 正在进行任务数
-    private Integer useStatus; // 正在进行任务数
+    private Integer useStatus; // 帐号使用状态（1帐号停用，2帐号禁止登入）
 
     // 待定二维码<暂未提供>
 
