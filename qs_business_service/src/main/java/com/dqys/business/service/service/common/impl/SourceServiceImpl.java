@@ -16,6 +16,7 @@ import com.dqys.business.service.service.common.SourceService;
 import com.dqys.business.service.utils.common.NavUtil;
 import com.dqys.business.service.utils.common.SourceServiceUtls;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.JsonResponseTool;
@@ -242,6 +243,15 @@ public class SourceServiceImpl implements SourceService {
      */
     public SelectDtoMap getNewNavALL(NavUnviewDTO dto){
         return navUnviewManagerService.getNewALL(dto.getNavId(),dto.getObjectType(),dto.getObjectId(),dto.getUnviewReIdMap());
+    }
+
+    /**
+     * 过滤掉当前用户不可见的分类
+     * @param list
+     * @param userSession
+     */
+    public void sourceNavigationFilter(List<SourceNavigation>  list, UserSession userSession){
+
     }
 
 }
