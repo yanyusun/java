@@ -2,6 +2,7 @@ package com.dqys.business.service.utils.common;
 
 import com.dqys.business.orm.mapper.common.SourceNavigationMapper;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
+import com.dqys.business.service.constant.SourceInfoEnum;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
 import com.dqys.business.service.service.common.NavUnviewCompanyService;
 import com.dqys.business.service.service.common.NavUnviewRoleService;
@@ -14,6 +15,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -30,6 +32,8 @@ public class NavUtil implements ApplicationContextAware {
     private static NavUnviewUserInfoService navUnviewUserInfoService;
     private static NavUnviewUserTypeService navUnviewUserTypeService;
     private static int isCustom = 1;//是否是用户自定义导航栏,0是,1不是
+    private static int CERTIFICATE_TYPE= SourceInfoEnum.CERTIFICATE_TYPE.getValue();//合同类型
+    private static int ENTITY_TYPE=SourceInfoEnum.ENTITY_TYPE.getValue();//资料实勘类型
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -47,10 +51,20 @@ public class NavUtil implements ApplicationContextAware {
      */
     public static void loadCommonNav() {
         List<SourceNavigation> list = sourceNavigationMapper.ListByIsCustom(isCustom);
-       /* for(SourceNavigation navigation:list){
-            redisTemplate.boundHashOps(NavUtil.COMMON_SOURCE_NAV_KEY+SourceNavigation.class.getName())
-                    .put(NavUtil.COMMON_SOURCE_NAV_KEY+navigation.getType()+"_"+navigation.getName(), navigation);
-        }*/
+        List<SourceNavigation> certificateList = new LinkedList<>();
+        List<SourceNavigation> entityTypeLsit = new LinkedList<>();
+        for (SourceNavigation navigation : list) {
+            if(navigation.getType()==CERTIFICATE_TYPE){//添加分类导航
+                certificateList.add(navigation);
+            }else{//添加实勘分类导航
+                entityTypeLsit.add(navigation);
+            }
+
+
+
+            redisTemplate.boundHashOps(NavUtil.COMMON_SOURCE_NAV_KEY + SourceNavigation.class.getName())
+                    .put(NavUtil.COMMON_SOURCE_NAV_KEY + navigation.getType() + "_" + navigation.getName(), navigation);
+        }
     }
 
     // TODO: 16-10-31　加载公共资源分类 Map<String type,List<SourceNavigation> navigationList>　ｔｙｐｅ与bt_source_nav的ｔｙｐｅ一致
@@ -90,7 +104,6 @@ public class NavUtil implements ApplicationContextAware {
     }
 
 
-
     // TODO: 16-11-1 根据 navId_type获取List<SelectDto>(对应的NavUnviewEnum枚举),查询operUser为ｏ的记录，ｏ公共默认
     public static List<SelectDto> getSelectDtoList(String navId_type, Integer objectType, Integer objectId) {
         List<SelectDto> dtos = NoSQLWithRedisTool.getValueObject(navId_type);
@@ -124,7 +137,6 @@ public class NavUtil implements ApplicationContextAware {
 //
 //        }
 //    }
-
 
 
 }
