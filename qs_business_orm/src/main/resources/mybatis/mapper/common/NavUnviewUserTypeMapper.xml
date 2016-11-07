@@ -59,6 +59,12 @@
             <if test="operUser != null">
                 oper_user,
             </if>
+            <if test="object != null">
+                object,
+            </if>
+            <if test="objectId != null">
+                object_id,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -68,7 +74,7 @@
                 #{navId,jdbcType=INTEGER},
             </if>
             <if test="userType != null">
-                #{userType,jdbcType=BIT},
+                #{userType,jdbcType=INTEGER},
             </if>
             <if test="version != null">
                 #{version,jdbcType=INTEGER},
@@ -85,6 +91,12 @@
             <if test="operUser != null">
                 #{operUser,jdbcType=INTEGER},
             </if>
+            <if test="object != null">
+                #{object,jdbcType=INTEGER},
+            </if>
+            <if test="objectId != null">
+                #{objectId,jdbcType=INTEGER},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.common.NavUnviewUserType">
@@ -94,7 +106,7 @@
                 nav_id = #{navId,jdbcType=INTEGER},
             </if>
             <if test="userType != null">
-                user_type = #{userType,jdbcType=BIT},
+                user_type = #{userType,jdbcType=INTEGER},
             </if>
             <if test="version != null">
                 version = #{version,jdbcType=INTEGER},
@@ -117,7 +129,7 @@
     <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.common.NavUnviewUserType">
     update t_nav_unview_usertype
     set nav_id = #{navId,jdbcType=INTEGER},
-      user_type = #{userType,jdbcType=BIT},
+      user_type = #{userType,jdbcType=INTEGER},
       version = #{version,jdbcType=INTEGER},
       create_at = #{createAt,jdbcType=TIMESTAMP},
       update_at = #{updateAt,jdbcType=TIMESTAMP},

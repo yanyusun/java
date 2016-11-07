@@ -37,6 +37,12 @@
             <if test="companyId != null">
                 company_id,
             </if>
+            <if test="object != null">
+                object,
+            </if>
+            <if test="objectId != null">
+                object_id,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -47,6 +53,12 @@
             </if>
             <if test="companyId != null">
                 #{companyId,jdbcType=INTEGER},
+            </if>
+            <if test="object != null">
+                #{object,jdbcType=INTEGER},
+            </if>
+            <if test="objectId != null">
+                #{objectId,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>

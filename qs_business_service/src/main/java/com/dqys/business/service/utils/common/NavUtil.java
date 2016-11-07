@@ -89,7 +89,7 @@ public class NavUtil implements ApplicationContextAware {
         return list;
     }
 
-    ;
+
 
     // TODO: 16-11-1 根据 navId_type获取List<SelectDto>(对应的NavUnviewEnum枚举),查询operUser为ｏ的记录，ｏ公共默认
     public static List<SelectDto> getSelectDtoList(String navId_type, Integer objectType, Integer objectId) {
@@ -112,5 +112,19 @@ public class NavUtil implements ApplicationContextAware {
         return dtos;
     }
 
-    ;
+    /**
+     * 过滤掉对当前用户不可见的资料实勘目录
+     * @param list 公共分类
+     * @param userSession
+     */
+//    public void commonSourceNavigationFilter(List<SourceNavigation>  list, UserSession userSession){
+//        Iterator<SourceNavigation> iter = list.iterator();
+//        while (iter.hasNext()) {
+//            String company_cahce_key = iter.next().getId()+"_"
+//
+//        }
+//    }
+
+
+
 }

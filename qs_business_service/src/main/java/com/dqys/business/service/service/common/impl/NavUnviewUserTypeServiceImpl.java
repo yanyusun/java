@@ -2,6 +2,8 @@ package com.dqys.business.service.service.common.impl;
 
 import com.dqys.business.orm.mapper.common.NavUnviewUserTypeMapper;
 import com.dqys.business.orm.mapper.common.SourceNavigationMapper;
+import com.dqys.business.orm.pojo.common.NavUnviewUserInfo;
+import com.dqys.business.orm.pojo.common.NavUnviewUserType;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
 import com.dqys.business.service.service.common.NavUnviewUserTypeService;
@@ -80,5 +82,37 @@ public class NavUnviewUserTypeServiceImpl implements NavUnviewUserTypeService {
     @Override
     public void add(Integer navId, Integer object, Integer objectId, List<Integer> unviewList) {
         navUnviewUserTypeMapper.insertSelectiveByUserType(navId, unviewList, object, objectId);
+    }
+
+    @Override
+    public SelectDto get(Integer navId, Integer object, Integer objectId, Integer reId) {
+        List<SelectDto> dtos = new ArrayList<>();
+        List<Integer> navIds = new ArrayList<>();
+        navIds.add(navId);
+        setSelectDtoList(dtos, navIds, object, objectId);
+        for (SelectDto dto : dtos) {
+            if (dto != null && dto.getReId().intValue() == reId) {
+                return dto;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void del(Integer navId, Integer object, Integer objectId, Integer reId) {
+        SelectDto dto = get(navId, object, objectId, reId);
+        if (dto != null) {
+            navUnviewUserTypeMapper.deleteByPrimaryKey(dto.getId());
+        }
+    }
+
+    @Override
+    public void add(Integer navId, Integer object, Integer objectId, Integer reId) {
+        NavUnviewUserType nav = new NavUnviewUserType();
+        nav.setUserType(reId);
+        nav.setNavId(navId);
+        nav.setObject(object);
+        nav.setObjectId(objectId);
+        navUnviewUserTypeMapper.insertSelective(nav);
     }
 }

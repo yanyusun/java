@@ -133,6 +133,15 @@ public class NavUnviewServerAgent {
         }
     }
 
+    public void reset(Integer navId,Integer object,Integer objectId,Integer reId){
+       SelectDto selectDto=navUnviewService.get(navId,object,objectId,reId);
+        if(selectDto==null){
+            navUnviewService.add(navId,object,objectId,reId);
+        }else{
+            navUnviewService.del( navId, object, objectId,reId);
+        }
+    }
+
 
     /**
      * 比较oldList与newList的是否相同

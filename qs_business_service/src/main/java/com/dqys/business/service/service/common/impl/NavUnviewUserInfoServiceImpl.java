@@ -3,6 +3,7 @@ package com.dqys.business.service.service.common.impl;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
 import com.dqys.business.orm.mapper.common.NavUnviewUserInfoMapper;
 import com.dqys.business.orm.mapper.common.SourceNavigationMapper;
+import com.dqys.business.orm.pojo.common.NavUnviewUserInfo;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
@@ -27,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 //// TODO: 16-10-28  mkf
 @Repository
 @Primary
-public class NavUnviewUserInfoServiceImpl implements NavUnviewUserInfoService{
+public class NavUnviewUserInfoServiceImpl implements NavUnviewUserInfoService {
     @Autowired
     private NavUnviewUserInfoMapper navUnviewUserInfoMapper;
 
@@ -90,7 +91,6 @@ public class NavUnviewUserInfoServiceImpl implements NavUnviewUserInfoService{
     }
 
 
-
     @Override
     public void del(Integer navId, Integer object, Integer objectId) {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
@@ -100,5 +100,37 @@ public class NavUnviewUserInfoServiceImpl implements NavUnviewUserInfoService{
     @Override
     public void add(Integer navId, Integer object, Integer objectId, List<Integer> unviewList) {
         navUnviewUserInfoMapper.insertSelectiveByUserInfo(navId, unviewList, object, objectId);
+    }
+
+    @Override
+    public SelectDto get(Integer navId, Integer object, Integer objectId, Integer reId) {
+        List<SelectDto> dtos = new ArrayList<>();
+        List<Integer> navIds = new ArrayList<>();
+        navIds.add(navId);
+        setSelectDtoList(dtos, navIds, object, objectId);
+        for (SelectDto dto : dtos) {
+            if (dto != null && dto.getReId().intValue() == reId) {
+                return dto;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void del(Integer navId, Integer object, Integer objectId, Integer reId) {
+        SelectDto dto = get(navId, object, objectId, reId);
+        if (dto != null) {
+            navUnviewUserInfoMapper.deleteByPrimaryKey(dto.getId());
+        }
+    }
+
+    @Override
+    public void add(Integer navId, Integer object, Integer objectId, Integer reId) {
+        NavUnviewUserInfo nav = new NavUnviewUserInfo();
+        nav.setUserId(reId);
+        nav.setNavId(navId);
+        nav.setObject(object);
+        nav.setObjectId(objectId);
+        navUnviewUserInfoMapper.insertSelective(nav);
     }
 }
