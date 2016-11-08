@@ -16,6 +16,7 @@ import com.dqys.business.service.service.common.SourceService;
 import com.dqys.business.service.utils.common.NavUtil;
 import com.dqys.business.service.utils.common.SourceServiceUtls;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.JsonResponseTool;
@@ -128,18 +129,16 @@ public class SourceServiceImpl implements SourceService {
         if (CommonUtil.checkParam(navId)) {
             return null;
         }
+        UserSession userSession = UserSession.getCurrent();
+        if(!hasSourceAuth(navId,lenderId,estatesId,userSession.getUserId())){
+            return null;
+        }
         SourceInfo sourceInfo = sourceInfoMapper.getByNavIdAndLenderId(navId, lenderId, estatesId);//根据借款人id或是资产源id查询资料实堪
         if (sourceInfo == null) {
             return null;
         }
-
         Integer sourceId = sourceInfo.getId();
         List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceId);
-
-
-
-
-
         return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList,getNavAuthAll(navId, lenderId, estatesId));
         //return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList);
     }
@@ -235,6 +234,15 @@ public class SourceServiceImpl implements SourceService {
      */
     public SelectDtoMap getNewNavALL(NavUnviewDTO dto){
         return navUnviewManagerService.getNewALL(dto.getNavId(),dto.getObjectType(),dto.getObjectId(),dto.getUnviewReIdMap());
+    }
+
+    public boolean hasSourceAuth(Integer navId,Integer lenderId,Integer estatesId,Integer userId){
+        if (lenderId != null && lenderId != 0) {//得到资产源的资料实勘权限
+            return navUnviewManagerService.hasSourceSourceAuth(navId,ObjectTypeEnum.LENDER.getValue(),lenderId,userId);
+        } else if (estatesId != null && estatesId != 0) {//得到借款人的资料实勘权限
+            return navUnviewManagerService.hasSourceSourceAuth(navId,ObjectTypeEnum.ASSETSOURCE.getValue(),estatesId,userId);
+        }
+        return false;
     }
 
 //    /**

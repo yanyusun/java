@@ -11,7 +11,9 @@ import com.dqys.business.service.dto.sourceAuth.UnviewReIdMap;
 import com.dqys.business.service.service.common.*;
 import com.dqys.business.service.utils.common.NavUnviewServerAgent;
 import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.constant.RoleTypeEnum;
+import com.dqys.core.model.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -66,22 +68,33 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
 
     @Override
     public boolean hasSourceSourceAuth(Integer navId, Integer object, Integer objectId, Integer userId) {
-        TUserInfo userInfo=tUserInfoMapper.selectByPrimaryKey(userId);
         NavUnviewServerAgent userTypeAgent = new NavUnviewServerAgent(navUnviewUserTypeService);
-        List<SelectDto> userTypeList = userTypeAgent.getUnview(navId, object, objectId);
-        for(SelectDto selectDto:userTypeList){
-            if(selectDto.getReId().intValue()==userInfo.getCompanyId()){
+        UserSession userSession = UserSession.getCurrent();
+        int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
+        if (hasSourceSourceAuth(userTypeAgent, userType, navId, object, objectId)) {//如果有人员类型权限
+            NavUnviewServerAgent roleAgent = new NavUnviewServerAgent(navUnviewRoleService);
+            int userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());
+            if (hasSourceSourceAuth(roleAgent, userRole, navId, object, objectId)) {//如果有角色权限
+                NavUnviewServerAgent companyAgent = new NavUnviewServerAgent(navUnviewCompanyService);
+                TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(userId);
+                if (hasSourceSourceAuth(companyAgent, userInfo.getCompanyId(), navId, object, objectId)) {//如果有公司权限
+                    NavUnviewServerAgent userInfoAgent = new NavUnviewServerAgent(navUnviewUserInfoService);
+                    if (hasSourceSourceAuth(userInfoAgent, userInfo.getId(), navId, object, objectId)) {//有人员权限
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean hasSourceSourceAuth(NavUnviewServerAgent navUnviewServerAgent, int reId, Integer navId, Integer object, Integer objectId) {
+        List<SelectDto> list = navUnviewServerAgent.getUnview(navId, object, objectId);
+        for (SelectDto selectDto : list) {
+            if (selectDto.getReId().intValue() == reId) {
                 return false;
             }
-
         }
-
-
-
-        NavUnviewServerAgent companyAgent = new NavUnviewServerAgent(navUnviewCompanyService);
-        NavUnviewServerAgent roleAgent = new NavUnviewServerAgent(navUnviewRoleService);
-        NavUnviewServerAgent userInfoAgent = new NavUnviewServerAgent(navUnviewUserInfoService);
-
         return true;
     }
 
