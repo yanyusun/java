@@ -4,6 +4,8 @@ import com.dqys.business.orm.mapper.sysNotice.SysNoticeMapper;
 import com.dqys.business.orm.pojo.sysNotice.SysNotice;
 import com.dqys.business.orm.query.sysNotice.SysNoticeQuery;
 import com.dqys.business.service.service.sysNotice.SysNoticeService;
+import com.dqys.core.utils.FileTool;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,6 +23,7 @@ public class SysNoticeServiceImpl implements SysNoticeService{
     @Autowired
     private SysNoticeMapper mapper;
 
+
     /**
      *
      * @param sysNoticeQuery
@@ -35,6 +38,16 @@ public class SysNoticeServiceImpl implements SysNoticeService{
     @CacheEvict(value="sys_notice_cache",allEntries=true)
     @Override
     public int insert(SysNotice sysNotice) {
+        String picName=sysNotice.getPicname();
+        if(picName!=null&&picName.equalsIgnoreCase("")){
+            try {
+                FileTool.saveFileSync(picName);
+            }catch (Exception e){
+                e.printStackTrace();
+                LogManager.getRootLogger().error("添加系统消息时保存文件失败");
+                return failNO;
+            }
+        }
         return mapper.insert(sysNotice);
     }
 

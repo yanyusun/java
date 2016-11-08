@@ -28,14 +28,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.dqys.business.orm.pojo.sysNotice.SysNotice" >
-    insert into t_sys_notice (id, title, content, 
-      type, picName, create_at, 
-      update_at, stateflag, version, 
-      user_id,introduce)
-    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
-      #{type,jdbcType=INTEGER}, #{picname,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, 
-      #{updateAt,jdbcType=TIMESTAMP}, #{stateflag,jdbcType=BIGINT}, #{version,jdbcType=INTEGER}, 
-      #{userId,jdbcType=INTEGER},#{introduce,jdbcType=INTEGER})
+    insert into t_sys_notice (title, content, type, picName, user_id)
+    values ( #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
+      #{type,jdbcType=INTEGER}, #{picname,jdbcType=VARCHAR},
+      #{userId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.sysNotice.SysNotice" >
     insert into t_sys_notice
@@ -164,7 +160,10 @@
   </select>
 
   <select id="queryCount" parameterType="com.dqys.business.orm.query.sysNotice.SysNoticeQuery" resultType="java.lang.Integer">
-    SELECT COUNT(*) FROM t_sys_notice
+    SELECT COUNT(*) FROM t_sys_notice where 1=1
+    <if test="isIntroduce">
+      AND introduce = 1
+    </if>
   </select>
 
 </mapper>

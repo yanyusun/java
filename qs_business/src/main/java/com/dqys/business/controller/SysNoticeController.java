@@ -121,7 +121,10 @@ public class SysNoticeController extends BaseApiContorller {
     @ResponseBody
     public JsonResponse add(SysNoticeDTO sysNoticeDTO) throws Exception{
         SysNotice sysNotice = SysNoticeUtil.toSysNotice(sysNoticeDTO);
-        sysNoticeService.insert(sysNotice);
+        int result=sysNoticeService.insert(sysNotice);
+        if(result==sysNoticeService.failNO){
+            return JsonResponseTool.failure("添加时保存图片失败");
+        }
         return JsonResponseTool.success(sysNotice);
     }
 
