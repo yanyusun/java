@@ -160,7 +160,10 @@
   </select>
 
   <select id="queryCount" parameterType="com.dqys.business.orm.query.sysNotice.SysNoticeQuery" resultType="java.lang.Integer">
-    SELECT COUNT(*) FROM t_sys_notice
+    SELECT COUNT(*) FROM t_sys_notice where 1=1
+    <if test="isIntroduce">
+      AND introduce = 1
+    </if>
   </select>
 
 </mapper>
