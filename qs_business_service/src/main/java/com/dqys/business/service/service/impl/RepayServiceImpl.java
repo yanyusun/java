@@ -77,13 +77,15 @@ public class RepayServiceImpl implements RepayService {
 
     @Override
     public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
-//        try {
-//            if (!FileTool.saveFileSync(file)) {
-//                throw new UnexpectedRollbackException("保存附件失败");
-//            }
-//        } catch (IOException e) {
-//            throw new UnexpectedRollbackException("保存附件异常");
-//        }
+        if (file != null && !"".equals(file)) {
+            try {
+                if (!FileTool.saveFileSync(file)) {
+                    throw new UnexpectedRollbackException("保存附件失败");
+                }
+            } catch (IOException e) {
+                throw new UnexpectedRollbackException("保存附件异常");
+            }
+        }
         if (objectType == RepayEnum.OBJECT_IOU.getValue().intValue()) {
             businessLogService.add(objectId, ObjectTypeEnum.IOU.getValue(), IouEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
         } else if (objectType == RepayEnum.OBJECT_PAWN.getValue().intValue()) {
