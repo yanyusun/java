@@ -308,11 +308,20 @@ public class UserServiceImpl implements UserService {
     public Map updateAccountUse(List<Integer> userIds, Integer useStatus) {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         Map map = new HashMap<>();
-        map.put("result", "yes");
+        map.put("result", "no");
+        if (userIds == null || userIds.size() == 0) {
+            map.put("msg", "请选择人员");
+            return map;
+        }
+        if (userIds != null && userIds.size() == 1 && userIds.contains(userId)) {
+            map.put("msg", "不能对自己进行操作");
+            return map;
+        }
         if (userIds.contains(userId)) {
             userIds.remove(userId);
         }
         tUserInfoMapper.updateAccountUse(userIds, useStatus);
+        map.put("result", "yes");
         return map;
     }
 
