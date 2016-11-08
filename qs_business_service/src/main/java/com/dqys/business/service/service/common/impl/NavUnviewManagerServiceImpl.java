@@ -1,6 +1,7 @@
 package com.dqys.business.service.service.common.impl;
 
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.mapper.common.NavUnviewCompanyMapper;
 import com.dqys.business.orm.mapper.common.NavUnviewUserInfoMapper;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
@@ -65,12 +66,12 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
 
     @Override
     public boolean hasSourceSourceAuth(Integer navId, Integer object, Integer objectId, Integer userId) {
-        tUserInfoMapper.selectByPrimaryKey(userId);
+        TUserInfo userInfo=tUserInfoMapper.selectByPrimaryKey(userId);
         NavUnviewServerAgent userTypeAgent = new NavUnviewServerAgent(navUnviewUserTypeService);
         List<SelectDto> userTypeList = userTypeAgent.getUnview(navId, object, objectId);
         for(SelectDto selectDto:userTypeList){
-            if(selectDto.getReId().intValue()==){
-
+            if(selectDto.getReId().intValue()==userInfo.getCompanyId()){
+                return false;
             }
 
         }

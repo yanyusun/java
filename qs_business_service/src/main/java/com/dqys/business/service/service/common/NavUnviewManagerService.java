@@ -27,6 +27,14 @@ public interface NavUnviewManagerService {
      */
     SelectDtoMap getNewALL(Integer navId,Integer object,Integer objectId,UnviewReIdMap unviewReIdMap);
 
+    /**
+     * 是否具有该类别的反问权限
+     * @param navId
+     * @param object
+     * @param objectId
+     * @param userId
+     * @return
+     */
     boolean hasSourceSourceAuth(Integer navId,Integer object,Integer objectId,Integer userId);
 
 
