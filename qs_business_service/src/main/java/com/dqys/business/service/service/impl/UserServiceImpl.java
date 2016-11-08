@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService {
             tUserQuery.setCompanyId(tUserInfo.getCompanyId());
         }
         //组织架构中不需要
-        if (query.getModule() == 1) {
+        if (query.getModule() != null && query.getModule() == 1) {
             // 总管理员
             if (CommonUtil.checkNullParam(query.getProvince(), query.getCity(), query.getDistrict())) {
                 List<Integer> companyIds = new ArrayList<>();
@@ -332,6 +332,10 @@ public class UserServiceImpl implements UserService {
         if (checkData != null) {
             return JsonResponseTool.paramErr(checkData);
         }
+        JsonResponse jsp = verify(data);//格式的验证
+        if (jsp.getCode() != ResponseCodeEnum.SUCCESS.getValue().intValue()) {
+            return jsp;
+        }
         if (data.getAvg() != null && !data.getAvg().equals("")) {
             try {
                 if (!FileTool.saveFileSync(data.getAvg())) {
@@ -390,10 +394,25 @@ public class UserServiceImpl implements UserService {
         return JsonResponseTool.failure("添加失败");
     }
 
+    private JsonResponse verify(UserInsertDTO dto) {
+        if (!FormatValidateTool.checkMobile(dto.getMobile())) {
+            return JsonResponseTool.failure("手机号格式不正确");
+        }
+        if (!FormatValidateTool.checkEmail(dto.getEmail())) {
+            return JsonResponseTool.failure("邮箱格式不正确");
+        }
+        return JsonResponseTool.success(null);
+    }
+
     @Override
     public JsonResponse update(UserInsertDTO userInsertDTO) {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        JsonResponse jsp = verify(userInsertDTO);//格式的验证
+        if (jsp.getCode() != ResponseCodeEnum.SUCCESS.getValue().intValue()) {
+            return jsp;
         }
         if (userInsertDTO.getAvg() != null && !userInsertDTO.getAvg().equals("")) {
             try {
@@ -412,18 +431,25 @@ public class UserServiceImpl implements UserService {
         if (tUserTag == null) {
             return JsonResponseTool.failure("修改失败");
         }
-        // 校验邮箱和帐号是否存在
-        List<TUserInfo> isExist = tUserInfoMapper.verifyUser(null, null, userInsertDTO.getEmail());
-        if (isExist != null && isExist.size() > 0) {
-            if (isExist.get(0).getId().intValue() != tUserTag.getUserId()) {
-                return JsonResponseTool.failure("邮箱已存在");
+        //不能自己在组织架构中修改自己的邮箱和帐号，管理员有权修改其他员工的邮箱和帐号
+        Map adminUser = coordinatorMapper.getAdminUser(userInsertDTO.getCompanyId());
+        if (userId.equals(MessageUtils.transMapToString(adminUser, "id")) && userInsertDTO.getId() != userId) {
+            // 校验邮箱和帐号是否存在
+            List<TUserInfo> isExist = tUserInfoMapper.verifyUser(null, null, userInsertDTO.getEmail());
+            if (isExist != null && isExist.size() > 0) {
+                if (isExist.get(0).getId().intValue() != tUserTag.getUserId()) {
+                    return JsonResponseTool.failure("邮箱已存在");
+                }
             }
-        }
-        List<TUserInfo> isExist2 = tUserInfoMapper.verifyUser(userInsertDTO.getAccount(), null, null);
-        if (isExist2 != null && isExist2.size() > 0) {
-            if (isExist2.get(0).getId().intValue() != tUserTag.getUserId()) {
-                return JsonResponseTool.failure("帐号已存在");
+            List<TUserInfo> isExist2 = tUserInfoMapper.verifyUser(userInsertDTO.getAccount(), null, null);
+            if (isExist2 != null && isExist2.size() > 0) {
+                if (isExist2.get(0).getId().intValue() != tUserTag.getUserId()) {
+                    return JsonResponseTool.failure("帐号已存在");
+                }
             }
+        } else {
+            userInsertDTO.setEmail(null);
+            userInsertDTO.setAccount(null);
         }
         boolean flag = false;
 
