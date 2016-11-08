@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.common.impl;
 
 import com.dqys.business.orm.mapper.common.NavUnviewUserTypeMapper;
 import com.dqys.business.orm.pojo.common.NavUnviewUserType;
+import com.dqys.business.orm.query.common.NavUnviewUserTypeQuery;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
@@ -59,6 +60,11 @@ public class NavUnviewUserTypeMapperImpl extends BaseDao implements NavUnviewUse
     @Override
     public List<Map> findNavNameByNavId(@Param("navIds") List<Integer> navIds, @Param("object") Integer object, @Param("objectId") Integer objectId) {
         return super.getSqlSession().getMapper(NavUnviewUserTypeMapper.class).findNavNameByNavId(navIds, object, objectId);
+    }
+
+    @Override
+    public int queryCount(NavUnviewUserTypeQuery query) {
+        return super.getSqlSession().getMapper(NavUnviewUserTypeMapper.class).queryCount(query);
     }
 
 }
