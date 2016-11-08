@@ -428,7 +428,7 @@ public class ZcyServiceImpl implements ZcyService {
         if (objectIds.size() > 0) {
             zcyListQuery.setObjectIdList(objectIds);//设置资产源待接收
             zcyListQuery.setUserId(null);
-            zcyListQuery.setStartPage(zcyListQuery.getPage() * zcyListQuery.getPageCount());
+            zcyListQuery.setStartPage((zcyListQuery.getPage() > 0 ? zcyListQuery.getPage() - 1 : 0) * zcyListQuery.getPageCount());
             num = coordinatorMapper.selectByZCYListPageCount(zcyListQuery);
             count += num;
             zcyPawnDTOs = coordinatorMapper.selectByZCYListPage(zcyListQuery);
@@ -456,7 +456,7 @@ public class ZcyServiceImpl implements ZcyService {
         if (objectIds.size() > 0) {
             zcyListQuery.setObjectIdList(objectIds);//设置显示的记录
             zcyListQuery.setUserId(null);
-            zcyListQuery.setStartPage(zcyListQuery.getPage() * zcyListQuery.getPageCount());
+            zcyListQuery.setStartPage((zcyListQuery.getPage() > 0 ? zcyListQuery.getPage() - 1 : 0) * zcyListQuery.getPageCount());
             count = coordinatorMapper.selectByZCYListPageCount(zcyListQuery);
             zcyPawnDTOs = coordinatorMapper.selectByZCYListPage(zcyListQuery);
             setZcyPawnDTOs(zcyPawnDTOs);
@@ -478,7 +478,7 @@ public class ZcyServiceImpl implements ZcyService {
         if (objectIds.size() > 0) {
             zcyListQuery.setObjectIdList(objectIds);//设置显示的记录
             zcyListQuery.setUserId(null);
-            zcyListQuery.setStartPage(zcyListQuery.getPage() * zcyListQuery.getPageCount());
+            zcyListQuery.setStartPage((zcyListQuery.getPage() > 0 ? zcyListQuery.getPage() - 1 : 0) * zcyListQuery.getPageCount());
             count = coordinatorMapper.selectByZCYListPageCount(zcyListQuery);
             zcyPawnDTOs = coordinatorMapper.selectByZCYListPage(zcyListQuery);
             setZcyPawnDTOs(zcyPawnDTOs);
@@ -503,7 +503,7 @@ public class ZcyServiceImpl implements ZcyService {
         if (objectIds.size() > 0) {
             zcyListQuery.setObjectIdList(objectIds);//设置资产源待接收
             zcyListQuery.setUserId(null);
-            zcyListQuery.setStartPage(zcyListQuery.getPage() * zcyListQuery.getPageCount());
+            zcyListQuery.setStartPage((zcyListQuery.getPage() > 0 ? zcyListQuery.getPage() - 1 : 0) * zcyListQuery.getPageCount());
             num = coordinatorMapper.selectByZCYListPageCount(zcyListQuery);
             count += num;
             zcyPawnDTOs = coordinatorMapper.selectByZCYListPage(zcyListQuery);
@@ -1069,7 +1069,7 @@ public class ZcyServiceImpl implements ZcyService {
         List<Integer> objectIds = new ArrayList<>();
         objectIds.add(estatesId);
         zcyListQuery.setObjectIdList(objectIds);//设置资产源待接收
-        zcyListQuery.setStartPage(zcyListQuery.getPage() * zcyListQuery.getPageCount());
+        zcyListQuery.setStartPage((zcyListQuery.getPage() > 0 ? zcyListQuery.getPage() - 1 : 0) * zcyListQuery.getPageCount());
         List<ZcyPawnDTO> zcyPawnDTOs = coordinatorMapper.selectByZCYListPage(zcyListQuery);
         setZcyPawnDTOs(zcyPawnDTOs);
         if (zcyPawnDTOs.size() > 0) {
