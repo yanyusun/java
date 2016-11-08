@@ -37,6 +37,8 @@ public class SysNoticeQuery  extends BaseQuery {
 
     private Integer userId;
 
+    private boolean isIntroduce=true;
+
     public Integer getId() {
         return id;
     }
@@ -115,5 +117,13 @@ public class SysNoticeQuery  extends BaseQuery {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public boolean isIntroduce() {
+        return isIntroduce;
+    }
+
+    public void setIntroduce(boolean introduce) {
+        isIntroduce = introduce;
     }
 }

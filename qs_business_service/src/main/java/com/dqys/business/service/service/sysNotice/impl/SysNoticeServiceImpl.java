@@ -26,7 +26,7 @@ public class SysNoticeServiceImpl implements SysNoticeService{
      * @param sysNoticeQuery
      * @return
      */
-    @Cacheable(value="sys_notice_cache",key="#sysNoticeQuery.getStartPageNum()+'_'+#sysNoticeQuery.getPageSize()")
+    @Cacheable(value="sys_notice_cache",key="#sysNoticeQuery.getStartPageNum()+'_'+#sysNoticeQuery.getPageSize()+'_'+#sysNoticeQuery.isIntroduce()")
     @Override
     public List<SysNotice> list(SysNoticeQuery sysNoticeQuery) {
         return mapper.list(sysNoticeQuery);
@@ -56,7 +56,7 @@ public class SysNoticeServiceImpl implements SysNoticeService{
         return mapper.updateByPrimaryKeySelective(record);
     }
 
-    @Cacheable(value="sys_notice_cache",key="'sys_notice_cache_query_count'")
+    @Cacheable(value="sys_notice_cache",key="'sys_notice_cache_query_count_'+#sysNoticeQuery.isIntroduce()")
     @Override
     public int queryCount(SysNoticeQuery sysNoticeQuery) {
         return mapper.queryCount(sysNoticeQuery);

@@ -15,7 +15,7 @@
     <result column="introduce" property="introduce" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, title, content, type, picName, create_at, update_at, stateflag, version, user_id
+    id, title, content, type, picName, create_at, update_at, stateflag, version, user_id,introduce
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -31,7 +31,7 @@
     insert into t_sys_notice (id, title, content, 
       type, picName, create_at, 
       update_at, stateflag, version, 
-      user_id)
+      user_id,introduce)
     values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
       #{type,jdbcType=INTEGER}, #{picname,jdbcType=VARCHAR}, #{createAt,jdbcType=TIMESTAMP}, 
       #{updateAt,jdbcType=TIMESTAMP}, #{stateflag,jdbcType=BIGINT}, #{version,jdbcType=INTEGER}, 
@@ -153,7 +153,10 @@
   <select id="list" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.query.sysNotice.SysNoticeQuery" >
     select
     <include refid="Base_Column_List" />
-    from  t_sys_notice
+    from  t_sys_notice WHERE 1=1
+    <if test="isIntroduce">
+      AND introduce = 1
+    </if>
     ORDER BY create_at DESC
     <if test="isPaging">
       limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}

@@ -2,11 +2,14 @@ package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.sysNotice.SysNotice;
 import com.dqys.business.orm.query.sysNotice.SysNoticeQuery;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.dto.sysNotice.SysNoticeDTO;
 import com.dqys.business.service.service.sysNotice.SysNoticeService;
 import com.dqys.business.service.utils.sysNotice.SysNoticeUtil;
+import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,6 +78,10 @@ public class SysNoticeController extends BaseApiContorller {
     @ResponseBody
     public JsonResponse list(SysNoticeQuery sysNoticeQuery) {
         if (sysNoticeQuery.getIsPaging()) {
+            int usertype = UserServiceUtils.headerStringToInt(UserSession.getCurrent().getUserType());
+            if(UserInfoEnum.USER_TYPE_ADMIN.getValue()==usertype){//如果是平台方有权利看到没有发布的内容
+                sysNoticeQuery.setIntroduce(false);
+            }
             Map<String, Object> map = new HashMap<>();
             List<SysNotice> list = sysNoticeService.list(sysNoticeQuery);
             map.put("data", list);
