@@ -21,6 +21,13 @@ public interface SysNoticeService {
 
     /**
      *
+     * @param sysNoticeQuery
+     * @return
+     */
+    List<SysNotice> listWithoutCache(SysNoticeQuery sysNoticeQuery);
+
+    /**
+     *
      * @param sysNotice
      * @return
      */
@@ -49,5 +56,10 @@ public interface SysNoticeService {
 
     int queryCount(SysNoticeQuery sysNoticeQuery);
 
-
+    /**
+     * 不经过缓存的查询数量
+     * @param sysNoticeQuery
+     * @return
+     */
+    int queryCountWithoutCache(SysNoticeQuery sysNoticeQuery);
 }

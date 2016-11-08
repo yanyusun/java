@@ -16,12 +16,12 @@
         <result column="user_name" property="userName" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, title, content, type, picName, create_at, update_at, user_id,introduce,user_name
+    id, title, content, type, picName, create_at, update_at, stateflag, version, user_id,introduce
   </sql>
 
     <sql id="select_Column_List">
-    id, title, content, type, picName, create_at, update_at, stateflag, version, user_id,introduce
-  </sql>
+    id, title, content, type, picName, create_at, update_at, user_id,introduce,user_name
+   </sql>
 
 
     <sql id="select_searchText_condition">
@@ -38,11 +38,9 @@
             AND n.create_at &gt; #{beginDate,jdbcType=DATE}
         </if>
         <if test="endDate != null">
-            AND n.create_at &lt;  #{endDate,jdbcType=DATE}
+            AND n.create_at &lt; #{endDate,jdbcType=DATE}
         </if>
     </sql>
-
-
 
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
@@ -178,12 +176,12 @@
         SELECT
         <include refid="select_Column_List"/>
         FROM (
-            Select
-            <include refid="select_Column_List"/>
-            FROM t_sys_notice n , t_user_info u
-            where n.user_id =u.id
-            <include refid="select_query_condition"/>
-        )AS total <include refid="select_searchText_condition"/>
+        Select n.*,u.user_name
+        FROM t_sys_notice n , t_user_info u
+        where n.user_id =u.id
+        <include refid="select_query_condition"/>
+        )AS total
+        <include refid="select_searchText_condition"/>
         ORDER BY create_at DESC
         <if test="isPaging">
             limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
@@ -192,8 +190,16 @@
 
     <select id="queryCount" parameterType="com.dqys.business.orm.query.sysNotice.SysNoticeQuery"
             resultType="java.lang.Integer">
-        SELECT COUNT(*) FROM t_sys_notice n where 1=1
-        <include refid="select_query_condition"/>
+        SELECT COUNT(*) FROM (
+          SELECT
+          <include refid="select_Column_List"/>
+          FROM (
+              Select n.*,u.user_name
+              FROM t_sys_notice n , t_user_info u
+              where n.user_id =u.id
+              <include refid="select_query_condition"/>
+          )AS total <include refid="select_searchText_condition"/>
+          ) as total
     </select>
 
 </mapper>
