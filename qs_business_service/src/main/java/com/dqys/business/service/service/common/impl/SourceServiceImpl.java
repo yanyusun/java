@@ -16,7 +16,6 @@ import com.dqys.business.service.service.common.SourceService;
 import com.dqys.business.service.utils.common.NavUtil;
 import com.dqys.business.service.utils.common.SourceServiceUtls;
 import com.dqys.core.model.JsonResponse;
-import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.JsonResponseTool;
@@ -136,8 +135,13 @@ public class SourceServiceImpl implements SourceService {
 
         Integer sourceId = sourceInfo.getId();
         List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceId);
-        //return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList,getNavAuthAll(navId, lenderId, estatesId));
-        return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList);
+
+
+
+
+
+        return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList,getNavAuthAll(navId, lenderId, estatesId));
+        //return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList);
     }
 
     @Override
@@ -223,19 +227,6 @@ public class SourceServiceImpl implements SourceService {
         return null;
     }
 
-//    /**
-//     * 得到重新设置后的ｎａｖｉｄ关联的所有可选内容
-//     * @param dto
-//     * @return
-//     */
-//    public SelectDtoMap getNewNavALL(SourceInfoDTO dto){
-//        if (dto.getLenderId() != null && dto.getLenderId() != 0) {//得到资产源的资料实勘权限
-//            return navUnviewManagerService.getNewALL(dto.getNavId(), ObjectTypeEnum.LENDER.getValue(),dto.getLenderId(),dto.getSelect);
-//        } else if (dto.getEstatesId()!= null && dto.getEstatesId() != 0) {//得到借款人的资料实勘权限
-//            return navUnviewManagerService.getNewALL(dto.getNavId(), ObjectTypeEnum.LENDER.getValue(),dto.getLenderId(),dto.getSelectDtoMap());
-//        }
-//        return null;
-//    }
 
     /**
      * 得到重新设置后的ｎａｖｉｄ关联的所有可选内容
@@ -243,17 +234,16 @@ public class SourceServiceImpl implements SourceService {
      * @return
      */
     public SelectDtoMap getNewNavALL(NavUnviewDTO dto){
-        //return navUnviewManagerService.getNewALL(dto.getNavId(),dto.getObjectType(),dto.getObjectId(),dto.getUnviewReIdMap());
-        return null;
+        return navUnviewManagerService.getNewALL(dto.getNavId(),dto.getObjectType(),dto.getObjectId(),dto.getUnviewReIdMap());
     }
 
-    /**
-     * 过滤掉当前用户不可见的分类
-     * @param list
-     * @param userSession
-     */
-    public void sourceNavigationFilter(List<SourceNavigation>  list, UserSession userSession){
-
-    }
+//    /**
+//     * 过滤掉当前用户不可见的分类
+//     * @param list
+//     * @param userSession
+//     */
+//    public void sourceNavigationFilter(List<SourceNavigation>  list, UserSession userSession){
+//
+//    }
 
 }

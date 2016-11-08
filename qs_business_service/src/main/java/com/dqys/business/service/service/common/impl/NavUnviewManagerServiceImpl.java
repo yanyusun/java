@@ -1,5 +1,6 @@
 package com.dqys.business.service.service.common.impl;
 
+import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.business.orm.mapper.common.NavUnviewCompanyMapper;
 import com.dqys.business.orm.mapper.common.NavUnviewUserInfoMapper;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
@@ -38,6 +39,8 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
     private NavUnviewCompanyMapper navUnviewCompanyMapper;
     @Autowired
     private NavUnviewUserInfoMapper navUnviewUserInfoMapper;
+    @Autowired
+    private TCompanyInfoMapper tCompanyInfoMapper;
 
     /**
      * 所有可以选择的用户类型
@@ -60,6 +63,25 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         return getAll(navId, object, objectId, unviewReIdMap);
     }
 
+    @Override
+    public boolean hasSourceSourceAuth(Integer navId, Integer object, Integer objectId, Integer userId) {
+        NavUnviewServerAgent userTypeAgent = new NavUnviewServerAgent(navUnviewUserTypeService);
+        List<SelectDto> userTypeList = userTypeAgent.getUnview(navId, object, objectId);
+        for(SelectDto selectDto:userTypeList){
+            if(selectDto.getReId().intValue()==){
+
+            }
+
+        }
+
+
+
+        NavUnviewServerAgent companyAgent = new NavUnviewServerAgent(navUnviewCompanyService);
+        NavUnviewServerAgent roleAgent = new NavUnviewServerAgent(navUnviewRoleService);
+        NavUnviewServerAgent userInfoAgent = new NavUnviewServerAgent(navUnviewUserInfoService);
+
+        return true;
+    }
 
     /**
      * 根据unviewReIdMap的值判断是否需要更新,并返回最新结果
@@ -75,24 +97,24 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         //用户类型列表
         List<SelectDto> userTypeInitList = getUserTypeInitList();
         NavUnviewServerAgent userTypeAgent = new NavUnviewServerAgent(navUnviewUserTypeService, userTypeInitList);
-        if (unviewReIdMap!=null&&unviewReIdMap.getUserType() != null) {//判断是否要更新
+        if (unviewReIdMap != null && unviewReIdMap.getUserType() != null) {//判断是否要更新
             userTypeAgent.initCacheReset(navId, object, objectId, unviewReIdMap.getUserType());
         }
         selectDtoMap.setUserTypeList(userTypeAgent.getSelectOptions(navId, object, objectId));
         //公司列表
         List<SelectDto> companyInitList = getCompanyInitList(userTypeAgent.getSelectedDtoList(navId, object, objectId));
-        if(unviewReIdMap!=null&&unviewReIdMap.getCompanySearchKey()!=null){
-            filter(companyInitList,unviewReIdMap.getCompanySearchKey());
+        if (unviewReIdMap != null && unviewReIdMap.getCompanySearchKey() != null) {
+            filter(companyInitList, unviewReIdMap.getCompanySearchKey());
         }
         NavUnviewServerAgent companyAgent = new NavUnviewServerAgent(navUnviewCompanyService, companyInitList);
-        if (unviewReIdMap!=null&&unviewReIdMap.getCompanyId() != null) {
+        if (unviewReIdMap != null && unviewReIdMap.getCompanyId() != null) {
             companyAgent.reset(navId, object, objectId, unviewReIdMap.getCompanyId());
         }
         selectDtoMap.setCompanyList(companyAgent.getSelectOptions(navId, object, objectId));
         //角色列表
         List<SelectDto> roleInitList = getRoleInitList();
         NavUnviewServerAgent roleAgent = new NavUnviewServerAgent(navUnviewRoleService, roleInitList);
-        if (unviewReIdMap!=null&&unviewReIdMap.getRoleType() != null) {
+        if (unviewReIdMap != null && unviewReIdMap.getRoleType() != null) {
             roleAgent.reset(navId, object, objectId, unviewReIdMap.getRoleType());
         }
         selectDtoMap.setRoleList(roleAgent.getSelectOptions(navId, object, objectId));
@@ -100,11 +122,11 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         List<SelectDto> userInfoInitList = getUserInitList(
                 roleAgent.getSelectedDtoList(navId, object, objectId), companyAgent.getSelectedDtoList(navId, object, objectId)
                 , object, objectId);
-        if(unviewReIdMap!=null&&unviewReIdMap.getUserSearchKey()!=null){
-            filter(userInfoInitList,unviewReIdMap.getUserSearchKey());
+        if (unviewReIdMap != null && unviewReIdMap.getUserSearchKey() != null) {
+            filter(userInfoInitList, unviewReIdMap.getUserSearchKey());
         }
         NavUnviewServerAgent userInfoAgent = new NavUnviewServerAgent(navUnviewUserInfoService, userInfoInitList);
-        if (unviewReIdMap!=null&&unviewReIdMap.getUserId() != null) {
+        if (unviewReIdMap != null && unviewReIdMap.getUserId() != null) {
             userInfoAgent.reset(navId, object, objectId, unviewReIdMap.getUserId());
         }
 

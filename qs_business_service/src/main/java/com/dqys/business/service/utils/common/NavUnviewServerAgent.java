@@ -5,6 +5,7 @@ import com.dqys.business.service.service.common.NavUnviewService;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -45,6 +46,10 @@ public class NavUnviewServerAgent {
     public NavUnviewServerAgent(NavUnviewService navUnviewService, List<SelectDto> intList) {
         this.navUnviewService = navUnviewService;
         this.intList = intList;
+    }
+
+    public NavUnviewServerAgent(NavUnviewService navUnviewService) {
+        this.navUnviewService = navUnviewService;
     }
 
     /**
@@ -115,6 +120,14 @@ public class NavUnviewServerAgent {
             }
         }
         return selectOptionsList;
+    }
+
+    public List<SelectDto> getUnview(Integer navId, Integer object, Integer objectId){
+        init(navId,object,objectId);//
+        List<SelectDto> list = new LinkedList<>();
+        list.addAll(allParentList);
+        list.addAll(navlist);
+        return list;
     }
 
 
@@ -205,6 +218,12 @@ public class NavUnviewServerAgent {
         return true;
     }
 
+    /**
+     * 初始化所有父不可见和当前不可见的内容
+     * @param navId
+     * @param object
+     * @param objectId
+     */
     public void init(Integer navId, Integer object, Integer objectId) {
         if (allParentList == null) {
             allParentList = navUnviewService.getALLParentList(navId, object, objectId);

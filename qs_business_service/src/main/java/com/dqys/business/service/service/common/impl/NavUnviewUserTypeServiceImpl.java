@@ -31,6 +31,13 @@ public class NavUnviewUserTypeServiceImpl implements NavUnviewUserTypeService {
     @Autowired
     private SourceNavigationMapper sourceNavigationMapper;
 
+    /**
+     * 如果对应的navId,object,objectId查不到数据,就从缓存中拿数据
+     * @param navId 资料实勘分类id
+     * @param object
+     * @param objectId
+     * @return
+     */
     @Override
     public List<SelectDto> getALLParentList(Integer navId, Integer object, Integer objectId) {
         List<SelectDto> dtos = new ArrayList<>();

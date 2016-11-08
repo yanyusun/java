@@ -27,4 +27,8 @@ public interface NavUnviewManagerService {
      */
     SelectDtoMap getNewALL(Integer navId,Integer object,Integer objectId,UnviewReIdMap unviewReIdMap);
 
+    boolean hasSourceSourceAuth(Integer navId,Integer object,Integer objectId,Integer userId);
+
+
+
 }
