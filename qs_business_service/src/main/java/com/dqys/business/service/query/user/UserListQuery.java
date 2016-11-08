@@ -14,11 +14,11 @@ import java.util.List;
  * @apiParam {number} [type] 类型<机构|个人>
  * @apiParam {number} [status] 状态<启用|禁用|未激活>
  * @apiParam {number} [statuss] 状态复选(集合)<启用|禁用|未激活>
+ * @apiParam {number} [module] 模块（null组织架构，1用户管理）
  * @apiParam {string} [name] 模糊查询
- *
  * @apiParam {number} [page] 页码
  * @apiParam {number} [pageCount] 显示条数
- *
+ * <p/>
  * Created by Yvan on 16/6/22.
  * 用户模块条件查询
  */
@@ -33,9 +33,27 @@ public class UserListQuery extends BasePagination {
     private Integer type; // 类型<机构|个人>
     // 用户信息
     private Integer status; // 状态<启用|禁用|未激活>
+    private Integer useStatus; // 使用状态状态<1停用2禁止登入>
     private List<Integer> statuss; // 多种状态集合
+    private Integer module; // 模块（null组织架构，1用户管理）
 
     private String name;  // 多种数据搜索
+
+    public Integer getModule() {
+        return module;
+    }
+
+    public void setModule(Integer module) {
+        this.module = module;
+    }
+
+    public Integer getUseStatus() {
+        return useStatus;
+    }
+
+    public void setUseStatus(Integer useStatus) {
+        this.useStatus = useStatus;
+    }
 
     public Integer getProvince() {
         return province;

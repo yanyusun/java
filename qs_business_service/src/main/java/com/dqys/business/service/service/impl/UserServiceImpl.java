@@ -140,32 +140,32 @@ public class UserServiceImpl implements UserService {
             tUserQuery.setCompanyId(tUserInfo.getCompanyId());
         }
         //组织架构中不需要
-//        if (CommonUtil.isManage()) {
-//            // 总管理员
-//            if (CommonUtil.checkNullParam(query.getProvince(), query.getCity(), query.getDistrict())) {
-//                List<Integer> companyIds = new ArrayList<>();
-//
-//                CompanyQuery companyQuery = new CompanyQuery();
-//                companyQuery.setProvince(query.getProvince());
-//                companyQuery.setCity(query.getCity());
-//                companyQuery.setDistrict(query.getDistrict());
-//
-//                List<TCompanyInfo> tCompanyInfoList = tCompanyInfoMapper.queryList(companyQuery);
-//                if (tCompanyInfoList != null) {
-//                    tCompanyInfoList.forEach(tCompanyInfo -> {
-//                        companyIds.add(tCompanyInfo.getId());
-//                    });
-//                }
-//                if (companyIds.isEmpty()) {
-//                    // 没有符合条件的数据
-//                    resultMap.put("data", null);
-//                    resultMap.put("total", 0);
-//                    return JsonResponseTool.success(resultMap);
-//                }
-//                tUserQuery.setCompanyIds(companyIds);
-//                tUserQuery.setCompanyId(null);
-//            }
-//        }
+        if (query.getModule() == 1) {
+            // 总管理员
+            if (CommonUtil.checkNullParam(query.getProvince(), query.getCity(), query.getDistrict())) {
+                List<Integer> companyIds = new ArrayList<>();
+
+                CompanyQuery companyQuery = new CompanyQuery();
+                companyQuery.setProvince(query.getProvince());
+                companyQuery.setCity(query.getCity());
+                companyQuery.setDistrict(query.getDistrict());
+
+                List<TCompanyInfo> tCompanyInfoList = tCompanyInfoMapper.queryList(companyQuery);
+                if (tCompanyInfoList != null) {
+                    tCompanyInfoList.forEach(tCompanyInfo -> {
+                        companyIds.add(tCompanyInfo.getId());
+                    });
+                }
+                if (companyIds.isEmpty()) {
+                    // 没有符合条件的数据
+                    resultMap.put("data", null);
+                    resultMap.put("total", 0);
+                    return JsonResponseTool.success(resultMap);
+                }
+                tUserQuery.setCompanyIds(companyIds);
+                tUserQuery.setCompanyId(null);
+            }
+        }
         tUserQuery.setStatus(query.getStatus());
         tUserQuery.setStatuss(query.getStatuss());
         tUserQuery.setNameLike(query.getName());
