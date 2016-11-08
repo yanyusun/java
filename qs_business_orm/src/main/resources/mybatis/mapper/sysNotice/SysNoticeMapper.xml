@@ -1,138 +1,166 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dqys.business.orm.mapper.sysNotice.SysNoticeMapper" >
-  <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.sysNotice.SysNotice" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="title" property="title" jdbcType="VARCHAR" />
-    <result column="content" property="content" jdbcType="VARCHAR" />
-    <result column="type" property="type" jdbcType="INTEGER" />
-    <result column="picName" property="picname" jdbcType="VARCHAR" />
-    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
-    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
-    <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
-    <result column="version" property="version" jdbcType="INTEGER" />
-    <result column="user_id" property="userId" jdbcType="INTEGER" />
-    <result column="introduce" property="introduce" jdbcType="INTEGER" />
-  </resultMap>
-  <sql id="Base_Column_List" >
+<mapper namespace="com.dqys.business.orm.mapper.sysNotice.SysNoticeMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.sysNotice.SysNotice">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="picName" property="picname" jdbcType="VARCHAR"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="introduce" property="introduce" jdbcType="INTEGER"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, title, content, type, picName, create_at, update_at, user_id,introduce,user_name
+  </sql>
+
+    <sql id="select_Column_List">
     id, title, content, type, picName, create_at, update_at, stateflag, version, user_id,introduce
   </sql>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
-    <include refid="Base_Column_List" />
-    from t_sys_notice
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+
+
+    <sql id="select_searchText_condition">
+        <if test="searchText != null">
+            WHERE user_name LIKE CONCAT('%',#{searchText},'%' ) or content LIKE CONCAT('%',#{searchText},'%' )
+        </if>
+    </sql>
+
+    <sql id="select_query_condition">
+        <if test="isIntroduce">
+            AND introduce = 1
+        </if>
+        <if test="beginDate != null">
+            AND n.create_at &gt; #{beginDate,jdbcType=DATE}
+        </if>
+        <if test="endDate != null">
+            AND n.create_at &lt;  #{endDate,jdbcType=DATE}
+        </if>
+    </sql>
+
+
+
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sys_notice
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from t_sys_notice
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.dqys.business.orm.pojo.sysNotice.SysNotice" >
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.sysNotice.SysNotice">
     insert into t_sys_notice (title, content, type, picName, user_id)
     values ( #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
       #{type,jdbcType=INTEGER}, #{picname,jdbcType=VARCHAR},
       #{userId,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.sysNotice.SysNotice" >
-    insert into t_sys_notice
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        id,
-      </if>
-      <if test="title != null" >
-        title,
-      </if>
-      <if test="content != null" >
-        content,
-      </if>
-      <if test="type != null" >
-        type,
-      </if>
-      <if test="picname != null" >
-        picName,
-      </if>
-      <if test="createAt != null" >
-        create_at,
-      </if>
-      <if test="updateAt != null" >
-        update_at,
-      </if>
-      <if test="stateflag != null" >
-        stateflag,
-      </if>
-      <if test="version != null" >
-        version,
-      </if>
-      <if test="userId != null" >
-        user_id,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="id != null" >
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="title != null" >
-        #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="content != null" >
-        #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null" >
-        #{type,jdbcType=INTEGER},
-      </if>
-      <if test="picname != null" >
-        #{picname,jdbcType=VARCHAR},
-      </if>
-      <if test="createAt != null" >
-        #{createAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="updateAt != null" >
-        #{updateAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="stateflag != null" >
-        #{stateflag,jdbcType=BIGINT},
-      </if>
-      <if test="version != null" >
-        #{version,jdbcType=INTEGER},
-      </if>
-      <if test="userId != null" >
-        #{userId,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.sysNotice.SysNotice" >
-    update t_sys_notice
-    <set >
-      version = version+1,
-      update_at=CURRENT_TIMESTAMP,
-      <if test="title != null" >
-        title = #{title,jdbcType=VARCHAR},
-      </if>
-      <if test="content != null" >
-        content = #{content,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null" >
-        type = #{type,jdbcType=INTEGER},
-      </if>
-      <if test="picname != null" >
-        picName = #{picname,jdbcType=VARCHAR},
-      </if>
-      <if test="createAt != null" >
-        create_at = #{createAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="stateflag != null" >
-        stateflag = #{stateflag,jdbcType=BIGINT},
-      </if>
-      <if test="userId != null" >
-        user_id = #{userId,jdbcType=INTEGER},
-      </if>
-      <if test="introduce != null" >
-        introduce = #{introduce,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.sysNotice.SysNotice" >
+    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.sysNotice.SysNotice">
+        insert into t_sys_notice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="picname != null">
+                picName,
+            </if>
+            <if test="createAt != null">
+                create_at,
+            </if>
+            <if test="updateAt != null">
+                update_at,
+            </if>
+            <if test="stateflag != null">
+                stateflag,
+            </if>
+            <if test="version != null">
+                version,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="picname != null">
+                #{picname,jdbcType=VARCHAR},
+            </if>
+            <if test="createAt != null">
+                #{createAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateAt != null">
+                #{updateAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="stateflag != null">
+                #{stateflag,jdbcType=BIGINT},
+            </if>
+            <if test="version != null">
+                #{version,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.sysNotice.SysNotice">
+        update t_sys_notice
+        <set>
+            version = version+1,
+            update_at=CURRENT_TIMESTAMP,
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="picname != null">
+                picName = #{picname,jdbcType=VARCHAR},
+            </if>
+            <if test="createAt != null">
+                create_at = #{createAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="stateflag != null">
+                stateflag = #{stateflag,jdbcType=BIGINT},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="introduce != null">
+                introduce = #{introduce,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.business.orm.pojo.sysNotice.SysNotice">
     update t_sys_notice
     set title = #{title,jdbcType=VARCHAR},
       content = #{content,jdbcType=VARCHAR},
@@ -146,24 +174,26 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="list" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.query.sysNotice.SysNoticeQuery" >
-    select
-    <include refid="Base_Column_List" />
-    from  t_sys_notice WHERE 1=1
-    <if test="isIntroduce">
-      AND introduce = 1
-    </if>
-    ORDER BY create_at DESC
-    <if test="isPaging">
-      limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
-    </if>
-  </select>
+    <select id="list" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.query.sysNotice.SysNoticeQuery">
+        SELECT
+        <include refid="select_Column_List"/>
+        FROM (
+            Select
+            <include refid="select_Column_List"/>
+            FROM t_sys_notice n , t_user_info u
+            where n.user_id =u.id
+            <include refid="select_query_condition"/>
+        )AS total <include refid="select_searchText_condition"/>
+        ORDER BY create_at DESC
+        <if test="isPaging">
+            limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+        </if>
+    </select>
 
-  <select id="queryCount" parameterType="com.dqys.business.orm.query.sysNotice.SysNoticeQuery" resultType="java.lang.Integer">
-    SELECT COUNT(*) FROM t_sys_notice where 1=1
-    <if test="isIntroduce">
-      AND introduce = 1
-    </if>
-  </select>
+    <select id="queryCount" parameterType="com.dqys.business.orm.query.sysNotice.SysNoticeQuery"
+            resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM t_sys_notice n where 1=1
+        <include refid="select_query_condition"/>
+    </select>
 
 </mapper>
