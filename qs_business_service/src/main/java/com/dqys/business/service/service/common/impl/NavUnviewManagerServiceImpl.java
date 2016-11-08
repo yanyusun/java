@@ -1,6 +1,6 @@
 package com.dqys.business.service.service.common.impl;
 
-import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
+import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.business.orm.mapper.common.NavUnviewCompanyMapper;
 import com.dqys.business.orm.mapper.common.NavUnviewUserInfoMapper;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
@@ -40,7 +40,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
     @Autowired
     private NavUnviewUserInfoMapper navUnviewUserInfoMapper;
     @Autowired
-    private TCompanyInfoMapper tCompanyInfoMapper;
+    private TUserInfoMapper tUserInfoMapper;
 
     /**
      * 所有可以选择的用户类型
@@ -65,6 +65,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
 
     @Override
     public boolean hasSourceSourceAuth(Integer navId, Integer object, Integer objectId, Integer userId) {
+        tUserInfoMapper.selectByPrimaryKey(userId);
         NavUnviewServerAgent userTypeAgent = new NavUnviewServerAgent(navUnviewUserTypeService);
         List<SelectDto> userTypeList = userTypeAgent.getUnview(navId, object, objectId);
         for(SelectDto selectDto:userTypeList){
