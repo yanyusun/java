@@ -4,13 +4,14 @@ import com.dqys.business.orm.pojo.sysNotice.SysNotice;
 import com.dqys.business.orm.query.sysNotice.SysNoticeQuery;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  *
  * Created by yan on 16-8-25.
  */
 public interface SysNoticeService {
+     int failNO=-1;
+
     /**
      *
      * @param sysNoticeQuery
