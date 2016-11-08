@@ -571,6 +571,7 @@ public class ZcyServiceImpl implements ZcyService {
                 }
             }
             dto.setHangShingle(timeCount.toString());
+            dto.setShiKan(coordinatorMapper.getShiKanCount(dto.getEstatesId()));
         }
     }
 

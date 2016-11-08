@@ -247,4 +247,9 @@ public interface CoordinatorMapper {
      * @return
      */
     UserDetail getUserDetail(Integer userId);
+
+    /**
+     * 获取资料实堪的资产源数量
+     */
+    Integer getShiKanCount(Integer estatesId);
 }
