@@ -135,8 +135,12 @@ public class UserServiceImpl implements UserService {
             }
             tUserQuery.setIds(ids);
         }
-
-        if (CommonUtil.isManage()) {
+        TUserInfo tUserInfo = getCurrentUser();
+        if (tUserInfo != null) {
+            tUserQuery.setCompanyId(tUserInfo.getCompanyId());
+        }
+        //组织架构中不需要
+        if (query.getModule() == 1) {
             // 总管理员
             if (CommonUtil.checkNullParam(query.getProvince(), query.getCity(), query.getDistrict())) {
                 List<Integer> companyIds = new ArrayList<>();
@@ -159,11 +163,7 @@ public class UserServiceImpl implements UserService {
                     return JsonResponseTool.success(resultMap);
                 }
                 tUserQuery.setCompanyIds(companyIds);
-            }
-        } else {
-            TUserInfo tUserInfo = getCurrentUser();
-            if (tUserInfo != null) {
-                tUserQuery.setCompanyId(tUserInfo.getCompanyId());
+                tUserQuery.setCompanyId(null);
             }
         }
         tUserQuery.setStatus(query.getStatus());
@@ -189,8 +189,8 @@ public class UserServiceImpl implements UserService {
             resultMap.put("total", 0);
             return JsonResponseTool.success(resultMap);
         } else {
-            for (TUserInfo tUserInfo : tUserInfoList) {
-                userListDTOList.add(_get(tUserInfo));
+            for (TUserInfo info : tUserInfoList) {
+                userListDTOList.add(_get(info));
             }
         }
         Integer count = tUserInfoMapper.queryCount(tUserQuery);
