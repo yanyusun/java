@@ -162,5 +162,10 @@ public class CoordinatorMapperImpl extends BaseDao implements CoordinatorMapper 
         return super.getSqlSession().getMapper(CoordinatorMapper.class).getUserDetail(userId);
     }
 
+    @Override
+    public Integer getShiKanCount(Integer estatesId) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).getShiKanCount(estatesId);
+    }
+
 
 }

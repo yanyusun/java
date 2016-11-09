@@ -337,6 +337,9 @@ public class ZcyController {
      * "expressPrice":,//速卖价格
      * "expressStartTime":,//速卖起始时间
      * "expressEndTime":,//速卖结束时间
+     * "entrustType":"出售",//委托类型
+     * "decorateCase":"精装",//装修情况
+     * "metro":1//距离铁
      * }
      * }
      * }
