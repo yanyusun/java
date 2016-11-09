@@ -150,9 +150,10 @@
     </delete>
 
     <insert id="insertSelectiveByUserType">
-        <foreach collection="unviewList" item="userType" index="index">
             INSERT INTO t_nav_unview_usertype(nav_id,user_type,object_type,object_id)
-            VALUES(#{navId},#{userType},#{object},#{objectId})
+            VALUES
+        <foreach collection="unviewList" item="userType" index="index" separator=",">
+            (#{navId},#{userType},#{object},#{objectId})
         </foreach>
     </insert>
 

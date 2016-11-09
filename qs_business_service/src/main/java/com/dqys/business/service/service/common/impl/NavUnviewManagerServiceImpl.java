@@ -26,10 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 资料实勘权限管理者
@@ -264,17 +261,19 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
      */
     private List<SelectDto> getCompanyInitList(List<SelectDto> selectUserTypeList) {
         // TODO: 16-11-3 mkf
-        List<Integer> userTypes = null;//用户类型
+        List<Integer> userTypes = new ArrayList<>();//用户类型
         List<SelectDto> dtos = new ArrayList<>();
         for (SelectDto dto : selectUserTypeList) {
             if (!userTypes.contains(dto.getReId())) {
                 userTypes.add(dto.getReId());
             }
         }
-        List<Map> list = navUnviewCompanyMapper.selectCompanyByUserType(userTypes);//查询对应类型的所有公司
-        for (Map m : list) {
-            SelectDto dto = new SelectDto(null, MessageUtils.transMapToInt(m, "reId"), MessageUtils.transMapToString(m, "showName"));
-            dtos.add(dto);
+        if(userTypes.size()!=0){
+            List<Map> list = navUnviewCompanyMapper.selectCompanyByUserType(userTypes);//查询对应类型的所有公司
+            for (Map m : list) {
+                SelectDto dto = new SelectDto(null, MessageUtils.transMapToInt(m, "reId"), MessageUtils.transMapToString(m, "showName"));
+                dtos.add(dto);
+            }
         }
         return dtos;
     }
@@ -317,8 +316,8 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
      */
     public List<SelectDto> getUserInitList(List<SelectDto> selectRoleList, List<SelectDto> selectCompanyList, Integer objectType, Integer objectId) {
         //// TODO: 16-11-3 mkf
-        List<Integer> roles = null;//角色
-        List<Integer> companyIds = null;//公司
+        List<Integer> roles = new ArrayList<>();//角色
+        List<Integer> companyIds = new ArrayList<>();//公司
         List<SelectDto> dtos = new ArrayList<>();
         for (SelectDto dto : selectRoleList) {
             if (!roles.contains(dto.getReId())) {
@@ -330,7 +329,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
                 companyIds.add(dto.getReId());
             }
         }
-        Map their = null;
+        Map their = new HashMap<>();
         if (roles.contains(RoleTypeEnum.THEIR.getValue())) {
             their.put("objectId", objectId);
             their.put("objectType", objectType);
@@ -351,7 +350,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
      * @return
      */
     private void filter(List<SelectDto> selectDtoList, String key) {
-        if (key != null && !key.equalsIgnoreCase("")) {
+        if (key != null && !key.equalsIgnoreCase("")&&selectDtoList!=null) {
             Iterator<SelectDto> iter = selectDtoList.iterator();
             while (iter.hasNext()) {
                 if (!iter.next().getShowName().contains(key)) {

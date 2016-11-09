@@ -76,6 +76,9 @@ public class NavUnviewUserTypeServiceImpl implements NavUnviewUserTypeService {
     }
 
     private void setSelectDtoList(List<SelectDto> dtos, List<Integer> navIds, Integer object, Integer objectId) {
+        if (navIds != null && navIds.size() == 0) {
+            return;
+        }
         List<Map> list = navUnviewUserTypeMapper.findNavNameByNavId(navIds, object, objectId);
         if (list != null && list.size() > 0) {
             for (Map m : list) {
