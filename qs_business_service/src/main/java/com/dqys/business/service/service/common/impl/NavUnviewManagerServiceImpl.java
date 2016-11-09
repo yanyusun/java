@@ -97,6 +97,11 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         }
         return true;
     }
+    //// TODO: 16-11-9 mkf 
+    @Override
+    public boolean hasNavUnviewOperAuth(Integer navId, Integer object, Integer objectId, Integer userId) {
+        return false;
+    }
 
     /**
      * 根据unviewReIdMap的值判断是否需要更新,并返回最新结果
