@@ -99,9 +99,10 @@
     </delete>
 
     <insert id="insertSelectiveByUserInfo">
-        <foreach collection="unviewList" item="userId" index="index">
-            INSERT INTO t_nav_unview_userinfo(nav_id,user_id,object_type,object_id)
-            VALUES(#{navId},#{userId},#{object},#{objectId})
+        INSERT INTO t_nav_unview_userinfo(nav_id,user_id,object_type,object_id)
+        VALUES
+        <foreach collection="unviewList" item="userId" index="index" separator=",">
+            (#{navId},#{userId},#{object},#{objectId})
         </foreach>
     </insert>
 
