@@ -7,6 +7,7 @@ import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.service.common.SourceService;
 import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +76,10 @@ public class SourceController extends BaseApiContorller {
         }
         if ((sourceInfoDTO.getLenderId() == null && sourceInfoDTO.getEstatesId() == null) || (sourceInfoDTO.getLenderId() != null && sourceInfoDTO.getEstatesId() != null)) {
             return JsonResponseTool.paramErr("资产源或借款人参数错误");
+        }
+        Integer userId = UserSession.getCurrent().getUserId();
+        if(!sourceService.hasSourceAuth(sourceInfoDTO.getNavId(),sourceInfoDTO.getLenderId(),sourceInfoDTO.getEstatesId(),userId)){
+            return JsonResponseTool.authFailure("对不起,您不具备增加该导航下资产源的权限");
         }
         return sourceService.addSource(sourceInfoDTO);
     }

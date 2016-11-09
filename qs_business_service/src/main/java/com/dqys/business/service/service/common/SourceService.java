@@ -74,4 +74,14 @@ public interface SourceService {
      */
     SelectDtoMap getNewNavALL(NavUnviewDTO dto);
 
+    /**
+     * 是否具有资料实勘的权限
+     * @param navId
+     * @param lenderId
+     * @param estatesId
+     * @param userId
+     * @return
+     */
+    boolean hasSourceAuth(Integer navId,Integer lenderId,Integer estatesId,Integer userId);
+
 }
