@@ -168,8 +168,8 @@
     </select>
     <!--最后留言时间-->
     <select id="getLastLeaveWord" resultType="java.util.Map">
-        SELECT DATE_FORMAT(lw.time,'%Y-%m-%d') time from leave_word lw
-          where lw.user_id=#{userId,jdbcType=INTEGER} ORDER BY lw.time desc LIMIT 0,1
+        SELECT DATE_FORMAT(lw.create_at,'%Y-%m-%d') time from t_follow_up_message lw
+          where lw.user_id=#{userId,jdbcType=INTEGER} ORDER BY lw.create_at desc LIMIT 0,1
     </select>
     <!--根据对象类型和对象id获取业务号id-->
     <select id="selectByBusinessId" resultType="java.util.Map">
