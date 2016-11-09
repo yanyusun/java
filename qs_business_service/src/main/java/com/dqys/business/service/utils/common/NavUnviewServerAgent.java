@@ -5,6 +5,7 @@ import com.dqys.business.service.service.common.NavUnviewService;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -47,6 +48,10 @@ public class NavUnviewServerAgent {
         this.intList = intList;
     }
 
+    public NavUnviewServerAgent(NavUnviewService navUnviewService) {
+        this.navUnviewService = navUnviewService;
+    }
+
     /**
      * 得到已选项
      *
@@ -63,16 +68,18 @@ public class NavUnviewServerAgent {
             Iterator<SelectDto> intIter = selectDtoList.iterator();
             //移除父级关联的项,
             while (intIter.hasNext()) {
+                SelectDto selectDto = intIter.next();
+                int reId = selectDto.getReId().intValue();
                 //移除父拥有的
                 for (SelectDto parentUnview : allParentList) {
-                    if (intIter.next().getReId().intValue() == parentUnview.getReId()) {
+                    if (reId == parentUnview.getReId()) {
                         intIter.remove();
                         break;
                     }
                 }
                 //是子类的去除
                 for (SelectDto navUnview : navlist) {
-                    if (intIter.next().getReId().intValue() == navUnview.getReId()) {
+                    if (reId == navUnview.getReId()) {
                         intIter.remove();
                         break;
                     }
@@ -98,16 +105,18 @@ public class NavUnviewServerAgent {
             Iterator<SelectDto> intIter = selectOptionsList.iterator();
             //移除父级关联的项,
             while (intIter.hasNext()) {
+                SelectDto selectDto = intIter.next();
+                int reId = selectDto.getReId().intValue();
                 //移除父拥有的
                 for (SelectDto parentUnview : allParentList) {
-                    if (intIter.next().getReId().intValue() == parentUnview.getReId()) {
+                    if (reId == parentUnview.getReId()) {
                         intIter.remove();
                         break;
                     }
                 }
                 //是子类的就可见为false
                 for (SelectDto navUnview : navlist) {
-                    if (intIter.next().getReId().intValue() == navUnview.getReId()) {
+                    if (reId == navUnview.getReId()) {
                         intIter.next().setVisible(false);
                         break;
                     }
@@ -115,6 +124,14 @@ public class NavUnviewServerAgent {
             }
         }
         return selectOptionsList;
+    }
+
+    public List<SelectDto> getUnview(Integer navId, Integer object, Integer objectId) {
+        init(navId, object, objectId);//
+        List<SelectDto> list = new LinkedList<>();
+        list.addAll(allParentList);
+        list.addAll(navlist);
+        return list;
     }
 
 
@@ -164,15 +181,15 @@ public class NavUnviewServerAgent {
                         break;
                     }
                 }
-                List<Integer> list=null;
+                List<Integer> list = null;
                 if (isInInitCache) {//如果在缓存里已经有值,将缓存中的其他值加入数据库
-                    list=NavUtil.selectDtosToIntegers(selectDtos);
+                    list = NavUtil.selectDtosToIntegers(selectDtos);
                     list.remove(reId);
                 } else {//将缓存中的值和当前的值加入数据库
-                    list=NavUtil.selectDtosToIntegers(selectDtos);
+                    list = NavUtil.selectDtosToIntegers(selectDtos);
                     list.add(reId);
                 }
-                navUnviewService.add(navId, object, objectId,list);
+                navUnviewService.add(navId, object, objectId, list);
             }
         }
 
@@ -205,6 +222,13 @@ public class NavUnviewServerAgent {
         return true;
     }
 
+    /**
+     * 初始化所有父不可见和当前不可见的内容
+     *
+     * @param navId
+     * @param object
+     * @param objectId
+     */
     public void init(Integer navId, Integer object, Integer objectId) {
         if (allParentList == null) {
             allParentList = navUnviewService.getALLParentList(navId, object, objectId);

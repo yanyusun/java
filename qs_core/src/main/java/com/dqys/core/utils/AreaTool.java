@@ -122,11 +122,13 @@ public class AreaTool implements ApplicationContextAware {
      */
     public static List<TArea> listAreaByUpperId(Integer upperId) throws Exception {
         List<Integer> tAreaIds = NoSQLWithRedisTool.getValueObject(AREA_RELATION_KEY + upperId);
-        List<TArea> tAreaList = new ArrayList<>();
-        for (Integer aid : tAreaIds) {
-            tAreaList.add(getAreaById(aid));
+        List<TArea> tAreaList =null;
+        if(tAreaIds!=null){
+            tAreaList = new ArrayList<>();
+            for (Integer aid : tAreaIds) {
+                tAreaList.add(getAreaById(aid));
+            }
         }
-
         return tAreaList;
     }
 

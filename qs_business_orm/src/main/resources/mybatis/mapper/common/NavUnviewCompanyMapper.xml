@@ -121,16 +121,31 @@
         </if>
     </select>
 
-    <select id="selectCompanyByUserType" resultType="java.util.Map">
+    <!--<select id="selectCompanyByUserType" resultType="java.util.Map" parameterType="java.util.List">-->
+        <!--SELECT tci.id reId,tci.company_name showName FROM t_company_info tci WHERE tci.business_type IN-->
+        <!--<if test="userTypes !=null and userTypes.size>0">-->
+            <!--<foreach collection="userTypes" index="index" item="id" open="(" close=")" separator=",">-->
+                <!--#{id}-->
+            <!--</foreach>-->
+        <!--</if>-->
+        <!--<if test="userTypes ==null">-->
+            <!--(0)-->
+        <!--</if>-->
+    <!--</select>-->
+
+    <select id="selectCompanyByUserType" resultType="java.util.Map" parameterType="java.util.List">
         SELECT tci.id reId,tci.company_name showName FROM t_company_info tci WHERE tci.business_type IN
-        <if test="userTypes !=null and userTypes.size>0">
-            <foreach collection="userTypes" index="index" item="id" open="(" close=")" separator=",">
+            <foreach collection="list" index="index" item="id" open="(" close=")" separator=",">
                 #{id}
             </foreach>
-        </if>
-        <if test="userTypes ==null">
-            (0)
-        </if>
     </select>
+
+    <!--<update id="updateBySqlWithList"  parameterType="java.util.List"  statementType="CALLABLE">-->
+        <!--<foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";" >-->
+            <!--UPdate ${item.gxbm}-->
+            <!--SET ${item.gxzd}=#{item.sbh,jdbcType=VARCHAR}-->
+            <!--WHERE ${item.gjzdmc}=#{item.gjzdz,jdbcType=VARCHAR}-->
+        <!--</foreach>-->
+    <!--</update>-->
 
 </mapper>

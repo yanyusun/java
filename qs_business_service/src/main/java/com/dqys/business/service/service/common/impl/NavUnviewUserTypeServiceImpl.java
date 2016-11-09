@@ -7,6 +7,7 @@ import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.query.common.NavUnviewUserTypeQuery;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
 import com.dqys.business.service.service.common.NavUnviewUserTypeService;
+import com.dqys.business.service.utils.common.NavUtil;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.NavUnviewEnum;
 import com.dqys.core.model.UserSession;
@@ -31,6 +32,14 @@ public class NavUnviewUserTypeServiceImpl implements NavUnviewUserTypeService {
     @Autowired
     private SourceNavigationMapper sourceNavigationMapper;
 
+    /**
+     * 如果对应的navId,object,objectId查不到数据,就从缓存中拿数据
+     *
+     * @param navId    资料实勘分类id
+     * @param object
+     * @param objectId
+     * @return
+     */
     @Override
     public List<SelectDto> getALLParentList(Integer navId, Integer object, Integer objectId) {
         List<SelectDto> dtos = new ArrayList<>();
@@ -45,9 +54,13 @@ public class NavUnviewUserTypeServiceImpl implements NavUnviewUserTypeService {
                 } else {
                     flag = false;
                 }
+            } else {
+                flag = false;
             }
         }
-        setSelectDtoList(dtos, navIds, object, objectId);
+        if (navIds.size() > 0) {
+            setSelectDtoList(dtos, navIds, object, objectId);
+        }
         return dtos;
     }
 
@@ -64,9 +77,18 @@ public class NavUnviewUserTypeServiceImpl implements NavUnviewUserTypeService {
 
     private void setSelectDtoList(List<SelectDto> dtos, List<Integer> navIds, Integer object, Integer objectId) {
         List<Map> list = navUnviewUserTypeMapper.findNavNameByNavId(navIds, object, objectId);
-        for (Map m : list) {
-            SelectDto dto = new SelectDto(MessageUtils.transMapToInt(m, "id"), MessageUtils.transMapToInt(m, "reId"), MessageUtils.transMapToString(m, "showName"));
-            dtos.add(dto);
+        if (list != null && list.size() > 0) {
+            for (Map m : list) {
+                SelectDto dto = new SelectDto(MessageUtils.transMapToInt(m, "id"), MessageUtils.transMapToInt(m, "reId"), MessageUtils.transMapToString(m, "showName"));
+                dtos.add(dto);
+            }
+        } else {
+            for (Integer navId : navIds) {
+                List<SelectDto> selectDtos = NavUtil.getSelectDtoList(navId, NavUnviewEnum.USER_TYPE.getValue());
+                if(selectDtos!=null){
+                    dtos.addAll(selectDtos);
+                }
+            }
         }
     }
 
@@ -116,12 +138,12 @@ public class NavUnviewUserTypeServiceImpl implements NavUnviewUserTypeService {
 
 
     @Override
-    public boolean hasDiy(Integer navId, Integer object,Integer objectId) {
+    public boolean hasDiy(Integer navId, Integer object, Integer objectId) {
         NavUnviewUserTypeQuery navUnviewUserTypeQuery = new NavUnviewUserTypeQuery();
         navUnviewUserTypeQuery.setNavId(navId);
         navUnviewUserTypeQuery.setObject(object);
         navUnviewUserTypeQuery.setObjectId(objectId);
-        if(navUnviewUserTypeMapper.queryCount(navUnviewUserTypeQuery)>0){
+        if (navUnviewUserTypeMapper.queryCount(navUnviewUserTypeQuery) > 0) {
             return true;
         }
         return false;

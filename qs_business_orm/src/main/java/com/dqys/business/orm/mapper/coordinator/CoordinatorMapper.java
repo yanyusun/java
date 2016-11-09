@@ -252,4 +252,16 @@ public interface CoordinatorMapper {
      * 获取资料实堪的资产源数量
      */
     Integer getShiKanCount(Integer estatesId);
+
+    /**
+     * 根据对象和用户，判断是否参与到协作器和获取协作器信息
+     *
+     * @param userId
+     * @param objectId
+     * @param objectType
+     * @return 协作器id：id，用户角色：type(管理者0|所属人1|参与者2)，用户所在公司id：companyId，所在公司管理员id：mangerId，
+     * 进入协作器的方式：joinType(0被分配，1主动加入)，参与用户id：userId
+     */
+    Map getCoordMessage(@Param("userId") Integer userId, @Param("objectId") Integer objectId, @Param("objectType") Integer objectType);
+
 }
