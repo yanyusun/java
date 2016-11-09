@@ -95,8 +95,9 @@
     </delete>
 
     <insert id="insertSelectiveByRoleType">
-        <foreach collection="unviewList" item="roleType" index="index">
-            INSERT INTO t_nav_unview_role(nav_id,role_type,object_type,object_id) VALUES(#{navId},#{roleType},#{object},#{objectId})
+        INSERT INTO t_nav_unview_role(nav_id,role_type,object_type,object_id) VALUES
+        <foreach collection="unviewList" item="roleType" index="index" separator=",">
+            (#{navId},#{roleType},#{object},#{objectId})
         </foreach>
     </insert>
 

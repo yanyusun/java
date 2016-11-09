@@ -139,10 +139,10 @@ public class SourceServiceImpl implements SourceService {
         }
         Integer sourceId = sourceInfo.getId();
         List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceId);
-
-
-        return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList,getNavAuthAll(navId, lenderId, estatesId));
-        //return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList);
+        if(hasNavUnviewOperAuth(navId,lenderId,estatesId,userSession.getUserId())){//如果拥有修改可见项的权限,返回可见项操作列表
+            return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList,getNavAuthAll(navId, lenderId, estatesId));
+        }
+        return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList);
     }
 
     @Override
@@ -238,11 +238,21 @@ public class SourceServiceImpl implements SourceService {
         return navUnviewManagerService.getNewALL(dto.getNavId(),dto.getObjectType(),dto.getObjectId(),dto.getUnviewReIdMap());
     }
 
+    @Override
     public boolean hasSourceAuth(Integer navId,Integer lenderId,Integer estatesId,Integer userId){
         if (lenderId != null && lenderId != 0) {//得到资产源的资料实勘权限
             return navUnviewManagerService.hasSourceSourceAuth(navId,ObjectTypeEnum.LENDER.getValue(),lenderId,userId);
         } else if (estatesId != null && estatesId != 0) {//得到借款人的资料实勘权限
             return navUnviewManagerService.hasSourceSourceAuth(navId,ObjectTypeEnum.ASSETSOURCE.getValue(),estatesId,userId);
+        }
+        return false;
+    }
+
+    public boolean hasNavUnviewOperAuth(Integer navId,Integer lenderId,Integer estatesId,Integer userId){
+        if (lenderId != null && lenderId != 0) {//得到资产源的资料实勘权限
+            return navUnviewManagerService.hasNavUnviewOperAuth(navId,ObjectTypeEnum.LENDER.getValue(),lenderId,userId);
+        } else if (estatesId != null && estatesId != 0) {//得到借款人的资料实勘权限
+            return navUnviewManagerService.hasNavUnviewOperAuth(navId,ObjectTypeEnum.ASSETSOURCE.getValue(),estatesId,userId);
         }
         return false;
     }

@@ -93,9 +93,9 @@
     </delete>
 
     <insert id="insertSelectiveByCompanyId">
-        <foreach collection="unviewList" item="companyId" index="index">
-            INSERT INTO t_nav_unview_company(nav_id,company_id,object_type,object_id)
-            VALUES(#{navId},#{companyId},#{object},#{objectId})
+        INSERT INTO t_nav_unview_company(nav_id,company_id,object_type,object_id) values
+        <foreach collection="unviewList" item="companyId" index="index" separator="," >
+            (#{navId},#{companyId},#{object},#{objectId})
         </foreach>
     </insert>
 
@@ -122,30 +122,30 @@
     </select>
 
     <!--<select id="selectCompanyByUserType" resultType="java.util.Map" parameterType="java.util.List">-->
-        <!--SELECT tci.id reId,tci.company_name showName FROM t_company_info tci WHERE tci.business_type IN-->
-        <!--<if test="userTypes !=null and userTypes.size>0">-->
-            <!--<foreach collection="userTypes" index="index" item="id" open="(" close=")" separator=",">-->
-                <!--#{id}-->
-            <!--</foreach>-->
-        <!--</if>-->
-        <!--<if test="userTypes ==null">-->
-            <!--(0)-->
-        <!--</if>-->
+    <!--SELECT tci.id reId,tci.company_name showName FROM t_company_info tci WHERE tci.business_type IN-->
+    <!--<if test="userTypes !=null and userTypes.size>0">-->
+    <!--<foreach collection="userTypes" index="index" item="id" open="(" close=")" separator=",">-->
+    <!--#{id}-->
+    <!--</foreach>-->
+    <!--</if>-->
+    <!--<if test="userTypes ==null">-->
+    <!--(0)-->
+    <!--</if>-->
     <!--</select>-->
 
     <select id="selectCompanyByUserType" resultType="java.util.Map" parameterType="java.util.List">
         SELECT tci.id reId,tci.company_name showName FROM t_company_info tci WHERE tci.business_type IN
-            <foreach collection="list" index="index" item="id" open="(" close=")" separator=",">
-                #{id}
-            </foreach>
+        <foreach collection="list" index="index" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
     </select>
 
     <!--<update id="updateBySqlWithList"  parameterType="java.util.List"  statementType="CALLABLE">-->
-        <!--<foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";" >-->
-            <!--UPdate ${item.gxbm}-->
-            <!--SET ${item.gxzd}=#{item.sbh,jdbcType=VARCHAR}-->
-            <!--WHERE ${item.gjzdmc}=#{item.gjzdz,jdbcType=VARCHAR}-->
-        <!--</foreach>-->
+    <!--<foreach collection="list" item="item" index="index" open="begin" close=";end;" separator=";" >-->
+    <!--UPdate ${item.gxbm}-->
+    <!--SET ${item.gxzd}=#{item.sbh,jdbcType=VARCHAR}-->
+    <!--WHERE ${item.gjzdmc}=#{item.gjzdz,jdbcType=VARCHAR}-->
+    <!--</foreach>-->
     <!--</update>-->
 
 </mapper>

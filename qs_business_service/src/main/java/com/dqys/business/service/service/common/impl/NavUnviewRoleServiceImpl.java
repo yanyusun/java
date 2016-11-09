@@ -66,6 +66,9 @@ public class NavUnviewRoleServiceImpl implements NavUnviewRoleService {
     }
 
     private void setSelectDtoList(List<SelectDto> dtos, List<Integer> navIds, Integer object, Integer objectId) {
+        if (navIds != null && navIds.size() == 0) {
+            return;
+        }
         List<Map> list = navUnviewRoleMapper.findNavNameByNavId(navIds, object, objectId);
         for (Map m : list) {
             SelectDto dto = new SelectDto(MessageUtils.transMapToInt(m, "id"), MessageUtils.transMapToInt(m, "reId"), MessageUtils.transMapToString(m, "showName"));
