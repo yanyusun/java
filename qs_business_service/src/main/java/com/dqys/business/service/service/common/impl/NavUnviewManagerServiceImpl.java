@@ -2,8 +2,14 @@ package com.dqys.business.service.service.common.impl;
 
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.common.NavUnviewCompanyMapper;
 import com.dqys.business.orm.mapper.common.NavUnviewUserInfoMapper;
+import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
+import com.dqys.business.orm.mapper.zcy.ZcyEstatesMapper;
+import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.zcy.ZcyEstates;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
@@ -44,6 +50,12 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
     private NavUnviewUserInfoMapper navUnviewUserInfoMapper;
     @Autowired
     private TUserInfoMapper tUserInfoMapper;
+    @Autowired
+    private LenderInfoMapper lenderInfoMapper;
+    @Autowired
+    private ZcyEstatesMapper zcyEstatesMapper;
+    @Autowired
+    private CoordinatorMapper coordinatorMapper;
 
     /**
      * 所有可以选择的用户类型
@@ -97,9 +109,36 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         }
         return true;
     }
-    //// TODO: 16-11-9 mkf 
+
+    //// TODO: 16-11-9 mkf
     @Override
     public boolean hasNavUnviewOperAuth(Integer navId, Integer object, Integer objectId, Integer userId) {
+        if (userId == null || objectId == null || object == null) {
+            return false;
+        }
+        //当前用户为对象的录入人员，具有权限返回true
+        if (ObjectTypeEnum.LENDER.getValue().intValue() == object) {
+            LenderInfo info = lenderInfoMapper.get(objectId);
+            if (info != null && info.getOperator().intValue() == userId) {
+                return true;
+            }
+        } else if (ObjectTypeEnum.ASSETSOURCE.getValue().intValue() == object) {
+            ZcyEstates info = zcyEstatesMapper.selectByPrimaryKey(objectId);
+            if (info != null && info.getOperator().equals(userId.toString())) {
+                return true;
+            }
+        }
+        //当前用户参与对象协作器，并且是管理员或是管理者或是所属人的具有权限返回true
+        Map coor = coordinatorMapper.getCoordMessage(userId, objectId, object);//查询当前用户是否参与到协作器了
+        if (coor != null) {
+            if (userId.toString().equals(MessageUtils.transMapToString(coor, "mangerId"))) {//判断是否为协作器管理员
+                return true;
+            }
+            Integer type = MessageUtils.transMapToInt(coor, "type");
+            if (type != null && (type == 0 || type == 1)) {//在协作器是否为管理者或所属人
+                return true;
+            }
+        }
         return false;
     }
 
