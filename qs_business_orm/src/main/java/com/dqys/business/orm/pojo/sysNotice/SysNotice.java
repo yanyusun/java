@@ -27,6 +27,8 @@ public class SysNotice  extends BaseModel {
 
     private Integer introduce;
 
+    private String userName;
+
     public Integer getId() {
         return id;
     }
@@ -113,5 +115,13 @@ public class SysNotice  extends BaseModel {
 
     public void setIntroduce(Integer introduce) {
         this.introduce = introduce;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

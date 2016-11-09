@@ -35,6 +35,11 @@ public class SysNoticeServiceImpl implements SysNoticeService{
         return mapper.list(sysNoticeQuery);
     }
 
+    @Override
+    public List<SysNotice> listWithoutCache(SysNoticeQuery sysNoticeQuery) {
+        return mapper.list(sysNoticeQuery);
+    }
+
     @CacheEvict(value="sys_notice_cache",allEntries=true)
     @Override
     public int insert(SysNotice sysNotice) {
@@ -69,11 +74,16 @@ public class SysNoticeServiceImpl implements SysNoticeService{
         return mapper.updateByPrimaryKeySelective(record);
     }
 
-    @Cacheable(value="sys_notice_cache",key="'sys_notice_cache_query_count_'+#sysNoticeQuery.isIntroduce()")
+    @Cacheable(value="sys_notice_cache",key="'sys_notice_cache_query_count_'+#sysNoticeQuery.isIntroduce()+''")
     @Override
     public int queryCount(SysNoticeQuery sysNoticeQuery) {
         return mapper.queryCount(sysNoticeQuery);
     }
+    @Override
+    public int queryCountWithoutCache(SysNoticeQuery sysNoticeQuery) {
+        return mapper.queryCount(sysNoticeQuery);
+    }
+
 
 
 }

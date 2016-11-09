@@ -176,7 +176,7 @@
     </if>
     ORDER BY create_at DESC
     <if test="isPaging">
-      limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+      limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
     </if>
   </select>
 
@@ -279,7 +279,7 @@
     <include refid="listAll_searchText_condition" />
     ORDER BY create_at DESC
     <if test="isPaging">
-      limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+      limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
     </if>
   </select>
 
@@ -340,7 +340,7 @@
     </if>
     ORDER BY create_at DESC
     <if test="isPaging">
-      limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+      limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
     </if>
   </select>
 
