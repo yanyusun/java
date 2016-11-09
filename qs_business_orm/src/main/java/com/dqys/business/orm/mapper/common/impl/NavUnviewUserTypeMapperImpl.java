@@ -66,4 +66,5 @@ public class NavUnviewUserTypeMapperImpl extends BaseDao implements NavUnviewUse
     public int queryCount(NavUnviewUserTypeQuery query) {
         return super.getSqlSession().getMapper(NavUnviewUserTypeMapper.class).queryCount(query);
     }
+
 }

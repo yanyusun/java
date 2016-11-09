@@ -124,6 +124,7 @@ public class SourceController extends BaseApiContorller {
      */
     @RequestMapping(value = "/getNewNavAll", method = RequestMethod.POST)
     public JsonResponse getNewNavAll(@ModelAttribute NavUnviewDTO dto) {
+
         SelectDtoMap selectDtoMap = sourceService.getNewNavALL(dto);
         if (selectDtoMap == null) {
             JsonResponseTool.failure("最新实勘权限获取异常");
