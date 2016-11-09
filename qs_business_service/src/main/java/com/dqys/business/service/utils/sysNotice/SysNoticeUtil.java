@@ -14,12 +14,15 @@ public class SysNoticeUtil {
             throw new ParamConvertException("参数错误:content-->" + sysNoticeDTO.getContent() + ";title-->" + sysNoticeDTO.getTitle(), ParamConvertException.PARAM_ISNOULL_ERROR);
         } else {
             SysNotice sysNotice = new SysNotice();
+            sysNotice.setId(sysNoticeDTO.getId());
             sysNotice.setContent(sysNoticeDTO.getContent());
             sysNotice.setPicname(sysNoticeDTO.getPicname());
             sysNotice.setTitle(sysNoticeDTO.getTitle());
             sysNotice.setType(sysNoticeDTO.getType());
             sysNotice.setUserId(UserSession.getCurrent().getUserId());
             sysNotice.setIntroduce(sysNoticeDTO.getIntroduce());
+            sysNotice.setIsCover(sysNoticeDTO.getIsCover());
+            sysNotice.setMark(sysNoticeDTO.getMark());
             return sysNotice;
         }
 
