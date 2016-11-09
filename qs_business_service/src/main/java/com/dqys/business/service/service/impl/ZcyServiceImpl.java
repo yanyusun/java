@@ -974,31 +974,31 @@ public class ZcyServiceImpl implements ZcyService {
         if (CommonUtil.checkParam(zcyExpress)) {
             return getMap(map, "信息不可为空");
         }
-        if (zcyExpress.getProtocolNo().length() > 20) {
+        if (zcyExpress.getProtocolNo() != null && zcyExpress.getProtocolNo().length() > 20) {
             msg = setMsg(msg, "协议编号");
         }
-        if (!FormatValidateTool.isDecimals(zcyExpress.getExpressPrice(), null) || zcyExpress.getExpressPrice().length() > 10) {
+        if (zcyExpress.getExpressPrice() != null && (!FormatValidateTool.isDecimals(zcyExpress.getExpressPrice(), null) || zcyExpress.getExpressPrice().length() > 10)) {
             msg = setMsg(msg, "速卖价格");
         }
-        if (zcyExpress.getEntrustAbortTime().length() > 20) {
+        if (zcyExpress.getEntrustAbortTime() != null && zcyExpress.getEntrustAbortTime().length() > 20) {
             msg = setMsg(msg, "速卖委托截止时间");
         }
-        if (zcyExpress.getEntrustProtocolTime().length() > 20) {
+        if (zcyExpress.getEntrustProtocolTime() != null && zcyExpress.getEntrustProtocolTime().length() > 20) {
             msg = setMsg(msg, "速卖委托协议时间");
         }
-        if (!FormatValidateTool.isDecimals(zcyExpress.getEntrustDeposit(), null) || zcyExpress.getEntrustDeposit().length() > 10) {
+        if (zcyExpress.getEntrustDeposit() != null && (!FormatValidateTool.isDecimals(zcyExpress.getEntrustDeposit(), null) || zcyExpress.getEntrustDeposit().length() > 10)) {
             msg = setMsg(msg, "委托保证金");
         }
-        if (zcyExpress.getExpressPeople().length() > 20) {
+        if (zcyExpress.getExpressPeople() != null && zcyExpress.getExpressPeople().length() > 20) {
             msg = setMsg(msg, "速 卖 人");
         }
-        if (zcyExpress.getTeam().length() > 10) {
+        if (zcyExpress.getTeam() != null && zcyExpress.getTeam().length() > 10) {
             msg = setMsg(msg, "所属团队");
         }
-        if (zcyExpress.getExpressFollow().length() > 255) {
+        if (zcyExpress.getExpressFollow() != null && zcyExpress.getExpressFollow().length() > 255) {
             msg = setMsg(msg, "速卖跟进");
         }
-        if (zcyExpress.getImgUrl().length() > 50) {
+        if (zcyExpress.getImgUrl() != null && zcyExpress.getImgUrl().length() > 50) {
             msg = setMsg(msg, "协议扫描件");
         }
         if (!"".equals(msg)) {
