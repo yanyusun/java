@@ -185,13 +185,11 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         } else {
             List<TeamDTO> list = getTeamDTOs(companyId, team);//协作器团队信息
             for (TeamDTO t : list) {//查询每个人员的任务数
-                if (t.getStatus() == TeammateReEnum.STATUS_ACCEPT.getValue()) {
                     Map<String, Object> task = getTaskCount(companyId, t.getUserId(), objectType);
                     t.setFinishTask(MessageUtils.transMapToInt(task, "finish"));
                     t.setOngoingTask(MessageUtils.transMapToInt(task, "ongoing"));
                     t.setTotalTask(MessageUtils.transMapToInt(task, "total"));
                     t.setLeaveWordTime(MessageUtils.transMapToString(coordinatorMapper.getLastLeaveWord(t.getUserId()), "time"));//最后留言时间
-                }
             }
             map.put("companys", companyList(objectId, objectType));//对象类型相应的公司
             map.put("teams", list);//团队信息
