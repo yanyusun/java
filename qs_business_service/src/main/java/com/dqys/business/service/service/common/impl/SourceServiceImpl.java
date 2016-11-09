@@ -139,6 +139,8 @@ public class SourceServiceImpl implements SourceService {
         }
         Integer sourceId = sourceInfo.getId();
         List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceId);
+
+
         return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList,getNavAuthAll(navId, lenderId, estatesId));
         //return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList);
     }
