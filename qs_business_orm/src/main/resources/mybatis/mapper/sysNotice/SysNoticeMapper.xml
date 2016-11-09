@@ -14,6 +14,8 @@
         <result column="user_id" property="userId" jdbcType="INTEGER"/>
         <result column="introduce" property="introduce" jdbcType="INTEGER"/>
         <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="is_cover" property="isCover" jdbcType="INTEGER"/>
+        <result column="mark" property="mark" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, title, content, type, picName, create_at, update_at, stateflag, version, user_id,introduce
@@ -54,10 +56,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.dqys.business.orm.pojo.sysNotice.SysNotice">
-    insert into t_sys_notice (title, content, type, picName, user_id)
+    insert into t_sys_notice (title, content, type, picName, user_id,is_cover,mark)
     values ( #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR},
       #{type,jdbcType=INTEGER}, #{picname,jdbcType=VARCHAR},
-      #{userId,jdbcType=INTEGER})
+      #{userId,jdbcType=INTEGER},#{is_cover,jdbcType=INTEGER},#{mark,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.sysNotice.SysNotice">
         insert into t_sys_notice
@@ -121,9 +123,6 @@
             <if test="version != null">
                 #{version,jdbcType=INTEGER},
             </if>
-            <if test="userId != null">
-                #{userId,jdbcType=INTEGER},
-            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.sysNotice.SysNotice">
@@ -154,6 +153,12 @@
             </if>
             <if test="introduce != null">
                 introduce = #{introduce,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                is_cover = #{isCover,jdbcType=INTEGER},
+            </if>
+            <if test="mark != null">
+                #{mark,jdbcType=VARCHAR},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}

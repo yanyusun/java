@@ -2,10 +2,7 @@ package com.dqys.business.orm.pojo.sysNotice;
 
 import com.dqys.core.base.BaseModel;
 
-import java.util.Date;
-
-public class SysNotice  extends BaseModel {
-    private Integer id;
+public class SysNotice extends BaseModel {
 
     private String title;
 
@@ -15,27 +12,15 @@ public class SysNotice  extends BaseModel {
 
     private String picname;
 
-    private Date createAt;
-
-    private Date updateAt;
-
-    private Long stateflag;
-
-    private Integer version;
-
     private Integer userId;
 
     private Integer introduce;
 
     private String userName;
 
-    public Integer getId() {
-        return id;
-    }
+    private Integer isCover;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    private String mark;
 
     public String getTitle() {
         return title;
@@ -69,38 +54,6 @@ public class SysNotice  extends BaseModel {
         this.picname = picname;
     }
 
-    public Date getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
-    }
-
-    public Date getUpdateAt() {
-        return updateAt;
-    }
-
-    public void setUpdateAt(Date updateAt) {
-        this.updateAt = updateAt;
-    }
-
-    public Long getStateflag() {
-        return stateflag;
-    }
-
-    public void setStateflag(Long stateflag) {
-        this.stateflag = stateflag;
-    }
-
-    public Integer getVersion() {
-        return version;
-    }
-
-    public void setVersion(Integer version) {
-        this.version = version;
-    }
-
     public Integer getUserId() {
         return userId;
     }
@@ -123,5 +76,21 @@ public class SysNotice  extends BaseModel {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Integer getIsCover() {
+        return isCover;
+    }
+
+    public void setIsCover(Integer isCover) {
+        this.isCover = isCover;
+    }
+
+    public String getMark() {
+        return mark;
+    }
+
+    public void setMark(String mark) {
+        this.mark = mark;
     }
 }
