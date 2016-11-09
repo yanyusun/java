@@ -50,9 +50,13 @@ public class NavUnviewUserInfoServiceImpl implements NavUnviewUserInfoService {
                 } else {
                     flag = false;
                 }
+            }else {
+                flag = false;
             }
         }
-        setSelectDtoList(dtos, navIds, object, objectId);
+        if (navIds.size() > 0) {
+            setSelectDtoList(dtos, navIds, object, objectId);
+        }
         return dtos;
     }
 

@@ -1,7 +1,9 @@
 package com.dqys.business.service.service.common.impl;
 
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.dao.facade.TUserTagMapper;
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.common.NavUnviewCompanyMapper;
@@ -50,6 +52,8 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
     private NavUnviewUserInfoMapper navUnviewUserInfoMapper;
     @Autowired
     private TUserInfoMapper tUserInfoMapper;
+    @Autowired
+    private TUserTagMapper tUserTagMapper;
     @Autowired
     private LenderInfoMapper lenderInfoMapper;
     @Autowired
@@ -116,18 +120,40 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         if (userId == null || objectId == null || object == null) {
             return false;
         }
-        //当前用户为对象的录入人员，具有权限返回true
+        List<TUserTag> operators = null;
+        List<TUserTag> tags = tUserTagMapper.selectByUserId(userId);
+        TUserTag user = tags.size() > 0 ? tags.get(0) : null;//当前用户
+        //当前用户为对象的录入人员
         if (ObjectTypeEnum.LENDER.getValue().intValue() == object) {
             LenderInfo info = lenderInfoMapper.get(objectId);
-            if (info != null && info.getOperator().intValue() == userId) {
-                return true;
+            if (info != null) {
+                operators = tUserTagMapper.selectByUserId(info.getOperator());
             }
         } else if (ObjectTypeEnum.ASSETSOURCE.getValue().intValue() == object) {
             ZcyEstates info = zcyEstatesMapper.selectByPrimaryKey(objectId);
-            if (info != null && info.getOperator().equals(userId.toString())) {
-                return true;
+            if (info != null) {
+                operators = tUserTagMapper.selectByUserId(MessageUtils.transStringToInt(info.getOperator()));
             }
         }
+        TUserTag operator = operators.size() > 0 ? operators.get(0) : null;//录入人
+        //录入人所在机构和当前用户的所在机构不是相同的就返回false
+        if (operator.getUserType().intValue() == UserInfoEnum.USER_TYPE_ADMIN.getValue() ||
+                operator.getUserType().intValue() == UserInfoEnum.USER_TYPE_ENTRUST.getValue()) {//判断录入人用户类型为平台或委托
+            if (user.getUserType().intValue() != UserInfoEnum.USER_TYPE_ADMIN.getValue() &&
+                    operator.getUserType().intValue() != UserInfoEnum.USER_TYPE_ENTRUST.getValue()) {//判断当前用户的用户类型
+                return false;
+            }
+        }
+        if (operator.getUserType().intValue() == UserInfoEnum.USER_TYPE_COLLECTION.getValue() ||
+                operator.getUserType().intValue() == UserInfoEnum.USER_TYPE_JUDICIARY.getValue() ||
+                operator.getUserType().intValue() == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue()) {//判断录入人用户类型为处置机构
+            if (operator.getUserType().intValue() != UserInfoEnum.USER_TYPE_COLLECTION.getValue() &&
+                    operator.getUserType().intValue() != UserInfoEnum.USER_TYPE_JUDICIARY.getValue() &&
+                    operator.getUserType().intValue() != UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue()) {//判断当前用户的用户类型
+                return false;
+            }
+        }
+
         //当前用户参与对象协作器，并且是管理员或是管理者或是所属人的具有权限返回true
         Map coor = coordinatorMapper.getCoordMessage(userId, objectId, object);//查询当前用户是否参与到协作器了
         if (coor != null) {

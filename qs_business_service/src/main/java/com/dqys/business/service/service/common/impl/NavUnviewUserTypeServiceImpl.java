@@ -34,7 +34,8 @@ public class NavUnviewUserTypeServiceImpl implements NavUnviewUserTypeService {
 
     /**
      * 如果对应的navId,object,objectId查不到数据,就从缓存中拿数据
-     * @param navId 资料实勘分类id
+     *
+     * @param navId    资料实勘分类id
      * @param object
      * @param objectId
      * @return
@@ -53,9 +54,13 @@ public class NavUnviewUserTypeServiceImpl implements NavUnviewUserTypeService {
                 } else {
                     flag = false;
                 }
+            } else {
+                flag = false;
             }
         }
-        setSelectDtoList(dtos, navIds, object, objectId);
+        if (navIds.size() > 0) {
+            setSelectDtoList(dtos, navIds, object, objectId);
+        }
         return dtos;
     }
 
