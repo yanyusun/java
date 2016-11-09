@@ -500,6 +500,15 @@
         ON tci.id=tui.company_id
         WHERE tui.id=#{userId}
     </select>
+    <!--根据对象和用户，判断是否参与到协作器和获取协作器信息-->
+    <select id="getCoordMessage" resultType="java.util.Map">
+        SELECT tut.id,tut.company_id companyId,tut.manger_id mangerId,
+        ttr.join_type joinType,ttr.type,ttr.user_id userId
+        FROM t_user_team tut LEFT JOIN t_teammate_re ttr
+        ON ttr.user_team_id=tut.id
+        WHERE ((ttr.user_id=#{userId} AND ttr.status=1)OR tut.manger_id=#{userId})
+			AND tut.stateflag=0  AND tut.object_id=#{objectId} AND tut.object_type=#{objectType}
+    </select>
 
 
 </mapper>

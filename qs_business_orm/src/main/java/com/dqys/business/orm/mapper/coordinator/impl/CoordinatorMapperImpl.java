@@ -162,5 +162,10 @@ public class CoordinatorMapperImpl extends BaseDao implements CoordinatorMapper 
         return super.getSqlSession().getMapper(CoordinatorMapper.class).getUserDetail(userId);
     }
 
+    @Override
+    public Map getCoordMessage(@Param("userId") Integer userId, @Param("objectId") Integer objectId, @Param("objectType") Integer objectType) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).getCoordMessage(userId, objectId, objectType);
+    }
+
 
 }
