@@ -508,6 +508,7 @@
         ON ttr.user_team_id=tut.id
         WHERE ((ttr.user_id=#{userId} AND ttr.status=1)OR tut.manger_id=#{userId})
 			AND tut.stateflag=0  AND tut.object_id=#{objectId} AND tut.object_type=#{objectType}
+			LIMIT 0,1
     </select>
 
 
