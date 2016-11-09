@@ -80,7 +80,9 @@ public class NavUnviewUserTypeServiceImpl implements NavUnviewUserTypeService {
         } else {
             for (Integer navId : navIds) {
                 List<SelectDto> selectDtos = NavUtil.getSelectDtoList(navId, NavUnviewEnum.USER_TYPE.getValue());
-                dtos.addAll(selectDtos);
+                if(selectDtos!=null){
+                    dtos.addAll(selectDtos);
+                }
             }
         }
     }
