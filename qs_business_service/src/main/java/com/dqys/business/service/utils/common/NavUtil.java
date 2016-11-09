@@ -47,6 +47,7 @@ public class NavUtil implements ApplicationContextAware {
         navUnviewCompanyService = applicationContext.getBean(NavUnviewCompanyService.class);
         navUnviewUserInfoService = applicationContext.getBean(NavUnviewUserInfoService.class);
         navUnviewUserTypeService = applicationContext.getBean(NavUnviewUserTypeService.class);
+        // TODO: 16-11-8 测试不加载
         //this.loadCommonNav();
     }
 

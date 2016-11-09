@@ -4,6 +4,8 @@ import com.dqys.business.orm.mapper.sysNotice.SysNoticeMapper;
 import com.dqys.business.orm.pojo.sysNotice.SysNotice;
 import com.dqys.business.orm.query.sysNotice.SysNoticeQuery;
 import com.dqys.business.service.service.sysNotice.SysNoticeService;
+import com.dqys.core.utils.FileTool;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,20 +23,36 @@ public class SysNoticeServiceImpl implements SysNoticeService{
     @Autowired
     private SysNoticeMapper mapper;
 
+
     /**
      *
      * @param sysNoticeQuery
      * @return
      */
-    @Cacheable(value="sys_notice_cache",key="#sysNoticeQuery.getStartPageNum()+'_'+#sysNoticeQuery.getPageSize()")
+    @Cacheable(value="sys_notice_cache",key="#sysNoticeQuery.getStartPageNum()+'_'+#sysNoticeQuery.getPageSize()+'_'+#sysNoticeQuery.isIntroduce()")
     @Override
     public List<SysNotice> list(SysNoticeQuery sysNoticeQuery) {
+        return mapper.list(sysNoticeQuery);
+    }
+
+    @Override
+    public List<SysNotice> listWithoutCache(SysNoticeQuery sysNoticeQuery) {
         return mapper.list(sysNoticeQuery);
     }
 
     @CacheEvict(value="sys_notice_cache",allEntries=true)
     @Override
     public int insert(SysNotice sysNotice) {
+        String picName=sysNotice.getPicname();
+        if(picName!=null&&picName.equalsIgnoreCase("")){
+            try {
+                FileTool.saveFileSync(picName);
+            }catch (Exception e){
+                e.printStackTrace();
+                LogManager.getRootLogger().error("添加系统消息时保存文件失败");
+                return failNO;
+            }
+        }
         return mapper.insert(sysNotice);
     }
 
@@ -56,11 +74,16 @@ public class SysNoticeServiceImpl implements SysNoticeService{
         return mapper.updateByPrimaryKeySelective(record);
     }
 
-    @Cacheable(value="sys_notice_cache",key="'sys_notice_cache_query_count'")
+    @Cacheable(value="sys_notice_cache",key="'sys_notice_cache_query_count_'+#sysNoticeQuery.isIntroduce()+''")
     @Override
     public int queryCount(SysNoticeQuery sysNoticeQuery) {
         return mapper.queryCount(sysNoticeQuery);
     }
+    @Override
+    public int queryCountWithoutCache(SysNoticeQuery sysNoticeQuery) {
+        return mapper.queryCount(sysNoticeQuery);
+    }
+
 
 
 }

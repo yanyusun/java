@@ -1,6 +1,7 @@
 package com.dqys.business.orm.query.sysNotice;
 
 import com.dqys.core.base.BaseQuery;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -36,6 +37,16 @@ public class SysNoticeQuery  extends BaseQuery {
     private Integer version;
 
     private Integer userId;
+
+    private boolean isIntroduce=true;
+
+    @DateTimeFormat( pattern = "yyyy-MM-dd" )
+    private Date beginDate;
+
+    @DateTimeFormat( pattern = "yyyy-MM-dd" )
+    private Date endDate;
+
+    private String searchText;
 
     public Integer getId() {
         return id;
@@ -115,5 +126,37 @@ public class SysNoticeQuery  extends BaseQuery {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public boolean isIntroduce() {
+        return isIntroduce;
+    }
+
+    public void setIntroduce(boolean introduce) {
+        isIntroduce = introduce;
+    }
+
+    public Date getBeginDate() {
+        return beginDate;
+    }
+
+    public void setBeginDate(Date beginDate) {
+        this.beginDate = beginDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getSearchText() {
+        return searchText;
+    }
+
+    public void setSearchText(String searchText) {
+        this.searchText = searchText;
     }
 }

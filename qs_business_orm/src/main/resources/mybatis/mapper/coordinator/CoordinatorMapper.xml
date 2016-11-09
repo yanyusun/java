@@ -137,7 +137,7 @@
     <select id="getAdminUser" resultType="java.util.Map">
         SELECT tui.id,tui.real_name realName,tui.mobile,tui.user_name userName from t_user_info tui LEFT JOIN t_user_tag tust
         ON tust.user_id=tui.id
-        WHERE tust.stateflag=0 and tust.role_id=1 and tust.is_certified=1
+        WHERE tust.stateflag=0 and tust.role_id=1
 			and tui.company_id=#{companyId,jdbcType=INTEGER}
     </select>
     <!--获取员工公司下的所有员工-->
@@ -283,13 +283,13 @@
         <if test="(zcyListQuery.startPriceTotal !=null and zcyListQuery.startPriceTotal !='') or (zcyListQuery.endPriceTotal !=null and zcyListQuery.endPriceTotal !='')">
             AND (
             <if test="(zcyListQuery.startPriceTotal !=null and zcyListQuery.startPriceTotal !='')">
-                #{zcyListQuery.startPriceTotal} &lt; = tze.selling_price
+                #{zcyListQuery.startPriceTotal} &lt;= tze.selling_price
             </if>
             <if test="(zcyListQuery.endPriceTotal !=null and zcyListQuery.endPriceTotal !='')">
                 <if test="(zcyListQuery.startPriceTotal !=null and zcyListQuery.startPriceTotal !='')">
                     AND
                 </if>
-                tze.selling_price &lt; = #{zcyListQuery.endPriceTotal}
+                tze.selling_price &lt;= #{zcyListQuery.endPriceTotal}
             </if>
             )
         </if>
@@ -500,6 +500,9 @@
         ON tci.id=tui.company_id
         WHERE tui.id=#{userId}
     </select>
-
+    <!--获取资产源的资料实堪信息数量-->
+    <select id="getShiKanCount" parameterType="int">
+        SELECT COUNT(*) FROM bt_source_info WHERE stateflag=0 AND  estates_id=#{estatesId}
+    </select>
 
 </mapper>

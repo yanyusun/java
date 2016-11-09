@@ -4,19 +4,27 @@ import com.dqys.business.orm.pojo.sysNotice.SysNotice;
 import com.dqys.business.orm.query.sysNotice.SysNoticeQuery;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  *
  * Created by yan on 16-8-25.
  */
 public interface SysNoticeService {
+     int failNO=-1;
+
     /**
      *
      * @param sysNoticeQuery
      * @return
      */
     List<SysNotice> list(SysNoticeQuery sysNoticeQuery);
+
+    /**
+     *
+     * @param sysNoticeQuery
+     * @return
+     */
+    List<SysNotice> listWithoutCache(SysNoticeQuery sysNoticeQuery);
 
     /**
      *
@@ -48,5 +56,10 @@ public interface SysNoticeService {
 
     int queryCount(SysNoticeQuery sysNoticeQuery);
 
-
+    /**
+     * 不经过缓存的查询数量
+     * @param sysNoticeQuery
+     * @return
+     */
+    int queryCountWithoutCache(SysNoticeQuery sysNoticeQuery);
 }

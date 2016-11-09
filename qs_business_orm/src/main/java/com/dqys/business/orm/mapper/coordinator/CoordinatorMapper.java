@@ -64,7 +64,7 @@ public interface CoordinatorMapper {
      * 根据公司id获取公司的管理员信息
      *
      * @param companyId
-     * @return
+     * @return id:用户id，realName:真实姓名，mobile:手机号，userName:用户名
      */
     Map<String, Object> getAdminUser(Integer companyId);
 
@@ -247,4 +247,9 @@ public interface CoordinatorMapper {
      * @return
      */
     UserDetail getUserDetail(Integer userId);
+
+    /**
+     * 获取资料实堪的资产源数量
+     */
+    Integer getShiKanCount(Integer estatesId);
 }
