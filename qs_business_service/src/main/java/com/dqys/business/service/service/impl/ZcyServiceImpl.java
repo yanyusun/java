@@ -618,7 +618,7 @@ public class ZcyServiceImpl implements ZcyService {
             msg = setMsg(msg, "限购");
             return getMap(map, msg);
         }
-        if (zcyEstates.getAcreage() != null && !"".equals(zcyEstates.getAcreage()) && (!FormatValidateTool.isDecimals(zcyEstates.getAcreage(), null) || zcyEstates.getSellingPrice().toString().length() > 10)) {
+        if (zcyEstates.getAcreage() != null && !"".equals(zcyEstates.getAcreage()) && (!FormatValidateTool.isDecimals(zcyEstates.getAcreage(), null) || zcyEstates.getAcreage().toString().length() > 10)) {
             msg = setMsg(msg, "面积");
             return getMap(map, msg);
         }

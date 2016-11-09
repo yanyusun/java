@@ -501,7 +501,7 @@
         WHERE tui.id=#{userId}
     </select>
     <!--获取资产源的资料实堪信息数量-->
-    <select id="getShiKanCount" parameterType="int">
+    <select id="getShiKanCount" resultType="java.lang.Integer" parameterType="java.lang.Integer">
         SELECT COUNT(*) FROM bt_source_info WHERE stateflag=0 AND  estates_id=#{estatesId}
     </select>
 

@@ -669,17 +669,17 @@ public class LenderServiceImpl implements LenderService {
         Boolean isUrgeOrLawyer = false; // 催收或者律所
         TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
         CompanyDetailInfo detailInfo = companyInfoMapper.getDetailByCompanyId(userInfo.getCompanyId());
-        if (detailInfo.getType().equals(
-                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_ENTRUST).getPropertyValue())) {
+        if (detailInfo.getType().toString().equals(
+                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_ENTRUST).getPropertyValue().toString())) {
             isPlatformOrEntrust = true;
-        } else if (detailInfo.getType().equals(
-                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM).getPropertyValue())) {
+        } else if (detailInfo.getType().toString().equals(
+                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_PLATFORM).getPropertyValue().toString())) {
             isPlatformOrEntrust = true;
-        } else if (detailInfo.getType().equals(
-                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW).getPropertyValue())) {
+        } else if (detailInfo.getType().toString().equals(
+                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW).getPropertyValue().toString())) {
             isUrgeOrLawyer = true;
-        } else if (detailInfo.getType().equals(
-                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE).getPropertyValue())) {
+        } else if (detailInfo.getType().toString().equals(
+                SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_URGE).getPropertyValue().toString())) {
             isUrgeOrLawyer = true;
         }
         // 为当前操作人且类型为借款人,状态为通过的数据ID
