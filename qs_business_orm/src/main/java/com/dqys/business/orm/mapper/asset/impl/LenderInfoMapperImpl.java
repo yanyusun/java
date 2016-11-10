@@ -4,6 +4,7 @@ import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.query.asset.LenderQuery;
 import com.dqys.core.base.BaseDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
@@ -55,4 +56,10 @@ public class LenderInfoMapperImpl extends BaseDao implements LenderInfoMapper {
     public List<Integer> likeList(String str) {
         return super.getSqlSession().getMapper(LenderInfoMapper.class).likeList(str);
     }
+
+    @Override
+    public List<Integer> lenderAllByObjectUserRelation(@Param("userId") Integer userId, @Param("objectType") Integer objectType) {
+        return super.getSqlSession().getMapper(LenderInfoMapper.class).lenderAllByObjectUserRelation(userId, objectType);
+    }
+
 }

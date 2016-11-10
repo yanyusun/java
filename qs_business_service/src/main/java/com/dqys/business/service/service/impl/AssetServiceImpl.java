@@ -737,6 +737,15 @@ public class AssetServiceImpl implements AssetService {
             });
             assetQuery.setIds(ids);
             assetQuery.setIsStop(true);
+        } else if (ObjectTabEnum.all.getValue().equals(type)) {
+            //全部
+            if (CommonUtil.isManage()) {
+                userId = null;
+            }
+            assetQuery.setIds(lenderInfoMapper.lenderAllByObjectUserRelation(userId, ObjectTypeEnum.ASSETPACKAGE.getValue()));
+            if (assetQuery.getIds() == null) {
+                assetQuery.setId(SysProperty.NULL_DATA_ID);
+            }
         } else {
             return null;
         }
