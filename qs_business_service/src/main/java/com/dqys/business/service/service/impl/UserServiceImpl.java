@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService {
         //组织架构中不需要
         if (query.getModule() != null && query.getModule() == 1) {
             // 总管理员
-            if (CommonUtil.checkNullParam(query.getProvince(), query.getCity(), query.getDistrict())) {
+
                 List<Integer> companyIds = new ArrayList<>();
 
                 CompanyQuery companyQuery = new CompanyQuery();
@@ -165,7 +165,6 @@ public class UserServiceImpl implements UserService {
                 tUserQuery.setCompanyIds(companyIds);
                 tUserQuery.setCompanyId(null);
             }
-        }
         tUserQuery.setStatus(query.getStatus());
         tUserQuery.setStatuss(query.getStatuss());
         tUserQuery.setNameLike(query.getName());

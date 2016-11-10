@@ -664,7 +664,7 @@ public class AuthController extends BaseApiContorller {
      * @api {POST} http://{url}/auth/fixCompanyInfo 完善公司以及管理人员信息
      * @apiName register_admin
      * @apiGroup Auth
-     * @apiParam {string} name 名称
+     * @apiParam {string} name 名称（相当于公司简称）
      * @apiParam {string} introduction 简介
      * @apiParam {number} province 省份
      * @apiParam {number} city 城市
