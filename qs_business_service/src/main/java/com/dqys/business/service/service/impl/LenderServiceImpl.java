@@ -614,8 +614,8 @@ public class LenderServiceImpl implements LenderService {
                         pawnDTO.setIouIds("" + iouInfo.getId());
                         pawnDTO.setIouNames(iouInfo.getName());
                     } else {
-                        pawnDTO.setIouIds("," + iouInfo.getId());
-                        pawnDTO.setIouNames("," + iouInfo.getName());
+                        pawnDTO.setIouIds((pawnDTO.getIouIds() == null ? "" : pawnDTO.getIouIds() + ",") + iouInfo.getId());
+                        pawnDTO.setIouNames((pawnDTO.getIouNames() == null ? "" : pawnDTO.getIouNames() + ",") + iouInfo.getName());
                     }
                 }
             });
@@ -882,6 +882,9 @@ public class LenderServiceImpl implements LenderService {
             });
             if (isUrgeOrLawyer || isPlatformOrEntrust) {
                 lenderQuery.setIds(CommonUtil.unionList(ids, businessIds));
+                if (lenderQuery.getIds() == null) {
+                    lenderQuery.setId(0);
+                }
             } else {
                 lenderQuery.setIds(ids);
             }

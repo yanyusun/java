@@ -8,6 +8,7 @@ import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.auth.orm.query.TUserQuery;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.constant.repay.RepayEnum;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.index.IndexMapper;
 import com.dqys.business.orm.pojo.index.UserMessage;
@@ -69,18 +70,11 @@ public class IndexServiceImpl implements IndexService {
         int unfinished = 0;
         int finish = 0;
         if (objectType == ObjectTypeEnum.LENDER.getValue()) {
-            Integer count1 = MessageUtils.transMapToInt(indexMapper.getLenderAllotByOneSelfAndCompany(1, objectType, userId), "count");//已完成任务自己或公司分配
-            Integer count2 = MessageUtils.transMapToInt(indexMapper.getLenderAllotByTeam(1, objectType, userId), "count");//已完成任务团队分配
-            finish = count1 + count2;
-            Integer count3 = MessageUtils.transMapToInt(indexMapper.getLenderAllotByOneSelfAndCompany(0, objectType, userId), "count");//正在进行任务自己或公司分配
-            Integer count4 = MessageUtils.transMapToInt(indexMapper.getLenderAllotByTeam(0, objectType, userId), "count");//正在进行任务团队分配
-            unfinished = count3 + count4;
+            finish = MessageUtils.transMapToInt(indexMapper.getLenderAllotByOneSelfAndCompany(RepayEnum.REPAY_STATUS_YES.getValue(), objectType, userId), "count");//已完成任务自己或公司分配
+            unfinished = MessageUtils.transMapToInt(indexMapper.getLenderAllotByOneSelfAndCompany(RepayEnum.REPAY_STATUS_NO.getValue(), objectType, userId), "count");//正在进行任务自己或公司分配
         } else if (objectType == ObjectTypeEnum.PAWN.getValue()) {
-            Integer total = MessageUtils.transMapToInt(indexMapper.getPawnTotalTask(objectType, userId), "count");
-            Integer count3 = MessageUtils.transMapToInt(indexMapper.getPawnAllotByOCIsUnfinished(objectType, userId), "count");//正在进行任务自己或公司分配
-            Integer count4 = MessageUtils.transMapToInt(indexMapper.getPawnAllotByTeamIsUnfinished(objectType, userId), "count");//正在进行任务团队分配
-            unfinished = (count3 == null ? 0 : count3) + (count4 == null ? 0 : count4);
-            finish = total - count3 - count4;
+            finish = MessageUtils.transMapToInt(indexMapper.getPawnAllotByOCIsUnfinished(RepayEnum.REPAY_STATUS_YES.getValue(),objectType, userId), "count");//已完成任务自己或公司分配
+            unfinished =  MessageUtils.transMapToInt(indexMapper.getPawnAllotByOCIsUnfinished(RepayEnum.REPAY_STATUS_NO.getValue(),objectType, userId), "count");//正在进行任务自己或公司分配
         }
         map.put("finish", finish);//已完成------------
         map.put("unfinished", unfinished);//正在进行中------------

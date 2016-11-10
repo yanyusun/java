@@ -40,8 +40,8 @@ public class IndexMapperImpl extends BaseDao implements IndexMapper {
     }
 
     @Override
-    public Map getPawnAllotByOCIsUnfinished(@Param("objectType") Integer objectType, @Param("userId") Integer userId) {
-        return super.getSqlSession().getMapper(IndexMapper.class).getPawnAllotByOCIsUnfinished(objectType, userId);
+    public Map getPawnAllotByOCIsUnfinished(@Param("repayStatus") Integer repayStatus, @Param("objectType") Integer objectType, @Param("userId") Integer userId) {
+        return super.getSqlSession().getMapper(IndexMapper.class).getPawnAllotByOCIsUnfinished(repayStatus, objectType, userId);
     }
 
     @Override

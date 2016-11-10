@@ -28,13 +28,13 @@ public class UserListQuery extends BasePagination {
     private Integer city; // 城市
     private Integer district; // 区域
     // 标签tag
-    private Integer accountType; // 账号类型<平台方|委托方|处置方|个体用户|c用户>
-    private Integer role; // 角色<管理员|负责人|参与人>
-    private Integer type; // 类型<机构|个人>
+    private Integer accountType; // 账号类型<1平台方|2委托方|处置方（31催收32律所33中介）|0个体用户0|c用户>
+    private Integer role; // 角色<1管理员|2负责人|3参与人>
+    private Integer type; // 类型<1机构|2个人>
     // 用户信息
-    private Integer status; // 状态<启用|禁用|未激活>
-    private Integer useStatus; // 使用状态状态<1停用2禁止登入>
-    private List<Integer> statuss; // 多种状态集合
+    private Integer status; // 状态<1已激活|0未激活>
+    private Integer useStatus; // 使用状态状态<0正常1停用2禁止登入>
+    private List<Integer> statuss; // 多种状态集合（可以同时搜索两种状态以上的数据，字段status一样的参数值）
     private Integer module; // 模块（null组织架构，1用户管理）
 
     private String name;  // 多种数据搜索

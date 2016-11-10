@@ -29,6 +29,7 @@ public interface IndexMapper {
 
     /**
      * 获取参与的任务
+     * 只有在协作器中是参与者身份的
      *
      * @param objectType
      * @param userId
@@ -44,7 +45,7 @@ public interface IndexMapper {
     /**
      * 获取抵押物自己分配和公司分配的未完成任务
      */
-    Map getPawnAllotByOCIsUnfinished(@Param("objectType") Integer objectType, @Param("userId") Integer userId);
+    Map getPawnAllotByOCIsUnfinished(@Param("repayStatus") Integer repayStatus, @Param("objectType") Integer objectType, @Param("userId") Integer userId);
 
     Map getPawnTotalTask(@Param("objectType") Integer objectType, @Param("userId") Integer userId);
 
