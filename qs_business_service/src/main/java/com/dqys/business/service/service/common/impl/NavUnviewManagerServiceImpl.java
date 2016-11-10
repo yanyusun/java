@@ -111,7 +111,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         return true;
     }
 
-    //// TODO: 16-11-9 mkf
+    //// TODO: 16-11-9 mkf 1.判断是否与录入是同一家公司的人员 2.如果为管理者或者管理员放回true 3.是不是协作器中的所属人
     @Override
     public boolean hasNavUnviewOperAuth(Integer navId, Integer object, Integer objectId, Integer userId) {
         if (userId == null || objectId == null || object == null) {
