@@ -176,7 +176,7 @@
             <if test="companyIds ==null">
                 (0)
             </if>
-            AND tut.object_id=#{their.objectId} AND tut.object_type=their.objectType AND ttr.type=1
+            AND tut.object_id=#{their.objectId} AND tut.object_type=#{their.objectType} AND ttr.type=1
         </if>
     </select>
 
