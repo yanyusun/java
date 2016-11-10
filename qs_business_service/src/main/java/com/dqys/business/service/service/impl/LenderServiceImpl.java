@@ -991,7 +991,7 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setIds(managerPassIds); // 通过审核还未处置
             } else {
                 lenderQuery.setIds(passIds); // 通过审核还未处置
-                lenderQuery.setOperator(userInfo.getId());
+//                lenderQuery.setOperator(userInfo.getId());
             }
             if (CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0) {
                 // 找不到数据

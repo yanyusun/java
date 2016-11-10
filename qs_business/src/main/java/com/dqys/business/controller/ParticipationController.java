@@ -60,7 +60,7 @@ public class ParticipationController {
     /**
      * /**
      *
-     * @api {post} part/getDetail 操作接口
+     * @api {post} part/getDetail 详情信息
      * @apiName part/getDetail
      * @apiSampleRequest part/getDetail
      * @apiParam {int} objectId 对象id

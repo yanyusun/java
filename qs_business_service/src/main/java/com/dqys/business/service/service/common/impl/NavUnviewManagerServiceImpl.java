@@ -120,6 +120,9 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         List<TUserTag> operators = null;
         List<TUserTag> tags = tUserTagMapper.selectByUserId(userId);
         TUserTag user = tags.size() > 0 ? tags.get(0) : null;//当前用户
+        if (user == null) {
+            return false;
+        }
         //当前用户为对象的录入人员
         if (ObjectTypeEnum.LENDER.getValue().intValue() == object) {
             LenderInfo info = lenderInfoMapper.get(objectId);
@@ -133,6 +136,9 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
             }
         }
         TUserTag operator = operators.size() > 0 ? operators.get(0) : null;//录入人
+        if (operator == null) {
+            return false;
+        }
         //录入人所在机构和当前用户的所在机构不是相同的就返回false
         if (operator.getUserType().intValue() == UserInfoEnum.USER_TYPE_ADMIN.getValue() ||
                 operator.getUserType().intValue() == UserInfoEnum.USER_TYPE_ENTRUST.getValue()) {//判断录入人用户类型为平台或委托
@@ -150,7 +156,9 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
                 return false;
             }
         }
-
+        if (user.getRoleId().intValue() == RoleTypeEnum.ADMIN.getValue().intValue() || user.getRoleId().intValue() == RoleTypeEnum.REGULATOR.getValue().intValue()) {
+            return true;
+        }
         //当前用户参与对象协作器，并且是管理员或是管理者或是所属人的具有权限返回true
         Map coor = coordinatorMapper.getCoordMessage(userId, objectId, object);//查询当前用户是否参与到协作器了
         if (coor != null) {
@@ -268,7 +276,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
                 userTypes.add(dto.getReId());
             }
         }
-        if(userTypes.size()!=0){
+        if (userTypes.size() != 0) {
             List<Map> list = navUnviewCompanyMapper.selectCompanyByUserType(userTypes);//查询对应类型的所有公司
             for (Map m : list) {
                 SelectDto dto = new SelectDto(null, MessageUtils.transMapToInt(m, "reId"), MessageUtils.transMapToString(m, "showName"));
@@ -350,7 +358,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
      * @return
      */
     private void filter(List<SelectDto> selectDtoList, String key) {
-        if (key != null && !key.equalsIgnoreCase("")&&selectDtoList!=null) {
+        if (key != null && !key.equalsIgnoreCase("") && selectDtoList != null) {
             Iterator<SelectDto> iter = selectDtoList.iterator();
             while (iter.hasNext()) {
                 if (!iter.next().getShowName().contains(key)) {
