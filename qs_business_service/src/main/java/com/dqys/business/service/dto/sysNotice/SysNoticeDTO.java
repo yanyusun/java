@@ -23,6 +23,10 @@ public class SysNoticeDTO {
 
     private Integer introduce;
 
+    private Integer isCover;
+
+    private String mark;
+
     public Integer getId() {
         return id;
     }
@@ -69,5 +73,21 @@ public class SysNoticeDTO {
 
     public void setIntroduce(Integer introduce) {
         this.introduce = introduce;
+    }
+
+    public Integer getIsCover() {
+        return isCover;
+    }
+
+    public void setIsCover(Integer isCover) {
+        this.isCover = isCover;
+    }
+
+    public String getMark() {
+        return mark;
+    }
+
+    public void setMark(String mark) {
+        this.mark = mark;
     }
 }
