@@ -1,8 +1,8 @@
 package com.dqys.business.service.utils.permission;
 
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
-import com.dqys.business.orm.mapper.asset.impl.AssetInfoMapperImpl;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.operType.OperType;
@@ -19,13 +19,13 @@ import java.util.List;
  */
 public class AddEditOperTypeFilter extends OperTypeFilter{
     private LenderInfoMapper lenderInfoMapper;
-    private AssetInfoMapperImpl assetInfoMapper;
+    private AssetInfoMapper assetInfoMapper;
     private Integer objectType;
     private Integer objectId;
     private int userType;
     private int useId;
 
-    public AddEditOperTypeFilter(LenderInfoMapper lenderInfoMapper, AssetInfoMapperImpl assetInfoMapper, Integer objectType, Integer objectId, int userType, int useId) {
+    public AddEditOperTypeFilter(LenderInfoMapper lenderInfoMapper, AssetInfoMapper assetInfoMapper, Integer objectType, Integer objectId, int userType, int useId) {
         this.lenderInfoMapper = lenderInfoMapper;
         this.assetInfoMapper = assetInfoMapper;
         this.objectType = objectType;
