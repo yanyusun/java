@@ -60,7 +60,7 @@
                 oper_user,
             </if>
             <if test="object != null">
-                object,
+                object_type,
             </if>
             <if test="objectId != null">
                 object_id,
