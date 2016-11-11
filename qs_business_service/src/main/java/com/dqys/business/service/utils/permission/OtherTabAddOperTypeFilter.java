@@ -6,6 +6,7 @@ import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.service.BusinessService;
+import com.dqys.business.service.service.OperTypeService;
 import com.dqys.business.service.utils.operType.OperTypeUtile;
 
 import java.util.List;
@@ -26,12 +27,14 @@ public class OtherTabAddOperTypeFilter  extends OperTypeFilter{
     private Integer objectId;
     private Integer objectType;
     private int userType;
+    private OperTypeService operTypeService;
 
-    public OtherTabAddOperTypeFilter(BusinessService businessService, Integer objectId, Integer objectType, int userType) {
+    public OtherTabAddOperTypeFilter(BusinessService businessService, Integer objectId, Integer objectType, int userType, OperTypeService operTypeService) {
         this.businessService = businessService;
         this.objectId = objectId;
         this.objectType = objectType;
         this.userType = userType;
+        this.operTypeService = operTypeService;
     }
 
     @Override
@@ -41,14 +44,26 @@ public class OtherTabAddOperTypeFilter  extends OperTypeFilter{
                 &&business.getStatus()!=BusinessStatusEnum.init.getValue()){//当不为待审核和已驳回状态时,改为正在处置的操作项
             List<OperType> operTypes1=null;
             if(userType== UserInfoEnum.USER_TYPE_ADMIN.getValue()||userType==UserInfoEnum.USER_TYPE_ENTRUST.getValue()){//是委托或者平台
-                operTypes1=OperTypeUtile.getOperType(ObjectTabEnum.handling_urge.getValue(),objectType);
+                setOperTypes(ObjectTabEnum.handling_urge);
             }else{
-                operTypes1=OperTypeUtile.getOperType(ObjectTabEnum.handling_entrust.getValue(),objectType);
+                setOperTypes(ObjectTabEnum.handling_entrust);
             }
-            operTypes=operTypes1;
         }else{
             operTypes=list;
         }
         return getNextPermission();
     }
+
+    private void setOperTypes(ObjectTabEnum tabEnum) {
+        List<OperType> operTypes1 = operTypeService.getOperType(objectType, objectId);
+        List<OperType> operTypes2= OperTypeUtile.getOperType(tabEnum.getValue(),objectType);
+        for(OperType operType1:operTypes1){
+            for(OperType operType2:operTypes2){
+                if(operType2.getOperType().intValue()==operType1.getOperType().intValue()){
+                    operTypes.add(operType1);
+                }
+            }
+        }
+    }
+
 }

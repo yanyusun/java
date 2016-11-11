@@ -64,13 +64,14 @@ public class PermissionImp implements Permission {
         if (ObjectTabEnum.handling_entrust.getValue().intValue() == navId) {//处置中
             handingEntrustFilter(objectType, objectId, userType, originOperTypeFiler);
         } else if (isOtherNavId(navId)) {//除了处置中,带审核,已驳回,待处置,延期其他流程不明确的搜所导航
-            OtherTabAddOperTypeFilter otherTabAddOperTypeFilter = new OtherTabAddOperTypeFilter(businessService, objectId, objectType, userType);
+            OtherTabAddOperTypeFilter otherTabAddOperTypeFilter = new OtherTabAddOperTypeFilter(businessService, objectId, objectType, userType,operTypeService);
             originOperTypeFiler.decorate(otherTabAddOperTypeFilter);
             handingEntrustFilter(objectType, objectId, userType, originOperTypeFiler);
         }
         if (userType == UserInfoEnum.USER_TYPE_COLLECTION.getValue()
                 || userType == UserInfoEnum.USER_TYPE_JUDICIARY.getValue()) {//当为催收或者司法录入的资产包和借款人时
             AddEditOperTypeFilter addEditOperTypeFilter = new AddEditOperTypeFilter(lenderInfoMapper, assetInfoMapper, objectType, objectId, userType, userSession.getUserId());
+            originOperTypeFiler.decorate(addEditOperTypeFilter);
         }
         List<OperType> operTypes = operTypeService
                 .getOperType(objectType, objectId);

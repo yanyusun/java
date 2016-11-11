@@ -16,7 +16,11 @@ public abstract class OperTypeFilter {
 
 
     public void decorate(OperTypeFilter filter) {
-        operTypePermissionFilter = filter;
+        if(operTypePermissionFilter==null){
+            operTypePermissionFilter=filter;
+        }else{
+            getLastFiler(operTypePermissionFilter).decorate(filter);
+        }
     }
 
     public abstract List<OperType> getPermission(List<OperType> list);
@@ -27,5 +31,12 @@ public abstract class OperTypeFilter {
         }
         return operTypes;
     };
+
+    private OperTypeFilter getLastFiler(OperTypeFilter filter) {
+        if (filter.operTypePermissionFilter != null) {
+            getLastFiler(filter.operTypePermissionFilter);
+        }
+        return filter;
+    }
 
 }

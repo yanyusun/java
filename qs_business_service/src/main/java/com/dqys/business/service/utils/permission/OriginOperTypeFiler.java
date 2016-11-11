@@ -13,20 +13,4 @@ public class OriginOperTypeFiler extends OperTypeFilter {
         return operTypePermissionFilter.getPermission(list);
     }
 
-    @Override
-    public void decorate(OperTypeFilter filter) {
-        if(operTypePermissionFilter==null){
-            operTypePermissionFilter=filter;
-        }else{
-            getLastFiler(operTypePermissionFilter).decorate(filter);
-        }
-    }
-
-    private OperTypeFilter getLastFiler(OperTypeFilter filter) {
-        if (filter.operTypePermissionFilter != null) {
-            getLastFiler(filter.operTypePermissionFilter);
-        }
-        return filter;
-    }
-
 }

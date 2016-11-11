@@ -115,6 +115,7 @@ public class OperTypeUtile implements ApplicationContextAware {
     private static Integer[] nav18 = {102, 1110, 1615, 1310, 1213, 109, 1117, 1614};//暂停
     private static Integer[] nav19 = {102, 1110, 1615, 1310, 1213};//正在进行
     private static Integer[] nav20 = {102, 1110, 1615, 1310, 1213};//我的催收
+    private static Integer[] nav99 = {102, 1110, 1615, 1310, 1213};//全部
 
     public static List<OperType> getOperType(Integer navId, Integer objectType) {
         Map<String, Object> map = new HashMap<>();
@@ -186,6 +187,9 @@ public class OperTypeUtile implements ApplicationContextAware {
         }
         if (navId == ObjectTabEnum.myUrge.getValue()) {
             return nav20;
+        }
+        if(navId == ObjectTabEnum.all.getValue()){
+            return nav99;
         }
         return null;
     }
