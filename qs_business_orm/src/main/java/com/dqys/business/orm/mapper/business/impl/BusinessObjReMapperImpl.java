@@ -52,4 +52,10 @@ public class BusinessObjReMapperImpl extends BaseDao implements BusinessObjReMap
         return super.getSqlSession().getMapper(BusinessObjReMapper.class)
                 .listIdByTypeIdStatus(type, status);
     }
+
+    @Override
+    public List<Integer> auditObject(Integer objectType) {
+        return super.getSqlSession().getMapper(BusinessObjReMapper.class)
+                .auditObject(objectType);
+    }
 }

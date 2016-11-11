@@ -382,6 +382,13 @@ public class AssetServiceImpl implements AssetService {
         } else if (ObjectTabEnum.apply.getValue().equals(type)) {
             // 待申请 -- 暂未其他公司参与
             assetQuery.setNoTakePart(true);
+            //还需要审核通过的对象
+            List<Integer> objectIds = businessObjReMapper.auditObject(ObjectTypeEnum.ASSETPACKAGE.getValue());
+            if (objectIds != null && objectIds.size() > 0) {
+                assetQuery.setIds(objectIds);
+            } else {
+                assetQuery.setId(SysProperty.NULL_DATA_ID);
+            }
 //            List<Integer> ids = companyTeamReMapper.listAssigned(ObjectTypeEnum.ASSETPACKAGE.getValue());
 //            if (ids != null && ids.size() > 0) {
 //                assetQuery.setExceptIds(ids);
@@ -737,6 +744,15 @@ public class AssetServiceImpl implements AssetService {
             });
             assetQuery.setIds(ids);
             assetQuery.setIsStop(true);
+        } else if (ObjectTabEnum.all.getValue().equals(type)) {
+            //全部
+            if (CommonUtil.isManage()) {
+                userId = null;
+            }
+            assetQuery.setIds(lenderInfoMapper.lenderAllByObjectUserRelation(userId, ObjectTypeEnum.ASSETPACKAGE.getValue()));
+            if (assetQuery.getIds() == null) {
+                assetQuery.setId(SysProperty.NULL_DATA_ID);
+            }
         } else {
             return null;
         }

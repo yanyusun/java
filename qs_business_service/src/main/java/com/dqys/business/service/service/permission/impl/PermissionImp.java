@@ -2,10 +2,10 @@ package com.dqys.business.service.service.permission.impl;
 
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
-import com.dqys.business.orm.mapper.asset.impl.AssetInfoMapperImpl;
 import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
@@ -49,7 +49,8 @@ public class PermissionImp implements Permission {
     @Autowired
     private LenderInfoMapper lenderInfoMapper;
     @Autowired
-    private AssetInfoMapperImpl assetInfoMapper;
+    private AssetInfoMapper assetInfoMapper;
+
 
     public List<OperType> getOperTypes(Integer objectType, Integer objectId, Integer navId) {
         UserSession userSession = UserSession.getCurrent();

@@ -97,7 +97,7 @@ public class UserController {
                 SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE))); //账号类型
         resultMap.put("roleType", SysPropertyTool.toPropertyDTO(
                 SysPropertyTool.getProperty(SysPropertyTypeEnum.ROLE))); // 角色类型
-
+        resultMap.put("userId", UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId());
         return JsonResponseTool.success(resultMap);
     }
 

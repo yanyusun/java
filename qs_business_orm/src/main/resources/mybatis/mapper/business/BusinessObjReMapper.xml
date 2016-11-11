@@ -73,5 +73,10 @@
     ) AND stateflag = 0
   </select>
 
+    <select id="auditObject" resultType="java.lang.Integer">
+            SELECT bor.object_id from business b LEFT JOIN t_business_obj_re bor
+            ON bor.business_id=b.id
+            WHERE bor.object_type=#{objectType} AND b.`status`=1 GROUP BY bor.object_id
+    </select>
 
 </mapper>

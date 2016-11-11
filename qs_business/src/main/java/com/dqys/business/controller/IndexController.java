@@ -47,6 +47,7 @@ public class IndexController {
      * "city": "市辖区",//城市
      * "area": "东城区",//区县
      * "address": null //地址
+     * "avg": null //头像
      * },
      * "notActivated": 0,//未激活的员工人数
      * "enterToday": 3,//当天登入的员工人数

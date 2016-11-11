@@ -235,17 +235,19 @@ public class UserServiceImpl implements UserService {
             if (companyInfo == null) {
                 return JsonResponseTool.failure("公司不存在，请返回上一步完善公司信息");
             }
+            Integer count = 0;
             // 修改用户信息
-            userInfo.setUserName(name);
-            Integer count = this.tUserInfoMapper.updateByPrimaryKeySelective(userInfo);
-            if (!count.equals(1)) {
-                return JsonResponseTool.failure("更新用户信息失败");
-            }
+//            userInfo.setUserName(name);
+//            count = this.tUserInfoMapper.updateByPrimaryKeySelective(userInfo);
+//            if (!count.equals(1)) {
+//                return JsonResponseTool.failure("更新用户信息失败");
+//            }
             // 修改公司信息
             companyInfo.setProvince(province);
             companyInfo.setCity(city);
             companyInfo.setArea(district);
             companyInfo.setRemark(introduction);
+            companyInfo.setCompanyAccount(name);
             count = this.tCompanyInfoMapper.updateByPrimaryKeySelective(companyInfo);
             if (!count.equals(1)) {
                 return JsonResponseTool.failure("更新公司信息失败");

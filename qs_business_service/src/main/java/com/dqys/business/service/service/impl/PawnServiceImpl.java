@@ -114,6 +114,7 @@ public class PawnServiceImpl implements PawnService {
 
     private void addRelation(Integer pawnId, Integer iouId, Integer lenderId, String name) {
         if (pawnId != null && (iouId != null || name != null)) {
+            piRelationMapper.deleteByPawnId(pawnId);  // 清除关联
             if (iouId == null) {
                 List<IOUInfo> iouInfoList = iouInfoMapper.listByName(lenderId, name);
                 if (iouInfoList != null && iouInfoList.size() > 0) {
@@ -175,8 +176,7 @@ public class PawnServiceImpl implements PawnService {
         Integer pawnId = pawnDTO.getId();
         // 修改借据
         pawnInfoMapper.update(PawnServiceUtils.toPawnInfo(pawnDTO));
-        // 清除关联
-        piRelationMapper.deleteByPawnId(pawnId);
+
         // 添加关联(如果ids&names同时存在，以IDS为准)
         if (pawnDTO.getIouIds() != null && pawnDTO.getIouIds().length() > 0) {
             String[] idStr = pawnDTO.getIouIds().split(",");
