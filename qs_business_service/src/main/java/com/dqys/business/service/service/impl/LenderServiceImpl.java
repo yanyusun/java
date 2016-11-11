@@ -1134,9 +1134,19 @@ public class LenderServiceImpl implements LenderService {
             } else {
                 lenderQuery.setIds(result);
             }
+        } else if (ObjectTabEnum.all.getValue().equals(tab)) {
+            //全部
+            if (CommonUtil.isManage()) {
+                userId = null;
+            }
+            lenderQuery.setIds(lenderInfoMapper.lenderAllByObjectUserRelation(userId, ObjectTypeEnum.LENDER.getValue()));
+            if (lenderQuery.getIds() == null) {
+                lenderQuery.setId(SysProperty.NULL_DATA_ID);
+            }
         } else {
             return null;
         }
         return lenderQuery;
     }
+
 }

@@ -639,4 +639,28 @@
         OR lender_no LIKE CONCAT('%', #{listSearch,jdbcType=VARCHAR} ,'%')
   </select>
 
+    <select id="lenderAllByObjectUserRelation" resultType="java.lang.Integer">
+        SELECT our.object_id from object_user_relation our WHERE our.stateflag=0
+        <if test="objectType !=null">
+            AND our.object_type=#{objectType}
+        </if>
+        <if test="userId !=null">
+            AND our.user_id=#{userId}
+        </if>
+        <if test="objectType !=null and objectType==11">
+            UNION
+            SELECT len.id from bt_lender len WHERE len.stateflag=0
+            <if test="userId !=null">
+                AND len.operator=#{userId}
+            </if>
+        </if>
+        <if test="objectType !=null and objectType==10">
+            UNION
+            SELECT ass.id from bt_asset ass WHERE ass.stateflag=0
+            <if test="userId !=null">
+                AND ass.operator=#{userId}
+            </if>
+        </if>
+    </select>
+
 </mapper>
