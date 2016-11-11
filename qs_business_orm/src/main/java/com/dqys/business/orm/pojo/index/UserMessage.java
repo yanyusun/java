@@ -13,6 +13,15 @@ public class UserMessage {
     private String area;//区/县
     private String address;//地址
     private String adminName;//管理员姓名
+    private String avg;//头像
+
+    public String getAvg() {
+        return avg;
+    }
+
+    public void setAvg(String avg) {
+        this.avg = avg;
+    }
 
     public String getAdminName() {
         return adminName;
