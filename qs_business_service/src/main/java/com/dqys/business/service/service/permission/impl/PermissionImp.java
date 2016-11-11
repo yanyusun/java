@@ -120,7 +120,7 @@ public class PermissionImp implements Permission {
         if (navId == ObjectTabEnum.focus.getValue() || navId == ObjectTabEnum.month.getValue()
                 || navId == ObjectTabEnum.stock.getValue() || navId == ObjectTabEnum.joined.getValue()
                 || navId == ObjectTabEnum.task.getValue() || navId == ObjectTabEnum.gongingOn.getValue()
-                || navId == ObjectTabEnum.myUrge.getValue()) {
+                || navId == ObjectTabEnum.myUrge.getValue()||navId == ObjectTabEnum.all.getValue()) {
             return true;
         }
         return false;
