@@ -33,4 +33,12 @@ public interface BusinessService {
      */
     Integer updateObjectUser_tx(ObjectUserRelation objectUserRelation);
 
+    /**
+     *  得到业务表信息
+     * @param ObjectType 对象类型
+     * @param ObjectId 对象信息
+     * @return
+     */
+    Business getBusiness(Integer ObjectType,Integer ObjectId);
+
 }

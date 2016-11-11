@@ -7,6 +7,7 @@ import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.service.OperTypeService;
 import com.dqys.business.service.service.companyTeam.CompanyTeamService;
 import com.dqys.business.service.service.permission.Permission;
@@ -49,31 +50,52 @@ public class PermissionImp implements Permission{
         if (navId != null) {
             originOperTypeFiler.decorate(new NavIdOperTypeFilter(navId, objectType));
         }
-        if (userType == UserInfoEnum.USER_TYPE_COLLECTION.getValue()
-                || userType == UserInfoEnum.USER_TYPE_JUDICIARY.getValue()
-                || userType == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue()) {
-            ObjectTypeEnum objectTypeEnum = ObjectTypeEnum.getObjectTypeEnum(objectType);
-            switch (objectTypeEnum) {
-                case LENDER:
-                    originOperTypeFiler.decorate(new NotTheirOperTypeFilter(
-                            companyTeamService, companyTeamReMapper, tUserInfoMapper, objectType, objectId));
-                    break;
-                case PAWN:
-                    originOperTypeFiler.decorate(new OnHandleOperTypeFilter(
-                            objectType, objectId, pawnInfoMapper, iouInfoMapper
-                    ));
-                    originOperTypeFiler.decorate(new InitBusinessOperTypeFilter(operTypeService,objectType,objectId,PAWN.getValue()));
-                    break;
-                case IOU:
-                    originOperTypeFiler.decorate(new OnHandleOperTypeFilter(
-                            objectType, objectId, pawnInfoMapper, iouInfoMapper
-                    ));
-                    originOperTypeFiler.decorate(new InitBusinessOperTypeFilter(operTypeService,objectType,objectId, IOU.getValue()));
-                    break;
+        if(ObjectTabEnum.handling_entrust.getValue().intValue()==navId) {
+            if (userType == UserInfoEnum.USER_TYPE_COLLECTION.getValue()
+                    || userType == UserInfoEnum.USER_TYPE_JUDICIARY.getValue()
+                    || userType == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue()) {
+                ObjectTypeEnum objectTypeEnum = ObjectTypeEnum.getObjectTypeEnum(objectType);
+                switch (objectTypeEnum) {
+                    case LENDER:
+                        originOperTypeFiler.decorate(new NotTheirOperTypeFilter(
+                                companyTeamService, companyTeamReMapper, tUserInfoMapper, objectType, objectId));
+                        break;
+                    case PAWN:
+                        originOperTypeFiler.decorate(new OnHandleOperTypeFilter(
+                                objectType, objectId, pawnInfoMapper, iouInfoMapper
+                        ));
+                        originOperTypeFiler.decorate(new InitBusinessOperTypeFilter(operTypeService, objectType, objectId, PAWN.getValue()));
+                        break;
+                    case IOU:
+                        originOperTypeFiler.decorate(new OnHandleOperTypeFilter(
+                                objectType, objectId, pawnInfoMapper, iouInfoMapper
+                        ));
+                        originOperTypeFiler.decorate(new InitBusinessOperTypeFilter(operTypeService, objectType, objectId, IOU.getValue()));
+                        break;
+                }
             }
         }
+        if(isOtherNavId(navId)){
+            //originOperTypeFiler.decorate();
+        }
+
         List<OperType> operTypes = operTypeService
                 .getOperType(objectType, objectId);
         return originOperTypeFiler.getPermission(operTypes);
+    }
+
+    /**
+     * 是否为非业务划分的标签
+     * @param navId
+     * @return
+     */
+    private boolean isOtherNavId(int navId){
+        if(navId==ObjectTabEnum.focus.getValue()||navId==ObjectTabEnum.month.getValue()
+                ||navId==ObjectTabEnum.stock.getValue()||navId==ObjectTabEnum.joined.getValue()
+                    ||navId==ObjectTabEnum.task.getValue()||navId==ObjectTabEnum.gongingOn.getValue()
+                        ||navId==ObjectTabEnum.myUrge.getValue()){
+            return true;
+        }
+        return false;
     }
 }

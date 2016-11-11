@@ -117,4 +117,8 @@ public class BusinessServiceImpl implements BusinessService {
         return objectUserRelationMapper.update(objectUserRelation);
     }
 
+    @Override
+    public Business getBusiness(Integer ObjectType, Integer ObjectId) {
+        return null;
+    }
 }
