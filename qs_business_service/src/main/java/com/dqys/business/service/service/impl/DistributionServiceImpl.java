@@ -36,6 +36,7 @@ import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.dto.company.BusinessServiceDTO;
 import com.dqys.business.service.dto.company.CompanyTeamReDTO;
 import com.dqys.business.service.dto.company.DistributionDTO;
@@ -103,6 +104,8 @@ public class DistributionServiceImpl implements DistributionService {
     private PiRelationMapper piRelationMapper;
     @Autowired
     private ZcyService zcyService;
+    @Autowired
+    private ContactInfoMapper contactInfoMapper;
 
     @Override
     public DistributionDTO listDistribution_tx(Integer type, Integer id) throws BusinessLogException {
@@ -122,6 +125,7 @@ public class DistributionServiceImpl implements DistributionService {
         List<CompanyTeamReDTO> companyTeamReDTOList = new ArrayList<>();
         List<Integer> userIds = new ArrayList<>();
         DistributionDTO distributionDTO = new DistributionDTO();
+        distributionDTO = setVaule(type, id);//设置分配器返回的dto信息
         distributionDTO.setId(companyTeam.getId());
         int index = 0;
         Map<Integer, Integer> keyMap = new HashMap<>();
@@ -181,6 +185,33 @@ public class DistributionServiceImpl implements DistributionService {
         }
 
         return distributionDTO;
+    }
+
+    private DistributionDTO setVaule(Integer type, Integer id) {
+        DistributionDTO dto = new DistributionDTO();
+        if (ObjectTypeEnum.LENDER.getValue().intValue() == type) {
+            LenderInfo info = lenderInfoMapper.get(id);
+            if (info != null) {
+                dto.setAccrual(info.getAccrual());
+                dto.setLoan(info.getLoan());
+                dto.setAppraisal(info.getAppraisal());
+                dto.setNumberNo(info.getLenderNo());
+                ContactInfo con = contactInfoMapper.getByModel(ObjectTypeEnum.LENDER.getValue().toString(), ContactTypeEnum.LENDER.getValue(), id);
+                dto.setName(con != null ? con.getName() : "");
+                dto.setAvg(con != null ? con.getAvg() : "");
+                dto.setSex(con != null ? con.getGender().toString() : "");
+            }
+        } else if (ObjectTypeEnum.ASSETPACKAGE.getValue().intValue() == type) {
+            AssetInfo info = assetInfoMapper.get(id);
+            if (info != null) {
+                dto.setAccrual(info.getAccrual());
+                dto.setLoan(info.getLoan());
+                dto.setAppraisal(info.getAppraisal());
+                dto.setNumberNo(info.getAssetNo());
+                dto.setName(info.getName());
+            }
+        }
+        return dto;
     }
 
     /**

@@ -31,7 +31,15 @@ public class AssetListDTO {
     private Date lastFollowUpTime; // 最后跟进时间
     private String belong; // 所属人
     private Integer followNum; // 实时动态条数
+    private String memo; // 备注
 
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
 
     public Integer getFollowNum() {
         return followNum;

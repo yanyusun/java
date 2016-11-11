@@ -11,10 +11,7 @@ import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.OURelationEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
-import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
-import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
-import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
-import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
+import com.dqys.business.orm.mapper.asset.*;
 import com.dqys.business.orm.mapper.business.BusinessMapper;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.mapper.cases.CaseInfoMapper;
@@ -25,10 +22,7 @@ import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.coordinator.UserTeamMapper;
 import com.dqys.business.orm.mapper.repay.RepayMapper;
 import com.dqys.business.orm.mapper.zcy.ZcyEstatesMapper;
-import com.dqys.business.orm.pojo.asset.AssetInfo;
-import com.dqys.business.orm.pojo.asset.IOUInfo;
-import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.pojo.asset.PawnInfo;
+import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.pojo.business.Business;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.cases.CaseInfo;
@@ -39,6 +33,7 @@ import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.*;
+import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.dto.company.DistributionDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.*;
@@ -101,6 +96,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     private DistributionService distributionService;
     @Autowired
     private ZcyService zcyService;
+    @Autowired
+    private ContactInfoMapper contactInfoMapper;
 
     @Override
     public void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType, Integer userid) {
@@ -185,11 +182,11 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         } else {
             List<TeamDTO> list = getTeamDTOs(companyId, team);//协作器团队信息
             for (TeamDTO t : list) {//查询每个人员的任务数
-                    Map<String, Object> task = getTaskCount(companyId, t.getUserId(), objectType);
-                    t.setFinishTask(MessageUtils.transMapToInt(task, "finish"));
-                    t.setOngoingTask(MessageUtils.transMapToInt(task, "ongoing"));
-                    t.setTotalTask(MessageUtils.transMapToInt(task, "total"));
-                    t.setLeaveWordTime(MessageUtils.transMapToString(coordinatorMapper.getLastLeaveWord(t.getUserId()), "time"));//最后留言时间
+                Map<String, Object> task = getTaskCount(companyId, t.getUserId(), objectType);
+                t.setFinishTask(MessageUtils.transMapToInt(task, "finish"));
+                t.setOngoingTask(MessageUtils.transMapToInt(task, "ongoing"));
+                t.setTotalTask(MessageUtils.transMapToInt(task, "total"));
+                t.setLeaveWordTime(MessageUtils.transMapToString(coordinatorMapper.getLastLeaveWord(t.getUserId()), "time"));//最后留言时间
             }
             map.put("companys", companyList(objectId, objectType));//对象类型相应的公司
             map.put("teams", list);//团队信息
@@ -280,6 +277,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             return true;
         } else {
             map.put("name", assetInfo.getName());//资产包名称
+            map.put("numberNo", assetInfo.getAssetNo() == null ? 0 : assetInfo.getAssetNo());//编号
             map.put("accrual", assetInfo.getAccrual() == null ? 0 : assetInfo.getAccrual());//总利息
             map.put("loan", assetInfo.getLoan() == null ? 0 : assetInfo.getLoan());//总贷款
             map.put("appraisal", assetInfo.getAppraisal() == null ? 0 : assetInfo.getAppraisal());//抵押物总评估
@@ -306,7 +304,11 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             map.put("msg", "查询借款人信息失败");
             return null;
         } else {
-            map.put("name", lenderInfo.getLenderNo());//借款人名称
+            ContactInfo con = contactInfoMapper.getByModel(ObjectTypeEnum.LENDER.getValue().toString(), ContactTypeEnum.LENDER.getValue(), objectId);
+            map.put("name", con != null ? con.getName() : "");//借款人名称
+            map.put("sex", con != null ? con.getGender() : "");//性别
+            map.put("avg", con != null ? con.getAvg() : "");//头像
+            map.put("numberNo", lenderInfo.getLenderNo() == null ? 0 : lenderInfo.getLenderNo());//编号
             map.put("accrual", lenderInfo.getAccrual() == null ? 0 : lenderInfo.getAccrual());//总利息
             map.put("loan", lenderInfo.getLoan() == null ? 0 : lenderInfo.getLoan());//总贷款
             map.put("appraisal", lenderInfo.getAppraisal() == null ? 0 : lenderInfo.getAppraisal());//抵押物总评估

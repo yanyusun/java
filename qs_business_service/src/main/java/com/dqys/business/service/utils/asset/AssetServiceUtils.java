@@ -56,7 +56,7 @@ public class AssetServiceUtils {
         assetInfo.setRepayStatus(assetDTO.getRepayStatus());
         assetInfo.setEntrustName(assetDTO.getEntrustName());
         assetInfo.setAttribute(assetDTO.getAttribute());
-
+        assetInfo.setMemo(assetDTO.getMemo());
         return assetInfo;
     }
 
@@ -166,6 +166,7 @@ public class AssetServiceUtils {
         assetListDTO.setAttribute(assetInfo.getAttribute());
         assetListDTO.setLastFollowUpTime(assetInfo.getFollowUpTime());
         assetListDTO.setFlag(assetInfo.getStateflag().equals(0) ? 1 : 0);
+        assetListDTO.setMemo(assetInfo.getMemo());
         if (assetInfo.getCity() != null) {
             TArea area = AreaTool.getAreaById(assetInfo.getDistrict());
             if (area != null) {
@@ -240,7 +241,7 @@ public class AssetServiceUtils {
                 assetDTO.getAccrual(), assetDTO.getLoan(), assetDTO.getAppraisal(),
                 assetDTO.getName(), assetDTO.getEvaluateExcellent(), assetDTO.getEvaluateLevel(),
                 assetDTO.getProvince(), assetDTO.getAddress(), assetDTO.getLoanOrganization(),
-                assetDTO.getLoanOrganizationDistrict(),assetDTO.getDisposeMode(), assetDTO.getEntrustName(), assetDTO.getAttribute())) {
+                assetDTO.getLoanOrganizationDistrict(), assetDTO.getDisposeMode(), assetDTO.getEntrustName(), assetDTO.getAttribute())) {
             return "存在非法参数";
         }
         if (ExcellentTypeEnum.getExcellentTypeEnum(assetDTO.getEvaluateExcellent()) == null) {
