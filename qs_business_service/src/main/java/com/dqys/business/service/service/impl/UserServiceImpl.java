@@ -143,28 +143,28 @@ public class UserServiceImpl implements UserService {
         if (query.getModule() != null && query.getModule() == 1) {
             // 总管理员
 
-                List<Integer> companyIds = new ArrayList<>();
+            List<Integer> companyIds = new ArrayList<>();
 
-                CompanyQuery companyQuery = new CompanyQuery();
-                companyQuery.setProvince(query.getProvince());
-                companyQuery.setCity(query.getCity());
-                companyQuery.setDistrict(query.getDistrict());
+            CompanyQuery companyQuery = new CompanyQuery();
+            companyQuery.setProvince(query.getProvince());
+            companyQuery.setCity(query.getCity());
+            companyQuery.setDistrict(query.getDistrict());
 
-                List<TCompanyInfo> tCompanyInfoList = tCompanyInfoMapper.queryList(companyQuery);
-                if (tCompanyInfoList != null) {
-                    tCompanyInfoList.forEach(tCompanyInfo -> {
-                        companyIds.add(tCompanyInfo.getId());
-                    });
-                }
-                if (companyIds.isEmpty()) {
-                    // 没有符合条件的数据
-                    resultMap.put("data", null);
-                    resultMap.put("total", 0);
-                    return JsonResponseTool.success(resultMap);
-                }
-                tUserQuery.setCompanyIds(companyIds);
-                tUserQuery.setCompanyId(null);
+            List<TCompanyInfo> tCompanyInfoList = tCompanyInfoMapper.queryList(companyQuery);
+            if (tCompanyInfoList != null) {
+                tCompanyInfoList.forEach(tCompanyInfo -> {
+                    companyIds.add(tCompanyInfo.getId());
+                });
             }
+            if (companyIds.isEmpty()) {
+                // 没有符合条件的数据
+                resultMap.put("data", null);
+                resultMap.put("total", 0);
+                return JsonResponseTool.success(resultMap);
+            }
+            tUserQuery.setCompanyIds(companyIds);
+            tUserQuery.setCompanyId(null);
+        }
         tUserQuery.setStatus(query.getStatus());
         tUserQuery.setStatuss(query.getStatuss());
         tUserQuery.setNameLike(query.getName());
@@ -408,6 +408,9 @@ public class UserServiceImpl implements UserService {
         }
         if (!FormatValidateTool.checkEmail(dto.getEmail())) {
             return JsonResponseTool.failure("邮箱格式不正确");
+        }
+        if (!FormatValidateTool.checkPhone(dto.getOccupationTel()) && !FormatValidateTool.checkMobile(dto.getOccupationTel())) {
+            return JsonResponseTool.failure("电话格式不正确");
         }
         return JsonResponseTool.success(null);
     }

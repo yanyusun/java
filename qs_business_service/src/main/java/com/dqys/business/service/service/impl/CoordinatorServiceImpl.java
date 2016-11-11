@@ -277,7 +277,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             return true;
         } else {
             map.put("name", assetInfo.getName());//资产包名称
-            map.put("numberNo", assetInfo.getAssetNo() == null ? 0 :assetInfo.getAssetNo());//编号
+            map.put("numberNo", assetInfo.getAssetNo() == null ? 0 : assetInfo.getAssetNo());//编号
             map.put("accrual", assetInfo.getAccrual() == null ? 0 : assetInfo.getAccrual());//总利息
             map.put("loan", assetInfo.getLoan() == null ? 0 : assetInfo.getLoan());//总贷款
             map.put("appraisal", assetInfo.getAppraisal() == null ? 0 : assetInfo.getAppraisal());//抵押物总评估
@@ -306,6 +306,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         } else {
             ContactInfo con = contactInfoMapper.getByModel(ObjectTypeEnum.LENDER.getValue().toString(), ContactTypeEnum.LENDER.getValue(), objectId);
             map.put("name", con != null ? con.getName() : "");//借款人名称
+            map.put("sex", con != null ? con.getGender() : "");//性别
+            map.put("avg", con != null ? con.getAvg() : "");//头像
             map.put("numberNo", lenderInfo.getLenderNo() == null ? 0 : lenderInfo.getLenderNo());//编号
             map.put("accrual", lenderInfo.getAccrual() == null ? 0 : lenderInfo.getAccrual());//总利息
             map.put("loan", lenderInfo.getLoan() == null ? 0 : lenderInfo.getLoan());//总贷款

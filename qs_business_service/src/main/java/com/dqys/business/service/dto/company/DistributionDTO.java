@@ -17,9 +17,27 @@ public class DistributionDTO {
     private double appraisal = 0; // 总评估
     private String numberNo; //编号
     private String name; // 名称
+    private String sex; // 性别
+    private String avg; // 头像
 
     private List<CompanyTeamReDTO> companyTeamReDTOList; // 分配器成员
     private List<BusinessServiceDTO> businessServiceDTOList; // 业务流成员
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getAvg() {
+        return avg;
+    }
+
+    public void setAvg(String avg) {
+        this.avg = avg;
+    }
 
     public double getAccrual() {
         return accrual;

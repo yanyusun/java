@@ -1,472 +1,480 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dqys.business.orm.mapper.asset.AssetInfoMapper" >
+<mapper namespace="com.dqys.business.orm.mapper.asset.AssetInfoMapper">
 
-  <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.asset.AssetInfo" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="version" property="version" jdbcType="INTEGER" />
-    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
-    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
-    <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
-    <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="asset_no" property="assetNo" jdbcType="VARCHAR" />
-    <result column="type" property="type" jdbcType="INTEGER" />
-    <result column="start_at" property="startAt" jdbcType="TIMESTAMP" />
-    <result column="end_at" property="endAt" jdbcType="TIMESTAMP" />
-    <result column="operator" property="operator" jdbcType="INTEGER" />
-    <result column="accrual" property="accrual" jdbcType="DOUBLE" />
-    <result column="loan" property="loan" jdbcType="DOUBLE" />
-    <result column="appraisal" property="appraisal" jdbcType="DOUBLE" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="evaluate_excellent" property="evaluateExcellent" jdbcType="VARCHAR" />
-    <result column="evaluate_level" property="evaluateLevel" jdbcType="VARCHAR" />
-    <result column="province" property="province" jdbcType="INTEGER" />
-    <result column="city" property="city" jdbcType="INTEGER" />
-    <result column="district" property="district" jdbcType="INTEGER" />
-    <result column="address" property="address" jdbcType="VARCHAR" />
-    <result column="loan_organization" property="loanOrganization" jdbcType="VARCHAR" />
-    <result column="loan_organization_district" property="loanOrganizationDistrict" jdbcType="VARCHAR" />
-    <result column="dispose_mode" property="disposeMode" jdbcType="VARCHAR" />
-    <result column="tags" property="tags" jdbcType="VARCHAR" />
-    <result column="isshow" property="isshow" jdbcType="INTEGER" />
-    <result column="follow_up_times" property="followUpTimes" jdbcType="INTEGER" />
-    <result column="follow_up_time" property="followUpTime" jdbcType="TIMESTAMP" />
-    <result column="belong_up_times" property="belongUpTimes" jdbcType="INTEGER" />
-    <result column="belong_up_time" property="belongUpTime" jdbcType="TIMESTAMP" />
-    <result column="is_collection" property="isCollection" jdbcType="INTEGER" />
-    <result column="is_agent" property="isAgent" jdbcType="INTEGER" />
-    <result column="is_lawyer" property="isLawyer" jdbcType="INTEGER" />
-    <result column="is_stop" property="isStop" jdbcType="INTEGER" />
-    <result column="repay_status" property="repayStatus" jdbcType="INTEGER" />
-    <result column="entrust_name" property="entrustName" jdbcType="VARCHAR" />
-    <result column="attribute" property="attribute" jdbcType="INTEGER" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.asset.AssetInfo">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="asset_no" property="assetNo" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="start_at" property="startAt" jdbcType="TIMESTAMP"/>
+        <result column="end_at" property="endAt" jdbcType="TIMESTAMP"/>
+        <result column="operator" property="operator" jdbcType="INTEGER"/>
+        <result column="accrual" property="accrual" jdbcType="DOUBLE"/>
+        <result column="loan" property="loan" jdbcType="DOUBLE"/>
+        <result column="appraisal" property="appraisal" jdbcType="DOUBLE"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="evaluate_excellent" property="evaluateExcellent" jdbcType="VARCHAR"/>
+        <result column="evaluate_level" property="evaluateLevel" jdbcType="VARCHAR"/>
+        <result column="province" property="province" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="INTEGER"/>
+        <result column="district" property="district" jdbcType="INTEGER"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="loan_organization" property="loanOrganization" jdbcType="VARCHAR"/>
+        <result column="loan_organization_district" property="loanOrganizationDistrict" jdbcType="VARCHAR"/>
+        <result column="dispose_mode" property="disposeMode" jdbcType="VARCHAR"/>
+        <result column="tags" property="tags" jdbcType="VARCHAR"/>
+        <result column="isshow" property="isshow" jdbcType="INTEGER"/>
+        <result column="follow_up_times" property="followUpTimes" jdbcType="INTEGER"/>
+        <result column="follow_up_time" property="followUpTime" jdbcType="TIMESTAMP"/>
+        <result column="belong_up_times" property="belongUpTimes" jdbcType="INTEGER"/>
+        <result column="belong_up_time" property="belongUpTime" jdbcType="TIMESTAMP"/>
+        <result column="is_collection" property="isCollection" jdbcType="INTEGER"/>
+        <result column="is_agent" property="isAgent" jdbcType="INTEGER"/>
+        <result column="is_lawyer" property="isLawyer" jdbcType="INTEGER"/>
+        <result column="is_stop" property="isStop" jdbcType="INTEGER"/>
+        <result column="repay_status" property="repayStatus" jdbcType="INTEGER"/>
+        <result column="entrust_name" property="entrustName" jdbcType="VARCHAR"/>
+        <result column="attribute" property="attribute" jdbcType="INTEGER"/>
+        <result column="memo" property="memo" jdbcType="VARCHAR"/>
+    </resultMap>
 
-  <sql id="Base_Column_List" >
+    <sql id="Base_Column_List">
     id, version, create_at, update_at, stateflag, remark, asset_no, type, start_at,
     end_at, operator, accrual, loan, appraisal, name, evaluate_excellent, evaluate_level, province,
     city, district, address, loan_organization, loan_organization_district, dispose_mode,
     tags, isshow, follow_up_time, follow_up_times, belong_up_time, belong_up_times, is_collection,
-    is_lawyer, is_stop, is_agent, repay_status, entrust_name, attribute
+    is_lawyer, is_stop, is_agent, repay_status, entrust_name, attribute,memo
   </sql>
 
-  <sql id="Query_Condition">
-    <where>
-      <if test="id != null">
-        id = #{id,jdbcType=INTEGER}
-      </if>
-      <if test="stateflag != null">
-        AND stateflag > 0
-      </if>
-      <if test="type != null">
-        AND type = #{type,jdbcType=TINYINT}
-      </if>
-      <if test="areaId != null">
-        AND district = #{areaId,jdbcType=INTEGER}
-      </if>
-      <if test="operator != null">
-        AND operator = #{operator,jdbcType=INTEGER}
-      </if>
-      <if test="code != null">
-        AND asset_no = #{code,jdbcType=VARCHAR}
-      </if>
-      <if test="repayStatus != null">
-        AND repay_status = #{repayStatus,jdbcType=VARCHAR}
-      </if>
-      <if test="entrustName != null">
-        AND entrust_name = #{entrustName,jdbcType=VARCHAR}
-      </if>
+    <sql id="Query_Condition">
+        <where>
+            <if test="id != null">
+                id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="stateflag != null">
+                AND stateflag > 0
+            </if>
+            <if test="type != null">
+                AND type = #{type,jdbcType=TINYINT}
+            </if>
+            <if test="areaId != null">
+                AND district = #{areaId,jdbcType=INTEGER}
+            </if>
+            <if test="operator != null">
+                AND operator = #{operator,jdbcType=INTEGER}
+            </if>
+            <if test="code != null">
+                AND asset_no = #{code,jdbcType=VARCHAR}
+            </if>
+            <if test="repayStatus != null">
+                AND repay_status = #{repayStatus,jdbcType=VARCHAR}
+            </if>
+            <if test="entrustName != null">
+                AND entrust_name = #{entrustName,jdbcType=VARCHAR}
+            </if>
 
-      <if test="outTime">
-        <![CDATA[ AND CURRENT_TIMESTAMP >= end_at ]]>
-      </if>
-      <if test="takePart">
-        AND (is_collection = 1 OR is_lawyer = 1 or is_agent = 1)
-      </if>
-      <if test="noTakePart">
-        AND is_collection = 0 AND is_lawyer = 0 AND is_agent = 0
-      </if>
-      <if test="isStop">
-        AND is_stop = 1
-      </if>
-      <if test="stopStatus !=null">
-        AND is_stop = #{stopStatus}
-      </if>
+            <if test="outTime">
+                <![CDATA[ AND CURRENT_TIMESTAMP >= end_at ]]>
+            </if>
+            <if test="takePart">
+                AND (is_collection = 1 OR is_lawyer = 1 or is_agent = 1)
+            </if>
+            <if test="noTakePart">
+                AND is_collection = 0 AND is_lawyer = 0 AND is_agent = 0
+            </if>
+            <if test="isStop">
+                AND is_stop = 1
+            </if>
+            <if test="stopStatus !=null">
+                AND is_stop = #{stopStatus}
+            </if>
 
-      <if test="startAt != null">
-        <![CDATA[ AND create_at >= #{startAt} ]]>
-      </if>
-      <if test="endAt != null">
-        <![CDATA[ AND create_at <= #{endAt} ]]>
-      </if>
+            <if test="startAt != null">
+                <![CDATA[ AND create_at >= #{startAt} ]]>
+            </if>
+            <if test="endAt != null">
+                <![CDATA[ AND create_at <= #{endAt} ]]>
+            </if>
 
-      <if test="ids != null and ids.size() > 0">
-        AND id in
-          <foreach collection="ids" item="i" open="(" close=")" separator=",">
-            #{i}
-          </foreach>
-      </if>
-      <if test="exceptIds != null and exceptIds.size() > 0">
-        AND id not in
-          <foreach collection="exceptIds" item="i" open="(" close=")" separator=",">
-            #{i}
-          </foreach>
-      </if>
+            <if test="ids != null and ids.size() > 0">
+                AND id in
+                <foreach collection="ids" item="i" open="(" close=")" separator=",">
+                    #{i}
+                </foreach>
+            </if>
+            <if test="exceptIds != null and exceptIds.size() > 0">
+                AND id not in
+                <foreach collection="exceptIds" item="i" open="(" close=")" separator=",">
+                    #{i}
+                </foreach>
+            </if>
 
-    </where>
-  </sql>
+        </where>
+    </sql>
 
-  <!-- 逻辑删除 -->
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    <!-- 逻辑删除 -->
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     UPDATE bt_asset SET stateflag = CURRENT_TIMESTAMP
     where id = #{id,jdbcType=INTEGER}
   </delete>
 
-  <!-- 新增 -->
-  <insert id="insert" parameterType="com.dqys.business.orm.pojo.asset.AssetInfo" useGeneratedKeys="true" keyProperty="id" >
-    insert into bt_asset
-    <trim prefix="(" suffix=")" suffixOverrides="," >
-      <if test="remark != null" >
-        remark,
-      </if>
-      <if test="assetNo != null" >
-        asset_no,
-      </if>
-      <if test="type != null" >
-        type,
-      </if>
-      <if test="startAt != null" >
-        start_at,
-      </if>
-      <if test="endAt != null" >
-        end_at,
-      </if>
-      <if test="operator != null" >
-        operator,
-      </if>
-      <if test="accrual != null" >
-        accrual,
-      </if>
-      <if test="loan != null" >
-        loan,
-      </if>
-      <if test="appraisal != null" >
-        appraisal,
-      </if>
-      <if test="name != null" >
-        name,
-      </if>
-      <if test="evaluateExcellent != null" >
-        evaluate_excellent,
-      </if>
-      <if test="evaluateLevel != null" >
-        evaluate_level,
-      </if>
-      <if test="province != null" >
-        province,
-      </if>
-      <if test="city != null" >
-        city,
-      </if>
-      <if test="district != null" >
-        district,
-      </if>
-      <if test="address != null" >
-        address,
-      </if>
-      <if test="loanOrganization != null" >
-        loan_organization,
-      </if>
-      <if test="loanOrganizationDistrict != null" >
-        loan_organization_district,
-      </if>
-      <if test="disposeMode != null" >
-        dispose_mode,
-      </if>
-      <if test="tags != null" >
-        tags,
-      </if>
-      <if test="isshow != null" >
-        isshow,
-      </if>
-      <if test="followUpTime != null" >
-        follow_up_time,
-      </if>
-      <if test="followUpTimes != null" >
-        follow_up_times,
-      </if>
-      <if test="belongUpTime != null" >
-        belong_up_Time,
-      </if>
-      <if test="belongUpTimes != null" >
-        belong_up_times,
-      </if>
-      <if test="isCollection != null" >
-        is_collection,
-      </if>
-      <if test="isAgent != null" >
-        is_agent,
-      </if>
-      <if test="isLawyer != null" >
-        is_lawyer,
-      </if>
-      <if test="isStop != null" >
-        is_stop,
-      </if>
-      <if test="repayStatus != null" >
-        repay_status,
-      </if>
-      <if test="entrustName != null" >
-        entrust_name,
-      </if>
-      <if test="attribute != null" >
-        attribute,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides="," >
-      <if test="remark != null" >
-        #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="assetNo != null" >
-        #{assetNo,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null" >
-        #{type,jdbcType=INTEGER},
-      </if>
-      <if test="startAt != null" >
-        #{startAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endAt != null" >
-        #{endAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="operator != null" >
-        #{operator,jdbcType=INTEGER},
-      </if>
-      <if test="accrual != null" >
-        #{accrual,jdbcType=DOUBLE},
-      </if>
-      <if test="loan != null" >
-        #{loan,jdbcType=DOUBLE},
-      </if>
-      <if test="appraisal != null" >
-        #{appraisal,jdbcType=DOUBLE},
-      </if>
-      <if test="name != null" >
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="evaluateExcellent != null" >
-        #{evaluateExcellent,jdbcType=VARCHAR},
-      </if>
-      <if test="evaluateLevel != null" >
-        #{evaluateLevel,jdbcType=VARCHAR},
-      </if>
-      <if test="province != null" >
-        #{province,jdbcType=INTEGER},
-      </if>
-      <if test="city != null" >
-        #{city,jdbcType=INTEGER},
-      </if>
-      <if test="district != null" >
-        #{district,jdbcType=INTEGER},
-      </if>
-      <if test="address != null" >
-        #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="loanOrganization != null" >
-        #{loanOrganization,jdbcType=VARCHAR},
-      </if>
-      <if test="loanOrganizationDistrict != null" >
-        #{loanOrganizationDistrict,jdbcType=VARCHAR},
-      </if>
-      <if test="disposeMode != null" >
-        #{disposeMode,jdbcType=VARCHAR},
-      </if>
-      <if test="tags != null" >
-        #{tags,jdbcType=VARCHAR},
-      </if>
-      <if test="isshow != null" >
-        #{isshow,jdbcType=INTEGER},
-      </if>
-      <if test="followUpTime != null" >
-        #{followUpTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="followUpTimes != null" >
-        #{followUpTimes,jdbcType=INTEGER},
-      </if>
-      <if test="belongUpTime != null" >
-        #{belongUpTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="belongUpTimes != null" >
-        #{belongUpTime,jdbcType=INTEGER},
-      </if>
-      <if test="isCollection != null" >
-        #{isCollection,jdbcType=INTEGER},
-      </if>
-      <if test="isAgent != null" >
-        #{isAgent,jdbcType=INTEGER},
-      </if>
-      <if test="isLawyer != null" >
-        #{isLawyer,jdbcType=INTEGER},
-      </if>
-      <if test="isStop != null" >
-        #{isStop,jdbcType=INTEGER},
-      </if>
-      <if test="repayStatus != null" >
-        #{repayStatus,jdbcType=INTEGER},
-      </if>
-      <if test="entrustName != null" >
-        #{entrustName,jdbcType=VARCHAR},
-      </if>
-      <if test="attribute != null" >
-        #{attribute,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
+    <!-- 新增 -->
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.asset.AssetInfo" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into bt_asset
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="assetNo != null">
+                asset_no,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="startAt != null">
+                start_at,
+            </if>
+            <if test="endAt != null">
+                end_at,
+            </if>
+            <if test="operator != null">
+                operator,
+            </if>
+            <if test="accrual != null">
+                accrual,
+            </if>
+            <if test="loan != null">
+                loan,
+            </if>
+            <if test="appraisal != null">
+                appraisal,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="evaluateExcellent != null">
+                evaluate_excellent,
+            </if>
+            <if test="evaluateLevel != null">
+                evaluate_level,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="district != null">
+                district,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="loanOrganization != null">
+                loan_organization,
+            </if>
+            <if test="loanOrganizationDistrict != null">
+                loan_organization_district,
+            </if>
+            <if test="disposeMode != null">
+                dispose_mode,
+            </if>
+            <if test="tags != null">
+                tags,
+            </if>
+            <if test="isshow != null">
+                isshow,
+            </if>
+            <if test="followUpTime != null">
+                follow_up_time,
+            </if>
+            <if test="followUpTimes != null">
+                follow_up_times,
+            </if>
+            <if test="belongUpTime != null">
+                belong_up_Time,
+            </if>
+            <if test="belongUpTimes != null">
+                belong_up_times,
+            </if>
+            <if test="isCollection != null">
+                is_collection,
+            </if>
+            <if test="isAgent != null">
+                is_agent,
+            </if>
+            <if test="isLawyer != null">
+                is_lawyer,
+            </if>
+            <if test="isStop != null">
+                is_stop,
+            </if>
+            <if test="repayStatus != null">
+                repay_status,
+            </if>
+            <if test="entrustName != null">
+                entrust_name,
+            </if>
+            <if test="attribute != null">
+                attribute,
+            </if>
+            <if test="memo != null">
+                memo,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="assetNo != null">
+                #{assetNo,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="startAt != null">
+                #{startAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endAt != null">
+                #{endAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="operator != null">
+                #{operator,jdbcType=INTEGER},
+            </if>
+            <if test="accrual != null">
+                #{accrual,jdbcType=DOUBLE},
+            </if>
+            <if test="loan != null">
+                #{loan,jdbcType=DOUBLE},
+            </if>
+            <if test="appraisal != null">
+                #{appraisal,jdbcType=DOUBLE},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="evaluateExcellent != null">
+                #{evaluateExcellent,jdbcType=VARCHAR},
+            </if>
+            <if test="evaluateLevel != null">
+                #{evaluateLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null">
+                #{province,jdbcType=INTEGER},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=INTEGER},
+            </if>
+            <if test="district != null">
+                #{district,jdbcType=INTEGER},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="loanOrganization != null">
+                #{loanOrganization,jdbcType=VARCHAR},
+            </if>
+            <if test="loanOrganizationDistrict != null">
+                #{loanOrganizationDistrict,jdbcType=VARCHAR},
+            </if>
+            <if test="disposeMode != null">
+                #{disposeMode,jdbcType=VARCHAR},
+            </if>
+            <if test="tags != null">
+                #{tags,jdbcType=VARCHAR},
+            </if>
+            <if test="isshow != null">
+                #{isshow,jdbcType=INTEGER},
+            </if>
+            <if test="followUpTime != null">
+                #{followUpTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="followUpTimes != null">
+                #{followUpTimes,jdbcType=INTEGER},
+            </if>
+            <if test="belongUpTime != null">
+                #{belongUpTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="belongUpTimes != null">
+                #{belongUpTime,jdbcType=INTEGER},
+            </if>
+            <if test="isCollection != null">
+                #{isCollection,jdbcType=INTEGER},
+            </if>
+            <if test="isAgent != null">
+                #{isAgent,jdbcType=INTEGER},
+            </if>
+            <if test="isLawyer != null">
+                #{isLawyer,jdbcType=INTEGER},
+            </if>
+            <if test="isStop != null">
+                #{isStop,jdbcType=INTEGER},
+            </if>
+            <if test="repayStatus != null">
+                #{repayStatus,jdbcType=INTEGER},
+            </if>
+            <if test="entrustName != null">
+                #{entrustName,jdbcType=VARCHAR},
+            </if>
+            <if test="attribute != null">
+                #{attribute,jdbcType=INTEGER},
+            </if>
+            <if test="memo != null">
+                #{memo,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
 
-  <!-- 根据ID获取单个实例 -->
-  <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
-    <include refid="Base_Column_List" />
-    from bt_asset
-    where id = #{id,jdbcType=INTEGER} AND stateflag = 0
-  </select>
+    <!-- 根据ID获取单个实例 -->
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from bt_asset
+        where id = #{id,jdbcType=INTEGER} AND stateflag = 0
+    </select>
 
-  <!-- 修改 -->
-  <update id="update" parameterType="com.dqys.business.orm.pojo.asset.AssetInfo" >
-    update bt_asset
-    <set >
-      version = version+1,
-      update_at = CURRENT_TIMESTAMP ,
-      <if test="remark != null" >
-        remark = #{remark,jdbcType=VARCHAR},
-      </if>
-      <if test="assetNo != null" >
-        asset_no = #{assetNo,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null" >
-        type = #{type,jdbcType=INTEGER},
-      </if>
-      <if test="startAt != null" >
-        start_at = #{startAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="endAt != null" >
-        end_at = #{endAt,jdbcType=TIMESTAMP},
-      </if>
-      <if test="operator != null" >
-        operator = #{operator,jdbcType=INTEGER},
-      </if>
-      <if test="accrual != null" >
-        accrual = #{accrual,jdbcType=DOUBLE},
-      </if>
-      <if test="loan != null" >
-        loan = #{loan,jdbcType=DOUBLE},
-      </if>
-      <if test="appraisal != null" >
-        appraisal = #{appraisal,jdbcType=DOUBLE},
-      </if>
-      <if test="name != null" >
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="evaluateExcellent != null" >
-        evaluate_excellent = #{evaluateExcellent,jdbcType=VARCHAR},
-      </if>
-      <if test="evaluateLevel != null" >
-        evaluate_level = #{evaluateLevel,jdbcType=VARCHAR},
-      </if>
-      <if test="province != null" >
-        province = #{province,jdbcType=INTEGER},
-      </if>
-      <if test="city != null" >
-        city = #{city,jdbcType=INTEGER},
-      </if>
-      <if test="district != null" >
-        district = #{district,jdbcType=INTEGER},
-      </if>
-      <if test="address != null" >
-        address = #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="loanOrganization != null" >
-        loan_organization = #{loanOrganization,jdbcType=VARCHAR},
-      </if>
-      <if test="loanOrganizationDistrict != null" >
-        loan_organization_district = #{loanOrganizationDistrict,jdbcType=VARCHAR},
-      </if>
-      <if test="disposeMode != null" >
-        dispose_mode = #{disposeMode,jdbcType=VARCHAR},
-      </if>
-      <if test="tags != null" >
-        tags = #{tags,jdbcType=VARCHAR},
-      </if>
-      <if test="isshow != null" >
-        isshow = #{isshow,jdbcType=INTEGER},
-      </if>
-      <if test="followUpTime != null" >
-        follow_up_time = #{followUpTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="followUpTimes != null" >
-        follow_up_times = #{followUpTimes,jdbcType=INTEGER},
-      </if>
-      <if test="belongUpTime != null" >
-        belong_up_time = #{followUpTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="belongUpTimes != null" >
-        belong_up_time = #{belongUpTimes,jdbcType=INTEGER},
-      </if>
-      <if test="isCollection != null" >
-        is_collection = #{isCollection,jdbcType=INTEGER},
-      </if>
-      <if test="isAgent != null" >
-        is_agent = #{isAgent,jdbcType=INTEGER},
-      </if>
-      <if test="isLawyer != null" >
-        is_lawyer = #{isLawyer,jdbcType=INTEGER},
-      </if>
-      <if test="isStop != null" >
-        is_stop = #{isStop,jdbcType=INTEGER},
-      </if>
-      <if test="repayStatus != null" >
-        repay_status = #{repayStatus,jdbcType=INTEGER},
-      </if>
-      <if test="entrustName != null" >
-        entrust_name = #{entrustName,jdbcType=VARCHAR},
-      </if>
-      <if test="attribute != null" >
-        attribute = #{attribute,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER} AND stateflag = 0
-  </update>
+    <!-- 修改 -->
+    <update id="update" parameterType="com.dqys.business.orm.pojo.asset.AssetInfo">
+        update bt_asset
+        <set>
+            version = version+1,
+            update_at = CURRENT_TIMESTAMP ,
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="assetNo != null">
+                asset_no = #{assetNo,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="startAt != null">
+                start_at = #{startAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endAt != null">
+                end_at = #{endAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="operator != null">
+                operator = #{operator,jdbcType=INTEGER},
+            </if>
+            <if test="accrual != null">
+                accrual = #{accrual,jdbcType=DOUBLE},
+            </if>
+            <if test="loan != null">
+                loan = #{loan,jdbcType=DOUBLE},
+            </if>
+            <if test="appraisal != null">
+                appraisal = #{appraisal,jdbcType=DOUBLE},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="evaluateExcellent != null">
+                evaluate_excellent = #{evaluateExcellent,jdbcType=VARCHAR},
+            </if>
+            <if test="evaluateLevel != null">
+                evaluate_level = #{evaluateLevel,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null">
+                province = #{province,jdbcType=INTEGER},
+            </if>
+            <if test="city != null">
+                city = #{city,jdbcType=INTEGER},
+            </if>
+            <if test="district != null">
+                district = #{district,jdbcType=INTEGER},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="loanOrganization != null">
+                loan_organization = #{loanOrganization,jdbcType=VARCHAR},
+            </if>
+            <if test="loanOrganizationDistrict != null">
+                loan_organization_district = #{loanOrganizationDistrict,jdbcType=VARCHAR},
+            </if>
+            <if test="disposeMode != null">
+                dispose_mode = #{disposeMode,jdbcType=VARCHAR},
+            </if>
+            <if test="tags != null">
+                tags = #{tags,jdbcType=VARCHAR},
+            </if>
+            <if test="isshow != null">
+                isshow = #{isshow,jdbcType=INTEGER},
+            </if>
+            <if test="followUpTime != null">
+                follow_up_time = #{followUpTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="followUpTimes != null">
+                follow_up_times = #{followUpTimes,jdbcType=INTEGER},
+            </if>
+            <if test="belongUpTime != null">
+                belong_up_time = #{followUpTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="belongUpTimes != null">
+                belong_up_time = #{belongUpTimes,jdbcType=INTEGER},
+            </if>
+            <if test="isCollection != null">
+                is_collection = #{isCollection,jdbcType=INTEGER},
+            </if>
+            <if test="isAgent != null">
+                is_agent = #{isAgent,jdbcType=INTEGER},
+            </if>
+            <if test="isLawyer != null">
+                is_lawyer = #{isLawyer,jdbcType=INTEGER},
+            </if>
+            <if test="isStop != null">
+                is_stop = #{isStop,jdbcType=INTEGER},
+            </if>
+            <if test="repayStatus != null">
+                repay_status = #{repayStatus,jdbcType=INTEGER},
+            </if>
+            <if test="entrustName != null">
+                entrust_name = #{entrustName,jdbcType=VARCHAR},
+            </if>
+            <if test="attribute != null">
+                attribute = #{attribute,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER} AND stateflag = 0
+    </update>
 
-  <!-- 统计数量 -->
-  <select id="count" resultType="java.lang.Integer">
+    <!-- 统计数量 -->
+    <select id="count" resultType="java.lang.Integer">
     SELECT count(id) FROM bt_asset
   </select>
 
-  <!-- 条件统计-->
-  <select id="queryCount" parameterType="com.dqys.business.orm.query.asset.AssetQuery" resultType="java.lang.Integer">
-    SELECT COUNT(id) FROM bt_asset
-    <include refid="Query_Condition" />
-  </select>
+    <!-- 条件统计-->
+    <select id="queryCount" parameterType="com.dqys.business.orm.query.asset.AssetQuery" resultType="java.lang.Integer">
+        SELECT COUNT(id) FROM bt_asset
+        <include refid="Query_Condition"/>
+    </select>
 
-  <!-- 查全 -->
-  <select id="listAll" resultMap="BaseResultMap">
+    <!-- 查全 -->
+    <select id="listAll" resultMap="BaseResultMap">
     SELECT * from bt_asset
   </select>
 
-  <!-- 分页 -->
-  <select id="pageList" parameterType="com.dqys.business.orm.query.asset.AssetQuery" resultMap="BaseResultMap" >
-    SELECT * from bt_asset
-    <include refid="Query_Condition" />
-    ORDER BY id DESC
-    <if test="isPaging">
-      limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
-    </if>
-  </select>
+    <!-- 分页 -->
+    <select id="pageList" parameterType="com.dqys.business.orm.query.asset.AssetQuery" resultMap="BaseResultMap">
+        SELECT * from bt_asset
+        <include refid="Query_Condition"/>
+        ORDER BY id DESC
+        <if test="isPaging">
+            limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+        </if>
+    </select>
 
-  <!-- 分配所属人 -->
-  <update id="assignedBatch">
-    UPDATE bt_asset SET belong = #{id, jdbcType=INTEGER}
-    <include refid="Query_Condition" />
-  </update>
+    <!-- 分配所属人 -->
+    <update id="assignedBatch">
+        UPDATE bt_asset SET belong = #{id, jdbcType=INTEGER}
+        <include refid="Query_Condition"/>
+    </update>
 
 </mapper>

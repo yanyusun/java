@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * 资产包基础信息
  */
-public class AssetInfo extends BaseModel  {
+public class AssetInfo extends BaseModel {
 
     private String assetNo; // 编号
     private Integer type;  // 资产包类型
@@ -32,7 +32,7 @@ public class AssetInfo extends BaseModel  {
     private Integer isshow;  // 是否展示外网
     private String entrustName; // 委托方名称
     private Integer attribute; // 属性（0私有，1公有）
-
+    private String memo; // 备注
     private Integer followUpTimes;
     private Date followUpTime;
     private Integer belongUpTimes;
@@ -58,6 +58,13 @@ public class AssetInfo extends BaseModel  {
         return string;
     }
 
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
 
     public String getEntrustName() {
         return entrustName;
