@@ -420,11 +420,13 @@ public class DistributionServiceImpl implements DistributionService {
                 if (managerList != null && managerList.size() != 0) {
                     // 当前只有一个平台方的管理员
                     detailInfo = companyInfoMapper.getDetailByCompanyId(managerList.get(0).getId());
-                    companyTeamRe.setAcceptCompanyId(detailInfo.getCompanyId());
-                    companyTeamRe.setStatus(ObjectAcceptTypeEnum.accept.getValue());
-                    companyTeamRe.setType(ObjectBusinessTypeEnum.join.getValue());
-                    companyTeamRe.setAccepterId(detailInfo.getUserId());
-                    companyTeamReMapper.insert(companyTeamRe);
+                    if (detailInfo != null && detailInfo.getUserId().intValue() != companyTeamRe.getAccepterId().intValue()) {
+                        companyTeamRe.setAcceptCompanyId(detailInfo.getCompanyId());
+                        companyTeamRe.setStatus(ObjectAcceptTypeEnum.accept.getValue());
+                        companyTeamRe.setType(ObjectBusinessTypeEnum.join.getValue());
+                        companyTeamRe.setAccepterId(detailInfo.getUserId());
+                        companyTeamReMapper.insert(companyTeamRe);
+                    }
                 }
 
             }
