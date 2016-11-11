@@ -14,6 +14,7 @@ import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
+import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -119,6 +120,11 @@ public class BusinessServiceImpl implements BusinessService {
 
     @Override
     public Business getBusiness(Integer ObjectType, Integer ObjectId) {
-        return null;
+        BusinessObjRe businessObjRe = businessObjReMapper.getByObject(ObjectType, ObjectId);
+        if (businessObjRe == null) {
+            return null;
+        }
+        Business business = businessMapper.get(businessObjRe.getBusinessId());
+        return business;
     }
 }
