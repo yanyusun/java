@@ -103,7 +103,7 @@ public class LenderServiceUtils {
         contactInfo.setDistrict(contactDTO.getDistrict());
         contactInfo.setAddress(contactDTO.getAddress());
         contactInfo.setOtherAddress(contactDTO.getOtherAddress());
-
+        contactInfo.setMemo(contactDTO.getMemo());
         return contactInfo;
     }
 
@@ -256,6 +256,7 @@ public class LenderServiceUtils {
         contactDTO.setDistrict(contactInfo.getDistrict());
         contactDTO.setAddress(contactInfo.getAddress());
         contactDTO.setOtherAddress(contactInfo.getOtherAddress());
+        contactDTO.setMemo(contactInfo.getMemo());
 
         return contactDTO;
     }
@@ -277,10 +278,9 @@ public class LenderServiceUtils {
         if (lenderListQuery.isAsset()) {
             lenderQuery.setAsset(true);
         }
-        lenderQuery.setCanContact(lenderListQuery.isCanContact()?1:null);
-        lenderQuery.setIsWorth(lenderListQuery.isWorth()?0:null); // 0表示资不抵债
+        lenderQuery.setCanContact(lenderListQuery.isCanContact() ? 1 : null);
+        lenderQuery.setIsWorth(lenderListQuery.isWorth() ? 0 : null); // 0表示资不抵债
         lenderQuery.setEntrustName(lenderListQuery.getEntrustName());
-
         return lenderQuery;
     }
 
@@ -339,10 +339,11 @@ public class LenderServiceUtils {
 
     /**
      * 根据借款人的三个处置状态展示处置阶段
+     *
      * @param lenderInfo
      * @return
      */
-    private static String getDisposeString(LenderInfo lenderInfo){
+    private static String getDisposeString(LenderInfo lenderInfo) {
         if (SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsCollection()) &&
                 SysProperty.BOOLEAN_TRUE.equals(lenderInfo.getIsLawyer())) {
             return "常规催收司法化解同时进行";

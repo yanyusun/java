@@ -90,7 +90,7 @@
                 AND is_worth = #{isWorth,jdbcType=INTEGER}
             </if>
             <if test="entrustName != null">
-                AND entrust_name = #{entrustName,jdbcType=VARCHAR}
+                AND entrust_name LIKE CONCAT('%',#{entrustName,jdbcType=VARCHAR},'%')
             </if>
             <if test="repayStatus != null">
                 AND repay_status = #{repayStatus,jdbcType=INTEGER}

@@ -27,8 +27,9 @@ public class ContactInfo extends BaseModel {
     private String address;  // 详细地址
     private String code; // 工号
     private String otherAddress; // 其他地址
+    private String memo; // 备注
 
-    public String toString(){
+    public String toString() {
         String string = "lenderInfo:[";
         string += "id:" + super.getId() + ",name:" + name + ",type:" + type
                 + ",avg:" + avg + ",idcard:" + idCard + ",gender:" + gender
@@ -40,6 +41,13 @@ public class ContactInfo extends BaseModel {
         return string;
     }
 
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
 
     public String getMode() {
         return mode;
