@@ -476,5 +476,9 @@
         UPDATE bt_asset SET belong = #{id, jdbcType=INTEGER}
         <include refid="Query_Condition"/>
     </update>
+    <!--根据资产包编号查询资产包id-->
+    <select id="selectIdbyAssetNo" resultType="java.lang.Integer">
+        SELECT id from bt_asset WHERE  asset_no LIKE CONCAT('%', #{assetNo,jdbcType=VARCHAR},'%')
+    </select>
 
 </mapper>

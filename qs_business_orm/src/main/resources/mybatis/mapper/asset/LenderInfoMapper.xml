@@ -80,6 +80,12 @@
             <if test="assetId != null">
                 AND asset_id = #{assetId,jdbcType=INTEGER}
             </if>
+            <if test="assetIds != null">
+                AND asset_id IN
+                <foreach collection="assetIds" item="assetId" separator="," open="(" close=")" index="index">
+                    #{assetId}
+                </foreach>
+            </if>
             <if test="lenderId != null">
                 AND id = #{lenderId,jdbcType=INTEGER}
             </if>

@@ -109,6 +109,9 @@ public class LenderServiceImpl implements LenderService {
         if (lenderQuery == null) {
             return null; // 类型不对,参数错误
         }
+        if (lenderListQuery != null && lenderListQuery.getAssetNo() != null) {
+            lenderQuery.setAssetIds(assetInfoMapper.selectIdbyAssetNo(lenderListQuery.getAssetNo()));
+        }
         if (!CommonUtil.isManage()) {
             if (SysProperty.NULL_DATA_ID.equals(lenderQuery.getId())) {
                 // 搜索不到数据
