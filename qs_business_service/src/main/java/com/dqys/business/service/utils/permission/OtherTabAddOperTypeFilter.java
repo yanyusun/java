@@ -1,8 +1,12 @@
 package com.dqys.business.service.utils.permission;
 
+import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.pojo.business.Business;
 import com.dqys.business.orm.pojo.operType.OperType;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.service.BusinessService;
+import com.dqys.business.service.utils.operType.OperTypeUtile;
 
 import java.util.List;
 
@@ -21,19 +25,30 @@ public class OtherTabAddOperTypeFilter  extends OperTypeFilter{
     private BusinessService businessService;
     private Integer objectId;
     private Integer objectType;
+    private int userType;
 
-    public OtherTabAddOperTypeFilter(BusinessService businessService, Integer objectId, Integer objectType) {
+    public OtherTabAddOperTypeFilter(BusinessService businessService, Integer objectId, Integer objectType, int userType) {
         this.businessService = businessService;
         this.objectId = objectId;
         this.objectType = objectType;
+        this.userType = userType;
     }
 
     @Override
     public List<OperType> getPermission(List<OperType> list) {
         Business business=businessService.getBusiness(objectType,objectId);
-//        if(business.getStatus()){
-//
-//        }
-        return null;
+        if(business.getStatus()!=BusinessStatusEnum.platform_refuse.getValue().intValue()
+                &&business.getStatus()!=BusinessStatusEnum.init.getValue()){//当不为待审核和已驳回状态时,改为正在处置的操作项
+            List<OperType> operTypes1=null;
+            if(userType== UserInfoEnum.USER_TYPE_ADMIN.getValue()||userType==UserInfoEnum.USER_TYPE_ENTRUST.getValue()){//是委托或者平台
+                operTypes1=OperTypeUtile.getOperType(ObjectTabEnum.handling_urge.getValue(),objectType);
+            }else{
+                operTypes1=OperTypeUtile.getOperType(ObjectTabEnum.handling_entrust.getValue(),objectType);
+            }
+            operTypes=operTypes1;
+        }else{
+            operTypes=list;
+        }
+        return getNextPermission();
     }
 }
