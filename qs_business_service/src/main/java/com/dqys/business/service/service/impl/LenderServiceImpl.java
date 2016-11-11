@@ -728,6 +728,13 @@ public class LenderServiceImpl implements LenderService {
         } else if (ObjectTabEnum.apply.getValue().equals(tab)) {
             // 待申请 -- 暂未其他公司参与(只要对象的三个值都不存在1就是未参与)
             lenderQuery.setNoTakePart(true);
+            //还需要审核通过的对象
+            List<Integer> objectIds = auditObject(ObjectTypeEnum.LENDER.getValue());
+            if (objectIds != null && objectIds.size() > 0) {
+                lenderQuery.setIds(objectIds);
+            } else {
+                lenderQuery.setId(SysProperty.NULL_DATA_ID);
+            }
 //            List<Integer> ids = companyTeamReMapper.listAssigned(ObjectTypeEnum.LENDER.getValue());
 //            if (ids != null || ids.size() > 0) {
 //                lenderQuery.setExceptIds(ids);
@@ -1147,6 +1154,16 @@ public class LenderServiceImpl implements LenderService {
             return null;
         }
         return lenderQuery;
+    }
+
+    /**
+     * 审核通过的对象
+     *
+     * @param objectType 对象类型
+     * @return
+     */
+    private List<Integer> auditObject(Integer objectType) {
+        return businessObjReMapper.auditObject(objectType);
     }
 
 }
