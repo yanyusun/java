@@ -24,6 +24,7 @@ import com.dqys.business.service.service.RepayService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.model.UserSession;
+import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.DateFormatTool;
 import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.SmsUtil;
@@ -342,7 +343,15 @@ public class RepayServiceImpl implements RepayService {
                 }
             }
         }
-        return ious;
+        //去除重复的数据
+        List<IOUInfo> iouInfos = new ArrayList<>();
+        List<Integer> iouIds = new ArrayList<>();
+        for (IOUInfo info : ious) {
+            if (!iouIds.contains(info.getId())) {
+                iouInfos.add(info);
+            }
+        }
+        return iouInfos;
     }
 
     private Map getMap(Map map, BigDecimal paTotal) {

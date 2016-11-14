@@ -390,10 +390,12 @@
     </select>
 
     <select id="selectIouInfoByPawnId" resultMap="BaseResultMap" parameterType="java.lang.Integer">
-      SELECT i.* from bt_pawn p LEFT JOIN bt_pi_relation pr
-      ON pr.pawn_id=p.id LEFT JOIN bt_iou i
-      ON i.id=pr.iou_id
+       SELECT i.* from  bt_iou i WHERE id IN (
+        SELECT pr.iou_id FROM
+        bt_pawn p LEFT JOIN bt_pi_relation pr
+      ON pr.pawn_id=p.id
       where p.id=#{objectId,jdbcType=INTEGER}
+      )
   </select>
     <!--获取所有借据-->
     <select id="selectIouInfoByObjectIds" resultMap="BaseResultMap">
