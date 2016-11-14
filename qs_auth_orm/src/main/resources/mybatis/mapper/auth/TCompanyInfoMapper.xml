@@ -22,6 +22,7 @@
         <result column="is_auth" property="isAuth" jdbcType="INTEGER"/>
         <result column="type" property="type" jdbcType="INTEGER"/>
         <result column="business_type" property="businessType" jdbcType="INTEGER"/>
+        <result column="company_account" property="companyAccount" jdbcType="INTEGER"/>
     </resultMap>
 
     <resultMap id="CompanyDetailMap" type="com.dqys.auth.orm.pojo.CompanyDetailInfo">
@@ -44,7 +45,7 @@
     <!-- 基础字段 -->
     <sql id="Base_Column_List">
     id, version, create_at, update_at, stateflag, remark, company_name, credential, licence, 
-    legal_person, province, city, area, address, is_auth, type,business_type
+    legal_person, province, city, area, address, is_auth, type,business_type,company_account
   </sql>
 
     <!-- 条件查询 -->
