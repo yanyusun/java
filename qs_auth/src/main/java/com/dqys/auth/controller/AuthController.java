@@ -814,6 +814,7 @@ public class AuthController extends BaseApiContorller {
                 tUserInfoMapper.updateByPrimaryKeySelective(userInfo);
             }
             userInfo.setRealName(realName);
+            userInfo.setUserName(realName);
             userInfo.setIdentity(identity);
             userInfo.setMobile(mobile);
             userServiceResult = this.userService.registerAdmin_tx(userType, userInfo);
