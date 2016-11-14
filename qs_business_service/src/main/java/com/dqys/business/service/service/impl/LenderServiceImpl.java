@@ -109,6 +109,9 @@ public class LenderServiceImpl implements LenderService {
         if (lenderQuery == null) {
             return null; // 类型不对,参数错误
         }
+        if (lenderListQuery != null && lenderListQuery.getAssetNo() != null) {
+            lenderQuery.setAssetIds(assetInfoMapper.selectIdbyAssetNo(lenderListQuery.getAssetNo()));
+        }
         if (!CommonUtil.isManage()) {
             if (SysProperty.NULL_DATA_ID.equals(lenderQuery.getId())) {
                 // 搜索不到数据
@@ -482,7 +485,6 @@ public class LenderServiceImpl implements LenderService {
         }
         // 联系人
         List<ContactInfo> contactInfoList = contactInfoMapper.listByMode(ObjectTypeEnum.LENDER.getValue().toString(), lenderInfo.getId());
-        resultMap.put("contactDTOs", LenderServiceUtils.toContactDTO(contactInfoList));
         for (ContactInfo contactInfo : contactInfoList) {
             if (contactInfo.getType().equals(ContactTypeEnum.LENDER.getValue())
                     ) {
@@ -499,6 +501,7 @@ public class LenderServiceImpl implements LenderService {
                 break;
             }
         }
+        resultMap.put("contactDTOs", LenderServiceUtils.toContactDTO(contactInfoList));
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         String userType = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getUserType();
         if (userType.indexOf(",") > 0) {

@@ -12,6 +12,7 @@ public class LenderQuery extends BaseQuery {
 
     private Integer lenderId; // 借款人ID
     private Integer assetId; // 资产包ID
+    private List<Integer> assetIds; // 资产包ID
     private Integer stateflag; // 数据状态
 
     private Integer canContact; // 可联系
@@ -41,6 +42,13 @@ public class LenderQuery extends BaseQuery {
     private boolean stop = false; // 是否暂停
     private boolean noTakePart; // 暂未其他处置方
 
+    public List<Integer> getAssetIds() {
+        return assetIds;
+    }
+
+    public void setAssetIds(List<Integer> assetIds) {
+        this.assetIds = assetIds;
+    }
 
     public Integer getStopStatus() {
         return stopStatus;
