@@ -47,9 +47,9 @@ public class MqClient {
     )
     public static void smsMailFromMessage(String[] msg) throws Exception {
 //        发送短信
-      //  sendSMS(msg[0], msg[1]);
+        sendSMS(msg[0], msg[1]);
         // TODO: 16-9-14  测试添加
-        sendMail("342088816@qq.com", msg[1]);
+       // sendMail("342088816@qq.com", msg[1]);
 
     }
 
