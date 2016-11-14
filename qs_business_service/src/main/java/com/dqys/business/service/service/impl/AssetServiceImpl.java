@@ -616,9 +616,18 @@ public class AssetServiceImpl implements AssetService {
                 assetQuery.setOperator(userInfo.getId());
             }
         } else if (ObjectTabEnum.refuse.getValue().equals(type)) {
+            List<Integer> ids =null;
             // 已驳回
-            List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.ASSETPACKAGE.getValue(),
-                    BusinessStatusEnum.platform_refuse.getValue(), userId);
+            if(flag){
+                 ids = businessObjReMapper.listIdByTypeIdStatus(ObjectTypeEnum.ASSETPACKAGE.getValue(),
+                        BusinessStatusEnum.platform_refuse.getValue());
+                assetQuery.setIds(ids);
+            }else{
+                 ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.ASSETPACKAGE.getValue(),
+                        BusinessStatusEnum.platform_refuse.getValue(), userId);
+                assetQuery.setIds(ids);
+            }
+
             if (!CommonUtil.checkParam(ids) && ids.size() > 0) {
                 assetQuery.setIds(ids);
             } else {
