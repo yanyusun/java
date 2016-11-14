@@ -92,6 +92,13 @@ public class SourceServiceImpl implements SourceService {
         }
     }
 
+    /**
+     * 如果是`
+     * @param sourceNavigation
+     */
+    private  void deleteNavigation(SourceNavigation sourceNavigation){
+
+    }
     @Override
     public JsonResponse addSource(SourceInfoDTO sourceInfoDTO) {
         SourceInfo data = sourceInfoMapper.getByNavIdAndLenderId(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId(), sourceInfoDTO.getEstatesId());
