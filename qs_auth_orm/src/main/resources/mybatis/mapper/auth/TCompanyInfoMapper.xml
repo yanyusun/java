@@ -241,10 +241,10 @@
     <!-- 根据公司ID获取详情 -->
     <select id="getDetailByCompanyId" parameterType="java.lang.Integer" resultMap="CompanyDetailMap">
     SELECT tci.id as id,create_at,company_name,province,city,area,is_auth,address,type as company_type,
-      res.id as user_id,res.avg,res.user_name as name,res.phone,res.user_type as type
+      res.id as user_id,res.avg,res.real_name as name,res.phone,res.user_type as type
     from t_company_info tci
     INNER JOIN
-      (SELECT tui.id as id,avg,user_name,mobile as phone,tui.company_id,tut.user_type
+      (SELECT tui.id as id,avg,real_name,mobile as phone,tui.company_id,tut.user_type
       FROM t_user_info tui
       INNER JOIN t_user_tag tut
       ON
@@ -273,7 +273,7 @@
     <select id="listByType" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM t_company_info where id in (
+        FROM t_company_info where is_auth=1 AND id in (
         SELECT company_id FROM t_user_info where id in (
         SELECT user_id from t_user_tag
         WHERE role_id = 1 AND stateflag = 0

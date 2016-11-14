@@ -108,13 +108,17 @@ public class RepayServiceImpl implements RepayService {
         //循环得出借据金额
         for (IOUInfo iou : ious) {
             iouIds.add(iou.getId());
-            if (iou.getLessCorpus() == 0 && ((iou.getPenalty() == null && iou.getAccrualArrears() == 0) || (iou.getPenalty() != null && iou.getPenalty() == 0))) {//剔除不需要还款的借据
+            if ((iou.getLessCorpus() != null && iou.getLessCorpus() == 0) && (iou.getAccrualArrears() != null && iou.getAccrualArrears() == 0) && (iou.getPenalty() != null && iou.getPenalty() == 0)) {//剔除不需要还款的借据
                 continue;
             }
-            principalTotal = principalTotal.add(BigDecimal.valueOf(iou.getLessCorpus()));
+            if (iou.getLessCorpus() != null) {
+                principalTotal = principalTotal.add(BigDecimal.valueOf(iou.getLessCorpus()));
+            }
+
             if (iou.getPenalty() != null) {
                 accrualTotal = accrualTotal.add(BigDecimal.valueOf(iou.getPenalty()));
-            } else {
+            }
+            if (iou.getAccrualArrears() != null) {
                 accrualTotal = accrualTotal.add(BigDecimal.valueOf(iou.getAccrualArrears()));
             }
         }
@@ -156,55 +160,50 @@ public class RepayServiceImpl implements RepayService {
             RepayRecord repayRecord = new RepayRecord();
             repayRecord.setRepayId(repay.getId());
             repayRecord.setIouId(iou.getId());
-            if (iou.getLessCorpus() == 0 && ((iou.getPenalty() == null && iou.getAccrualArrears() == 0) || (iou.getPenalty() != null && iou.getPenalty() == 0))) {//剔除不需要还款的借据
+            if ((iou.getLessCorpus() != null && iou.getLessCorpus() == 0) && (iou.getAccrualArrears() != null && iou.getAccrualArrears() == 0) && (iou.getPenalty() != null && iou.getPenalty() == 0)) {//剔除不需要还款的借据
                 continue;
             }
             if (money == 0) {
                 break;
             }
             //三种情况的还款方式
+            Double accMoney = 0.0;//利息
+            Double penalty = 0.0;//罚息
+            Double priMoney = 0.0;//本金
             if (repayType == RepayEnum.TYPE_PRINCIPAL.getValue()) {//还本金
-                Double priMoney = iou.getLessCorpus() > money ? money : iou.getLessCorpus();
-                money -= priMoney;
-                repayRecord.setRepayPrincipal(priMoney);
-                flag = dispose(iou.getLenderId(), iou.getId(), iou.getVersion(), priMoney, null, null);
+                if (iou.getLessCorpus() != null) {
+                    priMoney = iou.getLessCorpus() > money ? money : iou.getLessCorpus();
+                    money -= priMoney;
+                    repayRecord.setRepayPrincipal(priMoney);
+                }
             } else if (repayType == RepayEnum.TYPE_ACCRUAL.getValue()) {//还利息
-                Double accMoney = 0.0;
                 if (iou.getAccrualArrears() != null) {
                     accMoney = iou.getAccrualArrears() > money ? money : iou.getAccrualArrears();
+                    money -= accMoney;
                     repayRecord.setRepayInterest(accMoney);
                 }
                 if (iou.getPenalty() != null) {
-                    Double penalty = iou.getPenalty() > money ? money : iou.getPenalty();
+                    penalty = iou.getPenalty() > money ? money : iou.getPenalty();
                     money -= penalty;
                     repayRecord.setRepayFine(penalty);
-                    flag = dispose(iou.getLenderId(), iou.getId(), iou.getVersion(), null, accMoney, penalty);
-                } else {
-                    money -= accMoney;
-                    flag = dispose(iou.getLenderId(), iou.getId(), iou.getVersion(), null, accMoney, null);
                 }
             } else if (repayType == RepayEnum.TYPE_A_P.getValue()) {//先还利息再还本金
-                Double accMoney = 0.0;
                 if (iou.getAccrualArrears() != null) {
                     accMoney = iou.getAccrualArrears() > money ? money : iou.getAccrualArrears();
                     repayRecord.setRepayInterest(accMoney);
                 }
                 if (iou.getPenalty() != null) {
-                    Double penalty = iou.getPenalty() > money ? money : iou.getPenalty();
+                    penalty = iou.getPenalty() > money ? money : iou.getPenalty();
                     money -= penalty;
-                    Double priMoney = iou.getLessCorpus() > money ? money : iou.getLessCorpus();
-                    money -= priMoney;
-                    repayRecord.setRepayPrincipal(priMoney);
                     repayRecord.setRepayFine(penalty);
-                    flag = dispose(iou.getLenderId(), iou.getId(), iou.getVersion(), priMoney, accMoney, penalty);
-                } else {
-                    money -= accMoney;
-                    Double priMoney = iou.getLessCorpus() > money ? money : iou.getLessCorpus();
+                }
+                if (iou.getLessCorpus() != null) {
+                    priMoney = iou.getLessCorpus() > money ? money : iou.getLessCorpus();
                     money -= priMoney;
                     repayRecord.setRepayPrincipal(priMoney);
-                    flag = dispose(iou.getLenderId(), iou.getId(), iou.getVersion(), priMoney, accMoney, null);
                 }
             }
+            flag = dispose(iou.getLenderId(), iou.getId(), iou.getVersion(), priMoney, accMoney, penalty);
             //扣除金额成功后需要对每个借据添加还款详细记录
             if (!flag) {
                 throw new Exception();
@@ -362,12 +361,12 @@ public class RepayServiceImpl implements RepayService {
         if (result > 0) {
             setRepayStatus(iouId, 3);//修改借据还款状态
             LenderInfo len = lenderInfoMapper.get(lenderId);
-            Integer num = repayMapper.repayLender(lenderId, len.getVersion(), priMoney, penalty != null ? penalty : accMoney);//借款人扣除
+            Integer num = repayMapper.repayLender(lenderId, len.getVersion(), priMoney, penalty + accMoney);//借款人扣除
             if (num > 0) {
                 setRepayStatus(len.getId(), 2);//修改借款人还款状态
                 if (len.getAssetId() != null) {
                     AssetInfo assetInfo = assetInfoMapper.get(len.getAssetId());
-                    Integer count = repayMapper.repayAsset(assetInfo.getId(), assetInfo.getVersion(), priMoney, penalty != null ? penalty : accMoney);//资产包扣除
+                    Integer count = repayMapper.repayAsset(assetInfo.getId(), assetInfo.getVersion(), priMoney, penalty + accMoney);//资产包扣除
                     if (count > 0) {
                         setRepayStatus(assetInfo.getId(), 1);//修改资产包还款状态
                     }
@@ -389,12 +388,12 @@ public class RepayServiceImpl implements RepayService {
         if (result > 0) {
             setRepayStatus(iouInfo.getId(), 3);//修改借据还款状态
             LenderInfo len = lenderInfoMapper.get(iouInfo.getLenderId());
-            Integer num = repayMapper.repayLenderReversal(len.getId(), len.getVersion(), re.getRepayPrincipal(), re.getRepayFine() != null ? re.getRepayFine() : re.getRepayInterest());//借款人冲正
+            Integer num = repayMapper.repayLenderReversal(len.getId(), len.getVersion(), re.getRepayPrincipal(), re.getRepayFine() + re.getRepayInterest());//借款人冲正
             if (num > 0) {
                 setRepayStatus(len.getId(), 2);//修改借款人还款状态
                 if (len.getAssetId() != null) {
                     AssetInfo assetInfo = assetInfoMapper.get(len.getAssetId());
-                    Integer count = repayMapper.repayAssetReversal(assetInfo.getId(), assetInfo.getVersion(), re.getRepayPrincipal(), re.getRepayFine() != null ? re.getRepayFine() : re.getRepayInterest());//资产包冲正
+                    Integer count = repayMapper.repayAssetReversal(assetInfo.getId(), assetInfo.getVersion(), re.getRepayPrincipal(), re.getRepayFine() + re.getRepayInterest());//资产包冲正
                     if (count > 0) {
                         setRepayStatus(assetInfo.getId(), 1);//修改资产包还款状态
                     }
