@@ -694,16 +694,12 @@ public class AuthController extends BaseApiContorller {
         }
         Integer status = userServiceResult.getData().getStatus();
         Integer companyId = userServiceResult.getData().getCompanyId();
-        String userName = userServiceResult.getData().getUserName();
         if (status == null || status.equals(SysProperty.DEFAULT)) {
             step = "active";
         } else if (companyId == null || companyId.equals("")) {
             step = "company";
-        } else if (companyId != null) {
-            TCompanyInfo info = tCompanyInfoMapper.selectByPrimaryKey(companyId);
-            if (info.getCompanyAccount() != null && !"".equals(info.getCompanyAccount())) {
-                step = "administrator";
-            }
+        } else if (companyId != null && companyService.get(companyId).getCompanyAccount() == null) {
+            step = "administrator";
         } else if (companyService.get(companyId).getIsAuth().equals(0)) {
             step = "authentication";
         } else if (companyService.get(companyId).getIsAuth().equals(2)) {
