@@ -4,6 +4,7 @@ import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.auth.orm.dao.facade.TMessageMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.pojo.CompanyDetailInfo;
 import com.dqys.auth.orm.pojo.LoginLog;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
@@ -698,8 +699,11 @@ public class AuthController extends BaseApiContorller {
             step = "active";
         } else if (companyId == null || companyId.equals("")) {
             step = "company";
-        } else if (userName == null || userName.equals("")) {
-            step = "administrator";
+        } else if (companyId != null) {
+            TCompanyInfo info = tCompanyInfoMapper.selectByPrimaryKey(companyId);
+            if (info.getCompanyAccount() != null && !"".equals(info.getCompanyAccount())) {
+                step = "administrator";
+            }
         } else if (companyService.get(companyId).getIsAuth().equals(0)) {
             step = "authentication";
         } else if (companyService.get(companyId).getIsAuth().equals(2)) {
