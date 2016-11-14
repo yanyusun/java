@@ -18,7 +18,7 @@
     </sql>
     <sql id="QUERY_ALL">
          id,content,label,receive_id receiveId ,sender_id senderId
-        ,status ,title,type,DATE_FORMAT( send_time,'%Y-%m-%d') sendTime,oper_url operUrl
+        ,status ,title,type,DATE_FORMAT( send_time,'%Y-%m-%d %H:%i:%s') sendTime,oper_url operUrl
         ,business_type businessType,oper_status operStatus
     </sql>
 
