@@ -977,9 +977,15 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setOperator(userInfo.getId());
             }
         } else if (ObjectTabEnum.refuse.getValue().equals(tab)) {
+            List<Integer> ids=null;
             // 已驳回
-            List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.LENDER.getValue(),
-                    BusinessStatusEnum.platform_refuse.getValue(), userId);
+            if(flag){
+                 ids = businessObjReMapper.listIdByTypeIdStatus(ObjectTypeEnum.LENDER.getValue(),
+                        BusinessStatusEnum.platform_refuse.getValue());
+            }else{
+                ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.LENDER.getValue(),
+                        BusinessStatusEnum.platform_refuse.getValue(), userId);
+            }
             if (!CommonUtil.checkParam(ids) && ids.size() > 0) {
                 lenderQuery.setIds(ids);
             } else {
