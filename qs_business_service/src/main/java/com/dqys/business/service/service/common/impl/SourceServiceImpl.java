@@ -93,7 +93,8 @@ public class SourceServiceImpl implements SourceService {
     }
 
     /**
-     * 如果是`
+     * 如果是公共导航不删除,
+     * 其他删除本身外,删除相关的资源:sourceInfo,file,
      * @param sourceNavigation
      */
     private  void deleteNavigation(SourceNavigation sourceNavigation){
@@ -131,6 +132,12 @@ public class SourceServiceImpl implements SourceService {
         }
     }
 
+    /**
+     * @param navId
+     * @param lenderId
+     * @param estatesId
+     * @return
+     */
     @Override
     public SourceInfoDTO getSource(Integer navId, Integer lenderId, Integer estatesId) {
         if (CommonUtil.checkParam(navId)) {
