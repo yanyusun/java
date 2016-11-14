@@ -152,7 +152,7 @@
         #{dutyArea,jdbcType=INTEGER},
       </if>
       <if test="teamId != null" >
-        #{teamId,jdbcType=INETGER},
+        #{teamId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>

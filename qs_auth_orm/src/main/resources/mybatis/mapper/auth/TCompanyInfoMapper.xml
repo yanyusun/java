@@ -273,7 +273,7 @@
     <select id="listByType" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM t_company_info where id in (
+        FROM t_company_info where is_auth=1 AND id in (
         SELECT company_id FROM t_user_info where id in (
         SELECT user_id from t_user_tag
         WHERE role_id = 1 AND stateflag = 0
