@@ -191,6 +191,7 @@ public class RepayServiceImpl implements RepayService {
             } else if (repayType == RepayEnum.TYPE_A_P.getValue()) {//先还利息再还本金
                 if (iou.getAccrualArrears() != null) {
                     accMoney = iou.getAccrualArrears() > money ? money : iou.getAccrualArrears();
+                    money -= accMoney;
                     repayRecord.setRepayInterest(accMoney);
                 }
                 if (iou.getPenalty() != null) {
@@ -397,12 +398,12 @@ public class RepayServiceImpl implements RepayService {
         if (result > 0) {
             setRepayStatus(iouInfo.getId(), 3);//修改借据还款状态
             LenderInfo len = lenderInfoMapper.get(iouInfo.getLenderId());
-            Integer num = repayMapper.repayLenderReversal(len.getId(), len.getVersion(), re.getRepayPrincipal(), re.getRepayFine() + re.getRepayInterest());//借款人冲正
+            Integer num = repayMapper.repayLenderReversal(len.getId(), len.getVersion(), re.getRepayPrincipal(), (re.getRepayFine() + re.getRepayInterest()));//借款人冲正
             if (num > 0) {
                 setRepayStatus(len.getId(), 2);//修改借款人还款状态
                 if (len.getAssetId() != null) {
                     AssetInfo assetInfo = assetInfoMapper.get(len.getAssetId());
-                    Integer count = repayMapper.repayAssetReversal(assetInfo.getId(), assetInfo.getVersion(), re.getRepayPrincipal(), re.getRepayFine() + re.getRepayInterest());//资产包冲正
+                    Integer count = repayMapper.repayAssetReversal(assetInfo.getId(), assetInfo.getVersion(), re.getRepayPrincipal(), (re.getRepayFine() + re.getRepayInterest()));//资产包冲正
                     if (count > 0) {
                         setRepayStatus(assetInfo.getId(), 1);//修改资产包还款状态
                     }
@@ -588,13 +589,16 @@ public class RepayServiceImpl implements RepayService {
             return map;
         }
         List<RepayRecord> res = repayMapper.getRepayRecordByRepayId(repayId);//根据还款记录id获取还款详细信息
+        List<Integer> iouIds = new ArrayList<>();
         //存在还款记录就进行相应记录的冲正操作
         for (RepayRecord re : res) {
+            iouIds.add(re.getIouId());
             boolean flag = reversalDispose(re);
             if (!flag) {
                 throw new Exception();
             }
         }
+        setBusinessStatus(iouIds);//变化业务状态
         Repay repay = new Repay();
         repay.setStatus(2);//还款无效
         repay.setId(repayId);
