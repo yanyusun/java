@@ -88,11 +88,20 @@ public class UserInsertDTO {
     private List<Integer> userIds;//多个用户存储
 
     private String companyName;//公司名称
+    private String apartmentName;//团队名称
     private String teamName;//团队名称
     private String address;//地址
     private String entryTime;//入职时间
     private Integer yearsLimit;//从业年限
     private Integer workStatus;//工作状态（0默认在职，1离职，2请假）
+
+    public String getApartmentName() {
+        return apartmentName;
+    }
+
+    public void setApartmentName(String apartmentName) {
+        this.apartmentName = apartmentName;
+    }
 
     public Integer getWorkStatus() {
         return workStatus;
