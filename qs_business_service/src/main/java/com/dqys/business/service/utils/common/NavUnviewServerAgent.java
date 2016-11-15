@@ -154,7 +154,7 @@ public class NavUnviewServerAgent {
         if (selectDto == null) {
             navUnviewService.add(navId, object, objectId, reId);
         } else {
-            navUnviewService.del(navId, object, objectId, reId);
+            navUnviewService.del(selectDto.getId());
         }
     }
 

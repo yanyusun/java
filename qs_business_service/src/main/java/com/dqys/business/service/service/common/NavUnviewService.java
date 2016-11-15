@@ -43,15 +43,7 @@ public interface NavUnviewService {
      */
     void del(Integer navId,Integer object,Integer objectId);
 
-    // TODO: 16-11-4 mkf
-    /**
-     * 删除对应的不可见对象
-     * @param navId
-     * @param object
-     * @param objectId
-     * @param reId 关联对象id
-     */
-    void del(Integer navId,Integer object,Integer objectId,Integer reId);
+    void del(Integer id);
 
     /**
      * 对navId添加所有unviewList的选项
@@ -82,7 +74,5 @@ public interface NavUnviewService {
     List<SelectDto> getInit(Integer navId);
 
     int getType();
-
-
 
 }

@@ -52,11 +52,8 @@ public class NavUnviewCompanyServiceImpl extends AbstractNavUnview implements Na
     }
 
     @Override
-    public void del(Integer navId, Integer object, Integer objectId, Integer reId) {
-        SelectDto dto = get(navId, object, objectId, reId);
-        if (dto != null) {
-            navUnviewCompanyMapper.deleteByPrimaryKey(dto.getId());
-        }
+    public void del(Integer id) {
+        navUnviewCompanyMapper.deleteByPrimaryKey(id);
     }
 
     @Override
