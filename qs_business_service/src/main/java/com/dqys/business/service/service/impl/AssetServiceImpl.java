@@ -616,14 +616,14 @@ public class AssetServiceImpl implements AssetService {
                 assetQuery.setOperator(userInfo.getId());
             }
         } else if (ObjectTabEnum.refuse.getValue().equals(type)) {
-            List<Integer> ids =null;
+            List<Integer> ids = null;
             // 已驳回
-            if(flag){
-                 ids = businessObjReMapper.listIdByTypeIdStatus(ObjectTypeEnum.ASSETPACKAGE.getValue(),
+            if (flag) {
+                ids = businessObjReMapper.listIdByTypeIdStatus(ObjectTypeEnum.ASSETPACKAGE.getValue(),
                         BusinessStatusEnum.platform_refuse.getValue());
                 assetQuery.setIds(ids);
-            }else{
-                 ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.ASSETPACKAGE.getValue(),
+            } else {
+                ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.ASSETPACKAGE.getValue(),
                         BusinessStatusEnum.platform_refuse.getValue(), userId);
                 assetQuery.setIds(ids);
             }
@@ -960,7 +960,6 @@ public class AssetServiceImpl implements AssetService {
             if (lenderInfo.getLenderNo() == null) {
                 lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
             }
-            lenderInfo.setOperator(userId);
             String typeStr = UserSession.getCurrent().getUserType();
             UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
             if (infoEnum != null) {
@@ -1028,7 +1027,13 @@ public class AssetServiceImpl implements AssetService {
             // 增加操作记录
             businessLogService.add(pawnInfo.getId(), ObjectTypeEnum.PAWN.getValue(), PawnEnum.ADD.getValue(),
                     "", pawnDTO.getMemo(), 0, 0);
-            map.put(pawnDTO.getLenderId() + pawnDTO.getPawnName(), pawnInfo.getId());
+            //存放抵借据和押物关系
+            if (pawnDTO.getIouIds() != null && pawnDTO.getIouIds().length() > 0) {
+                String[] iouIdMap = pawnDTO.getIouIds().split(",");
+                for (String iouId : iouIdMap) {
+                    keyMap.put(iouId + pawnDTO.getPawnName(), pawnInfo.getId());
+                }
+            }
         }
         // 增加借据
         for (IouDTO iouDTO : iouDTOList) {
@@ -1061,19 +1066,20 @@ public class AssetServiceImpl implements AssetService {
             // 添加操作记录
             businessLogService.add(iouInfo.getId(), ObjectTypeEnum.IOU.getValue(), IouEnum.ADD.getValue(),
                     "", iouDTO.getMemo(), 0, 0);
-            // 增加关联关系
-            if (iouDTO.getPawnNames() != null && iouDTO.getPawnNames().length() > 0) {
-                String[] nameStr = iouDTO.getPawnNames().split(",");
-                for (String s : nameStr) {
-                    if (s.length() > 0 && keyMap.get(s) != null) {
+            // 增加借据抵押物的关联关系
+            if (iouDTO.getPawnIds() != null && iouDTO.getPawnIds().length() > 0) {
+                String[] nameStr = iouDTO.getPawnIds().split(",");
+                for (String paweName : nameStr) {
+                    String key = iouDTO.getIouName() + paweName;
+                    if (keyMap.get(key) != null) {
                         RelationQuery query = new RelationQuery();
-                        query.setPawnId(keyMap.get(s));
+                        query.setPawnId(keyMap.get(key));
                         query.setIouId(iouInfo.getId());
                         List<PiRelation> relation = piRelationMapper.queryList(query);
                         if (relation == null || relation.size() == 0) {
                             PiRelation piRelation = new PiRelation();
                             piRelation.setIouId(iouInfo.getId());
-                            piRelation.setPawnId(keyMap.get(s));
+                            piRelation.setPawnId(keyMap.get(key));
                             piRelationMapper.insert(piRelation);
                         }
                     }
