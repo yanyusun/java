@@ -162,7 +162,9 @@ public class UserServiceImpl implements UserService {
                 resultMap.put("total", 0);
                 return JsonResponseTool.success(resultMap);
             }
-            tUserQuery.setCompanyIds(companyIds);
+            if (query.getAccountType() != null) {
+                tUserQuery.setCompanyIds(companyIds);
+            }
             tUserQuery.setCompanyId(null);
         }
         tUserQuery.setStatus(query.getStatus());

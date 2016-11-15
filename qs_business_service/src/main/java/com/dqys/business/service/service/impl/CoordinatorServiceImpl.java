@@ -710,6 +710,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 if (list.size() > 0) {
                     receive_id = list.get(0).getUserId();//平台管理员id
                 }
+                code = SmsEnum.APPLY_AGAIN.getValue();
                 text = "重新业务审核申请";
             }
             if (objectType == ObjectTypeEnum.LENDER.getValue() && audit) {
@@ -727,9 +728,16 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 operType = AssetPackageEnum.update.getValue();
                 text = "资产包审核操作";
             }
-            Map userC = coordinatorMapper.getUserAndCompanyByUserId(receive_id);
-            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
-                    ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
+            Map userC = coordinatorMapper.getUserAndCompanyByUserId(receive_id);//接受者
+            String content = "";
+            if (audit) {
+                content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
+                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
+            } else {
+                Map operC = coordinatorMapper.getUserAndCompanyByUserId(userId);//发送者
+                content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(operC, "realName"),
+                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
+            }
             String title = getMessageTitle(objectId, objectType, MessageBTEnum.BUSINESS.getValue());
             messageService.add(title, content, userId, receive_id, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS.getValue(), "");//添加通知消息
             map.put("result", "yes");
@@ -746,6 +754,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         List<Map<String, Object>> receive_ids = new ArrayList<>();
         LenderInfo lenderInfo = new LenderInfo();
         if (objectType == ObjectTypeEnum.LENDER.getValue()) {
+            //对借款人的操作
             lenderInfo.setId(objectId);
             lenderInfo.setIsStop(status);
             LenderInfo lender = lenderInfoMapper.get(objectId);
@@ -763,6 +772,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             operType = LenderEnum.UPDATE_EDIT.getValue();
             receive_ids = coordinatorMapper.getUserIdByObjUserRelToLender(objectType, objectId);
         } else if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+            //对资产包的操作
             AssetInfo assetInfo = new AssetInfo();
             assetInfo.setId(objectId);
             assetInfo.setIsStop(status);
@@ -782,10 +792,29 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 lenderInfo.setAssetId(objectId);
                 coordinatorMapper.updateLender(lenderInfo);//修改资产包isStop状态
             }
-            ;
             operType = AssetPackageEnum.update.getValue();
             receive_ids = coordinatorMapper.getUserIdByObjUserRelToAsset(objectType, objectId);//被通知人员
+        } else if (objectType == ObjectTypeEnum.ASSETSOURCE.getValue().intValue()) {
+            //对资产源的操作
+            ZcyEstates zcyEstates = new ZcyEstates();
+            zcyEstates.setId(objectId);
+            zcyEstates.setResultStatus(status);
+            ZcyEstates estates = zcyEstatesMapper.selectByPrimaryKey(objectId);
+            if (estates == null) {
+                map.put("result", "noExist");//不存在记录
+                map.put("msg", "资产源记录不存在");
+                return;
+            }
+            if (estates.getResultStatus() == status) {
+                map.put("result", "repetition");//重复操作
+                map.put("msg", "重复操作");//
+                return;
+            }
+            zcyEstatesMapper.updateByPrimaryKey(zcyEstates);
+            operType = AssetSourceEnum.UPDATE_EDIT.getValue();
+            receive_ids = coordinatorMapper.getUserIdByObjUserRelToLender(objectType, objectId);//被通知人员
         }
+        businessLogService.add(objectId, objectType, operType, "暂停或无效操作", "", 0, 0);
         Integer code = 0;
         if (status == 1) {
             code = SmsEnum.BUSINESS_PAUSE.getValue();//设置业务暂停

@@ -1,6 +1,7 @@
 package com.dqys.business.service.service.impl;
 
 import com.dqys.auth.orm.constant.CompanyTypeEnum;
+import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.repay.RepayEnum;
@@ -34,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.UnexpectedRollbackException;
 
+import javax.servlet.jsp.tagext.TagInfo;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -472,18 +474,39 @@ public class RepayServiceImpl implements RepayService {
                 original_time = DateFormatTool.format(damageApply.getOriginal_time(), DateFormatTool.DATE_FORMAT_10_REG1);
             }
         }
+        List<Map> mapList = new ArrayList<>();
         SmsUtil smsUtil = new SmsUtil();//发送短信通知
         Integer code = SmsEnum.POSTPONE_APPLY.getValue();
-        Map userC = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getEaxm_user_id());//接收者
-        Map oper = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getApply_user_id());//发送者
-        String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
-                CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "realName"),
-                ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName(), coordinatorService.getObjectName(damageApply.getObject_type(), damageApply.getApply_object_id()), original_time, damage_date);
-        String title = coordinatorService.getMessageTitle(damageApply.getApply_object_id(), damageApply.getObject_type(), MessageBTEnum.POSTPONE.getValue());
-        String operUrl = MessageUtils.setOperUrl("/repay/auditPostpone?status=1&applyId=" + id, null, "/repay/auditPostpone?status=2&applyId=" + id, null, "");
-        messageService.add(title, content, damageApply.getApply_user_id(), damageApply.getEaxm_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE.getValue(), operUrl);
+        Map user = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getEaxm_user_id());//接收者
+        mapList.add(user);
+        Map oper = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getApply_user_id());//发送者、
+//        判断申请用户和审核用户是否为相同公司，如果是同家公司不需要通知平台参与审核
+        if (!MessageUtils.transMapToString(user, "companyName").equals(MessageUtils.transMapToString(oper, "companyName"))) {
+            TUserTag tag = messageService.getAdmin();
+            if (tag != null) {
+                Map admin = coordinatorMapper.getUserAndCompanyByUserId(tag.getUserId());//接收者管理员
+                mapList.add(admin);
+            }
+        }
+        for (Map userC : mapList) {
+            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
+                    CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "realName"),
+                    ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName(), coordinatorService.getObjectName(damageApply.getObject_type(), damageApply.getApply_object_id()), original_time, damage_date);
+            String title = coordinatorService.getMessageTitle(damageApply.getApply_object_id(), damageApply.getObject_type(), MessageBTEnum.POSTPONE.getValue());
+            String operUrl = MessageUtils.setOperUrl("/repay/auditPostpone?status=1&applyId=" + id, null, "/repay/auditPostpone?status=2&applyId=" + id, null, "");
+            messageService.add(title, content, damageApply.getApply_user_id(), MessageUtils.transMapToInt(userC, "userId"), "", MessageEnum.TASK.getValue(), MessageBTEnum.POSTPONE.getValue(), operUrl);
+        }
 
         map.put("result", "yes");
+    }
+
+    /**
+     * @param sendUserId
+     * @param receiveUserId
+     * @param mapList
+     */
+    private void judge(Integer sendUserId, Integer receiveUserId, List<Map> mapList) {
+
     }
 
     @Override

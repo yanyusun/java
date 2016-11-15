@@ -107,6 +107,7 @@ public class AssetServiceImpl implements AssetService {
             return JsonResponseTool.paramErr("参数错误");
         }
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        setAssetMoney(assetDTO);//设置金额
         AssetInfo assetInfo = AssetServiceUtils.toAssetInfo(assetDTO);
         assetInfo.setOperator(userId);
         String typeStr = UserSession.getCurrent().getUserType();
@@ -141,11 +142,18 @@ public class AssetServiceImpl implements AssetService {
         }
     }
 
+    private void setAssetMoney(AssetDTO assetDTO) {
+        assetDTO.setLoan(null);
+        assetDTO.setAccrual(null);
+        assetDTO.setAppraisal(null);
+    }
+
     @Override
     public JsonResponse updateById_tx(AssetDTO assetDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(assetDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
+        setAssetMoney(assetDTO);//设置金额
         Integer result = assetInfoMapper.update(AssetServiceUtils.toAssetInfo(assetDTO));
         if (CommonUtil.checkResult(result)) {
             return JsonResponseTool.failure("修改失败");

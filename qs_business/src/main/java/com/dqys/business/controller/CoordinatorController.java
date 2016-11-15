@@ -97,9 +97,9 @@ public class CoordinatorController {
             coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.PAWN.getValue(), userId);//查询抵押物
         } else if (objectId != null && type == 4) {
             coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.ASSETSOURCE.getValue(), userId);//查询资产源
-        }else if (objectId != null && type == 5) {
+        } else if (objectId != null && type == 5) {
             coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.CASE.getValue(), userId);//查询资产源
-        }  else {
+        } else {
             return JsonResponseTool.paramErr("参数错误");
         }
         if (map.get("result").toString().equals("yes")) {
@@ -284,9 +284,9 @@ public class CoordinatorController {
     }
 
     /**
-     * @api {post} coordinator/isPause 借款人或资产包暂停操作
+     * @api {post} coordinator/isPause 借款人或资产包暂停无效操作
      * @apiParam {int} objectId 对象id
-     * @apiParam {int} objectType 对象类型(10资产包11借款人)
+     * @apiParam {int} objectType 对象类型(10资产包11借款人16资产源)
      * @apiParam {int} status 状态（0开启1暂停2无效）
      * @apiSampleRequest coordinator/isPause
      * @apiGroup Coordinator
@@ -301,7 +301,8 @@ public class CoordinatorController {
         if (CommonUtil.checkParam(objectType, objectId, status)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        if (objectType != ObjectTypeEnum.LENDER.getValue() && objectType != ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+        if (objectType != ObjectTypeEnum.LENDER.getValue() && objectType != ObjectTypeEnum.ASSETPACKAGE.getValue() &&
+                objectType != ObjectTypeEnum.ASSETSOURCE.getValue()) {
             return JsonResponseTool.paramErr("对象类型有误");
         }
         if (status != 0 && status != 1 && status != 2) {

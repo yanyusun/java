@@ -343,6 +343,7 @@ public class LenderServiceImpl implements LenderService {
             return JsonResponseTool.paramErr("缺少借款人信息");
         }
         // 添加借款人基础信息
+        setLenderMoney(lenderDTO);//设置金额
         LenderInfo lenderInfo = LenderServiceUtils.toLenderInfo(lenderDTO);
         if (lenderInfo.getLenderNo() == null) {
             lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
@@ -387,6 +388,13 @@ public class LenderServiceImpl implements LenderService {
         return JsonResponseTool.success(lenderId);
     }
 
+    private void setLenderMoney(LenderDTO lenderDTO) {
+        //        总金额和总利息从借据累计而来,所以这里设置为null
+        lenderDTO.setAccrual(null);
+        lenderDTO.setLoan(null);
+        lenderDTO.setAppraisal(null);
+    }
+
     @Override
     public JsonResponse delete_tx(Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(id)) {
@@ -423,6 +431,7 @@ public class LenderServiceImpl implements LenderService {
         if (!flag) {
             return JsonResponseTool.paramErr("缺少借款人信息");
         }
+        setLenderMoney(lenderDTO);//设置金额
         Integer result = lenderInfoMapper.update(LenderServiceUtils.toLenderInfo(lenderDTO));
         if (!CommonUtil.checkResult(result)) {
             flag = true;

@@ -2,9 +2,11 @@ package com.dqys.business.service.service.impl;
 
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
+import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.asset.PiRelationMapper;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
+import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.asset.PiRelation;
 import com.dqys.business.orm.query.asset.RelationQuery;
@@ -24,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +47,8 @@ public class IouServiceImpl implements IouService {
     private BusinessService businessService;
     @Autowired
     private BusinessLogService businessLogService;
+    @Autowired
+    private LenderInfoMapper lenderInfoMapper;
 
     @Override
     public JsonResponse delete_tx(Integer id) throws BusinessLogException {
@@ -153,6 +158,11 @@ public class IouServiceImpl implements IouService {
         if (CommonUtil.checkParam(iouDTOList) || iouDTOList.size() == 0) {
             return JsonResponseTool.paramErr("参数错误");
         }
+        int num = 0;
+        BigDecimal loan = BigDecimal.ZERO;//总贷款
+        BigDecimal accrual = BigDecimal.ZERO;//总利息
+        BigDecimal appraisal = BigDecimal.ZERO;//总评估
+        Integer lenderId = 0;
         for (IouDTO iouDTO : iouDTOList) {
             JsonResponse response = null;
             if (iouDTO.getId() != null) {
@@ -160,11 +170,37 @@ public class IouServiceImpl implements IouService {
             } else {
                 response = add_tx(iouDTO);
             }
-            if (!response.getCode().equals(ResponseCodeEnum.SUCCESS.getValue())) {
-                return JsonResponseTool.failure("新增失败");
+            if (response.getCode().equals(ResponseCodeEnum.SUCCESS.getValue())) {
+                //累加借据金额，用于填充借款人的金额
+                loan = loan.add(sumMoney());
+                accrual = accrual.add(sumMoney());
+                appraisal = appraisal.add(sumMoney());
+                num++;
+            }
+            lenderId = iouDTO.getLenderId();
+        }
+        if (lenderId > 0) {
+            LenderInfo info = lenderInfoMapper.get(lenderId);
+            if (info != null) {
+                info.setAccrual(accrual.doubleValue());
+                info.setLoan(loan.doubleValue());
+                info.setAppraisal(appraisal.doubleValue());
+                lenderInfoMapper.update(info);
             }
         }
-        return JsonResponseTool.success(null);
+        if (num > 0) {
+            return JsonResponseTool.success(null);
+        } else {
+            return JsonResponseTool.failure("新增失败");
+        }
+    }
+
+    private BigDecimal sumMoney(Double... money) {
+        BigDecimal bigDecimal = BigDecimal.ZERO;
+        for (Double mon : money) {
+            bigDecimal = bigDecimal.add(new BigDecimal(mon));
+        }
+        return bigDecimal;
     }
 
     @Override
