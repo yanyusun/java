@@ -65,7 +65,7 @@ public class NavUnviewUserTypeServiceImpl extends AbstractNavUnview implements N
 
     @Override
     public void del(Integer navId, Integer object, Integer objectId, Integer reId) {
-        SelectDto dto = get(navId, object, objectId, reId);
+       SelectDto dto = get(navId, object, objectId, reId);
         if (dto != null) {
             navUnviewUserTypeMapper.deleteByPrimaryKey(dto.getId());
         }

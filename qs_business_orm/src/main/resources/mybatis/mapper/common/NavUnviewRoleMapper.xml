@@ -6,7 +6,7 @@
     <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.common.NavUnviewRole">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="nav_id" jdbcType="INTEGER" property="navId"/>
-        <result column="role_type" jdbcType="BIT" property="roleType"/>
+        <result column="role_type" jdbcType="INTEGER" property="roleType"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, nav_id, role_type

@@ -213,7 +213,6 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
 
 
     private List<SelectDto> getUserTypeInitList() {
-        if (userTypeInitList == null) {
             userTypeInitList = new ArrayList<>();
             //普通人员
             SelectDto commonSelectDto = new SelectDto();
@@ -245,7 +244,6 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
             intermediarySelectDto.setReId(UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue());
             intermediarySelectDto.setShowName("中介");
             userTypeInitList.add(intermediarySelectDto);
-        }
         return userTypeInitList;
     }
 
@@ -275,7 +273,6 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
     }
 
     public List<SelectDto> getRoleInitList() {
-        if (roleInitList == null) {
             roleInitList = new ArrayList<>();
             //管理员
             SelectDto adminSelectDto = new SelectDto();
@@ -297,7 +294,6 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
             theirSelectDto.setReId(RoleTypeEnum.THEIR.getValue());
             theirSelectDto.setShowName("所属人");
             roleInitList.add(theirSelectDto);
-        }
         return roleInitList;
     }
 
