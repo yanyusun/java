@@ -211,7 +211,12 @@ public class UserServiceImpl implements UserService {
             if (tUserTagList.size() > 0) {
                 tUserTag = tUserTagList.get(0);
             }
-            return JsonResponseTool.success(UserServiceUtils.toUserInsertDTO(tUserInfo, tUserTag));
+            UserInsertDTO dto = UserServiceUtils.toUserInsertDTO(tUserInfo, tUserTag);
+            CompanyDetailInfo detail = tCompanyInfoMapper.getDetailByCompanyId(dto.getCompanyId());
+            if (detail != null) {
+
+            }
+            return JsonResponseTool.success(dto);
         }
     }
 
