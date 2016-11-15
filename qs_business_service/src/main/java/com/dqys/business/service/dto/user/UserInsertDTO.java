@@ -53,6 +53,9 @@ import java.util.List;
  * @apiParam {string} [remark] 备注
  * @apiParam {number} userType 用户类型
  * @apiParam {number} [companyId] 公司Id
+ * @apiParam {string} entryTime 入职时间(yyyy-MM-dd)
+ * @apiParam {number} yearsLimit 从业年限
+ * @apiParam {number} workStatus 工作状态（0默认在职，1离职，2请假）
  * <p/>
  * Created by Yvan on 16/6/23.
  */
@@ -83,6 +86,70 @@ public class UserInsertDTO {
     private Integer companyId; // 公司Id
 
     private List<Integer> userIds;//多个用户存储
+
+    private String companyName;//公司名称
+    private String apartmentName;//团队名称
+    private String teamName;//团队名称
+    private String address;//地址
+    private String entryTime;//入职时间
+    private Integer yearsLimit;//从业年限
+    private Integer workStatus;//工作状态（0默认在职，1离职，2请假）
+
+    public String getApartmentName() {
+        return apartmentName;
+    }
+
+    public void setApartmentName(String apartmentName) {
+        this.apartmentName = apartmentName;
+    }
+
+    public Integer getWorkStatus() {
+        return workStatus;
+    }
+
+    public void setWorkStatus(Integer workStatus) {
+        this.workStatus = workStatus;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getEntryTime() {
+        return entryTime;
+    }
+
+    public void setEntryTime(String entryTime) {
+        this.entryTime = entryTime;
+    }
+
+    public Integer getYearsLimit() {
+        return yearsLimit;
+    }
+
+    public void setYearsLimit(Integer yearsLimit) {
+        this.yearsLimit = yearsLimit;
+    }
 
     public Integer getUseStatus() {
         return useStatus;

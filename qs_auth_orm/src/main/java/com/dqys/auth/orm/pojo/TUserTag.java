@@ -1,6 +1,7 @@
 package com.dqys.auth.orm.pojo;
 
 import com.dqys.core.base.BaseModel;
+
 import java.io.Serializable;
 
 public class TUserTag extends BaseModel implements Serializable {
@@ -20,6 +21,34 @@ public class TUserTag extends BaseModel implements Serializable {
     private String dutyMark; // 职责简介
     private Integer dutyArea; // 职责区域
     private Integer teamId; // 团队ID
+    //后续补充
+    private String entryTime;//入职时间
+    private Integer yearsLimit;//从业年限
+    private Integer workStatus;//工作状态（0默认在职，1离职，2请假）
+
+    public Integer getWorkStatus() {
+        return workStatus;
+    }
+
+    public void setWorkStatus(Integer workStatus) {
+        this.workStatus = workStatus;
+    }
+
+    public String getEntryTime() {
+        return entryTime;
+    }
+
+    public void setEntryTime(String entryTime) {
+        this.entryTime = entryTime;
+    }
+
+    public Integer getYearsLimit() {
+        return yearsLimit;
+    }
+
+    public void setYearsLimit(Integer yearsLimit) {
+        this.yearsLimit = yearsLimit;
+    }
 
     private static final long serialVersionUID = 1L;
 

@@ -36,7 +36,8 @@ public enum SmsEnum {
     REGISTER_AUDIT_RESULT(136, "注册审核结果"),
     ACTIVATION_INFORM(137, "组织架构导入通知激活"),
     RESET_PAWW(138, "重置密码"),
-    ACTIVATE_ACCOUNT(139, "帐号激活通知");
+    ACTIVATE_ACCOUNT(139, "帐号激活通知"),
+    APPLY_AGAIN(140, "业务重新提交审核");
 
     private Integer value;
     private String name;

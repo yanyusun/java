@@ -402,7 +402,9 @@ public class ZcyServiceImpl implements ZcyService {
             getWaitReceive(zcyListQuery, map);
         }
         if (zcyListQuery.getStatus() == ObjectTabEnum.stock.getValue().intValue()) {//存量
-
+            //三十天前的数据30*24共720小时
+            zcyListQuery.setHourNum(720);
+            getZcyAll(zcyListQuery, map);
         }
         if (zcyListQuery.getStatus() == ObjectTabEnum.focus.getValue().intValue()) {//聚焦
 

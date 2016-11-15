@@ -11,4 +11,6 @@ public interface TAreaMapper {
     List<TArea> selectAll();
 
     TArea getByName(String name);
+
+    TArea get(Integer id);
 }

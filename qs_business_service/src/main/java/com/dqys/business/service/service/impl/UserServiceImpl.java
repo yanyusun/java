@@ -162,7 +162,9 @@ public class UserServiceImpl implements UserService {
                 resultMap.put("total", 0);
                 return JsonResponseTool.success(resultMap);
             }
-            tUserQuery.setCompanyIds(companyIds);
+            if (query.getAccountType() != null) {
+                tUserQuery.setCompanyIds(companyIds);
+            }
             tUserQuery.setCompanyId(null);
         }
         tUserQuery.setStatus(query.getStatus());
@@ -211,8 +213,49 @@ public class UserServiceImpl implements UserService {
             if (tUserTagList.size() > 0) {
                 tUserTag = tUserTagList.get(0);
             }
-            return JsonResponseTool.success(UserServiceUtils.toUserInsertDTO(tUserInfo, tUserTag));
+            UserInsertDTO dto = UserServiceUtils.toUserInsertDTO(tUserInfo, tUserTag);
+            //查询公司名称和地址
+            CompanyDetailInfo detail = tCompanyInfoMapper.getDetailByCompanyId(dto.getCompanyId());
+            if (detail != null) {
+                dto.setCompanyName(detail.getCompanyName());
+                TArea province = areaMapper.get(detail.getProvince());
+                TArea city = areaMapper.get(detail.getCity());
+                TArea area = areaMapper.get(detail.getDistrict());
+                StringBuffer buff = new StringBuffer();
+                if (province != null) {
+                    buff.append(province.getLabel());
+                }
+                if (city != null) {
+                    buff.append(city.getLabel());
+                }
+                if (area != null) {
+                    buff.append(area.getLabel());
+                }
+                buff.append(detail.getAddress());
+                dto.setAddress(buff.toString());
+            }
+            //查询团队名称和部门名称
+            Organization org = getOrganization(dto.getTeamId());
+            if (org != null) {
+                dto.setTeamName(org.getName());
+            }
+            org = getOrganization(dto.getApartmentId());
+            if (org != null) {
+                dto.setApartmentName(org.getName());
+            }
+
+            return JsonResponseTool.success(dto);
         }
+    }
+
+    private Organization getOrganization(Integer id) {
+        if (id != null) {
+            Organization org = organizationMapper.get(id);
+            if (org != null) {
+                return org;
+            }
+        }
+        return null;
     }
 
     @Override

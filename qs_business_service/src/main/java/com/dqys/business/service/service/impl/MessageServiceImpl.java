@@ -183,7 +183,8 @@ public class MessageServiceImpl implements MessageService {
      *
      * @return
      */
-    private TUserTag getAdmin() {
+    @Override
+    public TUserTag getAdmin() {
         TUserTagQuery tUserTagQuery = new TUserTagQuery();
         tUserTagQuery.setUserType(1);
         tUserTagQuery.setRole(RoleTypeEnum.ADMIN.getValue());

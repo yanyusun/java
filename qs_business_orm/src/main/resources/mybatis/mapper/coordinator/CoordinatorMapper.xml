@@ -218,6 +218,7 @@
     <select id="getUserIdByObjUserRelToLender" resultType="java.util.Map">
             SELECT our.user_id from object_user_relation our
             where our.stateflag=0 and our.object_type=#{objectType} and our.object_id=#{objectId}
+            GROUP BY our.user_id
     </select>
 
     <select id="getUserIdByObjUserRelToAsset" resultType="java.util.Map">

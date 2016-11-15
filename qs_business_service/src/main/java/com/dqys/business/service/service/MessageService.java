@@ -1,5 +1,6 @@
 package com.dqys.business.service.service;
 
+import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.message.Message;
@@ -88,6 +89,9 @@ public interface MessageService {
      * @return
      */
     String businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer userId, String operUrl);
+
+    //    获取平台管理员账户
+    public TUserTag getAdmin();
 
     /**
      * 流转结果，平台接受或拒绝
