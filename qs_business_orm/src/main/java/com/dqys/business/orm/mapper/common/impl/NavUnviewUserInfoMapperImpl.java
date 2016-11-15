@@ -19,7 +19,7 @@ import java.util.Map;
 public class NavUnviewUserInfoMapperImpl extends BaseDao implements NavUnviewUserInfoMapper {
     @Override
     public int deleteByPrimaryKey(Integer id) {
-        return 0;
+        return super.getSqlSession().getMapper(NavUnviewUserInfoMapper.class).deleteByPrimaryKey(id);
     }
 
     @Override
