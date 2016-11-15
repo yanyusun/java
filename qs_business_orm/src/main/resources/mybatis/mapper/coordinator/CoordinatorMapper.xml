@@ -406,7 +406,8 @@
         tze.selling_price priceTotal,tze.guide_price priceUnit,tzk.id keyId,tze.acreage
         ,DATE_FORMAT(tzo.entrust_protocol_time,'%Y-%m-%d') entrustTime,
         tzea.plot_name title,CONCAT(tzea.floor,' (',tze.replenish,'/',tzea.floor_total,')') floor,
-        CONCAT(tzea.province,tzea.city,tzea.area,tzea.road,tzea.plot_name,tzea.building_no,tzea.element,tzea.floor)
+        CONCAT((SELECT name FROM t_area WHERE id=tzea.province),(SELECT name FROM t_area WHERE id=tzea.city),(SELECT name FROM t_area WHERE id=tzea.area),
+        CONCAT(tzea.road,'路'),tzea.plot_name,CONCAT(tzea.building_no,'栋'),CONCAT(tzea.element,'单元'),CONCAT(tzea.floor,'层'))
         place
         from t_zcy_estates tze LEFT JOIN t_zcy_owner tzo
         ON tzo.estates_id=tze.id LEFT JOIN t_zcy_maintain tzm

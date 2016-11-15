@@ -15,7 +15,7 @@ public class FollowUpUtil {
         followUpMessage.setObjectType(followUpMessageDTO.getObjectType());
         followUpMessage.setLiquidateStage(followUpMessageDTO.getLiquidateStage());
         if(null!=followUpMessageDTO.getSecondLiquidateStage()){
-            followUpMessage.setSecondLiquidateStage(followUpMessageDTO.getLiquidateStage());
+            followUpMessage.setSecondLiquidateStage(followUpMessageDTO.getSecondLiquidateStage());
         }
         if(null!=followUpMessageDTO.getSecondObjectId()){
             followUpMessage.setSecondObjectType(followUpMessageDTO.getSecondObjectType());
