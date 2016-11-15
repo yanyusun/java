@@ -48,9 +48,9 @@ public class NavUnviewUserTypeServiceImpl implements NavUnviewUserTypeService {
         while (flag) {
             SourceNavigation nav = sourceNavigationMapper.get(navId);
             if (nav != null) {
-                navIds.add(navId);
                 if (nav.getPid() != 0) {
                     navId = nav.getPid();
+                    navIds.add(navId);
                 } else {
                     flag = false;
                 }

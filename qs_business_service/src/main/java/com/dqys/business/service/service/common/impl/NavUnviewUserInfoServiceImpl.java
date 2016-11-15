@@ -7,8 +7,7 @@ import com.dqys.business.orm.pojo.common.NavUnviewUserInfo;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
-import com.dqys.business.service.service.CoordinatorService;
-import com.dqys.business.service.service.common.NavUnviewUserInfoService;
+import com.dqys.business.service.service.common.NavUnviewService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.NavUnviewEnum;
 import com.dqys.core.model.UserSession;
@@ -26,15 +25,12 @@ import java.util.Map;
 //// TODO: 16-10-28  mkf
 @Repository
 @Primary
-public class NavUnviewUserInfoServiceImpl implements NavUnviewUserInfoService {
+public class NavUnviewUserInfoServiceImpl implements NavUnviewService{
     @Autowired
     private NavUnviewUserInfoMapper navUnviewUserInfoMapper;
 
     @Autowired
     private SourceNavigationMapper sourceNavigationMapper;
-
-    @Autowired
-    private CoordinatorService coordinatorService;
 
     @Override
     public List<SelectDto> getALLParentList(Integer navId, Integer object, Integer objectId) {
@@ -71,7 +67,7 @@ public class NavUnviewUserInfoServiceImpl implements NavUnviewUserInfoService {
         return dtos;
     }
 
-    private void setSelectDtoList(List<SelectDto> dtos, List<Integer> navIds, Integer object, Integer objectId) {
+    protected void setSelectDtoList(List<SelectDto> dtos, List<Integer> navIds, Integer object, Integer objectId) {
         if (navIds != null && navIds.size() == 0) {
             return;
         }

@@ -149,7 +149,7 @@ public class SourceServiceImpl implements SourceService {
         }
         SourceInfo sourceInfo = sourceInfoMapper.getByNavIdAndLenderId(navId, lenderId, estatesId);//根据借款人id或是资产源id查询资料实堪
         if (sourceInfo == null) {
-            return null;
+            return SourceServiceUtls.toSourceInfoDTO(getNavAuthAll(navId, lenderId, estatesId));
         }
         Integer sourceId = sourceInfo.getId();
         List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceId);
@@ -248,8 +248,8 @@ public class SourceServiceImpl implements SourceService {
      * @param dto
      * @return
      */
-    public SelectDtoMap getNewNavALL(NavUnviewDTO dto){
-        return navUnviewManagerService.getNewALL(dto.getNavId(),dto.getObjectType(),dto.getObjectId(),dto.getUnviewReIdMap());
+    public SelectDtoMap resetAndGetNewALL(NavUnviewDTO dto){
+        return navUnviewManagerService.resetAndGetNewALL(dto.getNavId(),dto.getObjectType(),dto.getObjectId(),dto.getUnviewReIdMap());
     }
 
     @Override

@@ -72,7 +72,7 @@ public interface SourceService {
      * @param dto
      * @return
      */
-    SelectDtoMap getNewNavALL(NavUnviewDTO dto);
+    SelectDtoMap resetAndGetNewALL(NavUnviewDTO dto);
 
     /**
      * 是否具有资料实勘的权限

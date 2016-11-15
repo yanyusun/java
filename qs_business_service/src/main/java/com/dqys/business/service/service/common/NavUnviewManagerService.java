@@ -25,7 +25,7 @@ public interface NavUnviewManagerService {
      * @param unviewReIdMap
      * @return
      */
-    SelectDtoMap getNewALL(Integer navId,Integer object,Integer objectId,UnviewReIdMap unviewReIdMap);
+    SelectDtoMap resetAndGetNewALL(Integer navId,Integer object,Integer objectId,UnviewReIdMap unviewReIdMap);
 
     /**
      * 是否具有该类别的反问权限
