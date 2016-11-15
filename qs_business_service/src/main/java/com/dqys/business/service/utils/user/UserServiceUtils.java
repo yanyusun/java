@@ -124,7 +124,9 @@ public class UserServiceUtils {
         userTag.setDutyMark(userInsertDTO.getDutyMark());
         userTag.setDutyArea(userInsertDTO.getAreaId());
         userTag.setTeamId(userInsertDTO.getTeamId());
-
+        userTag.setYearsLimit(userInsertDTO.getYearsLimit());
+        userTag.setEntryTime(userInsertDTO.getEntryTime());
+        userTag.setWorkStatus(userInsertDTO.getWorkStatus());
         return userTag;
     }
 
