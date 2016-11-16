@@ -326,10 +326,18 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     @Override
     public Map<String, Object> getCompanyUserList(String realName, Integer userId, Integer companyId) {
         Map map = new HashMap<>();
+        Integer uId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         map.put("result", "no");
         //用户id和公司id只能选择其一，没有公司id就通过用户id查找公司id
         if ((companyId == null && userId != null) || (companyId != null && userId == null)) {
             List<Map<String, Object>> list = coordinatorMapper.getCompanyUserList(realName, userId, companyId);
+            //集合中去除自己的
+            for (Map m : list) {
+                if (uId.toString().equals(m.get("userId").toString())) {
+                    list.remove(m);
+                    break;
+                }
+            }
             map.put("users", list);
             map.put("result", "yes");
         } else {
