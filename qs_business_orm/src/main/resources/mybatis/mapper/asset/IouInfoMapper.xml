@@ -439,5 +439,10 @@
     <select id="findByPawnId" parameterType="int" resultMap="BaseResultMap">
         SELECT i.* from bt_iou i,bt_pi_relation pr WHERE pr.iou_id=i.id AND pr.pawn_id=#{pawnId}
     </select>
+    <!--根据借款人获取借款人下所有的借据-->
+    <select id="getIouBySumMoney" resultMap="BaseResultMap" parameterType="int">
+        SELECT SUM(iou.accrual_arrears)accrual_arrears,SUM(iou.penalty)penalty,SUM(iou.less_corpus)less_corpus FROM bt_iou iou
+        WHERE iou.stateflag=0 AND iou.lender_id=#{lenderId,jdbcType=INTEGER}}
+    </select>
 
 </mapper>

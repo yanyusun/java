@@ -81,4 +81,9 @@ public class IOUInfoMapperImpl extends BaseDao implements IOUInfoMapper {
         return super.getSqlSession().getMapper(IOUInfoMapper.class).findByPawnId(pawnId);
     }
 
+    @Override
+    public IOUInfo getIouBySumMoney(Integer lenderId) {
+        return super.getSqlSession().getMapper(IOUInfoMapper.class).getIouBySumMoney(lenderId);
+    }
+
 }

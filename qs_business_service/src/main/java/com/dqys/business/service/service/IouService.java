@@ -4,6 +4,7 @@ import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.core.model.JsonResponse;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -34,6 +35,12 @@ public interface IouService {
      * @return
      */
     JsonResponse listAdd(List<IouDTO> iouDTOList) throws BusinessLogException;
+
+    /**
+     * 修改借款人和相应资产包的总贷款金额、总利息、总评估价（单独录入借款人的时候资产包可能会没有）
+     *
+     */
+    void setLenderAndAsset(List<Integer> lenderIds);
 
     /**
      * 修改
