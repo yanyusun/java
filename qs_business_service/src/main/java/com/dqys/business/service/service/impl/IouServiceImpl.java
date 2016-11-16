@@ -1,14 +1,8 @@
 package com.dqys.business.service.service.impl;
 
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
-import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
-import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
-import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
-import com.dqys.business.orm.mapper.asset.PiRelationMapper;
-import com.dqys.business.orm.pojo.asset.IOUInfo;
-import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.pojo.asset.PawnInfo;
-import com.dqys.business.orm.pojo.asset.PiRelation;
+import com.dqys.business.orm.mapper.asset.*;
+import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.IouEnum;
 import com.dqys.business.service.dto.asset.IouDTO;
@@ -29,6 +23,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yvan on 16/7/12.
@@ -49,6 +44,8 @@ public class IouServiceImpl implements IouService {
     private BusinessLogService businessLogService;
     @Autowired
     private LenderInfoMapper lenderInfoMapper;
+    @Autowired
+    private AssetInfoMapper assetInfoMapper;
 
     @Override
     public JsonResponse delete_tx(Integer id) throws BusinessLogException {
@@ -159,10 +156,7 @@ public class IouServiceImpl implements IouService {
             return JsonResponseTool.paramErr("参数错误");
         }
         int num = 0;
-        BigDecimal loan = BigDecimal.ZERO;//总贷款
-        BigDecimal accrual = BigDecimal.ZERO;//总利息
-        BigDecimal appraisal = BigDecimal.ZERO;//总评估
-        Integer lenderId = 0;
+        List<Integer> lenderIds = new ArrayList<>();
         for (IouDTO iouDTO : iouDTOList) {
             JsonResponse response = null;
             if (iouDTO.getId() != null) {
@@ -171,23 +165,13 @@ public class IouServiceImpl implements IouService {
                 response = add_tx(iouDTO);
             }
             if (response.getCode().equals(ResponseCodeEnum.SUCCESS.getValue())) {
-                //累加借据金额，用于填充借款人的金额
-                loan = loan.add(sumMoney());
-                accrual = accrual.add(sumMoney());
-                appraisal = appraisal.add(sumMoney());
                 num++;
             }
-            lenderId = iouDTO.getLenderId();
-        }
-        if (lenderId > 0) {
-            LenderInfo info = lenderInfoMapper.get(lenderId);
-            if (info != null) {
-                info.setAccrual(accrual.doubleValue());
-                info.setLoan(loan.doubleValue());
-                info.setAppraisal(appraisal.doubleValue());
-                lenderInfoMapper.update(info);
+            if (!lenderIds.contains(iouDTO.getLenderId())) {
+                lenderIds.add(iouDTO.getLenderId());
             }
         }
+        setLenderAndAsset(lenderIds);//计算借款人和资产包的总评估价、总贷款、总利息金额
         if (num > 0) {
             return JsonResponseTool.success(null);
         } else {
@@ -195,12 +179,39 @@ public class IouServiceImpl implements IouService {
         }
     }
 
-    private BigDecimal sumMoney(Double... money) {
-        BigDecimal bigDecimal = BigDecimal.ZERO;
-        for (Double mon : money) {
-            bigDecimal = bigDecimal.add(new BigDecimal(mon));
+    @Override
+    public void setLenderAndAsset(List<Integer> lenderIds) {
+        //累加借据金额，用于填充借款人的金额
+        List<Integer> assetIds = new ArrayList<>();
+        if (lenderIds.size() > 0) {
+            //对借款人的金额修改
+            for (Integer lenderId : lenderIds) {
+                LenderInfo info = lenderInfoMapper.get(lenderId);
+                if (info != null) {
+//                    防止所传入的借款人id集合不是同一个资产包的情况
+                    if (info.getAssetId() != null && !assetIds.contains(info.getAssetId())) {
+                        assetIds.add(info.getAssetId());
+                    }
+                    IOUInfo iouMoney = iouInfoMapper.getIouBySumMoney(lenderId);//根据借款人获取借款人下所有的借据
+                    //计算金额
+                    info.setAccrual((iouMoney.getPenalty() + iouMoney.getAccrualArrears()));//总利息
+                    info.setLoan(iouMoney.getLessCorpus());//总贷款
+                    info.setAppraisal(iouMoney.getWorth());//总评估
+                    lenderInfoMapper.update(info);//修改借款人总贷款金额、总利息、总评估价格
+                }
+            }
+            //对资产包的计算修改
+            for (Integer assetId : assetIds) {
+                AssetInfo assetInfo = assetInfoMapper.get(assetId);//查询出资产包，对数据修改
+                if (assetInfo != null) {
+                    LenderInfo lenderMoney = lenderInfoMapper.getLenderBySumMoney(assetId);//根据资产包获取资产包下所有的借据
+                    assetInfo.setAccrual(lenderMoney.getAccrual());//总利息
+                    assetInfo.setLoan(lenderMoney.getLoan());//总贷款
+                    assetInfo.setAppraisal(lenderMoney.getAppraisal());//总评估
+                    assetInfoMapper.update(assetInfo);//修改资产包总贷款金额、总利息、总评估价格
+                }
+            }
         }
-        return bigDecimal;
     }
 
     @Override

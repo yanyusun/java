@@ -669,4 +669,10 @@
         </if>
     </select>
 
+    <!--根据借款人获取借款人下所有的借据-->
+    <select id="getLenderBySumMoney" resultMap="BaseResultMap" parameterType="int">
+       SELECT SUM(lender.accrual)accrual,SUM(lender.loan)loan,SUM(lender.appraisal)appraisal FROM bt_lender lender
+        WHERE lender.stateflag=0 AND lender.asset_id=#{assetId,jdbcType=INTEGER}
+    </select>
+
 </mapper>
