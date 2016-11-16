@@ -103,16 +103,24 @@
     <select id="getTaskOngoing" resultType="java.util.Map">
         SELECT count(tut.id) ongoing from t_teammate_re ttr LEFT JOIN t_user_team tut
         ON tut.id=ttr.user_team_id and tut.status=0
-        where ttr.status=1 and (ttr.type=0 or ttr.type=1 )
+        where ttr.stateflag=0 AND ttr.status=1 and (ttr.type=0 or ttr.type=1 )
           and ttr.user_id=#{userId,jdbcType=INTEGER} and tut.company_id=#{companyId,jdbcType=INTEGER}
     </select>
     <!--获取业绩比例(针对个人)-->
     <select id="getTaskRatio" resultType="java.util.Map">
         SELECT count(tut.id) finish,count(tut2.id) total
         from t_teammate_re ttr LEFT JOIN t_user_team tut
-        ON tut.id=ttr.user_team_id and tut.object_type=#{objectType,jdbcType=INTEGER} and tut.status=99 and tut.company_id=#{companyId,jdbcType=INTEGER}
-        LEFT JOIN t_user_team tut2 ON tut2.id=ttr.user_team_id and tut2.object_type=#{objectType,jdbcType=INTEGER} and tut2.company_id=#{companyId,jdbcType=INTEGER}
-        where ttr.`status`=1 and ttr.user_id=#{userId,jdbcType=INTEGER}
+        ON tut.id=ttr.user_team_id
+        <if test="objectType !=null">
+            and tut.object_type=#{objectType,jdbcType=INTEGER}
+        </if>
+        and tut.status=99 and tut.company_id=#{companyId,jdbcType=INTEGER}
+        LEFT JOIN t_user_team tut2 ON tut2.id=ttr.user_team_id
+        <if test="objectType !=null">
+            and tut2.object_type=#{objectType,jdbcType=INTEGER}
+        </if>
+        and tut2.company_id=#{companyId,jdbcType=INTEGER}
+        where ttr.stateflag=0 AND ttr.`status`=1 and ttr.user_id=#{userId,jdbcType=INTEGER}
     </select>
     <!--获取团队人数-->
     <select id="getPeopleNum" resultType="java.util.Map">
@@ -407,7 +415,8 @@
         tze.selling_price priceTotal,tze.guide_price priceUnit,tzk.id keyId,tze.acreage
         ,DATE_FORMAT(tzo.entrust_protocol_time,'%Y-%m-%d') entrustTime,
         tzea.plot_name title,CONCAT(tzea.floor,' (',tze.replenish,'/',tzea.floor_total,')') floor,
-        CONCAT((SELECT name FROM t_area WHERE id=tzea.province),(SELECT name FROM t_area WHERE id=tzea.city),(SELECT name FROM t_area WHERE id=tzea.area),
+        CONCAT((SELECT name FROM t_area WHERE id=tzea.province),(SELECT name FROM t_area WHERE id=tzea.city),(SELECT
+        name FROM t_area WHERE id=tzea.area),
         CONCAT(tzea.road,'路'),tzea.plot_name,CONCAT(tzea.building_no,'栋'),CONCAT(tzea.element,'单元'),CONCAT(tzea.floor,'层'))
         place
         from t_zcy_estates tze LEFT JOIN t_zcy_owner tzo

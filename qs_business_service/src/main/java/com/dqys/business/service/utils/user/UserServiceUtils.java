@@ -73,7 +73,7 @@ public class UserServiceUtils {
         userInsertDTO.setAccount(userInfo.getAccount());
         userInsertDTO.setRemark(userInfo.getRemark());
         userInsertDTO.setCompanyId(userInfo.getCompanyId());
-
+        userInsertDTO.setAccountCreateTime(DateFormatTool.format(userInfo.getCreateAt(), DateFormatTool.DATE_FORMAT_19));
         if (userTag != null) {
             userInsertDTO.setRoleId(userTag.getRoleId().intValue());
             userInsertDTO.setOccupation(userTag.getOccupation());

@@ -23,6 +23,7 @@ import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;
 import com.dqys.business.service.query.user.UserListQuery;
+import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.service.OperLogService;
 import com.dqys.business.service.service.UserService;
@@ -67,6 +68,8 @@ public class UserServiceImpl implements UserService {
     private OrganizationMapper organizationMapper;
     @Autowired
     private CoordinatorMapper coordinatorMapper;
+    @Autowired
+    private CoordinatorService coordinatorService;
     @Autowired
     private MessageService messageService;
     @Autowired
@@ -243,7 +246,10 @@ public class UserServiceImpl implements UserService {
             if (org != null) {
                 dto.setApartmentName(org.getName());
             }
-
+            dto.setLeaveWordTime(MessageUtils.transMapToString(coordinatorMapper.getLastLeaveWord(dto.getId()), "time"));//最后留言时间
+            Map task = coordinatorService.getTaskCount(dto.getCompanyId(), dto.getId(), null);//查询任务数量
+            dto.setResultsContrast(MessageUtils.transMapToString(task, "finish") + "/" + MessageUtils.transMapToString(task, "total"));
+            dto.setOngoing(MessageUtils.transMapToString(task, "ongoing"));
             return JsonResponseTool.success(dto);
         }
     }
