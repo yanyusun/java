@@ -487,7 +487,7 @@ public class UserServiceImpl implements UserService {
         }
         //不能自己在组织架构中修改自己的邮箱和帐号和角色，管理员有权修改其他员工的邮箱和帐号
         Map adminUser = coordinatorMapper.getAdminUser(userInsertDTO.getCompanyId());
-        if (userId.toString().equals(MessageUtils.transMapToString(adminUser, "id")) && userInsertDTO.getId() != userId) {
+        if (userId.toString().equals(MessageUtils.transMapToString(adminUser, "id")) && userInsertDTO.getId() != userId.intValue()) {
             // 校验邮箱和帐号是否存在
             List<TUserInfo> isExist = tUserInfoMapper.verifyUser(null, null, userInsertDTO.getEmail());
             if (isExist != null && isExist.size() > 0) {
@@ -504,7 +504,7 @@ public class UserServiceImpl implements UserService {
         } else {
             userInsertDTO.setEmail(null);
             userInsertDTO.setAccount(null);
-            userInsertDTO.setRoleId(null);
+            userInsertDTO.setRoleId(tUserTag.getRoleId().intValue());
         }
         boolean flag = false;
 
