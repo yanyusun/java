@@ -1,14 +1,8 @@
 package com.dqys.business.service.service.impl;
 
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
-import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
-import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
-import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
-import com.dqys.business.orm.mapper.asset.PiRelationMapper;
-import com.dqys.business.orm.pojo.asset.IOUInfo;
-import com.dqys.business.orm.pojo.asset.LenderInfo;
-import com.dqys.business.orm.pojo.asset.PawnInfo;
-import com.dqys.business.orm.pojo.asset.PiRelation;
+import com.dqys.business.orm.mapper.asset.*;
+import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.IouEnum;
 import com.dqys.business.service.dto.asset.IouDTO;
@@ -49,6 +43,8 @@ public class IouServiceImpl implements IouService {
     private BusinessLogService businessLogService;
     @Autowired
     private LenderInfoMapper lenderInfoMapper;
+    @Autowired
+    private AssetInfoMapper assetInfoMapper;
 
     @Override
     public JsonResponse delete_tx(Integer id) throws BusinessLogException {
@@ -172,22 +168,14 @@ public class IouServiceImpl implements IouService {
             }
             if (response.getCode().equals(ResponseCodeEnum.SUCCESS.getValue())) {
                 //累加借据金额，用于填充借款人的金额
-                loan = loan.add(sumMoney());
-                accrual = accrual.add(sumMoney());
-                appraisal = appraisal.add(sumMoney());
+                loan = loan.add(sumMoney(iouDTO.getLessCorpus()));
+                accrual = accrual.add(sumMoney(iouDTO.getAccrualArrears(), iouDTO.getPenalty()));
+                appraisal = appraisal.add(sumMoney(iouDTO.getWorth()));
                 num++;
             }
             lenderId = iouDTO.getLenderId();
         }
-        if (lenderId > 0) {
-            LenderInfo info = lenderInfoMapper.get(lenderId);
-            if (info != null) {
-                info.setAccrual(accrual.doubleValue());
-                info.setLoan(loan.doubleValue());
-                info.setAppraisal(appraisal.doubleValue());
-                lenderInfoMapper.update(info);
-            }
-        }
+        setLenderAndAsset(loan, accrual, appraisal, lenderId);//修改借款人金额和如果有资产包也同事修改了
         if (num > 0) {
             return JsonResponseTool.success(null);
         } else {
@@ -195,10 +183,43 @@ public class IouServiceImpl implements IouService {
         }
     }
 
+    private void setLenderAndAsset(BigDecimal loan, BigDecimal accrual, BigDecimal appraisal, Integer lenderId) {
+        if (lenderId > 0) {
+            LenderInfo info = lenderInfoMapper.get(lenderId);
+            if (info != null) {
+                info.setAccrual(accrual.doubleValue());
+                info.setLoan(loan.doubleValue());
+                info.setAppraisal(appraisal.doubleValue());
+                lenderInfoMapper.update(info);//修改借款人总贷款金额、总利息、总评估价格
+                if (info.getAssetId() != null) {
+                    List<LenderInfo> lenderInfos = lenderInfoMapper.listByAssetId(info.getAssetId());//得到资产包下所有的借款人
+                    loan = BigDecimal.ZERO;
+                    accrual = BigDecimal.ZERO;
+                    appraisal = BigDecimal.ZERO;
+                    //分别累加借款人下的总贷款金额、总利息、总评估价格
+                    for (LenderInfo len : lenderInfos) {
+                        loan = loan.add(new BigDecimal(len.getLoan()));
+                        accrual = accrual.add(new BigDecimal(len.getAccrual()));
+                        appraisal = appraisal.add(new BigDecimal(len.getAppraisal()));
+                    }
+                    AssetInfo assetInfo = assetInfoMapper.get(info.getAssetId());//查询出资产包，对数据修改
+                    if (assetInfo != null) {
+                        assetInfo.setAccrual(accrual.doubleValue());
+                        assetInfo.setLoan(loan.doubleValue());
+                        assetInfo.setAppraisal(appraisal.doubleValue());
+                        assetInfoMapper.update(assetInfo);//修改资产包总贷款金额、总利息、总评估价格
+                    }
+                }
+            }
+        }
+    }
+
     private BigDecimal sumMoney(Double... money) {
         BigDecimal bigDecimal = BigDecimal.ZERO;
         for (Double mon : money) {
-            bigDecimal = bigDecimal.add(new BigDecimal(mon));
+            if (mon != null) {
+                bigDecimal = bigDecimal.add(new BigDecimal(mon));
+            }
         }
         return bigDecimal;
     }
