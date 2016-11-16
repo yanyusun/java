@@ -7,6 +7,7 @@ import com.dqys.business.orm.mapper.common.SourceSourceMapper;
 import com.dqys.business.orm.pojo.common.SourceInfo;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.common.SourceSource;
+import com.dqys.business.service.constant.ObjectEnum.InformationEnum;
 import com.dqys.business.service.dto.common.NavUnviewDTO;
 import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
@@ -150,7 +151,7 @@ public class SourceServiceImpl implements SourceService {
         SourceInfo sourceInfo = sourceInfoMapper.getByNavIdAndLenderId(navId, lenderId, estatesId);//根据借款人id或是资产源id查询资料实堪
         SourceNavigation sourceNavigation =sourceNavigationMapper.get(navId);
         if (sourceInfo == null) {
-            if(hasNavUnviewOperAuth(navId,lenderId,estatesId,userSession.getUserId())&&sourceNavigation.getType()==0){//有修改权利的权限切位资料实勘且为证件合同,因为只有证件合同有权限操作
+            if(hasNavUnviewOperAuth(navId,lenderId,estatesId,userSession.getUserId())&&sourceNavigation.getType().intValue()== InformationEnum.CERTIFICATE_TYPE.getValue()){//有修改权利的权限切位资料实勘且为证件合同,因为只有证件合同有权限操作
                 return SourceServiceUtls.toSourceInfoDTO(getNavAuthAll(navId, lenderId, estatesId));
             }else{
                 return null;
@@ -158,7 +159,7 @@ public class SourceServiceImpl implements SourceService {
         }
         Integer sourceId = sourceInfo.getId();
         List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceId);
-        if(hasNavUnviewOperAuth(navId,lenderId,estatesId,userSession.getUserId())&&sourceNavigation.getType()==0){//如果拥有修改可见项的权限,返回可见项操作列表
+        if(hasNavUnviewOperAuth(navId,lenderId,estatesId,userSession.getUserId())&&sourceNavigation.getType().intValue()==InformationEnum.CERTIFICATE_TYPE.getValue()){//如果拥有修改可见项的权限,返回可见项操作列表
             return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList,getNavAuthAll(navId, lenderId, estatesId));
         }
         return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList);
