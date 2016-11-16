@@ -7,6 +7,7 @@ import com.dqys.core.model.TSysProperty;
 import com.dqys.core.model.UserSession;
 import org.aspectj.bridge.MessageUtil;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -407,5 +408,13 @@ public class CommonUtil {
         }
     }
 
-
+    public static BigDecimal sumMoney(Double... money) {
+        BigDecimal bigDecimal = BigDecimal.ZERO;
+        for (Double mon : money) {
+            if (mon != null) {
+                bigDecimal = bigDecimal.add(new BigDecimal(mon));
+            }
+        }
+        return bigDecimal;
+    }
 }

@@ -111,4 +111,12 @@ public interface IOUInfoMapper {
      * @return
      */
     List<IOUInfo> findByPawnId(Integer pawnId);
+
+    /**
+     * 根据借款人获取借款人下所有的借据
+     *
+     * @param lenderId
+     * @return
+     */
+    IOUInfo getIouBySumMoney(Integer lenderId);
 }

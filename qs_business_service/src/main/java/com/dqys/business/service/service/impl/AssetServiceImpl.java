@@ -33,10 +33,7 @@ import com.dqys.business.service.dto.excel.ExcelMessage;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.exception.bean.LenderException;
 import com.dqys.business.service.query.asset.AssetListQuery;
-import com.dqys.business.service.service.AssetService;
-import com.dqys.business.service.service.BusinessLogService;
-import com.dqys.business.service.service.BusinessService;
-import com.dqys.business.service.service.CoordinatorService;
+import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.business.service.utils.asset.IouServiceUtils;
 import com.dqys.business.service.utils.asset.LenderServiceUtils;
@@ -93,7 +90,8 @@ public class AssetServiceImpl implements AssetService {
     private TCompanyInfoMapper companyInfoMapper;
     @Autowired
     private FollowUpReadstatusMapper followUpReadstatusMapper;
-
+    @Autowired
+    private IouService iouService;
     @Autowired
     private BusinessLogService businessLogService;
     @Autowired
@@ -1044,6 +1042,7 @@ public class AssetServiceImpl implements AssetService {
             }
         }
         // 增加借据
+        List<Integer> lenderIds = new ArrayList<>();
         for (IouDTO iouDTO : iouDTOList) {
             if (idMap.get(iouDTO.getId()) == null) {
                 throw new LenderException("借款人的相关联系人序号关联不对", LenderException.EXCEPTION_CODE);
@@ -1067,6 +1066,10 @@ public class AssetServiceImpl implements AssetService {
             Integer result = iouInfoMapper.insert(iouInfo);
             if (CommonUtil.checkResult(result)) {
                 throw new LenderException("增加借据信息失败", LenderException.EXCEPTION_CODE);
+            }
+            //存放在集和中用于修改借款人和资产包的金额
+            if (!lenderIds.contains(iouInfo.getLenderId())) {
+                lenderIds.add(iouInfo.getLenderId());
             }
             // 添加业务
             businessService.addServiceObject(ObjectTypeEnum.IOU.getValue(), iouInfo.getId(),
@@ -1094,6 +1097,7 @@ public class AssetServiceImpl implements AssetService {
                 }
             }
         }
+        iouService.setLenderAndAsset(lenderIds);
         return JsonResponseTool.success(null);
     }
 }
