@@ -148,12 +148,17 @@ public class SourceServiceImpl implements SourceService {
             return null;
         }
         SourceInfo sourceInfo = sourceInfoMapper.getByNavIdAndLenderId(navId, lenderId, estatesId);//根据借款人id或是资产源id查询资料实堪
+        SourceNavigation sourceNavigation =sourceNavigationMapper.get(navId);
         if (sourceInfo == null) {
-            return SourceServiceUtls.toSourceInfoDTO(getNavAuthAll(navId, lenderId, estatesId));
+            if(hasNavUnviewOperAuth(navId,lenderId,estatesId,userSession.getUserId())&&sourceNavigation.getType()==0){//有修改权利的权限切位资料实勘且为证件合同,因为只有证件合同有权限操作
+                return SourceServiceUtls.toSourceInfoDTO(getNavAuthAll(navId, lenderId, estatesId));
+            }else{
+                return null;
+            }
         }
         Integer sourceId = sourceInfo.getId();
         List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceId);
-        if(hasNavUnviewOperAuth(navId,lenderId,estatesId,userSession.getUserId())){//如果拥有修改可见项的权限,返回可见项操作列表
+        if(hasNavUnviewOperAuth(navId,lenderId,estatesId,userSession.getUserId())&&sourceNavigation.getType()==0){//如果拥有修改可见项的权限,返回可见项操作列表
             return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList,getNavAuthAll(navId, lenderId, estatesId));
         }
         return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList);
