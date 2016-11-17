@@ -40,14 +40,7 @@
         UPDATE t_couple_back_message SET stateflag=now() WHERE id=#{id,jdbcType=INTEGER}
     </update>
 
-    <select id="selectBackByDTO" parameterType="com.dqys.business.orm.pojo.coupleBack.dto.CoupleBackDTO"
-            resultType="com.dqys.business.orm.pojo.coupleBack.dto.CoupleBackDTO">
-        SELECT tcb.id,tcb.create_user createUser,tcb.type,tcb.content,DATE_FORMAT(tcb.create_at,'%Y-%m-%d %H:%i:%s')
-        createTime,tui.user_name
-        userName,tui.real_name realName
-        FROM t_couple_back tcb LEFT JOIN t_user_info tui
-        ON tui.id=tcb.create_user
-        WHERE tcb.stateflag=0
+    <sql id="Back_Where">
         <if test="type !=null">
             and tcb.type=#{type}
         </if>
@@ -57,7 +50,27 @@
         <if test="createUser !=null">
             AND tcb.create_user=#{createUser}
         </if>
+    </sql>
 
+    <select id="selectBackByDTO" parameterType="com.dqys.business.orm.pojo.coupleBack.dto.CoupleBackDTO"
+            resultType="com.dqys.business.orm.pojo.coupleBack.dto.CoupleBackDTO">
+        SELECT tcb.id,tcb.create_user createUser,tcb.type,tcb.content,DATE_FORMAT(tcb.create_at,'%Y-%m-%d %H:%i:%s')
+        createTime,tui.user_name
+        userName,tui.real_name realName
+        FROM t_couple_back tcb LEFT JOIN t_user_info tui
+        ON tui.id=tcb.create_user
+        WHERE tcb.stateflag=0
+        <include refid="Back_Where"/>
+        ORDER BY tcb.create_at desc
+        Limit #{startPage},#{pageCount}
+    </select>
+    <select id="selectBackByDTOCount" parameterType="com.dqys.business.orm.pojo.coupleBack.dto.CoupleBackDTO"
+            resultType="int">
+        SELECT COUNT(tcb.id) count
+        FROM t_couple_back tcb LEFT JOIN t_user_info tui
+        ON tui.id=tcb.create_user
+        WHERE tcb.stateflag=0
+        <include refid="Back_Where"/>
     </select>
 
     <select id="listMessage" resultType="com.dqys.business.orm.pojo.coupleBack.dto.CoupleBackMessageDTO"

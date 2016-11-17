@@ -40,7 +40,10 @@ public class CoupleBackMapperImpl extends BaseDao implements CoupleBackMapper {
     public List<CoupleBackDTO> selectBackByDTO(CoupleBackDTO coupleBackDTO) {
         return super.getSqlSession().getMapper(CoupleBackMapper.class).selectBackByDTO(coupleBackDTO);
     }
-
+    @Override
+    public Integer selectBackByDTOCount(CoupleBackDTO coupleBackDTO) {
+        return super.getSqlSession().getMapper(CoupleBackMapper.class).selectBackByDTOCount(coupleBackDTO);
+    }
     @Override
     public List<CoupleBackMessageDTO> listMessage(Integer tcbId) {
         return super.getSqlSession().getMapper(CoupleBackMapper.class).listMessage(tcbId);

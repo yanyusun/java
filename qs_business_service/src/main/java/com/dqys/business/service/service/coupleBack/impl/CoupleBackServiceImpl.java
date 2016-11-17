@@ -78,8 +78,14 @@ public class CoupleBackServiceImpl implements CoupleBackService {
     public Map listBack(CoupleBackDTO coupleBackDTO) {
         Map map = new HashMap<>();
         map.put("result", "yes");
+        if (coupleBackDTO.getPage() != null && coupleBackDTO.getPage() > 0) {
+            coupleBackDTO.setPage(coupleBackDTO.getPage() - 1);
+        }
+        coupleBackDTO.setStartPage(coupleBackDTO.getPage() * coupleBackDTO.getPageCount());
+        Integer count = coupleBackMapper.selectBackByDTOCount(coupleBackDTO);
         List<CoupleBackDTO> list = coupleBackMapper.selectBackByDTO(coupleBackDTO);
         map.put("list", list);
+        map.put("totalCount", count);
         return map;
     }
 
