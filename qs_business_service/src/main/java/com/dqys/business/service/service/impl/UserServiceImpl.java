@@ -234,7 +234,7 @@ public class UserServiceImpl implements UserService {
                 if (area != null) {
                     buff.append(area.getLabel());
                 }
-                buff.append(detail.getAddress());
+                buff.append(detail.getAddress() == null ? "" : detail.getAddress());
                 dto.setAddress(buff.toString());
             }
             //查询团队名称和部门名称

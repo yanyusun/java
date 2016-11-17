@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.coupleBack.CoupleBackMapper">
+
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.coupleBack.CoupleBack">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="other" property="other" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="create_user" property="createUser" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, create_at, remark,type,content,email,create_user,other
+    version, update_at, stateflag
+  </sql>
+
+    <insert id="addCoupleBack" parameterType="com.dqys.business.orm.pojo.coupleBack.CoupleBack">
+        INSERT INTO t_couple_back(type,content,email,other,create_user,remark)
+      VALUES(#{type,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},
+      #{other,jdbcType=VARCHAR},#{createUser,jdbcType=INTEGER},#{remark,jdbcType=VARCHAR})
+    </insert>
+
+    <update id="delCoupleBack" parameterType="int">
+        UPDATE t_couple_back SET stateflag=now() WHERE id=#{id,jdbcType=INTEGER}
+    </update>
+
+
+    <insert id="addMessage" parameterType="com.dqys.business.orm.pojo.coupleBack.CoupleBackMessage">
+        INSERT INTO t_couple_back_message(tcb_id,leave_user_id,user_id,content_message,mess_type)
+        VALUES(#{tcbId,jdbcType=INTEGER},#{leaveUserId,jdbcType=INTEGER},#{userId,jdbcType=INTEGER},
+        #{contentMessage,jdbcType=VARCHAR},#{messType,jdbcType=INTEGER})
+    </insert>
+
+    <update id="delMessage" parameterType="int">
+        UPDATE t_couple_back_message SET stateflag=now() WHERE id=#{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="selectBackByDTO" parameterType="com.dqys.business.orm.pojo.coupleBack.dto.CoupleBackDTO"
+            resultType="com.dqys.business.orm.pojo.coupleBack.dto.CoupleBackDTO">
+        SELECT tcb.id,tcb.create_user createUser,tcb.type,tcb.content,DATE_FORMAT(tcb.create_at,'%Y-%m-%d %H:%i:%s')
+        createTime,tui.user_name
+        userName,tui.real_name realName
+        FROM t_couple_back tcb LEFT JOIN t_user_info tui
+        ON tui.id=tcb.create_user
+        WHERE tcb.stateflag=0
+        <if test="type !=null">
+            and tcb.type=#{type}
+        </if>
+        <if test="createTime !=null">
+            AND tcb.create_at=#{createTime}
+        </if>
+        <if test="createUser !=null">
+            AND tcb.create_user=#{createUser}
+        </if>
+
+    </select>
+
+    <select id="listMessage" resultType="com.dqys.business.orm.pojo.coupleBack.dto.CoupleBackMessageDTO"
+            parameterType="int">
+            SELECT tui1.user_name userName,tui1.real_name realName,tui2.user_name leaveUserName,
+            tui2.real_name leaveRealName,mess.mess_type messType,DATE_FORMAT(mess.create_at,'%Y-%m-%d %H:%i:%s') createTime,
+            mess.user_id userId,mess.leave_user_id leaveUserId,mess.tcb_id tcbId,mess.content_message contentMessage
+            FROM t_couple_back_message mess LEFT JOIN t_user_info tui1
+            ON tui1.id=mess.user_id LEFT JOIN t_user_info tui2
+            ON tui2.id=mess.leave_user_id
+            WHERE mess.stateflag=0 AND mess.tcb_id=#{tcbId}
+    </select>
+
+    <select id="get" parameterType="int" resultMap="BaseResultMap">
+        SELECT * FROM t_couple_back tcb WHERE tcb.stateflag=0 AND tcb.id=#{tcbId}
+    </select>
+
+</mapper>
