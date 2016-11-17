@@ -168,7 +168,7 @@ public abstract class ProtocolTool {
         NoSQLWithRedisTool.setHashObject(USER_LOGIN_KEY + uid, LOGIN_SUB_TIME, new Date());
         NoSQLWithRedisTool.setExpire(USER_LOGIN_KEY + uid,
                 Integer.decode(SysPropertyTool.getProperty(SysPropertyTypeEnum.SYS, KeyEnum.SYS_USER_EXPIRE_DAYS_KEY).getPropertyValue()),
-                TimeUnit.DAYS);
+                TimeUnit.HOURS);
     }
 
     /* 编码头信息 */
