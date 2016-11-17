@@ -49,6 +49,11 @@ public class CoupleBackServiceImpl implements CoupleBackService {
     public Map addMessage(CoupleBackMessage message) {
         Map map = new HashMap<>();
         map.put("result", "no");
+        CoupleBack back = coupleBackMapper.get(message.getTcbId());
+        if (back == null) {
+            map.put("msg", "反馈问题信息不存在，回复无效");
+            return map;
+        }
         if (coupleBackMapper.addMessage(message) > 0) {
             map.put("result", "yes");
         } else {

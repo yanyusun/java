@@ -12,7 +12,6 @@
         <result column="content" property="content" jdbcType="VARCHAR"/>
         <result column="version" property="version" jdbcType="INTEGER"/>
         <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
-        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
         <result column="create_user" property="createUser" jdbcType="BIGINT"/>
     </resultMap>
     <sql id="Base_Column_List">
@@ -23,7 +22,7 @@
     <insert id="addCoupleBack" parameterType="com.dqys.business.orm.pojo.coupleBack.CoupleBack">
         INSERT INTO t_couple_back(type,content,email,other,create_user,remark)
       VALUES(#{type,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},#{email,jdbcType=VARCHAR},
-      #{other,jdbcType=VARCHAR},#{create_user,jdbcType=INTEGER},#{remark,jdbcType=VARCHAR})
+      #{other,jdbcType=VARCHAR},#{createUser,jdbcType=INTEGER},#{remark,jdbcType=VARCHAR})
     </insert>
 
     <update id="delCoupleBack" parameterType="int">
@@ -69,8 +68,11 @@
             FROM t_couple_back_message mess LEFT JOIN t_user_info tui1
             ON tui1.id=mess.user_id LEFT JOIN t_user_info tui2
             ON tui2.id=mess.leave_user_id
-            WHERE mess.tcb_id=#{tcbId}
+            WHERE mess.stateflag=0 AND mess.tcb_id=#{tcbId}
     </select>
 
+    <select id="get" parameterType="int" resultMap="BaseResultMap">
+        SELECT * FROM t_couple_back tcb WHERE tcb.stateflag=0 AND tcb.id=#{tcbId}
+    </select>
 
 </mapper>

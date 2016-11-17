@@ -46,5 +46,10 @@ public class CoupleBackMapperImpl extends BaseDao implements CoupleBackMapper {
         return super.getSqlSession().getMapper(CoupleBackMapper.class).listMessage(tcbId);
     }
 
+    @Override
+    public CoupleBack get(Integer tcbId) {
+        return super.getSqlSession().getMapper(CoupleBackMapper.class).get(tcbId);
+    }
+
 
 }

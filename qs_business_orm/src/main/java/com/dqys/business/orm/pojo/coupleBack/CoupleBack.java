@@ -4,6 +4,13 @@ import com.dqys.core.base.BaseDTO;
 
 /**
  * Created by mkfeng on 2016/11/16.
+ *
+ * @apiDefine CoupleBack
+ * @apiParam {string} content 内容
+ * @apiParam {int} type 类型（0默认1资讯2建议3其他）
+ * @apiParam {string} email 邮箱
+ * @apiParam {string} other 其他信息
+ * @apiParam {string} remark 备注
  */
 public class CoupleBack extends BaseDTO {
 

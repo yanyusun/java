@@ -3,15 +3,21 @@ package com.dqys.business.orm.pojo.coupleBack;
 import com.dqys.core.base.BaseDTO;
 
 /**
- * Created by mkfeng on 2016/11/16.
+ * Created by mkfeng on| 2016/11/16.
+ *
+ * @apiDefine CoupleBackMessage
+ * @apiParam {int} tcbId 反馈信息id
+ * @apiParam {string} contentMessage 内容
+ * @apiParam {int} leaveUserId 被回复用户id
+ * @apiParam {string} remark 备注
  */
 public class CoupleBackMessage extends BaseDTO {
 
-    private Integer userId;
-    private Integer tcbId;
-    private String contentMessage;
-    private Integer leaveUserId;
-    private Integer messType;
+    private Integer userId;//添加消息的当前用户
+    private Integer tcbId;//t_couple_back 表id
+    private String contentMessage;//内容
+    private Integer leaveUserId;//回复留言者用户'
+    private Integer messType;//信息类型（0主动留言1回复留言）
 
     public Integer getMessType() {
         return messType;
