@@ -1,5 +1,6 @@
 package com.dqys.business.controller;
 
+import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.business.orm.pojo.zcy.ZcyModule;
 import com.dqys.business.orm.query.coordinator.ZcyListQuery;
 import com.dqys.business.service.exception.bean.BusinessLogException;
@@ -29,6 +30,8 @@ public class ZcyController {
 
     @Autowired
     private ZcyService zcyService;
+    @Autowired
+    private TUserInfoMapper tUserInfoMapper;
 
     /**
      * @api {post} zcy/get 获取信息
@@ -95,7 +98,7 @@ public class ZcyController {
     @RequestMapping("/addEstates")
     @ResponseBody
     public JsonResponse addEstates(@ModelAttribute ZcyModule zcyModule) throws Exception {
-        Integer userId = UserSession.getCurrent().getUserId();
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         Map map = new HashMap<>();
         zcyModule.getZcyEstates().setOperator(userId.toString());
         //验证对象格式
@@ -103,6 +106,7 @@ public class ZcyController {
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             map = zcyService.addEstates(zcyModule.getZcyEstates(), zcyModule.getZcyEstatesAddressList(), zcyModule.getZcyEstatesFacilities());
             if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+                map.put("operator", tUserInfoMapper.getUserPart(userId));
                 return JsonResponseTool.success(map);
             }
         }

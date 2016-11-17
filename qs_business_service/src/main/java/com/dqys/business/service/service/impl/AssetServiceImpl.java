@@ -921,8 +921,7 @@ public class AssetServiceImpl implements AssetService {
                 }
             }
         }
-
-        return JsonResponseTool.success(null);
+        return JsonResponseTool.success(userInfoMapper.getUserPart(userId));
     }
 
     @Override

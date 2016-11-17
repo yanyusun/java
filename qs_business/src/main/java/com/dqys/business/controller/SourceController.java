@@ -146,6 +146,27 @@ public class SourceController extends BaseApiContorller {
      * @apiGroup source
      * @apiName source/getSourceType
      * @apiSuccessExample {json} Data-Response:
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": [
+     * {
+     * "number": 145,
+     * "name": "添加标签",
+     * "url": ""
+     * },
+     * {
+     * "number": 146,
+     * "name": "重命名分类",
+     * "url": ""
+     * },
+     * {
+     * "number": 147,
+     * "name": "删除分类",
+     * "url": ""
+     * }
+     * ]
+     * }
      */
     @RequestMapping(value = "/getSourceType", method = RequestMethod.POST)
     @ResponseBody
