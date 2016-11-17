@@ -48,4 +48,6 @@ public interface CoupleBackMapper {
     List<CoupleBackMessageDTO> listMessage(Integer tcbId);
 
     CoupleBack get(Integer tcbId);
+
+    Integer selectBackByDTOCount(CoupleBackDTO coupleBackDTO);
 }

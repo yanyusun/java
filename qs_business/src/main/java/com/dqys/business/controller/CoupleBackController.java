@@ -57,11 +57,11 @@ public class CoupleBackController {
     }
 
     /**
-     * @api {post} back/addCoupleBack 添加回复信息
+     * @api {post} back/addMessage 添加回复信息
      * @apiUse CoupleBackMessage
-     * @apiSampleRequest back/addCoupleBack
+     * @apiSampleRequest back/addMessage
      * @apiGroup CoupleBack
-     * @apiName back/addCoupleBack
+     * @apiName back/addMessage
      */
     @RequestMapping("/addMessage")
     @ResponseBody
@@ -125,7 +125,7 @@ public class CoupleBackController {
     }
 
     /**
-     * @api {post} back/listMessage 反馈信息列表
+     * @api {post} back/listMessage 反馈信息回复列表
      * @apiParam {int} tcbId 反馈信息id
      * @apiSampleRequest back/listMessage
      * @apiGroup CoupleBack

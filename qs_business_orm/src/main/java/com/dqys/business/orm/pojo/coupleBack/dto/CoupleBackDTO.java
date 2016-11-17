@@ -1,9 +1,13 @@
 package com.dqys.business.orm.pojo.coupleBack.dto;
 
+import com.dqys.core.base.BasePageDTO;
+
 /**
  * Created by mkfeng on 2016/11/16.
  */
-public class CoupleBackDTO {
+public class CoupleBackDTO extends BasePageDTO {
+    private Integer startPage;
+
     private Integer id;
     private String userName;
     private String realName;
@@ -11,6 +15,14 @@ public class CoupleBackDTO {
     private String createTime;
     private String content;
     private Integer type;
+
+    public Integer getStartPage() {
+        return startPage;
+    }
+
+    public void setStartPage(Integer startPage) {
+        this.startPage = startPage;
+    }
 
     public String getRealName() {
         return realName;

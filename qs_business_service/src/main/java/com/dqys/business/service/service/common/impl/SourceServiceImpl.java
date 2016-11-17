@@ -1,21 +1,31 @@
 package com.dqys.business.service.service.common.impl;
 
+import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.common.SourceInfoMapper;
 import com.dqys.business.orm.mapper.common.SourceNavigationMapper;
 import com.dqys.business.orm.mapper.common.SourceSourceMapper;
+import com.dqys.business.orm.mapper.zcy.ZcyEstatesMapper;
+import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.common.SourceInfo;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.common.SourceSource;
+import com.dqys.business.service.constant.ObjectEnum.InformationEnum;
+import com.dqys.business.orm.pojo.zcy.ZcyEstates;
 import com.dqys.business.service.constant.ObjectEnum.InformationEnum;
 import com.dqys.business.service.dto.common.NavUnviewDTO;
 import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
+import com.dqys.business.service.dto.sourceAuth.SourceNavOperType;
 import com.dqys.business.service.service.common.NavUnviewManagerService;
 import com.dqys.business.service.service.common.SourceService;
 import com.dqys.business.service.utils.common.NavUtil;
 import com.dqys.business.service.utils.common.SourceServiceUtls;
+import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
@@ -26,7 +36,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yvan on 16/8/19.
@@ -43,6 +55,12 @@ public class SourceServiceImpl implements SourceService {
     private SourceSourceMapper sourceSourceMapper;
     @Autowired
     private NavUnviewManagerService navUnviewManagerService;
+    @Autowired
+    private LenderInfoMapper lenderInfoMapper;
+    @Autowired
+    private ZcyEstatesMapper zcyEstatesMapper;
+    @Autowired
+    private TUserInfoMapper tUserInfoMapper;
 
 
     @Override
@@ -285,5 +303,55 @@ public class SourceServiceImpl implements SourceService {
 //    public void sourceNavigationFilter(List<SourceNavigation>  list, UserSession userSession){
 //
 //    }
-
+    @Override
+    public JsonResponse getSourceType(Integer navId, Integer objectId, Integer objectType) {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        String role = UserSession.getCurrent() == null ? "" : UserSession.getCurrent().getRoleId();
+        String operator = "";//录入人
+        boolean flag = false;
+        if (CommonUtil.isManage()) {
+            flag = true;//平台总管理员有权限
+        } else {
+            //对录入人是否为当前人员，当前人员是否与录入人员同属一个公司并且是管理员的进行了判断
+            if (objectType == ObjectTypeEnum.LENDER.getValue().intValue()) {
+                LenderInfo info = lenderInfoMapper.get(objectId);
+                if (info != null) {
+                    operator = info.getOperator().toString();
+                }
+            } else if (objectType == ObjectTypeEnum.ASSETSOURCE.getValue().intValue()) {
+                ZcyEstates info = zcyEstatesMapper.selectByPrimaryKey(objectId);
+                if (info != null) {
+                    operator = info.getOperator();
+                }
+            } else {
+                return JsonResponseTool.failure("对象类型参数错误!");
+            }
+            if (operator.equals(userId)) {
+                flag = true;//同一个录入人有权限
+            } else {
+                //当前用户是否为管理员
+                if (role.equals(RoleTypeEnum.ADMIN.getValue().toString() + ",")) {
+                    if ("".equals(operator)) {
+                        flag = true; //录入人不存在情况下，所有管理员有权限
+                    } else {
+                        //查询录入人机构
+                        TUserInfo operC = tUserInfoMapper.selectByPrimaryKey(Integer.parseInt(operator));
+                        TUserInfo userC = tUserInfoMapper.selectByPrimaryKey(userId);
+                        if (operC.getCompanyId().intValue() == userC.getCompanyId().intValue()) {
+                            flag = true; //录入人存在情况下，同一家公司的管理员有权限
+                        }
+                    }
+                }
+            }
+        }
+        if (flag) {
+            //返回操作权限列表
+            List<SourceNavOperType> operTypes = new ArrayList<>();
+            operTypes.add(new SourceNavOperType(InformationEnum.ADD_TYPE.getValue(), InformationEnum.ADD_TYPE.getName(), ""));
+            operTypes.add(new SourceNavOperType(InformationEnum.UPD_TYPE.getValue(), InformationEnum.UPD_TYPE.getName(), ""));
+            operTypes.add(new SourceNavOperType(InformationEnum.DEL_TYPE.getValue(), InformationEnum.DEL_TYPE.getName(), ""));
+            return JsonResponseTool.success(operTypes);
+        }
+        return JsonResponseTool.failure(null);
+    }
 }

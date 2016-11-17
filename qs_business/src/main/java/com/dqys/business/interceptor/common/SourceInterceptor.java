@@ -19,6 +19,7 @@ public class SourceInterceptor extends AuthenticationInterceptor {
     private static final String API_GET  = "get";
     private static final String API_UPDATE  = "update";
     private static final String API_GET_NEW_NAV_ALL="getNewNavAll";
+    private static final String API_GET_SOURCE_TYPE="getSourceType";
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
@@ -41,7 +42,9 @@ public class SourceInterceptor extends AuthenticationInterceptor {
             return true;
         } else if(API_GET_NEW_NAV_ALL.equals(path)){
             return true;
-        } else {
+        }else if(API_GET_SOURCE_TYPE.equals(path)){
+            return true;
+        }  else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:" + url);
             throw new UrlException("未知请求链接错误", UrlException.UNKNOWN_URL_ERROR);
         }

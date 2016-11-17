@@ -78,7 +78,7 @@ public class SourceController extends BaseApiContorller {
             return JsonResponseTool.paramErr("资产源或借款人参数错误");
         }
         Integer userId = UserSession.getCurrent().getUserId();
-        if(!sourceService.hasSourceAuth(sourceInfoDTO.getNavId(),sourceInfoDTO.getLenderId(),sourceInfoDTO.getEstatesId(),userId)){
+        if (!sourceService.hasSourceAuth(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId(), sourceInfoDTO.getEstatesId(), userId)) {
             return JsonResponseTool.authFailure("对不起,您不具备增加该导航下资产源的权限");
         }
         return sourceService.addSource(sourceInfoDTO);
@@ -137,5 +137,41 @@ public class SourceController extends BaseApiContorller {
         return JsonResponseTool.success(selectDtoMap);
     }
 
+    /**
+     * @api {post} source/getSourceType 获取资料实堪分类操作的是否有权限
+     * @apiParam {int} navId 分类id
+     * @apiParam {int} objectId 对象id
+     * @apiParam {int} objectType 对象类型
+     * @apiSampleRequest source/getSourceType
+     * @apiGroup source
+     * @apiName source/getSourceType
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": [
+     * {
+     * "number": 145,
+     * "name": "添加标签",
+     * "url": ""
+     * },
+     * {
+     * "number": 146,
+     * "name": "重命名分类",
+     * "url": ""
+     * },
+     * {
+     * "number": 147,
+     * "name": "删除分类",
+     * "url": ""
+     * }
+     * ]
+     * }
+     */
+    @RequestMapping(value = "/getSourceType", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse getSourceType(Integer navId, @RequestParam Integer objectId, @RequestParam Integer objectType) {
+        return sourceService.getSourceType(navId, objectId, objectType);
+    }
 
 }
