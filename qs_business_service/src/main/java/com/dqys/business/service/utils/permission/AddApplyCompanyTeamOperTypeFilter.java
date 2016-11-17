@@ -28,10 +28,7 @@ public class AddApplyCompanyTeamOperTypeFilter extends OperTypeFilter{
         try{
             ListButtonShowerBean listButtonShowerBean=ListButtonShowerUtil.getListButtonShowerBean(navId,objectType,userType,roleType);
             if(listButtonShowerBean.isHasCompanyTeamButtonApply()){
-                OperType operType = new OperType();
-                operType.setOperName(OperTypeExtendEnum.APPLY_COMPANYTEAM.getName());
-                operType.setOperType(OperTypeExtendEnum.APPLY_COMPANYTEAM.getValue());
-                list.add(operType);
+                PermissionUtil.addEditOperType(list,OperTypeExtendEnum.APPLY_COMPANYTEAM.getValue(),OperTypeExtendEnum.APPLY_COMPANYTEAM.getName());
             }
         }catch (Exception e){
             //// TODO: 16-11-17  增加日志

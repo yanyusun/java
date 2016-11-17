@@ -7,6 +7,7 @@ import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
+import com.dqys.business.orm.mapper.zcy.ZcyEstatesMapper;
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
@@ -50,6 +51,8 @@ public class PermissionImp implements Permission {
     private LenderInfoMapper lenderInfoMapper;
     @Autowired
     private AssetInfoMapper assetInfoMapper;
+    @Autowired
+    private ZcyEstatesMapper zcyEstatesMapper;
 
 
     public List<OperType> getOperTypes(Integer objectType, Integer objectId, Integer navId) {
@@ -73,12 +76,17 @@ public class PermissionImp implements Permission {
             AddEditOperTypeFilter addEditOperTypeFilter = new AddEditOperTypeFilter(lenderInfoMapper, assetInfoMapper, objectType, objectId, userType, userSession.getUserId());
             originOperTypeFiler.decorate(addEditOperTypeFilter);
         }
-        if(objectType==ObjectTypeEnum.ASSETSOURCE.getValue().intValue()){//当为资产源时为除了带接收和带申请外的tab添加编辑功能
-
+        if(objectType==ObjectTypeEnum.ASSETSOURCE.getValue().intValue()&&isAssetSourceEdit(navId)){//当为资产源时为除了带接收和带申请外的tab添加编辑功能
+            AddAssetSourceEditOperTypeFilter addAssetSourceEditOperTypeFilter = new AddAssetSourceEditOperTypeFilter(objectId,userType,userSession.getUserId(),zcyEstatesMapper);
+            originOperTypeFiler.decorate(addAssetSourceEditOperTypeFilter);
         }
         if(ObjectTabEnum.apply.getValue().intValue()==navId){//如果为带申请为操作列表增加加入案组按钮
             AddApplyCompanyTeamOperTypeFilter addApplyCompanyTeamOperTypeFilter = new AddApplyCompanyTeamOperTypeFilter(navId,objectType,userType.toString(),userRole.toString());
             originOperTypeFiler.decorate(addApplyCompanyTeamOperTypeFilter);
+        }
+        if(ObjectTabEnum.accept.getValue().intValue()==navId){
+            AddAcceptOperTypeFilter addAcceptOperTypeFilter = new AddAcceptOperTypeFilter();
+            originOperTypeFiler.decorate(addAcceptOperTypeFilter);
         }
         List<OperType> operTypes = operTypeService
                 .getOperType(objectType, objectId);
@@ -135,5 +143,18 @@ public class PermissionImp implements Permission {
         return false;
     }
 
-    private boolean is
+    /**
+     * 是否为资产源可以编辑的tab
+     * @param navId
+     * @return
+     */
+    private boolean isAssetSourceEdit(int navId){
+        if(navId==ObjectTabEnum.handling_urge.getValue()||navId==ObjectTabEnum.joined.getValue()
+        ||navId==ObjectTabEnum.handle.getValue()||navId==ObjectTabEnum.assign.getValue()
+                ||navId==ObjectTabEnum.handling_entrust.getValue()||navId==ObjectTabEnum.task.getValue()||navId==ObjectTabEnum.myUrge.getValue()){
+            return true;
+        }
+        return false;
+    }
+
 }

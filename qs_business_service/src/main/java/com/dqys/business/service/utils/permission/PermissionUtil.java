@@ -30,4 +30,11 @@ public class PermissionUtil {
             }
         }
     }
+    public static void addEditOperType(List<OperType> list, Integer value, String name) {
+        OperType operType = new OperType();
+        operType.setOperType(value);
+        operType.setOperName(name);
+        list.add(operType);
+    }
+
 }

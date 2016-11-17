@@ -5,6 +5,8 @@ package com.dqys.business.service.constant;
  */
 public enum OperTypeExtendEnum {
     APPLY_COMPANYTEAM(10001, "加入案组"),
+    ACCEPT_AGREE(10002,"同意"),
+    ACCEPT_REJECT(10003,"拒绝")
     ;
     private Integer value;
     private String name;
