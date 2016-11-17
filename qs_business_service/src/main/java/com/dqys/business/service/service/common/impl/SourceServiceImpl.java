@@ -114,13 +114,11 @@ public class SourceServiceImpl implements SourceService {
     /**
      * 如果是公共导航不删除,
      * 其他删除本身外,删除相关的资源:sourceInfo,file,
-     *
      * @param sourceNavigation
      */
-    private void deleteNavigation(SourceNavigation sourceNavigation) {
+    private  void deleteNavigation(SourceNavigation sourceNavigation){
 
     }
-
     @Override
     public JsonResponse addSource(SourceInfoDTO sourceInfoDTO) {
         SourceInfo data = sourceInfoMapper.getByNavIdAndLenderId(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId(), sourceInfoDTO.getEstatesId());
@@ -165,7 +163,7 @@ public class SourceServiceImpl implements SourceService {
             return null;
         }
         UserSession userSession = UserSession.getCurrent();
-        if (!hasSourceAuth(navId, lenderId, estatesId, userSession.getUserId())) {
+        if(!hasSourceAuth(navId,lenderId,estatesId,userSession.getUserId())){
             return null;
         }
         SourceInfo sourceInfo = sourceInfoMapper.getByNavIdAndLenderId(navId, lenderId, estatesId);//根据借款人id或是资产源id查询资料实堪

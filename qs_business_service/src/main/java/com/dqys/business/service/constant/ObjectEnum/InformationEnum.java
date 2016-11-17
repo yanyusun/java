@@ -9,13 +9,11 @@ public enum InformationEnum {
     DELETE(142, "删除"),
     UPDATE(143, "修改"),
     LOOK(144, "查看"),
-    CERTIFICATE_TYPE(0,"证件合同"),
-    REAL_TYPE(1,"实勘")
-    ;
-    LOOK(144, "查看"),
     ADD_TYPE(145, "添加标签"),
     UPD_TYPE(146, "重命名分类"),
-    DEL_TYPE(147, "删除分类");
+    DEL_TYPE(147, "删除分类"),
+    CERTIFICATE_TYPE(0, "证件合同"),
+    REAL_TYPE(1, "实勘"),;
     private Integer value;
     private String name;
 
