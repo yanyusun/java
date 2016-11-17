@@ -8,7 +8,10 @@ public enum InformationEnum {
     UPLOAD(141, "上传"),
     DELETE(142, "删除"),
     UPDATE(143, "修改"),
-    LOOK(144, "查看"),;
+    LOOK(144, "查看"),
+    ADD_TYPE(145, "添加标签"),
+    UPD_TYPE(146, "重命名分类"),
+    DEL_TYPE(147, "删除分类");
     private Integer value;
     private String name;
 

@@ -84,4 +84,13 @@ public interface SourceService {
      */
     boolean hasSourceAuth(Integer navId,Integer lenderId,Integer estatesId,Integer userId);
 
+    //    /**
+//     * 过滤掉当前用户不可见的分类
+//     * @param list
+//     * @param userSession
+//     */
+//    public void sourceNavigationFilter(List<SourceNavigation>  list, UserSession userSession){
+//
+//    }
+    JsonResponse getSourceType(Integer navId, Integer objectId, Integer objectType);
 }
