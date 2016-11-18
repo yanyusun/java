@@ -2,7 +2,6 @@ package com.dqys.business.service.utils.followUp;
 
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 
 /**
  * Created by yan on 16-8-15.
@@ -17,9 +16,18 @@ public class FollowUpUtil {
         if(null!=followUpMessageDTO.getSecondLiquidateStage()){
             followUpMessage.setSecondLiquidateStage(followUpMessageDTO.getSecondLiquidateStage());
         }
+        //// TODO: 16-11-18 为了保证前端没有id传入也能显示展示修改成如下
+        //原来
+//        if(null!=followUpMessageDTO.getSecondObjectId()){
+//            followUpMessage.setSecondObjectType(followUpMessageDTO.getSecondObjectType());
+//            followUpMessage.setSecondObjectId(followUpMessageDTO.getSecondObjectId());
+//        }
+        //改后
         if(null!=followUpMessageDTO.getSecondObjectId()){
-            followUpMessage.setSecondObjectType(followUpMessageDTO.getSecondObjectType());
             followUpMessage.setSecondObjectId(followUpMessageDTO.getSecondObjectId());
+        }
+        if(null!=followUpMessageDTO.getSecondLiquidateStage()){
+            followUpMessage.setSecondObjectType(followUpMessageDTO.getSecondObjectType());
         }
         return followUpMessage;
     }
