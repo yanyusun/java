@@ -597,8 +597,20 @@ public class RepayServiceImpl implements RepayService {
             ious = objectUserRelationMapper.findByObjectId(ObjectTypeEnum.IOU.getValue(), userId, ious);
             pawns = objectUserRelationMapper.findByObjectId(ObjectTypeEnum.PAWN.getValue(), userId, pawns);
         }
+        /*
+         * 查询当前用户的机构类型，然后根据每个借据或是抵押物的id查询借据或是抵押物表，匹配表中的
+         * on_collection` int(2) DEFAULT '0' COMMENT '是否可以催收:0可以1不能',
+         * on_lawyer` int(2) DEFAULT '0' COMMENT '是否可以进行司法处置:0可以1不能',
+         * on_agent`int(2) DEFAULT '0' COMMENT '是否可以中介处置:0可以1不能',
+         * 三个字段
+         */
+
         map.put("ious", ious);//map的key（number和id）
         map.put("pawns", pawns);//map的key（number和id）
+    }
+
+    private boolean setObject(Integer userId, Integer objectType, Integer objectId) {
+        return false;
     }
 
     @Override

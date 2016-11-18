@@ -48,6 +48,7 @@ import com.dqys.core.utils.SmsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.lang.model.type.IntersectionType;
 import java.util.*;
 
 /**
@@ -400,6 +401,13 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
         businessLogService.add(userTeam.getObjectId(), userTeam.getObjectType(), UserInfoEnum.COORDINATOR_ADD_USER.getValue(), UserInfoEnum.COORDINATOR_ADD_USER.getName(), "", 0, userTeam.getId());
         return map;
+    }
+
+    private void setUserTeam(Integer objectType, Integer objectId, Integer companyId) {
+        UserTeam userTeam = userTeamMapper.getByObject(objectId, objectType, companyId);
+        if (userTeam != null) {
+
+        }
     }
 
     /**
