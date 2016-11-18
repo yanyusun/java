@@ -135,7 +135,6 @@ public class NavUtil implements ApplicationContextAware {
         List<Integer> integers = new LinkedList<>();
         for (SelectDto selectDto : selectDtos) {
             integers.add(selectDto.getReId());
-
         }
         return integers;
     }

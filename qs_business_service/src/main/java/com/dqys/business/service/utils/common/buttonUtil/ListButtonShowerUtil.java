@@ -730,6 +730,17 @@ public class ListButtonShowerUtil {
      */
     public static void putHandling_urge(ObjectTypeEnum objectTypeEnum) {
 
+
+        map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.ADMIN)
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
+        map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
+        map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
+        map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
+                , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
+
+
         map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.ADMIN)
                 , getCompanyTeamBeanView(getUserTeamBeanAdd(new ListButtonShowerBean())));
         map.put(getKey(ObjectTabEnum.handling_urge, objectTypeEnum, UserInfoEnum.USER_TYPE_COLLECTION, RoleTypeEnum.REGULATOR)
