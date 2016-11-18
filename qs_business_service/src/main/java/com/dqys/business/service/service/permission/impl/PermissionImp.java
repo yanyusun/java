@@ -17,6 +17,7 @@ import com.dqys.business.service.service.companyTeam.CompanyTeamService;
 import com.dqys.business.service.service.permission.Permission;
 import com.dqys.business.service.utils.permission.*;
 import com.dqys.business.service.utils.user.UserServiceUtils;
+import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.model.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -91,6 +92,27 @@ public class PermissionImp implements Permission {
         List<OperType> operTypes = operTypeService
                 .getOperType(objectType, objectId);
         return originOperTypeFiler.getPermission(operTypes);
+    }
+
+    /**
+     *  是否具有还款列表的接口
+     * @param objectType
+     * @param objectId
+     * @param navId
+     * @return
+     */
+    public boolean hasRepayButton(Integer objectType, Integer objectId, Integer navId){
+        UserSession userSession = UserSession.getCurrent();
+        int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
+        int userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());
+        if(isPlatBoolean(userType, userRole)){//为平台管理源就
+
+        }
+        return false;
+    }
+
+    public boolean isPlatBoolean(int userType, int userRole) {
+        return userType== UserInfoEnum.USER_TYPE_ADMIN.getValue()&&userRole== RoleTypeEnum.ADMIN.getValue();
     }
 
     /**

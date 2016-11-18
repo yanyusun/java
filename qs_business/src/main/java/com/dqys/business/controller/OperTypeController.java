@@ -163,4 +163,15 @@ public class OperTypeController {
         return JsonResponseTool.success(ListButtonShowerUtil.getListButtonShowerBean(navId, objectType, userTypes[0], roleId[0]));
 
     }
+    @RequestMapping("/repayButtonShower")
+    @ResponseBody
+    public JsonResponse getRepayButtonShower(Integer objectType, Integer objectId, Integer navId) throws UndefinitionTypeException {
+        UserSession userSession = UserSession.getCurrent();
+        String[] userTypes = userSession.getUserType().split(",");
+        String[] roleId = userSession.getRoleId().split(",");
+        return JsonResponseTool.success(ListButtonShowerUtil.getListButtonShowerBean(navId, objectType, userTypes[0], roleId[0]));
+
+    }
+
+
 }
