@@ -385,7 +385,9 @@ public class LenderServiceImpl implements LenderService {
         // 添加历史记录
         businessLogService.add(lenderId, ObjectTypeEnum.LENDER.getValue(), AssetPackageEnum.add.getValue(),
                 "", "", 0, 0);
-        return JsonResponseTool.success(lenderId);
+        Map map = userInfoMapper.getUserPart(userId);
+        map.put("lenderId", lenderId);
+        return JsonResponseTool.success(map);
     }
 
     private void setLenderMoney(LenderDTO lenderDTO) {

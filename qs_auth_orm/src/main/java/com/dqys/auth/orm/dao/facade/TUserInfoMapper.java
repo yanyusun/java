@@ -5,6 +5,7 @@ import com.dqys.auth.orm.query.TUserQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TUserInfoMapper {
     Integer deleteByPrimaryKey(Integer id);
@@ -42,4 +43,13 @@ public interface TUserInfoMapper {
     List<TUserInfo> findAccountByStatus(@Param("userIds") List<Integer> userIds, @Param("status") Integer status);
 
     void updateAccountUse(@Param("userIds") List<Integer> userIds, @Param("useStatus") Integer useStatus);
+
+    /**
+     * 获取用户的部分信息
+     *
+     * @param userId
+     * @return
+     */
+    Map getUserPart(Integer userId);
+
 }
