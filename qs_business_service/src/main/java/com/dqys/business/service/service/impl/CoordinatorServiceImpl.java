@@ -3,7 +3,8 @@ package com.dqys.business.service.service.impl;
 import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
-import com.dqys.auth.orm.pojo.*;
+import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.auth.orm.query.TUserTagQuery;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
@@ -26,7 +27,6 @@ import com.dqys.business.orm.pojo.business.Business;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.cases.CaseInfo;
 import com.dqys.business.orm.pojo.coordinator.*;
-import com.dqys.business.orm.pojo.coordinator.UserDetail;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.orm.pojo.zcy.ZcyEstates;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
@@ -153,9 +153,9 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         List<TeamDTO> list = getTeamDTOs(companyId, team);//协作器团队信息
         for (TeamDTO t : list) {//查询每个人员的任务数
             Map<String, Object> task = getTaskCount(companyId, t.getUserId(), objectType);
-            t.setFinishTask(MessageUtils.transMapToInt(task, "finish"));
-            t.setOngoingTask(MessageUtils.transMapToInt(task, "ongoing"));
-            t.setTotalTask(MessageUtils.transMapToInt(task, "total"));
+            t.setFinishTask(MessageUtils.transMapToInt(task, "finish") == null ? 0 : MessageUtils.transMapToInt(task, "finish"));
+            t.setOngoingTask(MessageUtils.transMapToInt(task, "ongoing") == null ? 0 : MessageUtils.transMapToInt(task, "ongoing"));
+            t.setTotalTask(MessageUtils.transMapToInt(task, "total") == null ? 0 : MessageUtils.transMapToInt(task, "total"));
             t.setLeaveWordTime(MessageUtils.transMapToString(coordinatorMapper.getLastLeaveWord(t.getUserId()), "time"));//最后留言时间
         }
         map.put("companys", companyList(objectId, objectType));//对象类型相应的公司
@@ -889,7 +889,10 @@ public class CoordinatorServiceImpl implements CoordinatorService {
      */
     @Override
     public List<TeamDTO> getLenderOrAsset(Integer companyId, Integer objectId, Integer objectType) {
-        return coordinatorMapper.getLenderOrAsset(companyId, objectId, objectType);
+        List<Integer> statusList = new ArrayList<>();
+        statusList.add(0);//待接收
+        statusList.add(1);//已接受
+        return coordinatorMapper.getLenderOrAsset(companyId, objectId, objectType, statusList);
     }
 
     /**
@@ -1574,7 +1577,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
         team.setStatus(TeammateReEnum.STATUS_DELETE.getValue());
         Integer result = teammateReMapper.updateByPrimaryKey(team);
-        teammateReMapper.deleteByPrimaryKey(team.getId());
+//        teammateReMapper.deleteByPrimaryKey(team.getId());
         OURelation ouRelation = new OURelation();
         ouRelation.setUserId(teamUserId);
         ouRelation.setEmployerId(userTeamId);
@@ -1669,10 +1672,21 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public Map history(Integer userTeamId) {
-        TeammateRe teammateRe = new TeammateRe();
-        teammateRe.setUserTeamId(userTeamId);
-        teammateReMapper.selectSelective(teammateRe);
-        return null;
+        Map map = new HashMap<>();
+        UserTeam userTeam = userTeamMapper.get(userTeamId);
+        List<Integer> statusList = new ArrayList<>();
+        statusList.add(99);
+        List<TeamDTO> dtos = coordinatorMapper.getLenderOrAsset(userTeam.getCompanyId(), userTeam.getObjectId(), userTeam.getObjectType(), statusList);
+        for (TeamDTO t : dtos) {//查询每个人员的任务数
+            Map<String, Object> task = getTaskCount(userTeam.getCompanyId(), t.getUserId(), userTeam.getObjectType());
+            t.setFinishTask(MessageUtils.transMapToInt(task, "finish") == null ? 0 : MessageUtils.transMapToInt(task, "finish"));
+            t.setOngoingTask(MessageUtils.transMapToInt(task, "ongoing") == null ? 0 : MessageUtils.transMapToInt(task, "ongoing"));
+            t.setTotalTask(MessageUtils.transMapToInt(task, "total") == null ? 0 : MessageUtils.transMapToInt(task, "total"));
+            t.setLeaveWordTime(MessageUtils.transMapToString(coordinatorMapper.getLastLeaveWord(t.getUserId()), "time"));//最后留言时间
+        }
+        map.put("teams", dtos);//团队信息
+        map.put("result", "yes");
+        return map;
     }
 
 

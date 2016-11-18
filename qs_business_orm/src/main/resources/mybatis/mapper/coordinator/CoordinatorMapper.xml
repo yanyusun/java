@@ -90,14 +90,19 @@
     <!--查询借款人或资产包的团队信息-->
     <select id="getLenderOrAsset" resultMap="BaseResultMap">
         SELECT tusi.real_name,bor.name,ttr.user_id,ttr.type,tusi.avg,ttr.status,ttr.join_type
-        from t_teammate_re ttr LEFT JOIN  t_user_tag tust
+        from t_teammate_re ttr LEFT JOIN t_user_tag tust
         ON tust.user_id=ttr.user_id LEFT JOIN t_user_team tut
         ON tut.id=ttr.user_team_id LEFT JOIN bt_organization bor
         ON bor.id=tust.team_id LEFT JOIN t_user_info tusi
         ON tusi.id=ttr.user_id
-        WHERE tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} and tut.company_id=#{companyId,jdbcType=INTEGER}
-            and ttr.status IN (0,1) and ttr.stateflag=0 and tut.stateflag=0
-            and tust.stateflag=0
+        WHERE tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} and
+        tut.company_id=#{companyId,jdbcType=INTEGER}
+        and ttr.status IN
+        <foreach collection="statusList" item="status" index="index" open="(" separator="," close=")">
+            #{status}
+        </foreach>
+        and tut.stateflag=0
+        and tust.stateflag=0
     </select>
     <!--获取当前进行的任务总数-->
     <select id="getTaskOngoing" resultType="java.util.Map">

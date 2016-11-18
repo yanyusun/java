@@ -116,6 +116,28 @@ public class CoordinatorController {
      * @apiGroup Coordinator
      * @apiName coordinator/history
      * @apiSuccessExample {json} Data-Response:
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {
+     * "result": "yes",
+     * "teams": [
+     * {
+     * "userId": 296,
+     * "roleType": 1,
+     * "realName": "admin",
+     * "teamName": "清搜团队",
+     * "finishTask": 0,
+     * "totalTask": 0,
+     * "ongoingTask": 0,
+     * "leaveWordTime": "2016-11-18",
+     * "status": 99,
+     * "joinType": 0,
+     * "avg": "1_296_1479464843315.jpg"
+     * }
+     * ]
+     * }
+     * }
      */
     @RequestMapping("/history")
     @ResponseBody
