@@ -1,7 +1,9 @@
 package com.dqys.business.service.service.impl;
 
 import com.dqys.auth.orm.constant.CompanyTypeEnum;
+import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.TUserTag;
+import com.dqys.auth.orm.pojo.UserDetail;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.repay.RepayEnum;
@@ -19,8 +21,8 @@ import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.*;
+import com.dqys.business.service.constant.UserStatusTypeEnum;
 import com.dqys.business.service.exception.bean.ArtificialException;
-import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.MessageService;
@@ -28,17 +30,13 @@ import com.dqys.business.service.service.RepayService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.model.UserSession;
-import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.DateFormatTool;
 import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.SmsUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.UnexpectedRollbackException;
 
-import javax.servlet.jsp.tagext.TagInfo;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -83,6 +81,8 @@ public class RepayServiceImpl implements RepayService {
     private CiRelationMapper ciRelationMapper;
     @Autowired
     private ObjectUserRelationMapper objectUserRelationMapper;
+    @Autowired
+    private TUserInfoMapper tUserInfoMapper;
 
     @Override
     public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
@@ -583,22 +583,89 @@ public class RepayServiceImpl implements RepayService {
         List<CompanyTeamRe> list = companyTeamReMapper.teamReListByLenderIdAndUserid(lenderId, ObjectTypeEnum.LENDER.getValue(), userId, 1);//查询当前用户的分配器
         boolean flag = false;//是否为业务流转用户。默认不是.优先考虑是所属机构的
         for (CompanyTeamRe teamRe : list) {
-            if (teamRe.getType() == 3) {
+            if (teamRe.getType() == 3) {//是业务流转用户
                 flag = true;
-            } else {
+            } else {//是所属机构用户
                 flag = false;
                 break;
             }
         }
         List<Map> ious = repayMapper.getIouByLenderId(lenderId);
         List<Map> pawns = repayMapper.getPawnByLenderId(lenderId);
+        UserDetail userDetail = tUserInfoMapper.getUserDetail(userId);
         if (flag) {
             //业务流转用，查出流转借据
             ious = objectUserRelationMapper.findByObjectId(ObjectTypeEnum.IOU.getValue(), userId, ious);
             pawns = objectUserRelationMapper.findByObjectId(ObjectTypeEnum.PAWN.getValue(), userId, pawns);
         }
+        /*
+         * 查询当前用户的机构类型，然后根据每个借据或是抵押物的id查询借据或是抵押物表，匹配表中的
+         * on_collection` int(2) DEFAULT '0' COMMENT '是否可以催收:0可以1不能',
+         * on_lawyer` int(2) DEFAULT '0' COMMENT '是否可以进行司法处置:0可以1不能',
+         * on_agent`int(2) DEFAULT '0' COMMENT '是否可以中介处置:0可以1不能',
+         * 三个字段
+         */
+        for (Map m : ious) {
+            boolean judge = setObjectJudge(userDetail, ObjectTypeEnum.IOU.getValue(), MessageUtils.transMapToInt(m, "id"));
+            if (!judge) {
+                ious.remove(m);
+            }
+        }
+        for (Map m : pawns) {
+            boolean judge = setObjectJudge(userDetail, ObjectTypeEnum.PAWN.getValue(), MessageUtils.transMapToInt(m, "id"));
+            if (!judge) {
+                ious.remove(m);
+            }
+        }
         map.put("ious", ious);//map的key（number和id）
         map.put("pawns", pawns);//map的key（number和id）
+    }
+
+    /**
+     * 判断当前用户的用户类型和对象针对用户的匹配程度
+     *
+     * @param userDetail
+     * @param objectType
+     * @param objectId
+     * @return
+     */
+    private boolean setObjectJudge(UserDetail userDetail, Integer objectType, Integer objectId) {
+        Integer on_collection = 0;//是否可以催收:0可以1不能
+        Integer on_lawyer = 0;//是否可以进行司法处置:0可以1不能',
+        Integer on_agent = 0;//是否可以中介处置:0可以1不能',
+        if (objectType == ObjectTypeEnum.PAWN.getValue().intValue()) {
+            PawnInfo info = pawnInfoMapper.get(objectId);
+            if (info != null) {
+                on_collection = info.getOnCollection();
+                on_lawyer = info.getOnLawyer();
+                on_agent = info.getOnAgent();
+            }
+        } else if (objectType == ObjectTypeEnum.PAWN.getValue().intValue()) {
+            IOUInfo info = iouInfoMapper.get(objectId);
+            if (info != null) {
+                on_collection = info.getOnCollection();
+                on_lawyer = info.getOnLawyer();
+                on_agent = info.getOnAgent();
+            }
+        }
+        if (userDetail.getUserType() == UserInfoEnum.USER_TYPE_ADMIN.getValue().intValue()) {//平台管理员
+            return true;
+        } else if (userDetail.getUserType() == UserInfoEnum.USER_TYPE_ENTRUST.getValue().intValue()) {//委托方
+            return true;
+        } else if (userDetail.getUserType() == UserInfoEnum.USER_TYPE_COLLECTION.getValue().intValue()) {//催收方
+            if (on_collection == 0) {
+                return true;
+            }
+        } else if (userDetail.getUserType() == UserInfoEnum.USER_TYPE_JUDICIARY.getValue().intValue()) {//律所司法
+            if (on_lawyer == 0) {
+                return true;
+            }
+        } else if (userDetail.getUserType() == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().intValue()) {//中介
+            if (on_agent == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

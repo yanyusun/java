@@ -183,4 +183,13 @@
         AND ttr.type= #{type} AND tut.object_id= #{objectId} AND tut.object_type= #{objectType}
     </select>
 
+    <select id="selectTeamReByStateflag" parameterType="com.dqys.business.orm.pojo.coordinator.TeammateRe"
+            resultMap="BaseResultMap">
+        SELECT ttr.* FROM t_teammate_re ttr
+        WHERE ttr.stateflag!=0
+        <if test="userTeamId !=null">
+            AND ttr.user_team_id=#{userTeamId}
+        </if>
+    </select>
+
 </mapper>

@@ -222,4 +222,12 @@ public interface CoordinatorService {
     Map getUserDetail(Integer userId);
 
     UserTeam getTeam(Integer objectId, Integer objectType, int userId);
+
+    /**
+     * 协作器查看历史记录
+     *
+     * @param userTeamId
+     * @return
+     */
+    Map history(Integer userTeamId);
 }

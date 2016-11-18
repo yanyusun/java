@@ -657,6 +657,7 @@ public class AssetServiceImpl implements AssetService {
             }
         } else if (ObjectTabEnum.assign.getValue().equals(type)) {
             // 待分配
+            /*
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
             if (!flag) {
@@ -671,6 +672,8 @@ public class AssetServiceImpl implements AssetService {
             if (!CommonUtil.checkParam(ids) && ids.size() > 0) {
                 assetQuery.setExceptIds(ids);
             }
+             */
+            assetQuery.setIds(assetInfoMapper.findObjectIdByAsset(userId, ObjectTypeEnum.ASSETPACKAGE.getValue()));//11月18号修改成这样，原来是使用上面注释掉的代码
             assetQuery.setOperator(userInfo.getId());
             if (!flag) {
 //                if (isPlatformOrEntrust) { // 修改于10.11

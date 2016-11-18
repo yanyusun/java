@@ -16,10 +16,11 @@
         <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
         <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
         <result column="object_oper_status" property="objectOperStatus" jdbcType="BIGINT"/>
+        <result column="number_people" property="numberPeople" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, create_at, remark, company_id, manger_id, status, ctreater_id, object_id, object_type, 
-    version, update_at, stateflag,object_oper_status
+    version, update_at, stateflag,object_oper_status,number_people
   </sql>
 
     <sql id="Query_Condition">
@@ -184,6 +185,9 @@
             </if>
             <if test="objectType != null">
                 object_type = #{objectType,jdbcType=INTEGER},
+            </if>
+            <if test="numberPeople != null">
+                number_people = #{numberPeople,jdbcType=INTEGER},
             </if>
             version = version+1,
             update_at = now(),

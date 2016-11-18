@@ -2,6 +2,7 @@ package com.dqys.auth.orm.dao.impl;
 
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.auth.orm.pojo.UserDetail;
 import com.dqys.auth.orm.query.TUserQuery;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
@@ -82,5 +83,10 @@ public class TUserInfoMapperImpl extends BaseDao implements TUserInfoMapper {
             map.put("userId", info.getId());
         }
         return map;
+    }
+
+    @Override
+    public UserDetail getUserDetail(Integer userId) {
+        return super.getSqlSession().getMapper(TUserInfoMapper.class).getUserDetail(userId);
     }
 }

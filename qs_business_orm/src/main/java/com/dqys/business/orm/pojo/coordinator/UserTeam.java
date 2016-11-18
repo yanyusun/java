@@ -29,6 +29,16 @@ public class UserTeam {
 
     private Integer objectOperStatus;
 
+    private Integer numberPeople;
+
+    public Integer getNumberPeople() {
+        return numberPeople;
+    }
+
+    public void setNumberPeople(Integer numberPeople) {
+        this.numberPeople = numberPeople;
+    }
+
     public Integer getObjectOperStatus() {
         return objectOperStatus;
     }

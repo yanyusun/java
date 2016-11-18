@@ -84,4 +84,6 @@ public interface LenderInfoMapper {
      * @return
      */
     LenderInfo getLenderBySumMoney(Integer assetId);
+
+    List<Integer> findObjectIdByLender(@Param("userId") Integer userId, @Param("objectType") Integer objectType);
 }

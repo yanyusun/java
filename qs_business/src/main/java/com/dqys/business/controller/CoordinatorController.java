@@ -110,6 +110,42 @@ public class CoordinatorController {
     }
 
     /**
+     * @api {post} coordinator/history 协作器历史参与人
+     * @apiParam {int} userTeamId 公司ID
+     * @apiSampleRequest coordinator/history
+     * @apiGroup Coordinator
+     * @apiName coordinator/history
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {
+     * "result": "yes",
+     * "teams": [
+     * {
+     * "userId": 296,
+     * "roleType": 1,
+     * "realName": "admin",
+     * "teamName": "清搜团队",
+     * "finishTask": 0,
+     * "totalTask": 0,
+     * "ongoingTask": 0,
+     * "leaveWordTime": "2016-11-18",
+     * "status": 99,
+     * "joinType": 0,
+     * "avg": "1_296_1479464843315.jpg"
+     * }
+     * ]
+     * }
+     * }
+     */
+    @RequestMapping("/history")
+    @ResponseBody
+    public JsonResponse history(@RequestParam Integer userTeamId) throws Exception {
+        return CommonUtil.jsonResponse(coordinatorService.history(userTeamId));
+    }
+
+    /**
      * @api {post} coordinator/getUserDetail 获取员工明信片
      * @apiParam {int} userId 用户id
      * @apiSampleRequest coordinator/getUserDetail
