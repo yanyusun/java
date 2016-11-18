@@ -163,4 +163,23 @@ public class OperTypeController {
         return JsonResponseTool.success(ListButtonShowerUtil.getListButtonShowerBean(navId, objectType, userTypes[0], roleId[0]));
 
     }
+    /**
+     * @api {GET} http://{url}/operType/repayButtonShower  是否显示添加还款记录按钮
+     * @apiName repayButtonShower
+     * @apiGroup OperType
+     * @apiParam {number} [lenderId] 对象id
+     * @apiSuccessExample {json} Data-Response:
+     *{
+        "code": 2000,
+        "msg": "成功",
+        "data": true
+        }
+     */
+    @RequestMapping("/repayButtonShower")
+    @ResponseBody
+    public JsonResponse getRepayButtonShower(Integer lenderId) throws UndefinitionTypeException {
+        return JsonResponseTool.success(permission.hasRepayButton(lenderId));
+    }
+
+
 }

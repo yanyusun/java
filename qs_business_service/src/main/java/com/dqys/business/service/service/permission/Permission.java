@@ -9,4 +9,6 @@ import java.util.List;
  */
 public interface Permission {
    List<OperType> getOperTypes( Integer objectType, Integer objectId, Integer navId);
+
+   boolean hasRepayButton(Integer lenderId);
 }
