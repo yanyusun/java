@@ -17,7 +17,6 @@ import com.dqys.business.service.service.companyTeam.CompanyTeamService;
 import com.dqys.business.service.service.permission.Permission;
 import com.dqys.business.service.utils.permission.*;
 import com.dqys.business.service.utils.user.UserServiceUtils;
-import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.model.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -67,8 +66,8 @@ public class PermissionImp implements Permission {
         }
         if (ObjectTabEnum.handling_entrust.getValue().intValue() == navId) {//处置中
             handingEntrustFilter(objectType, objectId, userType, originOperTypeFiler);
-        } else if (isOtherNavId(navId)&&objectType!=ObjectTypeEnum.ASSETSOURCE.getValue().intValue()) {//除了处置中,带审核,已驳回,待处置,延期其他流程不明确的搜所导航
-            OtherTabAddOperTypeFilter otherTabAddOperTypeFilter = new OtherTabAddOperTypeFilter(businessService, objectId, objectType, userType,operTypeService);
+        } else if (isOtherNavId(navId) && objectType != ObjectTypeEnum.ASSETSOURCE.getValue().intValue()) {//除了处置中,带审核,已驳回,待处置,延期其他流程不明确的搜所导航
+            OtherTabAddOperTypeFilter otherTabAddOperTypeFilter = new OtherTabAddOperTypeFilter(businessService, objectId, objectType, userType, operTypeService);
             originOperTypeFiler.decorate(otherTabAddOperTypeFilter);
             handingEntrustFilter(objectType, objectId, userType, originOperTypeFiler);
         }
@@ -77,15 +76,15 @@ public class PermissionImp implements Permission {
             AddEditOperTypeFilter addEditOperTypeFilter = new AddEditOperTypeFilter(lenderInfoMapper, assetInfoMapper, objectType, objectId, userType, userSession.getUserId());
             originOperTypeFiler.decorate(addEditOperTypeFilter);
         }
-        if(objectType==ObjectTypeEnum.ASSETSOURCE.getValue().intValue()&&isAssetSourceEdit(navId)){//当为资产源时为除了带接收和带申请外的tab添加编辑功能
-            AddAssetSourceEditOperTypeFilter addAssetSourceEditOperTypeFilter = new AddAssetSourceEditOperTypeFilter(objectId,userType,userSession.getUserId(),zcyEstatesMapper);
+        if (objectType == ObjectTypeEnum.ASSETSOURCE.getValue().intValue() && isAssetSourceEdit(navId)) {//当为资产源时为除了带接收和带申请外的tab添加编辑功能
+            AddAssetSourceEditOperTypeFilter addAssetSourceEditOperTypeFilter = new AddAssetSourceEditOperTypeFilter(objectId, userType, userSession.getUserId(), zcyEstatesMapper);
             originOperTypeFiler.decorate(addAssetSourceEditOperTypeFilter);
         }
-        if(ObjectTabEnum.apply.getValue().intValue()==navId){//如果为带申请为操作列表增加加入案组按钮
-            AddApplyCompanyTeamOperTypeFilter addApplyCompanyTeamOperTypeFilter = new AddApplyCompanyTeamOperTypeFilter(navId,objectType,userType.toString(),userRole.toString());
+        if (ObjectTabEnum.apply.getValue().intValue() == navId) {//如果为带申请为操作列表增加加入案组按钮
+            AddApplyCompanyTeamOperTypeFilter addApplyCompanyTeamOperTypeFilter = new AddApplyCompanyTeamOperTypeFilter(navId, objectType, userType.toString(), userRole.toString());
             originOperTypeFiler.decorate(addApplyCompanyTeamOperTypeFilter);
         }
-        if(ObjectTabEnum.accept.getValue().intValue()==navId){
+        if (ObjectTabEnum.accept.getValue().intValue() == navId) {
             AddAcceptOperTypeFilter addAcceptOperTypeFilter = new AddAcceptOperTypeFilter();
             originOperTypeFiler.decorate(addAcceptOperTypeFilter);
         }
@@ -95,25 +94,43 @@ public class PermissionImp implements Permission {
     }
 
     /**
-     *  是否具有还款列表的接口
-     * @param objectType
+     * 借款人详情是否具有添加还款的权限按钮
+     *
      * @param objectId
-     * @param navId
      * @return
      */
-    public boolean hasRepayButton(Integer objectType, Integer objectId, Integer navId){
+    public boolean hasRepayButton(Integer objectId) {
         UserSession userSession = UserSession.getCurrent();
         int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
         int userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());
-        if(isPlatBoolean(userType, userRole)){//为平台管理源就
 
+        if (UserServiceUtils.isPlatBoolean(userType, userRole)) {//为平台管理源就
+            return true;
+        } else {//只有正在处置,当前用户不是参与人,当前用户的团队在业务流转中的可运行状态才能有操作权限
+
+//            OriginOperTypeFiler originOperTypeFiler = new OriginOperTypeFiler();
+//            List<OperType> intOperTypes = null;
+//            if (userType == UserInfoEnum.USER_TYPE_COLLECTION.getValue()) {//如果是催收,需要有抵押物的还款权限
+//                intOperTypes = operTypeService.getOperType(ObjectTypeEnum.PAWN.getValue(), objectId);
+//                originOperTypeFiler.decorate(new OnHandleOperTypeFilter(
+//                        ObjectTypeEnum.PAWN.getValue(), objectId, pawnInfoMapper, iouInfoMapper
+//                ));
+//                originOperTypeFiler.decorate(new InitBusinessOperTypeFilter(operTypeService, ObjectTypeEnum.PAWN.getValue(), objectId, PAWN.getValue()));
+//                List<OperType> list = originOperTypeFiler.getPermission(intOperTypes);
+//                return PermissionUtil.isContian(list, PawnEnum.REIMBURSEMENT.getValue());
+//            } else if (userType == UserInfoEnum.USER_TYPE_JUDICIARY.getValue()) {//如果是律所,需要有借据的还款权限
+//                intOperTypes = operTypeService.getOperType(ObjectTypeEnum.IOU.getValue(), objectId);
+//                originOperTypeFiler.decorate(new OnHandleOperTypeFilter(
+//                        ObjectTypeEnum.IOU.getValue(), objectId, pawnInfoMapper, iouInfoMapper
+//                ));
+//                originOperTypeFiler.decorate(new InitBusinessOperTypeFilter(operTypeService, ObjectTypeEnum.IOU.getValue(), objectId, IOU.getValue()));
+//                List<OperType> list = originOperTypeFiler.getPermission(intOperTypes);
+//                return PermissionUtil.isContian(list, IouEnum.REIMBURSEMENT.getValue());
+//            }
         }
         return false;
     }
 
-    public boolean isPlatBoolean(int userType, int userRole) {
-        return userType== UserInfoEnum.USER_TYPE_ADMIN.getValue()&&userRole== RoleTypeEnum.ADMIN.getValue();
-    }
 
     /**
      * 正在处置中的对象方法过滤
@@ -159,7 +176,7 @@ public class PermissionImp implements Permission {
         if (navId == ObjectTabEnum.focus.getValue() || navId == ObjectTabEnum.month.getValue()
                 || navId == ObjectTabEnum.stock.getValue() || navId == ObjectTabEnum.joined.getValue()
                 || navId == ObjectTabEnum.task.getValue() || navId == ObjectTabEnum.gongingOn.getValue()
-                || navId == ObjectTabEnum.myUrge.getValue()||navId == ObjectTabEnum.all.getValue()) {
+                || navId == ObjectTabEnum.myUrge.getValue() || navId == ObjectTabEnum.all.getValue()) {
             return true;
         }
         return false;
@@ -167,13 +184,14 @@ public class PermissionImp implements Permission {
 
     /**
      * 是否为资产源可以编辑的tab
+     *
      * @param navId
      * @return
      */
-    private boolean isAssetSourceEdit(int navId){
-        if(navId==ObjectTabEnum.handling_urge.getValue()||navId==ObjectTabEnum.joined.getValue()
-        ||navId==ObjectTabEnum.handle.getValue()||navId==ObjectTabEnum.assign.getValue()
-                ||navId==ObjectTabEnum.handling_entrust.getValue()||navId==ObjectTabEnum.task.getValue()||navId==ObjectTabEnum.myUrge.getValue()){
+    private boolean isAssetSourceEdit(int navId) {
+        if (navId == ObjectTabEnum.handling_urge.getValue() || navId == ObjectTabEnum.joined.getValue()
+                || navId == ObjectTabEnum.handle.getValue() || navId == ObjectTabEnum.assign.getValue()
+                || navId == ObjectTabEnum.handling_entrust.getValue() || navId == ObjectTabEnum.task.getValue() || navId == ObjectTabEnum.myUrge.getValue()) {
             return true;
         }
         return false;

@@ -165,7 +165,7 @@ public class OperTypeController {
     }
     @RequestMapping("/repayButtonShower")
     @ResponseBody
-    public JsonResponse getRepayButtonShower(Integer objectType, Integer objectId, Integer navId) throws UndefinitionTypeException {
+    public JsonResponse getRepayButtonShower(Integer objectId) throws UndefinitionTypeException {
         UserSession userSession = UserSession.getCurrent();
         String[] userTypes = userSession.getUserType().split(",");
         String[] roleId = userSession.getRoleId().split(",");
