@@ -12,7 +12,6 @@ import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.common.SourceInfo;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.common.SourceSource;
-import com.dqys.business.service.constant.ObjectEnum.InformationEnum;
 import com.dqys.business.orm.pojo.zcy.ZcyEstates;
 import com.dqys.business.service.constant.ObjectEnum.InformationEnum;
 import com.dqys.business.service.dto.common.NavUnviewDTO;
@@ -114,11 +113,13 @@ public class SourceServiceImpl implements SourceService {
     /**
      * 如果是公共导航不删除,
      * 其他删除本身外,删除相关的资源:sourceInfo,file,
+     *
      * @param sourceNavigation
      */
-    private  void deleteNavigation(SourceNavigation sourceNavigation){
+    private void deleteNavigation(SourceNavigation sourceNavigation) {
 
     }
+
     @Override
     public JsonResponse addSource(SourceInfoDTO sourceInfoDTO) {
         SourceInfo data = sourceInfoMapper.getByNavIdAndLenderId(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId(), sourceInfoDTO.getEstatesId());
@@ -163,22 +164,17 @@ public class SourceServiceImpl implements SourceService {
             return null;
         }
         UserSession userSession = UserSession.getCurrent();
-        if(!hasSourceAuth(navId,lenderId,estatesId,userSession.getUserId())){
+        if (!hasSourceAuth(navId, lenderId, estatesId, userSession.getUserId())) {
             return null;
         }
         SourceInfo sourceInfo = sourceInfoMapper.getByNavIdAndLenderId(navId, lenderId, estatesId);//根据借款人id或是资产源id查询资料实堪
-        SourceNavigation sourceNavigation =sourceNavigationMapper.get(navId);
         if (sourceInfo == null) {
-            if(hasNavUnviewOperAuth(navId,lenderId,estatesId,userSession.getUserId())&&sourceNavigation.getType().intValue()== InformationEnum.CERTIFICATE_TYPE.getValue()){//有修改权利的权限切位资料实勘且为证件合同,因为只有证件合同有权限操作
-                return SourceServiceUtls.toSourceInfoDTO(getNavAuthAll(navId, lenderId, estatesId));
-            }else{
-                return null;
-            }
+            return SourceServiceUtls.toSourceInfoDTO(getNavAuthAll(navId, lenderId, estatesId));
         }
         Integer sourceId = sourceInfo.getId();
         List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceId);
-        if(hasNavUnviewOperAuth(navId,lenderId,estatesId,userSession.getUserId())&&sourceNavigation.getType().intValue()==InformationEnum.CERTIFICATE_TYPE.getValue()){//如果拥有修改可见项的权限,返回可见项操作列表
-            return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList,getNavAuthAll(navId, lenderId, estatesId));
+        if (hasNavUnviewOperAuth(navId, lenderId, estatesId, userSession.getUserId())) {//如果拥有修改可见项的权限,返回可见项操作列表
+            return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList, getNavAuthAll(navId, lenderId, estatesId));
         }
         return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList);
     }
@@ -252,14 +248,15 @@ public class SourceServiceImpl implements SourceService {
 
     /**
      * 得到ｎａｖｉｄ关联的所有可选内容
+     *
      * @param navId
      * @param lenderId
      * @param estatesId
      * @return
      */
-    public SelectDtoMap getNavAuthAll(Integer navId,Integer lenderId,Integer estatesId ){
+    public SelectDtoMap getNavAuthAll(Integer navId, Integer lenderId, Integer estatesId) {
         if (lenderId != null && lenderId != 0) {//得到资产源的资料实勘权限
-           return navUnviewManagerService.getAll(navId, ObjectTypeEnum.LENDER.getValue(),lenderId);
+            return navUnviewManagerService.getAll(navId, ObjectTypeEnum.LENDER.getValue(), lenderId);
         } else if (estatesId != null && estatesId != 0) {//得到借款人的资料实勘权限
             return navUnviewManagerService.getAll(navId, ObjectTypeEnum.ASSETSOURCE.getValue(), estatesId);//重新设置权限；
         }
@@ -269,33 +266,34 @@ public class SourceServiceImpl implements SourceService {
 
     /**
      * 得到重新设置后的ｎａｖｉｄ关联的所有可选内容
+     *
      * @param dto
      * @return
      */
-    public SelectDtoMap resetAndGetNewALL(NavUnviewDTO dto){
-        return navUnviewManagerService.resetAndGetNewALL(dto.getNavId(),dto.getObjectType(),dto.getObjectId(),dto.getUnviewReIdMap());
+    public SelectDtoMap resetAndGetNewALL(NavUnviewDTO dto) {
+        return navUnviewManagerService.resetAndGetNewALL(dto.getNavId(), dto.getObjectType(), dto.getObjectId(), dto.getUnviewReIdMap());
     }
 
     @Override
-    public boolean hasSourceAuth(Integer navId,Integer lenderId,Integer estatesId,Integer userId){
+    public boolean hasSourceAuth(Integer navId, Integer lenderId, Integer estatesId, Integer userId) {
         if (lenderId != null && lenderId != 0) {//得到资产源的资料实勘权限
-            return navUnviewManagerService.hasSourceSourceAuth(navId,ObjectTypeEnum.LENDER.getValue(),lenderId,userId);
+            return navUnviewManagerService.hasSourceSourceAuth(navId, ObjectTypeEnum.LENDER.getValue(), lenderId, userId);
         } else if (estatesId != null && estatesId != 0) {//得到借款人的资料实勘权限
-            return navUnviewManagerService.hasSourceSourceAuth(navId,ObjectTypeEnum.ASSETSOURCE.getValue(),estatesId,userId);
+            return navUnviewManagerService.hasSourceSourceAuth(navId, ObjectTypeEnum.ASSETSOURCE.getValue(), estatesId, userId);
         }
         return false;
     }
 
-    public boolean hasNavUnviewOperAuth(Integer navId,Integer lenderId,Integer estatesId,Integer userId){
+    public boolean hasNavUnviewOperAuth(Integer navId, Integer lenderId, Integer estatesId, Integer userId) {
         if (lenderId != null && lenderId != 0) {//得到资产源的资料实勘权限
-            return navUnviewManagerService.hasNavUnviewOperAuth(navId,ObjectTypeEnum.LENDER.getValue(),lenderId,userId);
+            return navUnviewManagerService.hasNavUnviewOperAuth(navId, ObjectTypeEnum.LENDER.getValue(), lenderId, userId);
         } else if (estatesId != null && estatesId != 0) {//得到借款人的资料实勘权限
-            return navUnviewManagerService.hasNavUnviewOperAuth(navId,ObjectTypeEnum.ASSETSOURCE.getValue(),estatesId,userId);
+            return navUnviewManagerService.hasNavUnviewOperAuth(navId, ObjectTypeEnum.ASSETSOURCE.getValue(), estatesId, userId);
         }
         return false;
     }
 
-//    /**
+    //    /**
 //     * 过滤掉当前用户不可见的分类
 //     * @param list
 //     * @param userSession
@@ -303,5 +301,55 @@ public class SourceServiceImpl implements SourceService {
 //    public void sourceNavigationFilter(List<SourceNavigation>  list, UserSession userSession){
 //
 //    }
-
+    @Override
+    public JsonResponse getSourceType(Integer navId, Integer objectId, Integer objectType) {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        String role = UserSession.getCurrent() == null ? "" : UserSession.getCurrent().getRoleId();
+        String operator = "";//录入人
+        boolean flag = false;
+        if (CommonUtil.isManage()) {
+            flag = true;//平台总管理员有权限
+        } else {
+            //对录入人是否为当前人员，当前人员是否与录入人员同属一个公司并且是管理员的进行了判断
+            if (objectType == ObjectTypeEnum.LENDER.getValue().intValue()) {
+                LenderInfo info = lenderInfoMapper.get(objectId);
+                if (info != null) {
+                    operator = info.getOperator().toString();
+                }
+            } else if (objectType == ObjectTypeEnum.ASSETSOURCE.getValue().intValue()) {
+                ZcyEstates info = zcyEstatesMapper.selectByPrimaryKey(objectId);
+                if (info != null) {
+                    operator = info.getOperator();
+                }
+            } else {
+                return JsonResponseTool.failure("对象类型参数错误!");
+            }
+            if (operator.equals(userId)) {
+                flag = true;//同一个录入人有权限
+            } else {
+                //当前用户是否为管理员
+                if (role.equals(RoleTypeEnum.ADMIN.getValue().toString() + ",")) {
+                    if ("".equals(operator)) {
+                        flag = true; //录入人不存在情况下，所有管理员有权限
+                    } else {
+                        //查询录入人机构
+                        TUserInfo operC = tUserInfoMapper.selectByPrimaryKey(Integer.parseInt(operator));
+                        TUserInfo userC = tUserInfoMapper.selectByPrimaryKey(userId);
+                        if (operC.getCompanyId().intValue() == userC.getCompanyId().intValue()) {
+                            flag = true; //录入人存在情况下，同一家公司的管理员有权限
+                        }
+                    }
+                }
+            }
+        }
+        if (flag) {
+            //返回操作权限列表
+            List<SourceNavOperType> operTypes = new ArrayList<>();
+            operTypes.add(new SourceNavOperType(InformationEnum.ADD_TYPE.getValue(), InformationEnum.ADD_TYPE.getName(), ""));
+            operTypes.add(new SourceNavOperType(InformationEnum.UPD_TYPE.getValue(), InformationEnum.UPD_TYPE.getName(), ""));
+            operTypes.add(new SourceNavOperType(InformationEnum.DEL_TYPE.getValue(), InformationEnum.DEL_TYPE.getName(), ""));
+            return JsonResponseTool.success(operTypes);
+        }
+        return JsonResponseTool.failure(null);
+    }
 }

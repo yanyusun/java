@@ -106,7 +106,7 @@ public class LenderController {
      */
     @RequestMapping(value = "/delete")
     @ResponseBody
-    public JsonResponse deleteLenderRelation(@PathVariable Integer id) throws BusinessLogException {
+    public JsonResponse deleteLenderRelation(@RequestParam Integer id) throws BusinessLogException {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }

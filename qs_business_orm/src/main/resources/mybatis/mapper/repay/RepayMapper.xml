@@ -430,7 +430,7 @@
     <!--根据借款人获取借据-->
     <select id="getIouByLenderId" resultType="java.util.Map">
         SELECT iou.iou_no number,iou.id id from bt_iou iou
-        where iou.lender_id=#{lenderId,jdbcType=INTEGER} and iou.stateflag=0 AND ioou.repay_status=1
+        where iou.lender_id=#{lenderId,jdbcType=INTEGER} and iou.stateflag=0 AND iou.repay_status=1
     </select>
     <!--根据借款人获取抵押物-->
     <select id="getPawnByLenderId" resultType="java.util.Map">

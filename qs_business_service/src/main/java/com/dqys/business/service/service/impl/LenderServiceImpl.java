@@ -405,13 +405,13 @@ public class LenderServiceImpl implements LenderService {
         Integer lender = lenderInfoMapper.deleteByPrimaryKey(id);
         Integer contact = contactInfoMapper.deleteByMode(ObjectTypeEnum.LENDER.getValue().toString(), id);
 
-        if (CommonUtil.checkResult(lender) && CommonUtil.checkResult(contact)) {
+        if (lender > 0 ) {
             // 添加历史记录
             businessLogService.add(id, ObjectTypeEnum.LENDER.getValue(), LenderEnum.DELETE.getValue(),
                     "", "", 0, 0);
             return JsonResponseTool.success(null);
         } else {
-            return JsonResponseTool.failure("删除失败");
+            return JsonResponseTool.failure("借款人删除失败");
         }
     }
 
