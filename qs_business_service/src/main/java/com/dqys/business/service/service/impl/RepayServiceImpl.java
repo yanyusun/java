@@ -6,9 +6,12 @@ import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.repay.RepayEnum;
 import com.dqys.business.orm.mapper.asset.*;
+import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
+import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.repay.RepayMapper;
 import com.dqys.business.orm.pojo.asset.*;
+import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
 import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
 import com.dqys.business.orm.pojo.repay.RepayRecord;
@@ -72,11 +75,14 @@ public class RepayServiceImpl implements RepayService {
 
     @Autowired
     private CoordinatorMapper coordinatorMapper;
-
+    @Autowired
+    private CompanyTeamReMapper companyTeamReMapper;
     @Autowired
     private CoordinatorService coordinatorService;
     @Autowired
     private CiRelationMapper ciRelationMapper;
+    @Autowired
+    private ObjectUserRelationMapper objectUserRelationMapper;
 
     @Override
     public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
@@ -573,8 +579,24 @@ public class RepayServiceImpl implements RepayService {
 
     @Override
     public void getIouAndPawnByLender(Integer lenderId, Map map) {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        List<CompanyTeamRe> list = companyTeamReMapper.teamReListByLenderIdAndUserid(lenderId, ObjectTypeEnum.LENDER.getValue(), userId, 1);//查询当前用户的分配器
+        boolean flag = false;//是否为业务流转用户。默认不是.优先考虑是所属机构的
+        for (CompanyTeamRe teamRe : list) {
+            if (teamRe.getType() == 3) {
+                flag = true;
+            } else {
+                flag = false;
+                break;
+            }
+        }
         List<Map> ious = repayMapper.getIouByLenderId(lenderId);
         List<Map> pawns = repayMapper.getPawnByLenderId(lenderId);
+        if (flag) {
+            //业务流转用，查出流转借据
+            ious = objectUserRelationMapper.findByObjectId(ObjectTypeEnum.IOU.getValue(), userId, ious);
+            pawns = objectUserRelationMapper.findByObjectId(ObjectTypeEnum.PAWN.getValue(), userId, pawns);
+        }
         map.put("ious", ious);//map的key（number和id）
         map.put("pawns", pawns);//map的key（number和id）
     }

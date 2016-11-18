@@ -54,4 +54,10 @@ public class CompanyTeamReMapperImpl extends BaseDao implements CompanyTeamReMap
     public List<Integer> listAssigned(@Param("type") Integer type) {
         return super.getSqlSession().getMapper(CompanyTeamReMapper.class).listAssigned(type);
     }
+
+    @Override
+    public List<CompanyTeamRe> teamReListByLenderIdAndUserid(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType,
+                                                             @Param("userId") Integer userId, @Param("status") Integer status) {
+        return super.getSqlSession().getMapper(CompanyTeamReMapper.class).teamReListByLenderIdAndUserid(objectId, objectType, userId, status);
+    }
 }
