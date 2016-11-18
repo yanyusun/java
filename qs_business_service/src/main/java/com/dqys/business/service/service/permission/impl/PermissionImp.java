@@ -13,6 +13,7 @@ import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.OperTypeService;
+import com.dqys.business.service.service.RepayService;
 import com.dqys.business.service.service.companyTeam.CompanyTeamService;
 import com.dqys.business.service.service.permission.Permission;
 import com.dqys.business.service.utils.permission.*;
@@ -22,7 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.dqys.business.orm.constant.company.ObjectTypeEnum.IOU;
 import static com.dqys.business.orm.constant.company.ObjectTypeEnum.PAWN;
@@ -53,7 +56,8 @@ public class PermissionImp implements Permission {
     private AssetInfoMapper assetInfoMapper;
     @Autowired
     private ZcyEstatesMapper zcyEstatesMapper;
-
+    @Autowired
+    private RepayService repayService;
 
     public List<OperType> getOperTypes(Integer objectType, Integer objectId, Integer navId) {
         UserSession userSession = UserSession.getCurrent();
@@ -96,18 +100,28 @@ public class PermissionImp implements Permission {
     /**
      * 借款人详情是否具有添加还款的权限按钮
      *
-     * @param objectId
+     * @param lenderId
      * @return
      */
-    public boolean hasRepayButton(Integer objectId) {
+    public boolean hasRepayButton(Integer lenderId) {
         UserSession userSession = UserSession.getCurrent();
         int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
         int userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());
 
         if (UserServiceUtils.isPlatBoolean(userType, userRole)) {//为平台管理源就
             return true;
-        } else {//只有正在处置,当前用户不是参与人,当前用户的团队在业务流转中的可运行状态才能有操作权限
-
+        } else {//当该用户有可还的抵押物或者借据时
+            Map<String,List<Map>> map =new HashMap();
+            repayService.getIouAndPawnByLender(lenderId,map);
+            List<Map> ious = map.get("ious");
+            List<Map> pawns = map.get("pawns");
+            if(ious!=null&&ious.size()>0){
+                return true;
+            }
+            if(pawns!=null&&pawns.size()>0){
+                return true;
+            }
+            return false;
 //            OriginOperTypeFiler originOperTypeFiler = new OriginOperTypeFiler();
 //            List<OperType> intOperTypes = null;
 //            if (userType == UserInfoEnum.USER_TYPE_COLLECTION.getValue()) {//如果是催收,需要有抵押物的还款权限
@@ -128,7 +142,7 @@ public class PermissionImp implements Permission {
 //                return PermissionUtil.isContian(list, IouEnum.REIMBURSEMENT.getValue());
 //            }
         }
-        return false;
+
     }
 
 
