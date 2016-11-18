@@ -675,4 +675,15 @@
         WHERE lender.stateflag=0 AND lender.asset_id=#{assetId,jdbcType=INTEGER}
     </select>
 
+    <select id="findObjectIdByLender" resultType="int">
+        SELECT len.id FROM bt_lender len
+        WHERE len.stateflag=0 AND
+        (
+        len.id NOT IN (select object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType}) OR
+        len.id IN(SELECT object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType} AND number_people &lt; 5
+        )
+        ) AND len.operator =#{userId}
+        GROUP BY len.id
+    </select>
+
 </mapper>

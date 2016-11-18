@@ -110,6 +110,20 @@ public class CoordinatorController {
     }
 
     /**
+     * @api {post} coordinator/history 协作器历史参与人
+     * @apiParam {int} userTeamId 公司ID
+     * @apiSampleRequest coordinator/history
+     * @apiGroup Coordinator
+     * @apiName coordinator/history
+     * @apiSuccessExample {json} Data-Response:
+     */
+    @RequestMapping("/history")
+    @ResponseBody
+    public JsonResponse history(@RequestParam Integer userTeamId) throws Exception {
+        return CommonUtil.jsonResponse(coordinatorService.history(userTeamId));
+    }
+
+    /**
      * @api {post} coordinator/getUserDetail 获取员工明信片
      * @apiParam {int} userId 用户id
      * @apiSampleRequest coordinator/getUserDetail

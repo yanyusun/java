@@ -150,11 +150,11 @@ public class UserServiceImpl implements UserService {
 
         String code = NoSQLWithRedisTool.getValueObject(MAIL_CONFIRM_KEY + tUserInfo.getEmail());
         if (!confirmKey.equals(code)) {
-            return ServiceResult.failure("验证码无效", ObjectUtils.NULL);
+            return ServiceResult.failure("验证码无效，请重新发送验证邮件。", ObjectUtils.NULL);
         }
         //最后一位操作类型校验码
         if (!code.endsWith(e.getValue().toString())) {
-            return ServiceResult.failure("验证码无效", ObjectUtils.NULL);
+            return ServiceResult.failure("验证码无效，请重新发送验证邮件。", ObjectUtils.NULL);
         }
 
         switch (e) {
@@ -170,7 +170,7 @@ public class UserServiceImpl implements UserService {
         //更新用户信息
         Integer count = this.tUserInfoMapper.updateByPrimaryKeySelective(tUserInfo);
         if (!count.equals(1)) {
-            return ServiceResult.failure("验证失败", ObjectUtils.NULL);
+            return ServiceResult.failure("验证失败,请稍后重试", ObjectUtils.NULL);
         }
 
         NoSQLWithRedisTool.removeValueObject(MAIL_CONFIRM_KEY + tUserInfo.getEmail());

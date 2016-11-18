@@ -3,8 +3,7 @@ package com.dqys.business.service.service.impl;
 import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
-import com.dqys.auth.orm.pojo.TUserInfo;
-import com.dqys.auth.orm.pojo.TUserTag;
+import com.dqys.auth.orm.pojo.*;
 import com.dqys.auth.orm.query.TUserTagQuery;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
@@ -27,6 +26,7 @@ import com.dqys.business.orm.pojo.business.Business;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.cases.CaseInfo;
 import com.dqys.business.orm.pojo.coordinator.*;
+import com.dqys.business.orm.pojo.coordinator.UserDetail;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.orm.pojo.zcy.ZcyEstates;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
@@ -38,7 +38,6 @@ import com.dqys.business.service.dto.company.DistributionDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.message.MessageUtils;
-import com.dqys.business.service.utils.operType.OperTypeUtile;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.model.UserSession;
@@ -48,7 +47,6 @@ import com.dqys.core.utils.SmsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.lang.model.type.IntersectionType;
 import java.util.*;
 
 /**
@@ -395,6 +393,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
         }
         if (num > 0) {
+            setUserTeamByPeopleNum(userTeam.getObjectType(), userTeam.getObjectId(), userId);//每次都修改人数
             map.put("result", "yes");
         } else {
             map.put("result", "no");
@@ -403,10 +402,26 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         return map;
     }
 
-    private void setUserTeam(Integer objectType, Integer objectId, Integer companyId) {
-        UserTeam userTeam = userTeamMapper.getByObject(objectId, objectType, companyId);
+    /**
+     * 修改对象的协作器人数
+     *
+     * @param objectType
+     * @param objectId
+     * @param userId
+     */
+    private void setUserTeamByPeopleNum(Integer objectType, Integer objectId, Integer userId) {
+        com.dqys.auth.orm.pojo.UserDetail userDetail = tUserInfoMapper.getUserDetail(userId);
+        UserTeam userTeam = userTeamMapper.getByObject(objectId, objectType, userDetail.getCompanyId());
         if (userTeam != null) {
-
+            TeammateRe teammateRe = new TeammateRe();
+            teammateRe.setUserTeamId(userTeam.getId());
+            teammateRe.setStatus(0);//待接收
+            List<TeammateRe> waitList = teammateReMapper.selectSelective(teammateRe);
+            teammateRe.setStatus(1);//已接受
+            List<TeammateRe> acceptLlist = teammateReMapper.selectSelective(teammateRe);
+            Integer sum = waitList.size() + acceptLlist.size();
+            userTeam.setNumberPeople(sum);
+            userTeamMapper.updateByPrimaryKeySelective(userTeam);
         }
     }
 
@@ -679,6 +694,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 messageService.add(title, content, userId, userT.getMangerId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INITIATIVE.getValue(),
                         MessageUtils.setOperUrl("/coordinator/isAccept?status=1&teammateId=" + teammateRe.getId(), null, "/coordinator/isAccept?status=2&teammateId=" + teammateRe.getId(), null, null));
             }
+            setUserTeamByPeopleNum(userT.getObjectType(), userT.getObjectId(), userId);//改对象的协作器人数
             map.put("result", "yes");
         } else if (flag == -1) {
             map.put("msg", "已经加入过案组或申请加入已发出");//已经加入过案组
@@ -1648,6 +1664,14 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 }
                 break;
         }
+        return null;
+    }
+
+    @Override
+    public Map history(Integer userTeamId) {
+        TeammateRe teammateRe = new TeammateRe();
+        teammateRe.setUserTeamId(userTeamId);
+        teammateReMapper.selectSelective(teammateRe);
         return null;
     }
 

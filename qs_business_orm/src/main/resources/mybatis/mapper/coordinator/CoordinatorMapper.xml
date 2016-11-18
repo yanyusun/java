@@ -465,16 +465,16 @@
             AND tze.operator=#{userId}
         </if>
     </select>
-    <!--获取接收后还未加入协作器的对象id-->
+    <!--待分配：获取自己录入的在写作其不存在或是参与人数没有超过5人的资产源-->
     <select id="findObjectIdByOURelation" resultType="int">
-        SELECT our.object_id from object_user_relation our
-        WHERE our.stateflag=0
-        <if test="userId !=null">
-            AND our.user_id=#{userId}
-        </if>
-        AND our.object_type=#{objectType} AND our.accept_status=0
-        AND our.object_id NOT IN(SELECT tut.object_id from t_user_team tut
-        WHERE tut.object_type=#{objectType})
+        SELECT tze.id FROM t_zcy_estates tze
+        WHERE tze.stateflag=0 AND
+        (
+        tze.id NOT IN (select object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType}) OR
+        tze.id IN(SELECT object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType} AND number_people &lt; 5
+        )
+        ) AND tze.operator =#{userId}
+        GROUP BY tze.id
     </select>
     <!--获取正在处置的对象id-->
     <select id="findObjectIdByOURelationAndBusiness" resultType="int">

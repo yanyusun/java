@@ -1,6 +1,7 @@
 package com.dqys.auth.orm.dao.facade;
 
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.auth.orm.pojo.UserDetail;
 import com.dqys.auth.orm.query.TUserQuery;
 import org.apache.ibatis.annotations.Param;
 
@@ -51,5 +52,13 @@ public interface TUserInfoMapper {
      * @return
      */
     Map getUserPart(Integer userId);
+
+    /**
+     * 获取用户的相关信息
+     *
+     * @param userId
+     * @return
+     */
+    UserDetail getUserDetail(Integer userId);
 
 }

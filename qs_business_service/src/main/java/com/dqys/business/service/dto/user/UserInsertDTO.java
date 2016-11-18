@@ -97,6 +97,42 @@ public class UserInsertDTO {
     private String accountCreateTime;//帐号创建时间
     private String resultsContrast;//业绩比例
     private String ongoing;//当前进行的任务数
+    private Integer performance;//历史业绩
+    private String joinCase;//参与过的案件
+    private String award;//奖励
+    private Integer currentTask;//当前任务数
+
+    public Integer getCurrentTask() {
+        return currentTask;
+    }
+
+    public void setCurrentTask(Integer currentTask) {
+        this.currentTask = currentTask;
+    }
+
+    public String getAward() {
+        return award;
+    }
+
+    public void setAward(String award) {
+        this.award = award;
+    }
+
+    public Integer getPerformance() {
+        return performance;
+    }
+
+    public void setPerformance(Integer performance) {
+        this.performance = performance;
+    }
+
+    public String getJoinCase() {
+        return joinCase;
+    }
+
+    public void setJoinCase(String joinCase) {
+        this.joinCase = joinCase;
+    }
 
     public String getResultsContrast() {
         return resultsContrast;

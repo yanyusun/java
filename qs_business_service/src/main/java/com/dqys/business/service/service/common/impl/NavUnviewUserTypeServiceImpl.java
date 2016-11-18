@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class NavUnviewUserTypeServiceImpl extends AbstractNavUnview implements N
         } else {
             for (Integer navId : navIds) {
                 List<SelectDto> selectDtos = NavUtil.getSelectDtoList(navId, NavUnviewEnum.USER_TYPE.getValue());
-                if(selectDtos!=null){
+                if (selectDtos != null) {
                     dtos.addAll(selectDtos);
                 }
             }
@@ -92,7 +93,10 @@ public class NavUnviewUserTypeServiceImpl extends AbstractNavUnview implements N
 
     @Override
     public List<SelectDto> getInit(Integer navId) {
-        return null;
+        List<SelectDto> dtos = new ArrayList<>();
+        dtos.addAll(getALLParentList(navId, 0, 0));
+        dtos.addAll(getList(navId, 0, 0));
+        return dtos;
     }
 
     @Override

@@ -458,7 +458,8 @@ public class UserServiceImpl implements UserService {
         if (!FormatValidateTool.checkEmail(dto.getEmail())) {
             return JsonResponseTool.failure("邮箱格式不正确");
         }
-        if (!FormatValidateTool.checkPhone(dto.getOccupationTel()) && !FormatValidateTool.checkMobile(dto.getOccupationTel())) {
+        if (dto.getOccupationTel() != null && !dto.getOccupationTel().equals("") &&
+                !FormatValidateTool.checkPhone(dto.getOccupationTel()) && !FormatValidateTool.checkMobile(dto.getOccupationTel())) {
             return JsonResponseTool.failure("电话格式不正确");
         }
         return JsonResponseTool.success(null);

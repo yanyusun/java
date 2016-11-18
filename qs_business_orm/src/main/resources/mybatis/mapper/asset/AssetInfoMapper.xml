@@ -481,4 +481,15 @@
         SELECT id from bt_asset WHERE  asset_no LIKE CONCAT('%', #{assetNo,jdbcType=VARCHAR},'%')
     </select>
 
+    <select id="findObjectIdByLender" resultType="int">
+        SELECT ast.id FROM bt_asset ast
+        WHERE ast.stateflag=0 AND
+        (
+        ast.id NOT IN (select object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType}) OR
+        ast.id IN(SELECT object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType} AND number_people &lt; 5
+        )
+        ) AND ast.operator =#{userId}
+        GROUP BY ast.id
+    </select>
+
 </mapper>

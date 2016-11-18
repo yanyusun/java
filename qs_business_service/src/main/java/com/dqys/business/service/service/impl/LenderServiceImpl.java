@@ -405,7 +405,7 @@ public class LenderServiceImpl implements LenderService {
         Integer lender = lenderInfoMapper.deleteByPrimaryKey(id);
         Integer contact = contactInfoMapper.deleteByMode(ObjectTypeEnum.LENDER.getValue().toString(), id);
 
-        if (lender > 0 ) {
+        if (lender > 0) {
             // 添加历史记录
             businessLogService.add(id, ObjectTypeEnum.LENDER.getValue(), LenderEnum.DELETE.getValue(),
                     "", "", 0, 0);
@@ -1023,6 +1023,7 @@ public class LenderServiceImpl implements LenderService {
             }
         } else if (ObjectTabEnum.assign.getValue().equals(tab)) {
             // 待分配
+            /*
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
             if (!flag) {
@@ -1037,6 +1038,8 @@ public class LenderServiceImpl implements LenderService {
             if (!CommonUtil.checkParam(ids) && ids.size() > 0) {
                 lenderQuery.setExceptIds(ids);
             }
+             */
+            lenderQuery.setIds(lenderInfoMapper.findObjectIdByLender(userId, ObjectTypeEnum.LENDER.getValue()));//11月18号修改成这样，原来是使用上面注释掉的代码
             lenderQuery.setOperator(userInfo.getId());
             if (!flag) {
 //                if (isPlatformOrEntrust) { // 修改于10.11
