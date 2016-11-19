@@ -679,10 +679,21 @@
         SELECT len.id FROM bt_lender len
         WHERE len.stateflag=0 AND
         (
-        len.id NOT IN (select object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType}) OR
-        len.id IN(SELECT object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType} AND number_people &lt; 5
+        len.id NOT IN (select object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType})
+        OR
+        len.id IN(SELECT object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType} AND
+        number_people &lt; 5
         )
-        ) AND len.operator =#{userId}
+        ) AND (
+        <if test="userId !=null">
+            len.operator =#{userId} or
+        </if>
+        len.id in (SELECT our.object_id FROM object_user_relation our
+        WHERE our.stateflag=0
+        <if test="userId !=null">
+            AND our.user_id=#{userId}
+        </if>
+        AND our.object_type=#{objectType}))
         GROUP BY len.id
     </select>
 
