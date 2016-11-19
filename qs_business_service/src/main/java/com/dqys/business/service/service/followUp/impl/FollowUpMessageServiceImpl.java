@@ -155,13 +155,17 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             int teamId = getTeamId(followUpMessageQuery.getObjectId(), followUpMessageQuery.getObjectType(), userId);
             followUpMessageQuery.setTeamId(teamId);
             followUpMessages = followUpMessageMapper.getlistWithALL(followUpMessageQuery);
-            Iterator<FollowUpMessage> intIter = followUpMessages.iterator();
-            while (intIter.hasNext()) {
-                FollowUpMessage followUpMessage = intIter.next();
-                if (followUpMessage.getUserId()==userId) {
-                    intIter.remove();
+            if(followUpMessages!=null&&followUpMessages.size()>0){
+                Iterator<FollowUpMessage> intIter = followUpMessages.iterator();
+                while (intIter.hasNext()) {
+                    FollowUpMessage followUpMessage = intIter.next();
+                    if (followUpMessage.getUserId()==userId) {
+                        intIter.remove();
+                    }
                 }
             }
+        }else{
+            followUpMessages = followUpMessageMapper.getlistWithALL(followUpMessageQuery);
         }
         // TODO: 16-10-27 预留字段目前需求不必使用也能完成 
 //        if(followUpMessageQuery.isCollection()){//与当前用户合作的催收公司
