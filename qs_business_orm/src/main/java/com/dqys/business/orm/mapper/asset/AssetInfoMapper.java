@@ -73,9 +73,20 @@ public interface AssetInfoMapper {
 
     /**
      * 批量分配
+     *
      * @param ids
      * @param id
      * @return
      */
-    Integer assignedBatch(@Param("ids")List<Integer> ids, @Param("id")Integer id);
+    Integer assignedBatch(@Param("ids") List<Integer> ids, @Param("id") Integer id);
+
+    /**
+     * 根据资产包编号查询资产包id
+     *
+     * @param assetNo
+     * @return
+     */
+    List<Integer> selectIdbyAssetNo(String assetNo);
+
+    List<Integer> findObjectIdByAsset(@Param("userId") Integer userId, @Param("objectType") Integer objectType);
 }

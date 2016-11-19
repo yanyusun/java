@@ -2,13 +2,16 @@ package com.dqys.auth.orm.dao.impl;
 
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.auth.orm.pojo.UserDetail;
 import com.dqys.auth.orm.query.TUserQuery;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author by pan on 16-4-6.
@@ -69,5 +72,21 @@ public class TUserInfoMapperImpl extends BaseDao implements TUserInfoMapper {
     @Override
     public void updateAccountUse(@Param("userIds") List<Integer> userIds, @Param("useStatus") Integer useStatus) {
         super.getSqlSession().getMapper(TUserInfoMapper.class).updateAccountUse(userIds, useStatus);
+    }
+
+    @Override
+    public Map getUserPart(Integer userId) {
+        TUserInfo info = selectByPrimaryKey(userId);
+        Map map = new HashMap<>();
+        if (info != null) {
+            map.put("realName", info.getRealName());
+            map.put("userId", info.getId());
+        }
+        return map;
+    }
+
+    @Override
+    public UserDetail getUserDetail(Integer userId) {
+        return super.getSqlSession().getMapper(TUserInfoMapper.class).getUserDetail(userId);
     }
 }

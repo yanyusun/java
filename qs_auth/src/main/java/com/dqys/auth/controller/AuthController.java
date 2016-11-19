@@ -4,6 +4,7 @@ import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.auth.orm.dao.facade.TMessageMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.pojo.CompanyDetailInfo;
 import com.dqys.auth.orm.pojo.LoginLog;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
@@ -693,16 +694,19 @@ public class AuthController extends BaseApiContorller {
         }
         Integer status = userServiceResult.getData().getStatus();
         Integer companyId = userServiceResult.getData().getCompanyId();
-        String userName = userServiceResult.getData().getUserName();
+        TCompanyInfo info = new TCompanyInfo();
+        if (companyId != null) {
+            info = companyService.get(companyId);
+        }
         if (status == null || status.equals(SysProperty.DEFAULT)) {
             step = "active";
         } else if (companyId == null || companyId.equals("")) {
             step = "company";
-        } else if (userName == null || userName.equals("")) {
+        } else if (companyId != null && info.getCompanyAccount() == null) {
             step = "administrator";
-        } else if (companyService.get(companyId).getIsAuth().equals(0)) {
+        } else if (info.getIsAuth().equals(0)) {
             step = "authentication";
-        } else if (companyService.get(companyId).getIsAuth().equals(2)) {
+        } else if (info.getIsAuth().equals(2)) {
             step = "authentication_no";
         } else {
             step = "true";
@@ -810,6 +814,7 @@ public class AuthController extends BaseApiContorller {
                 tUserInfoMapper.updateByPrimaryKeySelective(userInfo);
             }
             userInfo.setRealName(realName);
+            userInfo.setUserName(realName);
             userInfo.setIdentity(identity);
             userInfo.setMobile(mobile);
             userServiceResult = this.userService.registerAdmin_tx(userType, userInfo);

@@ -38,7 +38,6 @@ import com.dqys.business.service.dto.company.DistributionDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.message.MessageUtils;
-import com.dqys.business.service.utils.operType.OperTypeUtile;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.model.UserSession;
@@ -143,57 +142,65 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         if (objectType == ObjectTypeEnum.CASE.getValue().intValue()) {//案件
             if (getCase(map, objectId)) return;
         }
-        if (team == null) {//判断是否在t_user_team表中添加了记录，添加了返回信息，没添加的返回id
-            //需要判断userId是否拥有创建的权限
-            String role = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getRoleId();
-            boolean authority = false;
-            String[] roleType = role.split(",");
-            for (int i = 0; i < roleType.length; i++) {
-                if (RoleTypeEnum.ADMIN.getValue().toString().equals(roleType[i]) || RoleTypeEnum.REGULATOR.getValue().toString().equals(roleType[i])) {//用户为管理员或管理者才拥有权限
-                    authority = true;
-                }
-            }
-            if (!authority) {
-                map.put("result", "no");
-                map.put("msg", "没有权限创建协作器");
-                return;
-            }
+        if (team == null) {//该对象协作器还没有存在，创建协作器
+            if (addCoordinatorTeam(map, companyId, objectId, objectType, userid, userId, userTeam)) return;
 
-            Map<String, Object> adminUser = coordinatorMapper.getAdminUser(companyId);
-            Integer mangerId = MessageUtils.transMapToInt(adminUser, "id");//获取管理员id
-            userTeam.setMangerId(mangerId == null ? userid : mangerId);
-            userTeam.setCtreaterId(userid);
-            //查询操作人员被操作事物关系
-            ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
-            objectUserRelationQuery.setUserId(userId);
-            objectUserRelationQuery.setObjectId(objectId);
-            objectUserRelationQuery.setObjectType(objectType);
-            objectUserRelationQuery.setType(3);//业务流转类型
-            List<ObjectUserRelation> list = objectUserRelationMapper.list(objectUserRelationQuery);
-            for (ObjectUserRelation obj : list) {
-                if (obj.getVisibleType() != null && obj.getVisibleType() == 1) {
-                    userTeam.setObjectOperStatus(1);//设置对象可操作状态
-                    break;
-                }
-            }
-            Integer result = userTeamMapper.insertSelective(userTeam);//添加公司内成员协作器
-            map.put("userTeamId", userTeam.getId());
-            map.put("result", "yes");
-        } else {
-            List<TeamDTO> list = getTeamDTOs(companyId, team);//协作器团队信息
-            for (TeamDTO t : list) {//查询每个人员的任务数
-                Map<String, Object> task = getTaskCount(companyId, t.getUserId(), objectType);
-                t.setFinishTask(MessageUtils.transMapToInt(task, "finish"));
-                t.setOngoingTask(MessageUtils.transMapToInt(task, "ongoing"));
-                t.setTotalTask(MessageUtils.transMapToInt(task, "total"));
-                t.setLeaveWordTime(MessageUtils.transMapToString(coordinatorMapper.getLastLeaveWord(t.getUserId()), "time"));//最后留言时间
-            }
-            map.put("companys", companyList(objectId, objectType));//对象类型相应的公司
-            map.put("teams", list);//团队信息
-            map.put("people", getPeopleNum(companyId, objectId, objectType));//团队人数
-            map.put("userTeamId", team.getId());
-            map.put("result", "yes");
         }
+        //查询协作器信息
+        if (team == null) {
+            team = userTeamMapper.selectByPrimaryKeySelective(userTeam);
+        }
+        List<TeamDTO> list = getTeamDTOs(companyId, team);//协作器团队信息
+        for (TeamDTO t : list) {//查询每个人员的任务数
+            Map<String, Object> task = getTaskCount(companyId, t.getUserId(), objectType);
+            t.setFinishTask(MessageUtils.transMapToInt(task, "finish") == null ? 0 : MessageUtils.transMapToInt(task, "finish"));
+            t.setOngoingTask(MessageUtils.transMapToInt(task, "ongoing") == null ? 0 : MessageUtils.transMapToInt(task, "ongoing"));
+            t.setTotalTask(MessageUtils.transMapToInt(task, "total") == null ? 0 : MessageUtils.transMapToInt(task, "total"));
+            t.setLeaveWordTime(MessageUtils.transMapToString(coordinatorMapper.getLastLeaveWord(t.getUserId()), "time"));//最后留言时间
+        }
+        map.put("companys", companyList(objectId, objectType));//对象类型相应的公司
+        map.put("teams", list);//团队信息
+        map.put("people", getPeopleNum(companyId, objectId, objectType));//团队人数
+        map.put("userTeamId", team.getId());
+        map.put("result", "yes");
+
+    }
+
+    private boolean addCoordinatorTeam(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType, Integer userid, Integer userId, UserTeam userTeam) {
+        //需要判断userId是否拥有创建的权限
+        String role = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getRoleId();
+        boolean authority = false;
+        String[] roleType = role.split(",");
+        for (int i = 0; i < roleType.length; i++) {
+            if (RoleTypeEnum.ADMIN.getValue().toString().equals(roleType[i]) || RoleTypeEnum.REGULATOR.getValue().toString().equals(roleType[i])) {//用户为管理员或管理者才拥有权限
+                authority = true;
+            }
+        }
+        if (!authority) {
+            map.put("result", "no");
+            map.put("msg", "没有权限创建协作器");
+            return true;
+        }
+
+        Map<String, Object> adminUser = coordinatorMapper.getAdminUser(companyId);
+        Integer mangerId = MessageUtils.transMapToInt(adminUser, "id");//获取管理员id
+        userTeam.setMangerId(mangerId == null ? userid : mangerId);
+        userTeam.setCtreaterId(userid);
+        //查询操作人员被操作事物关系
+        ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
+        objectUserRelationQuery.setUserId(userId);
+        objectUserRelationQuery.setObjectId(objectId);
+        objectUserRelationQuery.setObjectType(objectType);
+        objectUserRelationQuery.setType(3);//业务流转类型
+        List<ObjectUserRelation> list = objectUserRelationMapper.list(objectUserRelationQuery);
+        for (ObjectUserRelation obj : list) {
+            if (obj.getVisibleType() != null && obj.getVisibleType() == 1) {
+                userTeam.setObjectOperStatus(1);//设置对象可操作状态
+                break;
+            }
+        }
+        Integer result = userTeamMapper.insertSelective(userTeam);//添加公司内成员协作器
+        return false;
     }
 
     /**
@@ -326,10 +333,18 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     @Override
     public Map<String, Object> getCompanyUserList(String realName, Integer userId, Integer companyId) {
         Map map = new HashMap<>();
+        Integer uId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         map.put("result", "no");
         //用户id和公司id只能选择其一，没有公司id就通过用户id查找公司id
         if ((companyId == null && userId != null) || (companyId != null && userId == null)) {
             List<Map<String, Object>> list = coordinatorMapper.getCompanyUserList(realName, userId, companyId);
+            //集合中去除自己的
+            for (Map m : list) {
+                if (uId.toString().equals(m.get("userId").toString())) {
+                    list.remove(m);
+                    break;
+                }
+            }
             map.put("users", list);
             map.put("result", "yes");
         } else {
@@ -378,12 +393,36 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
         }
         if (num > 0) {
+            setUserTeamByPeopleNum(userTeam.getObjectType(), userTeam.getObjectId(), userId);//每次都修改人数
             map.put("result", "yes");
         } else {
             map.put("result", "no");
         }
         businessLogService.add(userTeam.getObjectId(), userTeam.getObjectType(), UserInfoEnum.COORDINATOR_ADD_USER.getValue(), UserInfoEnum.COORDINATOR_ADD_USER.getName(), "", 0, userTeam.getId());
         return map;
+    }
+
+    /**
+     * 修改对象的协作器人数
+     *
+     * @param objectType
+     * @param objectId
+     * @param userId
+     */
+    private void setUserTeamByPeopleNum(Integer objectType, Integer objectId, Integer userId) {
+        com.dqys.auth.orm.pojo.UserDetail userDetail = tUserInfoMapper.getUserDetail(userId);
+        UserTeam userTeam = userTeamMapper.getByObject(objectId, objectType, userDetail.getCompanyId());
+        if (userTeam != null) {
+            TeammateRe teammateRe = new TeammateRe();
+            teammateRe.setUserTeamId(userTeam.getId());
+            teammateRe.setStatus(0);//待接收
+            List<TeammateRe> waitList = teammateReMapper.selectSelective(teammateRe);
+            teammateRe.setStatus(1);//已接受
+            List<TeammateRe> acceptLlist = teammateReMapper.selectSelective(teammateRe);
+            Integer sum = waitList.size() + acceptLlist.size();
+            userTeam.setNumberPeople(sum);
+            userTeamMapper.updateByPrimaryKeySelective(userTeam);
+        }
     }
 
     /**
@@ -655,6 +694,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 messageService.add(title, content, userId, userT.getMangerId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INITIATIVE.getValue(),
                         MessageUtils.setOperUrl("/coordinator/isAccept?status=1&teammateId=" + teammateRe.getId(), null, "/coordinator/isAccept?status=2&teammateId=" + teammateRe.getId(), null, null));
             }
+            setUserTeamByPeopleNum(userT.getObjectType(), userT.getObjectId(), userId);//改对象的协作器人数
             map.put("result", "yes");
         } else if (flag == -1) {
             map.put("msg", "已经加入过案组或申请加入已发出");//已经加入过案组
@@ -710,6 +750,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 if (list.size() > 0) {
                     receive_id = list.get(0).getUserId();//平台管理员id
                 }
+                code = SmsEnum.APPLY_AGAIN.getValue();
                 text = "重新业务审核申请";
             }
             if (objectType == ObjectTypeEnum.LENDER.getValue() && audit) {
@@ -727,9 +768,16 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 operType = AssetPackageEnum.update.getValue();
                 text = "资产包审核操作";
             }
-            Map userC = coordinatorMapper.getUserAndCompanyByUserId(receive_id);
-            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
-                    ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
+            Map userC = coordinatorMapper.getUserAndCompanyByUserId(receive_id);//接受者
+            String content = "";
+            if (audit) {
+                content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
+                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
+            } else {
+                Map operC = coordinatorMapper.getUserAndCompanyByUserId(userId);//发送者
+                content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(operC, "realName"),
+                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
+            }
             String title = getMessageTitle(objectId, objectType, MessageBTEnum.BUSINESS.getValue());
             messageService.add(title, content, userId, receive_id, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS.getValue(), "");//添加通知消息
             map.put("result", "yes");
@@ -746,6 +794,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         List<Map<String, Object>> receive_ids = new ArrayList<>();
         LenderInfo lenderInfo = new LenderInfo();
         if (objectType == ObjectTypeEnum.LENDER.getValue()) {
+            //对借款人的操作
             lenderInfo.setId(objectId);
             lenderInfo.setIsStop(status);
             LenderInfo lender = lenderInfoMapper.get(objectId);
@@ -763,6 +812,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             operType = LenderEnum.UPDATE_EDIT.getValue();
             receive_ids = coordinatorMapper.getUserIdByObjUserRelToLender(objectType, objectId);
         } else if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+            //对资产包的操作
             AssetInfo assetInfo = new AssetInfo();
             assetInfo.setId(objectId);
             assetInfo.setIsStop(status);
@@ -782,10 +832,29 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 lenderInfo.setAssetId(objectId);
                 coordinatorMapper.updateLender(lenderInfo);//修改资产包isStop状态
             }
-            ;
             operType = AssetPackageEnum.update.getValue();
             receive_ids = coordinatorMapper.getUserIdByObjUserRelToAsset(objectType, objectId);//被通知人员
+        } else if (objectType == ObjectTypeEnum.ASSETSOURCE.getValue().intValue()) {
+            //对资产源的操作
+            ZcyEstates zcyEstates = new ZcyEstates();
+            zcyEstates.setId(objectId);
+            zcyEstates.setResultStatus(status);
+            ZcyEstates estates = zcyEstatesMapper.selectByPrimaryKey(objectId);
+            if (estates == null) {
+                map.put("result", "noExist");//不存在记录
+                map.put("msg", "资产源记录不存在");
+                return;
+            }
+            if (estates.getResultStatus() == status) {
+                map.put("result", "repetition");//重复操作
+                map.put("msg", "重复操作");//
+                return;
+            }
+            zcyEstatesMapper.updateByPrimaryKey(zcyEstates);
+            operType = AssetSourceEnum.UPDATE_EDIT.getValue();
+            receive_ids = coordinatorMapper.getUserIdByObjUserRelToLender(objectType, objectId);//被通知人员
         }
+        businessLogService.add(objectId, objectType, operType, "暂停或无效操作", "", 0, 0);
         Integer code = 0;
         if (status == 1) {
             code = SmsEnum.BUSINESS_PAUSE.getValue();//设置业务暂停
@@ -820,7 +889,10 @@ public class CoordinatorServiceImpl implements CoordinatorService {
      */
     @Override
     public List<TeamDTO> getLenderOrAsset(Integer companyId, Integer objectId, Integer objectType) {
-        return coordinatorMapper.getLenderOrAsset(companyId, objectId, objectType);
+        List<Integer> statusList = new ArrayList<>();
+        statusList.add(0);//待接收
+        statusList.add(1);//已接受
+        return coordinatorMapper.getLenderOrAsset(companyId, objectId, objectType, statusList);
     }
 
     /**
@@ -1505,7 +1577,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
         team.setStatus(TeammateReEnum.STATUS_DELETE.getValue());
         Integer result = teammateReMapper.updateByPrimaryKey(team);
-        teammateReMapper.deleteByPrimaryKey(team.getId());
+//        teammateReMapper.deleteByPrimaryKey(team.getId());
         OURelation ouRelation = new OURelation();
         ouRelation.setUserId(teamUserId);
         ouRelation.setEmployerId(userTeamId);
@@ -1596,6 +1668,25 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 break;
         }
         return null;
+    }
+
+    @Override
+    public Map history(Integer userTeamId) {
+        Map map = new HashMap<>();
+        UserTeam userTeam = userTeamMapper.get(userTeamId);
+        List<Integer> statusList = new ArrayList<>();
+        statusList.add(99);
+        List<TeamDTO> dtos = coordinatorMapper.getLenderOrAsset(userTeam.getCompanyId(), userTeam.getObjectId(), userTeam.getObjectType(), statusList);
+        for (TeamDTO t : dtos) {//查询每个人员的任务数
+            Map<String, Object> task = getTaskCount(userTeam.getCompanyId(), t.getUserId(), userTeam.getObjectType());
+            t.setFinishTask(MessageUtils.transMapToInt(task, "finish") == null ? 0 : MessageUtils.transMapToInt(task, "finish"));
+            t.setOngoingTask(MessageUtils.transMapToInt(task, "ongoing") == null ? 0 : MessageUtils.transMapToInt(task, "ongoing"));
+            t.setTotalTask(MessageUtils.transMapToInt(task, "total") == null ? 0 : MessageUtils.transMapToInt(task, "total"));
+            t.setLeaveWordTime(MessageUtils.transMapToString(coordinatorMapper.getLastLeaveWord(t.getUserId()), "time"));//最后留言时间
+        }
+        map.put("teams", dtos);//团队信息
+        map.put("result", "yes");
+        return map;
     }
 
 

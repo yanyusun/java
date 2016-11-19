@@ -33,10 +33,7 @@ import com.dqys.business.service.dto.excel.ExcelMessage;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.exception.bean.LenderException;
 import com.dqys.business.service.query.asset.AssetListQuery;
-import com.dqys.business.service.service.AssetService;
-import com.dqys.business.service.service.BusinessLogService;
-import com.dqys.business.service.service.BusinessService;
-import com.dqys.business.service.service.CoordinatorService;
+import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.asset.AssetServiceUtils;
 import com.dqys.business.service.utils.asset.IouServiceUtils;
 import com.dqys.business.service.utils.asset.LenderServiceUtils;
@@ -93,7 +90,8 @@ public class AssetServiceImpl implements AssetService {
     private TCompanyInfoMapper companyInfoMapper;
     @Autowired
     private FollowUpReadstatusMapper followUpReadstatusMapper;
-
+    @Autowired
+    private IouService iouService;
     @Autowired
     private BusinessLogService businessLogService;
     @Autowired
@@ -107,6 +105,7 @@ public class AssetServiceImpl implements AssetService {
             return JsonResponseTool.paramErr("参数错误");
         }
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        setAssetMoney(assetDTO);//设置金额
         AssetInfo assetInfo = AssetServiceUtils.toAssetInfo(assetDTO);
         assetInfo.setOperator(userId);
         String typeStr = UserSession.getCurrent().getUserType();
@@ -141,11 +140,18 @@ public class AssetServiceImpl implements AssetService {
         }
     }
 
+    private void setAssetMoney(AssetDTO assetDTO) {
+        assetDTO.setLoan(null);
+        assetDTO.setAccrual(null);
+        assetDTO.setAppraisal(null);
+    }
+
     @Override
     public JsonResponse updateById_tx(AssetDTO assetDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(assetDTO)) {
             return JsonResponseTool.paramErr("参数错误");
         }
+        setAssetMoney(assetDTO);//设置金额
         Integer result = assetInfoMapper.update(AssetServiceUtils.toAssetInfo(assetDTO));
         if (CommonUtil.checkResult(result)) {
             return JsonResponseTool.failure("修改失败");
@@ -616,9 +622,18 @@ public class AssetServiceImpl implements AssetService {
                 assetQuery.setOperator(userInfo.getId());
             }
         } else if (ObjectTabEnum.refuse.getValue().equals(type)) {
+            List<Integer> ids = null;
             // 已驳回
-            List<Integer> ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.ASSETPACKAGE.getValue(),
-                    BusinessStatusEnum.platform_refuse.getValue(), userId);
+            if (flag) {
+                ids = businessObjReMapper.listIdByTypeIdStatus(ObjectTypeEnum.ASSETPACKAGE.getValue(),
+                        BusinessStatusEnum.platform_refuse.getValue());
+                assetQuery.setIds(ids);
+            } else {
+                ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.ASSETPACKAGE.getValue(),
+                        BusinessStatusEnum.platform_refuse.getValue(), userId);
+                assetQuery.setIds(ids);
+            }
+
             if (!CommonUtil.checkParam(ids) && ids.size() > 0) {
                 assetQuery.setIds(ids);
             } else {
@@ -642,6 +657,7 @@ public class AssetServiceImpl implements AssetService {
             }
         } else if (ObjectTabEnum.assign.getValue().equals(type)) {
             // 待分配
+            /*
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
             if (!flag) {
@@ -656,6 +672,8 @@ public class AssetServiceImpl implements AssetService {
             if (!CommonUtil.checkParam(ids) && ids.size() > 0) {
                 assetQuery.setExceptIds(ids);
             }
+             */
+            assetQuery.setIds(assetInfoMapper.findObjectIdByAsset(userId, ObjectTypeEnum.ASSETPACKAGE.getValue()));//11月18号修改成这样，原来是使用上面注释掉的代码
             assetQuery.setOperator(userInfo.getId());
             if (!flag) {
 //                if (isPlatformOrEntrust) { // 修改于10.11
@@ -906,8 +924,7 @@ public class AssetServiceImpl implements AssetService {
                 }
             }
         }
-
-        return JsonResponseTool.success(null);
+        return JsonResponseTool.success(userInfoMapper.getUserPart(userId));
     }
 
     @Override
@@ -951,7 +968,6 @@ public class AssetServiceImpl implements AssetService {
             if (lenderInfo.getLenderNo() == null) {
                 lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
             }
-            lenderInfo.setOperator(userId);
             String typeStr = UserSession.getCurrent().getUserType();
             UserInfoEnum infoEnum = UserInfoEnum.getUserInfoEnum(Integer.valueOf(typeStr.substring(0, typeStr.indexOf(","))));
             if (infoEnum != null) {
@@ -1019,9 +1035,16 @@ public class AssetServiceImpl implements AssetService {
             // 增加操作记录
             businessLogService.add(pawnInfo.getId(), ObjectTypeEnum.PAWN.getValue(), PawnEnum.ADD.getValue(),
                     "", pawnDTO.getMemo(), 0, 0);
-            map.put(pawnDTO.getLenderId() + pawnDTO.getPawnName(), pawnInfo.getId());
+            //存放抵借据和押物关系
+            if (pawnDTO.getIouIds() != null && pawnDTO.getIouIds().length() > 0) {
+                String[] iouIdMap = pawnDTO.getIouIds().split(",");
+                for (String iouId : iouIdMap) {
+                    keyMap.put(iouId + pawnDTO.getPawnName(), pawnInfo.getId());
+                }
+            }
         }
         // 增加借据
+        List<Integer> lenderIds = new ArrayList<>();
         for (IouDTO iouDTO : iouDTOList) {
             if (idMap.get(iouDTO.getId()) == null) {
                 throw new LenderException("借款人的相关联系人序号关联不对", LenderException.EXCEPTION_CODE);
@@ -1046,31 +1069,37 @@ public class AssetServiceImpl implements AssetService {
             if (CommonUtil.checkResult(result)) {
                 throw new LenderException("增加借据信息失败", LenderException.EXCEPTION_CODE);
             }
+            //存放在集和中用于修改借款人和资产包的金额
+            if (!lenderIds.contains(iouInfo.getLenderId())) {
+                lenderIds.add(iouInfo.getLenderId());
+            }
             // 添加业务
             businessService.addServiceObject(ObjectTypeEnum.IOU.getValue(), iouInfo.getId(),
                     ObjectTypeEnum.LENDER.getValue(), iouDTO.getLenderId());
             // 添加操作记录
             businessLogService.add(iouInfo.getId(), ObjectTypeEnum.IOU.getValue(), IouEnum.ADD.getValue(),
                     "", iouDTO.getMemo(), 0, 0);
-            // 增加关联关系
-            if (iouDTO.getPawnNames() != null && iouDTO.getPawnNames().length() > 0) {
-                String[] nameStr = iouDTO.getPawnNames().split(",");
-                for (String s : nameStr) {
-                    if (s.length() > 0 && keyMap.get(s) != null) {
+            // 增加借据抵押物的关联关系
+            if (iouDTO.getPawnIds() != null && iouDTO.getPawnIds().length() > 0) {
+                String[] nameStr = iouDTO.getPawnIds().split(",");
+                for (String paweName : nameStr) {
+                    String key = iouDTO.getIouName() + paweName;
+                    if (keyMap.get(key) != null) {
                         RelationQuery query = new RelationQuery();
-                        query.setPawnId(keyMap.get(s));
+                        query.setPawnId(keyMap.get(key));
                         query.setIouId(iouInfo.getId());
                         List<PiRelation> relation = piRelationMapper.queryList(query);
                         if (relation == null || relation.size() == 0) {
                             PiRelation piRelation = new PiRelation();
                             piRelation.setIouId(iouInfo.getId());
-                            piRelation.setPawnId(keyMap.get(s));
+                            piRelation.setPawnId(keyMap.get(key));
                             piRelationMapper.insert(piRelation);
                         }
                     }
                 }
             }
         }
+        iouService.setLenderAndAsset(lenderIds);
         return JsonResponseTool.success(null);
     }
 }

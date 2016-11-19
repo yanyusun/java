@@ -69,13 +69,13 @@
                 AND operator = #{operator,jdbcType=INTEGER}
             </if>
             <if test="code != null">
-                AND asset_no = #{code,jdbcType=VARCHAR}
+                AND asset_no LIKE CONCAT('%', #{code,jdbcType=VARCHAR},'%')
             </if>
             <if test="repayStatus != null">
                 AND repay_status = #{repayStatus,jdbcType=VARCHAR}
             </if>
             <if test="entrustName != null">
-                AND entrust_name = #{entrustName,jdbcType=VARCHAR}
+                AND entrust_name LIKE CONCAT('%', #{entrustName,jdbcType=VARCHAR},'%')
             </if>
 
             <if test="outTime">
@@ -476,5 +476,20 @@
         UPDATE bt_asset SET belong = #{id, jdbcType=INTEGER}
         <include refid="Query_Condition"/>
     </update>
+    <!--根据资产包编号查询资产包id-->
+    <select id="selectIdbyAssetNo" resultType="java.lang.Integer">
+        SELECT id from bt_asset WHERE  asset_no LIKE CONCAT('%', #{assetNo,jdbcType=VARCHAR},'%')
+    </select>
+
+    <select id="findObjectIdByLender" resultType="int">
+        SELECT ast.id FROM bt_asset ast
+        WHERE ast.stateflag=0 AND
+        (
+        ast.id NOT IN (select object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType}) OR
+        ast.id IN(SELECT object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType} AND number_people &lt; 5
+        )
+        ) AND ast.operator =#{userId}
+        GROUP BY ast.id
+    </select>
 
 </mapper>

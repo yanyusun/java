@@ -8,20 +8,21 @@ import com.dqys.business.service.service.sysNotice.SysNoticeService;
 import com.dqys.business.service.utils.sysNotice.SysNoticeUtil;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.base.BaseApiContorller;
+import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.ProtocolTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.dqys.business.service.utils.common.buttonUtil.ListButtonShowerUtil.map;
 
 /**
  * Created by yan on 16-9-7.
@@ -77,9 +78,20 @@ public class SysNoticeController extends BaseApiContorller {
 
     @RequestMapping(value = "/c_pageList", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse list(SysNoticeQuery sysNoticeQuery) {
+    public JsonResponse list(SysNoticeQuery sysNoticeQuery,HttpServletRequest httpServletRequest) throws Exception{
+
         if (sysNoticeQuery.getIsPaging()) {
-            int usertype = UserServiceUtils.headerStringToInt(UserSession.getCurrent().getUserType());
+            Integer userId = ProtocolTool.validateUser(
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                    httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+            );
+            int usertype = 0;
+            if (userId!=0){
+                usertype=  UserServiceUtils.headerStringToInt(UserSession.getCurrent().getUserType());
+            }
             if (UserInfoEnum.USER_TYPE_ADMIN.getValue() == usertype) {//如果是平台方有权利看到没有发布的内容
                 sysNoticeQuery.setIntroduce(false);
             }
@@ -100,6 +112,8 @@ public class SysNoticeController extends BaseApiContorller {
             return JsonResponseTool.paramErr("参数错误");
         }
     }
+
+
 
     /**
      * @api {GET} http://{url}/sys_notice/add 查询更进信息,并去除对应阶段的未读数据

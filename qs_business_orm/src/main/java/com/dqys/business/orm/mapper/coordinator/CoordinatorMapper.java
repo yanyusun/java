@@ -23,7 +23,8 @@ public interface CoordinatorMapper {
      * @param objectType
      * @return
      */
-    List<TeamDTO> getLenderOrAsset(@Param("companyId") Integer companyId, @Param("objectId") Integer objectId, @Param("objectType") Integer objectType);
+    List<TeamDTO> getLenderOrAsset(@Param("companyId") Integer companyId, @Param("objectId") Integer objectId, @Param("objectType") Integer objectType,
+                                   @Param("statusList") List<Integer> statusList);
 
     /**
      * 获取当前进行的任务总数

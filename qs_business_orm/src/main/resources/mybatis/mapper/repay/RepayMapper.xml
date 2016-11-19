@@ -41,21 +41,11 @@
         UPDATE bt_iou
         <set>
             version=version+1,
-            <if test="priMoney !=null">
-                less_corpus=less_corpus-#{priMoney,jdbcType=DOUBLE},
-                loan_repay=loan_repay+#{priMoney,jdbcType=DOUBLE},
-            </if>
-            <if test="accMoney !=null and penalty==null">
-                accrual_arrears=accrual_arrears-#{accMoney,jdbcType=DOUBLE},
-                accrual_repay=accrual_repay+#{accMoney,jdbcType=DOUBLE},
-            </if>
-            <if test="penalty !=null">
-                <if test="accMoney !=null">
-                    accrual_arrears=accrual_arrears-#{accMoney,jdbcType=DOUBLE},
-                </if>
-                penalty=penalty-#{penalty,jdbcType=DOUBLE},
-                accrual_repay=accrual_repay+#{penalty,jdbcType=DOUBLE},
-            </if>
+            less_corpus=less_corpus-#{priMoney,jdbcType=DOUBLE},
+            accrual_arrears=accrual_arrears-#{accMoney,jdbcType=DOUBLE},
+            penalty=penalty-#{penalty,jdbcType=DOUBLE},
+            loan_repay=loan_repay+#{priMoney,jdbcType=DOUBLE},
+            accrual_repay=accrual_repay+(#{accMoney,jdbcType=DOUBLE}+#{penalty,jdbcType=DOUBLE}),
         </set>
         WHERE id=#{iouId,jdbcType=INTEGER} and version=#{version,jdbcType=INTEGER}
     </update>
@@ -92,21 +82,11 @@
         UPDATE bt_iou
         <set>
             version=version+1,
-            <if test="priMoney !=null">
-                less_corpus=less_corpus+#{priMoney,jdbcType=DOUBLE},
-                loan_repay=loan_repay-#{priMoney,jdbcType=DOUBLE},
-            </if>
-            <if test="accMoney !=null and penalty==null">
-                accrual_arrears=accrual_arrears+#{accMoney,jdbcType=DOUBLE},
-                accrual_repay=accrual_repay-#{accMoney,jdbcType=DOUBLE},
-            </if>
-            <if test="penalty !=null">
-                <if test="accMoney !=null">
-                    accrual_arrears=accrual_arrears+#{accMoney,jdbcType=DOUBLE},
-                </if>
-                penalty=penalty+#{penalty,jdbcType=DOUBLE},
-                accrual_repay=accrual_repay-#{penalty,jdbcType=DOUBLE},
-            </if>
+            less_corpus=less_corpus+#{priMoney,jdbcType=DOUBLE},
+            accrual_arrears=accrual_arrears+#{accMoney,jdbcType=DOUBLE},
+            penalty=penalty+#{penalty,jdbcType=DOUBLE},
+            loan_repay=loan_repay-#{priMoney,jdbcType=DOUBLE},
+            accrual_repay=accrual_repay-(#{penalty,jdbcType=DOUBLE}+#{accMoney,jdbcType=DOUBLE}),
         </set>
         WHERE id=#{iouId,jdbcType=INTEGER} and version=#{version,jdbcType=INTEGER}
     </update>
@@ -342,7 +322,8 @@
         UPDATE business set status=#{status,jdbcType=INTEGER} WHERE id=#{id,jdbcType=INTEGER}
     </update>
     <!--添加延期申请记录-->
-    <insert id="addDamageApply" parameterType="com.dqys.business.orm.pojo.repay.DamageApply" keyProperty="id" useGeneratedKeys="true">
+    <insert id="addDamageApply" parameterType="com.dqys.business.orm.pojo.repay.DamageApply" keyProperty="id"
+            useGeneratedKeys="true">
         insert into t_damage_apply
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -449,7 +430,7 @@
     <!--根据借款人获取借据-->
     <select id="getIouByLenderId" resultType="java.util.Map">
         SELECT iou.iou_no number,iou.id id from bt_iou iou
-        where iou.lender_id=#{lenderId,jdbcType=INTEGER} and iou.stateflag=0 AND ioou.repay_status=1
+        where iou.lender_id=#{lenderId,jdbcType=INTEGER} and iou.stateflag=0 AND iou.repay_status=1
     </select>
     <!--根据借款人获取抵押物-->
     <select id="getPawnByLenderId" resultType="java.util.Map">

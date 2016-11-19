@@ -3,8 +3,8 @@ package com.dqys.business.service.service.common.impl;
 import com.dqys.business.orm.mapper.common.NavUnviewRoleMapper;
 import com.dqys.business.orm.mapper.common.SourceNavigationMapper;
 import com.dqys.business.orm.pojo.common.NavUnviewRole;
-import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
+import com.dqys.business.service.service.common.AbstractNavUnview;
 import com.dqys.business.service.service.common.NavUnviewRoleService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.NavUnviewEnum;
@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,49 +22,14 @@ import java.util.Map;
 //// TODO: 16-10-28  mkf
 @Repository
 @Primary
-public class NavUnviewRoleServiceImpl implements NavUnviewRoleService {
+public class NavUnviewRoleServiceImpl extends AbstractNavUnview implements NavUnviewRoleService {
     @Autowired
     private NavUnviewRoleMapper navUnviewRoleMapper;
 
     @Autowired
     private SourceNavigationMapper sourceNavigationMapper;
 
-    @Override
-    public List<SelectDto> getALLParentList(Integer navId, Integer object, Integer objectId) {
-        List<SelectDto> dtos = new ArrayList<>();
-        List<Integer> navIds = new ArrayList<>();
-        boolean flag = true;
-        while (flag) {
-            SourceNavigation nav = sourceNavigationMapper.get(navId);
-            if (nav != null) {
-                navIds.add(navId);
-                if (nav.getPid() != 0) {
-                    navId = nav.getPid();
-                } else {
-                    flag = false;
-                }
-            } else {
-                flag = false;
-            }
-        }
-        if (navIds.size() > 0) {
-            setSelectDtoList(dtos, navIds, object, objectId);
-        }
-        return dtos;
-    }
-
-    @Override
-    public List<SelectDto> getList(Integer navId, Integer object, Integer objectId) {
-        List<SelectDto> dtos = new ArrayList<>();
-        List<Integer> navIds = new ArrayList<>();
-        navIds.add(navId);
-        setSelectDtoList(dtos, navIds, object, objectId);
-//        NoSQLWithRedisTool.removeValueObject(navId + "_" + NavUnviewEnum.ROLE);
-//        NoSQLWithRedisTool.setValueObject(navId + "_" + NavUnviewEnum.ROLE, dtos, 31L, TimeUnit.DAYS);
-        return dtos;
-    }
-
-    private void setSelectDtoList(List<SelectDto> dtos, List<Integer> navIds, Integer object, Integer objectId) {
+    protected void setSelectDtoList(List<SelectDto> dtos, List<Integer> navIds, Integer object, Integer objectId) {
         if (navIds != null && navIds.size() == 0) {
             return;
         }
@@ -75,7 +39,6 @@ public class NavUnviewRoleServiceImpl implements NavUnviewRoleService {
             dtos.add(dto);
         }
     }
-
 
     @Override
     public void del(Integer navId, Integer object, Integer objectId) {
@@ -88,26 +51,10 @@ public class NavUnviewRoleServiceImpl implements NavUnviewRoleService {
         navUnviewRoleMapper.insertSelectiveByRoleType(navId, unviewList, object, objectId);
     }
 
-    @Override
-    public SelectDto get(Integer navId, Integer object, Integer objectId, Integer reId) {
-        List<SelectDto> dtos = new ArrayList<>();
-        List<Integer> navIds = new ArrayList<>();
-        navIds.add(navId);
-        setSelectDtoList(dtos, navIds, object, objectId);
-        for (SelectDto dto : dtos) {
-            if (dto != null && dto.getReId().intValue() == reId) {
-                return dto;
-            }
-        }
-        return null;
-    }
 
     @Override
-    public void del(Integer navId, Integer object, Integer objectId, Integer reId) {
-        SelectDto dto = get(navId, object, objectId, reId);
-        if (dto != null) {
-            navUnviewRoleMapper.deleteByPrimaryKey(dto.getId());
-        }
+    public void del(Integer id) {
+        navUnviewRoleMapper.deleteByPrimaryKey(id);
     }
 
     @Override
@@ -133,5 +80,10 @@ public class NavUnviewRoleServiceImpl implements NavUnviewRoleService {
     @Override
     public int getType() {
         return NavUnviewEnum.ROLE.getValue();
+    }
+
+    @Override
+    protected SourceNavigationMapper getSourceNavigationMapper() {
+        return sourceNavigationMapper;
     }
 }

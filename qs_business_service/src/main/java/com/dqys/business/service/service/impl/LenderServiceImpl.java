@@ -109,6 +109,9 @@ public class LenderServiceImpl implements LenderService {
         if (lenderQuery == null) {
             return null; // 类型不对,参数错误
         }
+        if (lenderListQuery != null && lenderListQuery.getAssetNo() != null) {
+            lenderQuery.setAssetIds(assetInfoMapper.selectIdbyAssetNo(lenderListQuery.getAssetNo()));
+        }
         if (!CommonUtil.isManage()) {
             if (SysProperty.NULL_DATA_ID.equals(lenderQuery.getId())) {
                 // 搜索不到数据
@@ -340,6 +343,7 @@ public class LenderServiceImpl implements LenderService {
             return JsonResponseTool.paramErr("缺少借款人信息");
         }
         // 添加借款人基础信息
+        setLenderMoney(lenderDTO);//设置金额
         LenderInfo lenderInfo = LenderServiceUtils.toLenderInfo(lenderDTO);
         if (lenderInfo.getLenderNo() == null) {
             lenderInfo.setLenderNo(RandomUtil.getCode(RandomUtil.LENDER_CODE));
@@ -381,7 +385,16 @@ public class LenderServiceImpl implements LenderService {
         // 添加历史记录
         businessLogService.add(lenderId, ObjectTypeEnum.LENDER.getValue(), AssetPackageEnum.add.getValue(),
                 "", "", 0, 0);
-        return JsonResponseTool.success(lenderId);
+        Map map = userInfoMapper.getUserPart(userId);
+        map.put("lenderId", lenderId);
+        return JsonResponseTool.success(map);
+    }
+
+    private void setLenderMoney(LenderDTO lenderDTO) {
+        //        总金额和总利息从借据累计而来,所以这里设置为null
+        lenderDTO.setAccrual(null);
+        lenderDTO.setLoan(null);
+        lenderDTO.setAppraisal(null);
     }
 
     @Override
@@ -392,13 +405,13 @@ public class LenderServiceImpl implements LenderService {
         Integer lender = lenderInfoMapper.deleteByPrimaryKey(id);
         Integer contact = contactInfoMapper.deleteByMode(ObjectTypeEnum.LENDER.getValue().toString(), id);
 
-        if (CommonUtil.checkResult(lender) && CommonUtil.checkResult(contact)) {
+        if (lender > 0) {
             // 添加历史记录
             businessLogService.add(id, ObjectTypeEnum.LENDER.getValue(), LenderEnum.DELETE.getValue(),
                     "", "", 0, 0);
             return JsonResponseTool.success(null);
         } else {
-            return JsonResponseTool.failure("删除失败");
+            return JsonResponseTool.failure("借款人删除失败");
         }
     }
 
@@ -420,6 +433,7 @@ public class LenderServiceImpl implements LenderService {
         if (!flag) {
             return JsonResponseTool.paramErr("缺少借款人信息");
         }
+        setLenderMoney(lenderDTO);//设置金额
         Integer result = lenderInfoMapper.update(LenderServiceUtils.toLenderInfo(lenderDTO));
         if (!CommonUtil.checkResult(result)) {
             flag = true;
@@ -482,7 +496,6 @@ public class LenderServiceImpl implements LenderService {
         }
         // 联系人
         List<ContactInfo> contactInfoList = contactInfoMapper.listByMode(ObjectTypeEnum.LENDER.getValue().toString(), lenderInfo.getId());
-        resultMap.put("contactDTOs", LenderServiceUtils.toContactDTO(contactInfoList));
         for (ContactInfo contactInfo : contactInfoList) {
             if (contactInfo.getType().equals(ContactTypeEnum.LENDER.getValue())
                     ) {
@@ -499,6 +512,7 @@ public class LenderServiceImpl implements LenderService {
                 break;
             }
         }
+        resultMap.put("contactDTOs", LenderServiceUtils.toContactDTO(contactInfoList));
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         String userType = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getUserType();
         if (userType.indexOf(",") > 0) {
@@ -1015,6 +1029,7 @@ public class LenderServiceImpl implements LenderService {
             }
         } else if (ObjectTabEnum.assign.getValue().equals(tab)) {
             // 待分配
+            /*
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
             if (!flag) {
@@ -1029,6 +1044,8 @@ public class LenderServiceImpl implements LenderService {
             if (!CommonUtil.checkParam(ids) && ids.size() > 0) {
                 lenderQuery.setExceptIds(ids);
             }
+             */
+            lenderQuery.setIds(lenderInfoMapper.findObjectIdByLender(userId, ObjectTypeEnum.LENDER.getValue()));//11月18号修改成这样，原来是使用上面注释掉的代码
             lenderQuery.setOperator(userInfo.getId());
             if (!flag) {
 //                if (isPlatformOrEntrust) { // 修改于10.11

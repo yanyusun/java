@@ -27,4 +27,9 @@ public class TAreaMapperImpl extends BaseDao implements TAreaMapper {
     public TArea getByName(String name) {
         return super.getSqlSession().getMapper(TAreaMapper.class).getByName(name);
     }
+
+    @Override
+    public TArea get(Integer id) {
+        return super.getSqlSession().getMapper(TAreaMapper.class).get(id);
+    }
 }

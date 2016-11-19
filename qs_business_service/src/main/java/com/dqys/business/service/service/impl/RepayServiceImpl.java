@@ -1,13 +1,19 @@
 package com.dqys.business.service.service.impl;
 
 import com.dqys.auth.orm.constant.CompanyTypeEnum;
+import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.pojo.TUserTag;
+import com.dqys.auth.orm.pojo.UserDetail;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.repay.RepayEnum;
 import com.dqys.business.orm.mapper.asset.*;
+import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
+import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.repay.RepayMapper;
 import com.dqys.business.orm.pojo.asset.*;
+import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
 import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
 import com.dqys.business.orm.pojo.repay.RepayRecord;
@@ -15,8 +21,8 @@ import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.service.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.*;
+import com.dqys.business.service.constant.UserStatusTypeEnum;
 import com.dqys.business.service.exception.bean.ArtificialException;
-import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.MessageService;
@@ -27,8 +33,6 @@ import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.DateFormatTool;
 import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.SmsUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.UnexpectedRollbackException;
@@ -69,11 +73,16 @@ public class RepayServiceImpl implements RepayService {
 
     @Autowired
     private CoordinatorMapper coordinatorMapper;
-
+    @Autowired
+    private CompanyTeamReMapper companyTeamReMapper;
     @Autowired
     private CoordinatorService coordinatorService;
     @Autowired
     private CiRelationMapper ciRelationMapper;
+    @Autowired
+    private ObjectUserRelationMapper objectUserRelationMapper;
+    @Autowired
+    private TUserInfoMapper tUserInfoMapper;
 
     @Override
     public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
@@ -108,13 +117,17 @@ public class RepayServiceImpl implements RepayService {
         //循环得出借据金额
         for (IOUInfo iou : ious) {
             iouIds.add(iou.getId());
-            if (iou.getLessCorpus() == 0 && ((iou.getPenalty() == null && iou.getAccrualArrears() == 0) || (iou.getPenalty() != null && iou.getPenalty() == 0))) {//剔除不需要还款的借据
+            if ((iou.getLessCorpus() != null && iou.getLessCorpus() == 0) && (iou.getAccrualArrears() != null && iou.getAccrualArrears() == 0) && (iou.getPenalty() != null && iou.getPenalty() == 0)) {//剔除不需要还款的借据
                 continue;
             }
-            principalTotal = principalTotal.add(BigDecimal.valueOf(iou.getLessCorpus()));
+            if (iou.getLessCorpus() != null) {
+                principalTotal = principalTotal.add(BigDecimal.valueOf(iou.getLessCorpus()));
+            }
+
             if (iou.getPenalty() != null) {
                 accrualTotal = accrualTotal.add(BigDecimal.valueOf(iou.getPenalty()));
-            } else {
+            }
+            if (iou.getAccrualArrears() != null) {
                 accrualTotal = accrualTotal.add(BigDecimal.valueOf(iou.getAccrualArrears()));
             }
         }
@@ -156,55 +169,51 @@ public class RepayServiceImpl implements RepayService {
             RepayRecord repayRecord = new RepayRecord();
             repayRecord.setRepayId(repay.getId());
             repayRecord.setIouId(iou.getId());
-            if (iou.getLessCorpus() == 0 && ((iou.getPenalty() == null && iou.getAccrualArrears() == 0) || (iou.getPenalty() != null && iou.getPenalty() == 0))) {//剔除不需要还款的借据
+            if ((iou.getLessCorpus() != null && iou.getLessCorpus() == 0) && (iou.getAccrualArrears() != null && iou.getAccrualArrears() == 0) && (iou.getPenalty() != null && iou.getPenalty() == 0)) {//剔除不需要还款的借据
                 continue;
             }
             if (money == 0) {
                 break;
             }
             //三种情况的还款方式
+            Double accMoney = 0.0;//利息
+            Double penalty = 0.0;//罚息
+            Double priMoney = 0.0;//本金
             if (repayType == RepayEnum.TYPE_PRINCIPAL.getValue()) {//还本金
-                Double priMoney = iou.getLessCorpus() > money ? money : iou.getLessCorpus();
-                money -= priMoney;
-                repayRecord.setRepayPrincipal(priMoney);
-                flag = dispose(iou.getLenderId(), iou.getId(), iou.getVersion(), priMoney, null, null);
+                if (iou.getLessCorpus() != null) {
+                    priMoney = iou.getLessCorpus() > money ? money : iou.getLessCorpus();
+                    money -= priMoney;
+                    repayRecord.setRepayPrincipal(priMoney);
+                }
             } else if (repayType == RepayEnum.TYPE_ACCRUAL.getValue()) {//还利息
-                Double accMoney = 0.0;
                 if (iou.getAccrualArrears() != null) {
                     accMoney = iou.getAccrualArrears() > money ? money : iou.getAccrualArrears();
+                    money -= accMoney;
                     repayRecord.setRepayInterest(accMoney);
                 }
                 if (iou.getPenalty() != null) {
-                    Double penalty = iou.getPenalty() > money ? money : iou.getPenalty();
+                    penalty = iou.getPenalty() > money ? money : iou.getPenalty();
                     money -= penalty;
                     repayRecord.setRepayFine(penalty);
-                    flag = dispose(iou.getLenderId(), iou.getId(), iou.getVersion(), null, accMoney, penalty);
-                } else {
-                    money -= accMoney;
-                    flag = dispose(iou.getLenderId(), iou.getId(), iou.getVersion(), null, accMoney, null);
                 }
             } else if (repayType == RepayEnum.TYPE_A_P.getValue()) {//先还利息再还本金
-                Double accMoney = 0.0;
                 if (iou.getAccrualArrears() != null) {
                     accMoney = iou.getAccrualArrears() > money ? money : iou.getAccrualArrears();
+                    money -= accMoney;
                     repayRecord.setRepayInterest(accMoney);
                 }
                 if (iou.getPenalty() != null) {
-                    Double penalty = iou.getPenalty() > money ? money : iou.getPenalty();
+                    penalty = iou.getPenalty() > money ? money : iou.getPenalty();
                     money -= penalty;
-                    Double priMoney = iou.getLessCorpus() > money ? money : iou.getLessCorpus();
-                    money -= priMoney;
-                    repayRecord.setRepayPrincipal(priMoney);
                     repayRecord.setRepayFine(penalty);
-                    flag = dispose(iou.getLenderId(), iou.getId(), iou.getVersion(), priMoney, accMoney, penalty);
-                } else {
-                    money -= accMoney;
-                    Double priMoney = iou.getLessCorpus() > money ? money : iou.getLessCorpus();
+                }
+                if (iou.getLessCorpus() != null) {
+                    priMoney = iou.getLessCorpus() > money ? money : iou.getLessCorpus();
                     money -= priMoney;
                     repayRecord.setRepayPrincipal(priMoney);
-                    flag = dispose(iou.getLenderId(), iou.getId(), iou.getVersion(), priMoney, accMoney, null);
                 }
             }
+            flag = dispose(iou.getLenderId(), iou.getId(), iou.getVersion(), priMoney, accMoney, penalty);
             //扣除金额成功后需要对每个借据添加还款详细记录
             if (!flag) {
                 throw new Exception();
@@ -343,7 +352,15 @@ public class RepayServiceImpl implements RepayService {
                 }
             }
         }
-        return ious;
+        //去除重复的数据
+        List<IOUInfo> iouInfos = new ArrayList<>();
+        List<Integer> iouIds = new ArrayList<>();
+        for (IOUInfo info : ious) {
+            if (!iouIds.contains(info.getId())) {
+                iouInfos.add(info);
+            }
+        }
+        return iouInfos;
     }
 
     private Map getMap(Map map, BigDecimal paTotal) {
@@ -362,12 +379,12 @@ public class RepayServiceImpl implements RepayService {
         if (result > 0) {
             setRepayStatus(iouId, 3);//修改借据还款状态
             LenderInfo len = lenderInfoMapper.get(lenderId);
-            Integer num = repayMapper.repayLender(lenderId, len.getVersion(), priMoney, penalty != null ? penalty : accMoney);//借款人扣除
+            Integer num = repayMapper.repayLender(lenderId, len.getVersion(), priMoney, penalty + accMoney);//借款人扣除
             if (num > 0) {
                 setRepayStatus(len.getId(), 2);//修改借款人还款状态
                 if (len.getAssetId() != null) {
                     AssetInfo assetInfo = assetInfoMapper.get(len.getAssetId());
-                    Integer count = repayMapper.repayAsset(assetInfo.getId(), assetInfo.getVersion(), priMoney, penalty != null ? penalty : accMoney);//资产包扣除
+                    Integer count = repayMapper.repayAsset(assetInfo.getId(), assetInfo.getVersion(), priMoney, penalty + accMoney);//资产包扣除
                     if (count > 0) {
                         setRepayStatus(assetInfo.getId(), 1);//修改资产包还款状态
                     }
@@ -389,12 +406,12 @@ public class RepayServiceImpl implements RepayService {
         if (result > 0) {
             setRepayStatus(iouInfo.getId(), 3);//修改借据还款状态
             LenderInfo len = lenderInfoMapper.get(iouInfo.getLenderId());
-            Integer num = repayMapper.repayLenderReversal(len.getId(), len.getVersion(), re.getRepayPrincipal(), re.getRepayFine() != null ? re.getRepayFine() : re.getRepayInterest());//借款人冲正
+            Integer num = repayMapper.repayLenderReversal(len.getId(), len.getVersion(), re.getRepayPrincipal(), (re.getRepayFine() + re.getRepayInterest()));//借款人冲正
             if (num > 0) {
                 setRepayStatus(len.getId(), 2);//修改借款人还款状态
                 if (len.getAssetId() != null) {
                     AssetInfo assetInfo = assetInfoMapper.get(len.getAssetId());
-                    Integer count = repayMapper.repayAssetReversal(assetInfo.getId(), assetInfo.getVersion(), re.getRepayPrincipal(), re.getRepayFine() != null ? re.getRepayFine() : re.getRepayInterest());//资产包冲正
+                    Integer count = repayMapper.repayAssetReversal(assetInfo.getId(), assetInfo.getVersion(), re.getRepayPrincipal(), (re.getRepayFine() + re.getRepayInterest()));//资产包冲正
                     if (count > 0) {
                         setRepayStatus(assetInfo.getId(), 1);//修改资产包还款状态
                     }
@@ -463,18 +480,39 @@ public class RepayServiceImpl implements RepayService {
                 original_time = DateFormatTool.format(damageApply.getOriginal_time(), DateFormatTool.DATE_FORMAT_10_REG1);
             }
         }
+        List<Map> mapList = new ArrayList<>();
         SmsUtil smsUtil = new SmsUtil();//发送短信通知
         Integer code = SmsEnum.POSTPONE_APPLY.getValue();
-        Map userC = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getEaxm_user_id());//接收者
-        Map oper = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getApply_user_id());//发送者
-        String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
-                CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "realName"),
-                ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName(), coordinatorService.getObjectName(damageApply.getObject_type(), damageApply.getApply_object_id()), original_time, damage_date);
-        String title = coordinatorService.getMessageTitle(damageApply.getApply_object_id(), damageApply.getObject_type(), MessageBTEnum.POSTPONE.getValue());
-        String operUrl = MessageUtils.setOperUrl("/repay/auditPostpone?status=1&applyId=" + id, null, "/repay/auditPostpone?status=2&applyId=" + id, null, "");
-        messageService.add(title, content, damageApply.getApply_user_id(), damageApply.getEaxm_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE.getValue(), operUrl);
+        Map user = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getEaxm_user_id());//接收者
+        mapList.add(user);
+        Map oper = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getApply_user_id());//发送者、
+//        判断申请用户和审核用户是否为相同公司，如果是同家公司不需要通知平台参与审核
+        if (!MessageUtils.transMapToString(user, "companyName").equals(MessageUtils.transMapToString(oper, "companyName"))) {
+            TUserTag tag = messageService.getAdmin();
+            if (tag != null) {
+                Map admin = coordinatorMapper.getUserAndCompanyByUserId(tag.getUserId());//接收者管理员
+                mapList.add(admin);
+            }
+        }
+        for (Map userC : mapList) {
+            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
+                    CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "realName"),
+                    ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName(), coordinatorService.getObjectName(damageApply.getObject_type(), damageApply.getApply_object_id()), original_time, damage_date);
+            String title = coordinatorService.getMessageTitle(damageApply.getApply_object_id(), damageApply.getObject_type(), MessageBTEnum.POSTPONE.getValue());
+            String operUrl = MessageUtils.setOperUrl("/repay/auditPostpone?status=1&applyId=" + id, null, "/repay/auditPostpone?status=2&applyId=" + id, null, "");
+            messageService.add(title, content, damageApply.getApply_user_id(), MessageUtils.transMapToInt(userC, "userId"), "", MessageEnum.TASK.getValue(), MessageBTEnum.POSTPONE.getValue(), operUrl);
+        }
 
         map.put("result", "yes");
+    }
+
+    /**
+     * @param sendUserId
+     * @param receiveUserId
+     * @param mapList
+     */
+    private void judge(Integer sendUserId, Integer receiveUserId, List<Map> mapList) {
+
     }
 
     @Override
@@ -541,10 +579,93 @@ public class RepayServiceImpl implements RepayService {
 
     @Override
     public void getIouAndPawnByLender(Integer lenderId, Map map) {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        List<CompanyTeamRe> list = companyTeamReMapper.teamReListByLenderIdAndUserid(lenderId, ObjectTypeEnum.LENDER.getValue(), userId, 1);//查询当前用户的分配器
+        boolean flag = false;//是否为业务流转用户。默认不是.优先考虑是所属机构的
+        for (CompanyTeamRe teamRe : list) {
+            if (teamRe.getType() == 3) {//是业务流转用户
+                flag = true;
+            } else {//是所属机构用户
+                flag = false;
+                break;
+            }
+        }
         List<Map> ious = repayMapper.getIouByLenderId(lenderId);
         List<Map> pawns = repayMapper.getPawnByLenderId(lenderId);
+        UserDetail userDetail = tUserInfoMapper.getUserDetail(userId);
+        if (flag) {
+            //业务流转用，查出流转借据
+            ious = objectUserRelationMapper.findByObjectId(ObjectTypeEnum.IOU.getValue(), userId, ious);
+            pawns = objectUserRelationMapper.findByObjectId(ObjectTypeEnum.PAWN.getValue(), userId, pawns);
+        }
+        /*
+         * 查询当前用户的机构类型，然后根据每个借据或是抵押物的id查询借据或是抵押物表，匹配表中的
+         * on_collection` int(2) DEFAULT '0' COMMENT '是否可以催收:0可以1不能',
+         * on_lawyer` int(2) DEFAULT '0' COMMENT '是否可以进行司法处置:0可以1不能',
+         * on_agent`int(2) DEFAULT '0' COMMENT '是否可以中介处置:0可以1不能',
+         * 三个字段
+         */
+        for (Map m : ious) {
+            boolean judge = setObjectJudge(userDetail, ObjectTypeEnum.IOU.getValue(), MessageUtils.transMapToInt(m, "id"));
+            if (!judge) {
+                ious.remove(m);
+            }
+        }
+        for (Map m : pawns) {
+            boolean judge = setObjectJudge(userDetail, ObjectTypeEnum.PAWN.getValue(), MessageUtils.transMapToInt(m, "id"));
+            if (!judge) {
+                ious.remove(m);
+            }
+        }
         map.put("ious", ious);//map的key（number和id）
         map.put("pawns", pawns);//map的key（number和id）
+    }
+
+    /**
+     * 判断当前用户的用户类型和对象针对用户的匹配程度
+     *
+     * @param userDetail
+     * @param objectType
+     * @param objectId
+     * @return
+     */
+    private boolean setObjectJudge(UserDetail userDetail, Integer objectType, Integer objectId) {
+        Integer on_collection = 0;//是否可以催收:0可以1不能
+        Integer on_lawyer = 0;//是否可以进行司法处置:0可以1不能',
+        Integer on_agent = 0;//是否可以中介处置:0可以1不能',
+        if (objectType == ObjectTypeEnum.PAWN.getValue().intValue()) {
+            PawnInfo info = pawnInfoMapper.get(objectId);
+            if (info != null) {
+                on_collection = info.getOnCollection();
+                on_lawyer = info.getOnLawyer();
+                on_agent = info.getOnAgent();
+            }
+        } else if (objectType == ObjectTypeEnum.PAWN.getValue().intValue()) {
+            IOUInfo info = iouInfoMapper.get(objectId);
+            if (info != null) {
+                on_collection = info.getOnCollection();
+                on_lawyer = info.getOnLawyer();
+                on_agent = info.getOnAgent();
+            }
+        }
+        if (userDetail.getUserType() == UserInfoEnum.USER_TYPE_ADMIN.getValue().intValue()) {//平台管理员
+            return true;
+        } else if (userDetail.getUserType() == UserInfoEnum.USER_TYPE_ENTRUST.getValue().intValue()) {//委托方
+            return true;
+        } else if (userDetail.getUserType() == UserInfoEnum.USER_TYPE_COLLECTION.getValue().intValue()) {//催收方
+            if (on_collection == 0) {
+                return true;
+            }
+        } else if (userDetail.getUserType() == UserInfoEnum.USER_TYPE_JUDICIARY.getValue().intValue()) {//律所司法
+            if (on_lawyer == 0) {
+                return true;
+            }
+        } else if (userDetail.getUserType() == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().intValue()) {//中介
+            if (on_agent == 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -580,13 +701,16 @@ public class RepayServiceImpl implements RepayService {
             return map;
         }
         List<RepayRecord> res = repayMapper.getRepayRecordByRepayId(repayId);//根据还款记录id获取还款详细信息
+        List<Integer> iouIds = new ArrayList<>();
         //存在还款记录就进行相应记录的冲正操作
         for (RepayRecord re : res) {
+            iouIds.add(re.getIouId());
             boolean flag = reversalDispose(re);
             if (!flag) {
                 throw new Exception();
             }
         }
+        setBusinessStatus(iouIds);//变化业务状态
         Repay repay = new Repay();
         repay.setStatus(2);//还款无效
         repay.setId(repayId);

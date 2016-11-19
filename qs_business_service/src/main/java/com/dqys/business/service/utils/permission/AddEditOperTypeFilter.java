@@ -40,24 +40,24 @@ public class AddEditOperTypeFilter extends OperTypeFilter{
         if(RoleTypeEnum.ADMIN.getValue()==userType){//如果是管理员
             switch (objectTypeEnum){
                 case ASSETPACKAGE:
-                    addEditOperType(list, AssetPackageEnum.update.getValue(), AssetPackageEnum.update.getName());
+                    PermissionUtil.addEditOperType(list, AssetPackageEnum.update.getValue(), AssetPackageEnum.update.getName());
                     break;
                 case LENDER:
-                    addEditOperType(list, LenderEnum.UPDATE_EDIT.getValue(), LenderEnum.UPDATE_EDIT.getName());
+                    PermissionUtil.addEditOperType(list, LenderEnum.UPDATE_EDIT.getValue(), LenderEnum.UPDATE_EDIT.getName());
                     break;
             }
-        }else{//如果是录入人
+        }else {//如果是录入人
             switch (objectTypeEnum){
                 case ASSETPACKAGE:
                     AssetInfo assetInfo=assetInfoMapper.get(objectId);
                     if(assetInfo.getOperator()==useId){
-                        addEditOperType(list, AssetPackageEnum.update.getValue(), AssetPackageEnum.update.getName());
+                        PermissionUtil.addEditOperType(list, AssetPackageEnum.update.getValue(), AssetPackageEnum.update.getName());
                     }
                     break;
                 case LENDER:
                     LenderInfo lenderInfo=lenderInfoMapper.get(objectId);
                     if(lenderInfo.getOperator()==useId){
-                        addEditOperType(list, LenderEnum.UPDATE_EDIT.getValue(), LenderEnum.UPDATE_EDIT.getName());
+                        PermissionUtil.addEditOperType(list, LenderEnum.UPDATE_EDIT.getValue(), LenderEnum.UPDATE_EDIT.getName());
                     }
                     break;
             }
@@ -66,12 +66,6 @@ public class AddEditOperTypeFilter extends OperTypeFilter{
         return getNextPermission();
     }
 
-    private void addEditOperType(List<OperType> list, Integer value, String name) {
-        OperType operType = new OperType();
-        operType.setOperType(value);
-        operType.setOperName(name);
-        list.add(operType);
-    }
 
 
 }

@@ -48,7 +48,7 @@ public class NavUtil implements ApplicationContextAware {
         navUnviewUserInfoService = applicationContext.getBean(NavUnviewUserInfoService.class);
         navUnviewUserTypeService = applicationContext.getBean(NavUnviewUserTypeService.class);
         // TODO: 16-11-8 测试不加载
-        //this.loadCommonNav();
+       // this.loadCommonNav();
     }
 
     /**
@@ -135,7 +135,6 @@ public class NavUtil implements ApplicationContextAware {
         List<Integer> integers = new LinkedList<>();
         for (SelectDto selectDto : selectDtos) {
             integers.add(selectDto.getReId());
-
         }
         return integers;
     }

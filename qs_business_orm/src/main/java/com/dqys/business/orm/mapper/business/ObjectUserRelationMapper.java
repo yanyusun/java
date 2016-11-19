@@ -2,13 +2,16 @@ package com.dqys.business.orm.mapper.business;
 
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ObjectUserRelationMapper {
 
     /**
      * 逻辑删除
+     *
      * @param id
      * @return
      */
@@ -16,6 +19,7 @@ public interface ObjectUserRelationMapper {
 
     /**
      * 新增
+     *
      * @param record
      * @return
      */
@@ -23,6 +27,7 @@ public interface ObjectUserRelationMapper {
 
     /**
      * 根据ID获取
+     *
      * @param id
      * @return
      */
@@ -30,6 +35,7 @@ public interface ObjectUserRelationMapper {
 
     /**
      * 修改
+     *
      * @param record
      * @return
      */
@@ -37,9 +43,11 @@ public interface ObjectUserRelationMapper {
 
     /**
      * 分页或者不分也查询ObjectUserRelation 列表
+     *
      * @param query
      * @return ObjectUserRelation 列表
      */
     List<ObjectUserRelation> list(ObjectUserRelationQuery query);
 
+    List<Map> findByObjectId(@Param("objectType") Integer objectType, @Param("userId") Integer userId, @Param("objectIds") List<Map> objectIds);
 }

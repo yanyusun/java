@@ -12,14 +12,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Administrator on 2016/11/1.
+ * Created by yan on 2016/11/1.
  */
 @Repository
 @Primary
 public class NavUnviewUserTypeMapperImpl extends BaseDao implements NavUnviewUserTypeMapper {
     @Override
     public int deleteByPrimaryKey(Integer id) {
-        return 0;
+        return super.getSqlSession().getMapper(NavUnviewUserTypeMapper.class).deleteByPrimaryKey(id);
     }
 
     @Override

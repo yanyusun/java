@@ -165,6 +165,17 @@ public class SourceServiceUtls {
         return sourceInfoDTO;
     }
 
+    /**
+     *
+     * DAO 转 DTO
+     * @param selectDtoMap
+     * @return
+     */
+    public static SourceInfoDTO toSourceInfoDTO( SelectDtoMap selectDtoMap) {
+        SourceInfoDTO sourceInfoDTO = new SourceInfoDTO();
+        sourceInfoDTO.setSelectDtoMap(selectDtoMap);
+        return sourceInfoDTO;
+    }
 
 
 

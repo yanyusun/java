@@ -72,4 +72,7 @@ public interface CompanyTeamReMapper {
      */
     List<Integer> listAssigned(@Param("type") Integer type);
 
+    List<CompanyTeamRe> teamReListByLenderIdAndUserid(@Param("objectId")Integer objectId, @Param("objectType")Integer objectType,
+                                                      @Param("userId") Integer userId, @Param("status")Integer status);
+
 }

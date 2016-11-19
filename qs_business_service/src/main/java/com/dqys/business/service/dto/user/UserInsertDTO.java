@@ -53,12 +53,14 @@ import java.util.List;
  * @apiParam {string} [remark] 备注
  * @apiParam {number} userType 用户类型
  * @apiParam {number} [companyId] 公司Id
+ * @apiParam {string} entryTime 入职时间(yyyy-MM-dd)
+ * @apiParam {number} yearsLimit 从业年限
+ * @apiParam {number} workStatus 工作状态（0默认在职，1离职，2请假）
  * <p/>
  * Created by Yvan on 16/6/23.
  */
 public class UserInsertDTO {
     private Integer id;
-
     private String avg; //头像地址
     private String userName; //用户昵称(必填)
     private String realName; //真实姓名(必填)
@@ -83,6 +85,142 @@ public class UserInsertDTO {
     private Integer companyId; // 公司Id
 
     private List<Integer> userIds;//多个用户存储
+
+    private String companyName;//公司名称
+    private String apartmentName;//部门名称
+    private String teamName;//团队名称
+    private String address;//地址
+    private String entryTime;//入职时间
+    private Integer yearsLimit;//从业年限
+    private Integer workStatus;//工作状态（0默认在职，1离职，2请假）
+    private String leaveWordTime;//最后留言时间
+    private String accountCreateTime;//帐号创建时间
+    private String resultsContrast;//业绩比例
+    private String ongoing;//当前进行的任务数
+    private Integer performance;//历史业绩
+    private String joinCase;//参与过的案件
+    private String award;//奖励
+    private Integer currentTask;//当前任务数
+
+    public Integer getCurrentTask() {
+        return currentTask;
+    }
+
+    public void setCurrentTask(Integer currentTask) {
+        this.currentTask = currentTask;
+    }
+
+    public String getAward() {
+        return award;
+    }
+
+    public void setAward(String award) {
+        this.award = award;
+    }
+
+    public Integer getPerformance() {
+        return performance;
+    }
+
+    public void setPerformance(Integer performance) {
+        this.performance = performance;
+    }
+
+    public String getJoinCase() {
+        return joinCase;
+    }
+
+    public void setJoinCase(String joinCase) {
+        this.joinCase = joinCase;
+    }
+
+    public String getResultsContrast() {
+        return resultsContrast;
+    }
+
+    public void setResultsContrast(String resultsContrast) {
+        this.resultsContrast = resultsContrast;
+    }
+
+    public String getOngoing() {
+        return ongoing;
+    }
+
+    public void setOngoing(String ongoing) {
+        this.ongoing = ongoing;
+    }
+
+    public String getAccountCreateTime() {
+        return accountCreateTime;
+    }
+
+    public void setAccountCreateTime(String accountCreateTime) {
+        this.accountCreateTime = accountCreateTime;
+    }
+
+    public String getLeaveWordTime() {
+        return leaveWordTime;
+    }
+
+    public void setLeaveWordTime(String leaveWordTime) {
+        this.leaveWordTime = leaveWordTime;
+    }
+
+    public String getApartmentName() {
+        return apartmentName;
+    }
+
+    public void setApartmentName(String apartmentName) {
+        this.apartmentName = apartmentName;
+    }
+
+    public Integer getWorkStatus() {
+        return workStatus;
+    }
+
+    public void setWorkStatus(Integer workStatus) {
+        this.workStatus = workStatus;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getTeamName() {
+        return teamName;
+    }
+
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getEntryTime() {
+        return entryTime;
+    }
+
+    public void setEntryTime(String entryTime) {
+        this.entryTime = entryTime;
+    }
+
+    public Integer getYearsLimit() {
+        return yearsLimit;
+    }
+
+    public void setYearsLimit(Integer yearsLimit) {
+        this.yearsLimit = yearsLimit;
+    }
 
     public Integer getUseStatus() {
         return useStatus;

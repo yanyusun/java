@@ -154,18 +154,19 @@ public interface RepayMapper {
     /**
      * 根据借款人获取借据
      *
+     * @param iouIds
      * @param lenderId
-     * @return (number 编号 id )
+     * @return (number 编号 id)
      */
-    List<Map> getIouByLenderId(Integer lenderId);
+    List<Map> getIouByLenderId(@Param("lenderId") Integer lenderId);
 
     /**
      * 根据借款人获取抵押物
      *
      * @param lenderId
-     * @return (number 编号 id )
+     * @return (number 编号 id)
      */
-    List<Map> getPawnByLenderId(Integer lenderId);
+    List<Map> getPawnByLenderId(@Param("lenderId") Integer lenderId);
 
     /**
      * 根据对象类型和对象id获取还款记录信息
@@ -226,6 +227,7 @@ public interface RepayMapper {
 
     /**
      * 获取还款列表
+     *
      * @param repay
      * @return
      */

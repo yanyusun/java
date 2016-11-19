@@ -190,14 +190,17 @@ public class RepayController {
     @ResponseBody
     public JsonResponse repayMoney(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType,
                                    @RequestParam("repayType") Integer repayType, @RequestParam("repayWay") Integer repayWay,
-                                   @RequestParam("money") Double money, @RequestParam("remark") String remark,
-                                   @RequestParam("file") String file) {
+                                   @RequestParam("money") Double money, String remark,
+                                   String file) {
         if (CommonUtil.checkParam(objectId, objectType, repayType, repayWay, money)) {
             return JsonResponseTool.paramErr("参数错误");
         }
 //        if (file.getName().indexOf("jpg") < 0 && file.getName().indexOf("jpeg") < 0) {
 //            return JsonResponseTool.paramErr("文件格式错误");
 //        }
+        if (remark != null && remark.length() > 255) {
+            return JsonResponseTool.paramErr("备注填写过多，只可输入255个以内");
+        }
         if (money <= 0 || !money.toString().matches("\\d*([.]\\d{1,2})?")) {
             return JsonResponseTool.paramErr("金额输入有误");
         }

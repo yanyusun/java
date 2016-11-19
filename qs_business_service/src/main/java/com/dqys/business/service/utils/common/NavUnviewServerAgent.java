@@ -117,7 +117,7 @@ public class NavUnviewServerAgent {
                 //是子类的就可见为false
                 for (SelectDto navUnview : navlist) {
                     if (reId == navUnview.getReId()) {
-                        intIter.next().setVisible(false);
+                        selectDto.setVisible(false);
                         break;
                     }
                 }
@@ -154,7 +154,7 @@ public class NavUnviewServerAgent {
         if (selectDto == null) {
             navUnviewService.add(navId, object, objectId, reId);
         } else {
-            navUnviewService.del(navId, object, objectId, reId);
+            navUnviewService.del(selectDto.getId());
         }
     }
 

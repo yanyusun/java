@@ -90,29 +90,42 @@
     <!--查询借款人或资产包的团队信息-->
     <select id="getLenderOrAsset" resultMap="BaseResultMap">
         SELECT tusi.real_name,bor.name,ttr.user_id,ttr.type,tusi.avg,ttr.status,ttr.join_type
-        from t_teammate_re ttr LEFT JOIN  t_user_tag tust
+        from t_teammate_re ttr LEFT JOIN t_user_tag tust
         ON tust.user_id=ttr.user_id LEFT JOIN t_user_team tut
         ON tut.id=ttr.user_team_id LEFT JOIN bt_organization bor
         ON bor.id=tust.team_id LEFT JOIN t_user_info tusi
         ON tusi.id=ttr.user_id
-        WHERE tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} and tut.company_id=#{companyId,jdbcType=INTEGER}
-            and ttr.status IN (0,1) and ttr.stateflag=0 and tut.stateflag=0
-            and tust.stateflag=0
+        WHERE tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} and
+        tut.company_id=#{companyId,jdbcType=INTEGER}
+        and ttr.status IN
+        <foreach collection="statusList" item="status" index="index" open="(" separator="," close=")">
+            #{status}
+        </foreach>
+        and tut.stateflag=0
+        and tust.stateflag=0
     </select>
     <!--获取当前进行的任务总数-->
     <select id="getTaskOngoing" resultType="java.util.Map">
         SELECT count(tut.id) ongoing from t_teammate_re ttr LEFT JOIN t_user_team tut
         ON tut.id=ttr.user_team_id and tut.status=0
-        where ttr.status=1 and (ttr.type=0 or ttr.type=1 )
+        where ttr.stateflag=0 AND ttr.status=1 and (ttr.type=0 or ttr.type=1 )
           and ttr.user_id=#{userId,jdbcType=INTEGER} and tut.company_id=#{companyId,jdbcType=INTEGER}
     </select>
     <!--获取业绩比例(针对个人)-->
     <select id="getTaskRatio" resultType="java.util.Map">
         SELECT count(tut.id) finish,count(tut2.id) total
         from t_teammate_re ttr LEFT JOIN t_user_team tut
-        ON tut.id=ttr.user_team_id and tut.object_type=#{objectType,jdbcType=INTEGER} and tut.status=99 and tut.company_id=#{companyId,jdbcType=INTEGER}
-        LEFT JOIN t_user_team tut2 ON tut2.id=ttr.user_team_id and tut2.object_type=#{objectType,jdbcType=INTEGER} and tut2.company_id=#{companyId,jdbcType=INTEGER}
-        where ttr.`status`=1 and ttr.user_id=#{userId,jdbcType=INTEGER}
+        ON tut.id=ttr.user_team_id
+        <if test="objectType !=null">
+            and tut.object_type=#{objectType,jdbcType=INTEGER}
+        </if>
+        and tut.status=99 and tut.company_id=#{companyId,jdbcType=INTEGER}
+        LEFT JOIN t_user_team tut2 ON tut2.id=ttr.user_team_id
+        <if test="objectType !=null">
+            and tut2.object_type=#{objectType,jdbcType=INTEGER}
+        </if>
+        and tut2.company_id=#{companyId,jdbcType=INTEGER}
+        where ttr.stateflag=0 AND ttr.`status`=1 and ttr.user_id=#{userId,jdbcType=INTEGER}
     </select>
     <!--获取团队人数-->
     <select id="getPeopleNum" resultType="java.util.Map">
@@ -218,6 +231,7 @@
     <select id="getUserIdByObjUserRelToLender" resultType="java.util.Map">
             SELECT our.user_id from object_user_relation our
             where our.stateflag=0 and our.object_type=#{objectType} and our.object_id=#{objectId}
+            GROUP BY our.user_id
     </select>
 
     <select id="getUserIdByObjUserRelToAsset" resultType="java.util.Map">
@@ -406,7 +420,9 @@
         tze.selling_price priceTotal,tze.guide_price priceUnit,tzk.id keyId,tze.acreage
         ,DATE_FORMAT(tzo.entrust_protocol_time,'%Y-%m-%d') entrustTime,
         tzea.plot_name title,CONCAT(tzea.floor,' (',tze.replenish,'/',tzea.floor_total,')') floor,
-        CONCAT(tzea.province,tzea.city,tzea.area,tzea.road,tzea.plot_name,tzea.building_no,tzea.element,tzea.floor)
+        CONCAT((SELECT name FROM t_area WHERE id=tzea.province),(SELECT name FROM t_area WHERE id=tzea.city),(SELECT
+        name FROM t_area WHERE id=tzea.area),
+        CONCAT(tzea.road,'路'),tzea.plot_name,CONCAT(tzea.building_no,'栋'),CONCAT(tzea.element,'单元'),CONCAT(tzea.floor,'层'))
         place
         from t_zcy_estates tze LEFT JOIN t_zcy_owner tzo
         ON tzo.estates_id=tze.id LEFT JOIN t_zcy_maintain tzm
@@ -454,16 +470,16 @@
             AND tze.operator=#{userId}
         </if>
     </select>
-    <!--获取接收后还未加入协作器的对象id-->
+    <!--待分配：获取自己录入的在写作其不存在或是参与人数没有超过5人的资产源-->
     <select id="findObjectIdByOURelation" resultType="int">
-        SELECT our.object_id from object_user_relation our
-        WHERE our.stateflag=0
-        <if test="userId !=null">
-            AND our.user_id=#{userId}
-        </if>
-        AND our.object_type=#{objectType} AND our.accept_status=0
-        AND our.object_id NOT IN(SELECT tut.object_id from t_user_team tut
-        WHERE tut.object_type=#{objectType})
+        SELECT tze.id FROM t_zcy_estates tze
+        WHERE tze.stateflag=0 AND
+        (
+        tze.id NOT IN (select object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType}) OR
+        tze.id IN(SELECT object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType} AND number_people &lt; 5
+        )
+        ) AND tze.operator =#{userId}
+        GROUP BY tze.id
     </select>
     <!--获取正在处置的对象id-->
     <select id="findObjectIdByOURelationAndBusiness" resultType="int">

@@ -16,6 +16,9 @@ public class IouDTO {
     private String iouName;  // 借据名称
     private String type;  // 借据类型
     private String agency;  // 代理机构
+
+
+
     private String iouCode;  // 原始借据号
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date loanTime;  // 放款时间

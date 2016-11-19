@@ -23,6 +23,7 @@ import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;
 import com.dqys.business.service.query.user.UserListQuery;
+import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.service.OperLogService;
 import com.dqys.business.service.service.UserService;
@@ -67,6 +68,8 @@ public class UserServiceImpl implements UserService {
     private OrganizationMapper organizationMapper;
     @Autowired
     private CoordinatorMapper coordinatorMapper;
+    @Autowired
+    private CoordinatorService coordinatorService;
     @Autowired
     private MessageService messageService;
     @Autowired
@@ -162,7 +165,9 @@ public class UserServiceImpl implements UserService {
                 resultMap.put("total", 0);
                 return JsonResponseTool.success(resultMap);
             }
-            tUserQuery.setCompanyIds(companyIds);
+            if (query.getAccountType() != null) {
+                tUserQuery.setCompanyIds(companyIds);
+            }
             tUserQuery.setCompanyId(null);
         }
         tUserQuery.setStatus(query.getStatus());
@@ -211,8 +216,52 @@ public class UserServiceImpl implements UserService {
             if (tUserTagList.size() > 0) {
                 tUserTag = tUserTagList.get(0);
             }
-            return JsonResponseTool.success(UserServiceUtils.toUserInsertDTO(tUserInfo, tUserTag));
+            UserInsertDTO dto = UserServiceUtils.toUserInsertDTO(tUserInfo, tUserTag);
+            //查询公司名称和地址
+            CompanyDetailInfo detail = tCompanyInfoMapper.getDetailByCompanyId(dto.getCompanyId());
+            if (detail != null) {
+                dto.setCompanyName(detail.getCompanyName());
+                TArea province = areaMapper.get(detail.getProvince());
+                TArea city = areaMapper.get(detail.getCity());
+                TArea area = areaMapper.get(detail.getDistrict());
+                StringBuffer buff = new StringBuffer();
+                if (province != null) {
+                    buff.append(province.getLabel());
+                }
+                if (city != null) {
+                    buff.append(city.getLabel());
+                }
+                if (area != null) {
+                    buff.append(area.getLabel());
+                }
+                buff.append(detail.getAddress() == null ? "" : detail.getAddress());
+                dto.setAddress(buff.toString());
+            }
+            //查询团队名称和部门名称
+            Organization org = getOrganization(dto.getTeamId());
+            if (org != null) {
+                dto.setTeamName(org.getName());
+            }
+            org = getOrganization(dto.getApartmentId());
+            if (org != null) {
+                dto.setApartmentName(org.getName());
+            }
+            dto.setLeaveWordTime(MessageUtils.transMapToString(coordinatorMapper.getLastLeaveWord(dto.getId()), "time"));//最后留言时间
+            Map task = coordinatorService.getTaskCount(dto.getCompanyId(), dto.getId(), null);//查询任务数量
+            dto.setResultsContrast(MessageUtils.transMapToString(task, "finish") + "/" + MessageUtils.transMapToString(task, "total"));
+            dto.setOngoing(MessageUtils.transMapToString(task, "ongoing"));
+            return JsonResponseTool.success(dto);
         }
+    }
+
+    private Organization getOrganization(Integer id) {
+        if (id != null) {
+            Organization org = organizationMapper.get(id);
+            if (org != null) {
+                return org;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -409,7 +458,8 @@ public class UserServiceImpl implements UserService {
         if (!FormatValidateTool.checkEmail(dto.getEmail())) {
             return JsonResponseTool.failure("邮箱格式不正确");
         }
-        if (!FormatValidateTool.checkPhone(dto.getOccupationTel()) && !FormatValidateTool.checkMobile(dto.getOccupationTel())) {
+        if (dto.getOccupationTel() != null && !dto.getOccupationTel().equals("") &&
+                !FormatValidateTool.checkPhone(dto.getOccupationTel()) && !FormatValidateTool.checkMobile(dto.getOccupationTel())) {
             return JsonResponseTool.failure("电话格式不正确");
         }
         return JsonResponseTool.success(null);
@@ -444,7 +494,7 @@ public class UserServiceImpl implements UserService {
         }
         //不能自己在组织架构中修改自己的邮箱和帐号和角色，管理员有权修改其他员工的邮箱和帐号
         Map adminUser = coordinatorMapper.getAdminUser(userInsertDTO.getCompanyId());
-        if (userId.toString().equals(MessageUtils.transMapToString(adminUser, "id")) && userInsertDTO.getId() != userId) {
+        if (userId.toString().equals(MessageUtils.transMapToString(adminUser, "id")) && userInsertDTO.getId() != userId.intValue()) {
             // 校验邮箱和帐号是否存在
             List<TUserInfo> isExist = tUserInfoMapper.verifyUser(null, null, userInsertDTO.getEmail());
             if (isExist != null && isExist.size() > 0) {
@@ -461,7 +511,7 @@ public class UserServiceImpl implements UserService {
         } else {
             userInsertDTO.setEmail(null);
             userInsertDTO.setAccount(null);
-            userInsertDTO.setRoleId(null);
+            userInsertDTO.setRoleId(tUserTag.getRoleId().intValue());
         }
         boolean flag = false;
 

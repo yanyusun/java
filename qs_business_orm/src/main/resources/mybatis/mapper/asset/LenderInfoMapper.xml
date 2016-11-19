@@ -80,6 +80,12 @@
             <if test="assetId != null">
                 AND asset_id = #{assetId,jdbcType=INTEGER}
             </if>
+            <if test="assetIds != null">
+                AND asset_id IN
+                <foreach collection="assetIds" item="assetId" separator="," open="(" close=")" index="index">
+                    #{assetId}
+                </foreach>
+            </if>
             <if test="lenderId != null">
                 AND id = #{lenderId,jdbcType=INTEGER}
             </if>
@@ -90,7 +96,7 @@
                 AND is_worth = #{isWorth,jdbcType=INTEGER}
             </if>
             <if test="entrustName != null">
-                AND entrust_name = #{entrustName,jdbcType=VARCHAR}
+                AND entrust_name LIKE CONCAT('%',#{entrustName,jdbcType=VARCHAR},'%')
             </if>
             <if test="repayStatus != null">
                 AND repay_status = #{repayStatus,jdbcType=INTEGER}
@@ -661,6 +667,23 @@
                 AND ass.operator=#{userId}
             </if>
         </if>
+    </select>
+
+    <!--根据借款人获取借款人下所有的借据-->
+    <select id="getLenderBySumMoney" resultMap="BaseResultMap" parameterType="int">
+       SELECT SUM(lender.accrual)accrual,SUM(lender.loan)loan,SUM(lender.appraisal)appraisal FROM bt_lender lender
+        WHERE lender.stateflag=0 AND lender.asset_id=#{assetId,jdbcType=INTEGER}
+    </select>
+
+    <select id="findObjectIdByLender" resultType="int">
+        SELECT len.id FROM bt_lender len
+        WHERE len.stateflag=0 AND
+        (
+        len.id NOT IN (select object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType}) OR
+        len.id IN(SELECT object_id FROM t_user_team WHERE stateflag=0 AND status=0 AND object_type=#{objectType} AND number_people &lt; 5
+        )
+        ) AND len.operator =#{userId}
+        GROUP BY len.id
     </select>
 
 </mapper>

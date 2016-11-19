@@ -1,10 +1,12 @@
 package com.dqys.auth.orm.dao.facade;
 
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.auth.orm.pojo.UserDetail;
 import com.dqys.auth.orm.query.TUserQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TUserInfoMapper {
     Integer deleteByPrimaryKey(Integer id);
@@ -42,4 +44,21 @@ public interface TUserInfoMapper {
     List<TUserInfo> findAccountByStatus(@Param("userIds") List<Integer> userIds, @Param("status") Integer status);
 
     void updateAccountUse(@Param("userIds") List<Integer> userIds, @Param("useStatus") Integer useStatus);
+
+    /**
+     * 获取用户的部分信息
+     *
+     * @param userId
+     * @return
+     */
+    Map getUserPart(Integer userId);
+
+    /**
+     * 获取用户的相关信息
+     *
+     * @param userId
+     * @return
+     */
+    UserDetail getUserDetail(Integer userId);
+
 }

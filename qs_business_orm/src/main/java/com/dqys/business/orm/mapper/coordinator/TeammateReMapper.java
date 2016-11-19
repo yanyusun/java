@@ -68,4 +68,6 @@ public interface TeammateReMapper {
     Integer deleteByUserTeamId(@Param("userTeamIds") List<Integer> userTeamIds);
 //根据userId 、objectId、objectType、type四个参数查询协作器团队信息
     List<TeammateRe> selectSelectiveByUserTeam(Map teamMap);
+
+    List<TeammateRe> selectTeamReByStateflag(TeammateRe teammateRe);
 }

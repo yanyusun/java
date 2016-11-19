@@ -3,6 +3,7 @@ package com.dqys.business.service.utils.user;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;
@@ -10,6 +11,7 @@ import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
+import com.dqys.core.utils.DateFormatTool;
 import org.apache.commons.lang3.RandomStringUtils;
 
 /**
@@ -72,7 +74,7 @@ public class UserServiceUtils {
         userInsertDTO.setAccount(userInfo.getAccount());
         userInsertDTO.setRemark(userInfo.getRemark());
         userInsertDTO.setCompanyId(userInfo.getCompanyId());
-
+        userInsertDTO.setAccountCreateTime(DateFormatTool.format(userInfo.getCreateAt(), DateFormatTool.DATE_FORMAT_19));
         if (userTag != null) {
             userInsertDTO.setRoleId(userTag.getRoleId().intValue());
             userInsertDTO.setOccupation(userTag.getOccupation());
@@ -83,6 +85,9 @@ public class UserServiceUtils {
             userInsertDTO.setAreaId(userTag.getDutyArea());
             userInsertDTO.setTeamId(userTag.getTeamId());
             userInsertDTO.setUserType(userTag.getUserType().intValue());
+            userInsertDTO.setYearsLimit(userTag.getYearsLimit());
+            userInsertDTO.setEntryTime(userTag.getEntryTime());
+            userInsertDTO.setWorkStatus(userTag.getWorkStatus());
         }
 
         return userInsertDTO;
@@ -120,7 +125,9 @@ public class UserServiceUtils {
         userTag.setDutyMark(userInsertDTO.getDutyMark());
         userTag.setDutyArea(userInsertDTO.getAreaId());
         userTag.setTeamId(userInsertDTO.getTeamId());
-
+        userTag.setYearsLimit(userInsertDTO.getYearsLimit());
+        userTag.setEntryTime(userInsertDTO.getEntryTime());
+        userTag.setWorkStatus(userInsertDTO.getWorkStatus());
         return userTag;
     }
 
@@ -150,6 +157,11 @@ public class UserServiceUtils {
         userTag.setDutyMark(userFileDTO.getDutyMark());
         userTag.setOccupationTel(userFileDTO.getOfficeTel());
         userTag.setOccupation(userFileDTO.getOccupation());
+        if (userFileDTO.getJoinAt() != null) {
+            userTag.setEntryTime(DateFormatTool.format(userFileDTO.getJoinAt(), DateFormatTool.DATE_FORMAT_10_REG1));
+        }
+        userTag.setYearsLimit(userFileDTO.getYear());
+
 
         return userTag;
     }
@@ -171,4 +183,7 @@ public class UserServiceUtils {
         return Integer.valueOf(s);
     }
 
+    public static boolean isPlatBoolean(int userType, int userRole) {
+        return userType== UserInfoEnum.USER_TYPE_ADMIN.getValue()&&userRole== RoleTypeEnum.ADMIN.getValue();
+    }
 }

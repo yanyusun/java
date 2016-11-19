@@ -1,10 +1,12 @@
 package com.dqys.business.service.dto.sourceAuth;
 
+import java.io.Serializable;
+
 /**
  * 资料实勘权限展示model
  * Created by yan on 16-10-28.
  */
-public class SelectDto {
+public class SelectDto implements Serializable{
     private Integer id;//不可见关系表ｉｄ
     private Integer reId;//关联对象ｉｄ或者枚举
     private String showName;//前台展示名称
