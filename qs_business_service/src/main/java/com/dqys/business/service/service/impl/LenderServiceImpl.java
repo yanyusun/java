@@ -1051,7 +1051,7 @@ public class LenderServiceImpl implements LenderService {
                 if (businessIds != null && businessIds.size() > 0) {
                     lenderQuery.setIds(businessIds);
                 } else {
-                    if (lenderQuery.getIds() == null) {
+                    if (lenderQuery.getIds() == null || lenderQuery.getIds().size() == 0) {
                         lenderQuery.setId(SysProperty.NULL_DATA_ID);
                     }
                 }
