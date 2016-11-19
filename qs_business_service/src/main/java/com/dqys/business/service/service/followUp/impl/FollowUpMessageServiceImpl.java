@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -145,13 +146,22 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
 
     @Override
     public List<FollowUpMessage> getlistWithAll(FollowUpMessageQuery followUpMessageQuery) {
+        List<FollowUpMessage> followUpMessages = null;
+        int userId = UserSession.getCurrent().getUserId();
         if (followUpMessageQuery.isMine()) {//只看自己
-            int userId = UserSession.getCurrent().getUserId();
             followUpMessageQuery.setUserId(userId);
+            followUpMessages = followUpMessageMapper.getlistWithALL(followUpMessageQuery);
         } else if (followUpMessageQuery.isTeam()) {//只看自己协作器的团队
-            int userId = UserSession.getCurrent().getUserId();
             int teamId = getTeamId(followUpMessageQuery.getObjectId(), followUpMessageQuery.getObjectType(), userId);
             followUpMessageQuery.setTeamId(teamId);
+            followUpMessages = followUpMessageMapper.getlistWithALL(followUpMessageQuery);
+            Iterator<FollowUpMessage> intIter = followUpMessages.iterator();
+            while (intIter.hasNext()) {
+                FollowUpMessage followUpMessage = intIter.next();
+                if (followUpMessage.getUserId()==userId) {
+                    intIter.remove();
+                }
+            }
         }
         // TODO: 16-10-27 预留字段目前需求不必使用也能完成 
 //        if(followUpMessageQuery.isCollection()){//与当前用户合作的催收公司
@@ -159,7 +169,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
 //        }else if(followUpMessageQuery.isJudiciary()){//与当前用户合作的司法机构
 //
 //        }
-        return followUpMessageMapper.getlistWithALL(followUpMessageQuery);
+        return followUpMessages;
     }
 
     @Override

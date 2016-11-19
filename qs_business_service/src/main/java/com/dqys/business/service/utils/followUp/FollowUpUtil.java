@@ -26,9 +26,10 @@ public class FollowUpUtil {
         if(null!=followUpMessageDTO.getSecondObjectId()){
             followUpMessage.setSecondObjectId(followUpMessageDTO.getSecondObjectId());
         }
-        if(null!=followUpMessageDTO.getSecondLiquidateStage()){
+        if(null!=followUpMessageDTO.getSecondObjectId()){
             followUpMessage.setSecondObjectType(followUpMessageDTO.getSecondObjectType());
         }
+
         return followUpMessage;
     }
 }
