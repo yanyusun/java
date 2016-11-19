@@ -535,7 +535,7 @@ public class DistributionServiceImpl implements DistributionService {
                         UserInfoEnum.getUserInfoEnum(companyDetailInfo.getType()).getName(),
                         userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
-                        companyTeam.getObjectId().toString()
+                        coordinatorService.getObjectName(companyTeam.getObjectType(), companyTeam.getObjectId())
                 };
                 smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_CODE, platformDetail.getPhone(), msg); // 平台接收
                 // 添加消息
@@ -652,7 +652,8 @@ public class DistributionServiceImpl implements DistributionService {
                     UserInfoEnum.getUserInfoEnum(companyDetailInfo.getType()).getName(),
                     companyDetailInfo.getName(),
                     ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
-                    companyTeam.getObjectId().toString()
+                    coordinatorService.getObjectName(companyTeam.getObjectType(), companyTeam.getObjectId()),
+                    ""
             };
             smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_INVITE_CODE, companyDetailInfo1.getPhone(), msg);
             // 添加消息
@@ -769,7 +770,7 @@ public class DistributionServiceImpl implements DistributionService {
                         applicant.getRealName(),
                         userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
-                        companyTeam.getObjectId().toString()
+                        coordinatorService.getObjectName(companyTeam.getObjectType(), companyTeam.getObjectId())
                 };
                 Message message = new Message();
                 if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
@@ -811,7 +812,7 @@ public class DistributionServiceImpl implements DistributionService {
                         UserInfoEnum.getUserInfoEnum(companyDetailInfo.getType()).getName(),
                         userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
-                        companyTeam.getObjectId().toString()
+                        coordinatorService.getObjectName(companyTeam.getObjectType(), companyTeam.getObjectId())
                 };
                 Message message = new Message();
                 if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
@@ -945,7 +946,7 @@ public class DistributionServiceImpl implements DistributionService {
             String[] msg = {
                     creator.getRealName(),
                     ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
-                    companyTeam.getObjectId().toString()
+                    coordinatorService.getObjectName(companyTeam.getObjectType(), companyTeam.getObjectId())
             };
             Message message = new Message();
             smsUtil.sendSms(SysProperty.SMS_OUT_CODE, creator.getMobile(), msg);
@@ -975,8 +976,8 @@ public class DistributionServiceImpl implements DistributionService {
             message.setReceiveId(companyTeamRe.getAccepterId());
             message.setLabel(null);
             message.setStatus(0);
-            message.setType(MessageEnum.TASK.getValue());
-            message.setBusinessType(MessageBTEnum.COMPANY_JOIN.getValue());
+            message.setType(MessageEnum.SERVE.getValue());
+            message.setBusinessType(MessageBTEnum.INSIDE_RESULT.getValue());
             message.setOperUrl(null);
             messageMapper.add(message);
             // 去除介入信息
