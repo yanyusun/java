@@ -1046,13 +1046,14 @@ public class LenderServiceImpl implements LenderService {
             }
              */
             lenderQuery.setIds(lenderInfoMapper.findObjectIdByLender(userId, ObjectTypeEnum.LENDER.getValue()));//11月18号修改成这样，原来是使用上面注释掉的代码
-            lenderQuery.setOperator(userInfo.getId());
             if (!flag) {
 //                if (isPlatformOrEntrust) { // 修改于10.11
                 if (businessIds != null && businessIds.size() > 0) {
                     lenderQuery.setIds(businessIds);
                 } else {
-                    lenderQuery.setId(SysProperty.NULL_DATA_ID);
+                    if (lenderQuery.getIds() == null) {
+                        lenderQuery.setId(SysProperty.NULL_DATA_ID);
+                    }
                 }
 //                }
             }
