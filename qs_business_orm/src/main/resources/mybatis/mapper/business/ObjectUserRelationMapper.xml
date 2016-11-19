@@ -203,5 +203,21 @@
             </if>
         </if>
     </select>
+    <!--处置中,只需要查分配器-->
+    <select id="findObjectIdByTeam" resultType="int">
+        SELECT bor.object_id FROM t_business_obj_re bor LEFT JOIN business b
+        ON b.id=bor.business_id
+        WHERE bor.object_type=11 AND bor.stateflag=0 AND b.`status`=1 AND bor.object_id IN
+        (
+        SELECT tct.object_id FROM t_company_team tct LEFT JOIN t_company_team_re tctr
+        ON tctr.company_team_id=tct.id LEFT JOIN t_user_tag tut
+        ON tut.user_id=tctr.accepter_id
+        WHERE tctr.type IN (0,1,2) AND tut.user_type IN (31,32,33)
+        AND tctr.`status`=1 AND tct.object_type=#{objectType}
+        <if test="userId !=null">
+            AND tctr.accepter_id=#{userId}
+        </if>
+        )
+    </select>
 
 </mapper>

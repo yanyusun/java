@@ -50,4 +50,6 @@ public interface ObjectUserRelationMapper {
     List<ObjectUserRelation> list(ObjectUserRelationQuery query);
 
     List<Map> findByObjectId(@Param("objectType") Integer objectType, @Param("userId") Integer userId, @Param("objectIds") List<Map> objectIds);
+
+    List<Integer> findObjectIdByTeam(@Param("objectType")Integer objectType, @Param("userId")Integer userId);
 }

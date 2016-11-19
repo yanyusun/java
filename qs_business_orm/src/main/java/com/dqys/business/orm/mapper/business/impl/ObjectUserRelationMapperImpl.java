@@ -46,4 +46,9 @@ public class ObjectUserRelationMapperImpl extends BaseDao implements ObjectUserR
     public List<Map> findByObjectId(@Param("objectType") Integer objectType, @Param("userId") Integer userId, @Param("objectIds") List<Map> objectIds) {
         return super.getSqlSession().getMapper(ObjectUserRelationMapper.class).findByObjectId(objectType, userId, objectIds);
     }
+
+    @Override
+    public List<Integer> findObjectIdByTeam(@Param("objectType") Integer objectType, @Param("userId") Integer userId) {
+        return super.getSqlSession().getMapper(ObjectUserRelationMapper.class).findObjectIdByTeam(objectType, userId);
+    }
 }

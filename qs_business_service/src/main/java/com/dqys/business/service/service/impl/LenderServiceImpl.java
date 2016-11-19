@@ -1096,16 +1096,23 @@ public class LenderServiceImpl implements LenderService {
         } else if (ObjectTabEnum.handling_urge.getValue().equals(tab)
                 || ObjectTabEnum.handling_entrust.getValue().equals(tab)) {
             // 委托的处置中
-            ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
-            objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
-            if (!flag) {
-                objectUserRelationQuery.setUserId(userId);
+            /**
+
+             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
+             objectUserRelationQuery.setObjectType(ObjectTypeEnum.LENDER.getValue());
+             if (!flag) {
+             objectUserRelationQuery.setUserId(userId);
+             }
+             List<ObjectUserRelation> objectUserRelationList = objectUserRelationMapper.list(objectUserRelationQuery);
+             List<Integer> ids = new ArrayList<>();
+             objectUserRelationList.forEach(objectUserRelation -> {
+             ids.add(objectUserRelation.getObjectId());
+             });
+             */
+            if (flag) {
+                userId = null;
             }
-            List<ObjectUserRelation> objectUserRelationList = objectUserRelationMapper.list(objectUserRelationQuery);
-            List<Integer> ids = new ArrayList<>();
-            objectUserRelationList.forEach(objectUserRelation -> {
-                ids.add(objectUserRelation.getObjectId());
-            });
+            List<Integer> ids = objectUserRelationMapper.findObjectIdByTeam(ObjectTypeEnum.LENDER.getValue(), userId);//11月19号修改，原来的是上面注释掉的代码
             if (CommonUtil.checkParam(ids) || ids.size() == 0) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             } else {
