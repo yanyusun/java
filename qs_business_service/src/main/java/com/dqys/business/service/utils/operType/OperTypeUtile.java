@@ -30,7 +30,7 @@ public class OperTypeUtile implements ApplicationContextAware {
         redisTemplate = (RedisTemplate) applicationContext.getBean("redisTemplate");
         operTypeService = applicationContext.getBean(OperTypeService.class);
         //// TODO: 16-9-18  上线要去掉下面的注释
-       // opertype();
+        // opertype();
     }
 
     public static List<OperType> getInitBuisnesOperTypeList(Integer objectType, Integer objectId, Integer flowType) {
@@ -83,7 +83,7 @@ public class OperTypeUtile implements ApplicationContextAware {
     private static Integer[] nav0 = {102, 1110, 1615, 1310, 1213};//待接收
     private static Integer[] nav1 = {102, 1110, 1615, 1310, 11213};//待申请
     private static Integer[] nav2 = {102, 1110, 1615, 1310, 1213, 100, 103, 104, 105, 106, 107, 108, 109, 110,
-            112, 113, 114, 115, 116, 117, 118, 119, 1111, 1115, 1116,
+            112, 113, 114, 115, 116, 117, 118, 119, 1111, 1115,
             162, 163, 164, 165, 166, 167, 168, 169, 169, 1610, 1611, 1612, 1613, 1614,
             130, 131, 132, 133, 134, 135, 136, 137, 138, 1310, 1311,
             120, 121, 122, 123, 124, 125, 126, 127, 129, 1210, 1211, 1214, 1215, 1216, 1217, 1218,
@@ -188,7 +188,7 @@ public class OperTypeUtile implements ApplicationContextAware {
         if (navId == ObjectTabEnum.myUrge.getValue()) {
             return nav20;
         }
-        if(navId == ObjectTabEnum.all.getValue()){
+        if (navId == ObjectTabEnum.all.getValue()) {
             return nav99;
         }
         return null;
