@@ -36,7 +36,7 @@ public class CaptchaServiceImpl implements CaptchaService {
 
     @Override
     public ServiceResult validImgCaptcha(String key, String capText) {
-        if (this.validCaptcha(CAPTCHA_KEY + key, capText)) {
+        if (this.validCaptcha(CAPTCHA_KEY + key, capText.toLowerCase())) {
             return ServiceResult.success(ObjectUtils.NULL);
         }
         return ServiceResult.failure("验证码错误", ObjectUtils.NULL);
