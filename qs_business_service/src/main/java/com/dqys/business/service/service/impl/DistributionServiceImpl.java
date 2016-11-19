@@ -533,7 +533,7 @@ public class DistributionServiceImpl implements DistributionService {
                         ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
                         companyTeam.getObjectId().toString()
                 };
-                smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_CODE, companyDetailInfo.getPhone(), msg); // 平台接收
+                smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_CODE, platformDetail.getPhone(), msg); // 平台接收
                 // 添加消息
                 String code = ""; // 对象编号
                 if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
