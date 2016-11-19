@@ -486,6 +486,10 @@ public class DistributionServiceImpl implements DistributionService {
             companyTeamReQuery.setTeamId(id);
             companyTeamReQuery.setValid(true);
             List<CompanyTeamRe> countList = companyTeamReMapper.queryList(companyTeamReQuery);
+            //处置机构只能存在一家
+            if (setDisposalTo(id)) {
+                return JsonResponseTool.failure("处置机构只能存在一家");
+            }
             for (CompanyTeamRe companyTeamRe : countList) {
                 if (companyTeamRe.getType().equals(ObjectBusinessTypeEnum.create.getValue())) {
                     // 如果创建方为处置方，默认处置机构为处置方
@@ -600,6 +604,10 @@ public class DistributionServiceImpl implements DistributionService {
         companyTeamReQuery.setTeamId(id);
         companyTeamReQuery.setValid(true);
         List<CompanyTeamRe> countList = companyTeamReMapper.queryList(companyTeamReQuery);
+        //处置机构只能存在一家
+        if (setDisposalTo(id)) {
+            return JsonResponseTool.failure("处置机构只能存在一家");
+        }
         for (CompanyTeamRe companyTeamRe : countList) {
             if (companyTeamRe.getType().equals(ObjectBusinessTypeEnum.create.getValue())) {
                 // 如果创建方为处置方，默认处置机构为处置方
@@ -684,6 +692,14 @@ public class DistributionServiceImpl implements DistributionService {
 
             return JsonResponseTool.success(companyTeamRe.getId());
         }
+    }
+
+    private boolean setDisposalTo(Integer companyTeamId) {
+        Integer count = companyTeamReMapper.findNumByDisposal(companyTeamId);
+        if (count >= 1) {
+            return true;
+        }
+        return false;
     }
 
     @Override

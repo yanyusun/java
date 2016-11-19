@@ -60,4 +60,9 @@ public class CompanyTeamReMapperImpl extends BaseDao implements CompanyTeamReMap
                                                              @Param("userId") Integer userId, @Param("status") Integer status) {
         return super.getSqlSession().getMapper(CompanyTeamReMapper.class).teamReListByLenderIdAndUserid(objectId, objectType, userId, status);
     }
+
+    @Override
+    public Integer findNumByDisposal(@Param("companyTeamId") Integer companyTeamId) {
+        return super.getSqlSession().getMapper(CompanyTeamReMapper.class).findNumByDisposal(companyTeamId);
+    }
 }

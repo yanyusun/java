@@ -160,8 +160,7 @@ public class UserController {
         if (CommonUtil.checkParam(userInsertDTO, userInsertDTO.getUserName(),
                 userInsertDTO.getRealName(), userInsertDTO.getSex(), userInsertDTO.getAccount(),
                 userInsertDTO.getDuty(), userInsertDTO.getWechat(), userInsertDTO.getMobile(),
-                userInsertDTO.getEmail(), userInsertDTO.getApartmentId(), userInsertDTO.getOccupation(),
-                userInsertDTO.getAreaId(), userInsertDTO.getRoleId(), userInsertDTO.getId(),
+                userInsertDTO.getEmail(), userInsertDTO.getApartmentId(),  userInsertDTO.getRoleId(), userInsertDTO.getId(),
                 userInsertDTO.getUserType())) {
             return JsonResponseTool.paramErr("参数错误");
         }

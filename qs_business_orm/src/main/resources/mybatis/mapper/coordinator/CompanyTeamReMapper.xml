@@ -184,5 +184,11 @@
         WHERE tct.stateflag=0 AND tctr.`status`=#{status} AND tctr.stateflag=0
         AND tct.object_type=#{objectType} AND tct.object_id=#{objectId} AND tctr.accepter_id=#{userId}
     </select>
+    <!--获取分配器中处置机构数量-->
+    <select id="findNumByDisposal" resultType="int">
+        SELECT COUNT(tctr.id) count FROM t_company_team_re tctr LEFT JOIN t_user_tag tct
+        ON tct.user_id=tctr.accepter_id
+        WHERE tctr.stateflag=0 AND tct.user_type IN (31,32,33) AND tctr.type IN (0,1,2) AND tctr.company_team_id=#{companyTeamId}
+    </select>
 
 </mapper>
