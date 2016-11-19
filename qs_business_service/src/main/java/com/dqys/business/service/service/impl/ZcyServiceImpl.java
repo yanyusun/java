@@ -279,7 +279,7 @@ public class ZcyServiceImpl implements ZcyService {
                     zcyMaintainOtherMapper.insertSelective(oth);
                 }
             }
-            if (others != null) {
+            if (taxes != null) {
                 for (ZcyMaintainTax tax : taxes) {
                     tax.setMaintainId(zcyMaintain.getId());
                     zcyMaintainTaxMapper.insertSelective(tax);
