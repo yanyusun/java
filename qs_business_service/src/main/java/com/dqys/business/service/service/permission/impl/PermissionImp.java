@@ -88,10 +88,10 @@ public class PermissionImp implements Permission {
             AddApplyCompanyTeamOperTypeFilter addApplyCompanyTeamOperTypeFilter = new AddApplyCompanyTeamOperTypeFilter(navId, objectType, userType.toString(), userRole.toString());
             originOperTypeFiler.decorate(addApplyCompanyTeamOperTypeFilter);
         }
-        if (ObjectTabEnum.accept.getValue().intValue() == navId) {
-            AddAcceptOperTypeFilter addAcceptOperTypeFilter = new AddAcceptOperTypeFilter();
-            originOperTypeFiler.decorate(addAcceptOperTypeFilter);
-        }
+//        if (ObjectTabEnum.accept.getValue().intValue() == navId) {
+//            AddAcceptOperTypeFilter addAcceptOperTypeFilter = new AddAcceptOperTypeFilter();
+//            originOperTypeFiler.decorate(addAcceptOperTypeFilter);
+//        }
         List<OperType> operTypes = operTypeService
                 .getOperType(objectType, objectId);
         return originOperTypeFiler.getPermission(operTypes);

@@ -70,18 +70,22 @@ public class NavUnviewServerAgent {
             while (intIter.hasNext()) {
                 SelectDto selectDto = intIter.next();
                 int reId = selectDto.getReId().intValue();
+                boolean isInParent=false;
                 //移除父拥有的
                 for (SelectDto parentUnview : allParentList) {
                     if (reId == parentUnview.getReId()) {
+                        isInParent=true;
                         intIter.remove();
                         break;
                     }
                 }
-                //是子类的去除
-                for (SelectDto navUnview : navlist) {
-                    if (reId == navUnview.getReId()) {
-                        intIter.remove();
-                        break;
+                if(!isInParent) {//只有在父里不存在时才去查询子类
+                    //是子类的去除
+                    for (SelectDto navUnview : navlist) {
+                        if (reId == navUnview.getReId()) {
+                            intIter.remove();
+                            break;
+                        }
                     }
                 }
             }
