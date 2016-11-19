@@ -478,10 +478,10 @@ public class UserServiceImpl implements UserService {
         if (userInsertDTO.getAvg() != null && !userInsertDTO.getAvg().equals("")) {
             try {
                 if (!FileTool.saveFileSync(userInsertDTO.getAvg())) {
-                    throw new UnexpectedRollbackException("保存附件失败");
+                    return JsonResponseTool.failure("头像修改失败，请重新上传");
                 }
             } catch (IOException e) {
-                throw new UnexpectedRollbackException("保存附件异常");
+                return JsonResponseTool.failure("头像修改失败，请重新上传");
             }
         }
         TUserTag tUserTag = new TUserTag();

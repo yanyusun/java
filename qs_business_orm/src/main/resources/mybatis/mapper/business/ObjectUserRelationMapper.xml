@@ -207,7 +207,7 @@
     <select id="findObjectIdByTeam" resultType="int">
         SELECT bor.object_id FROM t_business_obj_re bor LEFT JOIN business b
         ON b.id=bor.business_id
-        WHERE bor.object_type=11 AND bor.stateflag=0 AND b.`status`=1 AND bor.object_id IN
+        WHERE bor.object_type=11 AND bor.stateflag=0 AND b.`status` in (1,3) AND bor.object_id IN
         (
         SELECT tct.object_id FROM t_company_team tct LEFT JOIN t_company_team_re tctr
         ON tctr.company_team_id=tct.id LEFT JOIN t_user_tag tut
