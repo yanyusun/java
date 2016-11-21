@@ -23,7 +23,6 @@ import com.dqys.business.service.service.common.NavUnviewManagerService;
 import com.dqys.business.service.service.common.SourceService;
 import com.dqys.business.service.utils.common.NavUtil;
 import com.dqys.business.service.utils.common.SourceServiceUtls;
-import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -37,7 +36,6 @@ import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Yvan on 16/8/19.
@@ -123,11 +121,11 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public JsonResponse addSource(SourceInfoDTO sourceInfoDTO) {
         SourceInfo data = sourceInfoMapper.getByNavIdAndLenderId(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId(), sourceInfoDTO.getEstatesId());
-        if (data != null && sourceInfoDTO.getLenderId() != null) {
-            return JsonResponseTool.failure("添加失败，该借款人在该分类下已经有资源信息，请修改！");
-        }
-        if (data != null && sourceInfoDTO.getEstatesId() != null) {
-            return JsonResponseTool.failure("添加失败，该资产源在该分类下已经有资源信息，请修改！");
+        if(data != null){//去更新(原为直接返回错误信息)
+            if(sourceInfoDTO.getLenderId() != null||sourceInfoDTO.getEstatesId() != null){
+                sourceInfoDTO.setId(data.getId());
+                updateSource(sourceInfoDTO);
+            }
         }
         SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO);
         if (sourceInfo == null) {
