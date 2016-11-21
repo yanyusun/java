@@ -497,7 +497,7 @@
         SELECT rep.*,tui.real_name operUserName,bc.name lenderName from t_repay rep LEFT JOIN t_user_info tui
         ON tui.id=rep.oper_user_id LEFT JOIN bt_contact bc
         ON bc.mode=11 AND bc.mode_id=rep.lender_id AND bc.type=1
-        where rep.stateflag=0
+        where rep.stateflag=0 AND bc.stateflag=0
         <if test="repayType !=null">
             and rep.repay_type=#{repayType}
         </if>

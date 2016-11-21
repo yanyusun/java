@@ -28,6 +28,7 @@ import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
+import com.dqys.business.orm.pojo.coordinator.UserDetail;
 import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
@@ -522,8 +523,9 @@ public class DistributionServiceImpl implements DistributionService {
                 return JsonResponseTool.failure("添加失败，请重新操作");
             } else {
                 // 添加操作记录
+                UserDetail detail = coordinatorMapper.getUserDetail(userInfo.getId());
                 businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_ADD_THEIR.getValue(),
-                        "", "主动加入分配器, 公司ID：" + userInfo.getCompanyId() + "发起人ID：" + userInfo.getId(), 0, 0);
+                        "", "主动加入分配器, 公司：" + detail.getCompanyName() + "发起人：" + detail.getRealName(), 0, 0);
                 // 获取平台信息
                 List<TCompanyInfo> companyInfoList = companyInfoMapper.listByType(UserInfoEnum.USER_TYPE_ADMIN.getValue());
                 CompanyDetailInfo platformDetail = companyInfoMapper.getDetailByCompanyId(companyInfoList.get(0).getId());
@@ -642,8 +644,9 @@ public class DistributionServiceImpl implements DistributionService {
             return JsonResponseTool.failure("邀请失败 ，请重新再试");
         } else {
             // 添加操作记录
+            UserDetail detail = coordinatorMapper.getUserDetail(companyDetailInfo1.getUserId());
             businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_ADD_THEIR.getValue(),
-                    "", "邀请加入分配器，被邀请公司ID：" + companyId + "被邀请人ID：" + companyDetailInfo1.getUserId(), 0, 0);
+                    "", "邀请加入分配器，被邀请公司：" + detail.getCompanyName() + ",被邀请人：" + detail.getRealName(), 0, 0);
             // 发送短信提醒
             SmsUtil smsUtil = new SmsUtil();
             String[] msg = {
@@ -739,14 +742,15 @@ public class DistributionServiceImpl implements DistributionService {
         } else {
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId()); // 分配器信息
             // 添加操作记录
+            UserDetail detail = coordinatorMapper.getUserDetail(id);
             if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
                 // 接收
                 businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_ACCEPT_ADD.getValue(),
-                        "", "决定接受与否分配器成员Id：" + id + "，接受状态（1接受）：" + status, 0, 0);
+                        "", "决定接受与否分配器成员：" + detail.getRealName() + "，接受状态：同意", 0, 0);
             } else {
                 // 拒绝
                 businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_REJECT_DEL.getValue(),
-                        "", "决定接受与否分配器成员Id：" + id + "，接受状态（1接受）：" + status, 0, 0);
+                        "", "决定是否接受分配器成员：" + detail.getRealName() + "，接受状态：拒绝", 0, 0);
             }
             // 提醒消息
             String code = ""; // 对象编号
@@ -937,8 +941,9 @@ public class DistributionServiceImpl implements DistributionService {
             }
 
             // 添加操作记录
+            UserDetail detail = coordinatorMapper.getUserDetail(id);
             businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_DEL_THEIR.getValue(),
-                    "", "移除分配器内容对象成员id:" + id, 0, 0);
+                    "", "移除分配器内容对象成员:" + detail.getRealName(), 0, 0);
 
             // 发送短信提醒
             TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeamRe.getAccepterId()); // 申请人信息
@@ -1202,8 +1207,9 @@ public class DistributionServiceImpl implements DistributionService {
         } else {
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
             // 添加操作记录
+            UserDetail detail = coordinatorMapper.getUserDetail(id);
             businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_DEL_GENERAL.getValue(),
-                    "", "移除业务流转对象对象成员id:" + id, 0, 0);
+                    "", "移除业务流转对象对象成员:" + detail.getRealName(), 0, 0);
             // 去除介入信息
             if (companyTeam != null) {
                 // 删除操作者与操作事物的关联
@@ -1369,11 +1375,11 @@ public class DistributionServiceImpl implements DistributionService {
             if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
                 // 接收
                 businessLogService.add(id, type, UserInfoEnum.DISTRIBUTION_ACCEPT_ADD.getValue(),
-                        "", "决定(同意|拒绝)加入业务流转,业务id：" + distributionId + ",状态(1接受):" + status, 0, 0);
+                        "", "决定(同意|拒绝)加入业务流转,状态:同意", 0, 0);
             } else {
                 // 拒绝
                 businessLogService.add(id, type, UserInfoEnum.DISTRIBUTION_REJECT_DEL.getValue(),
-                        "", "决定(同意|拒绝)加入业务流转,业务id：" + distributionId + ",状态(1接受):" + status, 0, 0);
+                        "", "决定(同意|拒绝)加入业务流转,状态(1接受):拒绝", 0, 0);
             }
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
             if (companyTeam != null) {
@@ -1455,9 +1461,8 @@ public class DistributionServiceImpl implements DistributionService {
                         // 添加公司之间的关系
                         addCompanyRelation(creator.getCompanyId(), companyTeamRe.getAcceptCompanyId());
                         //是中介公司身份的流转需要把抵押物转变为资产源
-                        TSysProperty property = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY);
-                        String reg = property.getPropertyValue();
-                        if (UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().toString().equals(reg)) {
+                        String reg = UserSession.getCurrent() == null ? "" : UserSession.getCurrent().getUserType();
+                        if (UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().toString().equals(reg.substring(0, reg.lastIndexOf(",")))) {
                             zcyService.receivePawn(id, type, 0);//中介公司接受业务流转的抵押物添加到资产源信息
                         }
                     }
