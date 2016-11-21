@@ -991,12 +991,12 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setOperator(userInfo.getId());
             }
         } else if (ObjectTabEnum.refuse.getValue().equals(tab)) {
-            List<Integer> ids=null;
+            List<Integer> ids = null;
             // 已驳回
-            if(flag){
-                 ids = businessObjReMapper.listIdByTypeIdStatus(ObjectTypeEnum.LENDER.getValue(),
+            if (flag) {
+                ids = businessObjReMapper.listIdByTypeIdStatus(ObjectTypeEnum.LENDER.getValue(),
                         BusinessStatusEnum.platform_refuse.getValue());
-            }else{
+            } else {
                 ids = businessObjReMapper.listIdByTypeIdStatusUser(ObjectTypeEnum.LENDER.getValue(),
                         BusinessStatusEnum.platform_refuse.getValue(), userId);
             }

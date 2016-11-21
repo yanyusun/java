@@ -425,7 +425,7 @@
            ( SELECT iou.* from bt_iou iou
             WHERE iou.lender_id=#{lenderId,jdbcType=INTEGER} AND iou.stateflag=0 AND iou.id IN (
             SELECT bpr.iou_id from bt_pawn pawn ,object_user_relation our , bt_pi_relation bpr
-            WHERE pawn.id=our.object_id AND our.object_type=13 AND
+            WHERE pawn.id=our.object_id AND our.object_type=12 AND
             our.user_id=#{userId,jdbcType=INTEGER}
             AND bpr.pawn_id=pawn.id GROUP BY bpr.iou_id ))
             UNION

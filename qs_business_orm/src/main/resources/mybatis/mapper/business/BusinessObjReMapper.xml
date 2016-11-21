@@ -67,7 +67,7 @@
         SELECT tct.object_id FROM t_company_team tct LEFT JOIN t_company_team_re tctr
         ON tctr.company_team_id=tct.id LEFT JOIN t_user_tag tut
         ON tut.user_id=tctr.accepter_id
-        WHERE tctr.type IN (0,1,2) AND tut.user_type IN (31,32,33)
+        WHERE tut.user_type IN (31,32,33)
         AND tctr.`status`=1 AND tct.object_type=#{type}
         <if test="userId !=null">
             AND tctr.accepter_id=#{userId}
@@ -83,7 +83,7 @@
         SELECT tct.object_id FROM t_company_team tct LEFT JOIN t_company_team_re tctr
         ON tctr.company_team_id=tct.id LEFT JOIN t_user_tag tut
         ON tut.user_id=tctr.accepter_id
-        WHERE tctr.type IN (0,1,2) AND tut.user_type IN (31,32,33)
+        WHERE tut.user_type IN (31,32,33)
         AND tctr.`status`=1 AND tct.object_type=#{type}
         )
   </select>

@@ -185,8 +185,8 @@
             AND our.user_id=#{userId}
             <if test="objectIds !=null and objectIds.size>0">
                 AND paw.id IN
-                <foreach collection="objectIds" index="index" item="objectIds.id" open="(" separator="," close=")">
-                    #{objectIds.id}
+                <foreach collection="objectIds" index="index" item="objectIds.object" open="(" separator="," close=")">
+                    #{objectIds.object.id}
                 </foreach>
             </if>
         </if>
@@ -197,8 +197,8 @@
             AND our.user_id=#{userId}
             <if test="objectIds !=null and objectIds.size>0">
                 AND iou.id IN
-                <foreach collection="objectIds" index="index" item="objectIds.id" open="(" separator="," close=")">
-                    #{objectIds.id}
+                <foreach collection="objectIds" index="index" item="objectIds.object" open="(" separator="," close=")">
+                    #{objectIds.object.id}
                 </foreach>
             </if>
         </if>
@@ -212,7 +212,7 @@
         SELECT tct.object_id FROM t_company_team tct LEFT JOIN t_company_team_re tctr
         ON tctr.company_team_id=tct.id LEFT JOIN t_user_tag tut
         ON tut.user_id=tctr.accepter_id
-        WHERE tctr.type IN (0,1,2) AND tut.user_type IN (31,32,33)
+        WHERE tut.user_type IN (31,32,33)
         AND tctr.`status`=1 AND tct.object_type=#{objectType}
         <if test="userId !=null">
             AND tctr.accepter_id=#{userId}
