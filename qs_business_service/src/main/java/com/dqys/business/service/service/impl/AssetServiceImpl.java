@@ -729,6 +729,8 @@ public class AssetServiceImpl implements AssetService {
         } else if (ObjectTabEnum.handling_urge.getValue().equals(type)
                 || ObjectTabEnum.handling_entrust.getValue().equals(type)) {
             // 委托的处置中
+            /*
+             *
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
             objectUserRelationQuery.setObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue());
             if (!flag) {
@@ -739,11 +741,15 @@ public class AssetServiceImpl implements AssetService {
             objectUserRelationList.forEach(objectUserRelation -> {
                 ids.add(objectUserRelation.getObjectId());
             });
+            */
+            if (flag) {
+                userId = null;
+            }
+            List<Integer> ids = objectUserRelationMapper.findObjectIdByTeam(ObjectTypeEnum.LENDER.getValue(), userId);//11月19号修改，原来的是上面注释掉的代码
             if (CommonUtil.checkParam(ids) || ids.size() == 0) {
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
             } else {
-                // 这里引入业务的处置中状态
-                assetQuery.setIds(CommonUtil.unionList(ids, managerDisposeIds));
+                assetQuery.setIds(ids);
             }
             assetQuery.setTakePart(true);
             assetQuery.setStop(false);
