@@ -6,7 +6,7 @@ import java.util.List;
  * Created by Yvan on 16/8/19.
  */
 public class SelectDTOList {
-
+    private Integer pid;
     private String key;
     private String title;
     private List<SelectDTOList> children;
@@ -33,5 +33,13 @@ public class SelectDTOList {
 
     public void setChildren(List<SelectDTOList> children) {
         this.children = children;
+    }
+
+    public Integer getPid() {
+        return pid;
+    }
+
+    public void setPid(Integer pid) {
+        this.pid = pid;
     }
 }
