@@ -10,7 +10,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.UnexpectedRollbackException;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,20 +40,19 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public ServiceResult<Integer> addCompany_tx(TCompanyInfo tCompanyInfo) {
         //新增数据
-
+        if (tCompanyInfo.getLicence() != null && !"".equals(tCompanyInfo.getLicence())) {
+            try {
+                if (!FileTool.saveFileSync(tCompanyInfo.getLicence())) {
+                    return ServiceResult.failure("头像保存失败，请重新上传", null);
+                }
+            } catch (IOException e) {
+                return ServiceResult.failure("头像保存失败，请重新上传", null);
+            }
+        }
         Integer result = this.tCompanyInfoMapper.insertSelective(tCompanyInfo);
         if (result <= 0) {
             return ServiceResult.failure("新增失败", ObjectUtils.NULL);
         }
-
-        try {
-            if (!FileTool.saveFileSync(tCompanyInfo.getLicence())) {
-                throw new UnexpectedRollbackException("保存附件失败");
-            }
-        } catch (IOException e) {
-            throw new UnexpectedRollbackException("保存附件异常");
-        }
-
         return ServiceResult.success(tCompanyInfo.getId());
     }
 
