@@ -88,5 +88,4 @@ public interface AssetInfoMapper {
      */
     List<Integer> selectIdbyAssetNo(String assetNo);
 
-    List<Integer> findObjectIdByAsset(@Param("userId") Integer userId, @Param("objectType") Integer objectType);
 }

@@ -19,6 +19,7 @@ import com.dqys.business.orm.mapper.followUp.FollowUpReadstatusMapper;
 import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
+import com.dqys.business.orm.pojo.coordinator.UserDetail;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.orm.query.asset.AssetQuery;
@@ -42,6 +43,7 @@ import com.dqys.business.service.utils.excel.ExcelUtilAsset;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.ResponseCodeEnum;
+import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -673,7 +675,8 @@ public class AssetServiceImpl implements AssetService {
                 assetQuery.setExceptIds(ids);
             }
              */
-            assetQuery.setIds(assetInfoMapper.findObjectIdByAsset(userId, ObjectTypeEnum.ASSETPACKAGE.getValue()));//11月18号修改成这样，原来是使用上面注释掉的代码
+            Integer roleType = getRoleType(userId);
+            assetQuery.setIds(lenderInfoMapper.findObjectIdByLender(userId, ObjectTypeEnum.ASSETPACKAGE.getValue(), roleType));//11月18号修改成这样，原来是使用上面注释掉的代码
             assetQuery.setOperator(userInfo.getId());
             if (!flag) {
 //                if (isPlatformOrEntrust) { // 修改于10.11
@@ -781,6 +784,20 @@ public class AssetServiceImpl implements AssetService {
             return null;
         }
         return assetQuery;
+    }
+
+    private Integer getRoleType(Integer userId) {
+        Integer roleType = null;//
+        Map user = coordinatorService.getUserDetail(userId);
+        if (user != null && user.get("detail") != null) {
+            UserDetail detail = (UserDetail) user.get("detail");
+            if (detail.getUserType() == RoleTypeEnum.ADMIN.getValue()) {
+                roleType = 0;
+            } else if (detail.getUserType() == RoleTypeEnum.REGULATOR.getValue()) {
+                roleType = 1;
+            }
+        }
+        return roleType;
     }
 
     @Override
