@@ -217,6 +217,13 @@
         <if test="userId !=null">
             AND tctr.accepter_id=#{userId}
         </if>
+        UNION
+        SELECT tut.object_id from t_user_team tut LEFT JOIN t_teammate_re ttr
+        ON ttr.user_team_id=tut.id
+        WHERE tut.stateflag=0 AND tut.`status`=0 AND ttr.stateflag=0 AND ttr.`status`=1
+        <if test="userId !=null">
+            AND ttr.user_id=#{userId}
+        </if>
         )
     </select>
 
