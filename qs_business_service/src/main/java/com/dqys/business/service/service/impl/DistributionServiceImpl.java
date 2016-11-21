@@ -198,9 +198,11 @@ public class DistributionServiceImpl implements DistributionService {
                 dto.setAppraisal(info.getAppraisal());
                 dto.setNumberNo(info.getLenderNo());
                 ContactInfo con = contactInfoMapper.getByModel(ObjectTypeEnum.LENDER.getValue().toString(), ContactTypeEnum.LENDER.getValue(), id);
-                dto.setName(con != null ? con.getName() : "");
-                dto.setAvg(con != null ? con.getAvg() : "");
-                dto.setSex(con != null ? con.getGender().toString() : "");
+                if (con != null) {
+                    dto.setName(con.getName() != null ? con.getName() : "");
+                    dto.setAvg(con.getAvg() != null ? con.getAvg() : "");
+                    dto.setSex(con.getGender() != null ? con.getGender().toString() : "");
+                }
             }
         } else if (ObjectTypeEnum.ASSETPACKAGE.getValue().intValue() == type) {
             AssetInfo info = assetInfoMapper.get(id);

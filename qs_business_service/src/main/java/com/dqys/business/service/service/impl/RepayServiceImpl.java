@@ -86,13 +86,18 @@ public class RepayServiceImpl implements RepayService {
 
     @Override
     public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
+        Map map = new HashMap<>();
         if (file != null && !"".equals(file)) {
             try {
                 if (!FileTool.saveFileSync(file)) {
-                    throw new UnexpectedRollbackException("保存附件失败");
+                    map.put("result", "no");
+                    map.put("msg", "保存单据失败，稍后请重试！");
+                    return map;
                 }
             } catch (IOException e) {
-                throw new UnexpectedRollbackException("保存附件异常");
+                map.put("result", "no");
+                map.put("msg", "保存单据失败，稍后请重试！");
+                return map;
             }
         }
         if (objectType == RepayEnum.OBJECT_IOU.getValue().intValue()) {
@@ -102,7 +107,6 @@ public class RepayServiceImpl implements RepayService {
         } else if (objectType == RepayEnum.OBJECT_CASE.getValue().intValue()) {
             businessLogService.add(objectId, ObjectTypeEnum.CASE.getValue(), CaseEnum.REPAY_YET.getValue(), CaseEnum.REPAY_YET.getName(), "", 0, 0);//操作日志
         }
-        Map map = new HashMap<>();
         List<IOUInfo> ious = new ArrayList<>();
         ious = getIouInfos(objectId, objectType, ious);//根据对象类型获取所有借据
         if (ious == null || ious.size() == 0) {
