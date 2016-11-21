@@ -152,16 +152,16 @@
                 name,
             </if>
             <if test="repayStatus != null">
-                repay_status
+                repay_status,
             </if>
             <if test="onCollection != null">
-                on_collection
+                on_collection,
             </if>
             <if test="onAgent != null">
-                on_agent
+                on_agent,
             </if>
             <if test="onLawyer != null">
-                on_lawyer
+                on_lawyer,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">

@@ -123,8 +123,10 @@ public class SourceServiceImpl implements SourceService {
         SourceInfo data = sourceInfoMapper.getByNavIdAndLenderId(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId(), sourceInfoDTO.getEstatesId());
         if(data != null){//去更新(原为直接返回错误信息)
             if(sourceInfoDTO.getLenderId() != null||sourceInfoDTO.getEstatesId() != null){
-                sourceInfoDTO.setId(data.getId());
+                int oldId = data.getId();
+                sourceInfoDTO.setId(oldId);
                 updateSource(sourceInfoDTO);
+                return JsonResponseTool.success(oldId);
             }
         }
         SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO);
