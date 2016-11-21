@@ -1,18 +1,22 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.business.orm.constant.business.ObjectBusinessEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.*;
 import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.IouEnum;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.IouService;
 import com.dqys.business.service.utils.asset.IouServiceUtils;
+import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.RandomUtil;
@@ -20,10 +24,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Yvan on 16/7/12.
@@ -68,6 +70,23 @@ public class IouServiceImpl implements IouService {
     public JsonResponse add_tx(IouDTO iouDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(iouDTO, iouDTO.getLenderId(), iouDTO.getIouName())) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        UserSession userSession = UserSession.getCurrent();
+        int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
+        //第一次添加时根据人员类型,设置抵押物的处置状态
+        if (userType == UserInfoEnum.USER_TYPE_COLLECTION.getValue()) {//只有催收是在业务的
+            iouDTO.setLawyer(ObjectBusinessEnum.IOU_NOTON_BUSINESS.getValue());
+            iouDTO.setAgent(ObjectBusinessEnum.IOU_NOTON_BUSINESS.getValue());
+        } else if (userType == UserInfoEnum.USER_TYPE_JUDICIARY.getValue()) {//只有司法时在业务的
+            iouDTO.setUrge(ObjectBusinessEnum.IOU_NOTON_BUSINESS.getValue());
+            iouDTO.setAgent(ObjectBusinessEnum.IOU_NOTON_BUSINESS.getValue());
+        } else if (userType == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue()) {//只有中介时在业务的
+            iouDTO.setUrge(ObjectBusinessEnum.IOU_NOTON_BUSINESS.getValue());
+            iouDTO.setLawyer(ObjectBusinessEnum.IOU_NOTON_BUSINESS.getValue());
+        } else {//都不在业务
+            iouDTO.setUrge(ObjectBusinessEnum.IOU_NOTON_BUSINESS.getValue());
+            iouDTO.setLawyer(ObjectBusinessEnum.IOU_NOTON_BUSINESS.getValue());
+            iouDTO.setAgent(ObjectBusinessEnum.IOU_NOTON_BUSINESS.getValue());
         }
         IOUInfo iouInfo = IouServiceUtils.toIouInfo(iouDTO);
         if (iouInfo.getIouNo() == null) {

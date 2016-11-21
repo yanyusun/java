@@ -4,8 +4,6 @@ import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.service.dto.asset.PawnDTO;
 import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
-import com.dqys.core.utils.DateFormatTool;
-import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +36,6 @@ public class PawnServiceUtils {
      */
     public static PawnInfo toPawnInfo(PawnDTO pawnDTO){
         PawnInfo pawnInfo = new PawnInfo();
-
         pawnInfo.setId(pawnDTO.getId());
         pawnInfo.setName(pawnDTO.getPawnName());
         pawnInfo.setLenderId(pawnDTO.getLenderId());
@@ -56,7 +53,15 @@ public class PawnServiceUtils {
         pawnInfo.setDisposeStatus(pawnDTO.getDisposeStatus());
         pawnInfo.setWorth(pawnDTO.getWorth());
         pawnInfo.setMemo(pawnDTO.getMemo());
-
+        if(pawnDTO.getAgent()!=null){
+            pawnInfo.setOnAgent(pawnDTO.getAgent());
+        }
+        if(pawnDTO.getUrge()!=null){
+            pawnInfo.setOnCollection(pawnDTO.getUrge());
+        }
+        if(pawnDTO.getLawyer()!=null){
+            pawnInfo.setOnLawyer(pawnDTO.getLawyer());
+        }
         return pawnInfo;
     }
 

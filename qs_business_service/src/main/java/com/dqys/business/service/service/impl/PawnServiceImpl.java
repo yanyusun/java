@@ -1,5 +1,6 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.business.orm.constant.business.ObjectBusinessEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
@@ -9,14 +10,17 @@ import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.asset.PiRelation;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.dto.asset.PawnDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.PawnService;
 import com.dqys.business.service.utils.asset.PawnServiceUtils;
+import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.RandomUtil;
@@ -66,6 +70,23 @@ public class PawnServiceImpl implements PawnService {
     public JsonResponse add_tx(PawnDTO pawnDTO) throws BusinessLogException {
         if (CommonUtil.checkParam(pawnDTO, pawnDTO.getLenderId(), pawnDTO.getPawnName())) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        UserSession userSession = UserSession.getCurrent();
+        int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
+        //第一次添加时根据人员类型,设置抵押物的处置状态
+        if (userType == UserInfoEnum.USER_TYPE_COLLECTION.getValue()) {//只有催收是在业务的
+            pawnDTO.setLawyer(ObjectBusinessEnum.PAWN_NOTON_BUSINESS.getValue());
+            pawnDTO.setAgent(ObjectBusinessEnum.PAWN_NOTON_BUSINESS.getValue());
+        } else if (userType == UserInfoEnum.USER_TYPE_JUDICIARY.getValue()) {//只有司法时在业务的
+            pawnDTO.setUrge(ObjectBusinessEnum.PAWN_NOTON_BUSINESS.getValue());
+            pawnDTO.setAgent(ObjectBusinessEnum.PAWN_NOTON_BUSINESS.getValue());
+        } else if (userType == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue()) {//只有中介时在业务的
+            pawnDTO.setUrge(ObjectBusinessEnum.PAWN_NOTON_BUSINESS.getValue());
+            pawnDTO.setLawyer(ObjectBusinessEnum.PAWN_NOTON_BUSINESS.getValue());
+        } else {//都不在业务
+            pawnDTO.setUrge(ObjectBusinessEnum.PAWN_NOTON_BUSINESS.getValue());
+            pawnDTO.setLawyer(ObjectBusinessEnum.PAWN_NOTON_BUSINESS.getValue());
+            pawnDTO.setAgent(ObjectBusinessEnum.PAWN_NOTON_BUSINESS.getValue());
         }
         PawnInfo pawnInfo = PawnServiceUtils.toPawnInfo(pawnDTO);
         // 统计当前借款人已经具有的抵押物数量
@@ -155,6 +176,7 @@ public class PawnServiceImpl implements PawnService {
         }
         for (PawnDTO pawnDTO : pawnDTOList) {
             JsonResponse response = null;
+
             if (pawnDTO.getId() != null) {
                 response = update_tx(pawnDTO);
             } else {

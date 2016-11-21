@@ -4,8 +4,6 @@ import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.service.constant.asset.ExcellentTypeEnum;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.core.utils.CommonUtil;
-import com.dqys.core.utils.DateFormatTool;
-import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,7 +84,6 @@ public class IouServiceUtils {
      */
     public static IOUInfo toIouInfo(IouDTO iouDTO){
         IOUInfo iouInfo = new IOUInfo();
-
         iouInfo.setId(iouDTO.getId());
         iouInfo.setIouNo(iouDTO.getIouNo());
         iouInfo.setName(iouDTO.getIouName());
@@ -114,7 +111,15 @@ public class IouServiceUtils {
         iouInfo.setEvaluateExcellent(iouDTO.getEvaluateExcellent());
         iouInfo.setEvaluateLevel(iouDTO.getEvaluateLevel());
         iouInfo.setMemo(iouDTO.getMemo());
-
+        if(iouDTO.getAgent()!=null){
+            iouInfo.setOnAgent(iouDTO.getAgent());
+        }
+        if(iouDTO.getUrge()!=null){
+            iouInfo.setOnCollection(iouDTO.getUrge());
+        }
+        if(iouDTO.getLawyer()!=null){
+            iouInfo.setOnLawyer(iouDTO.getLawyer());
+        }
         return iouInfo;
     }
 
