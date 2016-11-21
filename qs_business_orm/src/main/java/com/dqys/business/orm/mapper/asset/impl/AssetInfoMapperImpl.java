@@ -67,8 +67,4 @@ public class AssetInfoMapperImpl extends BaseDao implements AssetInfoMapper {
         return super.getSqlSession().getMapper(AssetInfoMapper.class).selectIdbyAssetNo(assetNo);
     }
 
-    @Override
-    public List<Integer> findObjectIdByAsset(@Param("userId") Integer userId, @Param("objectType") Integer objectType) {
-        return super.getSqlSession().getMapper(AssetInfoMapper.class).findObjectIdByAsset(userId, objectType);
-    }
 }

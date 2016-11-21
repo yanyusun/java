@@ -1,9 +1,11 @@
 package com.dqys.auth.orm.pojo;
 
+import java.io.Serializable;
+
 /**
  * Created by mkfeng on 2016/11/18.
  */
-public class UserDetail {
+public class UserDetail implements Serializable {
     private Integer id;//用户id
     private String realName;//用户的真实姓名
     private String mobile;//用户的手机号

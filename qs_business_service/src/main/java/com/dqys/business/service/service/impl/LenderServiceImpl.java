@@ -21,6 +21,7 @@ import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
+import com.dqys.business.orm.pojo.coordinator.UserDetail;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.orm.query.asset.AssetQuery;
@@ -48,6 +49,7 @@ import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.base.BaseSelectonDTO;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -698,16 +700,14 @@ public class LenderServiceImpl implements LenderService {
         }
         // 为当前操作人且类型为借款人,状态为通过的数据ID
         List<Integer> passIds = businessObjReMapper.listIdByTypeIdStatusUser(
-                ObjectTypeEnum.LENDER.getValue(), BusinessStatusEnum.platform_pass.getValue(), userInfo.getId());
+                ObjectTypeEnum.LENDER.getValue(), BusinessStatusEnum.platform_pass.getValue(), userInfo.getId());//待处置
         List<Integer> disposeIds = businessObjReMapper.listIdByTypeIdStatusUser(
-                ObjectTypeEnum.LENDER.getValue(), BusinessStatusEnum.dispose.getValue(), userInfo.getId());
+                ObjectTypeEnum.LENDER.getValue(), BusinessStatusEnum.dispose.getValue(), userInfo.getId());//处置中
         List<Integer> businessIds = CommonUtil.pickList(passIds, disposeIds);
         List<Integer> managerPassIds = businessObjReMapper.listIdByTypeIdStatus(
-                ObjectTypeEnum.LENDER.getValue(), BusinessStatusEnum.platform_pass.getValue()
-        );
+                ObjectTypeEnum.LENDER.getValue(), BusinessStatusEnum.platform_pass.getValue());//平台待处置
         List<Integer> managerDisposeIds = businessObjReMapper.listIdByTypeIdStatus(
-                ObjectTypeEnum.LENDER.getValue(), BusinessStatusEnum.dispose.getValue()
-        );
+                ObjectTypeEnum.LENDER.getValue(), BusinessStatusEnum.dispose.getValue());//平台处置中
         List<Integer> managerBusinessIds = CommonUtil.pickList(managerDisposeIds, managerPassIds);
 
         LenderQuery lenderQuery = new LenderQuery();
@@ -1018,7 +1018,6 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setIds(managerPassIds); // 通过审核还未处置
             } else {
                 lenderQuery.setIds(passIds); // 通过审核还未处置
-//                lenderQuery.setOperator(userInfo.getId());
             }
             if (CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0) {
                 // 找不到数据
@@ -1045,7 +1044,8 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setExceptIds(ids);
             }
              */
-            lenderQuery.setIds(lenderInfoMapper.findObjectIdByLender(userId, ObjectTypeEnum.LENDER.getValue()));//11月18号修改成这样，原来是使用上面注释掉的代码
+            Integer roleType = getRoleType(userId);//根据用户判断用户角色获取对应协作器角色
+            lenderQuery.setIds(lenderInfoMapper.findObjectIdByLender(userId, ObjectTypeEnum.LENDER.getValue(), roleType));//11月18号修改成这样，原来是使用上面注释掉的代码
             if (!flag) {
 //                if (isPlatformOrEntrust) { // 修改于10.11
                 if (businessIds != null && businessIds.size() > 0) {
@@ -1184,6 +1184,20 @@ public class LenderServiceImpl implements LenderService {
             return null;
         }
         return lenderQuery;
+    }
+
+    private Integer getRoleType(Integer userId) {
+        Integer roleType = null;//
+        Map user = coordinatorService.getUserDetail(userId);
+        if (user != null && user.get("detail") != null) {
+            UserDetail detail = (UserDetail) user.get("detail");
+            if (detail.getUserType() == RoleTypeEnum.ADMIN.getValue()) {
+                roleType = 0;
+            } else if (detail.getUserType() == RoleTypeEnum.REGULATOR.getValue()) {
+                roleType = 1;
+            }
+        }
+        return roleType;
     }
 
     /**
