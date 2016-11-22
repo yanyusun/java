@@ -433,12 +433,12 @@ public class DistributionServiceImpl implements DistributionService {
             Integer result = companyTeamMapper.insert(companyTeam);
             if (CommonUtil.checkResult(result)) {
                 // 创建失败
-                return JsonResponseTool.failure("创建分配器失败");
+                return JsonResponseTool.failure("创建清收案组失败");
             }
             Integer teamId = companyTeam.getId();
             // 添加操作记录
             businessLogService.add(id, type, UserInfoEnum.DISTRIBUTION_ADD_THEIR.getValue(),
-                    "", "创建分配器", 0, 0);
+                    "", "创建清收案组", 0, 0);
             // 添加本家分配记录
             CompanyDetailInfo detailInfo = companyInfoMapper.getDetailByUserId(creatorId);
             if (detailInfo != null && detailInfo.getCompanyId() != null) {
@@ -466,7 +466,7 @@ public class DistributionServiceImpl implements DistributionService {
             }
             return JsonResponseTool.success(teamId);
         }
-        return JsonResponseTool.failure("分配器已经存在");
+        return JsonResponseTool.failure("清收案组已经存在");
     }
 
     @Override
@@ -482,7 +482,7 @@ public class DistributionServiceImpl implements DistributionService {
             }
             CompanyTeam companyTeam = companyTeamMapper.get(id);
             if (companyTeam == null) {
-                return JsonResponseTool.failure("分配器不存在");
+                return JsonResponseTool.failure("清收案组不存在");
             }
 
             CompanyTeamReQuery companyTeamReQuery = new CompanyTeamReQuery();
@@ -512,7 +512,7 @@ public class DistributionServiceImpl implements DistributionService {
             List<CompanyTeamRe> companyTeamReList = companyTeamReMapper.queryList(companyTeamReQuery);
             if (companyTeamReList != null && companyTeamReList.size() > 0) {
                 // 已经存在在该分配器中无需再次申请或邀请
-                return JsonResponseTool.failure("已经加入分配器中");
+                return JsonResponseTool.failure("已经加入清收案组中");
             }
             CompanyTeamRe companyTeamRe = new CompanyTeamRe();
             companyTeamRe.setCompanyTeamId(id);
@@ -527,7 +527,7 @@ public class DistributionServiceImpl implements DistributionService {
                 // 添加操作记录
                 UserDetail detail = coordinatorMapper.getUserDetail(userInfo.getId());
                 businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_ADD_THEIR.getValue(),
-                        "", "主动加入分配器, 公司：" + detail.getCompanyName() + "发起人：" + detail.getRealName(), 0, 0);
+                        "", "主动加入清收案组, 公司：" + detail.getCompanyName() + "发起人：" + detail.getRealName(), 0, 0);
                 // 获取平台信息
                 List<TCompanyInfo> companyInfoList = companyInfoMapper.listByType(UserInfoEnum.USER_TYPE_ADMIN.getValue());
                 CompanyDetailInfo platformDetail = companyInfoMapper.getDetailByCompanyId(companyInfoList.get(0).getId());
@@ -593,7 +593,7 @@ public class DistributionServiceImpl implements DistributionService {
         }
         CompanyTeam companyTeam = companyTeamMapper.get(id);
         if (companyTeam == null) {
-            return JsonResponseTool.paramErr("参数错误，分配器不存在"); // 分配器不存在
+            return JsonResponseTool.paramErr("参数错误，清收案组不存在"); // 分配器不存在
         }
         CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByUserId(UserSession.getCurrent().getUserId());
         if (companyDetailInfo == null) {
@@ -630,7 +630,7 @@ public class DistributionServiceImpl implements DistributionService {
         for (CompanyTeamRe companyTeamRe : countList) {
             if (companyTeamRe.getAcceptCompanyId().equals(companyId)) {
                 // 已经存在在该分配器中无需再次申请或邀请
-                return JsonResponseTool.failure("该公司已经存在在分配器中");
+                return JsonResponseTool.failure("该公司已经存在于清收案组中");
             }
         }
 
@@ -648,7 +648,7 @@ public class DistributionServiceImpl implements DistributionService {
             // 添加操作记录
             UserDetail detail = coordinatorMapper.getUserDetail(companyDetailInfo1.getUserId());
             businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_ADD_THEIR.getValue(),
-                    "", "邀请加入分配器，被邀请公司：" + detail.getCompanyName() + ",被邀请人：" + detail.getRealName(), 0, 0);
+                    "", "邀请加入清收案组，被邀请公司：" + detail.getCompanyName() + ",被邀请人：" + detail.getRealName(), 0, 0);
             // 发送短信提醒
             SmsUtil smsUtil = new SmsUtil();
             String[] msg = {
@@ -715,7 +715,7 @@ public class DistributionServiceImpl implements DistributionService {
         }
         CompanyTeamRe companyTeamRe = companyTeamReMapper.get(id);
         if (companyTeamRe == null) {
-            return JsonResponseTool.paramErr("参数错误，分配器对象不存在"); // 分配器记录不存在
+            return JsonResponseTool.paramErr("参数错误，清收案组不存在"); // 分配器记录不存在
         }
         if (!companyTeamRe.getStatus().equals(ObjectAcceptTypeEnum.init.getValue())) {
             return JsonResponseTool.failure("该对象已经审核过"); // 不是待审核状态
@@ -748,11 +748,11 @@ public class DistributionServiceImpl implements DistributionService {
             if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
                 // 接收
                 businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_ACCEPT_ADD.getValue(),
-                        "", "决定接受与否分配器成员：" + detail.getRealName() + "，接受状态：同意", 0, 0);
+                        "", "决定是否接受清收案组成员：" + detail.getRealName() + "，接受状态：同意", 0, 0);
             } else {
                 // 拒绝
                 businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_REJECT_DEL.getValue(),
-                        "", "决定是否接受分配器成员：" + detail.getRealName() + "，接受状态：拒绝", 0, 0);
+                        "", "决定是否接受清收案组成员：" + detail.getRealName() + "，接受状态：拒绝", 0, 0);
             }
             // 提醒消息
             String code = ""; // 对象编号
@@ -912,11 +912,11 @@ public class DistributionServiceImpl implements DistributionService {
         // 存在该分配数据
         CompanyTeamRe companyTeamRe = companyTeamReMapper.get(id);
         if (companyTeamRe == null) {
-            return JsonResponseTool.paramErr("参数错误，分配器成员不存在");
+            return JsonResponseTool.paramErr("参数错误，清收案组成员不存在");
         }
         // 已经移除
         if (companyTeamRe.getStateflag() > 0) {
-            return JsonResponseTool.failure("已经从分配器移除");
+            return JsonResponseTool.failure("已经从清收案组移除");
         }
         // 校验公司是否存在
         CompanyDetailInfo companyDetailInfo = companyInfoMapper.getDetailByCompanyId(companyTeamRe.getAcceptCompanyId());
@@ -945,7 +945,7 @@ public class DistributionServiceImpl implements DistributionService {
             // 添加操作记录
             UserDetail detail = coordinatorMapper.getUserDetail(companyTeamRe.getAccepterId());
             businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_DEL_THEIR.getValue(),
-                    "", "移除分配器内容对象成员:" + detail.getRealName(), 0, 0);
+                    "", "移除清收案组对象成员:" + detail.getRealName(), 0, 0);
 
             // 发送短信提醒
             TUserInfo creator = userInfoMapper.selectByPrimaryKey(companyTeamRe.getAccepterId()); // 申请人信息
@@ -1047,7 +1047,7 @@ public class DistributionServiceImpl implements DistributionService {
         }
         CompanyTeam companyTeam = companyTeamMapper.get(distributionId);
         if (companyTeam == null) {
-            return JsonResponseTool.paramErr("参数错误，不存在该分配器"); // 分配器不存在
+            return JsonResponseTool.paramErr("参数错误，不存在该清收案组"); // 分配器不存在
         }
         TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
         if (userInfo == null || userInfo.getCompanyId() == null) {
@@ -1193,7 +1193,7 @@ public class DistributionServiceImpl implements DistributionService {
         // 存在该分配数据
         CompanyTeamRe companyTeamRe = companyTeamReMapper.get(id);
         if (companyTeamRe == null) {
-            return JsonResponseTool.paramErr("参数错误，分配器成员不存在");
+            return JsonResponseTool.paramErr("参数错误，清收案组成员不存在");
         }
         // 该数据已经删除
         if (companyTeamRe.getStateflag() > 0) {
@@ -1211,7 +1211,7 @@ public class DistributionServiceImpl implements DistributionService {
             // 添加操作记录
             UserDetail detail = coordinatorMapper.getUserDetail(companyTeamRe.getAccepterId());
             businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_DEL_GENERAL.getValue(),
-                    "", "移除业务流转对象对象成员:" + detail.getRealName(), 0, 0);
+                    "", "移除业务流转对象成员:" + detail.getRealName(), 0, 0);
             // 去除介入信息
             if (companyTeam != null) {
                 // 删除操作者与操作事物的关联
@@ -1359,7 +1359,7 @@ public class DistributionServiceImpl implements DistributionService {
         }
         CompanyTeamRe companyTeamRe = companyTeamReMapper.get(distributionId);
         if (companyTeamRe == null) {
-            return JsonResponseTool.paramErr("参数错误，分配器成员不存在"); // 分配器记录不存在
+            return JsonResponseTool.paramErr("参数错误，清收案组成员不存在"); // 分配器记录不存在
         }
         TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
         if (userInfo == null || userInfo.getCompanyId() == null) {

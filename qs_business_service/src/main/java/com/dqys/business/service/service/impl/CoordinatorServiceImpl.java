@@ -178,7 +178,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
         if (!authority) {
             map.put("result", "no");
-            map.put("msg", "没有权限创建协作器");
+            map.put("msg", "没有权限创建该案组");
             return true;
         }
 
@@ -250,6 +250,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             teamDTO.setUserId(tUserInfo.getId());
             teamDTO.setRealName(tUserInfo.getRealName());
             teamDTO.setRoleType(10);//管理员
+            teamDTO.setStatus(1);
             list.add(teamDTO);
         }
         return list;
@@ -361,7 +362,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         team.setId(userTeamId);
         UserTeam userTeam = userTeamMapper.selectByPrimaryKeySelective(team);
         if (userTeam == null) {
-            map.put("msg", "协作器不存在");
+            map.put("msg", "该案组不存在");
             map.put("result", "no");
             return map;
         }
@@ -945,7 +946,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         UserTeam userTeam = userTeamMapper.selectByPrimaryKeySelective(ut);
         if (userTeam == null) {
             map.put("result", "no");
-            map.put("msg", "协作器不存在");
+            map.put("msg", "该案组不存在");
             return map;
         }
         if (status == null && substitutionUid == null) {//删除协作器联系人
