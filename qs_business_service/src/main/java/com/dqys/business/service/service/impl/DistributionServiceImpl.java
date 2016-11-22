@@ -30,6 +30,7 @@ import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
 import com.dqys.business.orm.pojo.coordinator.UserDetail;
 import com.dqys.business.orm.pojo.message.Message;
+import com.dqys.business.orm.pojo.zcy.ZcyEstates;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.orm.query.company.CompanyTeamReQuery;
@@ -47,6 +48,7 @@ import com.dqys.business.service.utils.company.CompanyServiceUtils;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
@@ -123,6 +125,7 @@ public class DistributionServiceImpl implements DistributionService {
         companyTeamReQuery.setStateflag(SysProperty.DEFAULT); // null表示有效查询，0表示全查询，<>0表示已删除
         companyTeamReQuery.setTeamId(companyTeam.getId());
         List<CompanyTeamRe> companyTeamReList = companyTeamReMapper.queryList(companyTeamReQuery);
+        setCompanyTeamReList(companyTeamReList);//判断是否对分配器中的总平台记录删除
         List<CompanyTeamReDTO> companyTeamReDTOList = new ArrayList<>();
         List<Integer> userIds = new ArrayList<>();
         DistributionDTO distributionDTO = new DistributionDTO();
@@ -186,6 +189,50 @@ public class DistributionServiceImpl implements DistributionService {
         }
 
         return distributionDTO;
+    }
+
+    //判断是否对分配器中的总平台记录删除。当前对象为处置机构所录入的，并且没有业务流转的机构，就对参与进来的平台进行删除
+    private void setCompanyTeamReList(List<CompanyTeamRe> companyTeamReList) {
+        boolean flag = true;//默认删除分配器中的平台，只有在业务流转中存在机构了，才不做删除
+        CompanyTeamRe companyTeamRe = new CompanyTeamRe();
+        for (CompanyTeamRe teamRe : companyTeamReList) {
+            if (teamRe.getStateflag() == 0 && teamRe.getStatus() == 1) {//没有删除并且是接收状态的
+                com.dqys.auth.orm.pojo.UserDetail detail = userInfoMapper.getUserDetail(teamRe.getAccepterId());
+                if (detail != null && detail.getUserType() == UserInfoEnum.USER_TYPE_ADMIN.getValue().intValue()) {
+                    companyTeamRe = teamRe;
+                }
+                if (teamRe.getType() == 3) {
+                    flag = false;//存在业务流转机构，不进行删除
+                }
+            }
+        }
+        if (companyTeamRe.getCompanyTeamId() != null) {
+            //当前对象不是为处置机构时候不进行删除
+            CompanyTeam team = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
+            if (team != null) {//分配器存在
+                Integer objectType = team.getObjectType();
+                Integer objectId = team.getObjectId();
+                Integer userId = 0;
+                if (objectType == ObjectTypeEnum.LENDER.getValue().intValue()) {
+                    LenderInfo info = lenderInfoMapper.get(objectId);
+                    userId = info.getOperator();
+                } else if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue().intValue()) {
+                    AssetInfo info = assetInfoMapper.get(objectId);
+                    userId = info.getOperator();
+                }
+                com.dqys.auth.orm.pojo.UserDetail detail = userInfoMapper.getUserDetail(userId);
+                if (detail != null && flag && (detail.getUserType() == UserInfoEnum.USER_TYPE_COLLECTION.getValue().intValue() ||
+                        detail.getUserType() == UserInfoEnum.USER_TYPE_JUDICIARY.getValue().intValue() ||
+                        detail.getUserType() == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().intValue())) {
+                    flag = true;//不存在业务流转机构，并且所录入人是处置机构,进行剔除
+                } else {
+                    flag = false;
+                }
+                if (flag) {
+                    companyTeamReList.remove(companyTeamRe);
+                }
+            }
+        }
     }
 
     private DistributionDTO setVaule(Integer type, Integer id) {
