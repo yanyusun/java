@@ -609,20 +609,23 @@ public class RepayServiceImpl implements RepayService {
          * on_agent`int(2) DEFAULT '0' COMMENT '是否可以中介处置:0可以1不能',
          * 三个字段
          */
+        List<Map> newIous = new ArrayList<>();
+        List<Map> newPawns = new ArrayList<>();
         for (Map m : ious) {
             boolean judge = setObjectJudge(userDetail, ObjectTypeEnum.IOU.getValue(), MessageUtils.transMapToInt(m, "id"));
-            if (!judge) {
-                ious.remove(m);
+            if (judge) {
+                newIous.add(m);
             }
         }
         for (Map m : pawns) {
             boolean judge = setObjectJudge(userDetail, ObjectTypeEnum.PAWN.getValue(), MessageUtils.transMapToInt(m, "id"));
-            if (!judge) {
-                ious.remove(m);
+            if (judge) {
+                newPawns.add(m);
             }
         }
-        map.put("ious", ious);//map的key（number和id）
-        map.put("pawns", pawns);//map的key（number和id）
+
+        map.put("ious", newIous);//map的key（number和id）
+        map.put("pawns", newPawns);//map的key（number和id）
     }
 
     /**
@@ -644,7 +647,7 @@ public class RepayServiceImpl implements RepayService {
                 on_lawyer = info.getOnLawyer();
                 on_agent = info.getOnAgent();
             }
-        } else if (objectType == ObjectTypeEnum.PAWN.getValue().intValue()) {
+        } else if (objectType == ObjectTypeEnum.IOU.getValue().intValue()) {
             IOUInfo info = iouInfoMapper.get(objectId);
             if (info != null) {
                 on_collection = info.getOnCollection();
