@@ -492,9 +492,9 @@ public class UserServiceImpl implements UserService {
         if (tUserTag == null) {
             return JsonResponseTool.failure("修改失败");
         }
-        //不能自己在组织架构中修改自己的邮箱和帐号和角色，管理员有权修改其他员工的邮箱和帐号
+        //不能自己在组织架构中修改自己的邮箱和帐号和角色，管理员有权修改其他员工的邮箱和帐号,平台可以修改所有人的权限
         Map adminUser = coordinatorMapper.getAdminUser(userInsertDTO.getCompanyId());
-        if (userId.toString().equals(MessageUtils.transMapToString(adminUser, "id")) && userInsertDTO.getId() != userId.intValue()) {
+        if ((userId.toString().equals(MessageUtils.transMapToString(adminUser, "id")) && userInsertDTO.getId() != userId.intValue()) || CommonUtil.isManage()) {
             // 校验邮箱和帐号是否存在
             List<TUserInfo> isExist = tUserInfoMapper.verifyUser(null, null, userInsertDTO.getEmail());
             if (isExist != null && isExist.size() > 0) {

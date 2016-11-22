@@ -637,9 +637,9 @@ public class RepayServiceImpl implements RepayService {
      * @return
      */
     private boolean setObjectJudge(UserDetail userDetail, Integer objectType, Integer objectId) {
-        Integer on_collection = 0;//是否可以催收:0可以1不能
-        Integer on_lawyer = 0;//是否可以进行司法处置:0可以1不能',
-        Integer on_agent = 0;//是否可以中介处置:0可以1不能',
+        Integer on_collection = 1;//是否可以催收:0可以1不能
+        Integer on_lawyer = 1;//是否可以进行司法处置:0可以1不能',
+        Integer on_agent = 1;//是否可以中介处置:0可以1不能',
         if (objectType == ObjectTypeEnum.PAWN.getValue().intValue()) {
             PawnInfo info = pawnInfoMapper.get(objectId);
             if (info != null) {
