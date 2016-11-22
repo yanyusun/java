@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.business.impl;
 
 import com.dqys.business.orm.mapper.business.BusinessObjReMapper;
 import com.dqys.business.orm.pojo.business.BusinessObjRe;
+import com.dqys.business.orm.query.business.BusinessObjReQuery;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
@@ -57,5 +58,10 @@ public class BusinessObjReMapperImpl extends BaseDao implements BusinessObjReMap
     public List<Integer> auditObject(Integer objectType) {
         return super.getSqlSession().getMapper(BusinessObjReMapper.class)
                 .auditObject(objectType);
+    }
+
+    @Override
+    public List<BusinessObjRe> list(BusinessObjReQuery businessObjReQuery) {
+        return super.getSqlSession().getMapper(BusinessObjReMapper.class).list(businessObjReQuery);
     }
 }

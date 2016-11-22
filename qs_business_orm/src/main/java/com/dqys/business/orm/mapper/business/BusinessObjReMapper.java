@@ -1,6 +1,7 @@
 package com.dqys.business.orm.mapper.business;
 
 import com.dqys.business.orm.pojo.business.BusinessObjRe;
+import com.dqys.business.orm.query.business.BusinessObjReQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -66,4 +67,6 @@ public interface BusinessObjReMapper {
      * @return
      */
     List<Integer> auditObject(Integer objectType);
+
+    List<BusinessObjRe> list(BusinessObjReQuery businessObjReQuery);
 }

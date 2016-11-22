@@ -1,7 +1,10 @@
 package com.dqys.business.service.service;
 
 import com.dqys.business.orm.pojo.business.Business;
+import com.dqys.business.orm.pojo.business.BusinessObjRe;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
+
+import java.util.List;
 
 /**
  * Created by Yvan on 16/7/15.
@@ -41,4 +44,29 @@ public interface BusinessService {
      */
     Business getBusiness(Integer ObjectType,Integer ObjectId);
 
+    /**
+     * 根据对象类型和业务id查询业务关联list
+     * @param ObjectType
+     * @param BusinessId
+     * @return
+     */
+    List<BusinessObjRe> getlistByObjectTypeAndBusinessId(Integer ObjectType,Integer BusinessId);
+
+    /**
+     * 根据对象类型和对象id查询业务关联List
+     * @param objectType 对象类型
+     * @param objectReType 与上述对象关联在统一个业务中的对象
+     * @param objectId 对象id
+     * @return
+     */
+    List<BusinessObjRe>  getListByObjecTypeAndObjectId(Integer objectType,Integer objectReType,Integer objectId);
+
+    /**
+     * 根据业务主体(资产包,借款人)跟新业务流转对象(借据,抵押物)
+     * @param objectType
+     * @param id
+     * @param pawnStatus 抵押物状态
+     * @param iouStatus 借据状态
+     */
+    void updateBusinessFlowObjOnType(Integer objectType, Integer id,int pawnStatus,int iouStatus);
 }

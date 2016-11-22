@@ -91,6 +91,15 @@ public interface DistributionService {
      */
     JsonResponse exitBusinessService(Integer id, Integer targetType, Integer targetId) throws BusinessLogException;
 
+    /**
+     *  所属机构同意平台将其加入分配器
+     * @param id
+     * @param status
+     * @return
+     * @throws BusinessLogException
+     */
+    JsonResponse designDistribution(Integer id, Integer status) throws BusinessLogException;
+
 
 
 }

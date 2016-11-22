@@ -17,6 +17,18 @@
     id, object_id, object_type, business_id, version, create_at, update_at, stateflag
   </sql>
 
+    <sql id="select_query_condition">
+        <if test="businessId != null">
+            AND business_id = #{businessId,jdbcType=INTEGER}
+        </if>
+        <if test="objectType != null">
+            AND objectType = #{objectType,jdbcType=INTEGER}
+        </if>
+        <if test="objectId != null">
+            AND object_id = #{objectId,jdbcType=INTEGER}
+        </if>
+    </sql>
+
     <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     UPDATE t_business_obj_re SET stateflag = CURRENT_TIMESTAMP
     where id = #{id,jdbcType=INTEGER}
@@ -90,5 +102,14 @@
             ON bor.business_id=b.id
             WHERE bor.object_type=#{objectType} AND b.`status`=1 GROUP BY bor.object_id
     </select>
+
+    <select id="list" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.query.business.BusinessObjReQuery">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_business_obj_re
+        WHERE 1=1
+        <include refid="select_query_condition"/>
+    </select>
+
 
 </mapper>

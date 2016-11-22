@@ -8,6 +8,7 @@ import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.constant.business.BusinessRelationEnum;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
+import com.dqys.business.orm.constant.business.ObjectBusinessEnum;
 import com.dqys.business.orm.constant.business.ObjectUserStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectBusinessTypeEnum;
@@ -47,10 +48,10 @@ import com.dqys.business.service.utils.company.CompanyServiceUtils;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
-import com.dqys.core.model.TSysProperty;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
+
+import static com.dqys.business.orm.constant.company.ObjectTypeEnum.PAWN;
 
 /**
  * Created by Yvan on 16/7/21.
@@ -107,6 +110,8 @@ public class DistributionServiceImpl implements DistributionService {
     private ZcyService zcyService;
     @Autowired
     private ContactInfoMapper contactInfoMapper;
+    @Autowired
+    private BusinessService businessService;
 
     @Override
     public DistributionDTO listDistribution_tx(Integer type, Integer id) throws BusinessLogException {
@@ -235,7 +240,7 @@ public class DistributionServiceImpl implements DistributionService {
         List<ObjectUserRelation> relationList = objectUserRelationMapper.list(objectUserRelationQuery);
         relationList.forEach(objectUserRelation -> {
             // 对象遍历
-            if (ObjectTypeEnum.PAWN.getValue().equals(objectUserRelation.getObjectType())) {
+            if (PAWN.getValue().equals(objectUserRelation.getObjectType())) {
                 PawnInfo pawnInfo = pawnInfoMapper.get(objectUserRelation.getObjectId());
                 if (pawnInfo != null) {
                     if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
@@ -245,7 +250,7 @@ public class DistributionServiceImpl implements DistributionService {
                                 CompanyTeamRe ctr = companyTeamReList.get(keyMap.get(objectUserRelation.getUserId()));
                                 CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(ctr.getAcceptCompanyId());
                                 if (ctr != null && detail != null) {
-                                    serviceDTOList.add(createBSDTO(ctr, detail, pawnInfo.getId(), ObjectTypeEnum.PAWN.getValue(),
+                                    serviceDTOList.add(createBSDTO(ctr, detail, pawnInfo.getId(), PAWN.getValue(),
                                             pawnInfo.getName(), objectUserRelation.getCreateAt()));
                                 }
                             }
@@ -255,7 +260,7 @@ public class DistributionServiceImpl implements DistributionService {
                             CompanyTeamRe ctr = companyTeamReList.get(keyMap.get(objectUserRelation.getUserId()));
                             CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(ctr.getAcceptCompanyId());
                             if (ctr != null && detail != null) {
-                                serviceDTOList.add(createBSDTO(ctr, detail, ObjectTypeEnum.PAWN.getValue(),
+                                serviceDTOList.add(createBSDTO(ctr, detail, PAWN.getValue(),
                                         pawnInfo.getId(), pawnInfo.getName(), objectUserRelation.getCreateAt()));
                             }
                         }
@@ -557,8 +562,8 @@ public class DistributionServiceImpl implements DistributionService {
                 }
                 Message message = new Message();
                 message.setTitle(MessageEnum.TASK.getName() + " > "
-                                + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
-                                + code
+                        + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
+                        + code
                 ); // 业务类型 对象类型 对象编号
                 message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_JOIN_CODE, msg));
                 message.setSenderId(userInfo.getId());
@@ -676,8 +681,8 @@ public class DistributionServiceImpl implements DistributionService {
             }
             Message message = new Message();
             message.setTitle(MessageEnum.TASK.getName() + " > "
-                            + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
-                            + code
+                    + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
+                    + code
             ); // 业务类型 对象类型 对象编号
             message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_INVITE_CODE, msg));
             message.setSenderId(companyDetailInfo.getUserId());
@@ -695,6 +700,7 @@ public class DistributionServiceImpl implements DistributionService {
                             null
                     ));
             messageMapper.add(message);
+
 
             return JsonResponseTool.success(companyTeamRe.getId());
         }
@@ -790,8 +796,8 @@ public class DistributionServiceImpl implements DistributionService {
                 }
                 // 添加消息
                 message.setTitle(MessageEnum.TASK.getName() + " > "
-                                + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
-                                + code
+                        + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
+                        + code
                 ); // 业务类型 对象类型 对象编号
                 message.setSenderId(userInfo.getId());
                 message.setReceiveId(companyTeamRe.getAccepterId()); // 申请人接收
@@ -897,8 +903,31 @@ public class DistributionServiceImpl implements DistributionService {
                     }
                 }
             }
+            return JsonResponseTool.success(companyTeam);
+        }
+    }
+
+
+
+
+    /**
+     * 所属机构同意平台将其加入分配器
+     * @param id
+     * @param status
+     * @return
+     */
+    public JsonResponse designDistribution(Integer id, Integer status) throws BusinessLogException {
+        JsonResponse result=updateDistribution_tx(id,status);
+        //根据业务主体(资产包,借款人)跟新业务流转对象(借据,抵押物)
+        if(result.getCode()== ResponseCodeEnum.SUCCESS.getValue().intValue()){
+            CompanyTeam companyTeam = (CompanyTeam)result.getData();
+            businessService.updateBusinessFlowObjOnType(companyTeam.getObjectType(),companyTeam.getObjectId(),
+                    ObjectBusinessEnum.PAWN_ON_BUSINESS.getValue(),ObjectBusinessEnum.IOU_ON_BUSINESS.getValue());
             return JsonResponseTool.success(id);
         }
+        return result;
+
+
     }
 
     @Override
@@ -976,8 +1005,8 @@ public class DistributionServiceImpl implements DistributionService {
                 }
             }
             message.setTitle(MessageEnum.TASK.getName() + " > "
-                            + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
-                            + code
+                    + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
+                    + code
             ); // 业务类型 对象类型 对象编号
             message.setSenderId(UserSession.getCurrent().getUserId());
             message.setReceiveId(companyTeamRe.getAccepterId());
@@ -1006,9 +1035,21 @@ public class DistributionServiceImpl implements DistributionService {
                     clearAssetDispose(companyTeam.getObjectId());
                 }
             }
+            //根据业务主体(资产包,借款人)跟新业务流转对象(借据,抵押物)
+            businessService.updateBusinessFlowObjOnType(companyTeam.getObjectType(),companyTeam.getObjectId(),
+                    ObjectBusinessEnum.PAWN_NOTON_BUSINESS.getValue(),ObjectBusinessEnum.IOU_NOTON_BUSINESS.getValue());
             return JsonResponseTool.success(result);
         }
     }
+
+
+
+
+
+
+
+
+
 
     /**
      * 创建对象之间的关系
@@ -1042,7 +1083,7 @@ public class DistributionServiceImpl implements DistributionService {
     @Override
     public JsonResponse addBusinessService(Integer type, Integer id, Integer distributionId,
                                            Integer businessType, Integer companyId, Integer businessRequestId) throws BusinessLogException {
-        if (!ObjectTypeEnum.IOU.getValue().equals(type) && !ObjectTypeEnum.PAWN.getValue().equals(type)) {
+        if (!ObjectTypeEnum.IOU.getValue().equals(type) && !PAWN.getValue().equals(type)) {
             return JsonResponseTool.paramErr("参数错误，不是可流转对象"); // 流转对象不对
         }
         CompanyTeam companyTeam = companyTeamMapper.get(distributionId);
@@ -1167,7 +1208,7 @@ public class DistributionServiceImpl implements DistributionService {
                         objectUserRelation.setObjectId(iouInfo.getLenderId());
                         objectUserRelationMapper.insert(objectUserRelation);
                     }
-                } else if (ObjectTypeEnum.PAWN.getValue().equals(type)) {
+                } else if (PAWN.getValue().equals(type)) {
                     PawnInfo pawnInfo = pawnInfoMapper.get(id);
                     query.setObjectId(pawnInfo.getLenderId());
                     relationList = objectUserRelationMapper.list(query);
@@ -1223,9 +1264,9 @@ public class DistributionServiceImpl implements DistributionService {
                     relationQuery.setIouId(targetId);
                     List<PiRelation> relationList = piRelationMapper.queryList(relationQuery);
                     for (PiRelation piRelation : relationList) {
-                        clearObjectBusinessStatus(ObjectTypeEnum.PAWN.getValue(), piRelation.getPawnId());
+                        clearObjectBusinessStatus(PAWN.getValue(), piRelation.getPawnId());
                     }
-                } else if (targetType.equals(ObjectTypeEnum.PAWN.getValue())) {
+                } else if (targetType.equals(PAWN.getValue())) {
                     relationQuery.setPawnId(targetId);
                     List<PiRelation> relationList = piRelationMapper.queryList(relationQuery);
                     for (PiRelation piRelation : relationList) {
@@ -1262,7 +1303,7 @@ public class DistributionServiceImpl implements DistributionService {
         }
         // 判断是否为最后一个关联关系,是则删除该借款人的关联关系
         Integer lenderId = null;
-        if (type.equals(ObjectTypeEnum.PAWN.getValue())) {
+        if (type.equals(PAWN.getValue())) {
             PawnInfo pawnInfo = pawnInfoMapper.get(id);
             if (pawnInfo != null && pawnInfo.getLenderId() != null) {
                 lenderId = pawnInfo.getLenderId();
@@ -1279,7 +1320,7 @@ public class DistributionServiceImpl implements DistributionService {
         Boolean flag = true; // 是最后一个
         if (relationList != null && relationList.size() > 1) {
             for (ObjectUserRelation objectUserRelation : relationList) {
-                if (objectUserRelation.getType().equals(ObjectTypeEnum.PAWN.getValue())) {
+                if (objectUserRelation.getType().equals(PAWN.getValue())) {
                     if (pawnInfoMapper.get(objectUserRelation.getId()).getLenderId().equals(lenderId)) {
                         flag = false;
                         break;
@@ -1294,7 +1335,7 @@ public class DistributionServiceImpl implements DistributionService {
         }
         if (flag) {
             query.setObjectType(ObjectTypeEnum.LENDER.getValue());
-            if (type.equals(ObjectTypeEnum.PAWN.getValue())) {
+            if (type.equals(PAWN.getValue())) {
                 PawnInfo pawnInfo = pawnInfoMapper.get(id);
                 if (pawnInfo != null && pawnInfo.getLenderId() != null) {
                     query.setId(pawnInfo.getLenderId());
@@ -1354,7 +1395,7 @@ public class DistributionServiceImpl implements DistributionService {
         if (!ObjectAcceptTypeEnum.accept.getValue().equals(status) && !ObjectAcceptTypeEnum.refuse.getValue().equals(status)) {
             return JsonResponseTool.paramErr("参数错误，操作结果错误"); // 操作状态不对
         }
-        if (!type.equals(ObjectTypeEnum.PAWN.getValue()) && !type.equals(ObjectTypeEnum.IOU.getValue())) {
+        if (!type.equals(PAWN.getValue()) && !type.equals(ObjectTypeEnum.IOU.getValue())) {
             return JsonResponseTool.paramErr("参数错误，对象类型不对");
         }
         CompanyTeamRe companyTeamRe = companyTeamReMapper.get(distributionId);
@@ -1407,7 +1448,7 @@ public class DistributionServiceImpl implements DistributionService {
                         ObjectUserRelation relation = list.get(0);
                         relation.setStatus(ObjectUserStatusEnum.accepted.getValue()); // 这里0为接收
                         objectUserRelationMapper.update(relation);
-                        if (ObjectTypeEnum.PAWN.getValue().equals(type)) {
+                        if (PAWN.getValue().equals(type)) {
                             PawnInfo pawnInfo = pawnInfoMapper.get(id);
                             query.setObjectType(ObjectTypeEnum.LENDER.getValue());
                             query.setObjectId(pawnInfo.getLenderId());
@@ -1481,7 +1522,7 @@ public class DistributionServiceImpl implements DistributionService {
                         list = objectUserRelationMapper.list(query);
                         if (list == null || list.size() == 0) {
                             if (list == null || list.size() == 0) {
-                                if (ObjectTypeEnum.PAWN.getValue().equals(type)) {
+                                if (PAWN.getValue().equals(type)) {
                                     PawnInfo pawnInfo = pawnInfoMapper.get(id);
                                     query.setObjectType(ObjectTypeEnum.LENDER.getValue());
                                     query.setObjectId(pawnInfo.getLenderId());
@@ -1899,7 +1940,7 @@ public class DistributionServiceImpl implements DistributionService {
      */
     private void clearObjectBusinessStatus(Integer type, Integer id) {
         if (!CommonUtil.checkParam(type, id)) {
-            if (type.equals(ObjectTypeEnum.PAWN.getValue())) {
+            if (type.equals(PAWN.getValue())) {
                 PawnInfo pawnInfo = pawnInfoMapper.get(id);
                 if (pawnInfo != null) {
                     pawnInfo.setOnLawyer(SysProperty.BOOLEAN_TRUE);

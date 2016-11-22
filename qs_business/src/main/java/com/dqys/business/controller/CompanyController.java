@@ -200,7 +200,7 @@ public class CompanyController {
             // 如果不是接受状态,全部设置为拒绝
             status = ObjectAcceptTypeEnum.refuse.getValue();
         }
-        return distributionService.updateDistribution_tx(id, status);
+        return distributionService.designDistribution(id,status);
     }
 
 

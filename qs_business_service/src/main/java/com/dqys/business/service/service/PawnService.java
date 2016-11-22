@@ -61,6 +61,8 @@ public interface PawnService {
     JsonResponse listAdd(List<PawnDTO> pawnDTOList) throws BusinessLogException;
 
 
+
+
 //
 //    /**
 //     * 根据ID获取借款人基础信息
