@@ -744,7 +744,7 @@ public class DistributionServiceImpl implements DistributionService {
         } else {
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId()); // 分配器信息
             // 添加操作记录
-            UserDetail detail = coordinatorMapper.getUserDetail(id);
+            UserDetail detail = coordinatorMapper.getUserDetail(userInfo.getId());
             if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
                 // 接收
                 businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_ACCEPT_ADD.getValue(),
@@ -943,7 +943,7 @@ public class DistributionServiceImpl implements DistributionService {
             }
 
             // 添加操作记录
-            UserDetail detail = coordinatorMapper.getUserDetail(id);
+            UserDetail detail = coordinatorMapper.getUserDetail(companyTeamRe.getAccepterId());
             businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_DEL_THEIR.getValue(),
                     "", "移除分配器内容对象成员:" + detail.getRealName(), 0, 0);
 
@@ -1209,7 +1209,7 @@ public class DistributionServiceImpl implements DistributionService {
         } else {
             CompanyTeam companyTeam = companyTeamMapper.get(companyTeamRe.getCompanyTeamId());
             // 添加操作记录
-            UserDetail detail = coordinatorMapper.getUserDetail(id);
+            UserDetail detail = coordinatorMapper.getUserDetail(companyTeamRe.getAccepterId());
             businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_DEL_GENERAL.getValue(),
                     "", "移除业务流转对象对象成员:" + detail.getRealName(), 0, 0);
             // 去除介入信息

@@ -1025,13 +1025,13 @@ public class ZcyServiceImpl implements ZcyService {
                 ZcyEstates zcyEstates = new ZcyEstates();
                 zcyEstates.setHouseNo(RandomUtil.getCode(RandomUtil.ESTATES_CODE));
                 zcyEstates.setObjectType(objectType);
-                zcyEstates.setObjectId(objectType);
+                zcyEstates.setObjectId(objectId);
                 zcyEstates.setStatus(1);//资产源来源是转过来
-                zcyEstates.setSellingPrice((pawnInfo.getWorth() / 10000));
+                zcyEstates.setSellingPrice(pawnInfo.getWorth());
                 if (pawnInfo.getSize().matches("\\d+([.]\\d+)?")) {
                     zcyEstates.setAcreage(Double.parseDouble(pawnInfo.getSize()));
                 }
-                zcyEstatesMapper.insert(zcyEstates);//抵押物信息转到资产源表
+                zcyEstatesMapper.insertSelective(zcyEstates);//抵押物信息转到资产源表
                 Integer burId = businessService.addServiceObject(ObjectTypeEnum.ASSETSOURCE.getValue(), zcyEstates.getId(), objectType, objectId);//添加业务对象
                 businessLogService.add(zcyEstates.getId(), ObjectTypeEnum.ASSETSOURCE.getValue(), ObjectLogEnum.add.getValue(), "", "", 0, 0);//添加操作日志
                 OURelation ouRelation = new OURelation();
