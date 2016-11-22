@@ -1191,9 +1191,9 @@ public class LenderServiceImpl implements LenderService {
         Map user = coordinatorService.getUserDetail(userId);
         if (user != null && user.get("detail") != null) {
             UserDetail detail = (UserDetail) user.get("detail");
-            if (detail.getUserType() == RoleTypeEnum.ADMIN.getValue()) {
+            if (detail.getRoleType() == RoleTypeEnum.ADMIN.getValue()) {
                 roleType = 0;
-            } else if (detail.getUserType() == RoleTypeEnum.REGULATOR.getValue()) {
+            } else if (detail.getRoleType() == RoleTypeEnum.REGULATOR.getValue()) {
                 roleType = 1;
             }
         }

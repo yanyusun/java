@@ -541,7 +541,7 @@ public class ZcyServiceImpl implements ZcyService {
                         ZcyPawnDTO dto = new ZcyPawnDTO();
                         dto.setPawnId(pawn.getId());
                         dto.setHouseNo(pawn.getPawnNo());
-                        dto.setPriceTotal((pawn.getWorth() / 10000) + "");
+                        dto.setPriceTotal(pawn.getWorth() + "");
                         dto.setAcreage(pawn.getSize());
                         dto.setMaintaining(MessageUtils.transMapToString(coordinatorMapper.getRealName(ObjectTypeEnum.PAWN.getValue(), pawn.getId(), 1), "real_name"));
                         zcyPawnDTOs.add(dto);
