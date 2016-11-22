@@ -51,5 +51,8 @@ public interface ObjectUserRelationMapper {
 
     List<Map> findByObjectId(@Param("objectType") Integer objectType, @Param("userId") Integer userId, @Param("objectIds") List<Map> objectIds);
 
-    List<Integer> findObjectIdByTeam(@Param("objectType")Integer objectType, @Param("userId")Integer userId);
+    List<Integer> findObjectIdByTeam(@Param("objectType") Integer objectType, @Param("userId") Integer userId);
+
+    /*获取录入人的对象*/
+    List<Integer> findObjectIdByObjectType(@Param("objectType") Integer objectType, @Param("userId") Integer userId);
 }

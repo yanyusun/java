@@ -319,10 +319,14 @@ public class CommonUtil {
     /**
      * 判断用户类型是否为处置方
      *
-     * @param type
+     * @param type 为null是获取当前用户
      * @return
      */
     public static boolean isDispose(String type) {
+        if (type == null) {
+            String userType = UserSession.getCurrent().getUserType();
+            type = userType.substring(0, userType.lastIndexOf(","));
+        }
         TSysProperty property = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_INTERMEDIARY);
         String reg = property.getPropertyValue();
         TSysProperty property1 = SysPropertyTool.getProperty(SysPropertyTypeEnum.USER_TYPE, KeyEnum.U_TYPE_LAW);

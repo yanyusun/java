@@ -196,7 +196,7 @@ public class DistributionServiceImpl implements DistributionService {
         boolean flag = true;//默认删除分配器中的平台，只有在业务流转中存在机构了，才不做删除
         CompanyTeamRe companyTeamRe = new CompanyTeamRe();
         for (CompanyTeamRe teamRe : companyTeamReList) {
-            if (teamRe.getStateflag() == 0 && teamRe.getStatus() == 1) {//没有删除并且是接收状态的
+            if (teamRe.getStateflag() == 0) {//没有删除的
                 com.dqys.auth.orm.pojo.UserDetail detail = userInfoMapper.getUserDetail(teamRe.getAccepterId());
                 if (detail != null && detail.getUserType() == UserInfoEnum.USER_TYPE_ADMIN.getValue().intValue()) {
                     companyTeamRe = teamRe;
@@ -884,9 +884,10 @@ public class DistributionServiceImpl implements DistributionService {
                 message.setReceiveId(companyTeam.getSenderId()); // 创建人接收
                 message.setLabel(null);
                 message.setStatus(0);
-                message.setType(MessageEnum.TASK.getValue());
-                message.setBusinessType(MessageBTEnum.COMPANY_BETWEEN.getValue());
+                message.setType(MessageEnum.SERVE.getValue());
+                message.setBusinessType(MessageBTEnum.INSIDE_RESULT.getValue());
                 message.setOperUrl(null);
+                message.setTitle(coordinatorService.getMessageTitle(companyTeam.getObjectId(), companyTeam.getObjectType(), MessageBTEnum.INSIDE_RESULT.getValue()));
                 messageMapper.add(message);
                 message.setReceiveId(platformDetail.getUserId()); // 平台接收
                 messageMapper.add(message);
