@@ -676,6 +676,9 @@ public class AssetServiceImpl implements AssetService {
             }
              */
             Integer roleType = getRoleType(userId);
+            if (flag) {
+                userId = null;
+            }
             assetQuery.setIds(lenderInfoMapper.findObjectIdByLender(userId, ObjectTypeEnum.ASSETPACKAGE.getValue(), roleType));//11月18号修改成这样，原来是使用上面注释掉的代码
             assetQuery.setOperator(userInfo.getId());
             if (!flag) {
@@ -947,6 +950,9 @@ public class AssetServiceImpl implements AssetService {
                 }
             }
         }
+        List<Integer> lenderIds = new ArrayList<>();
+        lenderIds.add(lenderId);
+        iouService.setLenderAndAsset(lenderIds);
         return JsonResponseTool.success(userInfoMapper.getUserPart(userId));
     }
 
