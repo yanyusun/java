@@ -1044,6 +1044,9 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setExceptIds(ids);
             }
              */
+            if (flag) {
+                userId = null;
+            }
             Integer roleType = getRoleType(userId);//根据用户判断用户角色获取对应协作器角色
             lenderQuery.setIds(lenderInfoMapper.findObjectIdByLender(userId, ObjectTypeEnum.LENDER.getValue(), roleType));//11月18号修改成这样，原来是使用上面注释掉的代码
             if (!flag) {
