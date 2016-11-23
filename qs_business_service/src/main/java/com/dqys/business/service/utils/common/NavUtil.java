@@ -49,6 +49,8 @@ public class NavUtil implements ApplicationContextAware {
         navUnviewUserTypeService = applicationContext.getBean(NavUnviewUserTypeService.class);
         // TODO: 16-11-8 测试不加载
         this.loadCommonNav();
+
+
     }
 
     /**
@@ -103,6 +105,9 @@ public class NavUtil implements ApplicationContextAware {
     // TODO: 16-11-1 根据 navId_type获取List<SelectDto>(对应的NavUnviewEnum枚举),查询operUser为ｏ的记录，ｏ公共默认
     public static List<SelectDto> getSelectDtoList(int navId,int type) {
         Map<String ,List<SelectDto>> selectDtoListMap = NoSQLWithRedisTool.getHashObject(NavUtil.COMMON_SOURCE_NAV_KEY + SourceNavigation.class.getName(),COMMON_SOURCE_NAV_TYPE_UNVIEW_MAP);
+        if(selectDtoListMap==null){
+            return null;
+        }
         return selectDtoListMap.get(getNavIdTypeKey(navId,type));
     }
 

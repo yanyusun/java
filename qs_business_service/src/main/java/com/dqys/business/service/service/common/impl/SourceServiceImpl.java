@@ -164,19 +164,19 @@ public class SourceServiceImpl implements SourceService {
             return null;
         }
         UserSession userSession = UserSession.getCurrent();
-        if (!hasSourceAuth(navId, lenderId, estatesId, userSession.getUserId())) {
+        if (!hasSourceAuth(navId, lenderId, estatesId, userSession.getUserId())) {//没有查看权限
             return null;
         }
         SourceInfo sourceInfo = sourceInfoMapper.getByNavIdAndLenderId(navId, lenderId, estatesId);//根据借款人id或是资产源id查询资料实堪
-        if (sourceInfo == null) {
-            return SourceServiceUtls.toSourceInfoDTO(getNavAuthAll(navId, lenderId, estatesId));
+        if (sourceInfo == null&&hasNavUnviewOperAuth(navId, lenderId, estatesId, userSession.getUserId())) {//未上传资料有操作权限
+            return SourceServiceUtls.toSourceInfoDTO(getNavAuthAll(navId, lenderId, estatesId));//只返回操作权限列表
         }
         Integer sourceId = sourceInfo.getId();
         List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceId);
-        if (hasNavUnviewOperAuth(navId, lenderId, estatesId, userSession.getUserId())) {//如果拥有修改可见项的权限,返回可见项操作列表
-            return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList, getNavAuthAll(navId, lenderId, estatesId));
+        if (hasNavUnviewOperAuth(navId, lenderId, estatesId, userSession.getUserId())) {//已上传资料且有操作权限
+            return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList, getNavAuthAll(navId, lenderId, estatesId));//如果拥有修改可见项的权限,返回可见项操作列表
         }
-        return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList);
+        return SourceServiceUtls.toSourceInfoDTO(sourceInfo, sourceList);//只返回资料信息
     }
 
     @Override
