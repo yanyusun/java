@@ -60,9 +60,6 @@
             useGeneratedKeys="true" keyProperty="id">
         insert into object_user_relation
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                id,
-            </if>
             <if test="objectType != null">
                 object_type,
             </if>
@@ -92,9 +89,6 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">
-                #{id,jdbcType=INTEGER},
-            </if>
             <if test="objectType != null">
                 #{objectType,jdbcType=INTEGER},
             </if>

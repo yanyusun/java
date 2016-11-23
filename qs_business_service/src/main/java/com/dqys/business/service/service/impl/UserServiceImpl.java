@@ -320,9 +320,20 @@ public class UserServiceImpl implements UserService {
                 if (flag && tCompanyInfoMapper.updateByPrimaryKeySelective(company) > 0) {
                     map.put("result", "yes");
                     Map userC = coordinatorMapper.getUserAndCompanyByUserId(userId);
+                    Integer userType = MessageUtils.transMapToInt(userC, "userType");
+                    String userTypeName = "";
+                    if (userType == UserInfoEnum.USER_TYPE_ENTRUST.getValue().intValue()) {
+                        userTypeName = "委托方";
+                    } else if (userType == UserInfoEnum.USER_TYPE_COLLECTION.getValue().intValue()) {
+                        userTypeName = "处置号-催收";
+                    } else if (userType == UserInfoEnum.USER_TYPE_JUDICIARY.getValue().intValue()) {
+                        userTypeName = "处置号-律所";
+                    } else if (userType == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().intValue()) {
+                        userTypeName = "处置号-中介";
+                    }
                     SmsUtil sms = new SmsUtil();
                     String content = sms.sendSms(SmsEnum.REGISTER_AUDIT_RESULT.getValue(), MessageUtils.transMapToString(userC, "mobile"),
-                            MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(userC, "companyName"), text);
+                            MessageUtils.transMapToString(userC, "realName"), userTypeName, MessageUtils.transMapToString(userC, "companyName"), text);
                     messageService.add("注册审核结果答复", content, operId, userId, "", MessageEnum.SERVE.getValue(), null, "");
                 }
             }
