@@ -1184,7 +1184,7 @@ public class LenderServiceImpl implements LenderService {
                 userId = null;
             }
             lenderQuery.setIds(lenderInfoMapper.lenderAllByObjectUserRelation(userId, ObjectTypeEnum.LENDER.getValue()));
-            if (lenderQuery.getIds() == null) {
+            if (lenderQuery.getIds() == null || lenderQuery.getIds().size() == 0) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
         } else {
