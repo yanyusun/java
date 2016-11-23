@@ -407,10 +407,10 @@ public class UserServiceImpl implements UserService {
         if (data.getAvg() != null && !data.getAvg().equals("")) {
             try {
                 if (!FileTool.saveFileSync(data.getAvg())) {
-                    throw new UnexpectedRollbackException("保存附件失败");
+                    return JsonResponseTool.failure("头像上传失败，请重新上传");
                 }
             } catch (IOException e) {
-                throw new UnexpectedRollbackException("保存附件异常");
+                return JsonResponseTool.failure("头像上传失败，请重新上传");
             }
         }
         // 校验邮箱是否存在
