@@ -556,17 +556,17 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 //                setFollowUpTime(userTeam.getObjectId(), userTeam.getObjectType());
 //            }
             OURelation ouRelation = new OURelation();
-            Integer object_oper_status = userTeam.getObjectOperStatus();//对象可操作状态:0拥有对其全部的操作1来自业务流转只对其下部分对象有操作权限',
-            if (1 == object_oper_status) {
-                List<OURelation> list = ouRelationMapper.findByOURelation(userTeam.getMangerId(), userTeam.getObjectType());//查询业务流转对象
-                if (list.size() > 0) {
-                    ouRelation = list.get(0);
-                }
-            } else {
-                ouRelation.setStatus(OURelationEnum.STATUS_ACCEPT.getValue());
-                ouRelation.setObjectType(userTeam.getObjectType());
-                ouRelation.setObjectId(userTeam.getObjectId());
-            }
+//            Integer object_oper_status = userTeam.getObjectOperStatus();//对象可操作状态:0拥有对其全部的操作1来自业务流转只对其下部分对象有操作权限',
+//            if (1 == object_oper_status) {
+//                List<OURelation> list = ouRelationMapper.findByOURelation(userTeam.getMangerId(), userTeam.getObjectType());//查询业务流转对象
+//                if (list.size() > 0) {
+//                    ouRelation = list.get(0);
+//                }
+//            } else {
+            ouRelation.setStatus(OURelationEnum.STATUS_ACCEPT.getValue());
+            ouRelation.setObjectType(userTeam.getObjectType());
+            ouRelation.setObjectId(userTeam.getObjectId());
+//            }
             ouRelation.setType(OURelationEnum.TYPE_ALLOCATION_TEAM.getValue());
             ouRelation.setUserId(teammateRe.getUserId());
             ouRelation.setEmployerId(teammateRe.getUserTeamId());
