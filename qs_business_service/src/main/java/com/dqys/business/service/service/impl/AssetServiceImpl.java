@@ -784,7 +784,7 @@ public class AssetServiceImpl implements AssetService {
                 userId = null;
             }
             assetQuery.setIds(lenderInfoMapper.lenderAllByObjectUserRelation(userId, ObjectTypeEnum.ASSETPACKAGE.getValue()));
-            if (assetQuery.getIds() == null) {
+            if (assetQuery.getIds() == null || assetQuery.getIds().size() == 0) {
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
             }
         } else {

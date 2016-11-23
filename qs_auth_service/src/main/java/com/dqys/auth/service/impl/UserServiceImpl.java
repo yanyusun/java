@@ -262,7 +262,7 @@ public class UserServiceImpl implements UserService {
                         userInfo.getRealName() == null ? "" : userInfo.getRealName());
                 String operUrl = MessageUtils.setOperUrl("/api/user/registerAudit?status=1&userId=" + userId, null,
                         "/api/user/registerAudit?status=2&userId=" + userId, null, null);
-                Message message = new Message("注册请求认证", content, userId, info.getId(), null, null, 0, null, 0, operUrl, 0);
+                Message message = new Message("注册请求认证帐号:" + userInfo.getEmail(), content, userId, info.getId(), null, null, 0, null, 0, operUrl, 0);
                 messageMapper.add(message);
             }
         }
