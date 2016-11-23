@@ -230,4 +230,20 @@
         )
     </select>
 
+    <select id="findObjectIdByObjectType" resultType="int">
+        <if test="objectType == 11">
+            SELECT len.id FROM bt_lender len WHERE len.stateflag=0 AND len.repay_status=1 AND len.operator=#{userId} AND
+            len.is_stop=0
+        </if>
+        <if test="objectType == 10">
+            SELECT asset.id FROM bt_asset asset WHERE asset.stateflag=0 AND asset.repay_status=1 AND
+            asset.operator=#{userId} AND
+            asset.is_stop=0
+        </if>
+        <if test="objectType == 16">
+            SELECT tze.id FROM t_zcy_estates tze WHERE tze.stateflag=0 AND tze.result_status=0 AND
+            tze.operator=#{userId}
+        </if>
+    </select>
+
 </mapper>

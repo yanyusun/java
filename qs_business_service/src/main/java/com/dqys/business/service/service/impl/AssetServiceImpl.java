@@ -751,11 +751,15 @@ public class AssetServiceImpl implements AssetService {
             if (flag) {
                 userId = null;
             }
-            List<Integer> ids = objectUserRelationMapper.findObjectIdByTeam(ObjectTypeEnum.LENDER.getValue(), userId);//11月19号修改，原来的是上面注释掉的代码
-            if (CommonUtil.checkParam(ids) || ids.size() == 0) {
+            List<Integer> ids = objectUserRelationMapper.findObjectIdByTeam(ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);//11月19号修改，原来的是上面注释掉的代码
+            //加入处置机构自己录入的
+            List<Integer> ids2 = null;
+            if (CommonUtil.isDispose(null)) {
+                ids2 = objectUserRelationMapper.findObjectIdByObjectType(ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);
+            }
+            assetQuery.setIds(CommonUtil.pickList(ids, ids2));
+            if (CommonUtil.checkParam(assetQuery.getIds()) || assetQuery.getIds().size() == 0) {
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
-            } else {
-                assetQuery.setIds(ids);
             }
             assetQuery.setTakePart(true);
             assetQuery.setStop(false);
