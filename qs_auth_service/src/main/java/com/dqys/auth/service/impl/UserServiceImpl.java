@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
             //NoSQLWithRedisTool.sendMailToChannel(tUserInfo.getEmail(), code);     //redis
             MailUtil mailUtil = new MailUtil();
             mailUtil.sendMail(MailEnum.ACTIVATE.getValue(), tUserInfo.getEmail(), tUserInfo.getEmail(), MqClientEnum.EMAIL_URL.getName() + code);
-            NoSQLWithRedisTool.setValueObject(MAIL_CONFIRM_KEY + tUserInfo.getEmail(), code, 1, TimeUnit.DAYS);
+            NoSQLWithRedisTool.setValueObject(MAIL_CONFIRM_KEY + tUserInfo.getEmail(), code, 2, TimeUnit.DAYS);
         }
     }
 
