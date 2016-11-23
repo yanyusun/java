@@ -2,6 +2,7 @@ package com.dqys.business.service.service.impl;
 
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.auth.orm.pojo.UserDetail;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.OURelationEnum;
@@ -81,7 +82,15 @@ public class ZcyServiceImpl implements ZcyService {
     @Override
     public Map getEstates(Integer id) {
         Map map = new HashMap<>();
-        map.put("estates", zcyEstatesMapper.selectByPrimaryKey(id));
+        ZcyEstates estates = zcyEstatesMapper.selectByPrimaryKey(id);
+        try {
+            com.dqys.business.orm.pojo.coordinator.UserDetail detail = coordinatorMapper.getUserDetail(
+                    Integer.parseInt(estates == null ? "0" : estates.getOperator()));
+            estates.setOperator(detail == null ? "" : detail.getRealName());
+        } catch (Exception e) {
+
+        }
+        map.put("estates", estates);
         ZcyEstatesAddress address = new ZcyEstatesAddress();
         address.setEstatesId(id);
         map.put("address", zcyEstatesAddressMapper.selectBySelective(address));//房源地址
