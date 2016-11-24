@@ -794,6 +794,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         Integer operType = 0;//操作类型
         List<Map<String, Object>> receive_ids = new ArrayList<>();
         LenderInfo lenderInfo = new LenderInfo();
+        map.put("result", "no");//默认失败，修改成功返回yes
         if (objectType == ObjectTypeEnum.LENDER.getValue()) {
             //对借款人的操作
             lenderInfo.setId(objectId);
@@ -809,9 +810,11 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 map.put("msg", "重复操作");//
                 return;
             }
-            coordinatorMapper.updateLender(lenderInfo);//修改借款人isStop状态
+            if (coordinatorMapper.updateLender(lenderInfo) > 1) {//修改借款人isStop状态
+                receive_ids = coordinatorMapper.getUserIdByObjUserRelToLender(objectType, objectId);
+                map.put("result", "yes");
+            }
             operType = LenderEnum.UPDATE_EDIT.getValue();
-            receive_ids = coordinatorMapper.getUserIdByObjUserRelToLender(objectType, objectId);
         } else if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue()) {
             //对资产包的操作
             AssetInfo assetInfo = new AssetInfo();
@@ -832,9 +835,10 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 lenderInfo.setIsStop(status);
                 lenderInfo.setAssetId(objectId);
                 coordinatorMapper.updateLender(lenderInfo);//修改资产包isStop状态
+                receive_ids = coordinatorMapper.getUserIdByObjUserRelToAsset(objectType, objectId);//被通知人员
+                map.put("result", "yes");
             }
             operType = AssetPackageEnum.update.getValue();
-            receive_ids = coordinatorMapper.getUserIdByObjUserRelToAsset(objectType, objectId);//被通知人员
         } else if (objectType == ObjectTypeEnum.ASSETSOURCE.getValue().intValue()) {
             //对资产源的操作
             ZcyEstates zcyEstates = new ZcyEstates();
@@ -851,11 +855,13 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 map.put("msg", "重复操作");//
                 return;
             }
-            zcyEstatesMapper.updateByPrimaryKey(zcyEstates);
+            if (zcyEstatesMapper.updateByPrimaryKey(zcyEstates) > 0) {
+                receive_ids = coordinatorMapper.getUserIdByObjUserRelToLender(objectType, objectId);//被通知人员
+                map.put("result", "yes");
+            }
             operType = AssetSourceEnum.UPDATE_EDIT.getValue();
-            receive_ids = coordinatorMapper.getUserIdByObjUserRelToLender(objectType, objectId);//被通知人员
         }
-        businessLogService.add(objectId, objectType, operType, "暂停或无效操作", "", 0, 0);
+        businessLogService.add(objectId, objectType, operType, "恢复、暂停或无效操作", "", 0, 0);
         Integer code = 0;
         if (status == 1) {
             code = SmsEnum.BUSINESS_PAUSE.getValue();//设置业务暂停
@@ -865,19 +871,20 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             code = SmsEnum.BUSINESS_INVALID.getValue();//设置业务无效
         }
         SmsUtil smsUtil = new SmsUtil();//发送短信通知
-        for (Map receive_id : receive_ids) {
-            Integer rec = MessageUtils.transMapToInt(receive_id, "user_id");
-            if (rec != null && !userId.equals(rec)) {
-                Map userC = coordinatorMapper.getUserAndCompanyByUserId(rec);
-                Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);
-                String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
-                        CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "realName"),
-                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
-                String title = getMessageTitle(objectId, objectType, MessageBTEnum.BUSINESS_PAUSE.getValue());
-                messageService.add(title, content, userId, rec, MessageBTEnum.BUSINESS_PAUSE.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS_PAUSE.getValue(), "");//添加通知消息
+        if (receive_ids != null && receive_ids.size() > 0) {
+            for (Map receive_id : receive_ids) {
+                Integer rec = MessageUtils.transMapToInt(receive_id, "user_id");
+                if (rec != null && !userId.equals(rec)) {
+                    Map userC = coordinatorMapper.getUserAndCompanyByUserId(rec);
+                    Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);
+                    String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
+                            CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "realName"),
+                            ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
+                    String title = getMessageTitle(objectId, objectType, MessageBTEnum.BUSINESS_PAUSE.getValue());
+                    messageService.add(title, content, userId, rec, MessageBTEnum.BUSINESS_PAUSE.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS_PAUSE.getValue(), "");//添加通知消息
+                }
             }
         }
-        map.put("result", "yes");
     }
 
     /**

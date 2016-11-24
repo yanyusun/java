@@ -370,6 +370,7 @@ public class ZcyServiceImpl implements ZcyService {
     @Override
     public Map awaitReceive(ZcyListQuery zcyListQuery) {
         Map map = new HashMap<>();
+        zcyListQuery.setResultStatus(0);//默认正常状态
         if (zcyListQuery.getStatus() == ObjectTabEnum.accept.getValue().intValue()) {//待接收
             getWaitReceive(zcyListQuery, map);
         }

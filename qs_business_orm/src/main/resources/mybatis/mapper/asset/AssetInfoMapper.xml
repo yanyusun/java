@@ -465,7 +465,7 @@
     <select id="pageList" parameterType="com.dqys.business.orm.query.asset.AssetQuery" resultMap="BaseResultMap">
         SELECT * from bt_asset
         <include refid="Query_Condition"/>
-        ORDER BY id DESC
+        ORDER BY update_at DESC
         <if test="isPaging">
             limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
         </if>
