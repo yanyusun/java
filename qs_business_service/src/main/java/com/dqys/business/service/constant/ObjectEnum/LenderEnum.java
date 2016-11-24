@@ -22,7 +22,7 @@ public enum LenderEnum {
     AUDIT_YES(1113, "审核通过"),
     AUDIT_NO(1114, "审核不通过"),
     PAUSE(1115,"暂停"),
-    RESTART_APPLY(1116,"重新申请"),
+    RESTART_APPLY(1116,"重新发布"),//重新申请
     PAUSE_RECOVER (1117,"暂停恢复"),
     INVALID_SET_RECOVER(1118,"无效恢复"),
 

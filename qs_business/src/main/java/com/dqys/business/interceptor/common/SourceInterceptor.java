@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Created by Yvan on 16/8/25.
  */
+
 public class SourceInterceptor extends AuthenticationInterceptor {
 
     private static final String API_LIST_NAV  = "listNavigation";
@@ -35,8 +36,10 @@ public class SourceInterceptor extends AuthenticationInterceptor {
         } else if (API_DELETE_NAV.equals(path)) {
             return true;
         } else if (API_UPDATE.equals(path)) {
+
             return true;
         } else if (API_ADD.equals(path)) {
+
             return true;
         } else if (API_GET.equals(path)) {
             return true;

@@ -17,7 +17,7 @@ public enum AssetSourceEnum {
     AUDIT_YES(169, "审核通过"),
     AUDIT_NO(1610, "审核不通过"),
     PAUSE(1611, "暂停"),
-    RESTART_APPLY(1612, "重新申请"),
+    RESTART_APPLY(1612, "重新发布"),//重新申请
     INVALID_SET_RECOVER(1613, "无效恢复"),
     PAUSE_RECOVER(1614, "暂停恢复"),
     OPERATION_LOG(1615, "操作日志");

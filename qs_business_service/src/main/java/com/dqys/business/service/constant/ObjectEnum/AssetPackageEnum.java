@@ -12,7 +12,7 @@ public enum AssetPackageEnum {
     AUDIT_YES(103, "审核通过"),
     AUDIT_NO(104, "审核不通过"),
     PAUSE(105, "暂停"),
-    RESTART_APPLY(106, "重新申请"),
+    RESTART_APPLY(106, "重新发布"),//重新申请
     INVALID_SET(107, "设置为无效"),
     INVALID_SET_RECOVER(108, "无效恢复"),
     PAUSE_RECOVER(109, "暂停恢复");
