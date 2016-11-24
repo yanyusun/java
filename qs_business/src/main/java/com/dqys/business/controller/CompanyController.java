@@ -141,13 +141,17 @@ public class CompanyController {
     @RequestMapping(value = "/getDistribution")
     public JsonResponse listDistribution(@RequestParam(required = true) Integer type,
                                          @RequestParam(required = true) Integer id) throws BusinessLogException {
-        if (CommonUtil.checkParam(type, id)) {
-            return JsonResponseTool.success("参数错误");
+        try {
+            if (CommonUtil.checkParam(type, id)) {
+                return JsonResponseTool.success("参数错误");
+            }
+            if (ObjectTypeEnum.getObjectTypeEnum(type) == null) {
+                return JsonResponseTool.paramErr("参数错误");
+            }
+            return JsonResponseTool.success(distributionService.listDistribution_tx(type, id));
+        } catch (Exception e) {
+            return JsonResponseTool.success(null);
         }
-        if (ObjectTypeEnum.getObjectTypeEnum(type) == null) {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        return JsonResponseTool.success(distributionService.listDistribution_tx(type, id));
     }
 
     /**
@@ -200,7 +204,7 @@ public class CompanyController {
             // 如果不是接受状态,全部设置为拒绝
             status = ObjectAcceptTypeEnum.refuse.getValue();
         }
-        return distributionService.designDistribution(id,status);
+        return distributionService.designDistribution(id, status);
     }
 
 
