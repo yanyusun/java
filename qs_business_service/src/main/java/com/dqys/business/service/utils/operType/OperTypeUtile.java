@@ -96,9 +96,9 @@ public class OperTypeUtile implements ApplicationContextAware {
     private static Integer[] nav8 = {102, 1110, 1615, 1310, 1213, 108, 1118, 1613, 139};//无效
     private static Integer[] nav9 = {102, 1110, 1615, 1310, 1213};//待参与
     private static Integer[] nav10 = {102, 1110, 1615, 1310, 1213};//已参与
-    private static Integer[] nav11 = {102, 103, 104, 1110, 1113, 1114, 1615, 1310, 1213, 169, 1610, 1312, 101, 161, 111, 1220};//待审核
-    private static Integer[] nav12 = {102, 1110, 1112, 1615, 1310, 1213};//待处置
-    private static Integer[] nav13 = {102, 1110, 1615, 1310, 1213};//待分配
+    private static Integer[] nav11 = {102, 103, 104, 1110, 1113, 1114, 1615, 1310, 1213, 169, 1610, 1312, 101, 161, 111, 1220,116,1115,105,107,1611,166};//待审核
+    private static Integer[] nav12 = {102, 1110, 1112, 1615, 1310, 1213,1115,116,105,107,1611,166};//待处置
+    private static Integer[] nav13 = {102, 1110, 1615, 1310, 1213,1115,116,105,107,1611,166};//待分配
     private static Integer[] nav14 = {102, 1110, 1615, 1310, 1213};//48H 新
     private static Integer[] nav15 = {102, 1110, 1615, 1310, 1213, 100, 101, 103, 104, 105, 106, 107, 110,
             111, 112, 113, 114, 115, 116, 117, 118, 119, 1111, 1115, 1116,
@@ -110,11 +110,11 @@ public class OperTypeUtile implements ApplicationContextAware {
             162, 163, 164, 165, 166, 167, 168, 169, 169, 1610, 1611, 1612, 1613, 1614,
             130, 131, 132, 133, 134, 135, 136, 137, 138, 1310, 1311,
             120, 121, 122, 123, 124, 125, 126, 127, 129, 1210, 1211, 1214, 1215, 1216, 1217, 1218};//处置中
-    private static Integer[] nav17 = {102, 1110, 1615, 1310, 1213, 105, 107, 101, 1115, 116, 111, 1611, 166, 161, 1312,
+    private static Integer[] nav17 = {102, 1110, 1615, 1310, 1213, 105, 107, 101, 1115, 116, 111, 1611, 161, 1312,
             1219, 106, 1116, 1612, 103, 169};//已驳回
-    private static Integer[] nav18 = {102, 1110, 1615, 1310, 1213, 109, 1117, 1614};//暂停
-    private static Integer[] nav19 = {102, 1110, 1615, 1310, 1213};//正在进行
-    private static Integer[] nav20 = {102, 1110, 1615, 1310, 1213};//我的催收
+    private static Integer[] nav18 = {102, 1110, 1615, 1310, 1213, 109, 1117, 1614,116,107,166};//暂停
+    private static Integer[] nav19 = {102, 1110, 1615, 1310, 1213,116,1115,105,107,1611};//正在进行
+    private static Integer[] nav20 = {102, 1110, 1615, 1310, 1213,116,1115,105,107,1611};//我的催收
     private static Integer[] nav99 = {102, 1110, 1615, 1310, 1213};//全部
 
     public static List<OperType> getOperType(Integer navId, Integer objectType) {
