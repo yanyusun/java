@@ -76,7 +76,7 @@ public class MessageController {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         String userType = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getUserType();
 //        if (!userType.equals(UserInfoEnum.USER_TYPE_ADMIN.getValue() + ",")) {//不是平台管理员，只能看自己的信息
-            message.setReceiveId(userId);
+        message.setReceiveId(userId);
 //        }
         List<Message> list = messageService.selectByMessage(message);
         if (list == null) {
@@ -160,6 +160,23 @@ public class MessageController {
         } else {
             return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
         }
+    }
+
+    /**
+     * @api {post} message/getCount 消息数量
+     * @apiParam {int} [type]  消息类型(0, "任务消息"),(1, "产品消息"), (2, "安全消息"),(3, "服务消息"),
+     * @apiParam {int} [status]  消息状态（0未读1已读）
+     * @apiSampleRequest message/getCount
+     * @apiGroup Message
+     * @apiName message/getCount
+     */
+    @RequestMapping("/getCount")
+    @ResponseBody
+    public JsonResponse getCount(Integer type, Integer status) {
+        Message message = new Message();
+        message.setStatus(status);
+        message.setType(type);
+        return JsonResponseTool.success(messageService.selectCount(message));
     }
 
 
