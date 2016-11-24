@@ -371,9 +371,11 @@ public class RepayServiceImpl implements RepayService {
         //去除重复的数据
         List<IOUInfo> iouInfos = new ArrayList<>();
         List<Integer> iouIds = new ArrayList<>();
-        for (IOUInfo info : ious) {
-            if (!iouIds.contains(info.getId())) {
-                iouInfos.add(info);
+        if (ious != null && ious.size() > 0) {
+            for (IOUInfo info : ious) {
+                if (info != null && !iouIds.contains(info.getId())) {
+                    iouInfos.add(info);
+                }
             }
         }
         return iouInfos;
