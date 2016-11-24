@@ -42,7 +42,7 @@ public class ParticipationServiceImpl implements ParticipationService {
      * @return
      */
     @Override
-    public Map getList(Integer objectId, Integer objectType) {
+    public Map findList(Integer objectId, Integer objectType) {
         Map map = new HashMap<>();
         map.put("result", "no");
         List<PartDto> partDtos = null;
@@ -68,7 +68,7 @@ public class ParticipationServiceImpl implements ParticipationService {
         Map map = new HashMap<>();
         map.put("result", "yes");
         map.put("detail", null);
-        Map mapDto = getList(objectId, objectType);
+        Map mapDto = findList(objectId, objectType);
         if (mapDto.get("list") != null) {
             List<PartDto> list = (List<PartDto>) mapDto.get("list");
             for (PartDto dto : list) {

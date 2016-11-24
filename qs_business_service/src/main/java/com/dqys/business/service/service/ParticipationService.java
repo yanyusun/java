@@ -11,7 +11,7 @@ public interface ParticipationService {
      *
      * @return
      */
-    Map getList(Integer objectId, Integer objectType);
+    Map findList(Integer objectId, Integer objectType);
 
     /**
      * 详情信息

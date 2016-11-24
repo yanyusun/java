@@ -52,8 +52,8 @@ public class ParticipationController {
      */
     @RequestMapping("/getList")
     @ResponseBody
-    public JsonResponse getList(@RequestParam Integer objectId, @RequestParam Integer objectType) {
-        Map map = participationService.getList(objectId, objectType);
+    public JsonResponse findList(@RequestParam Integer objectId, @RequestParam Integer objectType) {
+        Map map = participationService.findList(objectId, objectType);
         return CommonUtil.jsonResponse(map);
     }
 
