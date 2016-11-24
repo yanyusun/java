@@ -186,7 +186,11 @@ public class AssetServiceImpl implements AssetService {
         if (assetInfo == null) {
             return JsonResponseTool.failure("获取失败");
         } else {
-            return JsonResponseTool.success(AssetServiceUtils.toAssetDTO(assetInfo));
+            AssetDTO dto = AssetServiceUtils.toAssetDTO(assetInfo);
+            //添加录入人姓名
+            com.dqys.auth.orm.pojo.UserDetail detail = userInfoMapper.getUserDetail(dto.getOperatorId());
+            dto.setOperator(detail == null ? "" : detail.getRealName());
+            return JsonResponseTool.success(dto);
         }
     }
 
