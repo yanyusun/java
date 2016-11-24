@@ -714,6 +714,7 @@ public class LenderServiceImpl implements LenderService {
         List<Integer> managerBusinessIds = CommonUtil.pickList(managerDisposeIds, managerPassIds);
 
         LenderQuery lenderQuery = new LenderQuery();
+        lenderQuery.setStopStatus(0);//正常
         if (ObjectTabEnum.accept.getValue().equals(tab)) {
             // 待接收 -- 其他机构发起邀请未处理&协作器内没有接收的
             // 分配器中的待接收
@@ -926,7 +927,7 @@ public class LenderServiceImpl implements LenderService {
                 ids.add(objectUserRelation.getObjectId());
             });
             lenderQuery.setIds(ids);
-            lenderQuery.setStopStatus(2); // 这里表示无效， 暂停状态为1
+            lenderQuery.setStopStatus(2); // 这里2表示无效， 暂停状态为1
         } else if (ObjectTabEnum.join.getValue().equals(tab)) {
             // 待参与
             UserTeamQuery query = new UserTeamQuery();
@@ -1136,7 +1137,6 @@ public class LenderServiceImpl implements LenderService {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
             lenderQuery.setTakePart(true);
-            lenderQuery.setStopStatus(0);
         } else if (ObjectTabEnum.stop.getValue().equals(tab)) {
             // 暂停
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
@@ -1151,6 +1151,7 @@ public class LenderServiceImpl implements LenderService {
             });
             lenderQuery.setIds(ids);
             lenderQuery.setStop(true);
+            lenderQuery.setStopStatus(null);
         } else if (ObjectTabEnum.myUrge.getValue().equals(tab)) {
             // 我的催收
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery(); // 对象关系表

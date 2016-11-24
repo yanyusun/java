@@ -45,18 +45,21 @@ public class ParticipationServiceImpl implements ParticipationService {
     public Map getList(Integer objectId, Integer objectType) {
         Map map = new HashMap<>();
         map.put("result", "no");
+        List<PartDto> partDtos = null;
+        DistributionDTO dto = null;
         try {
-            List<PartDto> partDtos = null;
-            DistributionDTO dto = distributionService.listDistribution_tx(objectType, objectId);
-            if (dto != null && dto.getCompanyTeamReDTOList() != null) {
-                partDtos = setPartDto(dto.getCompanyTeamReDTOList(), objectId, objectType);
-            }
-            map.put("result", "yes");
-            map.put("list", partDtos);
-        } catch (BusinessLogException e) {
+            dto = distributionService.listDistribution_tx(objectType, objectId);
+        } catch (Exception e) {
             e.printStackTrace();
-            map.put("msg", "失败查询");
+            map.put("msg", "清收案组调取出错，可能清收案组还未创建");
+            return map;
         }
+        if (dto != null && dto.getCompanyTeamReDTOList() != null) {
+            partDtos = setPartDto(dto.getCompanyTeamReDTOList(), objectId, objectType);
+        }
+        map.put("result", "yes");
+        map.put("list", partDtos);
+
         return map;
     }
 

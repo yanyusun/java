@@ -331,6 +331,7 @@ public class AssetServiceImpl implements AssetService {
         }
 
         AssetQuery assetQuery = new AssetQuery();
+        assetQuery.setStopStatus(0);//正常状态
         boolean flag = CommonUtil.isManage(); // 是否是总管理员
         Boolean isPlatformOrEntrust = false; // 平台或者委托方
         Boolean isUrgeOrLawyer = false; // 催收或者律所
@@ -767,7 +768,6 @@ public class AssetServiceImpl implements AssetService {
             }
             assetQuery.setTakePart(true);
             assetQuery.setStop(false);
-            assetQuery.setStopStatus(0);//0正常1暂停2无效
         } else if (ObjectTabEnum.stop.getValue().equals(type)) {
             // 暂停
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
@@ -782,6 +782,7 @@ public class AssetServiceImpl implements AssetService {
             });
             assetQuery.setIds(ids);
             assetQuery.setIsStop(true);
+            assetQuery.setStopStatus(null);
         } else if (ObjectTabEnum.all.getValue().equals(type)) {
             //全部
             if (CommonUtil.isManage()) {
