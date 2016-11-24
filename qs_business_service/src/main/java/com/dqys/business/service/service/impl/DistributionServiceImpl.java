@@ -34,7 +34,7 @@ import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.orm.query.company.CompanyTeamReQuery;
-import com.dqys.business.service.constant.MessageBTEnum;
+import com.dqys.core.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;

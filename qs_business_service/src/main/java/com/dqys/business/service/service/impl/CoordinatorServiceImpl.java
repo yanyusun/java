@@ -30,7 +30,7 @@ import com.dqys.business.orm.pojo.coordinator.*;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.orm.pojo.zcy.ZcyEstates;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
-import com.dqys.business.service.constant.MessageBTEnum;
+import com.dqys.core.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.*;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
@@ -662,7 +662,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
         }
         String title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.INSIDE_RESULT.getValue());
-        messageService.add(title, content, sendUserId, recUserId, "", MessageEnum.SERVE.getValue(), MessageBTEnum.INSIDE_RESULT.getValue(), "");
+        messageService.add(title, content, sendUserId, recUserId, MessageBTEnum.INSIDE_RESULT.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.INSIDE_RESULT.getValue(), "");
     }
 
     @Override
@@ -692,7 +692,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 content = smsUtil.sendSms(SmsEnum.INITIATIVE_JOIN.getValue(), tUserInfo.getMobile(), tUserInfo.getRealName(), sendUser.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(userT.getObjectType()).getName(), getObjectName(userT.getObjectType(), userT.getObjectId()));//发送短信
                 String title = getMessageTitle(userT.getObjectId(), userT.getObjectType(), MessageBTEnum.INITIATIVE.getValue());
-                messageService.add(title, content, userId, userT.getMangerId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INITIATIVE.getValue(),
+                messageService.add(title, content, userId, userT.getMangerId(), MessageBTEnum.INITIATIVE.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.INITIATIVE.getValue(),
                         MessageUtils.setOperUrl("/coordinator/isAccept?status=1&teammateId=" + teammateRe.getId(), null, "/coordinator/isAccept?status=2&teammateId=" + teammateRe.getId(), null, null));
             }
             setUserTeamByPeopleNum(userT.getObjectType(), userT.getObjectId(), userId);//改对象的协作器人数
@@ -780,7 +780,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                         ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
             }
             String title = getMessageTitle(objectId, objectType, MessageBTEnum.BUSINESS.getValue());
-            messageService.add(title, content, userId, receive_id, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS.getValue(), "");//添加通知消息
+            messageService.add(title, content, userId, receive_id, MessageBTEnum.BUSINESS.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS.getValue(), "");//添加通知消息
             map.put("result", "yes");
         } else {
             map.put("msg", "审核业务号失败");
@@ -874,7 +874,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                         CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "realName"),
                         ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
                 String title = getMessageTitle(objectId, objectType, MessageBTEnum.BUSINESS_PAUSE.getValue());
-                messageService.add(title, content, userId, rec, "", MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS_PAUSE.getValue(), "");//添加通知消息
+                messageService.add(title, content, userId, rec, MessageBTEnum.BUSINESS_PAUSE.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS_PAUSE.getValue(), "");//添加通知消息
             }
         }
         map.put("result", "yes");
@@ -965,7 +965,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 String title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.REPLACE_CONTACTS.getValue());
                 String url = MessageUtils.setOperUrl("/coordinator/delUser?status=0&teamUserId=" + teamUserId + "&userTeamId=" + userTeamId + "&substitutionUid=" + substitutionUid + "&operUserId=" + userId, null,
                         "/coordinator/delUser?status=1&teamUserId=" + teamUserId + "&userTeamId=" + userTeamId + "&substitutionUid=" + substitutionUid + "&operUserId=" + userId, null, null);
-                messageService.add(title, content, userId, substitutionUid, "", MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE_CONTACTS.getValue(), url);//添加通知消息
+                messageService.add(title, content, userId, substitutionUid, MessageBTEnum.REPLACE_CONTACTS.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE_CONTACTS.getValue(), url);//添加通知消息
                 map.put("result", "yes");
             }
         } else if (status != null && substitutionUid != null) {//替换协作器联系人
@@ -992,7 +992,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                                     MessageUtils.transMapToString(oper, "realName"),
                                     ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(), getObjectName(userTeam.getObjectType(), userTeam.getObjectId()), TeammateReEnum.get(teammateRe.getType()));
                             String title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.REPLACE.getValue());
-                            messageService.add(title, content, userId, teamUserId, "", MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE.getValue(), "");//添加通知消息
+                            messageService.add(title, content, userId, teamUserId, MessageBTEnum.REPLACE.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE.getValue(), "");//添加通知消息
                             map.put("result", "yes");
                         } else {
                             throw new Exception();

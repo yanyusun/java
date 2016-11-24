@@ -259,10 +259,10 @@ public class UserServiceImpl implements UserService {
                 SmsUtil smsUtil = new SmsUtil();
                 String content = smsUtil.sendSms(SmsEnum.REGISTER_AUDIT.getValue(), info.getMobile(), info.getRealName(),
                         companyInfo.getCompanyName() == null ? "" : companyInfo.getCompanyName(), CompanyTypeEnum.getCompanyTypeEnum(companyInfo.getType()).getName(),
-                        userInfo.getRealName() == null ? "" : userInfo.getRealName());
+                        userInfo.getRealName() == null ? "" : userInfo.getRealName(), userInfo.getMobile());
                 String operUrl = MessageUtils.setOperUrl("/api/user/registerAudit?status=1&userId=" + userId, null,
                         "/api/user/registerAudit?status=2&userId=" + userId, null, null);
-                Message message = new Message("注册请求认证帐号:" + userInfo.getEmail(), content, userId, info.getId(), null, null, 0, null, 0, operUrl, 0);
+                Message message = new Message("注册请求认证帐号:" + userInfo.getEmail(), content, userId, info.getId(), null, null, MessageBTEnum.register.getValue(), null, 0, operUrl, 0);
                 messageMapper.add(message);
             }
         }

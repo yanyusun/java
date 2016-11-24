@@ -9,8 +9,8 @@ public enum ContactTypeEnum {
     LENDER(1, "借款人"),
     LENDER_WITH(2, "共同借款人"),
     GUARANTEE(3, "担保方"),
-    BANK_MANAGER(4, "委托客户经理"),
-    OTHER(5, "其他");
+    BANK_MANAGER(4, "委托方客户经理"),
+    OTHER(5, "其它相关联系人");
 
     private Integer value;
     private String name;

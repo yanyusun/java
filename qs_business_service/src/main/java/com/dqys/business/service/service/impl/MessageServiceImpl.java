@@ -13,7 +13,7 @@ import com.dqys.business.orm.mapper.message.MessageMapper;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.message.Message;
-import com.dqys.business.service.constant.MessageBTEnum;
+import com.dqys.core.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.service.CoordinatorService;
@@ -153,7 +153,7 @@ public class MessageServiceImpl implements MessageService {
                     companyTypeSend, realNameSend, objectName, coordinatorService.getObjectName(userTeam.getObjectType(), userTeam.getObjectId()), remark);
         }
         String title = coordinatorService.getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.INSIDE.getValue());
-        Integer result = add(title, content, MessageUtils.transMapToInt(map, "userId"), uid, CoordinatorEnum.taskMes.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.INSIDE.getValue(),
+        Integer result = add(title, content, MessageUtils.transMapToInt(map, "userId"), uid, MessageBTEnum.INSIDE.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.INSIDE.getValue(),
                 MessageUtils.setOperUrl("/coordinator/isAccept?status=1&teammateId=" + teammateRe.getId() + "&operUserId=" + MessageUtils.transMapToInt(map, "userId"), null,
                         "/coordinator/isAccept?status=2&teammateId=" + teammateRe.getId() + "&operUserId=" + MessageUtils.transMapToInt(map, "userId"), null, null));//添加消息记录
     }
@@ -171,7 +171,7 @@ public class MessageServiceImpl implements MessageService {
                         ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
                         ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId), operation);
                 String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.FLOW.getValue());
-                add(title, content, userId, tuserInfo.getId(), "", MessageEnum.TASK.getValue(), MessageBTEnum.FLOW.getValue(), operUrl);
+                add(title, content, userId, tuserInfo.getId(), MessageBTEnum.FLOW.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.FLOW.getValue(), operUrl);
                 return "yes";
             }
         }
@@ -212,7 +212,7 @@ public class MessageServiceImpl implements MessageService {
                         ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId), operation);
             }
             String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.FLOW_RESULT.getValue());
-            add(title, content, sendUserId, receiveUserId, "", MessageEnum.SERVE.getValue(), MessageBTEnum.FLOW_RESULT.getValue(), "");
+            add(title, content, sendUserId, receiveUserId, MessageBTEnum.FLOW_RESULT.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.FLOW_RESULT.getValue(), "");
             return "yes";
         } else {
             return "no";
@@ -317,7 +317,7 @@ public class MessageServiceImpl implements MessageService {
                         ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
                         ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId), operation, onStatus == 0 ? "加入" : "移除");
                 String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.FLOW_RESULT.getValue());
-                add(title, content, userId, MessageUtils.transMapToInt(map, "userId"), "", MessageEnum.SERVE.getValue(), MessageBTEnum.FLOW_RESULT.getValue(), "");
+                add(title, content, userId, MessageUtils.transMapToInt(map, "userId"), MessageBTEnum.FLOW_RESULT.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.FLOW_RESULT.getValue(), "");
                 return true;
             }
         }
