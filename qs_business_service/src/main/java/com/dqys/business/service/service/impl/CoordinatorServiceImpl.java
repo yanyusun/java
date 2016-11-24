@@ -810,7 +810,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 map.put("msg", "重复操作");//
                 return;
             }
-            if (coordinatorMapper.updateLender(lenderInfo) > 1) {//修改借款人isStop状态
+            if (coordinatorMapper.updateLender(lenderInfo) > 0) {//修改借款人isStop状态
                 receive_ids = coordinatorMapper.getUserIdByObjUserRelToLender(objectType, objectId);
                 map.put("result", "yes");
             }

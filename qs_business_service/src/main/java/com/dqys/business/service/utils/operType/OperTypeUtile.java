@@ -1,10 +1,15 @@
 package com.dqys.business.service.utils.operType;
 
+import com.dqys.business.orm.constant.business.ObjectUserStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
+import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.pojo.operType.OperType;
+import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.*;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.service.OperTypeService;
+import com.dqys.core.utils.NoSQLWithRedisTool;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -24,13 +29,14 @@ import java.util.Map;
 public class OperTypeUtile implements ApplicationContextAware {
     private static RedisTemplate<String, Object> redisTemplate;
     private static OperTypeService operTypeService;
-
+    private static ObjectUserRelationMapper objectUserRelationMapper;
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         redisTemplate = (RedisTemplate) applicationContext.getBean("redisTemplate");
         operTypeService = applicationContext.getBean(OperTypeService.class);
+        objectUserRelationMapper = applicationContext.getBean(ObjectUserRelationMapper.class);
         //// TODO: 16-9-18  上线要去掉下面的注释
-        // opertype();
+         //opertype();
     }
 
     public static List<OperType> getInitBuisnesOperTypeList(Integer objectType, Integer objectId, Integer flowType) {
@@ -55,7 +61,6 @@ public class OperTypeUtile implements ApplicationContextAware {
     }
 
     /**
-     * 请完善这个方法????
      *
      * @param userType 用户类型
      * @param userRole 用户角色
@@ -63,8 +68,14 @@ public class OperTypeUtile implements ApplicationContextAware {
      * @return 该用户对这种操作对象所具有的操作列表
      */
     public static List<OperType> operTypes(int userType, int userRole, int objType) {
-        String key = userType + "_" + userRole + "_" + objType;
-        return null;
+        String userId_roleId_objectId = userType + "_" + userRole + "_" + objType;
+        List<OperType> list = NoSQLWithRedisTool.getValueObject(userId_roleId_objectId) == null ? new ArrayList<>() : NoSQLWithRedisTool.getValueObject(userId_roleId_objectId);
+        if (list != null && list.size() != 0) {
+            return list;
+        } else {
+            NoSQLWithRedisTool.getRedisTemplate().opsForValue().set(userId_roleId_objectId, operTypeService.selectByRoleToOperType(userRole, userType, objType));
+        }
+        return (List<OperType>) NoSQLWithRedisTool.getValueObject(userId_roleId_objectId);
     }
 
     /**
@@ -73,12 +84,53 @@ public class OperTypeUtile implements ApplicationContextAware {
      * @param userType 用户类型
      * @param userRole 用户角色
      * @param objType  对象类型
-     * @param Oper     操作类型
+     * @param oper     操作类型
      * @return 该用户是否具有对应操作的权限
      */
-    public static boolean hasAuth(int userType, int userRole, int objType, int Oper) {
-        return true;
+    public static boolean hasAuth(int userType, int userRole, int objType, int oper) {
+        List<OperType> operTypes = operTypes(userType,userRole,objType);
+        for(OperType operType:operTypes){
+            if(operType.getOperType()==oper){
+                return true;
+            }
+        }
+        return false;
     }
+
+    /**
+     * 是处在待接收的状态
+     * @return
+     */
+    public static boolean isOnAccept(int objectType,int objectId,int userId){
+        ObjectUserRelationQuery query = new ObjectUserRelationQuery();
+        query.setUserId(userId);
+        query.setObjectType(objectType);
+        query.setObjectId(objectId);
+        List<ObjectUserRelation> objectUserRelationList=objectUserRelationMapper.list(query);
+        if(objectUserRelationList==null||objectUserRelationList.size()==0){
+            return false;
+        }else if(objectUserRelationList.size()>1){
+            //// TODO: 16-11-24 返回找到不止一个的错误信息
+            return false;
+        }else{
+            ObjectUserRelation objectUserRelation=objectUserRelationList.get(0);
+            if(objectUserRelation.getStatus().intValue()== ObjectUserStatusEnum.accept.getValue()){
+                return true;
+            }else{
+                return false;
+            }
+
+        }
+    }
+
+
+
+
+
+
+
+
+
 
     private static Integer[] nav0 = {102, 1110, 1615, 1310, 1213};//待接收
     private static Integer[] nav1 = {102, 1110, 1615, 1310, 11213};//待申请

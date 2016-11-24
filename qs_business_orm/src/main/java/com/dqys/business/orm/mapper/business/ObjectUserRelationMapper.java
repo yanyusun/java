@@ -55,4 +55,5 @@ public interface ObjectUserRelationMapper {
 
     /*获取录入人的对象*/
     List<Integer> findObjectIdByObjectType(@Param("objectType") Integer objectType, @Param("userId") Integer userId);
+
 }

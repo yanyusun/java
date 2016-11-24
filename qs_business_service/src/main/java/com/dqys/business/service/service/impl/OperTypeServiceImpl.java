@@ -115,14 +115,15 @@ public class OperTypeServiceImpl implements OperTypeService {
             }
         }
         // }
-        String userId_roleId_objectId = userType + "_" + roleId + "_" + objectType;
-        List<OperType> list = NoSQLWithRedisTool.getValueObject(userId_roleId_objectId) == null ? new ArrayList<>() : NoSQLWithRedisTool.getValueObject(userId_roleId_objectId);
-        if (list != null && list.size() != 0) {
-            return list;
-        } else {
-            NoSQLWithRedisTool.getRedisTemplate().opsForValue().set(userId_roleId_objectId, selectByRoleToOperType(roleId, userType, objectType));
-        }
-        return (List<OperType>) NoSQLWithRedisTool.getValueObject(userId_roleId_objectId);
+//        String userId_roleId_objectId = userType + "_" + roleId + "_" + objectType;
+//        List<OperType> list = NoSQLWithRedisTool.getValueObject(userId_roleId_objectId) == null ? new ArrayList<>() : NoSQLWithRedisTool.getValueObject(userId_roleId_objectId);
+//        if (list != null && list.size() != 0) {
+//            return list;
+//        } else {
+//            NoSQLWithRedisTool.getRedisTemplate().opsForValue().set(userId_roleId_objectId, selectByRoleToOperType(roleId, userType, objectType));
+//        }
+//        return (List<OperType>) NoSQLWithRedisTool.getValueObject(userId_roleId_objectId);
+        return OperTypeUtile.operTypes(userType,roleId,objectType);
     }
 
     @Override
