@@ -475,6 +475,9 @@ public class LenderServiceImpl implements LenderService {
             lenderDTO.setName(contactInfo.getName());
             lenderDTO.setSex(contactInfo.getGender());
         }
+        //添加录入人姓名
+        com.dqys.auth.orm.pojo.UserDetail detail = userInfoMapper.getUserDetail(lenderDTO.getOperatorId());
+        lenderDTO.setOperator(detail == null ? "" : detail.getRealName());
         return JsonResponseTool.success(lenderDTO);
     }
 
@@ -1184,7 +1187,7 @@ public class LenderServiceImpl implements LenderService {
                 userId = null;
             }
             lenderQuery.setIds(lenderInfoMapper.lenderAllByObjectUserRelation(userId, ObjectTypeEnum.LENDER.getValue()));
-            if (lenderQuery.getIds() == null) {
+            if (lenderQuery.getIds() == null || lenderQuery.getIds().size() == 0) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
         } else {

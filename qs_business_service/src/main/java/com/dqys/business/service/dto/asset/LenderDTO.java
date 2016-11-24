@@ -50,6 +50,7 @@ public class LenderDTO {
     private Integer attribute;  // 公私有属性
 
     private Integer operatorId;  // 操作人Id
+    private String operator;//录入人姓名
     private Integer assetId; // 资产包ID
 
     private String name; // 借款人姓名
@@ -63,6 +64,13 @@ public class LenderDTO {
     private Date createAt; // 录入时间
     private String assetCode; //资产包编号
 
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
 
     public Integer getType() {
         return type;

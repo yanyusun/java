@@ -39,7 +39,7 @@ public class AssetDTO {
     private Integer attribute; // 属性（0私有，1公有）
 
     private Integer operatorId; // 操作人ID
-    private UserDTO operator; // 操作人
+    private String operator; // 操作人
 
 
     public String getEntrustName() {
@@ -114,11 +114,11 @@ public class AssetDTO {
         this.endAt = endAt;
     }
 
-    public UserDTO getOperator() {
+    public String getOperator() {
         return operator;
     }
 
-    public void setOperator(UserDTO operator) {
+    public void setOperator(String operator) {
         this.operator = operator;
     }
 
