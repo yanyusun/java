@@ -92,7 +92,15 @@ public interface RepayService {
 
     /**
      * 案件已还款操作（把案件对应的所有借据的金额还完）
+     *
      * @return
      */
-    Map caseRepayMoney(Integer caseId,String remark, String file) throws Exception;
+    Map caseRepayMoney(Integer caseId, String remark, String file) throws Exception;
+
+    /**
+     * 借款人已处置操作（把借款人对应的所有借据的金额还完）
+     *
+     * @return
+     */
+    Map lenderRepayMoney(Integer lenderId, String remark, String file) throws Exception;
 }
