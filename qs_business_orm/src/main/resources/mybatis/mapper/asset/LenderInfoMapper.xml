@@ -628,7 +628,7 @@
     <select id="queryList" parameterType="com.dqys.business.orm.query.asset.LenderQuery" resultMap="BaseResultMap">
         SELECT * from bt_lender
         <include refid="Query_Condition"/>
-        ORDER BY id DESC
+        ORDER BY update_at DESC
         <if test="isPaging">
             limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
         </if>

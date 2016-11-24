@@ -477,6 +477,9 @@
             <if test="estateClassify != null">
                 estate_classify=#{estateClassify,jdbcType=INTEGER},
             </if>
+            <if test="resultStatus != null">
+                result_status=#{resultStatus,jdbcType=INTEGER},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
