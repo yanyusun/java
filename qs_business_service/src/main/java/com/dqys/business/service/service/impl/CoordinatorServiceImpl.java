@@ -782,10 +782,11 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             String title = getMessageTitle(objectId, objectType, MessageBTEnum.BUSINESS.getValue());
             messageService.add(title, content, userId, receive_id, MessageBTEnum.BUSINESS.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS.getValue(), "");//添加通知消息
             map.put("result", "yes");
+            businessLogService.add(objectId, objectType, operType, text, BusinessStatusEnum.getBusinessTypeEnum(status).getName(), 0, 0);//添加操作日志
         } else {
             map.put("msg", "审核业务号失败");
         }
-        businessLogService.add(objectId, objectType, operType, text, "", 0, 0);//添加操作日志
+
     }
 
     @Override
