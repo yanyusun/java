@@ -15,8 +15,8 @@ public enum UserInfoEnum {
     COORDINATOR_ADD_USER(9901, "案组添加用户"),
     COORDINATOR_DEL_USER(9902, "案组删除用户"),
     COORDINATOR_REPLACE_USER(9903, "案组替换用户"),
-    COORDINATOR_ACCEPT_ADD_USER(9904, "同意被添加进案组"),
-    COORDINATOR_REJECT_ADD_USER(9905, "拒绝被添加进案组"),
+    COORDINATOR_ACCEPT_ADD_USER(9904, "被同意添加进案组"),
+    COORDINATOR_REJECT_ADD_USER(9905, "被拒绝添加进案组"),
 
     DISTRIBUTION_ADD_THEIR(9906, "清收案组添加所属人"),
     DISTRIBUTION_DEL_THEIR(9907, "清收案组删除所属人"),

@@ -151,7 +151,7 @@
                 AND CURRENT_TIME > end_at
             </if>
             <if test="outTime !=null and outTime==false">
-                AND CURRENT_TIME &lt; end_at
+                AND CURRENT_TIME &lt;= end_at
             </if>
 
             <if test="listSearch != null">

@@ -391,6 +391,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 num++;
                 //发送短信
                 messageService.sendSmsByTeammate(userTeam, teammateRe, userAndCompany, uid, remark);
+                businessLogService.add(userTeam.getObjectId(), userTeam.getObjectType(), UserInfoEnum.COORDINATOR_ADD_USER.getValue(),
+                        UserInfoEnum.COORDINATOR_ADD_USER.getName() + "：" + getRealName(uid), "", 0, userTeam.getId());
             }
         }
         if (num > 0) {
@@ -399,8 +401,16 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         } else {
             map.put("result", "no");
         }
-        businessLogService.add(userTeam.getObjectId(), userTeam.getObjectType(), UserInfoEnum.COORDINATOR_ADD_USER.getValue(), UserInfoEnum.COORDINATOR_ADD_USER.getName(), "", 0, userTeam.getId());
+
         return map;
+    }
+
+    private String getRealName(Integer userId) {
+        UserDetail detail = coordinatorMapper.getUserDetail(userId);
+        if (detail != null) {
+            return detail.getRealName() == null ? "" : detail.getRealName();
+        }
+        return "";
     }
 
     /**
@@ -411,7 +421,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
      * @param userId
      */
     private void setUserTeamByPeopleNum(Integer objectType, Integer objectId, Integer userId) {
-        com.dqys.auth.orm.pojo.UserDetail userDetail = tUserInfoMapper.getUserDetail(userId);
+        UserDetail userDetail = coordinatorMapper.getUserDetail(userId);
         UserTeam userTeam = userTeamMapper.getByObject(objectId, objectType, userDetail.getCompanyId());
         if (userTeam != null) {
             TeammateRe teammateRe = new TeammateRe();
@@ -588,12 +598,14 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 }
             }
             //发送消息
-            businessLogService.add(userTeam.getObjectId(), userTeam.getObjectType(), UserInfoEnum.COORDINATOR_ACCEPT_ADD_USER.getValue(), UserInfoEnum.COORDINATOR_ACCEPT_ADD_USER.getName(), "", 0, userTeam.getId());
+            businessLogService.add(userTeam.getObjectId(), userTeam.getObjectType(), UserInfoEnum.COORDINATOR_ACCEPT_ADD_USER.getValue(),
+                    getRealName(teammateRe.getUserId()) + UserInfoEnum.COORDINATOR_ACCEPT_ADD_USER.getName(), "", 0, userTeam.getId());
             sendInviteCoordinator(teammateRe, userTeam, userId, operUserId, status);
             map.put("result", "yes");
         } else if (status == 2) {
             map.put("result", "yes");
-            businessLogService.add(userTeam.getObjectId(), userTeam.getObjectType(), UserInfoEnum.COORDINATOR_REJECT_ADD_USER.getValue(), UserInfoEnum.COORDINATOR_REJECT_ADD_USER.getName(), "", 0, userTeam.getId());
+            businessLogService.add(userTeam.getObjectId(), userTeam.getObjectType(), UserInfoEnum.COORDINATOR_REJECT_ADD_USER.getValue(),
+                    getRealName(teammateRe.getUserId()) + UserInfoEnum.COORDINATOR_REJECT_ADD_USER.getName(), "", 0, userTeam.getId());
             sendInviteCoordinator(teammateRe, userTeam, userId, operUserId, status);
         }
         return map;
@@ -696,6 +708,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                         MessageUtils.setOperUrl("/coordinator/isAccept?status=1&teammateId=" + teammateRe.getId(), null, "/coordinator/isAccept?status=2&teammateId=" + teammateRe.getId(), null, null));
             }
             setUserTeamByPeopleNum(userT.getObjectType(), userT.getObjectId(), userId);//改对象的协作器人数
+            businessLogService.add(userT.getObjectId(), userT.getObjectType(), UserInfoEnum.COORDINATOR_ADD_USER.getValue(),
+                    getRealName(teammateRe.getUserId()) + "主动加入案组", "", 0, userT.getId());
             map.put("result", "yes");
         } else if (flag == -1) {
             map.put("msg", "已经加入过案组或申请加入已发出");//已经加入过案组
@@ -706,7 +720,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         } else {
             map.put("msg", "操作失败");
         }
-        businessLogService.add(userT.getObjectId(), userT.getObjectType(), UserInfoEnum.COORDINATOR_ADD_USER.getValue(), "主动加入案组", "", 0, userT.getId());
+
         return map;
     }
 
@@ -960,7 +974,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         if (status == null && substitutionUid == null) {//删除协作器联系人
             code = teamVerdict(userId, teamUserId, userTeamId, status, substitutionUid);//删除联系人判定
             teamDel(code, teamUserId, userTeamId);
-            businessLogService.add(userTeam.getObjectId(), userTeam.getObjectType(), UserInfoEnum.COORDINATOR_DEL_USER.getValue(), UserInfoEnum.COORDINATOR_DEL_USER.getName(), "", 0, 0);//添加操作日志
+            businessLogService.add(userTeam.getObjectId(), userTeam.getObjectType(), UserInfoEnum.COORDINATOR_DEL_USER.getValue(),
+                    UserInfoEnum.COORDINATOR_DEL_USER.getName() + "：" + getRealName(teamUserId), "", 0, 0);//添加操作日志
         } else if (status == null && substitutionUid != null) {//发送短信通知替补的人
             code = teamVerdict(userId, teamUserId, userTeamId, status, substitutionUid);//删除联系人判定
             if ("200".equals(MessageUtils.transMapToString(code, "code"))) {
@@ -973,11 +988,13 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 String title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.REPLACE_CONTACTS.getValue());
                 String url = MessageUtils.setOperUrl("/coordinator/delUser?status=0&teamUserId=" + teamUserId + "&userTeamId=" + userTeamId + "&substitutionUid=" + substitutionUid + "&operUserId=" + userId, null,
                         "/coordinator/delUser?status=1&teamUserId=" + teamUserId + "&userTeamId=" + userTeamId + "&substitutionUid=" + substitutionUid + "&operUserId=" + userId, null, null);
-                messageService.add(title, content, userId, substitutionUid, MessageBTEnum.REPLACE_CONTACTS.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE_CONTACTS.getValue(), url);//添加通知消息
+                messageService.add(title, content, userId, substitutionUid, MessageBTEnum.REPLACE_CONTACTS.getName(),
+                        MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE_CONTACTS.getValue(), url);//添加通知消息
                 map.put("result", "yes");
             }
         } else if (status != null && substitutionUid != null) {//替换协作器联系人
-            businessLogService.add(userTeam.getObjectId(), userTeam.getObjectType(), UserInfoEnum.COORDINATOR_REPLACE_USER.getValue(), UserInfoEnum.COORDINATOR_REPLACE_USER.getName(), "", 0, 0);//添加操作日志
+            businessLogService.add(userTeam.getObjectId(), userTeam.getObjectType(), UserInfoEnum.COORDINATOR_REPLACE_USER.getValue(),
+                    UserInfoEnum.COORDINATOR_REPLACE_USER.getName() + "：" + getRealName(teamUserId), "", 0, 0);//添加操作日志
             if (userId.equals(substitutionUid)) {
                 if (status == TeammateReEnum.STATUS_ACCEPT.getValue().intValue()) {
                     code = teamVerdict(userId, teamUserId, userTeamId, status, substitutionUid);//删除联系人判定
