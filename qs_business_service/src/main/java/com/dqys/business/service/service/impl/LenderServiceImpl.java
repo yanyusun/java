@@ -10,6 +10,7 @@ import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
+import com.dqys.business.orm.constant.repay.RepayEnum;
 import com.dqys.business.orm.mapper.asset.*;
 import com.dqys.business.orm.mapper.business.BusinessObjReMapper;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
@@ -1187,6 +1188,8 @@ public class LenderServiceImpl implements LenderService {
             if (CommonUtil.isManage()) {
                 userId = null;
             }
+            lenderQuery.setRepayStatus(RepayEnum.REPAY_STATUS_NO.getValue());//未还完的
+            lenderQuery.setOutTime(false);//没有超时的
             lenderQuery.setIds(lenderInfoMapper.lenderAllByObjectUserRelation(userId, ObjectTypeEnum.LENDER.getValue()));
             if (lenderQuery.getIds() == null || lenderQuery.getIds().size() == 0) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);

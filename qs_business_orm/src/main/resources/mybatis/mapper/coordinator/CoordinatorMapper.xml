@@ -150,7 +150,7 @@
     <select id="getAdminUser" resultType="java.util.Map">
         SELECT tui.id,tui.real_name realName,tui.mobile,tui.user_name userName from t_user_info tui LEFT JOIN t_user_tag tust
         ON tust.user_id=tui.id
-        WHERE tust.stateflag=0 and tust.role_id=1
+        WHERE tui.stateflag=0 AND tust.stateflag=0 and tust.role_id=1
 			and tui.company_id=#{companyId,jdbcType=INTEGER}
     </select>
     <!--获取员工公司下的所有员工-->
@@ -160,7 +160,7 @@
         from t_company_info tci LEFT JOIN t_user_info tui
         ON tui.company_id=tci.id LEFT JOIN t_user_tag tut
         ON tut.user_id=tui.id
-        WHERE tci.id in (
+        WHERE tui.stateflag=0 AND tci.stateflag=0 AND tci.id in (
         <if test="companyId !=null and userId == null">
             #{companyId,jdbcType=INTEGER}
         </if>
