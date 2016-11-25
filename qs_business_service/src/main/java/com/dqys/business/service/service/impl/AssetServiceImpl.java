@@ -9,6 +9,7 @@ import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
+import com.dqys.business.orm.constant.repay.RepayEnum;
 import com.dqys.business.orm.mapper.asset.*;
 import com.dqys.business.orm.mapper.business.BusinessObjReMapper;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
@@ -788,6 +789,8 @@ public class AssetServiceImpl implements AssetService {
             if (CommonUtil.isManage()) {
                 userId = null;
             }
+            assetQuery.setRepayStatus(RepayEnum.REPAY_STATUS_NO.getValue());//没有还完的
+            assetQuery.setOutTime(false);//没有超时
             assetQuery.setIds(lenderInfoMapper.lenderAllByObjectUserRelation(userId, ObjectTypeEnum.ASSETPACKAGE.getValue()));
             if (assetQuery.getIds() == null || assetQuery.getIds().size() == 0) {
                 assetQuery.setId(SysProperty.NULL_DATA_ID);

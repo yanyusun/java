@@ -147,10 +147,12 @@
             <if test="noTakePart">
                 AND is_collection = 0 AND is_lawyer = 0 AND is_agent = 0
             </if>
-            <if test="outTime">
+            <if test="outTime !=null and outTime==true">
                 AND CURRENT_TIME > end_at
             </if>
-
+            <if test="outTime !=null and outTime==false">
+                AND CURRENT_TIME &lt; end_at
+            </if>
 
             <if test="listSearch != null">
                 AND (memo LIKE CONCAT('%', #{listSearch,jdbcType=VARCHAR} ,'%')

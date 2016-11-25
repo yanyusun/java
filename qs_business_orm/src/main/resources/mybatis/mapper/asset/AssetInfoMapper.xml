@@ -78,8 +78,11 @@
                 AND entrust_name LIKE CONCAT('%', #{entrustName,jdbcType=VARCHAR},'%')
             </if>
 
-            <if test="outTime">
+            <if test="outTime !=null and outTime ==true">
                 <![CDATA[ AND CURRENT_TIMESTAMP >= end_at ]]>
+            </if>
+            <if test="outTime !=null and outTime ==false">
+                <![CDATA[ AND CURRENT_TIMESTAMP &lt; end_at ]]>
             </if>
             <if test="takePart">
                 AND (is_collection = 1 OR is_lawyer = 1 or is_agent = 1)
