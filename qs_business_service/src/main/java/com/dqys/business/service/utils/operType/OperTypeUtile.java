@@ -8,6 +8,7 @@ import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.*;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
+import com.dqys.business.service.exception.bean.BusinessDataException;
 import com.dqys.business.service.service.OperTypeService;
 import com.dqys.core.utils.NoSQLWithRedisTool;
 import org.springframework.beans.BeansException;
@@ -101,22 +102,22 @@ public class OperTypeUtile implements ApplicationContextAware {
      * 是处在待接收的状态
      * @return
      */
-    public static boolean isOnAccept(int objectType,int objectId,int userId){
+    public static boolean isOnAccept(int objectType,int objectId,int userId) throws BusinessDataException{
         ObjectUserRelationQuery query = new ObjectUserRelationQuery();
         query.setUserId(userId);
         query.setObjectType(objectType);
         query.setObjectId(objectId);
         List<ObjectUserRelation> objectUserRelationList=objectUserRelationMapper.list(query);
-        if(objectUserRelationList==null||objectUserRelationList.size()==0){
+        if(objectUserRelationList==null||objectUserRelationList.size()==0){//没有加入协作器
             return false;
-        }else if(objectUserRelationList.size()>1){
+        }else if(objectUserRelationList.size()>1){//数据异常
             //// TODO: 16-11-24 返回找到不止一个的错误信息
-            return false;
+            throw new BusinessDataException("后台数据异常信息异常",BusinessDataException.OBJECT_USER_RELATION＿NOTONE);
         }else{
             ObjectUserRelation objectUserRelation=objectUserRelationList.get(0);
             if(objectUserRelation.getStatus().intValue()== ObjectUserStatusEnum.accept.getValue()){
                 return true;
-            }else{
+            }else{//不在带接收阶段
                 return false;
             }
 

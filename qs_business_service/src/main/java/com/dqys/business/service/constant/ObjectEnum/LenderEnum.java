@@ -25,6 +25,7 @@ public enum LenderEnum {
     RESTART_APPLY(1116,"重新发布"),//重新申请
     PAUSE_RECOVER (1117,"暂停恢复"),
     INVALID_SET_RECOVER(1118,"无效恢复"),
+    DISPOSAL_FINISH(1119,"已处置"),
 
     //    以下为借款人状态
     STATUS_CHECK_PENDING(0,"待审核"),

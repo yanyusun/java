@@ -15,7 +15,7 @@ public enum PawnEnum {
     SUBROGATION_OUTSIDE(127, "将债权转到外网"),
     LAWYER_LETTER(129, "申请律师函"),
     REIMBURSEMENT(1210, "进行还款"),
-    DISPOSAL_FINISH(1211, "设为已处置"),
+    DISPOSAL_FINISH(1211, "已处置"),
     INVALID_SET_EFFECTIVELY(1212, "无效/设置为有效"),
     OPERATION_RECORD(1213, "查看操作记录"),
     ASSESSMENT_REPORT(1214, "评估报告"),
