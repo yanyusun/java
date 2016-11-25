@@ -176,6 +176,7 @@ public class MessageController {
         Message message = new Message();
         message.setStatus(status);
         message.setType(type);
+        message.setReceiveId(UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId(););
         return JsonResponseTool.success(messageService.selectCount(message));
     }
 
