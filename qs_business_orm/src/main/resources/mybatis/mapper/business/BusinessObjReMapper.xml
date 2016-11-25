@@ -74,7 +74,7 @@
         SELECT bor.object_id FROM t_business_obj_re bor LEFT JOIN object_user_relation our
         ON our.object_id=bor.object_id LEFT JOIN business b
         ON b.id=bor.business_id
-        WHERE bor.object_type = #{type,jdbcType=INTEGER} AND b.status = #{status,jdbcType=INTEGER}
+        WHERE bor.object_type = #{type,jdbcType=INTEGER} AND b.status = #{status,jdbcType=INTEGER} AND our.object_type=#{type,jdbcType=INTEGER}
         AND b.stateflag = 0 AND bor.stateflag = 0 AND bor.object_id not IN (
         SELECT tct.object_id FROM t_company_team tct LEFT JOIN t_company_team_re tctr
         ON tctr.company_team_id=tct.id LEFT JOIN t_user_tag tut
