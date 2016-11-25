@@ -144,14 +144,8 @@ public class MessageServiceImpl implements MessageService {
             companyTypeSend = companyTypeEnum.getName();
         }
         SmsUtil smsUtil = new SmsUtil();
-        String content = "";
-        if (MessageUtils.transMapToString(user, "companyName").equals(MessageUtils.transMapToString(map, "companyName"))) {
-            content = smsUtil.sendSms(SmsEnum.INVITE_COORDINATOR.getValue(), mobilePhone, realName, typeSend, realNameSend, objectName,
-                    coordinatorService.getObjectName(userTeam.getObjectType(), userTeam.getObjectId()), remark);
-        } else {
-            content = smsUtil.sendSms(SmsEnum.INVITE_DISTRIBUTOR.getValue(), mobilePhone, realName, companyNameSend,
-                    companyTypeSend, realNameSend, objectName, coordinatorService.getObjectName(userTeam.getObjectType(), userTeam.getObjectId()), remark);
-        }
+        String content = smsUtil.sendSms(SmsEnum.INVITE_COORDINATOR.getValue(), mobilePhone, realName, typeSend, realNameSend, objectName,
+                coordinatorService.getObjectName(userTeam.getObjectType(), userTeam.getObjectId()), remark);
         String title = coordinatorService.getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.INSIDE.getValue());
         Integer result = add(title, content, MessageUtils.transMapToInt(map, "userId"), uid, MessageBTEnum.INSIDE.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.INSIDE.getValue(),
                 MessageUtils.setOperUrl("/coordinator/isAccept?status=1&teammateId=" + teammateRe.getId() + "&operUserId=" + MessageUtils.transMapToInt(map, "userId"), null,

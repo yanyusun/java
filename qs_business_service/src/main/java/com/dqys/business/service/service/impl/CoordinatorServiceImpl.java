@@ -381,7 +381,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                 break;
             }
             if (flag == -4) {//第一个添加人员不是管理者
-                map.put("msg", "第一个不是管理者");
+                map.put("msg", "第二个不是管理者");
                 break;
             }
             if (flag == -1) {//已经加入过案组
