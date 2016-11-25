@@ -370,12 +370,10 @@ public class LenderServiceImpl implements LenderService {
         Integer lenderId = lenderInfo.getId();
         // 增加借款人相关联系人的身份信息
         for (ContactDTO contactDTO : contactDTOList) {
-            contactDTO.setMode(ObjectTypeEnum.LENDER.getValue().toString());
-            contactDTO.setModeId(lenderId);
-            Integer result = contactInfoMapper.insert(LenderServiceUtils.toContactInfo(contactDTO));
-            if (CommonUtil.checkResult(result)) {
-                // todo 联系人增加失败,请处理
-
+            if(contactDTO.isOper()){//客户有填写该相关联系人的信息
+                contactDTO.setMode(ObjectTypeEnum.LENDER.getValue().toString());
+                contactDTO.setModeId(lenderId);
+                contactInfoMapper.insert(LenderServiceUtils.toContactInfo(contactDTO));
             }
         }
         // 添加业务

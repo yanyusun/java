@@ -189,4 +189,12 @@ public class ContactDTO {
     public void setOtherAddress(String otherAddress) {
         this.otherAddress = otherAddress;
     }
+
+    public boolean isOper(){//该数据已被操作
+        if(name!=null||idcard!=null||mobile!=null||address!=null||mobile!=null||homeTel!=null||officeTel!=null||province!=null||province!=null||memo!=null){
+            return true;
+        }
+        return false;
+    }
+
 }

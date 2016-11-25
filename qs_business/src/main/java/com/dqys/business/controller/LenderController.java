@@ -86,12 +86,7 @@ public class LenderController {
                 lenderInsertDTO.getContactDTOList().get(0))) {
             return JsonResponseTool.paramErr("参数错误");
         }
-
         String data = LenderServiceUtils.checkData(lenderInsertDTO.getLenderDTO());
-        if(data != null){
-            return JsonResponseTool.paramErr(data);
-        }
-        data = LenderServiceUtils.checkData(lenderInsertDTO.getContactDTOList());
         if(data != null){
             return JsonResponseTool.paramErr(data);
         }
