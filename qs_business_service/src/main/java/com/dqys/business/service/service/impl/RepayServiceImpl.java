@@ -104,6 +104,8 @@ public class RepayServiceImpl implements RepayService {
             businessLogService.add(objectId, ObjectTypeEnum.PAWN.getValue(), PawnEnum.REIMBURSEMENT.getValue(), "还款操作", "", 0, 0);//操作日志
         } else if (objectType == RepayEnum.OBJECT_CASE.getValue().intValue()) {
             businessLogService.add(objectId, ObjectTypeEnum.CASE.getValue(), CaseEnum.REPAY_YET.getValue(), CaseEnum.REPAY_YET.getName(), "", 0, 0);//操作日志
+        } else if (objectType == RepayEnum.OBJECT_LENDER.getValue().intValue()) {
+            businessLogService.add(objectId, ObjectTypeEnum.LENDER.getValue(), LenderEnum.ADD_REIMBURSEMENT.getValue(), LenderEnum.ADD_REIMBURSEMENT.getName(), "", 0, 0);//操作日志
         }
         List<IOUInfo> ious = new ArrayList<>();
         ious = getIouInfos(objectId, objectType, ious);//根据对象类型获取所有借据
@@ -138,6 +140,8 @@ public class RepayServiceImpl implements RepayService {
         //只有是案件的时候还款金额赋值为借据本金利息总金额(还款类型：还利息加本金)
         if (objectType == RepayEnum.OBJECT_CASE.getValue().intValue() && repayType == RepayEnum.TYPE_A_P.getValue().intValue()) {
             money = paTotal.doubleValue();
+        } else if (objectType == RepayEnum.OBJECT_LENDER.getValue().intValue() && repayType == RepayEnum.TYPE_A_P.getValue().intValue()) {
+            money = paTotal.doubleValue();
         }
         //还款金额为0就返回无需还款操作
         if (money == 0) {
@@ -162,7 +166,7 @@ public class RepayServiceImpl implements RepayService {
         repay.setRepayFidType(objectType);
         repay.setRepayM(money);
         repay.setRepayBills(file);
-        setRepayLenderId(repay);
+        setRepayLenderId(repay);//设置还款记录中的借款人id
         repayMapper.insertSelective(repay);
         map.put("repayId", repay.getId());
         //对还款金额进行操作
@@ -262,6 +266,8 @@ public class RepayServiceImpl implements RepayService {
                 }
             }
 
+        } else if (repay.getRepayFidType() == RepayEnum.OBJECT_LENDER.getValue().intValue()) {
+            repay.setLenderId(repay.getRepayFid());
         }
     }
 
@@ -306,6 +312,12 @@ public class RepayServiceImpl implements RepayService {
         return false;
     }
 
+    /**
+     * @param objectId   对象id
+     * @param objectType 对象类型(1借据2抵押物3不限对象（objectId为借款人id）4案件)
+     * @param ious
+     * @return
+     */
     private List<IOUInfo> getIouInfos(Integer objectId, Integer objectType, List<IOUInfo> ious) {
         if (objectType == RepayEnum.OBJECT_IOU.getValue().intValue()) {//借据
             IOUInfo iou = iouInfoMapper.get(objectId);
@@ -353,13 +365,17 @@ public class RepayServiceImpl implements RepayService {
                     ious.add(info);
                 }
             }
+        } else if (objectType == RepayEnum.OBJECT_LENDER.getValue().intValue()) {
+            ious = iouInfoMapper.listByLenderId(objectId);
         }
         //去除重复的数据
         List<IOUInfo> iouInfos = new ArrayList<>();
         List<Integer> iouIds = new ArrayList<>();
-        for (IOUInfo info : ious) {
-            if (!iouIds.contains(info.getId())) {
-                iouInfos.add(info);
+        if (ious != null && ious.size() > 0) {
+            for (IOUInfo info : ious) {
+                if (info != null && !iouIds.contains(info.getId())) {
+                    iouInfos.add(info);
+                }
             }
         }
         return iouInfos;
@@ -753,6 +769,13 @@ public class RepayServiceImpl implements RepayService {
     public Map caseRepayMoney(Integer caseId, String remark, String file) throws Exception {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         Map map = repayMoney(userId, caseId, RepayEnum.OBJECT_CASE.getValue(), RepayEnum.TYPE_A_P.getValue(), RepayEnum.WAY_DIRECT.getValue(), null, remark, file);
+        return map;
+    }
+
+    @Override
+    public Map lenderRepayMoney(Integer lenderId, String remark, String file) throws Exception {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        Map map = repayMoney(userId, lenderId, RepayEnum.OBJECT_LENDER.getValue(), RepayEnum.TYPE_A_P.getValue(), RepayEnum.WAY_DIRECT.getValue(), null, remark, file);
         return map;
     }
 

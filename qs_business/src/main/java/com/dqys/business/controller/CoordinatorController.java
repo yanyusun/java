@@ -86,26 +86,30 @@ public class CoordinatorController {
      */
     @RequestMapping("/list")
     @ResponseBody
-    public JsonResponse coordinatorList(Integer companyId, Integer objectId, Integer type) throws Exception {
+    public JsonResponse coordinatorList(Integer companyId, Integer objectId, Integer type) {
         Integer userId = UserSession.getCurrent().getUserId();
         Map<String, Object> map = new HashMap<>();
-        if (objectId != null && type == 1) {
-            coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.LENDER.getValue(), userId);//查询借款人团队
-        } else if (objectId != null && type == 2) {
-            coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);//查询资产包团队
-        } else if (objectId != null && type == 3) {
-            coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.PAWN.getValue(), userId);//查询抵押物
-        } else if (objectId != null && type == 4) {
-            coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.ASSETSOURCE.getValue(), userId);//查询资产源
-        } else if (objectId != null && type == 5) {
-            coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.CASE.getValue(), userId);//查询资产源
-        } else {
-            return JsonResponseTool.paramErr("参数错误");
-        }
-        if (map.get("result").toString().equals("yes")) {
-            return JsonResponseTool.success(map);
-        } else {
-            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+        try {
+            if (objectId != null && type == 1) {
+                coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.LENDER.getValue(), userId);//查询借款人团队
+            } else if (objectId != null && type == 2) {
+                coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.ASSETPACKAGE.getValue(), userId);//查询资产包团队
+            } else if (objectId != null && type == 3) {
+                coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.PAWN.getValue(), userId);//查询抵押物
+            } else if (objectId != null && type == 4) {
+                coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.ASSETSOURCE.getValue(), userId);//查询资产源
+            } else if (objectId != null && type == 5) {
+                coordinatorService.readByLenderOrAsset(map, companyId, objectId, ObjectTypeEnum.CASE.getValue(), userId);//查询资产源
+            } else {
+                return JsonResponseTool.paramErr("参数错误");
+            }
+            if (map.get("result").toString().equals("yes")) {
+                return JsonResponseTool.success(map);
+            } else {
+                return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+            }
+        } catch (Exception e) {
+            return JsonResponseTool.success(null);
         }
     }
 

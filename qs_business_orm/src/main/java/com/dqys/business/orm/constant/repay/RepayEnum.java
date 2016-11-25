@@ -8,6 +8,7 @@ public enum RepayEnum {
     OBJECT_PAWN(2, "抵押物"),
     OBJECT_UNLIMITED(3, "不限对象"),
     OBJECT_CASE(4, "案件"),
+    OBJECT_LENDER(5, "借款人"),
     TYPE_ACCRUAL(0, "还利息"),
     TYPE_PRINCIPAL(1, "还本金"),
     TYPE_A_P(2, "还利息加本金"),

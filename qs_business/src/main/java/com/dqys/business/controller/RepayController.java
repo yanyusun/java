@@ -356,13 +356,13 @@ public class RepayController {
      * @apiSampleRequest repay/caseRepayMoney
      * @apiParam {int} caseId 案件id
      * @apiParam {string} [remark] 备注
-     * @apiParam {string} file 单据图片
+     * @apiParam {string} [file] 单据图片
      * @apiGroup Repay
      */
     @RequestMapping("/caseRepayMoney")
     @ResponseBody
-    public JsonResponse caseRepayMoney(@RequestParam Integer caseId, @RequestParam String file, String remark) throws Exception {
-        if ("".equals(file.trim())) {
+    public JsonResponse caseRepayMoney(@RequestParam Integer caseId, String file, String remark) throws Exception {
+        if (file != null && "".equals(file.trim())) {
             return JsonResponseTool.failure("请上传单据");
         }
         Map map = repayService.caseRepayMoney(caseId, remark, file);
@@ -373,5 +373,27 @@ public class RepayController {
         }
     }
 
-
+    /**
+     * @return
+     * @api {post} repay/lenderRepayMoney 借款人已处置操作
+     * @apiName repay/lenderRepayMoney
+     * @apiSampleRequest repay/lenderRepayMoney
+     * @apiParam {int} lenderId 借款人id
+     * @apiParam {string} [remark] 备注
+     * @apiParam {string} [file] 单据图片
+     * @apiGroup Repay
+     */
+    @RequestMapping("/lenderRepayMoney")
+    @ResponseBody
+    public JsonResponse lenderRepayMoney(@RequestParam Integer lenderId, String file, String remark) throws Exception {
+        if (file != null && "".equals(file.trim())) {
+            return JsonResponseTool.failure("请上传单据");
+        }
+        Map map = repayService.lenderRepayMoney(lenderId, remark, file);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+        }
+    }
 }
