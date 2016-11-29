@@ -40,6 +40,7 @@ import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.DateFormatTool;
@@ -97,6 +98,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     private ZcyService zcyService;
     @Autowired
     private ContactInfoMapper contactInfoMapper;
+    @Autowired
+    private UserService userService;
 
     @Override
     public void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType, Integer userid) {
@@ -648,16 +651,22 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         Integer sendUserId = userId;//发送
         Integer recUserId = operUserId;//接收
         if (teammateRe.getJoinType() == TeammateReEnum.JOIN_TYPE_PASSIVITY.getValue()) {//被邀请
-            Map userC = coordinatorMapper.getUserAndCompanyByUserId(recUserId);
-            Map operC = coordinatorMapper.getUserAndCompanyByUserId(sendUserId);
+            UserDetail userC = coordinatorMapper.getUserDetail(recUserId);
+            UserDetail operC = coordinatorMapper.getUserDetail(sendUserId);
             if (status == 1) {//同意
-                content = smsUtil.sendSms(SmsEnum.INVITE_COORDINATOR_YES.getValue(), MessageUtils.transMapToString(userC, "mobile"),
-                        MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(operC, "realName"),
-                        ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(), getObjectName(userTeam.getObjectType(), userTeam.getObjectId()));
+                content = smsUtil.sendSms(SmsEnum.INVITE_COORDINATOR_YES.getValue(), userC.getMobile(),
+                        userC.getRealName(),
+                        userService.getRoleNameToString(operC.getUserId()),
+                        operC.getRealName(),
+                        ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(),
+                        getObjectName(userTeam.getObjectType(), userTeam.getObjectId()));
             } else if (status == 2) {//拒绝
-                content = smsUtil.sendSms(SmsEnum.INVITE_COORDINATOR_NO.getValue(), MessageUtils.transMapToString(userC, "mobile"),
-                        MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(operC, "realName"),
-                        ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(), getObjectName(userTeam.getObjectType(), userTeam.getObjectId()));
+                content = smsUtil.sendSms(SmsEnum.INVITE_COORDINATOR_NO.getValue(), userC.getMobile(),
+                        userC.getRealName(),
+                        userService.getRoleNameToString(operC.getUserId()),
+                        operC.getRealName(),
+                        ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(),
+                        getObjectName(userTeam.getObjectType(), userTeam.getObjectId()));
             }
         } else if (teammateRe.getJoinType() == TeammateReEnum.JOIN_TYPE_INITIATIVE.getValue()) {//主动加入，管理员操作
             recUserId = teammateRe.getUserId();//因为主动加入，所以审核同意发送的是管理员，接收的为协作器成员
@@ -890,11 +899,16 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             for (Map receive_id : receive_ids) {
                 Integer rec = MessageUtils.transMapToInt(receive_id, "user_id");
                 if (rec != null && !userId.equals(rec)) {
-                    Map userC = coordinatorMapper.getUserAndCompanyByUserId(rec);
-                    Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);
-                    String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
-                            CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "realName"),
-                            ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), getObjectName(objectType, objectId));
+                    UserDetail userC = coordinatorMapper.getUserDetail(rec);
+                    UserDetail oper = coordinatorMapper.getUserDetail(userId);
+                    String content = smsUtil.sendSms(code, userC.getMobile(),
+                            userC.getRealName(),
+                            userService.getCompayTypeToString(oper.getUserId()),
+                            oper.getCompanyName(),
+                            userService.getRoleNameToString(oper.getUserId()),
+                            oper.getRealName(),
+                            ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
+                            getObjectName(objectType, objectId));
                     String title = getMessageTitle(objectId, objectType, MessageBTEnum.BUSINESS_PAUSE.getValue());
                     messageService.add(title, content, userId, rec, MessageBTEnum.BUSINESS_PAUSE.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS_PAUSE.getValue(), "");//添加通知消息
                 }
@@ -1011,11 +1025,14 @@ public class CoordinatorServiceImpl implements CoordinatorService {
                         Map res = isAccept(teammateRe.getId(), status, userId, operUserId);//需要进行一个同意操作
                         if (MessageUtils.transMapToString(res, "result").equals("yes")) {
                             SmsUtil smsUtil = new SmsUtil();//发送短信通知
-                            Map userC = coordinatorMapper.getUserAndCompanyByUserId(teamUserId);
-                            Map oper = coordinatorMapper.getUserAndCompanyByUserId(userId);
-                            String content = smsUtil.sendSms(SmsEnum.REPLACE.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
-                                    MessageUtils.transMapToString(oper, "realName"),
-                                    ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(), getObjectName(userTeam.getObjectType(), userTeam.getObjectId()), TeammateReEnum.get(teammateRe.getType()));
+                            UserDetail userC = coordinatorMapper.getUserDetail(teamUserId);//原来参与人员
+                            UserDetail oper = coordinatorMapper.getUserDetail(operUserId);//发起邀请的人员
+                            String content = smsUtil.sendSms(SmsEnum.REPLACE.getValue(), userC.getMobile(),
+                                    userC.getRealName(),
+                                    userService.getRoleNameToString(operUserId),
+                                    oper.getRealName(),
+                                    ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(),
+                                    getObjectName(userTeam.getObjectType(), userTeam.getObjectId()));
                             String title = getMessageTitle(userTeam.getObjectId(), userTeam.getObjectType(), MessageBTEnum.REPLACE.getValue());
                             messageService.add(title, content, userId, teamUserId, MessageBTEnum.REPLACE.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.REPLACE.getValue(), "");//添加通知消息
                             map.put("result", "yes");
@@ -1121,7 +1138,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(objectType)) {//资产包
             AssetInfo info = assetInfoMapper.get(objectId);
             if (info != null) {
-                name = info.getAssetNo() == null ? "" : info.getAssetNo();
+                name = (info.getName() == null ? "" : info.getName()) + (info.getAssetNo() == null ? "" : info.getAssetNo());
             }
         } else if (ObjectTypeEnum.PAWN.getValue().equals(objectType)) {//抵押物
             PawnInfo info = pawnInfoMapper.get(objectId);

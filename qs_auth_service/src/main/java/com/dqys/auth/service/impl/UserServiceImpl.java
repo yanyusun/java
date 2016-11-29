@@ -5,10 +5,7 @@ import com.dqys.auth.orm.dao.facade.TMessageMapper;
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
-import com.dqys.auth.orm.pojo.Message;
-import com.dqys.auth.orm.pojo.TCompanyInfo;
-import com.dqys.auth.orm.pojo.TUserInfo;
-import com.dqys.auth.orm.pojo.TUserTag;
+import com.dqys.auth.orm.pojo.*;
 import com.dqys.auth.orm.query.TUserTagQuery;
 import com.dqys.auth.service.constant.MailVerifyTypeEnum;
 import com.dqys.auth.service.dto.UserDTO;
@@ -52,6 +49,7 @@ public class UserServiceImpl implements UserService {
     private TCompanyInfoMapper tCompanyInfoMapper;
     @Autowired
     private TMessageMapper messageMapper;
+
 
     @Override
     public ServiceResult<Integer> validateUser(String account, String mobile, String email) throws Exception {
@@ -257,9 +255,13 @@ public class UserServiceImpl implements UserService {
             if (tag != null) {
                 TUserInfo info = tUserInfoMapper.selectByPrimaryKey(tag.getUserId());
                 SmsUtil smsUtil = new SmsUtil();
-                String content = smsUtil.sendSms(SmsEnum.REGISTER_AUDIT.getValue(), info.getMobile(), info.getRealName(),
-                        companyInfo.getCompanyName() == null ? "" : companyInfo.getCompanyName(), CompanyTypeEnum.getCompanyTypeEnum(companyInfo.getType()).getName(),
-                        userInfo.getRealName() == null ? "" : userInfo.getRealName(), userInfo.getMobile());
+                String content = smsUtil.sendSms(SmsEnum.REGISTER_AUDIT.getValue(), info.getMobile(),
+                        info.getRealName(),
+                        getCompayTypeToString(userInfo.getId()),
+                        companyInfo.getCompanyName() == null ? "" : companyInfo.getCompanyName(),
+                        getRoleNameToString(userInfo.getId()),
+                        userInfo.getRealName() == null ? "" : userInfo.getRealName(),
+                        userInfo.getMobile());
                 String operUrl = MessageUtils.setOperUrl("/api/user/registerAudit?status=1&userId=" + userId, null,
                         "/api/user/registerAudit?status=2&userId=" + userId, null, null);
                 Message message = new Message("注册请求认证帐号:" + userInfo.getEmail(), content, userId, info.getId(), null, null, MessageBTEnum.register.getValue(), null, 0, operUrl, 0);
@@ -339,5 +341,36 @@ public class UserServiceImpl implements UserService {
         } else {
             return null;
         }
+    }
+
+    //人员角色
+    @Override
+    public String getRoleNameToString(Integer userId) {
+        UserDetail detail1 = tUserInfoMapper.getUserDetail(userId);
+        String roleName = "所属人";
+        if (detail1.getRold() == RoleTypeEnum.ADMIN.getValue().intValue()) {
+            roleName = RoleTypeEnum.ADMIN.getName();
+        } else if (detail1.getRold() == RoleTypeEnum.REGULATOR.getValue().intValue()) {
+            roleName = RoleTypeEnum.REGULATOR.getName();
+        }
+        return roleName;
+    }
+
+    //参与方类型
+    @Override
+    public String getCompayTypeToString(Integer userId) {
+        UserDetail detail = tUserInfoMapper.getUserDetail(userId);
+        if (detail.getUserType() == UserInfoEnum.USER_TYPE_ADMIN.getValue().intValue()) {
+            return UserInfoEnum.USER_TYPE_ADMIN.getName();
+        } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_ENTRUST.getValue().intValue()) {
+            return UserInfoEnum.USER_TYPE_ENTRUST.getName();
+        } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_COLLECTION.getValue().intValue()) {
+            return UserInfoEnum.USER_TYPE_COLLECTION.getName();
+        } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_JUDICIARY.getValue().intValue()) {
+            return UserInfoEnum.USER_TYPE_JUDICIARY.getName();
+        } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().intValue()) {
+            return UserInfoEnum.USER_TYPE_INTERMEDIARY.getName();
+        }
+        return "";
     }
 }

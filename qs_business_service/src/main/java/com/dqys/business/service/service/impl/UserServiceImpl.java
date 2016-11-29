@@ -14,9 +14,10 @@ import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.company.OrganizationMapper;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.pojo.company.Organization;
+import com.dqys.business.orm.pojo.coordinator.UserDetail;
 import com.dqys.business.orm.query.company.OrganizationQuery;
 import com.dqys.business.service.constant.MessageEnum;
-import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.constant.OrganizationTypeEnum;
 import com.dqys.business.service.dto.excel.ExcelMessage;
 import com.dqys.business.service.dto.user.UserFileDTO;
@@ -41,7 +42,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.UnexpectedRollbackException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -281,13 +281,15 @@ public class UserServiceImpl implements UserService {
         Integer uid = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         Map map = new HashMap<>();
         map.put("result", "no");
-        Map userC = coordinatorMapper.getUserAndCompanyByUserId(userId);
-        Map operC = coordinatorMapper.getUserAndCompanyByUserId(uid);
+        UserDetail userC = coordinatorMapper.getUserDetail(userId);
+        UserDetail operC = coordinatorMapper.getUserDetail(uid);
         SmsUtil smsUtil = new SmsUtil();
-        Integer result = messageService.add(MessageUtils.transMapToString(operC, "realName") + "给您的留言信息", content, uid, userId, "", MessageEnum.SERVE.getValue(), null, "");
+        Integer result = messageService.add(operC.getRealName() + "给您的留言信息", content, uid, userId, "", MessageEnum.SERVE.getValue(), null, "");
         if (result > 0) {
-            smsUtil.sendSms(SmsEnum.LEAVE_WORD.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
-                    MessageUtils.transMapToString(operC, "companyName"), RoleTypeEnum.get(MessageUtils.transMapToInt(operC, "rold")), MessageUtils.transMapToString(operC, "realName"));
+            smsUtil.sendSms(SmsEnum.LEAVE_WORD.getValue(), userC.getMobile(),
+                    userC.getRealName(),
+                    getRoleNameToString(operC.getUserId()),
+                    operC.getRealName());
             map.put("result", "yes");
         } else {
             map.put("msg", "请稍后再试");
@@ -319,21 +321,13 @@ public class UserServiceImpl implements UserService {
                 }
                 if (flag && tCompanyInfoMapper.updateByPrimaryKeySelective(company) > 0) {
                     map.put("result", "yes");
-                    Map userC = coordinatorMapper.getUserAndCompanyByUserId(userId);
-                    Integer userType = MessageUtils.transMapToInt(userC, "userType");
-                    String userTypeName = "";
-                    if (userType == UserInfoEnum.USER_TYPE_ENTRUST.getValue().intValue()) {
-                        userTypeName = "委托方";
-                    } else if (userType == UserInfoEnum.USER_TYPE_COLLECTION.getValue().intValue()) {
-                        userTypeName = "处置号-催收";
-                    } else if (userType == UserInfoEnum.USER_TYPE_JUDICIARY.getValue().intValue()) {
-                        userTypeName = "处置号-律所";
-                    } else if (userType == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().intValue()) {
-                        userTypeName = "处置号-中介";
-                    }
+                    UserDetail userC = coordinatorMapper.getUserDetail(userId);
                     SmsUtil sms = new SmsUtil();
-                    String content = sms.sendSms(SmsEnum.REGISTER_AUDIT_RESULT.getValue(), MessageUtils.transMapToString(userC, "mobile"),
-                            MessageUtils.transMapToString(userC, "realName"), userTypeName, MessageUtils.transMapToString(userC, "companyName"), text);
+                    String content = sms.sendSms(SmsEnum.REGISTER_AUDIT_RESULT.getValue(), userC.getMobile(),
+                            userC.getRealName(),
+                            getCompayTypeToString(userC.getUserId()),
+                            userC.getCompanyName(),
+                            text);
                     messageService.add("注册审核结果答复", content, operId, userId, "", MessageEnum.SERVE.getValue(), null, "");
                 }
             }
@@ -382,6 +376,39 @@ public class UserServiceImpl implements UserService {
         tUserInfoMapper.updateAccountUse(userIds, useStatus);
         map.put("result", "yes");
         return map;
+    }
+
+    @Override
+    public String getRoleNameToString(Integer userId) {
+        UserDetail detail1 = coordinatorMapper.getUserDetail(userId);
+        String roleName = "所属人";
+        if (detail1 != null) {
+            if (detail1.getRoleType() == RoleTypeEnum.ADMIN.getValue().intValue()) {
+                roleName = RoleTypeEnum.ADMIN.getName();
+            } else if (detail1.getRoleType() == RoleTypeEnum.REGULATOR.getValue().intValue()) {
+                roleName = RoleTypeEnum.REGULATOR.getName();
+            }
+        }
+        return roleName;
+    }
+
+    @Override
+    public String getCompayTypeToString(Integer userId) {
+        UserDetail detail = coordinatorMapper.getUserDetail(userId);
+        if (detail != null) {
+            if (detail.getUserType() == UserInfoEnum.USER_TYPE_ADMIN.getValue().intValue()) {
+                return UserInfoEnum.USER_TYPE_ADMIN.getName();
+            } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_ENTRUST.getValue().intValue()) {
+                return UserInfoEnum.USER_TYPE_ENTRUST.getName();
+            } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_COLLECTION.getValue().intValue()) {
+                return UserInfoEnum.USER_TYPE_COLLECTION.getName();
+            } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_JUDICIARY.getValue().intValue()) {
+                return UserInfoEnum.USER_TYPE_JUDICIARY.getName();
+            } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().intValue()) {
+                return UserInfoEnum.USER_TYPE_INTERMEDIARY.getName();
+            }
+        }
+        return "";
     }
 
     //邮箱激活通知

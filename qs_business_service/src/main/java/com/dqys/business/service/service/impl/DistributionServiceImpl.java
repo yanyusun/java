@@ -34,10 +34,8 @@ import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.orm.query.company.CompanyTeamReQuery;
-import com.dqys.core.constant.*;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
-import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.dto.company.BusinessServiceDTO;
 import com.dqys.business.service.dto.company.CompanyTeamReDTO;
@@ -47,6 +45,7 @@ import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.company.CompanyServiceUtils;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.base.SysProperty;
+import com.dqys.core.constant.*;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.*;
@@ -108,6 +107,8 @@ public class DistributionServiceImpl implements DistributionService {
     private ContactInfoMapper contactInfoMapper;
     @Autowired
     private BusinessService businessService;
+    @Autowired
+    private UserService userService;
 
     @Override
     public DistributionDTO listDistribution_tx(Integer type, Integer id) throws BusinessLogException {
@@ -584,13 +585,14 @@ public class DistributionServiceImpl implements DistributionService {
                 SmsUtil smsUtil = new SmsUtil();
                 String[] msg = {
                         platformDetail.getName(),
+                        userService.getCompayTypeToString(userInfo.getId()),
                         companyDetailInfo.getCompanyName(),
-                        UserInfoEnum.getUserInfoEnum(companyDetailInfo.getType()).getName(),
+                        userService.getRoleNameToString(userInfo.getId()),
                         userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
                         coordinatorService.getObjectName(companyTeam.getObjectType(), companyTeam.getObjectId())
                 };
-                smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_CODE, platformDetail.getPhone(), msg); // 平台接收
+                smsUtil.sendSms(SmsEnum.SMS_DISTRIBUTION_JOIN_CODE.getValue(), platformDetail.getPhone(), msg); // 平台接收
                 // 添加消息
                 String code = ""; // 对象编号
                 if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
@@ -609,7 +611,7 @@ public class DistributionServiceImpl implements DistributionService {
                                 + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
                                 + code
                 ); // 业务类型 对象类型 对象编号
-                message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_JOIN_CODE, msg));
+                message.setContent(smsUtil.getSendContent(SmsEnum.SMS_DISTRIBUTION_JOIN_CODE.getValue(), msg));
                 message.setSenderId(userInfo.getId());
                 message.setReceiveId(platformDetail.getUserId()); // 平台接收审核
                 message.setLabel(null);
@@ -701,7 +703,7 @@ public class DistributionServiceImpl implements DistributionService {
             UserDetail detail = coordinatorMapper.getUserDetail(companyDetailInfo1.getUserId());
             businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_ADD_THEIR.getValue(),
                     "", "邀请加入清收案组，被邀请公司：" + detail.getCompanyName() + ",被邀请人：" + detail.getRealName(), 0, 0);
-            String roleName = getRoleNameToString(UserSession.getCurrent().getUserId());
+            String roleName = userService.getRoleNameToString(UserSession.getCurrent().getUserId());
             // 发送短信提醒
             SmsUtil smsUtil = new SmsUtil();
             String[] msg = {
@@ -753,33 +755,6 @@ public class DistributionServiceImpl implements DistributionService {
         }
     }
 
-    //人员角色
-    private String getRoleNameToString(Integer userId) {
-        UserDetail detail1 = coordinatorMapper.getUserDetail(userId);
-        String roleName = "所属人";
-        if (detail1.getRoleType() == RoleTypeEnum.ADMIN.getValue().intValue()) {
-            roleName = RoleTypeEnum.ADMIN.getName();
-        } else if (detail1.getRoleType() == RoleTypeEnum.REGULATOR.getValue().intValue()) {
-            roleName = RoleTypeEnum.REGULATOR.getName();
-        }
-        return roleName;
-    }
-
-    private String getCompayTypeToString(Integer userId) {
-        UserDetail detail = coordinatorMapper.getUserDetail(userId);
-        if (detail.getUserType() == UserInfoEnum.USER_TYPE_ADMIN.getValue().intValue()) {
-            return UserInfoEnum.USER_TYPE_ADMIN.getName();
-        } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_ENTRUST.getValue().intValue()) {
-            return UserInfoEnum.USER_TYPE_ENTRUST.getName();
-        } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_COLLECTION.getValue().intValue()) {
-            return UserInfoEnum.USER_TYPE_COLLECTION.getName();
-        } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_JUDICIARY.getValue().intValue()) {
-            return UserInfoEnum.USER_TYPE_JUDICIARY.getName();
-        } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().intValue()) {
-            return UserInfoEnum.USER_TYPE_INTERMEDIARY.getName();
-        }
-        return "";
-    }
 
     private boolean setDisposalTo(Integer companyTeamId) {
         Integer count = companyTeamReMapper.findNumByDisposal(companyTeamId);
@@ -855,19 +830,18 @@ public class DistributionServiceImpl implements DistributionService {
                 SmsUtil smsUtil = new SmsUtil();
                 String[] msg = {
                         applicant.getRealName(),
-                        userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
                         coordinatorService.getObjectName(companyTeam.getObjectType(), companyTeam.getObjectId())
                 };
                 Message message = new Message();
                 if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
-                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_PASS_CODE, applicant.getMobile(), msg); // 申请人接收
-                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_PASS_CODE, creator.getMobile(), msg); // 创建人接收
-                    message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_JOIN_PASS_CODE, msg));
+                    smsUtil.sendSms(SmsEnum.DISTRIBUTION_JOIN_YES.getValue(), applicant.getMobile(), msg); // 申请人接收
+                    smsUtil.sendSms(SmsEnum.DISTRIBUTION_JOIN_YES.getValue(), creator.getMobile(), msg); // 创建人接收
+                    message.setContent(smsUtil.getSendContent(SmsEnum.DISTRIBUTION_JOIN_YES.getValue(), msg));
                 } else {
-                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_REFUSE_CODE, applicant.getMobile(), msg); // 申请人接收
-                    smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_JOIN_REFUSE_CODE, creator.getMobile(), msg); // 创建人接收
-                    message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_JOIN_REFUSE_CODE, msg));
+                    smsUtil.sendSms(SmsEnum.DISTRIBUTION_JOIN_NO.getValue(), applicant.getMobile(), msg); // 申请人接收
+                    smsUtil.sendSms(SmsEnum.DISTRIBUTION_JOIN_NO.getValue(), creator.getMobile(), msg); // 创建人接收
+                    message.setContent(smsUtil.getSendContent(SmsEnum.DISTRIBUTION_JOIN_NO.getValue(), msg));
                 }
                 // 添加消息
                 message.setTitle(MessageEnum.TASK.getName() + " > "
@@ -896,9 +870,9 @@ public class DistributionServiceImpl implements DistributionService {
                 SmsUtil smsUtil = new SmsUtil();
                 String[] msg = {
                         creator.getRealName(),
-                        getCompayTypeToString(userInfo.getId()),
+                        userService.getCompayTypeToString(userInfo.getId()),
                         companyDetailInfo.getCompanyName(),
-                        getRoleNameToString(userInfo.getId()),
+                        userService.getRoleNameToString(userInfo.getId()),
                         userInfo.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
                         coordinatorService.getObjectName(companyTeam.getObjectType(), companyTeam.getObjectId())
@@ -1060,8 +1034,8 @@ public class DistributionServiceImpl implements DistributionService {
                     coordinatorService.getObjectName(companyTeam.getObjectType(), companyTeam.getObjectId())
             };
             Message message = new Message();
-            smsUtil.sendSms(SysProperty.SMS_OUT_CODE, creator.getMobile(), msg);
-            message.setContent(smsUtil.getSendContent(SysProperty.SMS_OUT_CODE, msg));
+            smsUtil.sendSms(SmsEnum.SMS_OUT_CODE.getValue(), creator.getMobile(), msg);
+            message.setContent(smsUtil.getSendContent(SmsEnum.SMS_OUT_CODE.getValue(), msg));
 
             // 去除公司的协作器
             coordinatorService.delCoordinator(companyTeamRe.getAcceptCompanyId(),
@@ -1442,13 +1416,18 @@ public class DistributionServiceImpl implements DistributionService {
                                   Integer objectType, Integer flowId, Integer flowType, String operUrl) {
 
         SmsUtil smsUtil = new SmsUtil();
-        Map userC = coordinatorMapper.getUserAndCompanyByUserId(receiveUserId);
-        Map oper = coordinatorMapper.getUserAndCompanyByUserId(businessRequestId);
-        String content = smsUtil.sendSms(SmsEnum.ADD_FLOW_COMPANY.getValue(),
-                MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
-                CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "companyName"), MessageUtils.transMapToString(oper, "realName"),
-                ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
-                ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId));
+        UserDetail userC = coordinatorMapper.getUserDetail(receiveUserId);
+        UserDetail oper = coordinatorMapper.getUserDetail(businessRequestId);
+        String content = smsUtil.sendSms(SmsEnum.ADD_FLOW_COMPANY.getValue(), userC.getMobile(),
+                userC.getRealName(),
+                userService.getCompayTypeToString(oper.getUserId()),
+                oper.getCompanyName(),
+                userService.getRoleNameToString(oper.getUserId()),
+                oper.getRealName(),
+                ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
+                coordinatorService.getObjectName(objectType, objectId),
+                ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
+                coordinatorService.getObjectName(flowType, flowId));
         String title = coordinatorService.getMessageTitle(flowId, flowType, MessageBTEnum.COMPANY_BETWEEN.getValue());
         messageService.add(title, content, userId, receiveUserId, "", MessageEnum.TASK.getValue(), MessageBTEnum.COMPANY_BETWEEN.getValue(), operUrl);
     }

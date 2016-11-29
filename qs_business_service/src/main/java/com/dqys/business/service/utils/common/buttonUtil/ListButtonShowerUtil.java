@@ -1,7 +1,7 @@
 package com.dqys.business.service.utils.common.buttonUtil;
 
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
-import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.exception.bean.UndefinitionTypeException;
 import com.dqys.core.constant.RoleTypeEnum;
