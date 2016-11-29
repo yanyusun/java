@@ -31,6 +31,7 @@
             </if>
             <if test="type != null">
                 AND type = #{type,jdbcType=VARCHAR}
+            </if>
             <if test="pid != null">
                 AND pid = #{pid,jdbcType=INTEGER}
             </if>
