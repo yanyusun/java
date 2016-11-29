@@ -370,7 +370,7 @@ public class LenderServiceImpl implements LenderService {
         Integer lenderId = lenderInfo.getId();
         // 增加借款人相关联系人的身份信息
         for (ContactDTO contactDTO : contactDTOList) {
-            if(contactDTO.isOper()){//客户有填写该相关联系人的信息
+            if (contactDTO.isOper()) {//客户有填写该相关联系人的信息
                 contactDTO.setMode(ObjectTypeEnum.LENDER.getValue().toString());
                 contactDTO.setModeId(lenderId);
                 contactInfoMapper.insert(LenderServiceUtils.toContactInfo(contactDTO));
@@ -611,6 +611,19 @@ public class LenderServiceImpl implements LenderService {
             }
         }
         return JsonResponseTool.success(selectonDTOList);
+    }
+
+    @Override
+    public StatisticsLender getCountByStatistics(Integer objectId, Integer objectType) {
+        StatisticsLender statisticsLender = new StatisticsLender();
+        List<Integer> lenderIds = new ArrayList<>();
+        if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue().intValue()) {
+            lenderIds = lenderInfoMapper.selectByAssetId(objectId);//根据资产包，获取底下所有借款人id
+        }
+        if (objectType == ObjectTypeEnum.LENDER.getValue().intValue()) {
+
+        }
+        return null;
     }
 
     /**

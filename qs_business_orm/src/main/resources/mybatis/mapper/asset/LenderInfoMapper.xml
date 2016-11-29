@@ -699,4 +699,8 @@
         GROUP BY bor.object_id
     </select>
 
+    <select id="selectByAssetId" resultType="int">
+      SELECT len.id FROM bt_lender len WHERE len.asset_id=#{assetId}
+    </select>
+
 </mapper>

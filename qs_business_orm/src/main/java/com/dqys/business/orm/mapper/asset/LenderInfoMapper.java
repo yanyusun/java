@@ -85,5 +85,11 @@ public interface LenderInfoMapper {
      */
     LenderInfo getLenderBySumMoney(Integer assetId);
 
-    List<Integer> findObjectIdByLender(@Param("userId") Integer userId, @Param("objectType") Integer objectType,@Param("roleType") Integer roleType);
+    List<Integer> findObjectIdByLender(@Param("userId") Integer userId, @Param("objectType") Integer objectType, @Param("roleType") Integer roleType);
+
+    /**
+     * 根据资产包id，获取底下所有借款人id
+     */
+
+    List<Integer> selectByAssetId(Integer assetId);
 }

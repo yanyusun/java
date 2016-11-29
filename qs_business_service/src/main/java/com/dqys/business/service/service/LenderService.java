@@ -2,6 +2,7 @@ package com.dqys.business.service.service;
 
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
+import com.dqys.business.service.dto.asset.StatisticsLender;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.LenderListQuery;
 import com.dqys.core.model.JsonResponse;
@@ -17,7 +18,7 @@ public interface LenderService {
      * 条件获取借款联系人基础信息
      *
      * @param lenderListQuery 导航栏搜索条件
-     * @param type 什么类型的导航栏
+     * @param type            什么类型的导航栏
      * @return
      */
     JsonResponse queryList(LenderListQuery lenderListQuery, Integer type);
@@ -71,4 +72,13 @@ public interface LenderService {
      * @return
      */
     JsonResponse listLender(Integer id);
+
+    /**
+     * 返回对像数量
+     *
+     * @param objectId
+     * @param objectType
+     * @return
+     */
+    StatisticsLender getCountByStatistics(Integer objectId, Integer objectType);
 }
