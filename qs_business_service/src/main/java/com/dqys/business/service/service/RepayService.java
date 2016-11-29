@@ -103,4 +103,15 @@ public interface RepayService {
      * @return
      */
     Map lenderRepayMoney(Integer lenderId, String remark, String file) throws Exception;
+
+    /**
+     * 抵押物或借据已处置，把对应金额全部还完操作
+     *
+     * @param objectId
+     * @param objectType
+     * @param remark
+     * @param file
+     * @return
+     */
+    Map pawnOrIouRepayMoney(Integer objectId, Integer objectType, String remark, String file) throws Exception;
 }

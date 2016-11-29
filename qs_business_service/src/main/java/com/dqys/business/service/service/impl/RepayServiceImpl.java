@@ -85,6 +85,12 @@ public class RepayServiceImpl implements RepayService {
     @Override
     public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
         Map map = new HashMap<>();
+        //还款金额为0就返回无需还款操作
+        if (money <= 0) {
+            map.put("result", "no");
+            map.put("msg", "还款金额输入有误，无效还款");
+            return map;
+        }
         if (file != null && !"".equals(file)) {
             try {
                 if (!FileTool.saveFileSync(file)) {
@@ -137,17 +143,17 @@ public class RepayServiceImpl implements RepayService {
         }
         Repay repay = new Repay();
         BigDecimal paTotal = principalTotal.add(accrualTotal);//本金利息总和
-        //只有是案件的时候还款金额赋值为借据本金利息总金额(还款类型：还利息加本金)
-        if (objectType == RepayEnum.OBJECT_CASE.getValue().intValue() && repayType == RepayEnum.TYPE_A_P.getValue().intValue()) {
+        //针对特定情况下的还款操作：对案件、借款人、抵押物或借据的已处置操作，就是把相应借据的金额全部还完。
+        if (objectType == RepayEnum.OBJECT_CASE.getValue().intValue() && repayType == RepayEnum.TYPE_A_P.getValue().intValue()
+                && repayWay == RepayEnum.WAY_DIRECT.getValue()) {
             money = paTotal.doubleValue();
-        } else if (objectType == RepayEnum.OBJECT_LENDER.getValue().intValue() && repayType == RepayEnum.TYPE_A_P.getValue().intValue()) {
+        } else if (objectType == RepayEnum.OBJECT_LENDER.getValue().intValue() && repayType == RepayEnum.TYPE_A_P.getValue().intValue()
+                && repayWay == RepayEnum.WAY_DIRECT.getValue()) {
             money = paTotal.doubleValue();
-        }
-        //还款金额为0就返回无需还款操作
-        if (money == 0) {
-            map.put("result", "no");
-            map.put("msg", "还款金额是为0，无效还款");
-            return map;
+        } else if (money == null && repayType == RepayEnum.TYPE_A_P.getValue().intValue() && repayWay == RepayEnum.WAY_DIRECT.getValue()) {
+            money = paTotal.doubleValue();
+        } else {
+            money = 0.0;
         }
         //判断所得金额是否大于还款金额
         if (repayType == RepayEnum.TYPE_PRINCIPAL.getValue().intValue()) {
@@ -776,6 +782,13 @@ public class RepayServiceImpl implements RepayService {
     public Map lenderRepayMoney(Integer lenderId, String remark, String file) throws Exception {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         Map map = repayMoney(userId, lenderId, RepayEnum.OBJECT_LENDER.getValue(), RepayEnum.TYPE_A_P.getValue(), RepayEnum.WAY_DIRECT.getValue(), null, remark, file);
+        return map;
+    }
+
+    @Override
+    public Map pawnOrIouRepayMoney(Integer objectId, Integer objectType, String remark, String file) throws Exception {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        Map map = repayMoney(userId, objectId, objectType, RepayEnum.TYPE_A_P.getValue(), RepayEnum.WAY_DIRECT.getValue(), null, remark, file);
         return map;
     }
 
