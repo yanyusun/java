@@ -1,7 +1,6 @@
 package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.operType.OperType;
-import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.exception.bean.UndefinitionTypeException;
 import com.dqys.business.service.service.permission.Permission;
 import com.dqys.business.service.service.userTeam.UserTeamService;
@@ -164,10 +163,8 @@ public class OperTypeController {
         UserSession userSession = UserSession.getCurrent();
         int userType =  UserServiceUtils.headerStringToInt(userSession.getUserType());
         int roleId = UserServiceUtils.headerStringToInt(userSession.getRoleId());
-        if(userType==UserInfoEnum.USER_TYPE_ADMIN.getValue()&&roleId!=RoleTypeEnum.ADMIN.getValue()){
-
-        }else{
-
+        if(userTeamService.isTheir(objectType, objectId,userSession.getUserId())){//判断是否是所属人，是的话角色改变为所属人
+            roleId = RoleTypeEnum.THEIR.getValue();
         }
         return JsonResponseTool.success(ListButtonShowerUtil.getListButtonShowerBean(navId, objectType,String.valueOf(userType) ,String.valueOf(roleId)));
     }
