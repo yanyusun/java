@@ -1130,9 +1130,13 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
         } else if (ObjectTypeEnum.LENDER.getValue().equals(objectType)) {//借款人
             LenderInfo info = lenderInfoMapper.get(objectId);
+            ContactInfo contactInfo = contactInfoMapper.getByModel(objectType.toString(), 1, objectId);
             if (info != null) {
-                name = info.getLenderNo() == null ? "" : info.getLenderNo();
+                name = (contactInfo == null ? "" : contactInfo.getName())
+                        + (info.getLenderNo() == null ? "" : info.getLenderNo());
             }
+
+
         } else if (ObjectTypeEnum.IOU.getValue().equals(objectType)) {//借据
             IOUInfo info = iouInfoMapper.get(objectId);
             if (info != null) {

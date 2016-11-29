@@ -34,6 +34,11 @@ public class CompanyTeamMapperImpl extends BaseDao implements CompanyTeamMapper 
     }
 
     @Override
+    public Integer update(CompanyTeam team) {
+        return super.getSqlSession().getMapper(CompanyTeamMapper.class).update(team);
+    }
+
+    @Override
     public CompanyTeam getByTypeId(@Param("type") Integer type, @Param("id") Integer id) {
         return super.getSqlSession().getMapper(CompanyTeamMapper.class).getByTypeId(type, id);
     }

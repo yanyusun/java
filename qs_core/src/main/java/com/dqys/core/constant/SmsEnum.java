@@ -17,6 +17,8 @@ public enum SmsEnum {
     POSTPONE_AUDIT_NO(111, "延期申请审核失败"),
     INVITE_COORDINATOR_YES(112, "协作器邀请同意"),
     INVITE_COORDINATOR_NO(113, "协作器邀请拒绝"),
+    SMS_DISTRIBUTION_PASS_CODE(114, "分配器接收邀请"),
+    SMS_DISTRIBUTION_REFUSE_CODE(115, "分配器拒绝邀请"),
     INITIATIVE_JOIN_YES(118, "主动加入同意"),
     INITIATIVE_JOIN_NO(119, "主动加入被拒绝"),
     REPLACE_CONTACTS(122, "联系人替换"),

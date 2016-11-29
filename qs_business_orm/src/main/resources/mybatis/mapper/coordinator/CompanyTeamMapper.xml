@@ -44,4 +44,15 @@
         SELECT * FROM t_company_team where object_id = #{id,jdbcType=INTEGER} AND object_type = #{type,jdbcType=INTEGER}
          AND stateflag = 0
     </select>
+
+    <update id="update" parameterType="com.dqys.business.orm.pojo.coordinator.CompanyTeam">
+        UPDATE t_company_team
+        <set>
+            <if test="senderId !=null">
+                sender_id=#{senderId,jdbcType=INTEGER},
+            </if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
 </mapper>

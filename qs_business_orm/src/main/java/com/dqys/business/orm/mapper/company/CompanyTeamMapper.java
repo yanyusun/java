@@ -25,6 +25,7 @@ public interface CompanyTeamMapper {
 
     /**
      * 根据Id获取
+     *
      * @param id
      * @return
      */
@@ -32,19 +33,22 @@ public interface CompanyTeamMapper {
 
     /**
      * 根据类型以及ID联合查询分配器
+     *
      * @param type
      * @param id
      * @return
      */
-    CompanyTeam getByTypeId(@Param("type")Integer type, @Param("id")Integer id);
+    CompanyTeam getByTypeId(@Param("type") Integer type, @Param("id") Integer id);
 
     /**
      * 根据邀请人Id获取分配器
-     * @param id 创建人ID
+     *
+     * @param id   创建人ID
      * @param type 查询对象类型
      * @return
      */
     List<CompanyTeam> listBySendId(@Param("type") Integer type, @Param("id") Integer id);
 
+    Integer update(CompanyTeam team);
 
 }
