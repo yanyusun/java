@@ -5,12 +5,12 @@ import com.dqys.core.base.BasePagination;
 /**
  * Created by Yvan on 16/7/11.
  */
-public class LenderListQuery extends BasePagination{
+public class LenderListQuery extends BasePagination {
 
     private Integer id; // 主键
 
     private String entrustName; // 委托方
-    private String search; // 客户编号|姓名|电话|注释?
+    private String search; // 借款人编号|姓名|电话|注释?
     private String belong; // 所属人
     private Integer urgeType; // 催收阶段
     private Integer outDays; // N天以上未催收借款人

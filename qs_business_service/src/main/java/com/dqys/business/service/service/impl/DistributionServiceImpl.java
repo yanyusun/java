@@ -34,7 +34,7 @@ import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.orm.query.company.CompanyTeamReQuery;
-import com.dqys.core.constant.MessageBTEnum;
+import com.dqys.core.constant.*;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
@@ -47,10 +47,6 @@ import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.company.CompanyServiceUtils;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.base.SysProperty;
-import com.dqys.core.constant.KeyEnum;
-import com.dqys.core.constant.ResponseCodeEnum;
-import com.dqys.core.constant.SmsEnum;
-import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.*;
@@ -702,18 +698,25 @@ public class DistributionServiceImpl implements DistributionService {
             UserDetail detail = coordinatorMapper.getUserDetail(companyDetailInfo1.getUserId());
             businessLogService.add(companyTeam.getObjectId(), companyTeam.getObjectType(), UserInfoEnum.DISTRIBUTION_ADD_THEIR.getValue(),
                     "", "邀请加入清收案组，被邀请公司：" + detail.getCompanyName() + ",被邀请人：" + detail.getRealName(), 0, 0);
+            UserDetail detail1 = coordinatorMapper.getUserDetail(UserSession.getCurrent().getUserId());
+            String roleName = "所属人";
+            if (detail1.getRoleType() == RoleTypeEnum.ADMIN.getValue().intValue()) {
+                roleName = RoleTypeEnum.ADMIN.getName();
+            } else if (detail1.getRoleType() == RoleTypeEnum.REGULATOR.getValue().intValue()) {
+                roleName = RoleTypeEnum.REGULATOR.getName();
+            }
+
             // 发送短信提醒
             SmsUtil smsUtil = new SmsUtil();
             String[] msg = {
                     companyDetailInfo1.getName(),
                     companyDetailInfo.getCompanyName(),
-                    UserInfoEnum.getUserInfoEnum(companyDetailInfo.getType()).getName(),
+                    roleName,
                     companyDetailInfo.getName(),
                     ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName(),
-                    coordinatorService.getObjectName(companyTeam.getObjectType(), companyTeam.getObjectId()),
-                    ""
+                    coordinatorService.getObjectName(companyTeam.getObjectType(), companyTeam.getObjectId())
             };
-            smsUtil.sendSms(SysProperty.SMS_DISTRIBUTION_INVITE_CODE, companyDetailInfo1.getPhone(), msg);
+            smsUtil.sendSms(SmsEnum.INVITE_DISTRIBUTOR.getValue(), companyDetailInfo1.getPhone(), msg);
             // 添加消息
             String code = ""; // 对象编号
             if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
@@ -732,7 +735,7 @@ public class DistributionServiceImpl implements DistributionService {
                             + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
                             + code
             ); // 业务类型 对象类型 对象编号
-            message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_INVITE_CODE, msg));
+            message.setContent(smsUtil.getSendContent(SmsEnum.INVITE_DISTRIBUTOR.getValue(), msg));
             message.setSenderId(companyDetailInfo.getUserId());
             message.setReceiveId(companyDetailInfo1.getUserId());
             message.setLabel(null);
