@@ -359,6 +359,8 @@ public class DistributionServiceImpl implements DistributionService {
         result.setId(companyTeamRe.getId());
         result.setStatus(companyTeamRe.getStatus());
         result.setAvg(detail.getAvg());
+        result.setCompanyName(detail.getCompanyName());
+        result.setCompanyId(detail.getCompanyId());
 //        result.setType(detail.getType().toString());
         result.setName(detail.getCompanyName());
         switch (detail.getType()) {
@@ -608,8 +610,8 @@ public class DistributionServiceImpl implements DistributionService {
                 }
                 Message message = new Message();
                 message.setTitle(MessageEnum.TASK.getName() + " > "
-                        + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
-                        + code
+                                + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
+                                + code
                 ); // 业务类型 对象类型 对象编号
                 message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_JOIN_CODE, msg));
                 message.setSenderId(userInfo.getId());
@@ -727,8 +729,8 @@ public class DistributionServiceImpl implements DistributionService {
             }
             Message message = new Message();
             message.setTitle(MessageEnum.TASK.getName() + " > "
-                    + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
-                    + code
+                            + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
+                            + code
             ); // 业务类型 对象类型 对象编号
             message.setContent(smsUtil.getSendContent(SysProperty.SMS_DISTRIBUTION_INVITE_CODE, msg));
             message.setSenderId(companyDetailInfo.getUserId());
@@ -842,8 +844,8 @@ public class DistributionServiceImpl implements DistributionService {
                 }
                 // 添加消息
                 message.setTitle(MessageEnum.TASK.getName() + " > "
-                        + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
-                        + code
+                                + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
+                                + code
                 ); // 业务类型 对象类型 对象编号
                 message.setSenderId(userInfo.getId());
                 message.setReceiveId(companyTeamRe.getAccepterId()); // 申请人接收
@@ -955,21 +957,20 @@ public class DistributionServiceImpl implements DistributionService {
     }
 
 
-
-
     /**
      * 所属机构同意平台将其加入分配器
+     *
      * @param id
      * @param status
      * @return
      */
     public JsonResponse designDistribution(Integer id, Integer status) throws BusinessLogException {
-        JsonResponse result=updateDistribution_tx(id,status);
+        JsonResponse result = updateDistribution_tx(id, status);
         //根据业务主体(资产包,借款人)跟新业务流转对象(借据,抵押物)
-        if(result.getCode()== ResponseCodeEnum.SUCCESS.getValue().intValue()){
-            CompanyTeam companyTeam = (CompanyTeam)result.getData();
-            businessService.updateBusinessFlowObjOnType(companyTeam.getObjectType(),companyTeam.getObjectId(),
-                    ObjectBusinessEnum.PAWN_ON_BUSINESS.getValue(),ObjectBusinessEnum.IOU_ON_BUSINESS.getValue());
+        if (result.getCode() == ResponseCodeEnum.SUCCESS.getValue().intValue()) {
+            CompanyTeam companyTeam = (CompanyTeam) result.getData();
+            businessService.updateBusinessFlowObjOnType(companyTeam.getObjectType(), companyTeam.getObjectId(),
+                    ObjectBusinessEnum.PAWN_ON_BUSINESS.getValue(), ObjectBusinessEnum.IOU_ON_BUSINESS.getValue());
             return JsonResponseTool.success(id);
         }
         return result;
@@ -1052,8 +1053,8 @@ public class DistributionServiceImpl implements DistributionService {
                 }
             }
             message.setTitle(MessageEnum.TASK.getName() + " > "
-                    + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
-                    + code
+                            + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
+                            + code
             ); // 业务类型 对象类型 对象编号
             message.setSenderId(UserSession.getCurrent().getUserId());
             message.setReceiveId(companyTeamRe.getAccepterId());
@@ -1083,19 +1084,11 @@ public class DistributionServiceImpl implements DistributionService {
                 }
             }
             //根据业务主体(资产包,借款人)跟新业务流转对象(借据,抵押物)
-            businessService.updateBusinessFlowObjOnType(companyTeam.getObjectType(),companyTeam.getObjectId(),
-                    ObjectBusinessEnum.PAWN_NOTON_BUSINESS.getValue(),ObjectBusinessEnum.IOU_NOTON_BUSINESS.getValue());
+            businessService.updateBusinessFlowObjOnType(companyTeam.getObjectType(), companyTeam.getObjectId(),
+                    ObjectBusinessEnum.PAWN_NOTON_BUSINESS.getValue(), ObjectBusinessEnum.IOU_NOTON_BUSINESS.getValue());
             return JsonResponseTool.success(result);
         }
     }
-
-
-
-
-
-
-
-
 
 
     /**
