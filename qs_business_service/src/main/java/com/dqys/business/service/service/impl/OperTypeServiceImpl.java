@@ -1,24 +1,21 @@
 package com.dqys.business.service.service.impl;
 
-import com.dqys.auth.orm.dao.facade.TUserTagMapper;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
-import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
 import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
-import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.operType.OperTypeMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
-import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.constant.ObjectEnum.IouEnum;
 import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.service.OperTypeService;
+import com.dqys.business.service.service.userTeam.UserTeamService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.business.service.utils.operType.OperTypeUtile;
 import com.dqys.business.service.utils.user.UserServiceUtils;
@@ -31,7 +28,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -43,11 +39,8 @@ public class OperTypeServiceImpl implements OperTypeService {
 
     @Autowired
     private OperTypeMapper operTypeMapper;
-
     @Autowired
-    private TUserTagMapper tUserTagMapper;
-    @Autowired
-    private TeammateReMapper teammateReMapper;
+    private UserTeamService userTeamService;
     @Autowired
     private AssetInfoMapper assetInfoMapper;
     @Autowired
@@ -95,35 +88,11 @@ public class OperTypeServiceImpl implements OperTypeService {
         }
         //不是管理者的就是查询是否在团队中是所属人角色
         if (roleId != RoleTypeEnum.ADMIN.getValue()) {
-            Map teamMap = new HashMap<>();
-            teamMap.put("objectId", flowId);
-            teamMap.put("objectType", flowType);
-            teamMap.put("userId", userId);
-            teamMap.put("type", TeammateReEnum.TYPE_AUXILIARY.getValue());
-            List<TeammateRe> teammateReList = teammateReMapper.selectSelectiveByUserTeam(teamMap);
-            if (teammateReList.size() > 0) {
+            if(userTeamService.isTheir(flowType,flowId,userId)){
                 roleId = RoleTypeEnum.THEIR.getValue();
-            } else if (flowType == ObjectTypeEnum.LENDER.getValue()) {
-                //借款人的所属人查不到再去查资产包的所属人
-                LenderInfo info = lenderInfoMapper.get(flowId);
-                teamMap.put("objectId", info.getAssetId());
-                teamMap.put("objectType", ObjectTypeEnum.ASSETPACKAGE.getValue());
-                teammateReList = teammateReMapper.selectSelectiveByUserTeam(teamMap);
-                if (teammateReList.size() > 0) {
-                    roleId = RoleTypeEnum.THEIR.getValue();
-                }
             }
         }
-        // }
-//        String userId_roleId_objectId = userType + "_" + roleId + "_" + objectType;
-//        List<OperType> list = NoSQLWithRedisTool.getValueObject(userId_roleId_objectId) == null ? new ArrayList<>() : NoSQLWithRedisTool.getValueObject(userId_roleId_objectId);
-//        if (list != null && list.size() != 0) {
-//            return list;
-//        } else {
-//            NoSQLWithRedisTool.getRedisTemplate().opsForValue().set(userId_roleId_objectId, selectByRoleToOperType(roleId, userType, objectType));
-//        }
-//        return (List<OperType>) NoSQLWithRedisTool.getValueObject(userId_roleId_objectId);
-        return OperTypeUtile.operTypes(userType,roleId,objectType);
+        return OperTypeUtile.operTypes(userType, roleId, objectType);
     }
 
     @Override
@@ -271,6 +240,4 @@ public class OperTypeServiceImpl implements OperTypeService {
             return;
         }
     }
-
-
 }

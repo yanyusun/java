@@ -1,8 +1,5 @@
 package com.dqys.business.service.utils.common.buttonUtil;
 
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * 列表页面模型
  * Created by yan on 16-9-24.

@@ -243,10 +243,17 @@ public class ListButtonShowerUtil {
         //待处置 平台管理者
         map.put(getKey(ObjectTabEnum.handle, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.REGULATOR)
                 , getUserTeamBeanAdd(
-                        new ListButtonShowerBean()));
+                        getCompanyTeamBeanAdd(
+                                new ListButtonShowerBean())
+                ));
+
+
         //待处置 平台所属人
         map.put(getKey(ObjectTabEnum.handle, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
                 , new ListButtonShowerBean());
+
+
+
         //待处置 平台参与人
         map.put(getKey(ObjectTabEnum.handle, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.GENERAL)
                 , new ListButtonShowerBean());

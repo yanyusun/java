@@ -1,9 +1,13 @@
 package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.operType.OperType;
+import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
 import com.dqys.business.service.exception.bean.UndefinitionTypeException;
 import com.dqys.business.service.service.permission.Permission;
+import com.dqys.business.service.service.userTeam.UserTeamService;
 import com.dqys.business.service.utils.common.buttonUtil.ListButtonShowerUtil;
+import com.dqys.business.service.utils.user.UserServiceUtils;
+import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.JsonResponseTool;
@@ -22,12 +26,12 @@ import java.util.List;
 @Controller
 @RequestMapping("/operType")
 public class OperTypeController {
-
-    //@Autowired
-    // private OperTypeService operTypeService;
+    @Autowired
+    private UserTeamService userTeamService;
 
     @Autowired
     private Permission permission;
+
 
     /**
      * @api {post} operType/list 操作接口
@@ -158,10 +162,14 @@ public class OperTypeController {
     @ResponseBody
     public JsonResponse getListButtonShower(Integer objectType, Integer objectId, Integer navId) throws UndefinitionTypeException {
         UserSession userSession = UserSession.getCurrent();
-        String[] userTypes = userSession.getUserType().split(",");
-        String[] roleId = userSession.getRoleId().split(",");
-        return JsonResponseTool.success(ListButtonShowerUtil.getListButtonShowerBean(navId, objectType, userTypes[0], roleId[0]));
+        int userType =  UserServiceUtils.headerStringToInt(userSession.getUserType());
+        int roleId = UserServiceUtils.headerStringToInt(userSession.getRoleId());
+        if(userType==UserInfoEnum.USER_TYPE_ADMIN.getValue()&&roleId!=RoleTypeEnum.ADMIN.getValue()){
 
+        }else{
+
+        }
+        return JsonResponseTool.success(ListButtonShowerUtil.getListButtonShowerBean(navId, objectType,String.valueOf(userType) ,String.valueOf(roleId)));
     }
     /**
      * @api {GET} http://{url}/operType/repayButtonShower  是否显示添加还款记录按钮
