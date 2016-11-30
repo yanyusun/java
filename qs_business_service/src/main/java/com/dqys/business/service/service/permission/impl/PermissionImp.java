@@ -70,9 +70,6 @@ public class PermissionImp implements Permission {
         }
         if (ObjectTabEnum.handling_urge.getValue().intValue() == navId) {//正在处置
             handingEntrustFilter(objectType, objectId, userType, originOperTypeFiler);
-        } else if (ObjectTabEnum.handling_entrust.getValue().intValue() == navId) {//处置中
-
-
         } else if (isOtherNavId(navId) && objectType != ObjectTypeEnum.ASSETSOURCE.getValue().intValue()) {//除了处置中,带审核,已驳回,待处置,延期其他流程不明确的搜所导航
             OtherTabAddOperTypeFilter otherTabAddOperTypeFilter = new OtherTabAddOperTypeFilter(businessService, objectId, objectType, userType, operTypeService);
             originOperTypeFiler.decorate(otherTabAddOperTypeFilter);

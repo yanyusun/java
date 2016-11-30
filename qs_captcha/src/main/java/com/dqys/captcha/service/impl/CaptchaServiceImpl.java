@@ -28,7 +28,7 @@ public class CaptchaServiceImpl implements CaptchaService {
     private static final String SUB_CODE = "code";
     private static final String SUB_FRE = "fre";
     private static final String SUB_RETRY = "retry";
-    private static final int KEY_EXPIRE = 1200;
+    private static final int KEY_EXPIRE = 600;
 
     @Autowired(required = false)
     private DefaultKaptcha captchaProducer;
