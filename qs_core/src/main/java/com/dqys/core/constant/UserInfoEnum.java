@@ -1,4 +1,4 @@
-package com.dqys.business.service.constant.ObjectEnum;
+package com.dqys.core.constant;
 
 /**
  * 用户信息
@@ -27,11 +27,11 @@ public enum UserInfoEnum {
 
 
     USER_TYPE_COMMON(0, "普通员工"),
-    USER_TYPE_ADMIN(1, "平台管理员"),
+    USER_TYPE_ADMIN(1, "平台方"),
     USER_TYPE_ENTRUST(2, "委托方"),
-    USER_TYPE_COLLECTION(31, "催收方"),
-    USER_TYPE_JUDICIARY(32, "律所司法"),
-    USER_TYPE_INTERMEDIARY(33, "中介");
+    USER_TYPE_COLLECTION(31, "处置方-催收"),
+    USER_TYPE_JUDICIARY(32, "处置方-律所"),
+    USER_TYPE_INTERMEDIARY(33, "处置方-中介");
     private Integer value;
     private String name;
 

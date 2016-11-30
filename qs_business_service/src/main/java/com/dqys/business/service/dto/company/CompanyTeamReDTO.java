@@ -19,6 +19,24 @@ public class CompanyTeamReDTO {
     private Date time; // 接收时间
     private Integer stateflag; // 数据状态
     private Integer userId;//联系人id
+    private String companyName;//公司名称
+    private Integer companyId;//公司id
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
+    }
 
     public Integer getUserId() {
         return userId;

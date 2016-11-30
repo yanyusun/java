@@ -12,7 +12,7 @@ import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.zcy.ZcyEstatesMapper;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.zcy.ZcyEstates;
-import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.dto.sourceAuth.UnviewReIdMap;

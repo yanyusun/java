@@ -18,16 +18,14 @@ import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
 import com.dqys.business.orm.pojo.repay.RepayRecord;
 import com.dqys.business.orm.query.asset.RelationQuery;
+import com.dqys.business.service.service.*;
 import com.dqys.core.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.*;
 import com.dqys.business.service.exception.bean.ArtificialException;
-import com.dqys.business.service.service.BusinessLogService;
-import com.dqys.business.service.service.CoordinatorService;
-import com.dqys.business.service.service.MessageService;
-import com.dqys.business.service.service.RepayService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.SmsEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.DateFormatTool;
 import com.dqys.core.utils.FileTool;
@@ -68,7 +66,8 @@ public class RepayServiceImpl implements RepayService {
 
     @Autowired
     private PawnInfoMapper pawnInfoMapper;
-
+    @Autowired
+    private UserService userService;
     @Autowired
     private CoordinatorMapper coordinatorMapper;
     @Autowired
@@ -85,6 +84,12 @@ public class RepayServiceImpl implements RepayService {
     @Override
     public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
         Map map = new HashMap<>();
+        //还款金额为0就返回无需还款操作
+        if (money <= 0) {
+            map.put("result", "no");
+            map.put("msg", "还款金额输入有误，无效还款");
+            return map;
+        }
         if (file != null && !"".equals(file)) {
             try {
                 if (!FileTool.saveFileSync(file)) {
@@ -137,17 +142,17 @@ public class RepayServiceImpl implements RepayService {
         }
         Repay repay = new Repay();
         BigDecimal paTotal = principalTotal.add(accrualTotal);//本金利息总和
-        //只有是案件的时候还款金额赋值为借据本金利息总金额(还款类型：还利息加本金)
-        if (objectType == RepayEnum.OBJECT_CASE.getValue().intValue() && repayType == RepayEnum.TYPE_A_P.getValue().intValue()) {
+        //针对特定情况下的还款操作：对案件、借款人、抵押物或借据的已处置操作，就是把相应借据的金额全部还完。
+        if (objectType == RepayEnum.OBJECT_CASE.getValue().intValue() && repayType == RepayEnum.TYPE_A_P.getValue().intValue()
+                && repayWay == RepayEnum.WAY_DIRECT.getValue()) {
             money = paTotal.doubleValue();
-        } else if (objectType == RepayEnum.OBJECT_LENDER.getValue().intValue() && repayType == RepayEnum.TYPE_A_P.getValue().intValue()) {
+        } else if (objectType == RepayEnum.OBJECT_LENDER.getValue().intValue() && repayType == RepayEnum.TYPE_A_P.getValue().intValue()
+                && repayWay == RepayEnum.WAY_DIRECT.getValue()) {
             money = paTotal.doubleValue();
-        }
-        //还款金额为0就返回无需还款操作
-        if (money == 0) {
-            map.put("result", "no");
-            map.put("msg", "还款金额是为0，无效还款");
-            return map;
+        } else if (money == null && repayType == RepayEnum.TYPE_A_P.getValue().intValue() && repayWay == RepayEnum.WAY_DIRECT.getValue()) {
+            money = paTotal.doubleValue();
+        } else {
+            money = 0.0;
         }
         //判断所得金额是否大于还款金额
         if (repayType == RepayEnum.TYPE_PRINCIPAL.getValue().intValue()) {
@@ -513,9 +518,16 @@ public class RepayServiceImpl implements RepayService {
             }
         }
         for (Map userC : mapList) {
-            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
-                    CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "realName"),
-                    ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName(), coordinatorService.getObjectName(damageApply.getObject_type(), damageApply.getApply_object_id()), original_time, damage_date);
+            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"),
+                    MessageUtils.transMapToString(userC, "realName"),
+                    userService.getCompayTypeToString(MessageUtils.transMapToInt(oper, "userId")),
+                    MessageUtils.transMapToString(oper, "companyName"),
+                    userService.getRoleNameToString(MessageUtils.transMapToInt(oper, "userId")),
+                    MessageUtils.transMapToString(oper, "realName"),
+                    ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName(),
+                    coordinatorService.getObjectName(damageApply.getObject_type(), damageApply.getApply_object_id()),
+                    original_time,
+                    damage_date);
             String title = coordinatorService.getMessageTitle(damageApply.getApply_object_id(), damageApply.getObject_type(), MessageBTEnum.POSTPONE.getValue());
             String operUrl = MessageUtils.setOperUrl("/repay/auditPostpone?status=1&applyId=" + id, null, "/repay/auditPostpone?status=2&applyId=" + id, null, "");
             messageService.add(title, content, damageApply.getApply_user_id(), MessageUtils.transMapToInt(userC, "userId"), "", MessageEnum.TASK.getValue(), MessageBTEnum.POSTPONE.getValue(), operUrl);
@@ -581,11 +593,16 @@ public class RepayServiceImpl implements RepayService {
             } else {
                 code = SmsEnum.POSTPONE_AUDIT_NO.getValue();
             }
-            Map userC = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getApply_user_id());
-            Map oper = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getEaxm_user_id());
-            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(oper, "companyName"),
-                    CompanyTypeEnum.getCompanyTypeEnum(MessageUtils.transMapToInt(oper, "companyType")).getName(), MessageUtils.transMapToString(oper, "realName"),
-                    ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName(), coordinatorService.getObjectName(damageApply.getObject_type(), damageApply.getApply_object_id()));
+            com.dqys.business.orm.pojo.coordinator.UserDetail userC = coordinatorMapper.getUserDetail(damageApply.getApply_user_id());
+            com.dqys.business.orm.pojo.coordinator.UserDetail oper = coordinatorMapper.getUserDetail(damageApply.getEaxm_user_id());
+            String content = smsUtil.sendSms(code, userC.getMobile(),
+                    userC.getRealName(),
+                    userService.getCompayTypeToString(oper.getUserId()),
+                    oper.getCompanyName(),
+                    userService.getRoleNameToString(oper.getUserId()),
+                    oper.getRealName(),
+                    ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName(),
+                    coordinatorService.getObjectName(damageApply.getObject_type(), damageApply.getApply_object_id()));
             String title = coordinatorService.getMessageTitle(damageApply.getApply_object_id(), damageApply.getObject_type(), MessageBTEnum.POSTPONE_AUDIT.getValue());
             messageService.add(title, content, damageApply.getEaxm_user_id(), damageApply.getApply_user_id(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.POSTPONE_AUDIT.getValue(), "");
             map.put("result", "yes");
@@ -776,6 +793,13 @@ public class RepayServiceImpl implements RepayService {
     public Map lenderRepayMoney(Integer lenderId, String remark, String file) throws Exception {
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         Map map = repayMoney(userId, lenderId, RepayEnum.OBJECT_LENDER.getValue(), RepayEnum.TYPE_A_P.getValue(), RepayEnum.WAY_DIRECT.getValue(), null, remark, file);
+        return map;
+    }
+
+    @Override
+    public Map pawnOrIouRepayMoney(Integer objectId, Integer objectType, String remark, String file) throws Exception {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        Map map = repayMoney(userId, objectId, objectType, RepayEnum.TYPE_A_P.getValue(), RepayEnum.WAY_DIRECT.getValue(), null, remark, file);
         return map;
     }
 

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 /**
@@ -396,4 +397,30 @@ public class RepayController {
             return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
         }
     }
+
+    /**
+     * @return
+     * @api {post} repay/pawnOrIouRepayMoney 抵押物或借据已处置操作
+     * @apiName repay/pawnOrIouRepayMoney
+     * @apiSampleRequest repay/pawnOrIouRepayMoney
+     * @apiParam {int} objectId 对象id
+     * @apiParam {int} objectType 对象类型(1借据2抵押物)
+     * @apiParam {string} [remark] 备注
+     * @apiParam {string} [file] 单据图片
+     * @apiGroup Repay
+     */
+    @RequestMapping("/pawnOrIouRepayMoney")
+    @ResponseBody
+    public JsonResponse pawnOrIouRepayMoney(@RequestParam Integer objectId, @RequestParam Integer objectType, String file, String remark) throws Exception {
+        if (file != null && "".equals(file.trim())) {
+            return JsonResponseTool.failure("请上传单据");
+        }
+        Map map = repayService.pawnOrIouRepayMoney(objectId, objectType, remark, file);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+        }
+    }
+
 }

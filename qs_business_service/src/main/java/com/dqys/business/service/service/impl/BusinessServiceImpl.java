@@ -13,7 +13,7 @@ import com.dqys.business.orm.pojo.business.Business;
 import com.dqys.business.orm.pojo.business.BusinessObjRe;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.query.business.BusinessObjReQuery;
-import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.base.BusinessFlowModel;

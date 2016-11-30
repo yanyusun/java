@@ -98,6 +98,7 @@ public interface UserService {
 
     /**
      * 完善公司以及管理人员信息
+     *
      * @param userId
      * @param name
      * @param introduction
@@ -110,4 +111,10 @@ public interface UserService {
 
     /* 验证用户存在性 */
     TUserInfo queryUser(String account, String mobile, String email) throws Exception;
+
+    //人员角色
+    String getRoleNameToString(Integer userId);
+
+    //参与方类型
+    String getCompayTypeToString(Integer userId);
 }

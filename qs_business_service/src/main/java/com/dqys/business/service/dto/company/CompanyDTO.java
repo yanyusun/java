@@ -12,6 +12,15 @@ public class CompanyDTO {
     private String province; // 省份
     private String city; // 城市
     private String district; // 区域
+    private Integer companyType;//公司类型（1平台2委托31催收32律所33中介）
+
+    public Integer getCompanyType() {
+        return companyType;
+    }
+
+    public void setCompanyType(Integer companyType) {
+        this.companyType = companyType;
+    }
 
     public Integer getId() {
         return id;

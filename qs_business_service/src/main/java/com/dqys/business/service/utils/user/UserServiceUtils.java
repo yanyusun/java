@@ -3,7 +3,7 @@ package com.dqys.business.service.utils.user;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
-import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.dto.user.UserFileDTO;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.dto.user.UserListDTO;

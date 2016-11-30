@@ -41,7 +41,7 @@ public class CompanyServiceUtils {
         companyDTO.setProvince(AreaTool.getAreaById(companyInfo.getProvince()).getLabel());
         companyDTO.setCity(AreaTool.getAreaById(companyInfo.getCity()).getLabel());
         companyDTO.setDistrict(AreaTool.getAreaById(companyInfo.getArea()).getLabel());
-
+        companyDTO.setCompanyType(companyInfo.getBusinessType());
         return companyDTO;
     }
 
@@ -134,7 +134,8 @@ public class CompanyServiceUtils {
             companyDetailInfo = new CompanyDetailInfo();
         }
         CompanyTeamReDTO companyTeamReDTO = new CompanyTeamReDTO();
-
+        companyTeamReDTO.setCompanyId(companyDetailInfo.getCompanyId());
+        companyTeamReDTO.setCompanyName(companyDetailInfo.getCompanyName());
         companyTeamReDTO.setId(companyTeamRe.getId());
         companyTeamReDTO.setTime(companyTeamRe.getUpdateAt());
         companyTeamReDTO.setUserId(companyTeamRe.getAccepterId());

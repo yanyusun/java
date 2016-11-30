@@ -2,7 +2,7 @@ package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.sysNotice.SysNotice;
 import com.dqys.business.orm.query.sysNotice.SysNoticeQuery;
-import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.dto.sysNotice.SysNoticeDTO;
 import com.dqys.business.service.service.sysNotice.SysNoticeService;
 import com.dqys.business.service.utils.sysNotice.SysNoticeUtil;

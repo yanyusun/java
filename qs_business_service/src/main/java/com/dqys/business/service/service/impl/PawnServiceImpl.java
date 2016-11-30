@@ -10,7 +10,7 @@ import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.asset.PiRelation;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
-import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.dto.asset.PawnDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;

@@ -21,7 +21,24 @@ public class BusinessServiceDTO {
     private Date time; // 接收时间
     private Integer stateflag; // 数据状态
     private Integer status; // 接受状态
+    private String companyName;//公司名称
+    private Integer companyId;//公司id
 
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
+    }
 
     public Integer getTargetType() {
         return targetType;

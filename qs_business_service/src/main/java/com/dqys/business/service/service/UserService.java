@@ -148,4 +148,10 @@ public interface UserService {
      * @return
      */
     Map updateAccountUse(List<Integer> userIds, Integer useStatus);
+
+    //人员角色
+    String getRoleNameToString(Integer userId);
+
+    //参与方类型
+    String getCompayTypeToString(Integer userId);
 }

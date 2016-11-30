@@ -3,8 +3,6 @@ package com.dqys.business.controller;
 import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.orm.pojo.message.MessageQuery;
 import com.dqys.business.service.constant.MessageEnum;
-import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
-import com.dqys.business.service.constant.UserStatusTypeEnum;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.model.JsonResponse;

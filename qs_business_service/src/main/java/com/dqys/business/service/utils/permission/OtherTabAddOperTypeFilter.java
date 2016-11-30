@@ -3,7 +3,7 @@ package com.dqys.business.service.utils.permission;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.pojo.business.Business;
 import com.dqys.business.orm.pojo.operType.OperType;
-import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.OperTypeService;

@@ -6,7 +6,7 @@ import com.dqys.business.orm.mapper.asset.*;
 import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.IouEnum;
-import com.dqys.business.service.constant.ObjectEnum.UserInfoEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
