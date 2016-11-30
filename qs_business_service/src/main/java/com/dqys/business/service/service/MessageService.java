@@ -107,7 +107,7 @@ public interface MessageService {
      * @param status        状态（0拒绝1接收）
      * @return
      */
-    String businessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer sendUserId, Integer receiveUserId, Integer status);
+    String businessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer sendUserId, Integer receiveUserId, Integer status, Integer inviteUserId);
 
     /**
      * 被邀请公司同意拒绝

@@ -125,7 +125,7 @@ public class MessageServiceImpl implements MessageService {
         SmsUtil smsUtil = new SmsUtil();
         String content = smsUtil.sendSms(SmsEnum.INVITE_COORDINATOR.getValue(), user.getMobile(),
                 user.getRealName(),
-                userService.getRoleNameToString(MessageUtils.transMapToInt(map, "userId")),
+                userService.getRoleNameToString(coordinatorMapper.getUserDetail(MessageUtils.transMapToInt(map, "userId"))),
                 MessageUtils.transMapToString(map, "realName"),
                 ObjectTypeEnum.getObjectTypeEnum(userTeam.getObjectType()).getName(),
                 coordinatorService.getObjectName(userTeam.getObjectType(), userTeam.getObjectId()));
@@ -142,11 +142,18 @@ public class MessageServiceImpl implements MessageService {
         if (tUserTag != null) {
             TUserInfo tuserInfo = tUserInfoMapper.selectByPrimaryKey(tUserTag.getUserId());
             if (tuserInfo != null) {
-                Map userC = coordinatorMapper.getUserAndCompanyByUserId(userId);//发送者
-                String content = smsUtil.sendSms(SmsEnum.FLOW.getValue(), tuserInfo.getMobile(), tuserInfo.getRealName(),
-                        MessageUtils.transMapToString(userC, "companyName"), MessageUtils.transMapToString(userC, "realName"),
-                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
-                        ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId), operation);
+                UserDetail operC = coordinatorMapper.getUserDetail(userId);//发送者
+                String content = smsUtil.sendSms(SmsEnum.FLOW.getValue(), tuserInfo.getMobile(),
+                        tuserInfo.getRealName(),
+                        userService.getCompayTypeToString(operC),
+                        operC.getCompanyName(),
+                        userService.getRoleNameToString(operC),
+                        operC.getRealName(),
+                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
+                        coordinatorService.getObjectName(objectType, objectId),
+                        ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
+                        coordinatorService.getObjectName(flowType, flowId),
+                        operation);
                 String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.FLOW.getValue());
                 add(title, content, userId, tuserInfo.getId(), MessageBTEnum.FLOW.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.FLOW.getValue(), operUrl);
                 return "yes";
@@ -174,19 +181,29 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public String businessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer sendUserId, Integer receiveUserId, Integer status) {
+    public String businessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer sendUserId, Integer receiveUserId, Integer status, Integer inviteUserId) {
         SmsUtil smsUtil = new SmsUtil();
-        Map userC = coordinatorMapper.getUserAndCompanyByUserId(receiveUserId);//接收者
+        UserDetail userC = coordinatorMapper.getUserDetail(receiveUserId);//接收者
         if (userC != null) {
             String content = "";
             if (status == 1) {
-                content = smsUtil.sendSms(SmsEnum.FLOW_RESULT_YES.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
-                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
-                        ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId), operation);
+                content = smsUtil.sendSms(SmsEnum.FLOW_RESULT_YES.getValue(), userC.getMobile(),
+                        userC.getRealName(),
+                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
+                        coordinatorService.getObjectName(objectType, objectId),
+                        ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
+                        coordinatorService.getObjectName(flowType, flowId),
+                        operation,
+                        userService.getCompayTypeToString(coordinatorMapper.getUserDetail(inviteUserId)),
+                        coordinatorMapper.getUserDetail(inviteUserId).getCompanyName());
             } else {
-                content = smsUtil.sendSms(SmsEnum.FLOW_RESULT_NO.getValue(), MessageUtils.transMapToString(userC, "mobile"), MessageUtils.transMapToString(userC, "realName"),
-                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(), coordinatorService.getObjectName(objectType, objectId),
-                        ObjectTypeEnum.getObjectTypeEnum(flowType).getName(), coordinatorService.getObjectName(flowType, flowId), operation);
+                content = smsUtil.sendSms(SmsEnum.FLOW_RESULT_NO.getValue(), userC.getMobile(),
+                        userC.getRealName(),
+                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
+                        coordinatorService.getObjectName(objectType, objectId),
+                        ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
+                        coordinatorService.getObjectName(flowType, flowId),
+                        operation);
             }
             String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.FLOW_RESULT.getValue());
             add(title, content, sendUserId, receiveUserId, MessageBTEnum.FLOW_RESULT.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.FLOW_RESULT.getValue(), "");
@@ -219,9 +236,9 @@ public class MessageServiceImpl implements MessageService {
                 }
                 content = smsUtil.sendSms(code, userC.getMobile(),
                         userC.getRealName(),
-                        userService.getCompayTypeToString(oper.getUserId()),
+                        userService.getCompayTypeToString(oper),
                         oper.getCompanyName(),
-                        userService.getRoleNameToString(oper.getUserId()),
+                        userService.getRoleNameToString(oper),
                         oper.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
                         coordinatorService.getObjectName(objectType, objectId),
@@ -230,13 +247,13 @@ public class MessageServiceImpl implements MessageService {
 
                 adminContent = smsUtil.sendSms(adminCode, tuserInfo.getMobile(),
                         tuserInfo.getRealName(),
-                        userService.getCompayTypeToString(oper.getUserId()),
+                        userService.getCompayTypeToString(oper),
                         oper.getCompanyName(),
-                        userService.getRoleNameToString(oper.getUserId()),
+                        userService.getRoleNameToString(oper),
                         oper.getRealName(),
-                        userService.getCompayTypeToString(userC.getUserId()),
+                        userService.getCompayTypeToString(userC),
                         userC.getCompanyName(),
-                        userService.getRoleNameToString(userC.getUserId()),
+                        userService.getRoleNameToString(userC),
                         userC.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
                         coordinatorService.getObjectName(objectType, objectId),
@@ -319,16 +336,16 @@ public class MessageServiceImpl implements MessageService {
             if (userC != null && !userId.equals(MessageUtils.transMapToInt(map, "userId"))) {//需要发送者与接收者不是同一个人
                 String content = smsUtil.sendSms(SmsEnum.FlOW_OPER.getValue(), userC.getMobile(),
                         userC.getRealName(),
-                        userService.getCompayTypeToString(oper.getUserId()),
+                        userService.getCompayTypeToString(oper),
                         oper.getCompanyName(),
-                        userService.getRoleNameToString(oper.getUserId()),
+                        userService.getRoleNameToString(oper),
                         oper.getRealName(),
                         ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
                         coordinatorService.getObjectName(objectType, objectId),
                         ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
                         coordinatorService.getObjectName(flowType, flowId),
                         operation,
-                        onStatus == 0 ? "加入" : "移除");
+                        onStatus == 0 ? "加入" : "移出");
                 String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.FLOW_RESULT.getValue());
                 add(title, content, userId, MessageUtils.transMapToInt(map, "userId"), MessageBTEnum.FLOW_RESULT.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.FLOW_RESULT.getValue(), "");
                 return true;

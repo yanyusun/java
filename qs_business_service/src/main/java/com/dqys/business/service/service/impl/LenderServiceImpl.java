@@ -621,7 +621,7 @@ public class LenderServiceImpl implements LenderService {
             lenderIds = lenderInfoMapper.selectByAssetId(objectId);//根据资产包，获取底下所有借款人id
         }
         if (objectType == ObjectTypeEnum.LENDER.getValue().intValue()) {
-
+            lenderIds.add(objectId);
         }
         return null;
     }

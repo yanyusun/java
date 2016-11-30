@@ -431,6 +431,7 @@ public class CoordinatorController {
      * @apiParam {int} status        状态（0拒绝1接收）
      * @apiParam {int} [messageId] 消息id
      * @apiParam {int} [operStatus]   操作状态（0默认未操作1同意2拒绝）
+     * @apiParam {int} [inviteUserId] 被邀请用户id
      * @apiSampleRequest coordinator/businessFlowResult
      * @apiGroup companyRelation
      * @apiName coordinator/businessFlowResult
@@ -440,7 +441,7 @@ public class CoordinatorController {
     public JsonResponse businessFlowResult(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType,
                                            @RequestParam("flowId") Integer flowId, @RequestParam("flowType") Integer flowType,
                                            @RequestParam("operType") Integer operType, @RequestParam("receiveUserId") Integer receiveUserId,
-                                           @RequestParam("status") Integer status, Integer messageId, Integer operStatus) throws Exception {
+                                           @RequestParam("status") Integer status, Integer messageId, Integer operStatus, Integer inviteUserId) throws Exception {
         if (CommonUtil.checkParam(objectId, objectType, flowId, flowType, operType, receiveUserId, status)) {
             return JsonResponseTool.paramErr("参数有误");
         }
@@ -450,7 +451,7 @@ public class CoordinatorController {
         if (messageId != null && operStatus != null) {
             messageService.setOper(messageId, operStatus);
         }
-        Map map = coordinatorService.sendBusinessFlowResult(objectId, objectType, flowId, flowType, operType, receiveUserId, status);
+        Map map = coordinatorService.sendBusinessFlowResult(objectId, objectType, flowId, flowType, operType, receiveUserId, status, inviteUserId);
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
             return JsonResponseTool.success(map);
         } else {

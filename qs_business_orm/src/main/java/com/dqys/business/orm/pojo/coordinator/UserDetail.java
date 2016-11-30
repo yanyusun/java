@@ -13,6 +13,15 @@ public class UserDetail {
     private Integer roleType;//角色类型（1-管理员;2-管理者;3-普通员工）
     private Integer userType;//用户类型（0普通用户1平台管理员2委托31催收32司法33中介）
     private String occupation;//职位
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public Integer getUserId() {
         return userId;

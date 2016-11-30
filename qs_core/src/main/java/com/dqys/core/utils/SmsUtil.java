@@ -1,5 +1,7 @@
 package com.dqys.core.utils;
 
+import com.dqys.core.constant.SmsEnum;
+
 import java.io.*;
 import java.util.Properties;
 
@@ -62,12 +64,30 @@ public class SmsUtil {
             for (int i = 0; i < content.length; i++) {
                 msg = msg.replace("{" + i + "}", content[i]);
             }
+            msg = replaceMsg(code, msg);//填充好数据后的还需要特殊处理
         } else {
             msg = "";
         }
         if (mobilePhone != null && FormatValidateTool.checkMobile(mobilePhone.trim())) {
             //发送短信接口
             RabbitMQProducerTool.addToSMSSendQueue(mobilePhone.trim(), msg);//加入短信队列
+        }
+        return msg;
+    }
+
+    /**
+     * 还要经过特殊处理的文字
+     *
+     * @param code
+     * @param msg
+     * @return
+     */
+    private String replaceMsg(Integer code, String msg) {
+        if (code == SmsEnum.FlOW_OPER.getValue().intValue() && msg.lastIndexOf("[加入]") > -1) {
+            return msg.replace("[也不能]", "").replace("[已不能]", "");
+        }
+        if (code == SmsEnum.REGISTER_AUDIT.getValue().intValue() || code == SmsEnum.REGISTER_AUDIT_RESULT.getValue().intValue()) {
+            return msg.replace("处置方", "处置号");
         }
         return msg;
     }

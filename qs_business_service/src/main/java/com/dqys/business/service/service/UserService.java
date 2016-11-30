@@ -1,6 +1,7 @@
 package com.dqys.business.service.service;
 
 import com.dqys.auth.orm.pojo.TCompanyInfo;
+import com.dqys.business.orm.pojo.coordinator.UserDetail;
 import com.dqys.business.service.dto.user.UserInsertDTO;
 import com.dqys.business.service.query.user.UserListQuery;
 import com.dqys.core.model.JsonResponse;
@@ -150,8 +151,8 @@ public interface UserService {
     Map updateAccountUse(List<Integer> userIds, Integer useStatus);
 
     //人员角色
-    String getRoleNameToString(Integer userId);
+    String getRoleNameToString(UserDetail user);
 
     //参与方类型
-    String getCompayTypeToString(Integer userId);
+    String getCompayTypeToString(UserDetail user);
 }
