@@ -36,7 +36,10 @@ public class OperTypeController {
      * @api {post} operType/list 操作接口
      * @apiName operType/list
      * @apiSampleRequest operType/list
-     * @apiParam {int} objectType 对象类型
+     * @apiParam {number} objectType 对象类型
+     * @apiParam {number} navId 导航id
+     * @apiParam {number} objectId 对象id
+     * @apiParam {number} position 位置
      * @apiGroup　 OperType
      * @apiSuccessExample {json} Data-Response:
      * {
@@ -120,9 +123,9 @@ public class OperTypeController {
     }*/
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse list(@RequestParam("objectType") Integer objectType, @RequestParam("objectId") Integer objectId, @RequestParam("navId") Integer navId,int position) {
+    public JsonResponse list(@RequestParam("objectType") Integer objectType, @RequestParam("objectId") Integer objectId, @RequestParam("navId") Integer navId, int position) {
         try {
-            List<OperType> operTypes = permission.getOperTypes(objectType, objectId, navId,position);
+            List<OperType> operTypes = permission.getOperTypes(objectType, objectId, navId, position);
             return JsonResponseTool.success(operTypes);
         } catch (Exception e) {
             return JsonResponseTool.serverErr();
@@ -162,26 +165,27 @@ public class OperTypeController {
     @ResponseBody
     public JsonResponse getListButtonShower(Integer objectType, Integer objectId, Integer navId) throws UndefinitionTypeException {
         UserSession userSession = UserSession.getCurrent();
-        int userType =  UserServiceUtils.headerStringToInt(userSession.getUserType());
+        int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
         int roleId = UserServiceUtils.headerStringToInt(userSession.getRoleId());
-        if(objectId!=null){
-            if(userTeamService.isTheir(objectType, objectId,userSession.getUserId())){//判断是否是所属人，是的话角色改变为所属人
+        if (objectId != null) {
+            if (userTeamService.isTheir(objectType, objectId, userSession.getUserId())) {//判断是否是所属人，是的话角色改变为所属人
                 roleId = RoleTypeEnum.THEIR.getValue();
             }
         }
-        return JsonResponseTool.success(ListButtonShowerUtil.getListButtonShowerBean(navId, objectType,String.valueOf(userType) ,String.valueOf(roleId)));
+        return JsonResponseTool.success(ListButtonShowerUtil.getListButtonShowerBean(navId, objectType, String.valueOf(userType), String.valueOf(roleId)));
     }
+
     /**
      * @api {GET} http://{url}/operType/repayButtonShower  是否显示添加还款记录按钮
      * @apiName repayButtonShower
      * @apiGroup OperType
      * @apiParam {number} [lenderId] 对象id
      * @apiSuccessExample {json} Data-Response:
-     *{
-        "code": 2000,
-        "msg": "成功",
-        "data": true
-        }
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": true
+     * }
      */
     @RequestMapping("/repayButtonShower")
     @ResponseBody
