@@ -4,7 +4,7 @@ package com.dqys.business.service.constant.ObjectEnum;
  * 借据
  * Created by mkfeng on 2016/7/7.
  */
-public enum IouEnum {
+public enum IouEnum implements ObjectEnumBase{
     MAINTAIN_REGULAR(130, "维持常规催收"),
     MARKET_DISPOSITION(131, "市场处置（变卖）"),
     CM_SIMULTANEOUS(132, "催收/市场同时进行"),

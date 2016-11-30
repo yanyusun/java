@@ -4,7 +4,7 @@ package com.dqys.business.service.constant.ObjectEnum;
  * 借款人
  * Created by mkfeng on 2016/7/7.
  */
-public enum LenderEnum {
+public enum LenderEnum implements ObjectEnumBase{
     ADD(110, "新增"),
     UPDATE_EDIT(111, "修改/编辑"),
     ADD_ATTENTION(112, "添加关注"),

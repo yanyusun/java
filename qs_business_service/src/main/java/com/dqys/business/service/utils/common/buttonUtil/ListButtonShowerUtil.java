@@ -250,7 +250,7 @@ public class ListButtonShowerUtil {
 
         //待处置 平台所属人
         map.put(getKey(ObjectTabEnum.handle, objectTypeEnum, UserInfoEnum.USER_TYPE_ADMIN, RoleTypeEnum.THEIR)
-                , new ListButtonShowerBean());
+                , getCompanyTeamBeanAdd(new ListButtonShowerBean()));
 
 
 

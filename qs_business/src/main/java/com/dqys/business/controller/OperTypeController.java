@@ -120,17 +120,18 @@ public class OperTypeController {
     }*/
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse list(@RequestParam("objectType") Integer objectType, @RequestParam("objectId") Integer objectId, @RequestParam("navId") Integer navId) {
+    public JsonResponse list(@RequestParam("objectType") Integer objectType, @RequestParam("objectId") Integer objectId, @RequestParam("navId") Integer navId,int position) {
         try {
-            List<OperType> operTypes = permission.getOperTypes(objectType, objectId, navId);
+            List<OperType> operTypes = permission.getOperTypes(objectType, objectId, navId,position);
             return JsonResponseTool.success(operTypes);
         } catch (Exception e) {
             return JsonResponseTool.serverErr();
         }
     }
 
+
     /**
-     * @api {GET} http://{url}/operType/listbuttonShower 读取未读的数量
+     * @api {GET} http://{url}/operType/listbuttonShower 按钮显示接口
      * @apiName listbuttonShower
      * @apiGroup OperType
      * @apiParam {number} [objectId] 对象id
@@ -163,8 +164,10 @@ public class OperTypeController {
         UserSession userSession = UserSession.getCurrent();
         int userType =  UserServiceUtils.headerStringToInt(userSession.getUserType());
         int roleId = UserServiceUtils.headerStringToInt(userSession.getRoleId());
-        if(userTeamService.isTheir(objectType, objectId,userSession.getUserId())){//判断是否是所属人，是的话角色改变为所属人
-            roleId = RoleTypeEnum.THEIR.getValue();
+        if(objectId!=null){
+            if(userTeamService.isTheir(objectType, objectId,userSession.getUserId())){//判断是否是所属人，是的话角色改变为所属人
+                roleId = RoleTypeEnum.THEIR.getValue();
+            }
         }
         return JsonResponseTool.success(ListButtonShowerUtil.getListButtonShowerBean(navId, objectType,String.valueOf(userType) ,String.valueOf(roleId)));
     }

@@ -4,7 +4,7 @@ package com.dqys.business.service.constant.ObjectEnum;
  * 抵押物
  * Created by mkfeng on 2016/7/7.
  */
-public enum PawnEnum {
+public enum PawnEnum implements ObjectEnumBase{
     ADD(120, "新增"),
     MAINTAIN_REGULAR(121, "维持常规催收"),
     MARKET_DISPOSITION(122, "市场处置（变卖）"),

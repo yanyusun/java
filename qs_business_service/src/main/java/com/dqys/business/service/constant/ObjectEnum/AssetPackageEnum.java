@@ -4,7 +4,7 @@ package com.dqys.business.service.constant.ObjectEnum;
  * 资产包
  * Created by mkfeng on 2016/7/7.
  */
-public enum AssetPackageEnum {
+public enum AssetPackageEnum implements ObjectEnumBase{
     delete(1010, "删除"),
     update(101, "编辑"),
     add(100, "添加"),

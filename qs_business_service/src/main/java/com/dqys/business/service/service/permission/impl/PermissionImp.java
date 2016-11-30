@@ -59,14 +59,14 @@ public class PermissionImp implements Permission {
     @Autowired
     private RepayService repayService;
 
-    public List<OperType> getOperTypes(Integer objectType, Integer objectId, Integer navId) {
+    public List<OperType> getOperTypes(Integer objectType, Integer objectId, Integer navId,int position) {
         UserSession userSession = UserSession.getCurrent();
         //// TODO: 16-10-4  
         Integer userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
         Integer userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());
         OriginOperTypeFiler originOperTypeFiler = new OriginOperTypeFiler();
         if (navId != null) {
-            originOperTypeFiler.decorate(new NavIdOperTypeFilter(navId, objectType));
+            originOperTypeFiler.decorate(new NavIdOperTypeFilter(navId, objectType,position));
         }
         if (ObjectTabEnum.handling_urge.getValue().intValue() == navId) {//正在处置
             handingEntrustFilter(objectType, objectId, userType, originOperTypeFiler);
@@ -91,6 +91,8 @@ public class PermissionImp implements Permission {
                 .getOperType(objectType, objectId);
         return originOperTypeFiler.getPermission(operTypes);
     }
+
+
 
     /**
      * 借款人详情是否具有添加还款的权限按钮
@@ -117,25 +119,6 @@ public class PermissionImp implements Permission {
                 return true;
             }
             return false;
-//            OriginOperTypeFiler originOperTypeFiler = new OriginOperTypeFiler();
-//            List<OperType> intOperTypes = null;
-//            if (userType == UserInfoEnum.USER_TYPE_COLLECTION.getValue()) {//如果是催收,需要有抵押物的还款权限
-//                intOperTypes = operTypeService.getOperType(ObjectTypeEnum.PAWN.getValue(), objectId);
-//                originOperTypeFiler.decorate(new OnHandleOperTypeFilter(
-//                        ObjectTypeEnum.PAWN.getValue(), objectId, pawnInfoMapper, iouInfoMapper
-//                ));
-//                originOperTypeFiler.decorate(new InitBusinessOperTypeFilter(operTypeService, ObjectTypeEnum.PAWN.getValue(), objectId, PAWN.getValue()));
-//                List<OperType> list = originOperTypeFiler.getPermission(intOperTypes);
-//                return PermissionUtil.isContian(list, PawnEnum.REIMBURSEMENT.getValue());
-//            } else if (userType == UserInfoEnum.USER_TYPE_JUDICIARY.getValue()) {//如果是律所,需要有借据的还款权限
-//                intOperTypes = operTypeService.getOperType(ObjectTypeEnum.IOU.getValue(), objectId);
-//                originOperTypeFiler.decorate(new OnHandleOperTypeFilter(
-//                        ObjectTypeEnum.IOU.getValue(), objectId, pawnInfoMapper, iouInfoMapper
-//                ));
-//                originOperTypeFiler.decorate(new InitBusinessOperTypeFilter(operTypeService, ObjectTypeEnum.IOU.getValue(), objectId, IOU.getValue()));
-//                List<OperType> list = originOperTypeFiler.getPermission(intOperTypes);
-//                return PermissionUtil.isContian(list, IouEnum.REIMBURSEMENT.getValue());
-//            }
         }
 
     }

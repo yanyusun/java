@@ -4,7 +4,7 @@ package com.dqys.business.service.constant.ObjectEnum;
  * 资料实勘
  * Created by mkfeng on 2016/7/7.
  */
-public enum InformationEnum {
+public enum InformationEnum implements ObjectEnumBase{
     UPLOAD(141, "上传"),
     DELETE(142, "删除"),
     UPDATE(143, "修改"),
