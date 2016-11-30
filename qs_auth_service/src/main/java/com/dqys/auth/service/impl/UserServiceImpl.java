@@ -222,7 +222,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public JsonResponse registerStep5(Integer userId, String name, String introduction, Integer province, Integer city, Integer district) {
-        TUserInfo userInfo = queryUser(userId);
+        TUserInfo userInfo = queryUser(userId);//注册用户
         if (userInfo == null) {
             return JsonResponseTool.paramErr("用户信息错误，请重新登录");
         }
@@ -253,15 +253,16 @@ public class UserServiceImpl implements UserService {
             //发送消息给平台管理员请求认证
             TUserTag tag = getAdmin();
             if (tag != null) {
-                TUserInfo info = tUserInfoMapper.selectByPrimaryKey(tag.getUserId());
+                TUserInfo info = tUserInfoMapper.selectByPrimaryKey(tag.getUserId());//平台管理员
                 SmsUtil smsUtil = new SmsUtil();
                 String content = smsUtil.sendSms(SmsEnum.REGISTER_AUDIT.getValue(), info.getMobile(),
                         info.getRealName(),
-                        getCompayTypeToString(userInfo.getId()),
-                        companyInfo.getCompanyName() == null ? "" : companyInfo.getCompanyName(),
-                        getRoleNameToString(userInfo.getId()),
                         userInfo.getRealName() == null ? "" : userInfo.getRealName(),
-                        userInfo.getMobile());
+                        userInfo.getMobile(),
+                        getCompayTypeToString(userInfo.getId()),
+                        name,
+                        companyInfo.getCompanyName() == null ? "" : companyInfo.getCompanyName(),
+                        companyInfo.getCredential());
                 String operUrl = MessageUtils.setOperUrl("/api/user/registerAudit?status=1&userId=" + userId, null,
                         "/api/user/registerAudit?status=2&userId=" + userId, null, null);
                 Message message = new Message("注册请求认证帐号:" + userInfo.getEmail(), content, userId, info.getId(), null, null, MessageBTEnum.register.getValue(), null, 0, operUrl, 0);

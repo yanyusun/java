@@ -14,6 +14,24 @@ public class MessageDTO {
     private Integer businessType;//int(2) NOT NULL COMMENT '业务类型：具体就看MessageBTEnum枚举'',
     private String operUrl;//int(2) NOT NULL COMMENT '操作地址'',;
     private Integer operStatus;//int(2) NOT NULL COMMENT '操作状态(0未操作1已同意2未同意)',
+    private String operUserName;//操作人姓名
+    private Integer messageNo;//操作人编号
+
+    public String getOperUserName() {
+        return operUserName;
+    }
+
+    public void setOperUserName(String operUserName) {
+        this.operUserName = operUserName;
+    }
+
+    public Integer getMessageNo() {
+        return messageNo;
+    }
+
+    public void setMessageNo(Integer messageNo) {
+        this.messageNo = messageNo;
+    }
 
     public Integer getOperStatus() {
         return operStatus;

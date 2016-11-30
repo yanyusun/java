@@ -1,6 +1,5 @@
 package com.dqys.business.service.service.impl;
 
-import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.auth.orm.pojo.UserDetail;
@@ -11,19 +10,21 @@ import com.dqys.business.orm.mapper.asset.*;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
+import com.dqys.business.orm.mapper.message.MessageMapper;
 import com.dqys.business.orm.mapper.repay.RepayMapper;
 import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
+import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
 import com.dqys.business.orm.pojo.repay.RepayRecord;
 import com.dqys.business.orm.query.asset.RelationQuery;
-import com.dqys.business.service.service.*;
-import com.dqys.core.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.*;
 import com.dqys.business.service.exception.bean.ArtificialException;
+import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.core.constant.MessageBTEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.core.model.UserSession;
@@ -60,6 +61,8 @@ public class RepayServiceImpl implements RepayService {
 
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private MessageMapper messageMapper;
 
     @Autowired
     private BusinessLogService businessLogService;
@@ -503,34 +506,44 @@ public class RepayServiceImpl implements RepayService {
                 original_time = DateFormatTool.format(damageApply.getOriginal_time(), DateFormatTool.DATE_FORMAT_10_REG1);
             }
         }
-        List<Map> mapList = new ArrayList<>();
+        List<com.dqys.business.orm.pojo.coordinator.UserDetail> userList = new ArrayList<>();
         SmsUtil smsUtil = new SmsUtil();//发送短信通知
         Integer code = SmsEnum.POSTPONE_APPLY.getValue();
-        Map user = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getEaxm_user_id());//接收者
-        mapList.add(user);
-        Map oper = coordinatorMapper.getUserAndCompanyByUserId(damageApply.getApply_user_id());//发送者、
+        com.dqys.business.orm.pojo.coordinator.UserDetail user = coordinatorMapper.getUserDetail(damageApply.getEaxm_user_id());//接收者
+        userList.add(user);
+        com.dqys.business.orm.pojo.coordinator.UserDetail oper = coordinatorMapper.getUserDetail(damageApply.getApply_user_id());//发送者、
 //        判断申请用户和审核用户是否为相同公司，如果是同家公司不需要通知平台参与审核
-        if (!MessageUtils.transMapToString(user, "companyName").equals(MessageUtils.transMapToString(oper, "companyName"))) {
+        if (!user.getCompanyName().equals(oper.getCompanyName())) {
             TUserTag tag = messageService.getAdmin();
             if (tag != null) {
-                Map admin = coordinatorMapper.getUserAndCompanyByUserId(tag.getUserId());//接收者管理员
-                mapList.add(admin);
+                com.dqys.business.orm.pojo.coordinator.UserDetail admin = coordinatorMapper.getUserDetail(tag.getUserId());//接收者管理员
+                userList.add(admin);
             }
         }
-        for (Map userC : mapList) {
-            String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"),
-                    MessageUtils.transMapToString(userC, "realName"),
-                    userService.getCompayTypeToString(MessageUtils.transMapToInt(oper, "userId")),
-                    MessageUtils.transMapToString(oper, "companyName"),
-                    userService.getRoleNameToString(MessageUtils.transMapToInt(oper, "userId")),
-                    MessageUtils.transMapToString(oper, "realName"),
+        Message message = new Message();
+        message.setMessageNo(messageService.getMessageNo());//获取消息的统一编号
+        for (com.dqys.business.orm.pojo.coordinator.UserDetail userC : userList) {
+            String content = smsUtil.sendSms(code, userC.getMobile(),
+                    userC.getRealName(),
+                    userService.getCompayTypeToString(oper),
+                    oper.getCompanyName(),
+                    userService.getRoleNameToString(oper),
+                    oper.getRealName(),
                     ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName(),
                     coordinatorService.getObjectName(damageApply.getObject_type(), damageApply.getApply_object_id()),
                     original_time,
                     damage_date);
             String title = coordinatorService.getMessageTitle(damageApply.getApply_object_id(), damageApply.getObject_type(), MessageBTEnum.POSTPONE.getValue());
             String operUrl = MessageUtils.setOperUrl("/repay/auditPostpone?status=1&applyId=" + id, null, "/repay/auditPostpone?status=2&applyId=" + id, null, "");
-            messageService.add(title, content, damageApply.getApply_user_id(), MessageUtils.transMapToInt(userC, "userId"), "", MessageEnum.TASK.getValue(), MessageBTEnum.POSTPONE.getValue(), operUrl);
+            message.setTitle(title);
+            message.setContent(content);
+            message.setSenderId(damageApply.getApply_user_id());
+            message.setReceiveId(userC.getUserId());
+            message.setLabel("");
+            message.setType(MessageEnum.TASK.getValue());
+            message.setBusinessType(MessageBTEnum.POSTPONE.getValue());
+            message.setOperUrl(operUrl);
+            messageMapper.add(message);
         }
 
         map.put("result", "yes");
@@ -597,9 +610,9 @@ public class RepayServiceImpl implements RepayService {
             com.dqys.business.orm.pojo.coordinator.UserDetail oper = coordinatorMapper.getUserDetail(damageApply.getEaxm_user_id());
             String content = smsUtil.sendSms(code, userC.getMobile(),
                     userC.getRealName(),
-                    userService.getCompayTypeToString(oper.getUserId()),
+                    userService.getCompayTypeToString(oper),
                     oper.getCompanyName(),
-                    userService.getRoleNameToString(oper.getUserId()),
+                    userService.getRoleNameToString(oper),
                     oper.getRealName(),
                     ObjectTypeEnum.getObjectTypeEnum(damageApply.getObject_type()).getName(),
                     coordinatorService.getObjectName(damageApply.getObject_type(), damageApply.getApply_object_id()));

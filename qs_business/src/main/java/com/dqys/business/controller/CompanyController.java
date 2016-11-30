@@ -7,12 +7,15 @@ import com.dqys.business.service.dto.company.OrganizationInsertDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.CompanyService;
 import com.dqys.business.service.service.DistributionService;
+import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * Created by Yvan on 16/6/30.
@@ -281,11 +284,13 @@ public class CompanyController {
     @RequestMapping(value = "/addBusinessService")
     public JsonResponse addBusinessService(@RequestParam Integer type, @RequestParam Integer id,
                                            @RequestParam Integer distributionId, @RequestParam Integer businessType,
-                                           @RequestParam Integer companyId, @RequestParam Integer businessRequestId) throws BusinessLogException {
+                                           @RequestParam Integer companyId, @RequestParam Integer businessRequestId,
+                                           Integer objectType, Integer objectId, Integer receiveUserId) throws BusinessLogException {
         if (CommonUtil.checkParam(type, id, distributionId, businessType, companyId)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return distributionService.addBusinessService(type, id, distributionId, businessType, companyId, businessRequestId);
+        JsonResponse response = distributionService.addBusinessService(type, id, distributionId, businessType, companyId, businessRequestId, objectType, objectId, receiveUserId);
+        return response;
     }
 
     /**

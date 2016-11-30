@@ -66,9 +66,12 @@ public interface DistributionService {
      * @param distributionId 分配器ID
      * @param businessType 业务类型
      * @param companyId 被邀请公司ID
+     * @param objectType
+     * @param objectId
+     * @param receiveUserId
      */
     JsonResponse addBusinessService(Integer type, Integer id, Integer distributionId,
-                               Integer businessType, Integer companyId,Integer businessRequestId) throws BusinessLogException;
+                                    Integer businessType, Integer companyId, Integer businessRequestId, Integer objectType, Integer objectId, Integer receiveUserId) throws BusinessLogException;
 
     /**
      * 被添加公司接受或者拒绝业务流转邀请

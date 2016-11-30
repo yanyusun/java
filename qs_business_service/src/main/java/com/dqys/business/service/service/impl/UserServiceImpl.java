@@ -288,7 +288,7 @@ public class UserServiceImpl implements UserService {
         if (result > 0) {
             smsUtil.sendSms(SmsEnum.LEAVE_WORD.getValue(), userC.getMobile(),
                     userC.getRealName(),
-                    getRoleNameToString(operC.getUserId()),
+                    getRoleNameToString(operC),
                     operC.getRealName());
             map.put("result", "yes");
         } else {
@@ -309,11 +309,11 @@ public class UserServiceImpl implements UserService {
             if (company != null) {
                 String text = "";
                 if (company.getIsAuth() == 0 && status == 1) {
-                    text = "成功";
+                    text = "通过";
                     company.setIsAuth(status);
                     flag = true;
                 } else if (company.getIsAuth() == 0 && status == 2) {
-                    text = "失败";
+                    text = "未通过";
                     company.setIsAuth(status);
                     flag = true;
                 } else {
@@ -325,7 +325,7 @@ public class UserServiceImpl implements UserService {
                     SmsUtil sms = new SmsUtil();
                     String content = sms.sendSms(SmsEnum.REGISTER_AUDIT_RESULT.getValue(), userC.getMobile(),
                             userC.getRealName(),
-                            getCompayTypeToString(userC.getUserId()),
+                            getCompayTypeToString(userC),
                             userC.getCompanyName(),
                             text);
                     messageService.add("注册审核结果答复", content, operId, userId, "", MessageEnum.SERVE.getValue(), null, "");
@@ -379,32 +379,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getRoleNameToString(Integer userId) {
-        UserDetail detail1 = coordinatorMapper.getUserDetail(userId);
-        String roleName = "所属人";
-        if (detail1 != null) {
-            if (detail1.getRoleType() == RoleTypeEnum.ADMIN.getValue().intValue()) {
+    public String getRoleNameToString(UserDetail user) {
+        if (user != null && user.getRoleType() != null) {
+            String roleName = "所属人";
+            if (user.getRoleType() == RoleTypeEnum.ADMIN.getValue().intValue()) {
                 roleName = RoleTypeEnum.ADMIN.getName();
-            } else if (detail1.getRoleType() == RoleTypeEnum.REGULATOR.getValue().intValue()) {
+            } else if (user.getRoleType() == RoleTypeEnum.REGULATOR.getValue().intValue()) {
                 roleName = RoleTypeEnum.REGULATOR.getName();
             }
+            return roleName;
         }
-        return roleName;
+        return "";
     }
 
     @Override
-    public String getCompayTypeToString(Integer userId) {
-        UserDetail detail = coordinatorMapper.getUserDetail(userId);
-        if (detail != null) {
-            if (detail.getUserType() == UserInfoEnum.USER_TYPE_ADMIN.getValue().intValue()) {
+    public String getCompayTypeToString(UserDetail user) {
+        if (user != null && user.getUserType() != null) {
+            if (user.getUserType() == UserInfoEnum.USER_TYPE_ADMIN.getValue().intValue()) {
                 return UserInfoEnum.USER_TYPE_ADMIN.getName();
-            } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_ENTRUST.getValue().intValue()) {
+            } else if (user.getUserType() == UserInfoEnum.USER_TYPE_ENTRUST.getValue().intValue()) {
                 return UserInfoEnum.USER_TYPE_ENTRUST.getName();
-            } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_COLLECTION.getValue().intValue()) {
+            } else if (user.getUserType() == UserInfoEnum.USER_TYPE_COLLECTION.getValue().intValue()) {
                 return UserInfoEnum.USER_TYPE_COLLECTION.getName();
-            } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_JUDICIARY.getValue().intValue()) {
+            } else if (user.getUserType() == UserInfoEnum.USER_TYPE_JUDICIARY.getValue().intValue()) {
                 return UserInfoEnum.USER_TYPE_JUDICIARY.getName();
-            } else if (detail.getUserType() == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().intValue()) {
+            } else if (user.getUserType() == UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().intValue()) {
                 return UserInfoEnum.USER_TYPE_INTERMEDIARY.getName();
             }
         }
@@ -413,11 +412,14 @@ public class UserServiceImpl implements UserService {
 
     //邮箱激活通知
     private void sendActivate(Integer sendUser, Integer receiveUser) {
-        Map userC = coordinatorMapper.getUserAndCompanyByUserId(receiveUser);//接收者
-        Map operC = coordinatorMapper.getUserAndCompanyByUserId(sendUser);//发送者
+        UserDetail userC = coordinatorMapper.getUserDetail(receiveUser);//接收者
+        UserDetail operC = coordinatorMapper.getUserDetail(sendUser);//发送者
         SmsUtil smsUtil = new SmsUtil();
-        String content = smsUtil.sendSms(SmsEnum.ACTIVATE_ACCOUNT.getValue(), MessageUtils.transMapToString(userC, "mobile"),
-                MessageUtils.transMapToString(userC, "realName"), MessageUtils.transMapToString(operC, "realName"), MessageUtils.transMapToString(userC, "email"));
+        String content = smsUtil.sendSms(SmsEnum.ACTIVATE_ACCOUNT.getValue(), userC.getMobile(),
+                userC.getRealName(),
+                getRoleNameToString(operC),
+                operC.getRealName(),
+                userC.getEmail());
 //        messageService.add("帐号激活提醒", content, sendUser, receiveUser, "", MessageEnum.SERVE.getValue(), null, "");
     }
 

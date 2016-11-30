@@ -4,6 +4,7 @@ import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.message.Message;
+import com.dqys.business.orm.pojo.message.MessageOperinfo;
 
 import java.util.List;
 import java.util.Map;
@@ -106,7 +107,7 @@ public interface MessageService {
      * @param status        状态（0拒绝1接收）
      * @return
      */
-    String businessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer sendUserId, Integer receiveUserId, Integer status);
+    String businessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer sendUserId, Integer receiveUserId, Integer status, Integer inviteUserId);
 
     /**
      * 被邀请公司同意拒绝
@@ -175,4 +176,9 @@ public interface MessageService {
      * @return
      */
     Map setOper(Integer id, Integer status);
+
+    Integer getMessageNo();
+
+    Integer insertMessageNoByOperinfo(MessageOperinfo messageOperinfo);
+
 }
