@@ -59,7 +59,7 @@ public class PermissionImp implements Permission {
     @Autowired
     private RepayService repayService;
 
-    public List<OperType> getOperTypes(Integer objectType, Integer objectId, Integer navId,int position) {
+    public List<OperType> getOperTypes(Integer objectType, Integer objectId, Integer navId,Integer position) {
         UserSession userSession = UserSession.getCurrent();
         //// TODO: 16-10-4  
         Integer userType = UserServiceUtils.headerStringToInt(userSession.getUserType());

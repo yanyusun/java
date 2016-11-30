@@ -18,9 +18,9 @@ public class NavIdOperTypeFilter extends OperTypeFilter {
 
     private Integer objectType;
 
-    private int position;
+    private Integer position;
 
-    public NavIdOperTypeFilter(Integer navId, Integer objectType, int position) {
+    public NavIdOperTypeFilter(Integer navId, Integer objectType, Integer position) {
         this.navId = navId;
         this.objectType = objectType;
         this.position = position;

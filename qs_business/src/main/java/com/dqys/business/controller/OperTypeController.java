@@ -123,7 +123,7 @@ public class OperTypeController {
     }*/
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse list(@RequestParam("objectType") Integer objectType, @RequestParam("objectId") Integer objectId, @RequestParam("navId") Integer navId, int position) {
+    public JsonResponse list(@RequestParam("objectType") Integer objectType, @RequestParam("objectId") Integer objectId, @RequestParam("navId") Integer navId, @RequestParam(value="position", defaultValue="0")Integer position) {
         try {
             List<OperType> operTypes = permission.getOperTypes(objectType, objectId, navId, position);
             return JsonResponseTool.success(operTypes);
