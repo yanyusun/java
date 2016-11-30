@@ -1,6 +1,7 @@
 package com.dqys.business.orm.mapper.message;
 
 import com.dqys.business.orm.pojo.message.Message;
+import com.dqys.business.orm.pojo.message.MessageOperinfo;
 
 import java.util.List;
 
@@ -51,4 +52,8 @@ public interface MessageMapper {
     Message get(Integer id);
 
     Integer updateOperStatus(Message message);
+
+    Integer getMessageNo();
+
+    Integer insertMessageNoByOperinfo(MessageOperinfo messageOperinfo);
 }

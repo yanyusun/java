@@ -13,6 +13,7 @@ import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserDetail;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.message.Message;
+import com.dqys.business.orm.pojo.message.MessageOperinfo;
 import com.dqys.business.service.service.UserService;
 import com.dqys.core.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
@@ -24,6 +25,7 @@ import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.RabbitMQProducerTool;
 import com.dqys.core.utils.SmsUtil;
@@ -281,11 +283,29 @@ public class MessageServiceImpl implements MessageService {
         if (message == null) {
             map.put("msg", "查询消息记录有误");
         } else {
+            if (message.getMessageNo() != null) {//如果存在编号，就把统一编号的消息操作状态全改了
+                message.setId(null);
+                MessageOperinfo messageOperinfo = new MessageOperinfo();
+                messageOperinfo.setMessageMo(message.getMessageNo());
+                messageOperinfo.setUserId(UserSession.getCurrent().getUserId());
+                messageOperinfo.setOperStatus(status);
+                messageMapper.insertMessageNoByOperinfo(messageOperinfo);
+            }
             message.setOperStatus(status);
             messageMapper.updateOperStatus(message);
             map.put("result", "yes");
         }
         return map;
+    }
+
+    @Override
+    public Integer getMessageNo() {
+        return messageMapper.getMessageNo();
+    }
+
+    @Override
+    public Integer insertMessageNoByOperinfo(MessageOperinfo messageOperinfo) {
+        return messageMapper.insertMessageNoByOperinfo(messageOperinfo);
     }
 
     private boolean setJiGou(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, Integer userType, boolean modify) {

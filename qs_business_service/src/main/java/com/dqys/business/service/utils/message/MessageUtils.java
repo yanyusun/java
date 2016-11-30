@@ -45,6 +45,8 @@ public class MessageUtils {
             messageDTO.setBusinessType(m.getBusinessType());
             messageDTO.setOperUrl(m.getOperUrl());
             messageDTO.setOperStatus(m.getOperStatus());
+            messageDTO.setOperUserName(m.getOperUserName());
+            messageDTO.setMessageNo(m.getMessageNo());
             list.add(messageDTO);
         }
         return list;

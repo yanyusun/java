@@ -4,6 +4,7 @@ import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.message.Message;
+import com.dqys.business.orm.pojo.message.MessageOperinfo;
 
 import java.util.List;
 import java.util.Map;
@@ -175,4 +176,9 @@ public interface MessageService {
      * @return
      */
     Map setOper(Integer id, Integer status);
+
+    Integer getMessageNo();
+
+    Integer insertMessageNoByOperinfo(MessageOperinfo messageOperinfo);
+
 }

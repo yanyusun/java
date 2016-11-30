@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.message.impl;
 
 import com.dqys.business.orm.mapper.message.MessageMapper;
 import com.dqys.business.orm.pojo.message.Message;
+import com.dqys.business.orm.pojo.message.MessageOperinfo;
 import com.dqys.core.base.BaseDao;
 import org.springframework.stereotype.Repository;
 
@@ -47,6 +48,16 @@ public class MessageMapperImpl extends BaseDao implements MessageMapper {
     @Override
     public Integer updateOperStatus(Message message) {
         return super.getSqlSession().getMapper(MessageMapper.class).updateOperStatus(message);
+    }
+
+    @Override
+    public Integer getMessageNo() {
+        return super.getSqlSession().getMapper(MessageMapper.class).getMessageNo();
+    }
+
+    @Override
+    public Integer insertMessageNoByOperinfo(MessageOperinfo messageOperinfo) {
+        return super.getSqlSession().getMapper(MessageMapper.class).insertMessageNoByOperinfo(messageOperinfo);
     }
 
 }

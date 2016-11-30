@@ -1,6 +1,5 @@
 package com.dqys.business.service.service.impl;
 
-import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.auth.orm.pojo.UserDetail;
@@ -11,19 +10,21 @@ import com.dqys.business.orm.mapper.asset.*;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
+import com.dqys.business.orm.mapper.message.MessageMapper;
 import com.dqys.business.orm.mapper.repay.RepayMapper;
 import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.pojo.coordinator.CompanyTeamRe;
+import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.orm.pojo.repay.DamageApply;
 import com.dqys.business.orm.pojo.repay.Repay;
 import com.dqys.business.orm.pojo.repay.RepayRecord;
 import com.dqys.business.orm.query.asset.RelationQuery;
-import com.dqys.business.service.service.*;
-import com.dqys.core.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.*;
 import com.dqys.business.service.exception.bean.ArtificialException;
+import com.dqys.business.service.service.*;
 import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.core.constant.MessageBTEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.core.model.UserSession;
@@ -60,6 +61,8 @@ public class RepayServiceImpl implements RepayService {
 
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private MessageMapper messageMapper;
 
     @Autowired
     private BusinessLogService businessLogService;
@@ -517,6 +520,8 @@ public class RepayServiceImpl implements RepayService {
                 mapList.add(admin);
             }
         }
+        Message message = new Message();
+        message.setMessageNo(messageService.getMessageNo());//获取消息的统一编号
         for (Map userC : mapList) {
             String content = smsUtil.sendSms(code, MessageUtils.transMapToString(userC, "mobile"),
                     MessageUtils.transMapToString(userC, "realName"),
@@ -530,7 +535,15 @@ public class RepayServiceImpl implements RepayService {
                     damage_date);
             String title = coordinatorService.getMessageTitle(damageApply.getApply_object_id(), damageApply.getObject_type(), MessageBTEnum.POSTPONE.getValue());
             String operUrl = MessageUtils.setOperUrl("/repay/auditPostpone?status=1&applyId=" + id, null, "/repay/auditPostpone?status=2&applyId=" + id, null, "");
-            messageService.add(title, content, damageApply.getApply_user_id(), MessageUtils.transMapToInt(userC, "userId"), "", MessageEnum.TASK.getValue(), MessageBTEnum.POSTPONE.getValue(), operUrl);
+            message.setTitle(title);
+            message.setContent(content);
+            message.setSenderId(damageApply.getApply_user_id());
+            message.setReceiveId(MessageUtils.transMapToInt(userC, "userId"));
+            message.setLabel("");
+            message.setType(MessageEnum.TASK.getValue());
+            message.setBusinessType(MessageBTEnum.POSTPONE.getValue());
+            message.setOperUrl(operUrl);
+            messageMapper.add(message);
         }
 
         map.put("result", "yes");
