@@ -686,11 +686,18 @@
         </if>
         AND bor.stateflag=0 AND b.stateflag=0 AND b.`status` IN (1,3) AND
         (bor.object_id NOT IN (SELECT tut.object_id from t_user_team tut WHERE tut.stateflag=0 AND tut.status=0 AND
-        tut.object_type=#{objectType} )
+        tut.object_type=#{objectType}
+        <if test="userId !=null">
+            AND tut.company_id IN (SELECT tuif.company_id FROM t_user_info tuif WHERE id=#{userId} )
+        </if>
+        )
         OR
         bor.object_id NOT IN (SELECT tut.object_id FROM t_user_team tut,t_teammate_re ttr
         WHERE tut.id=ttr.user_team_id AND tut.stateflag=0 AND tut.status=0 AND tut.object_type=#{objectType} AND
         ttr.status=1
+        <if test="userId !=null">
+            AND tut.company_id IN (SELECT tuif.company_id FROM t_user_info tuif WHERE id=#{userId} )
+        </if>
         <if test="roleType !=null">
             AND ttr.type=#{roleType}
         </if>
