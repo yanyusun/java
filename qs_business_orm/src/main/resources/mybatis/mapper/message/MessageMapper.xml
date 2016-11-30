@@ -26,7 +26,7 @@
     <select id="selectCount" parameterType="com.dqys.business.orm.pojo.message.Message"
             resultType="int">
         SELECT count(*) amount
-        from t_message
+        from t_message tm
         <include refid="WHERE_QUERY"/>
     </select>
     <!--分页查询列表-->
