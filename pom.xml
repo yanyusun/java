@@ -19,6 +19,7 @@
         <module>qs_business_orm</module>
         <module>qs_business_service</module>
         <module>qs_business</module>
+        <module>qs_business_auth</module>
     </modules>
 
     <properties>

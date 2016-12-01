@@ -5,7 +5,6 @@ import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
-import com.dqys.business.service.utils.followUp.FollowUpUtil;
 import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
