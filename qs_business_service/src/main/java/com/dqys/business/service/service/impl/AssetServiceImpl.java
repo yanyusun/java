@@ -98,6 +98,8 @@ public class AssetServiceImpl implements AssetService {
     private BusinessService businessService;
     @Autowired
     private CoordinatorService coordinatorService;
+    @Autowired
+    private LenderService lenderService;
 
     @Override
     public JsonResponse add_tx(AssetDTO assetDTO) throws BusinessLogException {
@@ -234,9 +236,9 @@ public class AssetServiceImpl implements AssetService {
                         userInfoMapper.selectByPrimaryKey(assetInfo.getOperator()),
                         null,
                         getBelong(assetInfo),
-                        followUpReadstatusMapper.countByTypeIdUser(assetInfo.getId(),
-                                ObjectTypeEnum.ASSETPACKAGE.getValue(),
-                                userId)));
+                        followUpReadstatusMapper.countByTypeIdUser(assetInfo.getId(), ObjectTypeEnum.ASSETPACKAGE.getValue(), userId),
+                        lenderService.getCountByStatistics(assetInfo.getId(), ObjectTypeEnum.ASSETPACKAGE.getValue())
+                ));
             });
             map.put("data", listDTOList);
             map.put("total", assetInfoMapper.queryCount(assetQuery));
@@ -303,13 +305,15 @@ public class AssetServiceImpl implements AssetService {
         List<AssetLenderDTO> assetLenderDTOList = AssetServiceUtils.toAssetLenderDTO(lenderInfoList);
         if (assetLenderDTOList != null) {
             for (int i = 0; i < assetLenderDTOList.size(); i++) {
-                assetLenderDTOList.get(i).setAssetName(assetInfo.getName());
+                AssetLenderDTO assetLenderDTO = assetLenderDTOList.get(i);
+                assetLenderDTO.setStatisticsLender(lenderService.getCountByStatistics(assetLenderDTO.getId(), ObjectTypeEnum.LENDER.getValue()));//统计数量
+                assetLenderDTO.setAssetName(assetInfo.getName());
                 ContactInfo contactInfo = contactInfoMapper.getByModel(
                         ObjectTypeEnum.LENDER.getValue().toString(),
                         ContactTypeEnum.LENDER.getValue(),
-                        assetLenderDTOList.get(i).getId());
+                        assetLenderDTO.getId());
                 if (contactInfo != null) {
-                    assetLenderDTOList.get(i).setName(contactInfo.getName()); // 设置资产包名称
+                    assetLenderDTO.setName(contactInfo.getName()); // 设置资产包名称
                 }
             }
         }

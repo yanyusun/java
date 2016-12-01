@@ -319,7 +319,7 @@ public class LenderServiceImpl implements LenderService {
                     teamDTOList = coordinatorService.getLenderOrAsset(userTeam.getCompanyId(),
                             lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue());
                 }
-                lenderListDTOList.add(LenderServiceUtils.toLenderListDTO(lenderInfo, contactInfo, teamDTOList));
+                lenderListDTOList.add(LenderServiceUtils.toLenderListDTO(lenderInfo, contactInfo, teamDTOList, getCountByStatistics(lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue())));
             }
         });
         map.put("data", lenderListDTOList);

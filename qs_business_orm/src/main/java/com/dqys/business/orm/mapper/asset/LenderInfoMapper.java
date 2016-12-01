@@ -99,7 +99,7 @@ public interface LenderInfoMapper {
      * @param lenderIds
      * @return
      */
-    List<Integer> selectIouIdByLenderId(List<Integer> lenderIds);
+    List<Integer> selectIouIdByLenderId(@Param("lenderIds") List<Integer> lenderIds);
 
     /**
      * 获取借款人下所有抵押物id
@@ -107,7 +107,7 @@ public interface LenderInfoMapper {
      * @param lenderIds
      * @return
      */
-    List<Integer> selectPawnIdByLenderId(List<Integer> lenderIds);
+    List<Integer> selectPawnIdByLenderId(@Param("lenderIds") List<Integer> lenderIds);
 
     /**
      * 获取借据相关的案件id
@@ -115,5 +115,5 @@ public interface LenderInfoMapper {
      * @param iouIds
      * @return
      */
-    List<Integer> selectCaseIdByIouId(List<Integer> iouIds);
+    List<Integer> selectCaseIdByIouId(@Param("iouIds") List<Integer> iouIds);
 }

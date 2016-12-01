@@ -1,6 +1,7 @@
 package com.dqys.business.service.dto.asset;
 
 /**
+ * 资产包、借款人、 借据、抵押物、案件的统计
  * Created by mkfeng on 2016/11/29.
  */
 public class StatisticsLender {

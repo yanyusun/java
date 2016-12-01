@@ -35,7 +35,15 @@ public class LenderListDTO {
     private Integer type;  // 类型
     private String entrustName;  // 委托方名称
     private Integer attribute;  // 公私有属性
+    private StatisticsLender statisticsLender;//统计数量
 
+    public StatisticsLender getStatisticsLender() {
+        return statisticsLender;
+    }
+
+    public void setStatisticsLender(StatisticsLender statisticsLender) {
+        this.statisticsLender = statisticsLender;
+    }
 
     public Integer getType() {
         return type;

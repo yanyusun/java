@@ -714,7 +714,7 @@
         SELECT iou.id FROM bt_iou iou WHERE iou.stateflag=0
         <if test="lenderIds !=null and lenderIds.size>0">
             AND iou.lender_id IN
-            <foreach collection="list" index="index" item="lenderId" open="(" separator="," close=")">
+            <foreach collection="lenderIds" index="index" item="lenderId" open="(" separator="," close=")">
                 #{lenderId}
             </foreach>
         </if>
@@ -724,7 +724,7 @@
         SELECT pawn.id FROM bt_pawn pawn WHERE pawn.stateflag=0
         <if test="lenderIds !=null and lenderIds.size>0">
             AND pawn.lender_id IN
-            <foreach collection="list" index="index" item="lenderId" open="(" separator="," close=")">
+            <foreach collection="lenderIds" index="index" item="lenderId" open="(" separator="," close=")">
                 #{lenderId}
             </foreach>
         </if>
@@ -736,7 +736,7 @@
         bci.stateflag=0
         <if test="iouIds !=null and iouIds.size>0">
             AND bci.iou_id IN
-            <foreach collection="list" index="index" item="iouId" open="(" separator="," close=")">
+            <foreach collection="iouIds" index="index" item="iouId" open="(" separator="," close=")">
                 #{iouId}
             </foreach>
         </if>
