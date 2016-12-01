@@ -81,4 +81,5 @@ public interface LenderService {
      * @return
      */
     StatisticsLender getCountByStatistics(Integer objectId, Integer objectType);
+
 }

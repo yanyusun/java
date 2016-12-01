@@ -92,4 +92,28 @@ public interface LenderInfoMapper {
      */
 
     List<Integer> selectByAssetId(Integer assetId);
+
+    /**
+     * 获取借款人下所有借据id
+     *
+     * @param lenderIds
+     * @return
+     */
+    List<Integer> selectIouIdByLenderId(List<Integer> lenderIds);
+
+    /**
+     * 获取借款人下所有抵押物id
+     *
+     * @param lenderIds
+     * @return
+     */
+    List<Integer> selectPawnIdByLenderId(List<Integer> lenderIds);
+
+    /**
+     * 获取借据相关的案件id
+     *
+     * @param iouIds
+     * @return
+     */
+    List<Integer> selectCaseIdByIouId(List<Integer> iouIds);
 }

@@ -619,11 +619,31 @@ public class LenderServiceImpl implements LenderService {
         List<Integer> lenderIds = new ArrayList<>();
         if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue().intValue()) {
             lenderIds = lenderInfoMapper.selectByAssetId(objectId);//根据资产包，获取底下所有借款人id
-        }
-        if (objectType == ObjectTypeEnum.LENDER.getValue().intValue()) {
+            statisticsLender.setAssetCount(1);//资产包数量
+        } else if (objectType == ObjectTypeEnum.LENDER.getValue().intValue()) {
             lenderIds.add(objectId);
+        } else {
+            return statisticsLender;//对象类型不正确的情况下，返回初始化对象
         }
-        return null;
+        if (lenderIds == null || lenderIds.size() == 0) {
+            return statisticsLender;//没有借款人的情况下，返回初始化对象
+        }
+        statisticsLender.setLenderCount(lenderIds.size());//借款人数量
+        List<Integer> iouIds = lenderInfoMapper.selectIouIdByLenderId(lenderIds);//借据数量
+        if (iouIds != null) {
+            statisticsLender.setIouCount(iouIds.size());
+        }
+        List<Integer> pawnIds = lenderInfoMapper.selectPawnIdByLenderId(lenderIds);//抵押物数量
+        if (pawnIds != null) {
+            statisticsLender.setPawnCount(pawnIds.size());
+        }
+        if (iouIds != null && iouIds.size() > 0) {
+            List<Integer> caseIds = lenderInfoMapper.selectCaseIdByIouId(iouIds);
+            if (caseIds != null) {
+                statisticsLender.setCaseCount(caseIds.size());
+            }
+        }
+        return statisticsLender;
     }
 
     /**

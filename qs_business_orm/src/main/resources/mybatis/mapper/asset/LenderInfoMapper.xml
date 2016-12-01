@@ -707,7 +707,40 @@
     </select>
 
     <select id="selectByAssetId" resultType="int">
-      SELECT len.id FROM bt_lender len WHERE len.asset_id=#{assetId}
+      SELECT len.id FROM bt_lender len WHERE len.stateflag=0 AND len.asset_id=#{assetId}
+    </select>
+
+    <select id="selectIouIdByLenderId" resultType="int">
+        SELECT iou.id FROM bt_iou iou WHERE iou.stateflag=0
+        <if test="lenderIds !=null and lenderIds.size>0">
+            AND iou.lender_id IN
+            <foreach collection="list" index="index" item="lenderId" open="(" separator="," close=")">
+                #{lenderId}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectPawnIdByLenderId" resultType="int">
+        SELECT pawn.id FROM bt_pawn pawn WHERE pawn.stateflag=0
+        <if test="lenderIds !=null and lenderIds.size>0">
+            AND pawn.lender_id IN
+            <foreach collection="list" index="index" item="lenderId" open="(" separator="," close=")">
+                #{lenderId}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectCaseIdByIouId" resultType="int">
+        SELECT bc.id FROM bt_case bc WHERE bc.stateflag=0 AND
+        bc.id IN (SELECT bci.case_id FROM bt_ci_relation bci WHERE
+        bci.stateflag=0
+        <if test="iouIds !=null and iouIds.size>0">
+            AND bci.iou_id IN
+            <foreach collection="list" index="index" item="iouId" open="(" separator="," close=")">
+                #{iouId}
+            </foreach>
+        </if>
+        )
     </select>
 
 </mapper>
