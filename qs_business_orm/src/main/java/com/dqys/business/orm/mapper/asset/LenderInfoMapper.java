@@ -121,4 +121,9 @@ public interface LenderInfoMapper {
      * 普通员工在协作器中是待接收和（已接收状态并且是没有录入过跟进信息的情况）
      */
     List<Integer> getObjectIdByNewTask(@Param("userId") Integer userId, @Param("objectType") Integer objectType);
+
+    /**
+     * 普通员工在协作器中是已接收状态并且是录入过跟进信息的情况
+     */
+    List<Integer> getObjectIdByUnderway(@Param("userId") Integer userId, @Param("objectType") Integer objectType);
 }

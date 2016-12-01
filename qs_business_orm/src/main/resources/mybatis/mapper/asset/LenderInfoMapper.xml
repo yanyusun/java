@@ -751,5 +751,14 @@
         AND tut.object_id NOT IN (SELECT tfum.object_id
         FROM t_follow_up_message tfum WHERE tfum.object_type=#{objectType} AND tfum.user_id=#{userId})
     </select>
+    <!--普通员工在协作器中是已接收状态并且是录入过跟进信息的情况-->
+    <select id="getObjectIdByUnderway" resultType="int">
+        SELECT tut.object_id from t_user_team tut,t_teammate_re ttr
+        WHERE ttr.user_team_id=tut.id AND tut.stateflag=0 AND ttr.stateflag=0
+        AND tut.object_type=#{objectType}
+        AND ttr.user_id=#{userId} AND ttr.status IN (1)
+        AND tut.object_id IN (SELECT tfum.object_id
+        FROM t_follow_up_message tfum WHERE tfum.object_type=#{objectType} AND tfum.user_id=#{userId})
+    </select>
 
 </mapper>
