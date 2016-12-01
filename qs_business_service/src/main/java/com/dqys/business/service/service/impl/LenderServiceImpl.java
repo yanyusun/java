@@ -1048,6 +1048,7 @@ public class LenderServiceImpl implements LenderService {
             if (!flag) {
                 lenderQuery.setOperator(userInfo.getId());
             }
+            lenderQuery.setOutTime(null);
         } else if (ObjectTabEnum.handle.getValue().equals(tab)) {
             // 待处置
             if (flag) {
@@ -1223,6 +1224,14 @@ public class LenderServiceImpl implements LenderService {
             lenderQuery.setOutTime(false);//没有超时的
             lenderQuery.setIds(lenderInfoMapper.lenderAllByObjectUserRelation(userId, ObjectTypeEnum.LENDER.getValue()));
             if (lenderQuery.getIds() == null || lenderQuery.getIds().size() == 0) {
+                lenderQuery.setId(SysProperty.NULL_DATA_ID);
+            }
+        } else if (ObjectTabEnum.new_task.getValue().equals(tab)) {
+            //最新任务：规则-->管理者分给普通员工，普通员工在协作器中是待接收和（已接收状态并且是没有录入过跟进信息的情况）.
+            List<Integer> ids = lenderInfoMapper.getObjectIdByNewTask(userId, ObjectTypeEnum.LENDER.getValue());
+            if (ids != null && ids.size() > 0) {
+                lenderQuery.setIds(ids);
+            } else {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
         } else {

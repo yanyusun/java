@@ -116,4 +116,9 @@ public interface LenderInfoMapper {
      * @return
      */
     List<Integer> selectCaseIdByIouId(@Param("iouIds") List<Integer> iouIds);
+
+    /**
+     * 普通员工在协作器中是待接收和（已接收状态并且是没有录入过跟进信息的情况）
+     */
+    List<Integer> getObjectIdByNewTask(@Param("userId") Integer userId, @Param("objectType") Integer objectType);
 }
