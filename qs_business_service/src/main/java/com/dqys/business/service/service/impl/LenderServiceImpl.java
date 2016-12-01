@@ -1065,17 +1065,17 @@ public class LenderServiceImpl implements LenderService {
             }
             Integer roleType = getRoleType(userId);//根据用户判断用户角色获取对应协作器角色
             lenderQuery.setIds(lenderInfoMapper.findObjectIdByLender(userId, ObjectTypeEnum.LENDER.getValue(), roleType));//11月18号修改成这样，原来是使用上面注释掉的代码
-            if (!flag) {
+//            if (!flag) {
 //                if (isPlatformOrEntrust) { // 修改于10.11
-                if (businessIds != null && businessIds.size() > 0) {
-                    lenderQuery.setIds(businessIds);
-                } else {
-                    if (lenderQuery.getIds() == null || lenderQuery.getIds().size() == 0) {
-                        lenderQuery.setId(SysProperty.NULL_DATA_ID);
-                    }
-                }
-//                }
+//                if (businessIds != null && businessIds.size() > 0) {
+//                    lenderQuery.setIds(businessIds);
+//                } else {
+            if (lenderQuery.getIds() == null || lenderQuery.getIds().size() == 0) {
+                lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
+//                }
+//                }
+//            }
         } else if (ObjectTabEnum.new48h.getValue().equals(tab)) {
             // 48h 新
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
