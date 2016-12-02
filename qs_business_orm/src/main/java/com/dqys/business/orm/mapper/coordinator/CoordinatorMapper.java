@@ -76,7 +76,7 @@ public interface CoordinatorMapper {
      * @param userId
      * @param companyId
      */
-    List<Map<String, Object>> getCompanyUserList(@Param("realName") String realName, @Param("userId") Integer userId, @Param("companyId") Integer companyId);
+    List<Map<String, Object>> getCompanyUserList(@Param("realName") String realName, @Param("userId") Integer userId, @Param("companyId") Integer companyId, @Param("roleIds") List<Integer> roleIds);
 
     /**
      * 查询团队中的协作器信息
