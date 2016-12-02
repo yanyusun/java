@@ -163,7 +163,7 @@
     <select id="selectByObjectAndUser" resultMap="BaseResultMap">
         SELECT tre.* FROM t_user_team tut ,t_teammate_re tre, t_user_info tui
         where tut.company_id =  tui.company_id and tre.user_team_id =tut.id and  tre.user_id  =tui.id
-        and tut.object_id =#{objectId} and tut.object_type=#{objectType} and  tui.id =#{userId} AND and tre.stateflag =0
+        and tut.object_id =#{objectId} and tut.object_type=#{objectType} and  tui.id =#{userId}  and tre.stateflag =0
     </select>
     <!--删除协作器的团队-->
     <update id="deleteByUserTeamId">

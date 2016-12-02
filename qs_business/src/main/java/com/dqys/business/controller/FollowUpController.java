@@ -172,7 +172,7 @@ public class FollowUpController extends BaseApiContorller {
             return JsonResponseTool.paramErr("参数错误");
         }
         UserSession userSession = UserSession.getCurrent();
-        if(objectUserRelationService.hasOnlyOneRelation(followUpMessageDTO.getObjectType(),followUpMessageDTO.getObjectId(),userSession.getUserId())){
+        if(!objectUserRelationService.hasOnlyOneRelation(followUpMessageDTO.getObjectType(),followUpMessageDTO.getObjectId(),userSession.getUserId())){
             return JsonResponseTool.failure("对不起,您暂无该权限");
         }
         followUpMessageService.insert(followUpMessageDTO);
