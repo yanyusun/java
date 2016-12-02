@@ -248,15 +248,17 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     private List<TeamDTO> getTeamDTOs(Integer companyId, UserTeam team) {
         List<TeamDTO> list = getLenderOrAsset(companyId, team.getObjectId(), team.getObjectType());//获取借款人或是资产包的团队信息
         TUserInfo tUserInfo = tUserInfoMapper.selectByPrimaryKey(team.getMangerId());//管理员信息
+        List<TeamDTO> newList = new ArrayList<>();
         if (tUserInfo != null) {
             TeamDTO teamDTO = new TeamDTO();
             teamDTO.setUserId(tUserInfo.getId());
             teamDTO.setRealName(tUserInfo.getRealName());
             teamDTO.setRoleType(10);//管理员
             teamDTO.setStatus(1);
-            list.add(teamDTO);
+            newList.add(teamDTO);
         }
-        return list;
+        newList.addAll(list);
+        return newList;
     }
 
     /**

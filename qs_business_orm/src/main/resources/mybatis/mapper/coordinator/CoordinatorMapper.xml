@@ -103,6 +103,7 @@
         </foreach>
         and tut.stateflag=0
         and tust.stateflag=0
+        ORDER  BY  ttr.type
     </select>
     <!--获取当前进行的任务总数-->
     <select id="getTaskOngoing" resultType="java.util.Map">
