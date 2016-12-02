@@ -22,8 +22,8 @@ import java.util.Map;
 @Repository
 public class CoordinatorMapperImpl extends BaseDao implements CoordinatorMapper {
     @Override
-    public List<TeamDTO> getLenderOrAsset(Integer companyId, Integer objectId, Integer objectType, List<Integer> statusList) {
-        return super.getSqlSession().getMapper(CoordinatorMapper.class).getLenderOrAsset(companyId, objectId, objectType, statusList);
+    public List<TeamDTO> getLenderOrAsset(Integer companyId, Integer objectId, Integer objectType, List<Integer> statusList, @Param("stateflag") Boolean stateflag) {
+        return super.getSqlSession().getMapper(CoordinatorMapper.class).getLenderOrAsset(companyId, objectId, objectType, statusList, stateflag);
     }
 
     @Override

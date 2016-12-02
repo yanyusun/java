@@ -949,7 +949,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         List<Integer> statusList = new ArrayList<>();
         statusList.add(0);//待接收
         statusList.add(1);//已接受
-        return coordinatorMapper.getLenderOrAsset(companyId, objectId, objectType, statusList);
+        return coordinatorMapper.getLenderOrAsset(companyId, objectId, objectType, statusList, true);
     }
 
     /**
@@ -1651,7 +1651,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
         team.setStatus(TeammateReEnum.STATUS_DELETE.getValue());
         Integer result = teammateReMapper.updateByPrimaryKey(team);
-//        teammateReMapper.deleteByPrimaryKey(team.getId());
+        teammateReMapper.deleteByPrimaryKey(team.getId());
         OURelation ouRelation = new OURelation();
         ouRelation.setUserId(teamUserId);
         ouRelation.setEmployerId(userTeamId);
@@ -1750,7 +1750,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         UserTeam userTeam = userTeamMapper.get(userTeamId);
         List<Integer> statusList = new ArrayList<>();
         statusList.add(99);
-        List<TeamDTO> dtos = coordinatorMapper.getLenderOrAsset(userTeam.getCompanyId(), userTeam.getObjectId(), userTeam.getObjectType(), statusList);
+        List<TeamDTO> dtos = coordinatorMapper.getLenderOrAsset(userTeam.getCompanyId(), userTeam.getObjectId(), userTeam.getObjectType(), statusList, false);
         for (TeamDTO t : dtos) {//查询每个人员的任务数
             Map<String, Object> task = getTaskCount(userTeam.getCompanyId(), t.getUserId(), userTeam.getObjectType());
             t.setFinishTask(MessageUtils.transMapToInt(task, "finish") == null ? 0 : MessageUtils.transMapToInt(task, "finish"));

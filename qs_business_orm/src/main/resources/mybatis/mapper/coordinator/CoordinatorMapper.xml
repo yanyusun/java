@@ -101,9 +101,13 @@
         <foreach collection="statusList" item="status" index="index" open="(" separator="," close=")">
             #{status}
         </foreach>
-        and tut.stateflag=0
-        and tust.stateflag=0
-        ORDER  BY  ttr.type
+        <if test="stateflag !=null and stateflag==true">
+            and ttr.stateflag=0
+        </if>
+        <if test="stateflag !=null and stateflag==false">
+            and ttr.stateflag!=0
+        </if>
+        ORDER BY ttr.type
     </select>
     <!--获取当前进行的任务总数-->
     <select id="getTaskOngoing" resultType="java.util.Map">
