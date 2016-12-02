@@ -4,7 +4,6 @@ package com.dqys.business.service.dto.asset;
  * Created by Yvan on 16/7/11.
  *
  * @apiDefine AssetLender
- *
  */
 public class AssetLenderDTO {
 
@@ -31,6 +30,15 @@ public class AssetLenderDTO {
     private String canContact;
     private String canPay;
     private String memo;
+    private StatisticsLender statisticsLender;
+
+    public StatisticsLender getStatisticsLender() {
+        return statisticsLender;
+    }
+
+    public void setStatisticsLender(StatisticsLender statisticsLender) {
+        this.statisticsLender = statisticsLender;
+    }
 
     public Integer getId() {
         return id;

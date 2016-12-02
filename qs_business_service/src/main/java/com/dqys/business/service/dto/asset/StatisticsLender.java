@@ -1,14 +1,15 @@
 package com.dqys.business.service.dto.asset;
 
 /**
+ * 资产包、借款人、 借据、抵押物、案件的统计
  * Created by mkfeng on 2016/11/29.
  */
 public class StatisticsLender {
-    private Integer assetCount;
-    private Integer lenderCount;
-    private Integer pawnCount;
-    private Integer iouCount;
-    private Integer caseCount;
+    private Integer assetCount = 0;//资产包数量
+    private Integer lenderCount = 0;//借款人数量
+    private Integer pawnCount = 0;//抵押物数量
+    private Integer iouCount = 0;//借据数量
+    private Integer caseCount = 0;//案件数量
 
     public Integer getAssetCount() {
         return assetCount;

@@ -319,7 +319,7 @@ public class LenderServiceImpl implements LenderService {
                     teamDTOList = coordinatorService.getLenderOrAsset(userTeam.getCompanyId(),
                             lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue());
                 }
-                lenderListDTOList.add(LenderServiceUtils.toLenderListDTO(lenderInfo, contactInfo, teamDTOList));
+                lenderListDTOList.add(LenderServiceUtils.toLenderListDTO(lenderInfo, contactInfo, teamDTOList, getCountByStatistics(lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue())));
             }
         });
         map.put("data", lenderListDTOList);
@@ -619,11 +619,31 @@ public class LenderServiceImpl implements LenderService {
         List<Integer> lenderIds = new ArrayList<>();
         if (objectType == ObjectTypeEnum.ASSETPACKAGE.getValue().intValue()) {
             lenderIds = lenderInfoMapper.selectByAssetId(objectId);//根据资产包，获取底下所有借款人id
-        }
-        if (objectType == ObjectTypeEnum.LENDER.getValue().intValue()) {
+            statisticsLender.setAssetCount(1);//资产包数量
+        } else if (objectType == ObjectTypeEnum.LENDER.getValue().intValue()) {
             lenderIds.add(objectId);
+        } else {
+            return statisticsLender;//对象类型不正确的情况下，返回初始化对象
         }
-        return null;
+        if (lenderIds == null || lenderIds.size() == 0) {
+            return statisticsLender;//没有借款人的情况下，返回初始化对象
+        }
+        statisticsLender.setLenderCount(lenderIds.size());//借款人数量
+        List<Integer> iouIds = lenderInfoMapper.selectIouIdByLenderId(lenderIds);//借据数量
+        if (iouIds != null) {
+            statisticsLender.setIouCount(iouIds.size());
+        }
+        List<Integer> pawnIds = lenderInfoMapper.selectPawnIdByLenderId(lenderIds);//抵押物数量
+        if (pawnIds != null) {
+            statisticsLender.setPawnCount(pawnIds.size());
+        }
+        if (iouIds != null && iouIds.size() > 0) {
+            List<Integer> caseIds = lenderInfoMapper.selectCaseIdByIouId(iouIds);
+            if (caseIds != null) {
+                statisticsLender.setCaseCount(caseIds.size());
+            }
+        }
+        return statisticsLender;
     }
 
     /**
@@ -790,60 +810,14 @@ public class LenderServiceImpl implements LenderService {
 //            } else {
 //                lenderQuery.setIds(ids);
 //            }
-            // 自己分配
-            ObjectUserRelationQuery query = new ObjectUserRelationQuery();
-
-            query.setType(BusinessRelationEnum.own.getValue()); // 自己分配
-            List<ObjectUserRelation> mine = objectUserRelationMapper.list(query);
-            List<Integer> mineIds = new ArrayList<>();
-            mine.forEach(objectUserRelation -> {
-                mineIds.add(objectUserRelation.getObjectId());
-            });
-            // 公司分配
-            query.setType(BusinessRelationEnum.company.getValue()); // 公司分配
-            List<ObjectUserRelation> company = objectUserRelationMapper.list(query);
-            List<Integer> companyIds = new ArrayList<>();
-            company.forEach(objectUserRelation -> {
-                companyIds.add(objectUserRelation.getObjectId());
-            });
-            // 团队分配
-            query.setType(BusinessRelationEnum.team.getValue());
-            List<ObjectUserRelation> team = objectUserRelationMapper.list(query);
-            List<Integer> teamIds = new ArrayList<>();
-            team.forEach(objectUserRelation -> {
-                teamIds.add(objectUserRelation.getObjectId());
-            });
-            TeammateRe teammateRe = new TeammateRe();
-            teammateRe.setType(TeammateReEnum.TYPE_ADMIN.getValue()); // 管理员创建的
-            List<TeammateRe> adminList = teammateReMapper.selectSelective(teammateRe);
-            List<Integer> adminIds = new ArrayList<>();
-            adminList.forEach(teammateRe1 -> {
-                UserTeam userTeam = userTeamMapper.get(teammateRe1.getUserTeamId());
-                if (userTeam != null) {
-                    adminIds.add(userTeam.getObjectId());
-                }
-            });
-            teammateRe.setType(TeammateReEnum.TYPE_ADMIN.getValue()); // 管理员创建的
-            List<TeammateRe> managerList = teammateReMapper.selectSelective(teammateRe);
-            List<Integer> managerIds = new ArrayList<>();
-            managerList.forEach(teammateRe1 -> {
-                UserTeam userTeam = userTeamMapper.get(teammateRe1.getUserTeamId());
-                if (userTeam != null) {
-                    managerIds.add(userTeam.getObjectId());
-                }
-            });
-//            List<Integer> result = CommonUtil.pickList(mineIds, companyIds);
-            List<Integer> teamateIds = CommonUtil.pickList(adminIds, managerIds);
-            List<Integer> result = CommonUtil.pickList(companyIds, CommonUtil.unionList(teamateIds, teamateIds));
-            if (isUrgeOrLawyer) {
-                lenderQuery.setIds(CommonUtil.unionList(result, businessIds));
+//            setUnderway(isUrgeOrLawyer, businessIds, lenderQuery);
+            //正在进行：规则-->管理者分给普通员工，普通员工在协作器中是已接收状态并且是录入过跟进信息的情况.(修改于12.01)
+            List<Integer> ids = lenderInfoMapper.getObjectIdByUnderway(userId, ObjectTypeEnum.LENDER.getValue());
+            if (ids != null && ids.size() > 0) {
+                lenderQuery.setIds(ids);
             } else {
-                lenderQuery.setIds(result);
-            }
-            if (CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
-            lenderQuery.setRepayStatus(SysProperty.BOOLEAN_FALSE);
         } else if (ObjectTabEnum.focus.getValue().equals(tab)) {
             // 聚焦
             lenderQuery.setId(SysProperty.NULL_DATA_ID); // 暂时不显示数据
@@ -904,6 +878,9 @@ public class LenderServiceImpl implements LenderService {
                 ids.add(objectUserRelation.getObjectId());
             });
             lenderQuery.setIds(ids);
+            if (lenderQuery.getIds() == null || lenderQuery.getIds().size() == 0) {
+                lenderQuery.setId(SysProperty.NULL_DATA_ID);
+            }
             lenderQuery.setOver(true);
         } else if (ObjectTabEnum.outTime.getValue().equals(tab)) {
             // 超时
@@ -939,6 +916,9 @@ public class LenderServiceImpl implements LenderService {
                 ids.add(objectUserRelation.getObjectId());
             });
             lenderQuery.setIds(ids);
+            if (lenderQuery.getIds() == null || lenderQuery.getIds().size() == 0) {
+                lenderQuery.setId(SysProperty.NULL_DATA_ID);
+            }
             lenderQuery.setStopStatus(2); // 这里2表示无效， 暂停状态为1
         } else if (ObjectTabEnum.join.getValue().equals(tab)) {
             // 待参与
@@ -1028,6 +1008,7 @@ public class LenderServiceImpl implements LenderService {
             if (!flag) {
                 lenderQuery.setOperator(userInfo.getId());
             }
+            lenderQuery.setOutTime(null);
         } else if (ObjectTabEnum.handle.getValue().equals(tab)) {
             // 待处置
             if (flag) {
@@ -1205,10 +1186,82 @@ public class LenderServiceImpl implements LenderService {
             if (lenderQuery.getIds() == null || lenderQuery.getIds().size() == 0) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
+        } else if (ObjectTabEnum.new_task.getValue().equals(tab)) {
+            //最新任务：规则-->管理者分给普通员工，普通员工在协作器中是待接收和（已接收状态并且是没有录入过跟进信息的情况）.
+            List<Integer> ids = lenderInfoMapper.getObjectIdByNewTask(userId, ObjectTypeEnum.LENDER.getValue());
+            if (ids != null && ids.size() > 0) {
+                lenderQuery.setIds(ids);
+            } else {
+                lenderQuery.setId(SysProperty.NULL_DATA_ID);
+            }
         } else {
             return null;
         }
         return lenderQuery;
+    }
+
+    /**
+     * 正在进行（小徐写的）
+     *
+     * @param isUrgeOrLawyer
+     * @param businessIds
+     * @param lenderQuery
+     */
+    private void setUnderway(Boolean isUrgeOrLawyer, List<Integer> businessIds, LenderQuery lenderQuery) {
+        // 自己分配
+        ObjectUserRelationQuery query = new ObjectUserRelationQuery();
+
+        query.setType(BusinessRelationEnum.own.getValue()); // 自己分配
+        List<ObjectUserRelation> mine = objectUserRelationMapper.list(query);
+        List<Integer> mineIds = new ArrayList<>();
+        mine.forEach(objectUserRelation -> {
+            mineIds.add(objectUserRelation.getObjectId());
+        });
+        // 公司分配
+        query.setType(BusinessRelationEnum.company.getValue()); // 公司分配
+        List<ObjectUserRelation> company = objectUserRelationMapper.list(query);
+        List<Integer> companyIds = new ArrayList<>();
+        company.forEach(objectUserRelation -> {
+            companyIds.add(objectUserRelation.getObjectId());
+        });
+        // 团队分配
+        query.setType(BusinessRelationEnum.team.getValue());
+        List<ObjectUserRelation> team = objectUserRelationMapper.list(query);
+        List<Integer> teamIds = new ArrayList<>();
+        team.forEach(objectUserRelation -> {
+            teamIds.add(objectUserRelation.getObjectId());
+        });
+        TeammateRe teammateRe = new TeammateRe();
+        teammateRe.setType(TeammateReEnum.TYPE_ADMIN.getValue()); // 管理员创建的
+        List<TeammateRe> adminList = teammateReMapper.selectSelective(teammateRe);
+        List<Integer> adminIds = new ArrayList<>();
+        adminList.forEach(teammateRe1 -> {
+            UserTeam userTeam = userTeamMapper.get(teammateRe1.getUserTeamId());
+            if (userTeam != null) {
+                adminIds.add(userTeam.getObjectId());
+            }
+        });
+        teammateRe.setType(TeammateReEnum.TYPE_ADMIN.getValue()); // 管理员创建的
+        List<TeammateRe> managerList = teammateReMapper.selectSelective(teammateRe);
+        List<Integer> managerIds = new ArrayList<>();
+        managerList.forEach(teammateRe1 -> {
+            UserTeam userTeam = userTeamMapper.get(teammateRe1.getUserTeamId());
+            if (userTeam != null) {
+                managerIds.add(userTeam.getObjectId());
+            }
+        });
+//            List<Integer> result = CommonUtil.pickList(mineIds, companyIds);
+        List<Integer> teamateIds = CommonUtil.pickList(adminIds, managerIds);
+        List<Integer> result = CommonUtil.pickList(companyIds, CommonUtil.unionList(teamIds, teamateIds));
+        if (isUrgeOrLawyer) {
+            lenderQuery.setIds(CommonUtil.unionList(result, businessIds));
+        } else {
+            lenderQuery.setIds(result);
+        }
+        if (CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0) {
+            lenderQuery.setId(SysProperty.NULL_DATA_ID);
+        }
+        lenderQuery.setRepayStatus(SysProperty.BOOLEAN_FALSE);
     }
 
     private Integer getRoleType(Integer userId) {

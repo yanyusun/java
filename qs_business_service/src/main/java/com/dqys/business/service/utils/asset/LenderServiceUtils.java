@@ -9,6 +9,7 @@ import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
 import com.dqys.business.service.dto.asset.LenderListDTO;
+import com.dqys.business.service.dto.asset.StatisticsLender;
 import com.dqys.business.service.query.asset.LenderListQuery;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.UserSession;
@@ -282,7 +283,7 @@ public class LenderServiceUtils {
         return lenderQuery;
     }
 
-    public static LenderListDTO toLenderListDTO(LenderInfo lenderInfo, ContactInfo contactInfo, List<TeamDTO> teamDTOList) {
+    public static LenderListDTO toLenderListDTO(LenderInfo lenderInfo, ContactInfo contactInfo, List<TeamDTO> teamDTOList, StatisticsLender statisticsLender) {
         LenderListDTO lenderListDTO = new LenderListDTO();
         if (contactInfo != null) {
             lenderListDTO.setAvg(contactInfo.getAvg());
@@ -329,7 +330,7 @@ public class LenderServiceUtils {
         lenderListDTO.setStatus(getDisposeString(lenderInfo));
         lenderListDTO.setManageTime(lenderInfo.getBelongFollowTimes() + lenderInfo.getFollowUpTime());// 所属人催收次数
 
-
+        lenderListDTO.setStatisticsLender(statisticsLender);//借款人统计数量
         lenderListDTO.setMessage(null);// 消息
 
         return lenderListDTO;

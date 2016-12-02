@@ -32,6 +32,15 @@ public class AssetListDTO {
     private String belong; // 所属人
     private Integer followNum; // 实时动态条数
     private String memo; // 备注
+    private StatisticsLender statisticsLender;//统计数量
+
+    public StatisticsLender getStatisticsLender() {
+        return statisticsLender;
+    }
+
+    public void setStatisticsLender(StatisticsLender statisticsLender) {
+        this.statisticsLender = statisticsLender;
+    }
 
     public String getMemo() {
         return memo;

@@ -80,7 +80,7 @@
         ON tctr.company_team_id=tct.id LEFT JOIN t_user_tag tut
         ON tut.user_id=tctr.accepter_id
         WHERE tct.object_type=#{type} AND tut.user_type IN (31,32,33)
-        AND tctr.`status`=1 AND tct.object_type=#{type}
+        AND tctr.`status`=1 AND tct.object_type=#{type} AND tut.user_id=#{userId,jdbcType=INTEGER}
         ) AND (our.user_id=#{userId,jdbcType=INTEGER} OR b.create_id=#{userId,jdbcType=INTEGER})
         GROUP BY bor.object_id
     </select>

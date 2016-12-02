@@ -141,8 +141,8 @@
         <if test="id!=null">
             AND id=#{id}
         </if>
-        <if test="operNo!=null">
-            AND public_message_no=#{operNo}
+        <if test="messageNo!=null">
+            AND public_message_no=#{messageNo}
         </if>
     </update>
 
