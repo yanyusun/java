@@ -92,4 +92,38 @@ public interface LenderInfoMapper {
      */
 
     List<Integer> selectByAssetId(Integer assetId);
+
+    /**
+     * 获取借款人下所有借据id
+     *
+     * @param lenderIds
+     * @return
+     */
+    List<Integer> selectIouIdByLenderId(@Param("lenderIds") List<Integer> lenderIds);
+
+    /**
+     * 获取借款人下所有抵押物id
+     *
+     * @param lenderIds
+     * @return
+     */
+    List<Integer> selectPawnIdByLenderId(@Param("lenderIds") List<Integer> lenderIds);
+
+    /**
+     * 获取借据相关的案件id
+     *
+     * @param iouIds
+     * @return
+     */
+    List<Integer> selectCaseIdByIouId(@Param("iouIds") List<Integer> iouIds);
+
+    /**
+     * 普通员工在协作器中是待接收和（已接收状态并且是没有录入过跟进信息的情况）
+     */
+    List<Integer> getObjectIdByNewTask(@Param("userId") Integer userId, @Param("objectType") Integer objectType);
+
+    /**
+     * 普通员工在协作器中是已接收状态并且是录入过跟进信息的情况
+     */
+    List<Integer> getObjectIdByUnderway(@Param("userId") Integer userId, @Param("objectType") Integer objectType);
 }

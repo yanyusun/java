@@ -707,7 +707,58 @@
     </select>
 
     <select id="selectByAssetId" resultType="int">
-      SELECT len.id FROM bt_lender len WHERE len.asset_id=#{assetId}
+      SELECT len.id FROM bt_lender len WHERE len.stateflag=0 AND len.asset_id=#{assetId}
+    </select>
+
+    <select id="selectIouIdByLenderId" resultType="int">
+        SELECT iou.id FROM bt_iou iou WHERE iou.stateflag=0
+        <if test="lenderIds !=null and lenderIds.size>0">
+            AND iou.lender_id IN
+            <foreach collection="lenderIds" index="index" item="lenderId" open="(" separator="," close=")">
+                #{lenderId}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectPawnIdByLenderId" resultType="int">
+        SELECT pawn.id FROM bt_pawn pawn WHERE pawn.stateflag=0
+        <if test="lenderIds !=null and lenderIds.size>0">
+            AND pawn.lender_id IN
+            <foreach collection="lenderIds" index="index" item="lenderId" open="(" separator="," close=")">
+                #{lenderId}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectCaseIdByIouId" resultType="int">
+        SELECT bc.id FROM bt_case bc WHERE bc.stateflag=0 AND
+        bc.id IN (SELECT bci.case_id FROM bt_ci_relation bci WHERE
+        bci.stateflag=0
+        <if test="iouIds !=null and iouIds.size>0">
+            AND bci.iou_id IN
+            <foreach collection="iouIds" index="index" item="iouId" open="(" separator="," close=")">
+                #{iouId}
+            </foreach>
+        </if>
+        )
+    </select>
+    <!--普通员工在协作器中是待接收和（已接收状态并且是没有录入过跟进信息的情况）-->
+    <select id="getObjectIdByNewTask" resultType="int">
+        SELECT tut.object_id from t_user_team tut,t_teammate_re ttr
+        WHERE ttr.user_team_id=tut.id AND tut.stateflag=0 AND ttr.stateflag=0
+        AND tut.object_type=#{objectType}
+        AND ttr.user_id=#{userId} AND ttr.status IN (0,1)
+        AND tut.object_id NOT IN (SELECT tfum.object_id
+        FROM t_follow_up_message tfum WHERE tfum.object_type=#{objectType} AND tfum.user_id=#{userId})
+    </select>
+    <!--普通员工在协作器中是已接收状态并且是录入过跟进信息的情况-->
+    <select id="getObjectIdByUnderway" resultType="int">
+        SELECT tut.object_id from t_user_team tut,t_teammate_re ttr
+        WHERE ttr.user_team_id=tut.id AND tut.stateflag=0 AND ttr.stateflag=0
+        AND tut.object_type=#{objectType}
+        AND ttr.user_id=#{userId} AND ttr.status IN (1)
+        AND tut.object_id IN (SELECT tfum.object_id
+        FROM t_follow_up_message tfum WHERE tfum.object_type=#{objectType} AND tfum.user_id=#{userId})
     </select>
 
 </mapper>

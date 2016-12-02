@@ -31,7 +31,7 @@ public class LenderQuery extends BaseQuery {
 
     private String listSearch; // 列表时搜索条件(模糊查询备注|借款人编号)
 
-    private boolean outTime; // 委托时间是否逾期o
+    private Boolean outTime = false; // 委托时间是否逾期o
     private boolean over; // 委托时间是否逾期
     private boolean asset; // 资产包
     private boolean notAsset; // 非资产包
@@ -170,11 +170,11 @@ public class LenderQuery extends BaseQuery {
         this.listSearch = listSearch;
     }
 
-    public boolean isOutTime() {
+    public Boolean isOutTime() {
         return outTime;
     }
 
-    public void setOutTime(boolean outTime) {
+    public void setOutTime(Boolean outTime) {
         this.outTime = outTime;
     }
 

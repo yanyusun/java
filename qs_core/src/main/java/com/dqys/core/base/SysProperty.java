@@ -2,7 +2,7 @@ package com.dqys.core.base;
 
 /**
  * Created by Yvan on 16/7/21.
- *
+ * <p/>
  * 通用的系统级配置
  */
 public class SysProperty {
@@ -14,8 +14,8 @@ public class SysProperty {
     public static final Integer NULL_DATA_ID = 0;
 
     // 只存在true|false情况下数据填充
-    public static final Integer BOOLEAN_TRUE = 1;
-    public static final Integer BOOLEAN_FALSE = 0;
+    public static final Integer BOOLEAN_TRUE = 0;
+    public static final Integer BOOLEAN_FALSE = 1;
 
     // 数据状态
     public static final Integer DEFAULT = 0;

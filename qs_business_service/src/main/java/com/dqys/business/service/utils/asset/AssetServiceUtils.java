@@ -10,6 +10,7 @@ import com.dqys.business.service.constant.asset.LenderTypeEnum;
 import com.dqys.business.service.dto.asset.AssetDTO;
 import com.dqys.business.service.dto.asset.AssetLenderDTO;
 import com.dqys.business.service.dto.asset.AssetListDTO;
+import com.dqys.business.service.dto.asset.StatisticsLender;
 import com.dqys.business.service.query.asset.AssetListQuery;
 import com.dqys.core.model.TArea;
 import com.dqys.core.utils.AreaTool;
@@ -149,7 +150,7 @@ public class AssetServiceUtils {
      * @return
      */
     public static AssetListDTO toAssetListDTO(AssetInfo assetInfo, TUserInfo userInfo, String rate,
-                                              String belong, Integer followNum) {
+                                              String belong, Integer followNum, StatisticsLender statisticsLender) {
         AssetListDTO assetListDTO = new AssetListDTO();
 
         assetListDTO.setId(assetInfo.getId());
@@ -181,7 +182,7 @@ public class AssetServiceUtils {
         assetListDTO.setCompany(assetInfo.getLoanOrganization());
         assetListDTO.setBelong(belong);
         assetListDTO.setFollowNum(followNum);
-
+        assetListDTO.setStatisticsLender(statisticsLender);//统计数量
         return assetListDTO;
     }
 

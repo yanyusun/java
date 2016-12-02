@@ -34,6 +34,7 @@ public enum ObjectTabEnum {
     stop(18, "暂停"),
     gongingOn(19, "正在进行"),
     myUrge(20, "我的催收"),
+    new_task(21, "最新任务"),
     all(99, "全部");
 
     private Integer value;
