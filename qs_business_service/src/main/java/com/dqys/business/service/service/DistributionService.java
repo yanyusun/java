@@ -6,13 +6,14 @@ import com.dqys.core.model.JsonResponse;
 
 /**
  * Created by Yvan on 16/7/21.
- *
+ * <p/>
  * 分配器管理
  */
 public interface DistributionService {
 
     /**
      * 获取分配器
+     *
      * @param type
      * @param id
      * @return
@@ -21,6 +22,7 @@ public interface DistributionService {
 
     /**
      * 创建分配器
+     *
      * @param type
      * @param id
      * @return
@@ -30,6 +32,7 @@ public interface DistributionService {
 
     /**
      * 加入分配器
+     *
      * @param id 分配器ID
      * @return
      */
@@ -37,7 +40,8 @@ public interface DistributionService {
 
     /**
      * 邀请加入分配器
-     * @param id 分配器ID
+     *
+     * @param id        分配器ID
      * @param companyId 被邀请公司ID
      * @return
      * @throws BusinessLogException
@@ -46,6 +50,7 @@ public interface DistributionService {
 
     /**
      * 修改分配器(同意加入|拒绝加入)
+     *
      * @param id
      * @param type
      * @return
@@ -54,6 +59,7 @@ public interface DistributionService {
 
     /**
      * 退出该分配记录
+     *
      * @param id
      * @return
      */
@@ -61,20 +67,23 @@ public interface DistributionService {
 
     /**
      * 平台为申请业务流转的公司添加业务流转伙伴
-     * @param type 对象类型
-     * @param id 对象ID
+     *
+     * @param type           对象类型
+     * @param id             对象ID
      * @param distributionId 分配器ID
-     * @param businessType 业务类型
-     * @param companyId 被邀请公司ID
+     * @param businessType   业务类型
+     * @param companyId      被邀请公司ID
      * @param objectType
      * @param objectId
      * @param receiveUserId
      */
-    JsonResponse addBusinessService(Integer type, Integer id, Integer distributionId,
-                                    Integer businessType, Integer companyId, Integer businessRequestId, Integer objectType, Integer objectId, Integer receiveUserId) throws BusinessLogException;
+    JsonResponse addBusinessService(Integer type, Integer id, Integer distributionId, Integer businessType, Integer companyId,
+                                    Integer businessRequestId, Integer objectType, Integer objectId, Integer receiveUserId,
+                                    Integer flowBusinessId) throws BusinessLogException;
 
     /**
      * 被添加公司接受或者拒绝业务流转邀请
+     *
      * @param type
      * @param id
      * @param distributionId
@@ -82,10 +91,11 @@ public interface DistributionService {
      * @return
      */
     JsonResponse updateBusinessService(Integer type, Integer id, Integer distributionId,
-                                  Integer businessType, Integer status) throws BusinessLogException;
+                                       Integer businessType, Integer status, Integer flowBusinessId) throws BusinessLogException;
 
     /**
      * 删除业务流转的被添加公司
+     *
      * @param id
      * @param targetType
      * @param targetId
@@ -95,14 +105,14 @@ public interface DistributionService {
     JsonResponse exitBusinessService(Integer id, Integer targetType, Integer targetId) throws BusinessLogException;
 
     /**
-     *  所属机构同意平台将其加入分配器
+     * 所属机构同意平台将其加入分配器
+     *
      * @param id
      * @param status
      * @return
      * @throws BusinessLogException
      */
     JsonResponse designDistribution(Integer id, Integer status) throws BusinessLogException;
-
 
 
 }

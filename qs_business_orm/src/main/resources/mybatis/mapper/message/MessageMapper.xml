@@ -93,6 +93,9 @@
             <if test="messageNo !=null">
                 public_message_no,
             </if>
+            <if test="flowBusinessId !=null">
+                flow_business_id,
+            </if>
             status,send_time
         </trim>
         <trim prefix=" values(" suffix=")">
@@ -122,6 +125,9 @@
             </if>
             <if test="messageNo !=null">
                 #{messageNo},
+            </if>
+            <if test="flowBusinessId !=null">
+                #{flowBusinessId},
             </if>
             0,now()
         </trim>

@@ -51,6 +51,20 @@ public interface MessageService {
     Integer add(String title, String content, Integer sender_id, Integer receive_id, String label, Integer type, Integer businessType, String operUrl);
 
     /**
+     * @param title          标题
+     * @param content        内容
+     * @param sender_id      发送者id
+     * @param receive_id     接受者id
+     * @param label          标签
+     * @param type           消息类型(0任务1产品2安全3服务)
+     * @param businessType   业务类型(0任务1产品2安全3服务)
+     * @param operUrl        操作地址参数
+     * @param flowBusinessId 流转业务状态表id
+     * @return
+     */
+    Integer add(String title, String content, Integer sender_id, Integer receive_id, String label, Integer type, Integer businessType, String operUrl, Integer flowBusinessId);
+
+    /**
      * 查询消息记录数
      *
      * @param message
@@ -107,7 +121,8 @@ public interface MessageService {
      * @param status        状态（0拒绝1接收）
      * @return
      */
-    String businessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer sendUserId, Integer receiveUserId, Integer status, Integer inviteUserId);
+    String businessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer sendUserId,
+                              Integer receiveUserId, Integer status, Integer inviteUserId, Integer flowBusinessId);
 
     /**
      * 被邀请公司同意拒绝
@@ -121,7 +136,8 @@ public interface MessageService {
      * @param status        状态（0拒绝1接收）
      * @return
      */
-    String respondInvite(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer sendUserId, Integer receiveUserId, Integer status);
+    String respondInvite(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer sendUserId, Integer receiveUserId,
+                         Integer status, Integer flowBusinessId);
 
     /**
      * 执行司法化解（律所接收到通知）
@@ -136,7 +152,8 @@ public interface MessageService {
      * @param modify     是否对数据修改（是true否false）
      * @return
      */
-    String judicature(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, boolean modify);
+    String judicature(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation,
+                      Integer onStatus, boolean modify, Integer flowBusinessId);
 
     /**
      * 市场处置（中介接收短信通知）
@@ -151,7 +168,8 @@ public interface MessageService {
      * @param modify     是否对数据修改（是true否false）
      * @return
      */
-    String intermediary(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, boolean modify);
+    String intermediary(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation,
+                        Integer onStatus, boolean modify, Integer flowBusinessId);
 
     /**
      * 维持常规催收（催收接收短信通知）
@@ -166,7 +184,8 @@ public interface MessageService {
      * @param modify     是否对数据修改（是true否false）
      * @return
      */
-    String collectiones(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, boolean modify);
+    String collectiones(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation,
+                        Integer onStatus, boolean modify, Integer flowBusinessId);
 
     /**
      * 设置消息的操作状态

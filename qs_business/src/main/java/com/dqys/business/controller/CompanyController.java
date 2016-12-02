@@ -285,11 +285,13 @@ public class CompanyController {
     public JsonResponse addBusinessService(@RequestParam Integer type, @RequestParam Integer id,
                                            @RequestParam Integer distributionId, @RequestParam Integer businessType,
                                            @RequestParam Integer companyId, @RequestParam Integer businessRequestId,
-                                           Integer objectType, Integer objectId, Integer receiveUserId) throws BusinessLogException {
+                                           Integer objectType, Integer objectId, Integer receiveUserId,
+                                           @RequestParam Integer flowBusinessId) throws BusinessLogException {
         if (CommonUtil.checkParam(type, id, distributionId, businessType, companyId)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        JsonResponse response = distributionService.addBusinessService(type, id, distributionId, businessType, companyId, businessRequestId, objectType, objectId, receiveUserId);
+        JsonResponse response = distributionService.addBusinessService(type, id, distributionId, businessType, companyId,
+                businessRequestId, objectType, objectId, receiveUserId, flowBusinessId);
         return response;
     }
 
@@ -307,7 +309,7 @@ public class CompanyController {
     @RequestMapping(value = "/designBusinessService")
     public JsonResponse designBusinessService(@RequestParam Integer type, @RequestParam Integer id,
                                               @RequestParam Integer distributionId, @RequestParam Integer businessType,
-                                              @RequestParam Integer status) throws BusinessLogException {
+                                              @RequestParam Integer status, Integer flowBusinessId) throws BusinessLogException {
         if (CommonUtil.checkParam(type, id, distributionId, businessType, status)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -315,7 +317,7 @@ public class CompanyController {
             // 如果不是接受状态,全部设置为拒绝
             status = ObjectAcceptTypeEnum.refuse.getValue();
         }
-        return distributionService.updateBusinessService(type, id, distributionId, businessType, status);
+        return distributionService.updateBusinessService(type, id, distributionId, businessType, status, flowBusinessId);
     }
 
     /**
