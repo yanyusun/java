@@ -9,6 +9,7 @@ public enum ResponseCodeEnum {
     SUCCESS(2000, "成功"),
     NODATA(3000, "没有数据"),
     AUTH_FAILURE(4000, "账号验证异常，请重新登陆"),
+    AUTH_BUSINESS_FAILURE(4001,"对当前访问的链接没有操作权限"),
     SERVER_ERR(5000, "服务器错误"),
     ILLEGAL_REQUEST(5001, "非法请求"),
     NOT_FOUND(5002, "资源不存在"),
