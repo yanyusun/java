@@ -1,6 +1,4 @@
-package com.dqys.resource.extend;
-
-import com.dqys.core.model.TArea;
+package com.dqys.core.model;
 
 import java.io.Serializable;
 import java.util.List;
