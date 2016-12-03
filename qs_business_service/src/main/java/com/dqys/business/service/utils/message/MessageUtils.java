@@ -47,6 +47,7 @@ public class MessageUtils {
             messageDTO.setOperStatus(m.getOperStatus());
             messageDTO.setOperUserName(m.getOperUserName());
             messageDTO.setMessageNo(m.getMessageNo());
+            messageDTO.setFlowBusiness(m.getFlowBusiness());
             list.add(messageDTO);
         }
         return list;

@@ -59,7 +59,11 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<Message> selectByMessage(Message message) {
-        return messageMapper.selectByMessage(message);
+        List<Message> messageList = messageMapper.selectByMessage(message);
+        for (Message mess : messageList) {
+            mess.setFlowBusiness(flowBusinessService.get(mess.getFlowBusinessId()));
+        }
+        return messageList;
     }
 
     @Override
