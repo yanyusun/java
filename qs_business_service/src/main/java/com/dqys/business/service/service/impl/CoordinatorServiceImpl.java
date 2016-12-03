@@ -337,26 +337,57 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     }
 
     @Override
-    public Map<String, Object> getCompanyUserList(String realName, Integer userId, Integer companyId) {
+    public Map<String, Object> getCompanyUserList(String realName, Integer userId, Integer companyId, Integer userTeamId) {
         Map map = new HashMap<>();
-        Integer uId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         map.put("result", "no");
         //用户id和公司id只能选择其一，没有公司id就通过用户id查找公司id
         if ((companyId == null && userId != null) || (companyId != null && userId == null)) {
-            List<Map<String, Object>> list = coordinatorMapper.getCompanyUserList(realName, userId, companyId);
-            //集合中去除自己的
+            List<Integer> roleIds = new ArrayList<>();
+            //判断当前用户在协作器中的角色
+            setRoleId(roleIds, userId, userTeamId);
+            List<Map<String, Object>> list = coordinatorMapper.getCompanyUserList(realName, userId, companyId, roleIds);
+            TeammateRe teammateRe = new TeammateRe();
+            teammateRe.setStatus(TeammateReEnum.STATUS_ACCEPT.getValue());
+            teammateRe.setUserTeamId(userTeamId);
+            List<TeammateRe> teamRes = teammateReMapper.selectSelective(teammateRe);//加入过协作器的人员
+            List<Integer> userIds = new ArrayList<>();
+            for (TeammateRe teamRe : teamRes) {
+                userIds.add(teamRe.getUserId());
+            }
+            List<Map> newList = new ArrayList<>();
+            //集合中去除自己的和加入过协作器的人员
             for (Map m : list) {
-                if (uId.toString().equals(m.get("userId").toString())) {
-                    list.remove(m);
-                    break;
+                if (!userIds.contains(MessageUtils.transMapToInt(m, "userId"))) {
+                    newList.add(m);
                 }
             }
-            map.put("users", list);
+            map.put("users", newList);
             map.put("result", "yes");
         } else {
             map.put("msg", "参数传输有误");
         }
         return map;
+    }
+
+    private void setRoleId(List<Integer> roleIds, Integer userId, Integer userTeamId) {
+        UserDetail detail = coordinatorMapper.getUserDetail(userId);
+        TeammateRe teammateRe = new TeammateRe();
+        teammateRe.setUserId(userId);
+        teammateRe.setUserTeamId(userTeamId);
+        teammateRe.setStatus(TeammateReEnum.STATUS_ACCEPT.getValue());
+        teammateRe.setType(TeammateReEnum.TYPE_AUXILIARY.getValue());
+        List<TeammateRe> list = teammateReMapper.selectSelective(teammateRe);
+        //根据当前用户的角色查询相应角色的成员
+        if (detail.getRoleType() == RoleTypeEnum.ADMIN.getValue().intValue()) {//管理员
+            roleIds.add(RoleTypeEnum.REGULATOR.getValue().intValue());
+            roleIds.add(RoleTypeEnum.GENERAL.getValue().intValue());
+        } else if (detail.getRoleType() == RoleTypeEnum.REGULATOR.getValue().intValue()) {//管理者
+            roleIds.add(RoleTypeEnum.GENERAL.getValue().intValue());
+        } else if (detail.getRoleType() == RoleTypeEnum.GENERAL.getValue().intValue() && list != null && list.size() > 0) {//所属人
+            roleIds.add(RoleTypeEnum.GENERAL.getValue().intValue());
+        } else {
+            roleIds.add(0);
+        }
     }
 
     @Override
@@ -949,7 +980,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         List<Integer> statusList = new ArrayList<>();
         statusList.add(0);//待接收
         statusList.add(1);//已接受
-        return coordinatorMapper.getLenderOrAsset(companyId, objectId, objectType, statusList);
+        return coordinatorMapper.getLenderOrAsset(companyId, objectId, objectType, statusList, true);
     }
 
     /**
@@ -1651,7 +1682,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
         team.setStatus(TeammateReEnum.STATUS_DELETE.getValue());
         Integer result = teammateReMapper.updateByPrimaryKey(team);
-//        teammateReMapper.deleteByPrimaryKey(team.getId());
+        teammateReMapper.deleteByPrimaryKey(team.getId());
         OURelation ouRelation = new OURelation();
         ouRelation.setUserId(teamUserId);
         ouRelation.setEmployerId(userTeamId);
@@ -1750,7 +1781,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         UserTeam userTeam = userTeamMapper.get(userTeamId);
         List<Integer> statusList = new ArrayList<>();
         statusList.add(99);
-        List<TeamDTO> dtos = coordinatorMapper.getLenderOrAsset(userTeam.getCompanyId(), userTeam.getObjectId(), userTeam.getObjectType(), statusList);
+        List<TeamDTO> dtos = coordinatorMapper.getLenderOrAsset(userTeam.getCompanyId(), userTeam.getObjectId(), userTeam.getObjectType(), statusList, false);
         for (TeamDTO t : dtos) {//查询每个人员的任务数
             Map<String, Object> task = getTaskCount(userTeam.getCompanyId(), t.getUserId(), userTeam.getObjectType());
             t.setFinishTask(MessageUtils.transMapToInt(task, "finish") == null ? 0 : MessageUtils.transMapToInt(task, "finish"));
