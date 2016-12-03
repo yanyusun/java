@@ -2,19 +2,17 @@ package com.dqys.resource.controller;
 
 import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.model.AreaList;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.TArea;
 import com.dqys.core.utils.ApiParseTool;
 import com.dqys.core.utils.AreaTool;
-import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.resource.extend.AreaList;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -44,56 +42,24 @@ public class AreaController extends BaseApiContorller {
 
     @RequestMapping(path = "/listAll")
     public JsonResponse listAll() throws Exception{
-        List<TArea> tAreaList = AreaTool.listAreaByUpperId(0);
-        if (null == tAreaList || tAreaList.isEmpty()) {
-            return JsonResponseTool.noData();
-        }
-
-        List<AreaList> result = new ArrayList<>();
-        for (TArea tArea : tAreaList) {
-            AreaList area = toAreaList(tArea);
-            area.setChildren(listAllChildAreaById(area.getValue()));
-            result.add(area);
-        }
+//        List<TArea> tAreaList = AreaTool.listAreaByUpperId(0);
+//        if (null == tAreaList || tAreaList.isEmpty()) {
+//            return JsonResponseTool.noData();
+//        }
+//
+//        List<AreaList> result = new ArrayList<>();
+//        for (TArea tArea : tAreaList) {
+//            AreaList area = toAreaList(tArea);
+//            area.setChildren(listAllChildAreaById(area.getValue()));
+//            result.add(area);
+//        }
+        List<AreaList> result = AreaTool.getAllArea();
         return JsonResponseTool.success(result);
     }
 
 
-    private List<AreaList> listAllChildAreaById(Integer id){
-        if(CommonUtil.checkParam(id)){
-            return null;
-        }
-        try {
-            List<TArea> areaList = AreaTool.listAreaByUpperId(id);
-            if(CommonUtil.checkParam(areaList) || areaList.size() == 0){
-                return null;
-            }
-            List<AreaList> result = new ArrayList<>();
-            for (TArea tArea : areaList) {
-                AreaList area = toAreaList(tArea);
-                area.setChildren(listAllChildAreaById(area.getValue()));
-                result.add(area);
-            }
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
-    private AreaList toAreaList(TArea tarea){
-        if(CommonUtil.checkParam(tarea)){
-            return null;
-        }
-        AreaList result = new AreaList();
 
-        result.setValue(tarea.getValue());
-        result.setIsLeaf(tarea.getIsLeaf());
-        result.setLevel(tarea.getLevel());
-        result.setLabel(tarea.getLabel());
-        result.setUpper(tarea.getUpper());
 
-        return result;
-    }
 
 }

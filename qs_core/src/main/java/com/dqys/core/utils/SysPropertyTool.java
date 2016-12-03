@@ -213,7 +213,8 @@ public class SysPropertyTool implements ApplicationContextAware {
     public static void initProperty() {
         try {
             loadAllProperty();
-           // AreaTool.loadArea();  // FIXME: 16-5-26 测试环境不加载
+          // AreaTool.loadArea();  // FIXME: 16-5-26 测试环境不加载
+            //AreaTool.loadListAll();//// TODO: 16-12-2 等前端可以一级级调用后删除
         } catch (Exception e) {
             e.printStackTrace();
         }
