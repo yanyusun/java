@@ -1,6 +1,7 @@
 package com.dqys.business.service.utils.permission;
 
 import com.dqys.business.orm.pojo.operType.OperType;
+import com.dqys.business.service.utils.operType.OperTypeNavBean;
 import com.dqys.business.service.utils.operType.OperTypeUtile;
 
 import java.util.List;
@@ -17,21 +18,23 @@ public class NavIdOperTypeFilter extends OperTypeFilter {
 
     private Integer objectType;
 
-    public NavIdOperTypeFilter(Integer navId, Integer objectType) {
+    private Integer position;
+
+    public NavIdOperTypeFilter(Integer navId, Integer objectType, Integer position) {
         this.navId = navId;
         this.objectType = objectType;
+        this.position = position;
     }
 
     @Override
     public List<OperType> getPermission(List<OperType> list) {
-        List<OperType> operTypes2= OperTypeUtile.getOperType(navId,objectType);
-        for(OperType operType1:list){
-            for(OperType operType2:operTypes2){
-                if(operType2.getOperType().intValue()==operType1.getOperType().intValue()){
-                    operTypes.add(operType1);
-                }
-            }
+        List<OperType> operTypes2 = null;
+        if (OperTypeNavBean.LENDER_ROW == position) {
+            operTypes2 = OperTypeUtile.getLenderRowOperType(navId);
+        } else {
+            operTypes2 = OperTypeUtile.getOperType(navId, objectType);
         }
+        PermissionUtil.intersection(list, operTypes2, operTypes);
         return getNextPermission();
     }
 

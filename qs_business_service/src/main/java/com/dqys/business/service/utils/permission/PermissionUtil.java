@@ -21,8 +21,12 @@ public class PermissionUtil {
         return newList;
     }
 
-    ;
-
+    /**
+     * 求list1与list2中的交集
+     * @param list1
+     * @param list2
+     * @param resultList
+     */
     public static void intersection(List<OperType> list1, List<OperType> list2, List<OperType> resultList) {
         for (OperType operType1 : list1) {
             for (OperType operType2 : list2) {

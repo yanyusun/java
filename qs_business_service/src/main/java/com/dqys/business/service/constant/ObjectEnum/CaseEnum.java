@@ -4,7 +4,7 @@ package com.dqys.business.service.constant.ObjectEnum;
  * 案件
  * Created by mkfeng on 2016/7/7.
  */
-public enum CaseEnum {
+public enum CaseEnum implements ObjectEnumBase{
     CASE_FOLLOW(151, "输入案件跟进信息"),
     NEGOTIATE(152, "进行了谈判"),
     MEDIATION_ONE(153, "进行了一审调解"),

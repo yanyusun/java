@@ -5,9 +5,10 @@ import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
-import com.dqys.business.service.utils.followUp.FollowUpUtil;
+import com.dqys.business.service.service.objectUserRelation.ObjectUserRelationService;
 import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,9 @@ public class FollowUpController extends BaseApiContorller {
 
     @Autowired
     private FollowUpReadStatusService followUpReadStatusService;
+
+    @Autowired
+    private ObjectUserRelationService objectUserRelationService;
 
 
     /**
@@ -166,6 +170,10 @@ public class FollowUpController extends BaseApiContorller {
     public JsonResponse add(FollowUpMessageDTO followUpMessageDTO) throws IOException{
         if (followUpMessageDTO.getObjectId() == null || followUpMessageDTO.getObjectType() == null || followUpMessageDTO.getLiquidateStage() == null) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        UserSession userSession = UserSession.getCurrent();
+        if(!objectUserRelationService.hasOnlyOneRelation(followUpMessageDTO.getObjectType(),followUpMessageDTO.getObjectId(),userSession.getUserId())){
+            return JsonResponseTool.failure("对不起,您暂无该权限");
         }
         followUpMessageService.insert(followUpMessageDTO);
         return JsonResponseTool.success(followUpMessageDTO);

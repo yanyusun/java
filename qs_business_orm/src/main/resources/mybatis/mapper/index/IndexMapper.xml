@@ -6,18 +6,18 @@
        SELECT COUNT(t.id) count FROM
         (
         SELECT id from t_teammate_re ttr
-                where ttr.status=0 and ttr.user_id=#{userId,jdbcType=INTEGER}
+                where ttr.status=0 AND ttr.stateflag=0 and ttr.user_id=#{userId,jdbcType=INTEGER}
         UNION
         SELECT id from t_company_team_re ctr
-        where ctr.status=0 and ctr.accepter_id=#{userId,jdbcType=INTEGER}) t
+        where ctr.status=0 AND ctr.stateflag=0 and ctr.accepter_id=#{userId,jdbcType=INTEGER}) t
     </select>
     <!--获取借款人自己分配和公司分配的任务-->
     <select id="getLenderAllotByOneSelfAndCompany" resultType="java.util.Map">
        SELECT COUNT(t.object_id) count FROM (
   SELECT  our.object_id  from object_user_relation our LEFT JOIN t_teammate_re ttr
-        ON ttr.id=our.employer_id and our.type=1 and ttr.type !=2 LEFT JOIN bt_lender len
+        ON ttr.id=our.employer_id  LEFT JOIN bt_lender len
         ON len.id=our.object_id
-        where len.repay_status=#{repayStatus,jdbcType=INTEGER} and our.object_type=#{objectType,jdbcType=INTEGER} and our.user_id=#{userId,jdbcType=INTEGER}
+        where our.type=1 and ttr.type !=2  AND ttr.stateflag=0 AND len.repay_status=#{repayStatus,jdbcType=INTEGER} and our.object_type=#{objectType,jdbcType=INTEGER} and our.user_id=#{userId,jdbcType=INTEGER}
   UNION
   SELECT our.object_id  from object_user_relation our LEFT JOIN bt_lender len
         ON len.id=our.object_id and (our.type=0 or our.type=2)
@@ -26,15 +26,15 @@
     <!--获取借款人团队分配的任务-->
     <select id="getLenderAllotByTeam" resultType="java.util.Map">
         SELECT count(*) count from object_user_relation our LEFT JOIN t_teammate_re ttr
-        ON ttr.id=our.employer_id and our.type=1 and ttr.type !=2 LEFT JOIN bt_lender len
+        ON ttr.id=our.employer_id  LEFT JOIN bt_lender len
         ON len.id=our.object_id
-        where len.repay_status=#{repayStatus,jdbcType=INTEGER} and our.object_type=#{objectType,jdbcType=INTEGER} and our.user_id=#{userId,jdbcType=INTEGER}
+        where  our.type=1 and ttr.type !=2 AND ttr.stateflag=0 and len.repay_status=#{repayStatus,jdbcType=INTEGER} and our.object_type=#{objectType,jdbcType=INTEGER} and our.user_id=#{userId,jdbcType=INTEGER}
     </select>
     <!--参加的任务数(只有在协作器中是参与者身份的)-->
     <select id="getJoinTask" resultType="java.util.Map">
         SELECT count(*) count FROM object_user_relation our LEFT JOIN t_teammate_re ttr
         ON ttr.user_id=our.user_id and ttr.type=2
-        WHERE  our.user_id=#{userId,jdbcType=INTEGER} and our.object_type=#{objectType,jdbcType=INTEGER} and our.type=1
+        WHERE  ttr.stateflag=0 AND our.user_id=#{userId,jdbcType=INTEGER} and our.object_type=#{objectType,jdbcType=INTEGER} and our.type=1
     </select>
     <!--获取抵押物团队分配的未完成任务-->
     <select id="getPawnAllotByTeamIsUnfinished" resultType="java.util.Map">
@@ -43,7 +43,7 @@
         ON paw.id=our.object_id  LEFT JOIN bt_pi_relation pi
         ON pi.pawn_id=paw.id LEFT JOIN bt_iou iou
         ON iou.id=pi.iou_id AND iou.repay_status=0
-        where our.object_type=#{objectType,jdbcType=INTEGER} and our.user_id=#{userId,jdbcType=INTEGER} GROUP BY our.object_id
+        where ttr.stateflag=0 AND our.object_type=#{objectType,jdbcType=INTEGER} and our.user_id=#{userId,jdbcType=INTEGER} GROUP BY our.object_id
     </select>
     <!--获取抵押物自己分配和公司分配的未完成任务-->
     <select id="getPawnAllotByOCIsUnfinished" resultType="java.util.Map">
@@ -53,13 +53,13 @@
         ON paw.id=our.object_id  LEFT JOIN bt_pi_relation pi
         ON pi.pawn_id=paw.id LEFT JOIN bt_iou iou
         ON iou.id=pi.iou_id
-        where iou.repay_status=#{repayStatus,jdbcType=INTEGER} and our.object_type=#{objectType,jdbcType=INTEGER} and our.user_id=#{userId,jdbcType=INTEGER}
+        where ttr.stateflag=0 AND  iou.repay_status=#{repayStatus,jdbcType=INTEGER} and our.object_type=#{objectType,jdbcType=INTEGER} and our.user_id=#{userId,jdbcType=INTEGER}
   UNION
   SELECT our.object_id  from object_user_relation our  LEFT JOIN bt_pawn paw
         ON paw.id=our.object_id  and (our.type=0 or our.type=2) LEFT JOIN bt_pi_relation pi
         ON pi.pawn_id=paw.id  LEFT JOIN bt_iou iou
         ON iou.id=pi.iou_id
-        where  iou.repay_status=#{repayStatus,jdbcType=INTEGER} and our.object_type=#{objectType,jdbcType=INTEGER} and our.user_id=#{userId,jdbcType=INTEGER}) t
+        where iou.repay_status=#{repayStatus,jdbcType=INTEGER} and our.object_type=#{objectType,jdbcType=INTEGER} and our.user_id=#{userId,jdbcType=INTEGER}) t
     </select>
     <!--获取抵押物总的任务-->
     <select id="getPawnTotalTask" resultType="java.util.Map">

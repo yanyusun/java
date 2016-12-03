@@ -29,7 +29,7 @@ public interface CoordinatorService {
      * @param realName
      * @return
      */
-    Map<String, Object> getCompanyUserList(String realName, Integer userId, Integer companyId);
+    Map<String, Object> getCompanyUserList(String realName, Integer userId, Integer companyId, Integer userTeamId);
 
     /**
      * 添加邀请人

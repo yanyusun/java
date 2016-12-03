@@ -161,11 +161,9 @@
     </select>
 
     <select id="selectByObjectAndUser" resultMap="BaseResultMap">
-      SELECT  ore.*  FROM   object_user_relation ore ,t_teammate_re tre
-      where ore.object_type =#{objectType,jdbcType=INTEGER}
-      and ore.object_id =#{objectId,jdbcType=INTEGER}
-      and tre.user_team_id=ore.employer_id
-      and ore.type =1  and tre.user_id =#{userId,jdbcType=INTEGER}
+        SELECT tre.* FROM t_user_team tut ,t_teammate_re tre, t_user_info tui
+        where tut.company_id =  tui.company_id and tre.user_team_id =tut.id and  tre.user_id  =tui.id
+        and tut.object_id =#{objectId} and tut.object_type=#{objectType} and  tui.id =#{userId}  and tre.stateflag =0
     </select>
     <!--删除协作器的团队-->
     <update id="deleteByUserTeamId">
@@ -179,7 +177,7 @@
     <select id="selectSelectiveByUserTeam" parameterType="java.util.Map" resultMap="BaseResultMap">
         SELECT ttr.* FROM t_teammate_re ttr LEFT JOIN t_user_team tut
         ON tut.id=ttr.user_team_id
-        WHERE ttr.stateflag AND ttr.user_id= #{userId}
+        WHERE ttr.stateflag = 0 AND ttr.user_id= #{userId}
         AND ttr.type= #{type} AND tut.object_id= #{objectId} AND tut.object_type= #{objectType}
     </select>
 

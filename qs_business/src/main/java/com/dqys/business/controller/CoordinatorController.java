@@ -184,6 +184,7 @@ public class CoordinatorController {
     /**
      * @api {post} coordinator/userList 选择人员
      * @apiParam {string} realName 用户名称或真实姓名
+     * @apiParam {int} userTeamId 协作器id
      * @apiDescription 添加参与人的时候选择人员（公司所有员工）
      * @apiSampleRequest coordinator/userList
      * @apiGroup Coordinator
@@ -209,9 +210,9 @@ public class CoordinatorController {
      */
     @RequestMapping("/userList")
     @ResponseBody
-    public JsonResponse userList(String realName) throws Exception {
+    public JsonResponse userList(String realName, Integer userTeamId) throws Exception {
         Integer userId = UserSession.getCurrent().getUserId();
-        Map<String, Object> map = coordinatorService.getCompanyUserList(realName, userId, null);
+        Map<String, Object> map = coordinatorService.getCompanyUserList(realName, userId, null, userTeamId);
         return JsonResponseTool.success(map);
     }
 

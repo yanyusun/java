@@ -4,7 +4,7 @@ package com.dqys.business.service.constant.ObjectEnum;
  * 资产源
  * Created by mkfeng on 2016/7/7.
  */
-public enum AssetSourceEnum {
+public enum AssetSourceEnum implements ObjectEnumBase{
     UPDATE_EDIT(161, "修改/编辑"),
     ADD_ATTENTION(162, "添加关注"),
     INTERNAL_RATING(163, "评优/内部评级"),
