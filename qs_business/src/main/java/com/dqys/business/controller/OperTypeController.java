@@ -2,6 +2,7 @@ package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.operType.OperType;
 import com.dqys.business.service.exception.bean.UndefinitionTypeException;
+import com.dqys.business.service.service.objectUserRelation.ObjectUserRelationService;
 import com.dqys.business.service.service.permission.Permission;
 import com.dqys.business.service.service.userTeam.UserTeamService;
 import com.dqys.business.service.utils.common.buttonUtil.ListButtonShowerUtil;
@@ -30,6 +31,9 @@ public class OperTypeController {
 
     @Autowired
     private Permission permission;
+
+    @Autowired
+    private ObjectUserRelationService objectUserRelationService;
 
 
     /**
@@ -167,7 +171,12 @@ public class OperTypeController {
         UserSession userSession = UserSession.getCurrent();
         int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
         int roleId = UserServiceUtils.headerStringToInt(userSession.getRoleId());
+        int userId = userSession.getUserId();
         if (objectId != null) {
+            if(!objectUserRelationService.hasOnlyOneRelation(objectType,objectId,userId)){//未正式加入
+                return JsonResponseTool.success(ListButtonShowerUtil.defaultBean());
+            }
+
             if (userTeamService.isTheir(objectType, objectId, userSession.getUserId())) {//判断是否是所属人，是的话角色改变为所属人
                 roleId = RoleTypeEnum.THEIR.getValue();
             }

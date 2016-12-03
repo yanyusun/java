@@ -17,6 +17,7 @@
       where ror.status=0 AND ror.user_type=#{userType,jdbcType=INTEGER}
        and ror.role_type=#{roleId,jdbcType=INTEGER}
        and oj.object_type=#{objectType,jdbcType=INTEGER}
+       AND ot.status=0;
     </select>
     <!--查询用户类型-->
     <select id="selectByUserIds" resultType="int">
@@ -34,7 +35,7 @@
     <select id="getAll" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.pojo.operType.OperType">
         SELECT * from oper_type
         <where>
-            1=1
+            status=0
             <if test="operType !=null and operType.operType !=null">
                 AND oper_type=#{operType}
             </if>

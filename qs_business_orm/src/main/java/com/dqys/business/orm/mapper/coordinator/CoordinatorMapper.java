@@ -24,7 +24,7 @@ public interface CoordinatorMapper {
      * @return
      */
     List<TeamDTO> getLenderOrAsset(@Param("companyId") Integer companyId, @Param("objectId") Integer objectId, @Param("objectType") Integer objectType,
-                                   @Param("statusList") List<Integer> statusList);
+                                   @Param("statusList") List<Integer> statusList, @Param("stateflag") Boolean stateflag);
 
     /**
      * 获取当前进行的任务总数
@@ -76,7 +76,7 @@ public interface CoordinatorMapper {
      * @param userId
      * @param companyId
      */
-    List<Map<String, Object>> getCompanyUserList(@Param("realName") String realName, @Param("userId") Integer userId, @Param("companyId") Integer companyId);
+    List<Map<String, Object>> getCompanyUserList(@Param("realName") String realName, @Param("userId") Integer userId, @Param("companyId") Integer companyId, @Param("roleIds") List<Integer> roleIds);
 
     /**
      * 查询团队中的协作器信息

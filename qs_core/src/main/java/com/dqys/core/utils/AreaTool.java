@@ -1,6 +1,7 @@
 package com.dqys.core.utils;
 
 import com.dqys.core.mapper.facade.TAreaMapper;
+import com.dqys.core.model.AreaList;
 import com.dqys.core.model.TArea;
 import net.sourceforge.pinyin4j.PinyinHelper;
 import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
@@ -26,6 +27,7 @@ public class AreaTool implements ApplicationContextAware {
 
 
     private static final String AREA_RELATION_KEY = "area_relation_";      //地区
+    private static final String AREA_ALL="area_all";
     private static RedisTemplate<String, Object> redisTemplate;
     private static TAreaMapper tAreaMapper;
 
@@ -45,6 +47,65 @@ public class AreaTool implements ApplicationContextAware {
         }
         //省份
         loadAreaByUpper(0);
+
+        // TODO: 16-12-2  为了listAll接口提高效率暂时添加,后续当删除
+        loadListAll();
+    }
+
+    public static void loadListAll() {
+        List<TArea> tAreaList = null;
+        try {
+            tAreaList = listAreaByUpperId(0);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        List<AreaList> result = new ArrayList<>();
+        for (TArea tArea : tAreaList) {
+            AreaList area = toAreaList(tArea);
+            area.setChildren(listAllChildAreaById(area.getValue()));
+            result.add(area);
+        }
+        redisTemplate.boundHashOps(TArea.class.getName()).put(AREA_ALL,result);
+    }
+    public static List<AreaList>  getAllArea(){
+       return NoSQLWithRedisTool.getHashObject(TArea.class.getName(),AREA_ALL);
+    }
+    // TODO: 16-12-2  为了listAll接口提高效率暂时添加,后续当删除
+    private static AreaList toAreaList(TArea tarea){
+        if(CommonUtil.checkParam(tarea)){
+            return null;
+        }
+        AreaList result = new AreaList();
+
+        result.setValue(tarea.getValue());
+        result.setIsLeaf(tarea.getIsLeaf());
+        result.setLevel(tarea.getLevel());
+        result.setLabel(tarea.getLabel());
+        result.setUpper(tarea.getUpper());
+
+        return result;
+    }
+    // TODO: 16-12-2  为了listAll接口提高效率暂时添加,后续当删除
+    private static List<AreaList> listAllChildAreaById(Integer id){
+        if(CommonUtil.checkParam(id)){
+            return null;
+        }
+        try {
+            List<TArea> areaList = AreaTool.listAreaByUpperId(id);
+            if(CommonUtil.checkParam(areaList) || areaList.size() == 0){
+                return null;
+            }
+            List<AreaList> result = new ArrayList<>();
+            for (TArea tArea : areaList) {
+                AreaList area = toAreaList(tArea);
+                area.setChildren(listAllChildAreaById(area.getValue()));
+                result.add(area);
+            }
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
