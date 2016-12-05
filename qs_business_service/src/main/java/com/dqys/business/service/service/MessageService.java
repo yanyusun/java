@@ -103,7 +103,7 @@ public interface MessageService {
      * @param userId     操作人id
      * @return
      */
-    String businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer userId, String operUrl);
+    String businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer userId, String operUrl, Integer flowBusinessId);
 
     //    获取平台管理员账户
     public TUserTag getAdmin();
@@ -122,7 +122,7 @@ public interface MessageService {
      * @return
      */
     String businessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer sendUserId,
-                              Integer receiveUserId, Integer status, Integer inviteUserId, Integer flowBusinessId);
+                              Integer receiveUserId, Integer status, List<Integer> inviteUserIds, Integer flowBusinessId);
 
     /**
      * 被邀请公司同意拒绝

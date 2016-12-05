@@ -1422,7 +1422,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
 
     @Override
     public Map sendBusinessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, Integer receiveUserId,
-                                      Integer status, Integer inviteUserId, Integer flowBusinessId) {
+                                      Integer status, List<Integer> inviteUserIds, Integer flowBusinessId) {
         Map map = new HashMap<>();
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
         String operation = "";
@@ -1431,7 +1431,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         } else if (ObjectTypeEnum.IOU.getValue() == flowType) {
             operation = IouEnum.getIouEnum(operType).getName();
         }
-        String result = messageService.businessFlowResult(objectId, objectType, flowId, flowType, operation, userId, receiveUserId, status, inviteUserId, flowBusinessId);
+        String result = messageService.businessFlowResult(objectId, objectType, flowId, flowType, operation, userId, receiveUserId, status, inviteUserIds, flowBusinessId);
         map.put("result", result);
         if ("no".equals(result)) {
             map.put("msg", "用户信息不存在");
@@ -1562,10 +1562,10 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         FlowBusiness flowBusiness = new FlowBusiness(flowId, flowType, 0, userId, operType, 0, 0, 0);
         flowBusinessService.add(flowBusiness);//业务流转的业务状态添加
         Integer flowBusinessId = flowBusiness.getId();
-//        String accept = "/coordinator/businessFlowResult?status=1&objectId=" + objectId + "&objectType=" + objectType +
-//                "&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType + "&receiveUserId=" + userId+
-//                 "&flowBusinessId=" + flowBusinessId;//同意
-        String accept = null;
+        String accept = "/coordinator/businessFlowResult?status=1&objectId=" + objectId + "&objectType=" + objectType +
+                "&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType + "&receiveUserId=" + userId +
+                "&flowBusinessId=" + flowBusinessId;//同意
+//        String accept = null;
         String reject = "/coordinator/businessFlowResult?status=0&objectId=" + objectId + "&objectType=" + objectType +
                 "&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType + "&receiveUserId=" + userId +
                 "&flowBusinessId=" + flowBusinessId;//拒绝
@@ -1590,7 +1590,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         }
         boolean modify = true;
         if ((coll == 0 && !c) || (lawy == 0 && !l) || (agen == 0 && !a)) {//判断是否符合，发送给平台管理员短信
-            messageService.businessFlow(objectId, objectType, flowId, flowType, operation, userId, operUrl);
+            messageService.businessFlow(objectId, objectType, flowId, flowType, operation, userId, operUrl, flowBusinessId);
             modify = modifyOnstatus(flowId, flowType, coll, lawy, agen);//判断是否进行修改处置状态，默认可以
         }
         //进行处置机构发送短信

@@ -1124,8 +1124,7 @@ public class DistributionServiceImpl implements DistributionService {
 
     @Override
     public JsonResponse addBusinessService(Integer type, Integer id, Integer distributionId, Integer businessType, Integer companyId,
-                                           Integer businessRequestId, Integer objectType, Integer objectId, Integer receiveUserId,
-                                           Integer flowBusinessId) throws BusinessLogException {
+                                           Integer businessRequestId, Integer flowBusinessId, List<Integer> inviteUserIds) throws BusinessLogException {
         if (!ObjectTypeEnum.IOU.getValue().equals(type) && !PAWN.getValue().equals(type)) {
             return JsonResponseTool.paramErr("参数错误，不是可流转对象"); // 流转对象不对
         }
@@ -1204,8 +1203,7 @@ public class DistributionServiceImpl implements DistributionService {
                 setFlowBusiness(companyDetailInfo1.getUserId(), flowBusinessId, FlowBusinessEnum.FLOW_COMPANY_WAIT_AGREE.getValue());//修改业务状态
                 sendBusinessFlow(UserSession.getCurrent().getUserId(), companyDetailInfo1.getUserId(), businessRequestId,
                         companyTeam.getObjectId(), companyTeam.getObjectType(), id, type, operUrl, operation);//发送短信给邀请的公司
-                coordinatorService.sendBusinessFlowResult(objectId, objectType, id, type, businessType, receiveUserId, 1,
-                        companyDetailInfo1.getUserId(), flowBusinessId);//发送给流转申请方
+                inviteUserIds.add(companyDetailInfo1.getUserId());
                 return JsonResponseTool.success(result);
             }
         }

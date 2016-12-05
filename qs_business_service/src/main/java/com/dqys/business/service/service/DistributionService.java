@@ -4,6 +4,8 @@ import com.dqys.business.service.dto.company.DistributionDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.core.model.JsonResponse;
 
+import java.util.List;
+
 /**
  * Created by Yvan on 16/7/21.
  * <p/>
@@ -78,8 +80,7 @@ public interface DistributionService {
      * @param receiveUserId
      */
     JsonResponse addBusinessService(Integer type, Integer id, Integer distributionId, Integer businessType, Integer companyId,
-                                    Integer businessRequestId, Integer objectType, Integer objectId, Integer receiveUserId,
-                                    Integer flowBusinessId) throws BusinessLogException;
+                                    Integer businessRequestId, Integer flowBusinessId,List<Integer> inviteUserIds) throws BusinessLogException;
 
     /**
      * 被添加公司接受或者拒绝业务流转邀请

@@ -43,7 +43,10 @@ public enum SmsEnum {
     ACTIVATION_INFORM(137, "组织架构导入通知激活"),
     RESET_PAWW(138, "重置密码"),
     ACTIVATE_ACCOUNT(139, "帐号激活通知"),
-    APPLY_AGAIN(140, "业务重新提交审核");
+    APPLY_AGAIN(140, "业务重新提交审核"),
+    FLOW_ADD_COMPANY(141, "通知请求公司平台为他添加的单家合作机构"),
+    FLOW_ADD_COMPANY2(142, "通知请求公司平台为他添加的两家合作机构"),
+    FLOW_ADD_COMPANY3(143, "通知请求公司平台为他添加的三家合作机构");
 
     private Integer value;
     private String name;

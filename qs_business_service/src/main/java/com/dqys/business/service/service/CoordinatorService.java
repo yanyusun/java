@@ -183,7 +183,7 @@ public interface CoordinatorService {
      * @return
      */
     Map sendBusinessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, Integer receiveUserId,
-                               Integer status, Integer inviteUserId, Integer flowBusinessId);
+                               Integer status, List<Integer> inviteUserIds, Integer flowBusinessId);
 
     /**
      * 设置委托期限

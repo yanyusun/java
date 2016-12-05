@@ -6,6 +6,7 @@ import com.dqys.business.service.constant.OrganizationTypeEnum;
 import com.dqys.business.service.dto.company.OrganizationInsertDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.CompanyService;
+import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.DistributionService;
 import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +34,8 @@ public class CompanyController {
     private CompanyService companyService;
     @Autowired
     private DistributionService distributionService;
+    @Autowired
+    private CoordinatorService coordinatorService;
 
     /**
      * 查看特定类型的公司
@@ -284,15 +289,28 @@ public class CompanyController {
     @RequestMapping(value = "/addBusinessService")
     public JsonResponse addBusinessService(@RequestParam Integer type, @RequestParam Integer id,
                                            @RequestParam Integer distributionId, @RequestParam Integer businessType,
-                                           @RequestParam Integer companyId, @RequestParam Integer businessRequestId,
+                                           @RequestParam Integer[] companyId, @RequestParam Integer businessRequestId,
                                            Integer objectType, Integer objectId, Integer receiveUserId,
                                            @RequestParam Integer flowBusinessId) throws BusinessLogException {
         if (CommonUtil.checkParam(type, id, distributionId, businessType, companyId)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        JsonResponse response = distributionService.addBusinessService(type, id, distributionId, businessType, companyId,
-                businessRequestId, objectType, objectId, receiveUserId, flowBusinessId);
-        return response;
+        String msg = "";
+        List<Integer> inviteUserIds = new ArrayList<>();
+        for (Integer comId : companyId) {
+            JsonResponse response = distributionService.addBusinessService(type, id, distributionId, businessType, comId,
+                    businessRequestId, flowBusinessId, inviteUserIds);
+            if (response.getCode() != ResponseCodeEnum.SUCCESS.getValue().intValue()) {
+                msg = response.getMsg() + "；";
+            }
+        }
+        coordinatorService.sendBusinessFlowResult(objectId, objectType, id, type, businessType, receiveUserId, 1,
+                inviteUserIds, flowBusinessId);//发送给流转申请方
+        if ("".equals(msg)) {
+            return JsonResponseTool.failure(msg);
+        } else {
+            return JsonResponseTool.success(null);
+        }
     }
 
     /**

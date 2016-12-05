@@ -19,7 +19,7 @@
     <sql id="QUERY_ALL">
         tm.id,tm.content,tm.label,tm.receive_id receiveId ,tm.sender_id senderId
         ,tm.status ,tm.title,type,DATE_FORMAT( tm.send_time,'%Y-%m-%d %H:%i:%s') sendTime,tm.oper_url operUrl
-        ,tm.business_type businessType,tm.oper_status operStatus,tm.public_message_no messageNo
+        ,tm.business_type businessType,tm.oper_status operStatus,tm.public_message_no messageNo,tm.flow_business_id flowBusinessId
     </sql>
 
     <!--查询记录数量-->
