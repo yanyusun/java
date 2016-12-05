@@ -1204,8 +1204,8 @@ public class DistributionServiceImpl implements DistributionService {
                 setFlowBusiness(companyDetailInfo1.getUserId(), flowBusinessId, FlowBusinessEnum.FLOW_COMPANY_WAIT_AGREE.getValue());//修改业务状态
                 sendBusinessFlow(UserSession.getCurrent().getUserId(), companyDetailInfo1.getUserId(), businessRequestId,
                         companyTeam.getObjectId(), companyTeam.getObjectType(), id, type, operUrl, operation);//发送短信给邀请的公司
-//                coordinatorService.sendBusinessFlowResult(objectId, objectType, id, type, businessType, receiveUserId, 1,
-//                        companyDetailInfo1.getUserId(), flowBusinessId);//发送给流转申请方
+                coordinatorService.sendBusinessFlowResult(objectId, objectType, id, type, businessType, receiveUserId, 1,
+                        companyDetailInfo1.getUserId(), flowBusinessId);//发送给流转申请方
                 return JsonResponseTool.success(result);
             }
         }
