@@ -121,7 +121,7 @@ public interface MessageService {
      * @param status        状态（0拒绝1接收）
      * @return
      */
-    String respondInvite(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer sendUserId, Integer receiveUserId, Integer status);
+    String respondInvite(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer sendUserId, Integer receiveUserId, Integer status, Integer operType);
 
     /**
      * 执行司法化解（律所接收到通知）
