@@ -1562,9 +1562,9 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         FlowBusiness flowBusiness = new FlowBusiness(flowId, flowType, 0, userId, operType, 0, 0, 0);
         flowBusinessService.add(flowBusiness);//业务流转的业务状态添加
         Integer flowBusinessId = flowBusiness.getId();
-//        String accept = "/coordinator/businessFlowResult?status=1&objectId=" + objectId + "&objectType=" + objectType +
-//                "&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType + "&receiveUserId=" + userId;//同意
-        String accept = null;
+        String accept = "/coordinator/businessFlowResult?status=1&objectId=" + objectId + "&objectType=" + objectType +
+                "&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType + "&receiveUserId=" + userId+
+                 "&flowBusinessId=" + flowBusinessId;//同意
         String reject = "/coordinator/businessFlowResult?status=0&objectId=" + objectId + "&objectType=" + objectType +
                 "&flowId=" + flowId + "&flowType=" + flowType + "&operType=" + operType + "&receiveUserId=" + userId +
                 "&flowBusinessId=" + flowBusinessId;//拒绝
