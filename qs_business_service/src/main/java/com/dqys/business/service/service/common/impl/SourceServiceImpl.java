@@ -76,7 +76,8 @@ public class SourceServiceImpl implements SourceService {
         }
         List<SourceNavigation> navigationList = NavUtil.getCommonSourceNavigation(type);
         navigationList.addAll(sourceNavigationMapper.listByTypeAndLenderId(lenderId, estatesId, type));
-        return SourceServiceUtls.toSelect(navigationList);
+        UserSession userSession = UserSession.getCurrent();
+        return SourceServiceUtls.toSelect(navigationList,navUnviewManagerService, objectType, objectId, userSession.getUserId());
     }
 
     @Override

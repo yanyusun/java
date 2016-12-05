@@ -172,7 +172,7 @@ public class OperTypeController {
         int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
         int roleId = UserServiceUtils.headerStringToInt(userSession.getRoleId());
         int userId = userSession.getUserId();
-        if (objectId != null) {
+        if (objectId != null&&RoleTypeEnum.ADMIN.getValue()!=roleId) {//需要根据具体对象去判定操作权限的情况
             if(!objectUserRelationService.hasOnlyOneRelation(objectType,objectId,userId)){//未正式加入
                 return JsonResponseTool.success(ListButtonShowerUtil.defaultBean());
             }

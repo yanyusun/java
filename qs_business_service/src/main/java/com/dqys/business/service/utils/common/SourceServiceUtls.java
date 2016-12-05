@@ -7,6 +7,7 @@ import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.dto.common.SourceDTO;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
+import com.dqys.business.service.service.common.NavUnviewManagerService;
 import com.dqys.core.utils.CommonUtil;
 
 import java.util.*;
@@ -16,7 +17,8 @@ import java.util.*;
  */
 public class SourceServiceUtls {
 
-    public static List<SelectDTOList> toSelect(List<SourceNavigation> navigationList) {
+    public static List<SelectDTOList> toSelect(List<SourceNavigation> navigationList, NavUnviewManagerService navUnviewManagerService,
+                                               Integer object, Integer objectId, Integer userId) {
         // 降序排列
         Collections.sort(navigationList, (a, b) -> a.getPid().compareTo(b.getPid()));
 
@@ -24,33 +26,40 @@ public class SourceServiceUtls {
         Map<Integer, List<SelectDTOList>> map = new HashMap<>();
         // 提取出一级菜单,将子级菜单加入map
         navigationList.forEach(sourceNavigation -> {
-            if (sourceNavigation.getPid().equals(0)) {
-                // 一级菜单
-                result.add(toSelectDTOList(sourceNavigation));
-            } else {
-                // 二级菜单
-                if (map.get(sourceNavigation.getPid()) == null) {
-                    List<SelectDTOList> selectDTO = new ArrayList<>();
-                    selectDTO.add(toSelectDTOList(sourceNavigation));
-                    map.put(sourceNavigation.getPid(), selectDTO);
+            if (navUnviewManagerService.hasSourceSourceAuth(sourceNavigation.getId(), object, objectId, userId)) {//只添加有查看权限的nav
+                if (sourceNavigation.getPid().equals(0)) {
+                    // 一级菜单
+                    result.add(toSelectDTOList(sourceNavigation));
                 } else {
-                    List<SelectDTOList> selectDTO = map.get(sourceNavigation.getPid());
-                    selectDTO.add(toSelectDTOList(sourceNavigation));
-                    map.put(sourceNavigation.getPid(), selectDTO);
+                    // 二级菜单
+                    if (map.get(sourceNavigation.getPid()) == null) {
+                        List<SelectDTOList> selectDTO = new ArrayList<>();
+                        selectDTO.add(toSelectDTOList(sourceNavigation));
+                        map.put(sourceNavigation.getPid(), selectDTO);
+                    } else {
+                        List<SelectDTOList> selectDTO = map.get(sourceNavigation.getPid());
+                        selectDTO.add(toSelectDTOList(sourceNavigation));
+                        map.put(sourceNavigation.getPid(), selectDTO);
+                    }
                 }
             }
         });
         // 递归填充子数据
-        addChildren(result, map);
+        addChildren(result, map,navUnviewManagerService,object, objectId, userId);
         return result;
     }
 
-    public static void addChildren(List<SelectDTOList> pList, Map<Integer, List<SelectDTOList>> map) {
+    public static void addChildren(List<SelectDTOList> pList, Map<Integer, List<SelectDTOList>> map,NavUnviewManagerService navUnviewManagerService,
+                                   Integer object, Integer objectId, Integer userId) {
         for (int i = 0; i < pList.size(); i++) {
             if (map.get(Integer.valueOf(pList.get(i).getKey())) != null) {
-                List<SelectDTOList> result = map.get(Integer.valueOf(pList.get(i).getKey()));
-                pList.get(i).setChildren(result);
-                addChildren(pList.get(i).getChildren(), map);
+                Integer navId = Integer.valueOf(pList.get(i).getKey());
+                List<SelectDTOList> result = map.get(navId);
+                if (navUnviewManagerService.hasSourceSourceAuth(navId, object, objectId, userId)) {
+                    pList.get(i).setChildren(result);
+                    addChildren(pList.get(i).getChildren(), map,navUnviewManagerService,object, objectId, userId);
+                }
+
             }
         }
     }
@@ -151,6 +160,7 @@ public class SourceServiceUtls {
         sourceInfoDTO.setEstatesId(sourceInfo.getEstatesId());
         return sourceInfoDTO;
     }
+
     /**
      * DAO 转 DTO
      *
@@ -159,24 +169,22 @@ public class SourceServiceUtls {
      * @return
      */
     public static SourceInfoDTO toSourceInfoDTO(SourceInfo sourceInfo, List<SourceSource> sourceList, SelectDtoMap selectDtoMap) {
-        SourceInfoDTO sourceInfoDTO = toSourceInfoDTO(sourceInfo,sourceList);
+        SourceInfoDTO sourceInfoDTO = toSourceInfoDTO(sourceInfo, sourceList);
         sourceInfoDTO.setSelectDtoMap(selectDtoMap);
         return sourceInfoDTO;
     }
 
     /**
-     *
      * DAO 转 DTO
+     *
      * @param selectDtoMap
      * @return
      */
-    public static SourceInfoDTO toSourceInfoDTO( SelectDtoMap selectDtoMap) {
+    public static SourceInfoDTO toSourceInfoDTO(SelectDtoMap selectDtoMap) {
         SourceInfoDTO sourceInfoDTO = new SourceInfoDTO();
         sourceInfoDTO.setSelectDtoMap(selectDtoMap);
         return sourceInfoDTO;
     }
-
-
 
 
     /**
