@@ -1203,7 +1203,7 @@ public class DistributionServiceImpl implements DistributionService {
                 setFlowBusiness(companyDetailInfo1.getUserId(), flowBusinessId, FlowBusinessEnum.FLOW_COMPANY_WAIT_AGREE.getValue());//修改业务状态
                 sendBusinessFlow(UserSession.getCurrent().getUserId(), companyDetailInfo1.getUserId(), businessRequestId,
                         companyTeam.getObjectId(), companyTeam.getObjectType(), id, type, operUrl, operation);//发送短信给邀请的公司
-                inviteUserIds.add(companyDetailInfo1.getUserId());
+                inviteUserIds.add(companyDetailInfo1.getUserId());//添加的业务公司管理员
                 return JsonResponseTool.success(result);
             }
         }
@@ -1226,6 +1226,33 @@ public class DistributionServiceImpl implements DistributionService {
             flowBusiness.setAgent(status);
         }
         flowBusinessService.updateById(flowBusiness);
+    }
+
+    /**
+     * 设置操作状态，多个相同机构进行操作，其中有一个同意，其余的都不得继续操作
+     *
+     * @param flowBusinessId
+     * @param userId
+     * @param status
+     */
+    private boolean setOperStatus(Integer flowBusinessId, Integer userId, Integer status) {
+        UserDetail detail = coordinatorMapper.getUserDetail(userId);
+        Integer operStatus = 0;
+        List<Message> list = messageMapper.selectMessageByUFO(detail.getUserType(), flowBusinessId, operStatus);
+        if (list == null || list.size() == 1) {
+            return true;
+        }
+        if (status.equals(ObjectAcceptTypeEnum.accept.getValue()) && list.size() > 1) {
+            for (Message message : list) {
+                if (message.getReceiveId() != userId) {
+                    message.setOperStatus(3);
+                    messageMapper.updateOperStatus(message);
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -1457,8 +1484,8 @@ public class DistributionServiceImpl implements DistributionService {
                 ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
                 coordinatorService.getObjectName(flowType, flowId),
                 operation);
-        String title = coordinatorService.getMessageTitle(flowId, flowType, MessageBTEnum.COMPANY_BETWEEN.getValue());
-        messageService.add(title, content, userId, receiveUserId, "", MessageEnum.TASK.getValue(), MessageBTEnum.COMPANY_BETWEEN.getValue(), operUrl);
+        String title = coordinatorService.getMessageTitle(flowId, flowType, MessageBTEnum.COMPANY_BETWEEN_FLOW.getValue());
+        messageService.add(title, content, userId, receiveUserId, "", MessageEnum.TASK.getValue(), MessageBTEnum.COMPANY_BETWEEN_FLOW.getValue(), operUrl);
     }
 
     @Override
@@ -1628,11 +1655,13 @@ public class DistributionServiceImpl implements DistributionService {
                     companyTeamReMapper.update(ctr);
 
                 }
-                //修改流转业务状态
-                if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
-                    setFlowBusiness(UserSession.getCurrent().getUserId(), flowBusinessId, FlowBusinessEnum.FLOW_COMPANY_AGREE.getValue());
-                } else {
-                    setFlowBusiness(UserSession.getCurrent().getUserId(), flowBusinessId, FlowBusinessEnum.FLOW_COMPANY_REFUSE.getValue());
+                if (setOperStatus(flowBusinessId, UserSession.getCurrent().getUserId(), status)) {
+                    //修改流转业务状态
+                    if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
+                        setFlowBusiness(UserSession.getCurrent().getUserId(), flowBusinessId, FlowBusinessEnum.FLOW_COMPANY_AGREE.getValue());
+                    } else {
+                        setFlowBusiness(UserSession.getCurrent().getUserId(), flowBusinessId, FlowBusinessEnum.FLOW_COMPANY_REFUSE.getValue());
+                    }
                 }
                 // 消息提醒
                 messageService.respondInvite(companyTeam.getObjectId(), companyTeam.getObjectType(), id, type, userInfo.getId(),

@@ -19,7 +19,8 @@
     <sql id="QUERY_ALL">
         tm.id,tm.content,tm.label,tm.receive_id receiveId ,tm.sender_id senderId
         ,tm.status ,tm.title,type,DATE_FORMAT( tm.send_time,'%Y-%m-%d %H:%i:%s') sendTime,tm.oper_url operUrl
-        ,tm.business_type businessType,tm.oper_status operStatus,tm.public_message_no messageNo,tm.flow_business_id flowBusinessId
+        ,tm.business_type businessType,tm.oper_status operStatus,tm.public_message_no messageNo,tm.flow_business_id
+        flowBusinessId
     </sql>
 
     <!--查询记录数量-->
@@ -157,7 +158,17 @@
     </select>
 
     <insert id="insertMessageNoByOperinfo" parameterType="com.dqys.business.orm.pojo.message.MessageOperinfo">
-       INSERT  INTO  t_message_public_operinfo(user_id,oper_status,public_message_no) VALUES(#{userId},#{operStatus},#{messageMo})
+        INSERT INTO t_message_public_operinfo(user_id,oper_status,public_message_no)
+        VALUES(#{userId},#{operStatus},#{messageMo})
     </insert>
+
+    <select id="selectMessageByUFO" resultType="com.dqys.business.orm.pojo.message.Message">
+        SELECT
+        <include refid="QUERY_ALL"/>
+        FROM t_message tm LEFT JOIN t_user_tag tut
+        ON tut.user_id=tm.receive_id
+        WHERE tm.status!=2 AND tut.user_type=#{userType} AND tm.oper_status=#{operStatus} AND
+        tm.flow_business_id=#{flowBusinessId}
+    </select>
 
 </mapper>

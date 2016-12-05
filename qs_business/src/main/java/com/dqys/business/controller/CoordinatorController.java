@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -433,7 +434,7 @@ public class CoordinatorController {
      * @apiParam {int} status        状态（0拒绝1接收）
      * @apiParam {int} [messageId] 消息id
      * @apiParam {int} [operStatus]   操作状态（0默认未操作1同意2拒绝）
-     * @apiParam {int} [inviteUserIds[0]] 被邀请用户id
+     * @apiParam {int} [inviteUserId] 被邀请用户id
      * @apiParam {int} flowBusinessId 业务流转状态id
      * @apiSampleRequest coordinator/businessFlowResult
      * @apiGroup companyRelation
@@ -444,7 +445,7 @@ public class CoordinatorController {
     public JsonResponse businessFlowResult(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType,
                                            @RequestParam("flowId") Integer flowId, @RequestParam("flowType") Integer flowType,
                                            @RequestParam("operType") Integer operType, @RequestParam("receiveUserId") Integer receiveUserId,
-                                           @RequestParam("status") Integer status, Integer messageId, Integer operStatus, List<Integer> inviteUserIds,
+                                           @RequestParam("status") Integer status, Integer messageId, Integer operStatus, Integer[] inviteUserId,
                                            Integer flowBusinessId) throws Exception {
         if (CommonUtil.checkParam(objectId, objectType, flowId, flowType, operType, receiveUserId, status)) {
             return JsonResponseTool.paramErr("参数有误");
@@ -454,6 +455,12 @@ public class CoordinatorController {
         }
         if (messageId != null && operStatus != null) {
             messageService.setOper(messageId, operStatus);
+        }
+        List<Integer> inviteUserIds = new ArrayList<>();
+        if (inviteUserId != null && inviteUserId.length > 0) {
+            for (Integer inv : inviteUserId) {
+                inviteUserIds.add(inv);
+            }
         }
         Map map = coordinatorService.sendBusinessFlowResult(objectId, objectType, flowId, flowType, operType, receiveUserId, status, inviteUserIds, flowBusinessId);
         if (MessageUtils.transMapToString(map, "result").equals("yes")) {
@@ -489,5 +496,6 @@ public class CoordinatorController {
             return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
         }
     }
+
 
 }

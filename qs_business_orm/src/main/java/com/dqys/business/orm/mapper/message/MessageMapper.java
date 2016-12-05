@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.message;
 
 import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.orm.pojo.message.MessageOperinfo;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -56,4 +57,6 @@ public interface MessageMapper {
     Integer getMessageNo();
 
     Integer insertMessageNoByOperinfo(MessageOperinfo messageOperinfo);
+
+    List<Message> selectMessageByUFO(@Param("userType") Integer userType, @Param("flowBusinessId") Integer flowBusinessId, @Param("operStatus") Integer operStatus);
 }

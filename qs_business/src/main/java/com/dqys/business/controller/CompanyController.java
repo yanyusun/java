@@ -306,7 +306,7 @@ public class CompanyController {
         }
         coordinatorService.sendBusinessFlowResult(objectId, objectType, id, type, businessType, receiveUserId, 1,
                 inviteUserIds, flowBusinessId);//发送给流转申请方
-        if ("".equals(msg)) {
+        if (!"".equals(msg)) {
             return JsonResponseTool.failure(msg);
         } else {
             return JsonResponseTool.success(null);
