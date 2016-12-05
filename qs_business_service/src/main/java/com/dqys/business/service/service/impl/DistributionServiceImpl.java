@@ -1604,7 +1604,7 @@ public class DistributionServiceImpl implements DistributionService {
 
                 }
                 // 消息提醒
-                messageService.respondInvite(companyTeam.getObjectId(), companyTeam.getObjectType(), id, type, userInfo.getId(), companyTeamRe.getRequesterId(), status);
+                messageService.respondInvite(companyTeam.getObjectId(), companyTeam.getObjectType(), id, type, userInfo.getId(), companyTeamRe.getRequesterId(), status, businessType);
             }
             return JsonResponseTool.success(result);
         }
