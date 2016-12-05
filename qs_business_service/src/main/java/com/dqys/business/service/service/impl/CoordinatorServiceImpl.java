@@ -1197,7 +1197,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         } else if (ObjectTypeEnum.PAWN.getValue().equals(objectType)) {//抵押物
             PawnInfo info = pawnInfoMapper.get(objectId);
             if (info != null) {
-                name = info.getPawnNo() == null ? "" : info.getPawnNo();
+                name = (info == null ? "" : info.getName())
+                        + (info.getPawnNo() == null ? "" : info.getPawnNo());
             }
         } else if (ObjectTypeEnum.LENDER.getValue().equals(objectType)) {//借款人
             LenderInfo info = lenderInfoMapper.get(objectId);
@@ -1211,7 +1212,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         } else if (ObjectTypeEnum.IOU.getValue().equals(objectType)) {//借据
             IOUInfo info = iouInfoMapper.get(objectId);
             if (info != null) {
-                name = info.getIouNo() == null ? "" : info.getIouNo();
+                name = (info == null ? "" : info.getName())
+                        + (info.getIouNo() == null ? "" : info.getIouNo());
             }
         } else if (ObjectTypeEnum.ASSETSOURCE.getValue().equals(objectType)) {//资产源
             ZcyEstates info = zcyEstatesMapper.selectByPrimaryKey(objectId);

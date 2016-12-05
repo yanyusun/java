@@ -245,7 +245,8 @@ public class MessageServiceImpl implements MessageService {
                         ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
                         coordinatorService.getObjectName(objectType, objectId),
                         ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
-                        coordinatorService.getObjectName(flowType, flowId));
+                        coordinatorService.getObjectName(flowType, flowId),
+                        getOperTypeName(flowType, operType));
 
                 adminContent = smsUtil.sendSms(adminCode, tuserInfo.getMobile(),
                         tuserInfo.getRealName(),
