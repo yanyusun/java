@@ -322,8 +322,20 @@ public class LenderServiceImpl implements LenderService {
                 lenderListDTOList.add(LenderServiceUtils.toLenderListDTO(lenderInfo, contactInfo, teamDTOList, getCountByStatistics(lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue())));
             }
         });
+        //设置当前用户在这个借款人中的参与状态
+        for (LenderListDTO dto : lenderListDTOList) {
+            dto.setAcceptStatus(setAcceptStatus(dto.getLenderId(), ObjectTypeEnum.LENDER.getValue(), userId));
+        }
         map.put("data", lenderListDTOList);
         return JsonResponseTool.success(map);
+    }
+
+    public Integer setAcceptStatus(Integer objectId, Integer objectType, Integer userId) {
+        TeammateRe teammateRe = teammateReMapper.selectByObjectAndUser(objectType, objectId, userId);
+        if (teammateRe != null) {
+            return teammateRe.getStatus();
+        }
+        return null;
     }
 
     @Override
@@ -337,8 +349,7 @@ public class LenderServiceImpl implements LenderService {
             if (ContactTypeEnum.getContactTypeEnum(contactDTO.getType()) == null) {
                 return JsonResponseTool.paramErr("联系人类型参数错误");
             }
-            if (ContactTypeEnum.LENDER.getValue()
-                    .equals(ContactTypeEnum.getContactTypeEnum(contactDTO.getType()).getValue())) {
+            if (ContactTypeEnum.LENDER.getValue().equals(ContactTypeEnum.getContactTypeEnum(contactDTO.getType()).getValue())) {
                 flag = true;
             }
         }

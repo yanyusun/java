@@ -36,6 +36,15 @@ public class LenderListDTO {
     private String entrustName;  // 委托方名称
     private Integer attribute;  // 公私有属性
     private StatisticsLender statisticsLender;//统计数量
+    private Integer acceptStatus;//null不在协作器，0待接收，1已接受，2已拒绝
+
+    public Integer getAcceptStatus() {
+        return acceptStatus;
+    }
+
+    public void setAcceptStatus(Integer acceptStatus) {
+        this.acceptStatus = acceptStatus;
+    }
 
     public StatisticsLender getStatisticsLender() {
         return statisticsLender;
