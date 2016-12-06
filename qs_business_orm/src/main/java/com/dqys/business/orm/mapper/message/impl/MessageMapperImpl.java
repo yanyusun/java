@@ -4,6 +4,7 @@ import com.dqys.business.orm.mapper.message.MessageMapper;
 import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.orm.pojo.message.MessageOperinfo;
 import com.dqys.core.base.BaseDao;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -58,6 +59,11 @@ public class MessageMapperImpl extends BaseDao implements MessageMapper {
     @Override
     public Integer insertMessageNoByOperinfo(MessageOperinfo messageOperinfo) {
         return super.getSqlSession().getMapper(MessageMapper.class).insertMessageNoByOperinfo(messageOperinfo);
+    }
+
+    @Override
+    public List<Message> selectMessageByUFO(@Param("userType") Integer userType, @Param("flowBusinessId") Integer flowBusinessId, @Param("operStatus") Integer operStatus, @Param("messageBusinessType") Integer messageBusinessType) {
+        return super.getSqlSession().getMapper(MessageMapper.class).selectMessageByUFO(userType, flowBusinessId, operStatus, messageBusinessType);
     }
 
 }

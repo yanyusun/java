@@ -182,7 +182,8 @@ public interface CoordinatorService {
      * @param status        状态（0拒绝1接收）
      * @return
      */
-    Map sendBusinessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, Integer receiveUserId, Integer status, Integer inviteUserId);
+    Map sendBusinessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer operType, Integer receiveUserId,
+                               Integer status, List<Integer> inviteUserIds, Integer flowBusinessId);
 
     /**
      * 设置委托期限

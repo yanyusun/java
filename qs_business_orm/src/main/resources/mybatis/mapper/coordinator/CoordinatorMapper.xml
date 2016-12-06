@@ -286,7 +286,7 @@
         SELECT ttr.user_id,tui.real_name FROM t_user_team tut LEFT JOIN t_teammate_re ttr
             ON ttr.user_team_id=tut.id LEFT JOIN t_user_info tui
             ON tui.id=ttr.user_id
-            where tut.object_id=#{objectId} and tut.object_type=#{objectType} and ttr.type=#{type}
+            where tut.object_id=#{objectId} and tut.object_type=#{objectType} and ttr.type=#{type} AND ttr.status=1 limit 0,1
     </select>
     <!--资产源列表-->
     <sql id="ZCY_WhERE">

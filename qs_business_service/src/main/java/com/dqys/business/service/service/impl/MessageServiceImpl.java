@@ -1,37 +1,36 @@
 package com.dqys.business.service.service.impl;
 
-import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.auth.orm.query.TUserTagQuery;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.constant.flowBusiness.FlowBusinessEnum;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.message.MessageMapper;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserDetail;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
+import com.dqys.business.orm.pojo.flowBusiness.FlowBusiness;
 import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.orm.pojo.message.MessageOperinfo;
 import com.dqys.business.service.constant.ObjectEnum.IouEnum;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.service.UserService;
+import com.dqys.business.service.service.flowBusiness.FlowBusinessService;
 import com.dqys.core.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.MessageService;
 import com.dqys.business.service.utils.message.MessageUtils;
-import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
-import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.RabbitMQProducerTool;
 import com.dqys.core.utils.SmsUtil;
-import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,10 +56,16 @@ public class MessageServiceImpl implements MessageService {
     private CoordinatorService coordinatorService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private FlowBusinessService flowBusinessService;
 
     @Override
     public List<Message> selectByMessage(Message message) {
-        return messageMapper.selectByMessage(message);
+        List<Message> messageList = messageMapper.selectByMessage(message);
+        for (Message mess : messageList) {
+            mess.setFlowBusiness(flowBusinessService.get(mess.getFlowBusinessId()));
+        }
+        return messageList;
     }
 
     @Override
@@ -102,6 +107,27 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
+    public Integer add(String title, String content, Integer sender_id, Integer receive_id, String label, Integer type,
+                       Integer businessType, String operUrl, Integer flowBusinessId) {
+        if (title.equals("") || sender_id == null || receive_id == null || type == null) {
+            return 0;
+        } else {
+            Message message = new Message();
+            message.setContent(content);
+            message.setLabel(label);
+            message.setReceiveId(receive_id);
+            message.setSenderId(sender_id);
+            message.setStatus(0);
+            message.setTitle(title);
+            message.setType(type);
+            message.setBusinessType(businessType);
+            message.setOperUrl(operUrl);
+            message.setFlowBusinessId(flowBusinessId);
+            return messageMapper.add(message);
+        }
+    }
+
+    @Override
     public Integer selectCount(Message message) {
         return messageMapper.selectCount(message);
     }
@@ -138,7 +164,7 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public String businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer userId, String operUrl) {
+    public String businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer userId, String operUrl, Integer flowBusinessId) {
         SmsUtil smsUtil = new SmsUtil();
         TUserTag tUserTag = getAdmin();
         if (tUserTag != null) {
@@ -157,7 +183,7 @@ public class MessageServiceImpl implements MessageService {
                         coordinatorService.getObjectName(flowType, flowId),
                         operation);
                 String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.FLOW.getValue());
-                add(title, content, userId, tuserInfo.getId(), MessageBTEnum.FLOW.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.FLOW.getValue(), operUrl);
+                add(title, content, userId, tuserInfo.getId(), MessageBTEnum.FLOW.getName(), MessageEnum.TASK.getValue(), MessageBTEnum.FLOW.getValue(), operUrl, flowBusinessId);
                 return "yes";
             }
         }
@@ -183,40 +209,77 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public String businessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer sendUserId, Integer receiveUserId, Integer status, Integer inviteUserId) {
+    public String businessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer sendUserId,
+                                     Integer receiveUserId, Integer status, List<Integer> inviteUserIds, Integer flowBusinessId) {
         SmsUtil smsUtil = new SmsUtil();
         UserDetail userC = coordinatorMapper.getUserDetail(receiveUserId);//接收者
         if (userC != null) {
             String content = "";
-            if (status == 1) {
-                content = smsUtil.sendSms(SmsEnum.FLOW_RESULT_YES.getValue(), userC.getMobile(),
-                        userC.getRealName(),
-                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
-                        coordinatorService.getObjectName(objectType, objectId),
-                        ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
-                        coordinatorService.getObjectName(flowType, flowId),
-                        operation,
-                        userService.getCompayTypeToString(coordinatorMapper.getUserDetail(inviteUserId)),
-                        coordinatorMapper.getUserDetail(inviteUserId).getCompanyName());
-            } else {
-                content = smsUtil.sendSms(SmsEnum.FLOW_RESULT_NO.getValue(), userC.getMobile(),
-                        userC.getRealName(),
-                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
-                        coordinatorService.getObjectName(objectType, objectId),
-                        ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
-                        coordinatorService.getObjectName(flowType, flowId),
-                        operation);
+            FlowBusiness flowBusiness = flowBusinessService.get(flowBusinessId);
+            if ((flowBusiness != null && flowBusiness.getStatus() == FlowBusinessEnum.FLOW_STATUS_WAIT.getValue().intValue() || (inviteUserIds != null || inviteUserIds.size() > 0))) {
+                if (status == 1) {
+                    if (inviteUserIds == null || inviteUserIds.size() == 0) {
+                        flowBusiness.setStatus(FlowBusinessEnum.FLOW_STATUS_YES.getValue());//平台同意
+                        content = smsUtil.sendSms(SmsEnum.FLOW_RESULT_YES.getValue(), userC.getMobile(),
+                                userC.getRealName(),
+                                ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
+                                coordinatorService.getObjectName(objectType, objectId),
+                                ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
+                                coordinatorService.getObjectName(flowType, flowId),
+                                operation);
+                    } else {
+                        //发送分配的处置机构
+                        content = sendCompany(smsUtil, inviteUserIds, userC);
+                    }
+                } else {
+                    flowBusiness.setStatus(FlowBusinessEnum.FLOW_STATUS_NO.getValue());//平台拒绝
+                    content = smsUtil.sendSms(SmsEnum.FLOW_RESULT_NO.getValue(), userC.getMobile(),
+                            userC.getRealName(),
+                            ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
+                            coordinatorService.getObjectName(objectType, objectId),
+                            ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
+                            coordinatorService.getObjectName(flowType, flowId),
+                            operation);
+                }
+                flowBusinessService.updateById(flowBusiness);//修改业务流转业务状态这个表中的状态
+                String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.FLOW_RESULT.getValue());
+                add(title, content, sendUserId, receiveUserId, MessageBTEnum.FLOW_RESULT.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.FLOW_RESULT.getValue(), "");
             }
-            String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.FLOW_RESULT.getValue());
-            add(title, content, sendUserId, receiveUserId, MessageBTEnum.FLOW_RESULT.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.FLOW_RESULT.getValue(), "");
             return "yes";
         } else {
             return "no";
         }
     }
 
+    private String sendCompany(SmsUtil smsUtil, List<Integer> inviteUserIds, UserDetail userC) {
+        if (inviteUserIds.size() == 1) {
+            return smsUtil.sendSms(SmsEnum.FLOW_ADD_COMPANY.getValue(), userC.getMobile(),
+                    userC.getRealName(),
+                    userService.getCompayTypeToString(coordinatorMapper.getUserDetail(inviteUserIds.get(0))),
+                    coordinatorMapper.getUserDetail(inviteUserIds.get(0)).getCompanyName());
+        } else if (inviteUserIds.size() == 2) {
+            return smsUtil.sendSms(SmsEnum.FLOW_ADD_COMPANY2.getValue(), userC.getMobile(),
+                    userC.getRealName(),
+                    userService.getCompayTypeToString(coordinatorMapper.getUserDetail(inviteUserIds.get(0))),
+                    coordinatorMapper.getUserDetail(inviteUserIds.get(0)).getCompanyName(),
+                    userService.getCompayTypeToString(coordinatorMapper.getUserDetail(inviteUserIds.get(1))),
+                    coordinatorMapper.getUserDetail(inviteUserIds.get(1)).getCompanyName());
+        } else if (inviteUserIds.size() == 3) {
+            return smsUtil.sendSms(SmsEnum.FLOW_ADD_COMPANY3.getValue(), userC.getMobile(),
+                    userC.getRealName(),
+                    userService.getCompayTypeToString(coordinatorMapper.getUserDetail(inviteUserIds.get(0))),
+                    coordinatorMapper.getUserDetail(inviteUserIds.get(0)).getCompanyName(),
+                    userService.getCompayTypeToString(coordinatorMapper.getUserDetail(inviteUserIds.get(1))),
+                    coordinatorMapper.getUserDetail(inviteUserIds.get(1)).getCompanyName(),
+                    userService.getCompayTypeToString(coordinatorMapper.getUserDetail(inviteUserIds.get(2))),
+                    coordinatorMapper.getUserDetail(inviteUserIds.get(2)).getCompanyName());
+        }
+        return null;
+    }
+
     @Override
-    public String respondInvite(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer sendUserId, Integer receiveUserId, Integer status, Integer operType) {
+    public String respondInvite(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer sendUserId,
+                                Integer receiveUserId, Integer status, Integer flowBusinessId, Integer operType) {
         SmsUtil smsUtil = new SmsUtil();
         TUserTag tUserTag = getAdmin();
         if (tUserTag != null) {
@@ -263,9 +326,9 @@ public class MessageServiceImpl implements MessageService {
                         ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
                         coordinatorService.getObjectName(flowType, flowId),
                         getOperTypeName(flowType, operType));
-                add(title, content, sendUserId, receiveUserId, "", MessageEnum.SERVE.getValue(), MessageBTEnum.INVITE_RESULT.getValue(), "");
+                add(title, content, sendUserId, receiveUserId, "", MessageEnum.SERVE.getValue(), MessageBTEnum.INVITE_RESULT.getValue(), "", flowBusinessId);
 
-                add(title, adminContent, sendUserId, tuserInfo.getId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INVITE_RESULT.getValue(), "");
+                add(title, adminContent, sendUserId, tuserInfo.getId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INVITE_RESULT.getValue(), "", flowBusinessId);
                 return "yes";
             }
         }
@@ -282,24 +345,27 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public String judicature(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, boolean modify) {
-        if (setJiGou(objectId, objectType, flowId, flowType, userId, operation, onStatus, UserInfoEnum.USER_TYPE_JUDICIARY.getValue(), modify)) {
+    public String judicature(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation,
+                             Integer onStatus, boolean modify, Integer flowBusinessId) {
+        if (setJiGou(objectId, objectType, flowId, flowType, userId, operation, onStatus, UserInfoEnum.USER_TYPE_JUDICIARY.getValue(), modify, flowBusinessId)) {
             return "yes";
         }
         return "no";
     }
 
     @Override
-    public String intermediary(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, boolean modify) {
-        if (setJiGou(objectId, objectType, flowId, flowType, userId, operation, onStatus, UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue(), modify)) {
+    public String intermediary(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation,
+                               Integer onStatus, boolean modify, Integer flowBusinessId) {
+        if (setJiGou(objectId, objectType, flowId, flowType, userId, operation, onStatus, UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue(), modify, flowBusinessId)) {
             return "yes";
         }
         return "no";
     }
 
     @Override
-    public String collectiones(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, boolean modify) {
-        if (setJiGou(objectId, objectType, flowId, flowType, userId, operation, onStatus, UserInfoEnum.USER_TYPE_COLLECTION.getValue(), modify)) {
+    public String collectiones(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation,
+                               Integer onStatus, boolean modify, Integer flowBusinessId) {
+        if (setJiGou(objectId, objectType, flowId, flowType, userId, operation, onStatus, UserInfoEnum.USER_TYPE_COLLECTION.getValue(), modify, flowBusinessId)) {
             return "yes";
         }
         return "no";
@@ -338,7 +404,8 @@ public class MessageServiceImpl implements MessageService {
         return messageMapper.insertMessageNoByOperinfo(messageOperinfo);
     }
 
-    private boolean setJiGou(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation, Integer onStatus, Integer userType, boolean modify) {
+    private boolean setJiGou(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation,
+                             Integer onStatus, Integer userType, boolean modify, Integer flowBusinessId) {
         boolean flag = coordinatorService.verdictOrganization(flowId, flowType, onStatus, userType, modify);
         if (flag) {
             SmsUtil smsUtil = new SmsUtil();
@@ -360,7 +427,8 @@ public class MessageServiceImpl implements MessageService {
                         operation,
                         onStatus == 0 ? "加入" : "移出");
                 String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.FLOW_RESULT.getValue());
-                add(title, content, userId, MessageUtils.transMapToInt(map, "userId"), MessageBTEnum.FLOW_RESULT.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.FLOW_RESULT.getValue(), "");
+                add(title, content, userId, MessageUtils.transMapToInt(map, "userId"), MessageBTEnum.FLOW_RESULT.getName(),
+                        MessageEnum.SERVE.getValue(), MessageBTEnum.FLOW_RESULT.getValue(), "", flowBusinessId);
                 return true;
             }
         }

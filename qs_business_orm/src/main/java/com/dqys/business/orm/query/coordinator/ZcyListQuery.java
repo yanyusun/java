@@ -37,7 +37,7 @@ public class ZcyListQuery extends BasePagination {
     private Integer status;//状态
     private Integer objectType;
     private List<Integer> objectIds;
-    private Integer startPage;
+    private Integer startPage=0;
     private Integer userId;//
 
     /*筛选条件*/

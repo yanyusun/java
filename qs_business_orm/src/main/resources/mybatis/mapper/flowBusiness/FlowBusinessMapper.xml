@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.flowBusiness.FlowBusinessMapper">
+
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.flowBusiness.FlowBusiness">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="object_id" property="objectId" jdbcType="INTEGER"/>
+        <result column="object_type" property="objectType" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="create_user_id" property="createUserId" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="collection" property="collection" jdbcType="INTEGER"/>
+        <result column="lawyer" property="lawyer" jdbcType="INTEGER"/>
+        <result column="agent" property="agent" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    tfa.id,tfa.object_id,tfa.object_type,tfa.type,tfa.status,tfa.create_user_id,tfa.create_at,
+    tfa.version,tfa.update_at,tfa.collection,tfa.lawyer,tfa.agent
+    </sql>
+    <sql id="Where_Query">
+        <if test="objectId !=null">
+            AND tfa.object_id=#{objectId}
+        </if>
+        <if test="objectType !=null">
+            AND tfa.object_type=#{objectType}
+        </if>
+        <if test="status !=null">
+            AND tfa.status=#{status}
+        </if>
+        <if test="createUserId !=null">
+            AND tfa.create_user_id=#{createUserId}
+        </if>
+    </sql>
+
+    <select id="selectByCondition" resultMap="BaseResultMap"
+            parameterType="com.dqys.business.orm.pojo.flowBusiness.FlowBusiness">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_flowbusiness_add tfa
+        WHERE 1=1
+        <include refid="Where_Query"/>
+    </select>
+
+    <insert id="add" parameterType="com.dqys.business.orm.pojo.flowBusiness.FlowBusiness" keyProperty="id"
+            useGeneratedKeys="true">
+    INSERT INTO t_flowbusiness_add(object_id,object_type,type,create_user_id,create_at,update_at)
+     VALUES(#{objectId},#{objectType},#{type},#{createUserId},now(),now())
+    </insert>
+
+    <update id="updateById" parameterType="com.dqys.business.orm.pojo.flowBusiness.FlowBusiness">
+        UPDATE t_flowbusiness_add
+        <set>
+            <if test="objectId !=null">
+                object_id=#{objectId},
+            </if>
+            <if test="objectType !=null">
+                object_type=#{objectType},
+            </if>
+            <if test="type !=null">
+                type=#{type},
+            </if>
+            <if test="createUserId !=null">
+                create_user_id=#{createUserId},
+            </if>
+            <if test="status !=null">
+                status=#{status},
+            </if>
+            <if test="collection !=null">
+                collection=#{collection},
+            </if>
+            <if test="lawyer !=null">
+                lawyer=#{lawyer},
+            </if>
+            <if test="agent !=null">
+                agent=#{agent},
+            </if>
+            update_at=now(),
+            version=version+1
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <select id="get" parameterType="int" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_flowbusiness_add tfa
+        WHERE tfa.id=#{id}
+    </select>
+
+
+</mapper>
