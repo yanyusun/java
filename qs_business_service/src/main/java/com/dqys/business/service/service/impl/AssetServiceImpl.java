@@ -796,7 +796,15 @@ public class AssetServiceImpl implements AssetService {
             if (assetQuery.getIds() == null || assetQuery.getIds().size() == 0) {
                 assetQuery.setId(SysProperty.NULL_DATA_ID);
             }
-        } else {
+        }  else if (ObjectTabEnum.new_task.getValue().equals(type)) {
+            //待发布：规则--》委托方录入还未发布的，只有委托方自己录入的才能看到，其他人看不到
+            List<Integer> ids = lenderInfoMapper.getObjectIdByUserIdAndStatus(userId, ObjectTypeEnum.ASSETPACKAGE.getValue(), BusinessStatusEnum.not_publish.getValue());
+            assetQuery.setIds(ids);
+            if (assetQuery.getIds() == null || assetQuery.getIds().size() == 0) {
+                assetQuery.setId(SysProperty.NULL_DATA_ID);
+            }
+            assetQuery.setOperator(userId);
+        }else {
             return null;
         }
         return assetQuery;

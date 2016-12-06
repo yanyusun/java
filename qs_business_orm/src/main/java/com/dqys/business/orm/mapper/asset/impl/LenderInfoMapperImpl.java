@@ -102,4 +102,8 @@ public class LenderInfoMapperImpl extends BaseDao implements LenderInfoMapper {
         return super.getSqlSession().getMapper(LenderInfoMapper.class).getObjectIdByUnderway(userId, objectType);
     }
 
+    @Override
+    public List<Integer> getObjectIdByUserIdAndStatus(@Param("userId") Integer userId, @Param("objectType") Integer objectType, @Param("status") Integer status) {
+        return super.getSqlSession().getMapper(LenderInfoMapper.class).getObjectIdByUserIdAndStatus(userId, objectType, status);
+    }
 }
