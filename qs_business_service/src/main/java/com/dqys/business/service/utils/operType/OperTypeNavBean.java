@@ -53,6 +53,10 @@ abstract public class OperTypeNavBean {
 
     abstract Integer[] getNav99();
 
+    abstract Integer[] getNav21();
+
+    abstract Integer[] getNav22();
+
     public Integer[] getNav(Integer navId) {
         if (navId == ObjectTabEnum.accept.getValue()) {
             return getNav0();
@@ -116,6 +120,12 @@ abstract public class OperTypeNavBean {
         }
         if (navId == ObjectTabEnum.myUrge.getValue()) {
             return getNav20();
+        }
+        if(navId == ObjectTabEnum.new_task.getValue()){
+            return getNav21();
+        }
+        if(navId == ObjectTabEnum.wait_publish.getValue()){
+            return getNav22();
         }
         if (navId == ObjectTabEnum.all.getValue()) {
             return getNav99();

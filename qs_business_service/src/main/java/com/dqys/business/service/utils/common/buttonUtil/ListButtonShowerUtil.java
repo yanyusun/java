@@ -102,7 +102,10 @@ public class ListButtonShowerUtil {
         getOnGoing(ObjectTypeEnum.ASSETSOURCE);
         //--------------------------------------------------->最新任务
         getNewTask(ObjectTypeEnum.LENDER);
-        getOnGoing(ObjectTypeEnum.ASSETSOURCE);
+        getNewTask(ObjectTypeEnum.ASSETSOURCE);
+        //----------------------------------------------------->待发布
+        getWaitPublish(ObjectTypeEnum.LENDER);
+        getWaitPublish(ObjectTypeEnum.ASSETSOURCE);
     }
 
     public static ListButtonShowerBean getListButtonShowerBean(Integer navId, Integer objectType, String userType, String roleType) throws UndefinitionTypeException {
@@ -1292,6 +1295,24 @@ public class ListButtonShowerUtil {
         map.put(getKey(ObjectTabEnum.new_task, objectTypeEnum, UserInfoEnum.USER_TYPE_INTERMEDIARY, RoleTypeEnum.GENERAL)
                 , getCompanyTeamBeanView(getUserTeamBeanView(new ListButtonShowerBean())));
     }
+
+    /**
+     * 待发布
+     *
+     * @param objectTypeEnum
+     */
+    public static void getWaitPublish(ObjectTypeEnum objectTypeEnum) {
+        map.put(getKey(ObjectTabEnum.wait_publish, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.ADMIN)
+                , new ListButtonShowerBean());
+        map.put(getKey(ObjectTabEnum.wait_publish, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.REGULATOR)
+                , new ListButtonShowerBean());
+        map.put(getKey(ObjectTabEnum.wait_publish, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.THEIR)
+                , new ListButtonShowerBean());
+        map.put(getKey(ObjectTabEnum.wait_publish, objectTypeEnum, UserInfoEnum.USER_TYPE_ENTRUST, RoleTypeEnum.GENERAL)
+                , new ListButtonShowerBean());
+
+    }
+
 
 
 
