@@ -1203,7 +1203,7 @@ public class DistributionServiceImpl implements DistributionService {
                 }
                 setFlowBusiness(companyDetailInfo1.getUserId(), flowBusinessId, FlowBusinessEnum.FLOW_COMPANY_WAIT_AGREE.getValue());//修改业务状态
                 sendBusinessFlow(UserSession.getCurrent().getUserId(), companyDetailInfo1.getUserId(), businessRequestId,
-                        companyTeam.getObjectId(), companyTeam.getObjectType(), id, type, operUrl, operation);//发送短信给邀请的公司
+                        companyTeam.getObjectId(), companyTeam.getObjectType(), id, type, operUrl, operation, flowBusinessId);//发送短信给邀请的公司
                 inviteUserIds.add(companyDetailInfo1.getUserId());//添加的业务公司管理员
                 return JsonResponseTool.success(result);
             }
@@ -1230,29 +1230,51 @@ public class DistributionServiceImpl implements DistributionService {
     }
 
     /**
-     * 设置操作状态，多个相同机构进行操作，其中有一个同意，其余的都不得继续操作
+     * 设置操作状态，多个相同机构进行操作，其中有一个同意，其余的都不得继续操作,不能操作的机构进行删除
      *
      * @param flowBusinessId
      * @param userId
      * @param status
      */
-    private boolean setOperStatus(Integer flowBusinessId, Integer userId, Integer status) {
+    private boolean setOperStatus(Integer flowBusinessId, Integer userId, Integer status, CompanyTeamRe teamRe) throws BusinessLogException {
         UserDetail detail = coordinatorMapper.getUserDetail(userId);
         Integer operStatus = 0;
-        List<Message> list = messageMapper.selectMessageByUFO(detail.getUserType(), flowBusinessId, operStatus, MessageBTEnum.COMPANY_BETWEEN_FLOW.getValue());
+        List<Message> list = messageMapper.selectMessageByUFO(detail.getUserType(), flowBusinessId, operStatus, MessageBTEnum.COMPANY_BETWEEN_FLOW.getValue());//获取相同分配器和相同机构角色的成员
         if (list == null || list.size() == 1) {
             return true;
+        }
+        List<BusinessServiceDTO> businessServiceDTOList = null;//业务流转成员
+        if (teamRe != null) {
+            CompanyTeam team = companyTeamMapper.get(teamRe.getCompanyTeamId());
+            DistributionDTO dto = listDistribution_tx(team.getObjectType(), team.getObjectId());//获取分配器列表中的业务流转成员，用于剔除其他相同的机构
+            if (dto != null) {
+                businessServiceDTOList = dto.getBusinessServiceDTOList() == null ? null : dto.getBusinessServiceDTOList();
+            }
         }
         if (status.equals(ObjectAcceptTypeEnum.accept.getValue()) && list.size() > 1) {
             for (Message message : list) {
                 if (message.getReceiveId() != userId) {
                     message.setOperStatus(3);
-                    messageMapper.updateOperStatus(message);
+                    messageMapper.updateOperStatus(message);//修改操作状态
+                    //做出删除行为
+                    delFlowBusinessCompany(businessServiceDTOList, message);
                 }
             }
             return true;
         } else {
             return false;
+        }
+    }
+
+    private void delFlowBusinessCompany(List<BusinessServiceDTO> businessServiceDTOList, Message message) throws BusinessLogException {
+        UserDetail detail = coordinatorMapper.getUserDetail(message.getReceiveId());
+        if (businessServiceDTOList != null) {
+            for (BusinessServiceDTO busDto : businessServiceDTOList) {
+                if (busDto.getStateflag() == 0 && busDto.getCompanyId().intValue() == detail.getCompanyId().intValue()) {
+                    exitBusinessService(busDto.getId(), busDto.getTargetType(), busDto.getTargetId());
+                    break;
+                }
+            }
         }
     }
 
@@ -1266,6 +1288,7 @@ public class DistributionServiceImpl implements DistributionService {
      * @param status      接收状态
      * @param flag        是否开启增加其借款人的关联关系
      */
+
     private String addBusinessObjectUserRelation(Integer type, Integer id, Integer managerId,
                                                  CompanyTeam companyTeam, Integer status, boolean flag) {
 
@@ -1469,7 +1492,7 @@ public class DistributionServiceImpl implements DistributionService {
      * @param flowType          业务流转对象类型
      */
     private void sendBusinessFlow(Integer userId, Integer receiveUserId, Integer businessRequestId, Integer objectId,
-                                  Integer objectType, Integer flowId, Integer flowType, String operUrl, String operation) {
+                                  Integer objectType, Integer flowId, Integer flowType, String operUrl, String operation, Integer flowBusinessId) {
 
         SmsUtil smsUtil = new SmsUtil();
         UserDetail userC = coordinatorMapper.getUserDetail(receiveUserId);
@@ -1486,7 +1509,7 @@ public class DistributionServiceImpl implements DistributionService {
                 coordinatorService.getObjectName(flowType, flowId),
                 operation);
         String title = coordinatorService.getMessageTitle(flowId, flowType, MessageBTEnum.COMPANY_BETWEEN_FLOW.getValue());
-        messageService.add(title, content, userId, receiveUserId, "", MessageEnum.TASK.getValue(), MessageBTEnum.COMPANY_BETWEEN_FLOW.getValue(), operUrl);
+        messageService.add(title, content, userId, receiveUserId, "", MessageEnum.TASK.getValue(), MessageBTEnum.COMPANY_BETWEEN_FLOW.getValue(), operUrl, flowBusinessId);
     }
 
     @Override
@@ -1656,20 +1679,18 @@ public class DistributionServiceImpl implements DistributionService {
                     companyTeamReMapper.update(ctr);
 
                 }
-                if (setOperStatus(flowBusinessId, UserSession.getCurrent().getUserId(), status)) {
+                CompanyTeamRe teamRe = companyTeamReMapper.get(distributionId);
+                if (setOperStatus(flowBusinessId, UserSession.getCurrent().getUserId(), status, teamRe)) {
                     //修改流转业务状态
                     if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
                         setFlowBusiness(UserSession.getCurrent().getUserId(), flowBusinessId, FlowBusinessEnum.FLOW_COMPANY_AGREE.getValue());
                     } else {
                         setFlowBusiness(UserSession.getCurrent().getUserId(), flowBusinessId, FlowBusinessEnum.FLOW_COMPANY_REFUSE.getValue());
                     }
-                } else {
-                    //删除业务流转的对象
-                    exitBusinessService(distributionId, type, id);
                 }
                 // 消息提醒
                 messageService.respondInvite(companyTeam.getObjectId(), companyTeam.getObjectType(), id, type, userInfo.getId(),
-                        companyTeamRe.getRequesterId(), status, flowBusinessId,businessType);
+                        companyTeamRe.getRequesterId(), status, flowBusinessId, businessType);
             }
             return JsonResponseTool.success(result);
         }

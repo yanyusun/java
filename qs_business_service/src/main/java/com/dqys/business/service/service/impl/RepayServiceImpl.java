@@ -154,8 +154,6 @@ public class RepayServiceImpl implements RepayService {
             money = paTotal.doubleValue();
         } else if (money == null && repayType == RepayEnum.TYPE_A_P.getValue().intValue() && repayWay == RepayEnum.WAY_DIRECT.getValue()) {
             money = paTotal.doubleValue();
-        } else {
-            money = 0.0;
         }
         //判断所得金额是否大于还款金额
         if (repayType == RepayEnum.TYPE_PRINCIPAL.getValue().intValue()) {
@@ -283,6 +281,9 @@ public class RepayServiceImpl implements RepayService {
      * 修改业务表状态
      */
     private void setBusinessStatus(List<Integer> iouIds) throws Exception {
+        if (iouIds == null || iouIds.size() == 0) {
+            return;
+        }
         List<Integer> businessIds = repayMapper.getBusinessId(ObjectTypeEnum.IOU.getValue(), iouIds);
         for (Integer id : businessIds) {
             Map iouMap = repayMapper.getIouSumByBusinessId(id, ObjectTypeEnum.IOU.getValue());

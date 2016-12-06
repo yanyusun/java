@@ -137,7 +137,7 @@ public interface MessageService {
      * @return
      */
     String respondInvite(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer sendUserId, Integer receiveUserId,
-                         Integer status, Integer flowBusinessId);
+                         Integer status, Integer flowBusinessId,Integer operType);
 
     /**
      * 执行司法化解（律所接收到通知）
@@ -169,7 +169,7 @@ public interface MessageService {
      * @return
      */
     String intermediary(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation,
-                        Integer onStatus, boolean modify, Integer flowBusinessId,Integer operType);
+                        Integer onStatus, boolean modify, Integer flowBusinessId);
 
     /**
      * 维持常规催收（催收接收短信通知）

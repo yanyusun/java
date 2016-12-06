@@ -132,7 +132,7 @@ public class RepayController {
      * @apiSampleRequest repay/updateRepayMoney
      * @apiParam {int} repayId 还款记录id
      * @apiParam {int} objectId 对象id
-     * @apiParam {int} objectType 对象类型（1借据2抵押物）
+     * @apiParam {int} objectType 对象类型（1借据2抵押物3不限对象）
      * @apiParam {int} repayType 还款类型（0还利息1还本金2还利息加本金）
      * @apiParam {int} repayWay 还款方式 （0直接还款1转贷还款2变卖还款3其他方式）
      * @apiParam {double} money 还款金额(单位：元)
@@ -155,7 +155,7 @@ public class RepayController {
         if (money <= 0 || !money.toString().matches("\\d*([.]\\d{1,2})?")) {
             return JsonResponseTool.paramErr("金额输入有误");
         }
-        if (objectType != RepayEnum.OBJECT_IOU.getValue() && objectType != RepayEnum.OBJECT_PAWN.getValue()) {
+        if (objectType != RepayEnum.OBJECT_IOU.getValue() && objectType != RepayEnum.OBJECT_PAWN.getValue()&& objectType != RepayEnum.OBJECT_UNLIMITED.getValue()) {
             return JsonResponseTool.paramErr("对象类型错误");
         }
         if (repayType != RepayEnum.TYPE_ACCRUAL.getValue() && repayType != RepayEnum.TYPE_PRINCIPAL.getValue() && repayType != RepayEnum.TYPE_A_P.getValue()) {

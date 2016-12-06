@@ -4,8 +4,9 @@ package com.dqys.business.orm.constant.flowBusiness;
  * Created by mkfeng on 2016/12/2.
  */
 public enum FlowBusinessEnum {
-    FLOW_STATUS_NO(0, "平台未同意"),
+    FLOW_STATUS_WAIT(0, "待平台审核"),
     FLOW_STATUS_YES(1, "平台同意"),
+    FLOW_STATUS_NO(2, "平台未同意"),
     FLOW_STATUS_FINISH(100, "完成"),
     FLOW_COMPANY_WAIT_ADD(0, "待添加"),
     FLOW_COMPANY_WAIT_AGREE(1, "待同意"),

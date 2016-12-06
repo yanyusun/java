@@ -216,32 +216,35 @@ public class MessageServiceImpl implements MessageService {
         if (userC != null) {
             String content = "";
             FlowBusiness flowBusiness = flowBusinessService.get(flowBusinessId);
-            if (status == 1) {
-                if (inviteUserIds == null || inviteUserIds.size() == 0) {
-                    flowBusiness.setStatus(FlowBusinessEnum.FLOW_STATUS_YES.getValue());//平台同意
-                    flowBusinessService.updateById(flowBusiness);//当平台同意时，修改业务流转业务状态这个表中的状态
-                    content = smsUtil.sendSms(SmsEnum.FLOW_RESULT_YES.getValue(), userC.getMobile(),
+            if ((flowBusiness != null && flowBusiness.getStatus() == FlowBusinessEnum.FLOW_STATUS_WAIT.getValue().intValue() || (inviteUserIds != null || inviteUserIds.size() > 0))) {
+                if (status == 1) {
+                    if (inviteUserIds == null || inviteUserIds.size() == 0) {
+                        flowBusiness.setStatus(FlowBusinessEnum.FLOW_STATUS_YES.getValue());//平台同意
+                        content = smsUtil.sendSms(SmsEnum.FLOW_RESULT_YES.getValue(), userC.getMobile(),
+                                userC.getRealName(),
+                                ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
+                                coordinatorService.getObjectName(objectType, objectId),
+                                ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
+                                coordinatorService.getObjectName(flowType, flowId),
+                                operation);
+                    } else {
+                        //发送分配的处置机构
+                        content = sendCompany(smsUtil, inviteUserIds, userC);
+                    }
+                } else {
+                    flowBusiness.setStatus(FlowBusinessEnum.FLOW_STATUS_NO.getValue());//平台拒绝
+                    content = smsUtil.sendSms(SmsEnum.FLOW_RESULT_NO.getValue(), userC.getMobile(),
                             userC.getRealName(),
                             ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
                             coordinatorService.getObjectName(objectType, objectId),
                             ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
                             coordinatorService.getObjectName(flowType, flowId),
                             operation);
-                } else {
-                    //发送分配的处置机构
-                    sendCompany(smsUtil, inviteUserIds, userC);
                 }
-            } else {
-                content = smsUtil.sendSms(SmsEnum.FLOW_RESULT_NO.getValue(), userC.getMobile(),
-                        userC.getRealName(),
-                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
-                        coordinatorService.getObjectName(objectType, objectId),
-                        ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
-                        coordinatorService.getObjectName(flowType, flowId),
-                        operation);
+                flowBusinessService.updateById(flowBusiness);//修改业务流转业务状态这个表中的状态
+                String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.FLOW_RESULT.getValue());
+                add(title, content, sendUserId, receiveUserId, MessageBTEnum.FLOW_RESULT.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.FLOW_RESULT.getValue(), "");
             }
-            String title = coordinatorService.getMessageTitle(objectId, objectType, MessageBTEnum.FLOW_RESULT.getValue());
-            add(title, content, sendUserId, receiveUserId, MessageBTEnum.FLOW_RESULT.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.FLOW_RESULT.getValue(), "");
             return "yes";
         } else {
             return "no";
@@ -321,9 +324,10 @@ public class MessageServiceImpl implements MessageService {
                         ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
                         coordinatorService.getObjectName(objectType, objectId),
                         ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
-                        coordinatorService.getObjectName(flowType, flowId));
+                        coordinatorService.getObjectName(flowType, flowId),
+                        getOperTypeName(flowType, operType));
                 add(title, content, sendUserId, receiveUserId, "", MessageEnum.SERVE.getValue(), MessageBTEnum.INVITE_RESULT.getValue(), "", flowBusinessId);
-                                    
+
                 add(title, adminContent, sendUserId, tuserInfo.getId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INVITE_RESULT.getValue(), "", flowBusinessId);
                 return "yes";
             }
