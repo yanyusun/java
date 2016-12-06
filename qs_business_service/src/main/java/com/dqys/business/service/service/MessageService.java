@@ -169,7 +169,7 @@ public interface MessageService {
      * @return
      */
     String intermediary(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation,
-                        Integer onStatus, boolean modify, Integer flowBusinessId);
+                        Integer onStatus, boolean modify, Integer flowBusinessId,Integer operType);
 
     /**
      * 维持常规催收（催收接收短信通知）

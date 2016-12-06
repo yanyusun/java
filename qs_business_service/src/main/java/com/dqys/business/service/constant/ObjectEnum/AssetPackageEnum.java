@@ -15,7 +15,11 @@ public enum AssetPackageEnum implements ObjectEnumBase{
     RESTART_APPLY(106, "重新发布"),//重新申请
     INVALID_SET(107, "设置为无效"),
     INVALID_SET_RECOVER(108, "无效恢复"),
-    PAUSE_RECOVER(109, "暂停恢复");
+    PAUSE_RECOVER(109, "暂停恢复"),
+    DEL(1010, "暂停恢复"),
+    PUBLISH(1011,"待发布")
+    ;
+
 
     private Integer value;
     private String name;

@@ -26,6 +26,7 @@ public enum LenderEnum implements ObjectEnumBase{
     INVALID_SET_RECOVER(1118,"无效恢复"),
     DELETE(1119, "删除"),
     DISPOSAL_FINISH(1120,"已处置"),
+    PUBLISH(1121,"发布"),
 
     //    以下为借款人状态
     STATUS_CHECK_PENDING(0,"待审核"),

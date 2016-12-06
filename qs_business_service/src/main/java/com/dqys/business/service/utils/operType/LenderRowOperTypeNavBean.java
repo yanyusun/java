@@ -1,5 +1,7 @@
 package com.dqys.business.service.utils.operType;
 
+import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
+
 /**
  * nav对应借款人列表所有权限
  * <p>
@@ -27,7 +29,10 @@ public class LenderRowOperTypeNavBean extends OperTypeNavBean {
     public Integer[] nav18 = {1110, 1117, 116};//暂停
     public Integer[] nav19 = {1110, 116, 1115};//正在进行
     public Integer[] nav20 = {1110, 116, 1115};//我的催收
+    public Integer[] nav21 = {102, 1110, 1615, 1310, 1213};//最新任务
+    public Integer[] nav22 = {102, 1110, 1615, 1310, 1213, 111,1121,101, AssetPackageEnum.PUBLISH.getValue()};//待发布
     public Integer[] nav99 = {1110};//全部
+
 
     public final static LenderRowOperTypeNavBean lenderRowOperTypeNavBean = new LenderRowOperTypeNavBean();
 
@@ -134,6 +139,16 @@ public class LenderRowOperTypeNavBean extends OperTypeNavBean {
     @Override
     Integer[] getNav20() {
         return nav20;
+    }
+
+    @Override
+    Integer[] getNav21() {
+        return nav21;
+    }
+
+    @Override
+    Integer[] getNav22() {
+        return nav22;
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.dqys.business.service.utils.operType;
 
+import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
+
 /**
  * nav对应状态具有的所有权限
  * <p>
@@ -41,7 +43,10 @@ public class AllOperTypeNavBean extends OperTypeNavBean{
     public Integer[] nav18 = {102, 1110, 1615, 1310, 1213, 109, 1117, 1614, 116, 107, 166};//暂停
     public Integer[] nav19 = {102, 1110, 1615, 1310, 1213, 116, 1115, 105, 107, 1611};//正在进行
     public Integer[] nav20 = {102, 1110, 1615, 1310, 1213, 116, 1115, 105, 107, 1611};//我的催收
+    public Integer[] nav21 = {102, 1110, 1615, 1310, 1213};//最新任务
+    public Integer[] nav22 = {102, 1110, 1615, 1310, 1213, 111,1121,101, AssetPackageEnum.PUBLISH.getValue()};//待发布
     public Integer[] nav99 = {102, 1110, 1615, 1310, 1213};//全部
+
 
     public final static AllOperTypeNavBean allOperTypeNavBean = new AllOperTypeNavBean();
 
@@ -148,6 +153,16 @@ public class AllOperTypeNavBean extends OperTypeNavBean{
     @Override
     Integer[] getNav20() {
         return nav20;
+    }
+
+    @Override
+    Integer[] getNav21() {
+        return nav21;
+    }
+
+    @Override
+    Integer[] getNav22() {
+        return nav22;
     }
 
     @Override

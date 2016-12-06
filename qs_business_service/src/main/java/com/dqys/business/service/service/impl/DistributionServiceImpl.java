@@ -1669,7 +1669,7 @@ public class DistributionServiceImpl implements DistributionService {
                 }
                 // 消息提醒
                 messageService.respondInvite(companyTeam.getObjectId(), companyTeam.getObjectType(), id, type, userInfo.getId(),
-                        companyTeamRe.getRequesterId(), status, flowBusinessId);
+                        companyTeamRe.getRequesterId(), status, flowBusinessId,businessType);
             }
             return JsonResponseTool.success(result);
         }

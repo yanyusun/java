@@ -78,6 +78,11 @@ public class PermissionImp implements Permission {
             AddApplyCompanyTeamOperTypeFilter addApplyCompanyTeamOperTypeFilter = new AddApplyCompanyTeamOperTypeFilter(navId, objectType, userType.toString(), userRole.toString());
             originOperTypeFiler.decorate(addApplyCompanyTeamOperTypeFilter);
         }
+        if(ObjectTabEnum.wait_publish.getValue()==navId){//待发布
+            List<OperType> operTypes = operTypeService
+                    .getOperType(objectType, objectId);
+            return originOperTypeFiler.getPermission(operTypes);
+        }
         if (userType == UserInfoEnum.USER_TYPE_COLLECTION.getValue()
                 || userType == UserInfoEnum.USER_TYPE_JUDICIARY.getValue()) {//当为催收或者司法录入的资产包和借款人时
             AddEditOperTypeFilter addEditOperTypeFilter = new AddEditOperTypeFilter(lenderInfoMapper, assetInfoMapper, objectType, objectId, userType, userSession.getUserId());

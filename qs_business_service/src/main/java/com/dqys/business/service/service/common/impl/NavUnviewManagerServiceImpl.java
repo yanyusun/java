@@ -215,20 +215,20 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
     private List<SelectDto> getUserTypeInitList() {
             userTypeInitList = new ArrayList<>();
             //普通人员
-            SelectDto commonSelectDto = new SelectDto();
-            commonSelectDto.setReId(UserInfoEnum.USER_TYPE_COMMON.getValue());
-            commonSelectDto.setShowName("普通人员");
-            userTypeInitList.add(commonSelectDto);
+//            SelectDto commonSelectDto = new SelectDto();
+//            commonSelectDto.setReId(UserInfoEnum.USER_TYPE_COMMON.getValue());
+//            commonSelectDto.setShowName("普通人员");
+//            userTypeInitList.add(commonSelectDto);
             //平台
-            SelectDto adminSelectDto = new SelectDto();
-            adminSelectDto.setReId(UserInfoEnum.USER_TYPE_ADMIN.getValue());
-            adminSelectDto.setShowName("平台");
-            userTypeInitList.add(adminSelectDto);
+//            SelectDto adminSelectDto = new SelectDto();
+//            adminSelectDto.setReId(UserInfoEnum.USER_TYPE_ADMIN.getValue());
+//            adminSelectDto.setShowName("平台");
+//            userTypeInitList.add(adminSelectDto);
             //委托
-            SelectDto entrustSelectDto = new SelectDto();
-            entrustSelectDto.setReId(UserInfoEnum.USER_TYPE_ENTRUST.getValue());
-            entrustSelectDto.setShowName("委托");
-            userTypeInitList.add(entrustSelectDto);
+//            SelectDto entrustSelectDto = new SelectDto();
+//            entrustSelectDto.setReId(UserInfoEnum.USER_TYPE_ENTRUST.getValue());
+//            entrustSelectDto.setShowName("委托");
+//            userTypeInitList.add(entrustSelectDto);
             //催收
             SelectDto collectionSelectDto = new SelectDto();
             collectionSelectDto.setReId(UserInfoEnum.USER_TYPE_COLLECTION.getValue());

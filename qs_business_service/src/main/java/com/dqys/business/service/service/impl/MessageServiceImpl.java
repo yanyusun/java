@@ -15,6 +15,8 @@ import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.flowBusiness.FlowBusiness;
 import com.dqys.business.orm.pojo.message.Message;
 import com.dqys.business.orm.pojo.message.MessageOperinfo;
+import com.dqys.business.service.constant.ObjectEnum.IouEnum;
+import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
 import com.dqys.business.service.service.UserService;
 import com.dqys.business.service.service.flowBusiness.FlowBusinessService;
 import com.dqys.core.constant.MessageBTEnum;
@@ -274,7 +276,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public String respondInvite(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer sendUserId,
-                                Integer receiveUserId, Integer status, Integer flowBusinessId) {
+                                Integer receiveUserId, Integer status, Integer flowBusinessId, Integer operType) {
         SmsUtil smsUtil = new SmsUtil();
         TUserTag tUserTag = getAdmin();
         if (tUserTag != null) {
@@ -303,7 +305,8 @@ public class MessageServiceImpl implements MessageService {
                         ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
                         coordinatorService.getObjectName(objectType, objectId),
                         ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
-                        coordinatorService.getObjectName(flowType, flowId));
+                        coordinatorService.getObjectName(flowType, flowId),
+                        getOperTypeName(flowType, operType));
 
                 adminContent = smsUtil.sendSms(adminCode, tuserInfo.getMobile(),
                         tuserInfo.getRealName(),
@@ -320,12 +323,21 @@ public class MessageServiceImpl implements MessageService {
                         ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
                         coordinatorService.getObjectName(flowType, flowId));
                 add(title, content, sendUserId, receiveUserId, "", MessageEnum.SERVE.getValue(), MessageBTEnum.INVITE_RESULT.getValue(), "", flowBusinessId);
-
+                                    
                 add(title, adminContent, sendUserId, tuserInfo.getId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INVITE_RESULT.getValue(), "", flowBusinessId);
                 return "yes";
             }
         }
         return "no";
+    }
+
+    private String getOperTypeName(Integer ojectType, Integer operType) {
+        if (ojectType == ObjectTypeEnum.PAWN.getValue().intValue()) {
+            return PawnEnum.getPawnEnum(operType).getName();
+        } else if (ojectType == ObjectTypeEnum.IOU.getValue().intValue()) {
+            return IouEnum.getIouEnum(operType).getName();
+        }
+        return "";
     }
 
     @Override
