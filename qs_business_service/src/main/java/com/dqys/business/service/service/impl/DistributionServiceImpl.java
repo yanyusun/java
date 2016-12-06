@@ -392,6 +392,7 @@ public class DistributionServiceImpl implements DistributionService {
         result.setTask(companyTeamRe.getVersion() - companyTeamRe.getStatus());
         result.setTarget(name);
         result.setTargetId(id);
+        result.setTargetType(type);
         result.setTime(time);
         result.setStateflag(companyTeamRe.getStateflag().intValue());
 
@@ -1238,7 +1239,7 @@ public class DistributionServiceImpl implements DistributionService {
     private boolean setOperStatus(Integer flowBusinessId, Integer userId, Integer status) {
         UserDetail detail = coordinatorMapper.getUserDetail(userId);
         Integer operStatus = 0;
-        List<Message> list = messageMapper.selectMessageByUFO(detail.getUserType(), flowBusinessId, operStatus);
+        List<Message> list = messageMapper.selectMessageByUFO(detail.getUserType(), flowBusinessId, operStatus, MessageBTEnum.COMPANY_BETWEEN_FLOW.getValue());
         if (list == null || list.size() == 1) {
             return true;
         }
@@ -1337,7 +1338,7 @@ public class DistributionServiceImpl implements DistributionService {
             return JsonResponseTool.failure("删除失败，已经从分配中移除");
         }
         // 校验是否为业务流转类型
-        if (companyTeamRe.getType().equals(ObjectBusinessTypeEnum.mechanism.getValue())) {
+        if (companyTeamRe.getType() != ObjectBusinessTypeEnum.mechanism.getValue().intValue()) {
             return JsonResponseTool.failure("不是业务流转数据，无法删除");
         }
         Integer result = companyTeamReMapper.deleteByPrimaryKey(id);
@@ -1662,6 +1663,9 @@ public class DistributionServiceImpl implements DistributionService {
                     } else {
                         setFlowBusiness(UserSession.getCurrent().getUserId(), flowBusinessId, FlowBusinessEnum.FLOW_COMPANY_REFUSE.getValue());
                     }
+                } else {
+                    //删除业务流转的对象
+                    exitBusinessService(distributionId, type, id);
                 }
                 // 消息提醒
                 messageService.respondInvite(companyTeam.getObjectId(), companyTeam.getObjectType(), id, type, userInfo.getId(),

@@ -168,7 +168,7 @@
         FROM t_message tm LEFT JOIN t_user_tag tut
         ON tut.user_id=tm.receive_id
         WHERE tm.status!=2 AND tut.user_type=#{userType} AND tm.oper_status=#{operStatus} AND
-        tm.flow_business_id=#{flowBusinessId}
+        tm.flow_business_id=#{flowBusinessId} AND tm.business_type=#{messageBusinessType}
     </select>
 
 </mapper>

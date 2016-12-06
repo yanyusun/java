@@ -62,8 +62,8 @@ public class MessageMapperImpl extends BaseDao implements MessageMapper {
     }
 
     @Override
-    public List<Message> selectMessageByUFO(@Param("userType") Integer userType, @Param("flowBusinessId") Integer flowBusinessId, @Param("operStatus") Integer operStatus) {
-        return super.getSqlSession().getMapper(MessageMapper.class).selectMessageByUFO(userType, flowBusinessId, operStatus);
+    public List<Message> selectMessageByUFO(@Param("userType") Integer userType, @Param("flowBusinessId") Integer flowBusinessId, @Param("operStatus") Integer operStatus, @Param("messageBusinessType") Integer messageBusinessType) {
+        return super.getSqlSession().getMapper(MessageMapper.class).selectMessageByUFO(userType, flowBusinessId, operStatus, messageBusinessType);
     }
 
 }

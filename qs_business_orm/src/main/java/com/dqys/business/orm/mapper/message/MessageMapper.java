@@ -58,5 +58,12 @@ public interface MessageMapper {
 
     Integer insertMessageNoByOperinfo(MessageOperinfo messageOperinfo);
 
-    List<Message> selectMessageByUFO(@Param("userType") Integer userType, @Param("flowBusinessId") Integer flowBusinessId, @Param("operStatus") Integer operStatus);
+    /**
+     * @param userType
+     * @param flowBusinessId
+     * @param operStatus
+     * @param messageBusinessType
+     * @return
+     */
+    List<Message> selectMessageByUFO(@Param("userType") Integer userType, @Param("flowBusinessId") Integer flowBusinessId, @Param("operStatus") Integer operStatus,@Param("messageBusinessType") Integer messageBusinessType);
 }
