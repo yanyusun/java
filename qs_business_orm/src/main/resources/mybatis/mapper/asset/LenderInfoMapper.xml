@@ -760,5 +760,13 @@
         AND tut.object_id IN (SELECT tfum.object_id
         FROM t_follow_up_message tfum WHERE tfum.object_type=#{objectType} AND tfum.user_id=#{userId})
     </select>
+    <!--查询业务状态，获取对象id-->
+    <select id="getObjectIdByUserIdAndStatus" resultType="int">
+        SELECT our.object_id FROM object_user_relation our LEFT JOIN t_business_obj_re bor
+        ON bor.object_id=our.object_id AND bor.object_type=our.object_type
+        LEFT JOIN business b
+        ON b.id=bor.business_id
+        WHERE b.stateflag=0 AND our.stateflag=0 AND b.status=#{status} AND our.object_type=#{objectType} AND our.user_id=#{userId}
+    </select>
 
 </mapper>

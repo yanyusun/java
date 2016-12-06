@@ -1,22 +1,27 @@
 package com.dqys.business.service.service.impl;
 
-import com.dqys.business.orm.constant.business.*;
+import com.dqys.business.orm.constant.business.BusinessRelationEnum;
+import com.dqys.business.orm.constant.business.BusinessStatusEnum;
+import com.dqys.business.orm.constant.business.BusinessTypeEnum;
+import com.dqys.business.orm.constant.business.ObjectUserStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.business.BusinessMapper;
 import com.dqys.business.orm.mapper.business.BusinessObjReMapper;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
+import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.business.Business;
 import com.dqys.business.orm.pojo.business.BusinessObjRe;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
+import com.dqys.business.orm.pojo.coordinator.UserDetail;
 import com.dqys.business.orm.query.business.BusinessObjReQuery;
-import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.base.BusinessFlowModel;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +46,8 @@ public class BusinessServiceImpl implements BusinessService {
     private PawnInfoMapper pawnInfoMapper;
     @Autowired
     private IOUInfoMapper iouInfoMapper;
+    @Autowired
+    private CoordinatorMapper coordinatorMapper;
 
     @Override
     public Integer addServiceObject(Integer type, Integer id, Integer pType, Integer pId) {
@@ -57,7 +64,11 @@ public class BusinessServiceImpl implements BusinessService {
                 if (CommonUtil.isDispose(typeStr.substring(0, typeStr.indexOf(",")))) {
                     business.setStatus(BusinessStatusEnum.dispose.getValue());
                 } else {
-                    business.setStatus(BusinessStatusEnum.init.getValue());
+                    if (vfUserType(UserInfoEnum.USER_TYPE_ENTRUST.getValue())) {
+                        business.setStatus(BusinessStatusEnum.not_publish.getValue());//只有当是委托方录入添加的业务状态为未发布
+                    } else {
+                        business.setStatus(BusinessStatusEnum.init.getValue());
+                    }
                 }
                 if (type.equals(ObjectTypeEnum.ASSETPACKAGE.getValue())) {
                     business.setType(BusinessTypeEnum.asset.getValue());
@@ -111,6 +122,14 @@ public class BusinessServiceImpl implements BusinessService {
         return null;
     }
 
+    private boolean vfUserType(Integer userType) {
+        UserDetail detail = coordinatorMapper.getUserDetail(UserSession.getCurrent().getUserId());
+        if (detail != null && userType == detail.getUserType().intValue()) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public Integer updateService_tx(Business business) {
         if (CommonUtil.checkParam(business, business.getStatus(), business.getId())) {
@@ -152,52 +171,55 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public void updateBusinessFlowObjOnType(Integer objectType, Integer id,int pawnStatus,int iouStatus) {
+    public void updateBusinessFlowObjOnType(Integer objectType, Integer id, int pawnStatus, int iouStatus) {
         UserSession userSession = UserSession.getCurrent();
         int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
         if (ObjectTypeEnum.ASSETSOURCE.getValue().intValue() == objectType) {//资产包
             //更新抵押物
-            updatePawnOnStatusByBusinessObjReList(objectType, id, userType,pawnStatus);
+            updatePawnOnStatusByBusinessObjReList(objectType, id, userType, pawnStatus);
             //更新借据
-            updateIouOnStatusByBusinessObjReList(objectType, id, userType,iouStatus);
-        }else if(ObjectTypeEnum.LENDER.getValue().intValue() == objectType){//借款人
+            updateIouOnStatusByBusinessObjReList(objectType, id, userType, iouStatus);
+        } else if (ObjectTypeEnum.LENDER.getValue().intValue() == objectType) {//借款人
             //更新抵押物
-            updatePawnOnStausByLenderId(id, userType,pawnStatus);
+            updatePawnOnStausByLenderId(id, userType, pawnStatus);
             //更新借据
-            updateIouOnStausByLenderId(id, userType,iouStatus);
+            updateIouOnStausByLenderId(id, userType, iouStatus);
         }
     }
 
     /**
      * 根据接款人设置抵押物的状态
+     *
      * @param id
      * @param userType
      */
-    private void updatePawnOnStausByLenderId(Integer id, int userType,int status) {
+    private void updatePawnOnStausByLenderId(Integer id, int userType, int status) {
         List<PawnInfo> pawnInfoList = pawnInfoMapper.listByLenderId(id);
-        for(PawnInfo pawnInfo:pawnInfoList){
-            BusinessFlowModel businessFlowModel=initByOnStatus(new PawnInfo(),userType,
-                    status,pawnInfo.getId());
+        for (PawnInfo pawnInfo : pawnInfoList) {
+            BusinessFlowModel businessFlowModel = initByOnStatus(new PawnInfo(), userType,
+                    status, pawnInfo.getId());
             pawnInfoMapper.update((PawnInfo) businessFlowModel);
         }
     }
-    private void updateIouOnStausByLenderId(Integer id, int userType,int status) {
-        List<IOUInfo> iouInfoList =iouInfoMapper.listByLenderId(id);
-        for(IOUInfo iouInfo:iouInfoList){
-            BusinessFlowModel businessFlowModel=initByOnStatus(new IOUInfo(),userType,
-                    status,iouInfo.getId());
-            iouInfoMapper.update((IOUInfo)businessFlowModel);
+
+    private void updateIouOnStausByLenderId(Integer id, int userType, int status) {
+        List<IOUInfo> iouInfoList = iouInfoMapper.listByLenderId(id);
+        for (IOUInfo iouInfo : iouInfoList) {
+            BusinessFlowModel businessFlowModel = initByOnStatus(new IOUInfo(), userType,
+                    status, iouInfo.getId());
+            iouInfoMapper.update((IOUInfo) businessFlowModel);
         }
     }
 
 
     /**
      * 设置抵押物的状态
+     *
      * @param objectType
      * @param id
      * @param userType
      */
-    private void updatePawnOnStatusByBusinessObjReList(Integer objectType, Integer id, int userType,int status) {
+    private void updatePawnOnStatusByBusinessObjReList(Integer objectType, Integer id, int userType, int status) {
         List<BusinessObjRe> businessObjReList = getListByObjecTypeAndObjectId(objectType, ObjectTypeEnum.PAWN.getValue(), id);
         for (BusinessObjRe businessObjRe : businessObjReList) {
             BusinessFlowModel businessFlowModel = initByOnStatus(new PawnInfo(), userType,
@@ -205,8 +227,10 @@ public class BusinessServiceImpl implements BusinessService {
             pawnInfoMapper.update((PawnInfo) businessFlowModel);
         }
     }
+
     /**
      * 设置借据的状态
+     *
      * @param objectType
      * @param id
      * @param userType
@@ -216,7 +240,7 @@ public class BusinessServiceImpl implements BusinessService {
         for (BusinessObjRe businessObjRe : businessObjReList) {
             BusinessFlowModel businessFlowModel = initByOnStatus(new IOUInfo(), userType,
                     status, businessObjRe.getObjectId());
-            iouInfoMapper.update((IOUInfo)businessFlowModel);
+            iouInfoMapper.update((IOUInfo) businessFlowModel);
         }
     }
 

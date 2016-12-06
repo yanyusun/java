@@ -33,7 +33,6 @@ import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.orm.query.coordinator.UserTeamQuery;
 import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
 import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
-import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.dto.asset.*;
@@ -52,6 +51,7 @@ import com.dqys.core.base.SysProperty;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.*;
@@ -503,6 +503,8 @@ public class LenderServiceImpl implements LenderService {
             return JsonResponseTool.paramErr("参数错误");
         }
         LenderDTO lenderDTO = LenderServiceUtils.toLenderDTO(lenderInfo);
+        com.dqys.auth.orm.pojo.UserDetail user = userInfoMapper.getUserDetail(lenderDTO.getOperatorId());//录入人姓名
+        lenderDTO.setOperator(user == null ? "" : user.getRealName());
         if (lenderInfo.getAssetId() != null) {
             AssetInfo assetInfo = assetInfoMapper.get(lenderInfo.getAssetId());
             if (assetInfo != null) {
@@ -1200,15 +1202,24 @@ public class LenderServiceImpl implements LenderService {
         } else if (ObjectTabEnum.new_task.getValue().equals(tab)) {
             //最新任务：规则-->管理者分给普通员工，普通员工在协作器中是待接收和（已接收状态并且是没有录入过跟进信息的情况）.
             List<Integer> ids = lenderInfoMapper.getObjectIdByNewTask(userId, ObjectTypeEnum.LENDER.getValue());
-            if (ids != null && ids.size() > 0) {
-                lenderQuery.setIds(ids);
-            } else {
-                lenderQuery.setId(SysProperty.NULL_DATA_ID);
-            }
+            setId(lenderQuery, ids);
+        } else if (ObjectTabEnum.new_task.getValue().equals(tab)) {
+            //待发布：规则--》委托方录入还未发布的，只有委托方自己录入的才能看到，其他人看不到
+            List<Integer> ids = lenderInfoMapper.getObjectIdByUserIdAndStatus(userId, ObjectTypeEnum.LENDER.getValue(), BusinessStatusEnum.not_publish.getValue());
+            setId(lenderQuery, ids);
+            lenderQuery.setOperator(userId);
         } else {
             return null;
         }
         return lenderQuery;
+    }
+
+    private void setId(LenderQuery lenderQuery, List<Integer> ids) {
+        if (ids != null && ids.size() > 0) {
+            lenderQuery.setIds(ids);
+        } else {
+            lenderQuery.setId(SysProperty.NULL_DATA_ID);
+        }
     }
 
     /**
