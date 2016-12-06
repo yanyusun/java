@@ -39,6 +39,7 @@
         <association property="userInfo" javaType="com.dqys.auth.orm.pojo.TUserInfo">
             <result column="user_name" property="userName"/>
             <result column="sex" property="sex"/>
+            <result column="avg" property="avg"/>
         </association>
         <association property="teammateRe" javaType="com.dqys.business.orm.pojo.coordinator.TeammateRe">
             <result column="type" property="type"/>

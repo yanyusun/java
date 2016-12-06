@@ -6,6 +6,7 @@ import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
 import com.dqys.business.service.service.objectUserRelation.ObjectUserRelationService;
+import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -172,7 +173,10 @@ public class FollowUpController extends BaseApiContorller {
             return JsonResponseTool.paramErr("参数错误");
         }
         UserSession userSession = UserSession.getCurrent();
-        if(!objectUserRelationService.hasOnlyOneRelation(followUpMessageDTO.getObjectType(),followUpMessageDTO.getObjectId(),userSession.getUserId())){
+        int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
+        int userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());
+        if(!UserServiceUtils.isPlatBoolean(userType,userRole)
+                &&!objectUserRelationService.hasOnlyOneRelation(followUpMessageDTO.getObjectType(),followUpMessageDTO.getObjectId(),userSession.getUserId())){
             return JsonResponseTool.failure("对不起,您暂无该权限");
         }
         followUpMessageService.insert(followUpMessageDTO);
