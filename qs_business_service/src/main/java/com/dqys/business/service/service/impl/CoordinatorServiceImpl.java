@@ -104,6 +104,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     private UserService userService;
     @Autowired
     private FlowBusinessService flowBusinessService;
+    @Autowired
+    private LenderService lenderService;
 
     @Override
     public void readByLenderOrAsset(Map<String, Object> map, Integer companyId, Integer objectId, Integer objectType, Integer userid) {
@@ -481,7 +483,8 @@ public class CoordinatorServiceImpl implements CoordinatorService {
      *
      * @return
      */
-    private Integer getTeammateFlag(TeammateRe teammateRe) {
+    @Override
+    public Integer getTeammateFlag(TeammateRe teammateRe) {
         Integer flag = 0;
         List<TeammateRe> users = new ArrayList<>();
         TeammateRe re = new TeammateRe();
@@ -509,7 +512,9 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         } else {
             teammateRe.setType(TeammateReEnum.TYPE_PARTICIPATION.getValue());
         }
-        teammateRe.setStatus(ObjectAcceptTypeEnum.init.getValue());
+        if (teammateRe.getStatus() == null) {
+            teammateRe.setStatus(TeammateReEnum.STATUS_INIT.getValue());
+        }
         re.setUserId(teammateRe.getUserId());
         re.setStatus(null);
         users = teammateReMapper.selectSelective(re);//查询用于判断人员加入过这个协作器没有
@@ -573,6 +578,13 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             return true;
         } else {
             return false;
+        }
+    }
+
+    @Override
+    public void addOURelation(OURelation ouRelation) {
+        if (checkExist(ouRelation)) {
+            ouRelationMapper.insertSelective(ouRelation);//添加事物关系
         }
     }
 
@@ -809,6 +821,10 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             }
             if (objectType == ObjectTypeEnum.LENDER.getValue() && audit) {
                 LenderInfo len = coordinatorMapper.getLenderInfo(objectId);
+                if (status == BusinessStatusEnum.platform_pass.getValue().intValue()) {
+                    //创建协作器
+                    lenderService.addCoordinator(len);
+                }
                 if (len != null) {
                     receive_id = len.getOperator() == null ? 0 : len.getOperator();
                 }

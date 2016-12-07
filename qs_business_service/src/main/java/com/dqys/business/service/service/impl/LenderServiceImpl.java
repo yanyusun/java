@@ -9,6 +9,7 @@ import com.dqys.business.orm.constant.business.BusinessRelationEnum;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.constant.coordinator.OURelationEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
 import com.dqys.business.orm.constant.repay.RepayEnum;
 import com.dqys.business.orm.mapper.asset.*;
@@ -16,14 +17,12 @@ import com.dqys.business.orm.mapper.business.BusinessObjReMapper;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
+import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.coordinator.UserTeamMapper;
 import com.dqys.business.orm.pojo.asset.*;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
-import com.dqys.business.orm.pojo.coordinator.CompanyTeam;
-import com.dqys.business.orm.pojo.coordinator.TeammateRe;
-import com.dqys.business.orm.pojo.coordinator.UserDetail;
-import com.dqys.business.orm.pojo.coordinator.UserTeam;
+import com.dqys.business.orm.pojo.coordinator.*;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.orm.query.asset.AssetQuery;
 import com.dqys.business.orm.query.asset.ContactQuery;
@@ -103,6 +102,8 @@ public class LenderServiceImpl implements LenderService {
     private BusinessLogService businessLogService;
     @Autowired
     private CoordinatorService coordinatorService;
+    @Autowired
+    private CoordinatorMapper coordinatorMapper;
 
 
     @Override
@@ -379,6 +380,7 @@ public class LenderServiceImpl implements LenderService {
             return JsonResponseTool.failure("添加失败");
         }
         Integer lenderId = lenderInfo.getId();
+        addCoordinator(lenderInfo);//添加协作器
         // 增加借款人相关联系人的身份信息
         for (ContactDTO contactDTO : contactDTOList) {
             if (contactDTO.isOper()) {//客户有填写该相关联系人的信息
@@ -400,6 +402,37 @@ public class LenderServiceImpl implements LenderService {
         Map map = userInfoMapper.getUserPart(userId);
         map.put("lenderId", lenderId);
         return JsonResponseTool.success(map);
+    }
+
+    @Override
+    public Map addCoordinator(LenderInfo lenderInfo) {
+        Map map = new HashMap<>();
+        if (lenderInfo != null) {
+            UserDetail detail = coordinatorMapper.getUserDetail(lenderInfo.getOperator());
+            coordinatorService.readByLenderOrAsset(map, detail.getCompanyId(), lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue(), lenderInfo.getOperator());
+            if ("yes".equals(MessageUtils.transMapToString(map, "result")) && RoleTypeEnum.REGULATOR.getValue().intValue() == detail.getRoleType()) {//是管理者就加入到协作器
+                UserTeam userTeam = new UserTeam();
+                userTeam.setId(MessageUtils.transMapToInt(map, "userTeammateId"));
+                UserTeam userT = userTeamMapper.selectByPrimaryKeySelective(userTeam);//团队信息
+                TeammateRe teammateRe = new TeammateRe();
+                teammateRe.setUserId(lenderInfo.getOperator());
+                teammateRe.setUserTeamId(userT.getId());
+                teammateRe.setJoinType(TeammateReEnum.JOIN_TYPE_ADD.getValue());
+                teammateRe.setBusinessType(TeammateReEnum.BUSINESS_TYPE_TASK.getValue());
+                teammateRe.setStatus(TeammateReEnum.STATUS_ACCEPT.getValue());
+                coordinatorService.getTeammateFlag(teammateRe);//加入到协作器
+                OURelation ouRelation = new OURelation();
+                ouRelation.setStatus(OURelationEnum.STATUS_ACCEPT.getValue());
+                ouRelation.setObjectType(userT.getObjectType());
+                ouRelation.setObjectId(userT.getObjectId());
+                ouRelation.setType(OURelationEnum.TYPE_ALLOCATION_TEAM.getValue());
+                ouRelation.setUserId(teammateRe.getUserId());
+                ouRelation.setEmployerId(teammateRe.getUserTeamId());
+                coordinatorService.addOURelation(ouRelation);//添加事物关系
+            }
+            return map;
+        }
+        return map;
     }
 
     private void setLenderMoney(LenderDTO lenderDTO) {
