@@ -1115,7 +1115,7 @@ public class LenderServiceImpl implements LenderService {
             }
         } else if (ObjectTabEnum.handling_urge.getValue().equals(tab)
                 || ObjectTabEnum.handling_entrust.getValue().equals(tab)) {
-            // 委托的处置中
+            // 委托的处置中或处置机构的正在处置
             /**
 
              ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
@@ -1142,7 +1142,6 @@ public class LenderServiceImpl implements LenderService {
             if (CommonUtil.checkParam(lenderQuery.getIds()) || lenderQuery.getIds().size() == 0) {
                 lenderQuery.setId(SysProperty.NULL_DATA_ID);
             }
-            lenderQuery.setTakePart(true);
         } else if (ObjectTabEnum.stop.getValue().equals(tab)) {
             // 暂停
             ObjectUserRelationQuery objectUserRelationQuery = new ObjectUserRelationQuery();
