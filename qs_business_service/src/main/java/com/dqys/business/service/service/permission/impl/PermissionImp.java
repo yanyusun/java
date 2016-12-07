@@ -92,6 +92,10 @@ public class PermissionImp implements Permission {
             AddAssetSourceEditOperTypeFilter addAssetSourceEditOperTypeFilter = new AddAssetSourceEditOperTypeFilter(objectId, userType, userSession.getUserId(), zcyEstatesMapper);
             originOperTypeFiler.decorate(addAssetSourceEditOperTypeFilter);
         }
+        if(UserServiceUtils.isPlatBoolean(userType,userRole)){//如果是平台管理员,增加额外的权限
+            PlatAdmimOperTypeFilter platAdmimOperTypeFilter = new PlatAdmimOperTypeFilter(objectType);
+            originOperTypeFiler.decorate(platAdmimOperTypeFilter);
+        }
         List<OperType> operTypes = operTypeService
                 .getOperType(objectType, objectId);
         return originOperTypeFiler.getPermission(operTypes);
