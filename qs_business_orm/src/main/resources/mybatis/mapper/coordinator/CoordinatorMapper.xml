@@ -149,7 +149,7 @@
         where tci.id IN (
         SELECT tut.company_id from t_user_team tut
 	        where tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} GROUP BY tut.company_id )
-	        GROUP BY tci.id
+	        GROUP BY tci.id,tci.company_name,tci.type,userType
     </select>
     <!--根据公司id获取公司的管理员信息-->
     <select id="getAdminUser" resultType="java.util.Map">
