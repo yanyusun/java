@@ -2,36 +2,38 @@ package com.dqys.business.service.utils.operType;
 
 import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
 
+import static com.dqys.business.service.constant.ObjectEnum.LenderEnum.*;
+
 /**
  * nav对应借款人列表所有权限
  * <p>
  * Created by yan on 16-11-30.
  */
 public class LenderRowOperTypeNavBean extends OperTypeNavBean {
-    public Integer[] nav0 = {1110};//待接收
-    public Integer[] nav1 = {1110};//待申请
-    public Integer[] nav2 = {110, 116, 1115};//正在处置
-    public Integer[] nav3 = {1110};//聚焦
-    public Integer[] nav4 = {1110};//当月
-    public Integer[] nav5 = {1110};//存量
-    public Integer[] nav6 = {1110};//完成
-    public Integer[] nav7 = {1110};//超时
-    public Integer[] nav8 = {1110, 1118};//无效
-    public Integer[] nav9 = {1110};//待参与
-    public Integer[] nav10 = {1110};//已参与
-    public Integer[] nav11 = {1110, 1113, 1114, 111, 1115};//待审核
-    public Integer[] nav12 = {1110, 1112, 1115, 116};//待处置
-    public Integer[] nav13 = {1110, 1213, 1115, 116};//待分配
-    public Integer[] nav14 = {1110};//48H 新
-    public Integer[] nav15 = {1110, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 1111, 1115, 1116};//我的任务
-    public Integer[] nav16 = {116, 110, 1115};//处置中
-    public Integer[] nav17 = {1110, 1115, 116, 111, 1116};//已驳回
-    public Integer[] nav18 = {1110, 1117, 116};//暂停
-    public Integer[] nav19 = {1110, 116, 1115};//正在进行
-    public Integer[] nav20 = {1110, 116, 1115};//我的催收
-    public Integer[] nav21 = {102, 1110, 1615, 1310, 1213};//最新任务
-    public Integer[] nav22 = {102, 1110, 1615, 1310, 1213, 111,1121,101, AssetPackageEnum.PUBLISH.getValue()};//待发布
-    public Integer[] nav99 = {1110};//全部
+    public Integer[] nav0 = {OPERATION_LOG.getValue()};//待接收
+    public Integer[] nav1 = {OPERATION_LOG.getValue()};//待申请
+    public Integer[] nav2 = {OPERATION_LOG.getValue(),INVALID_SET.getValue(),PAUSE.getValue(),UPDATE_EDIT.getValue()};//正在处置
+    public Integer[] nav3 = {OPERATION_LOG.getValue()};//聚焦
+    public Integer[] nav4 = {OPERATION_LOG.getValue()};//当月
+    public Integer[] nav5 = {OPERATION_LOG.getValue()};//存量
+    public Integer[] nav6 = {OPERATION_LOG.getValue()};//完成
+    public Integer[] nav7 = {OPERATION_LOG.getValue()};//超时
+    public Integer[] nav8 = {OPERATION_LOG.getValue(),INVALID_SET_RECOVER.getValue()};//无效
+    public Integer[] nav9 = {OPERATION_LOG.getValue()};//待参与
+    public Integer[] nav10 = {OPERATION_LOG.getValue()};//已参与
+    public Integer[] nav11 = {OPERATION_LOG.getValue(), AUDIT_YES.getValue(),AUDIT_NO.getValue(),UPDATE_EDIT.getValue(), PAUSE.getValue()};//待审核
+    public Integer[] nav12 = {OPERATION_LOG.getValue(), DISTRIBUTION_BORROWER.getValue(), PAUSE.getValue(),INVALID_SET.getValue()};//待处置
+    public Integer[] nav13 = {OPERATION_LOG.getValue(), PAUSE.getValue(), INVALID_SET.getValue()};//待分配
+    public Integer[] nav14 = {OPERATION_LOG.getValue()};//48H 新
+    public Integer[] nav15 = {OPERATION_LOG.getValue(),INVALID_SET.getValue(),PAUSE.getValue()};//我的任务
+    public Integer[] nav16 = {OPERATION_LOG.getValue(),INVALID_SET.getValue(),PAUSE.getValue()};//处置中
+    public Integer[] nav17 = {OPERATION_LOG.getValue(), INVALID_SET.getValue(), PAUSE.getValue(),UPDATE_EDIT.getValue(), RESTART_APPLY.getValue()};//已驳回
+    public Integer[] nav18 = {OPERATION_LOG.getValue(), PAUSE_RECOVER.getValue(), INVALID_SET.getValue()};//暂停
+    public Integer[] nav19 = {OPERATION_LOG.getValue(), INVALID_SET.getValue(), PAUSE.getValue()};//正在进行
+    public Integer[] nav20 = {OPERATION_LOG.getValue(), INVALID_SET.getValue(), PAUSE.getValue()};//我的催收
+    public Integer[] nav21 = {OPERATION_LOG.getValue(),INVALID_SET.getValue(), PAUSE.getValue()};//最新任务
+    public Integer[] nav22 = {OPERATION_LOG.getValue(), UPDATE_EDIT.getValue(),PUBLISH.getValue(),AssetPackageEnum.PUBLISH.getValue()};//待发布
+    public Integer[] nav99 = {OPERATION_LOG.getValue()};//全部
 
 
     public final static LenderRowOperTypeNavBean lenderRowOperTypeNavBean = new LenderRowOperTypeNavBean();
