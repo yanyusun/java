@@ -786,24 +786,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         Integer operType = 0;
         String text = "";
         Integer receive_id = 0;//录入人
-        List<Integer> ids = new ArrayList<>();
-        ids.add(objectId);
-        List<Integer> buinessIds = repayMapper.getBusinessId(objectType, ids);
-        if (buinessIds.size() == 0) {
-            map.put("msg", "业务号不存在");
-            return;
-        }
-        Business business = businessMapper.get(buinessIds.get(0));
-        if (business == null) {
-            map.put("msg", "业务号不存在");
-            return;
-        }
-        if (business.getStatus() == status) {
-            map.put("msg", "重复操作");
-            return;
-        }
-        //修改业务状态
-        Integer result = repayMapper.updateBusinessStatus(buinessIds.get(0), status);
+        Integer result = editBusinessStatus(map, objectId, objectType, status);
         if (result > 0) {
             SmsUtil smsUtil = new SmsUtil();//发送短信通知
             Integer code = 0;
@@ -861,10 +844,39 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             messageService.add(title, content, userId, receive_id, MessageBTEnum.BUSINESS.getName(), MessageEnum.SERVE.getValue(), MessageBTEnum.BUSINESS.getValue(), "");//添加通知消息
             map.put("result", "yes");
             businessLogService.add(objectId, objectType, operType, text, BusinessStatusEnum.getBusinessTypeEnum(status).getName(), 0, 0);//添加操作日志
-        } else {
+        } else if (result == 0) {
             map.put("msg", "审核业务号失败");
         }
+    }
 
+    /**
+     * 单纯的只做修改状态
+     *
+     * @param map
+     * @param objectId
+     * @param objectType
+     * @param status
+     * @return
+     */
+    private Integer editBusinessStatus(Map map, Integer objectId, Integer objectType, Integer status) {
+        List<Integer> ids = new ArrayList<>();
+        ids.add(objectId);
+        List<Integer> buinessIds = repayMapper.getBusinessId(objectType, ids);
+        if (buinessIds.size() == 0) {
+            map.put("msg", "业务号不存在");
+            return -1;
+        }
+        Business business = businessMapper.get(buinessIds.get(0));
+        if (business == null) {
+            map.put("msg", "业务号不存在");
+            return -1;
+        }
+        if (business.getStatus() == status) {
+            map.put("msg", "重复操作");
+            return -1;
+        }
+        //修改业务状态
+        return repayMapper.updateBusinessStatus(buinessIds.get(0), status);
     }
 
     @Override
@@ -1804,6 +1816,17 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         map.put("teams", dtos);//团队信息
         map.put("result", "yes");
         return map;
+    }
+
+    @Override
+    public void publish(Map map, Integer userId, Integer objectId, Integer objectType, Integer status) {
+        map.put("result", "no");
+        Integer result = editBusinessStatus(map, objectId, objectType, status);
+        if (result > 0) {
+            map.put("result", "yes");
+        } else if (result == 0) {
+            map.put("msg", "发布失败，稍后请重试！");
+        }
     }
 
 

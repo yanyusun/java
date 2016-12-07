@@ -231,4 +231,15 @@ public interface CoordinatorService {
      * @return
      */
     Map history(Integer userTeamId);
+
+    /**
+     * 修改业务表状态
+     *
+     * @param map
+     * @param userId
+     * @param objectId
+     * @param objectType
+     * @param status
+     */
+    void publish(Map map, Integer userId, Integer objectId, Integer objectType, Integer status);
 }
