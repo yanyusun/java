@@ -327,6 +327,37 @@ public class CoordinatorController {
     }
 
     /**
+     * @api {post} coordinator/publish 录入信息的发布
+     * @apiParam {int} objectId 对象id
+     * @apiParam {int} objectType 对象类型(10资产包11借款人)
+     * @apiParam {int} status 状态（0发布）
+     * @apiSampleRequest coordinator/publish
+     * @apiGroup Coordinator
+     * @apiName coordinator/publish
+     */
+    @RequestMapping("/publish")
+    @ResponseBody
+    public JsonResponse publish(@RequestParam("objectId") Integer objectId, @RequestParam("objectType") Integer objectType, @RequestParam("status") Integer status) throws Exception {
+        if (CommonUtil.checkParam(objectType, objectId, status)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if (objectType != ObjectTypeEnum.LENDER.getValue() && objectType != ObjectTypeEnum.ASSETPACKAGE.getValue()) {
+            return JsonResponseTool.paramErr("对象类型有误");
+        }
+        if (status != BusinessStatusEnum.init.getValue() && status != BusinessStatusEnum.platform_pass.getValue() && status != BusinessStatusEnum.platform_refuse.getValue()) {
+            return JsonResponseTool.paramErr("状态有误");
+        }
+        Integer userId = UserSession.getCurrent().getUserId();
+        Map map = new HashMap<>();
+        coordinatorService.publish(map, userId, objectId, objectType, status);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+        }
+    }
+
+    /**
      * @api {post} coordinator/isPause 借款人或资产包暂停无效操作
      * @apiParam {int} objectId 对象id
      * @apiParam {int} objectType 对象类型(10资产包11借款人16资产源)

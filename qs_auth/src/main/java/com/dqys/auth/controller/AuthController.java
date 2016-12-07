@@ -279,6 +279,7 @@ public class AuthController extends BaseApiContorller {
                                             @RequestParam(required = false) String email,
                                             @RequestParam String pwd,
                                             @RequestParam(required = false) String smsCode,
+                                            String ip,
                                             @RequestParam(required = false) String captcha,
                                             @RequestParam(required = false) String captchaKey,
                                             HttpServletRequest request) {
@@ -324,11 +325,7 @@ public class AuthController extends BaseApiContorller {
             if (!userServiceResult.getFlag()) {
                 return JsonResponseTool.authFailure(userServiceResult.getMessage());
             }
-            LoginLog log = new LoginLog();
-            log.setUserId(userServiceResult.getData().getUserId());
-            String ip = request.getRemoteAddr().toString();
-            log.setIp(ip);
-            messageMapper.addLoginLog(log);//添加登入记录
+            addLoginLog(userServiceResult, request, ip);  //保存登入日志
             return JsonResponseTool.success(ProtocolTool.createUserHeader(
                             userServiceResult.getData().getUserId(),
                             userServiceResult.getData().getUserTypes(),
@@ -341,6 +338,16 @@ public class AuthController extends BaseApiContorller {
         };
     }
 
+    private void addLoginLog(ServiceResult<UserDTO> userServiceResult, HttpServletRequest request, String ip) {
+        LoginLog log = new LoginLog();
+        log.setUserId(userServiceResult.getData().getUserId());
+        if (ip == null || "".equals(ip)) {
+            log.setIp(request.getRemoteAddr().toString());
+        } else {
+            log.setIp(ip);
+        }
+        messageMapper.addLoginLog(log);//添加登入记录
+}
     /**
      * @apiDefine CommonHeader
      * @apiHeader {String} x-qs-user 账号加密字符串
