@@ -114,6 +114,8 @@ public class DistributionServiceImpl implements DistributionService {
     private UserService userService;
     @Autowired
     private FlowBusinessService flowBusinessService;
+    @Autowired
+    private LenderService lenderService;
 
     @Override
     public DistributionDTO listDistribution_tx(Integer type, Integer id) throws BusinessLogException {
@@ -974,6 +976,11 @@ public class DistributionServiceImpl implements DistributionService {
             CompanyTeam companyTeam = (CompanyTeam) result.getData();
             businessService.updateBusinessFlowObjOnType(companyTeam.getObjectType(), companyTeam.getObjectId(),
                     ObjectBusinessEnum.PAWN_ON_BUSINESS.getValue(), ObjectBusinessEnum.IOU_ON_BUSINESS.getValue());
+            if (status == ObjectAcceptTypeEnum.accept.getValue() && companyTeam.getObjectType() == ObjectTypeEnum.LENDER.getValue().intValue()) {
+                //创建协作器
+                LenderInfo lenderInfo = lenderInfoMapper.get(companyTeam.getObjectType());
+                lenderService.addCoordinator(lenderInfo);
+            }
             return JsonResponseTool.success(id);
         }
         return result;
@@ -1634,6 +1641,12 @@ public class DistributionServiceImpl implements DistributionService {
                         if (UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().toString().equals(reg.substring(0, reg.lastIndexOf(",")))) {
                             zcyService.receivePawn(id, type, 0);//中介公司接受业务流转的抵押物添加到资产源信息
                         }
+                    }
+
+                    if (companyTeam.getObjectType() == ObjectTypeEnum.LENDER.getValue().intValue()) {
+                        //创建协作器
+                        LenderInfo lenderInfo = lenderInfoMapper.get(companyTeam.getObjectId());
+                        lenderService.addCoordinator(lenderInfo);
                     }
                 } else {
                     if (list != null && list.size() > 0) {

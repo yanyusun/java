@@ -13,6 +13,7 @@ public enum TeammateReEnum {
     STATUS_DELETE(99, "删除"),
     JOIN_TYPE_PASSIVITY(0, "被分配"),
     JOIN_TYPE_INITIATIVE(1, "主动加入"),
+    JOIN_TYPE_ADD(2, "录入人"),
     BUSINESS_TYPE_TASK(0, "分配任务消息"),
     BUSINESS_TYPE_COMPANY(1, "公司分配消息"),;
     private Integer value;

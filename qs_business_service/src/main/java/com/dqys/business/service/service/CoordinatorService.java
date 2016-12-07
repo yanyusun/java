@@ -1,6 +1,8 @@
 package com.dqys.business.service.service;
 
 import com.dqys.auth.orm.pojo.TUserTag;
+import com.dqys.business.orm.pojo.coordinator.OURelation;
+import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
@@ -35,6 +37,10 @@ public interface CoordinatorService {
      * 添加邀请人
      */
     Map addTeammate(Integer userTeamId, Integer userId, String remark, Integer[] userIds) throws BusinessLogException;
+
+    Integer getTeammateFlag(TeammateRe teammateRe);
+
+    void addOURelation(OURelation ouRelation);
 
     /**
      * 是否同意邀请

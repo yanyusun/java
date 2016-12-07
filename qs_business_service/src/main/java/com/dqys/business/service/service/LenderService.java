@@ -1,5 +1,6 @@
 package com.dqys.business.service.service;
 
+import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
 import com.dqys.business.service.dto.asset.StatisticsLender;
@@ -8,6 +9,7 @@ import com.dqys.business.service.query.asset.LenderListQuery;
 import com.dqys.core.model.JsonResponse;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yvan on 16/6/12.
@@ -31,6 +33,8 @@ public interface LenderService {
      * @return
      */
     JsonResponse add_tx(List<ContactDTO> contactDTOList, LenderDTO lenderDTO) throws BusinessLogException;
+
+    Map addCoordinator(LenderInfo lenderInfo);
 
     /**
      * 删除借款人
