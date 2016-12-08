@@ -576,7 +576,7 @@ public class LenderServiceImpl implements LenderService {
         boolean flag = false; // 是否业务流转
         if (list.size() > 0) {
             ObjectUserRelation our = list.get(0);
-            if (our.getVisibleType() != null && our.getVisibleType() == 1) {
+            if (our.getVisibleType() != null && our.getVisibleType() ==0) {
                 flag = true;
             }
         }

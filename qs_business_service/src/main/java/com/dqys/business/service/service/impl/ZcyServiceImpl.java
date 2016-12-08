@@ -1038,6 +1038,7 @@ public class ZcyServiceImpl implements ZcyService {
                 zcyEstates.setObjectId(objectId);
                 zcyEstates.setStatus(1);//资产源来源是转过来
                 zcyEstates.setSellingPrice(pawnInfo.getWorth());
+                zcyEstates.setOperator(UserSession.getCurrent().getUserId().toString());
                 if (pawnInfo.getSize().matches("\\d+([.]\\d+)?")) {
                     zcyEstates.setAcreage(Double.parseDouble(pawnInfo.getSize()));
                 }
