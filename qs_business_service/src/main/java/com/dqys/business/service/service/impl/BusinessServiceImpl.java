@@ -64,8 +64,8 @@ public class BusinessServiceImpl implements BusinessService {
                 if (CommonUtil.isDispose(typeStr.substring(0, typeStr.indexOf(",")))) {
                     business.setStatus(BusinessStatusEnum.dispose.getValue());
                 } else {
-                    if (vfUserType(UserInfoEnum.USER_TYPE_ENTRUST.getValue())) {
-                        business.setStatus(BusinessStatusEnum.not_publish.getValue());//只有当是委托方录入添加的业务状态为未发布
+                    if (vfUserType(UserInfoEnum.USER_TYPE_ENTRUST.getValue()) || vfUserType(UserInfoEnum.USER_TYPE_ADMIN.getValue())) {
+                        business.setStatus(BusinessStatusEnum.not_publish.getValue());//只有当是委托方或平台方录入添加的业务状态为未发布
                     } else {
                         business.setStatus(BusinessStatusEnum.init.getValue());
                     }
