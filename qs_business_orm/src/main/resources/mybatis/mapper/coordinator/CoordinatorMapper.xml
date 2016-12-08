@@ -142,13 +142,13 @@
           GROUP BY ttr.type
     </select>
     <!--获取相应的公司-->
-    <select id="companyList" resultType="java.util.Map">
+    <select id="companyList" resultType="com.dqys.business.orm.pojo.coordinator.CompanyDTO">
          SELECT tci.id,tci.company_name,tci.type,tut.user_type userType from t_company_info tci LEFT JOIN t_user_info tui
             ON tui.company_id=tci.id LEFT JOIN t_user_tag tut
             ON tut.user_id=tui.id
-        where tci.id IN (
+        where tci.stateflag=0 AND tci.id IN (
         SELECT tut.company_id from t_user_team tut
-	        where tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} GROUP BY tut.company_id )
+	        where tut.stateflag=0 AND tut.object_id=#{objectId,jdbcType=INTEGER} and tut.object_type=#{objectType,jdbcType=INTEGER} GROUP BY tut.company_id )
 	        GROUP BY tci.id,tci.company_name,tci.type,userType
     </select>
     <!--根据公司id获取公司的管理员信息-->
@@ -442,8 +442,8 @@
         ON tzex.estates_id=tze.id LEFT JOIN t_zcy_estates_address tzea
         ON tzea.estates_id=tze.id
         <where>
-            tze.stateflag=0 AND tzo.stateflag=0 AND  tzex.stateflag=0 AND
-            tzm.stateflag=0 AND  tzk.stateflag=0 AND tzea.stateflag=0
+            tze.stateflag=0 AND tzo.stateflag=0 AND tzex.stateflag=0 AND
+            tzm.stateflag=0 AND tzk.stateflag=0 AND tzea.stateflag=0
             <include refid="ZCY_WhERE"/>
         </where>
         LIMIT #{zcyListQuery.startPage},#{zcyListQuery.pageCount}

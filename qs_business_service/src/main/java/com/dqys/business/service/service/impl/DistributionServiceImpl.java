@@ -397,7 +397,7 @@ public class DistributionServiceImpl implements DistributionService {
         result.setTargetType(type);
         result.setTime(time);
         result.setStateflag(companyTeamRe.getStateflag().intValue());
-
+        result.setUserType(detail.getType());
         return result;
     }
 
