@@ -1,7 +1,10 @@
 package com.dqys.business.service.utils.permission;
 
 import com.dqys.business.orm.pojo.operType.OperType;
+import com.dqys.business.service.constant.ObjectEnum.IouEnum;
 import com.dqys.business.service.constant.ObjectEnum.LenderEnum;
+import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
+import com.dqys.business.service.utils.operType.OperTypeUtile;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -57,6 +60,26 @@ public class PermissionUtil {
             }
         }
         return false;
+    }
+
+    public static void addPawnBusinessOpertype(List<OperType> list){
+        list.add(OperTypeUtile.getOperType(PawnEnum.MAINTAIN_REGULAR));
+        list.add(OperTypeUtile.getOperType(PawnEnum.MARKET_DISPOSITION));
+        list.add(OperTypeUtile.getOperType(PawnEnum.CM_SIMULTANEOUS));
+        list.add(OperTypeUtile.getOperType(PawnEnum.EXECUTE_JUSTICE_RESOLVE));
+        list.add(OperTypeUtile.getOperType(PawnEnum.CJ_SIMULTANEOUS));
+        list.add(OperTypeUtile.getOperType(PawnEnum.CMJ_SIMULTANEOUS));
+        list.add(OperTypeUtile.getOperType(PawnEnum.SIMULTANEOUS_TANEOUS));
+    }
+
+    public static void addIouBusinessOpertype(List<OperType> list) {
+        list.add(OperTypeUtile.getOperType(IouEnum.MAINTAIN_REGULAR));
+        list.add(OperTypeUtile.getOperType(IouEnum.MARKET_DISPOSITION));
+        list.add(OperTypeUtile.getOperType(IouEnum.CM_SIMULTANEOUS));
+        list.add(OperTypeUtile.getOperType(IouEnum.EXECUTE_JUSTICE_RESOLVE));
+        list.add(OperTypeUtile.getOperType(IouEnum.CJ_SIMULTANEOUS));
+        list.add(OperTypeUtile.getOperType(IouEnum.CMJ_SIMULTANEOUS));
+        list.add(OperTypeUtile.getOperType(IouEnum.SIMULTANEOUS_TANEOUS));
     }
 
 }

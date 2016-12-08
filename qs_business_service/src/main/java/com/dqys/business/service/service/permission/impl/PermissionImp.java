@@ -78,8 +78,9 @@ public class PermissionImp implements Permission {
             AddApplyCompanyTeamOperTypeFilter addApplyCompanyTeamOperTypeFilter = new AddApplyCompanyTeamOperTypeFilter(navId, objectType, userType.toString(), userRole.toString());
             originOperTypeFiler.decorate(addApplyCompanyTeamOperTypeFilter);
         } else if(ObjectTabEnum.assign.getValue().intValue() == navId){//待分配
-            if(userType == UserInfoEnum.USER_TYPE_ADMIN.getValue().intValue()||userType == UserInfoEnum.USER_TYPE_ENTRUST.getValue().intValue()){
-
+            if(userType == UserInfoEnum.USER_TYPE_COLLECTION.getValue().intValue()||userType == UserInfoEnum.USER_TYPE_JUDICIARY.getValue().intValue()){
+                AddBusinessOperTypeFilter addBusinessOperTypeFilter = new AddBusinessOperTypeFilter(objectType);
+                originOperTypeFiler.decorate(addBusinessOperTypeFilter);
             }
         }
         if(ObjectTabEnum.wait_publish.getValue()==navId){//待发布

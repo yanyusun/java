@@ -34,7 +34,7 @@ public class OperTypeUtile implements ApplicationContextAware {
         operTypeService = applicationContext.getBean(OperTypeService.class);
         objectUserRelationMapper = applicationContext.getBean(ObjectUserRelationMapper.class);
         //// TODO: 16-9-18  上线要去掉下面的注释
-         //opertype();
+         opertype();
     }
 
     public static List<OperType> getInitBuisnesOperTypeList(Integer objectType, Integer objectId, Integer flowType) {
@@ -186,6 +186,13 @@ public class OperTypeUtile implements ApplicationContextAware {
                 break;
             }
         }
+    }
+
+    public static OperType getOperType(ObjectEnumBase ObjectEnumBase){
+        OperType operType = new OperType();
+        operType.setOperType(ObjectEnumBase.getValue());
+        operType.setOperName(ObjectEnumBase.getName());
+        return operType;
     }
 
 }

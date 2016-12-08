@@ -7,4 +7,6 @@ public interface ObjectEnumBase {
     Integer getValue();
 
     String getName();
+
+
 }

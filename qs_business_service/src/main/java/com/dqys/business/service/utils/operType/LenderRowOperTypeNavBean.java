@@ -1,7 +1,5 @@
 package com.dqys.business.service.utils.operType;
 
-import com.dqys.business.service.constant.ObjectEnum.AssetPackageEnum;
-
 import static com.dqys.business.service.constant.ObjectEnum.LenderEnum.*;
 
 /**
@@ -32,7 +30,7 @@ public class LenderRowOperTypeNavBean extends OperTypeNavBean {
     public Integer[] nav19 = {OPERATION_LOG.getValue(), INVALID_SET.getValue(), PAUSE.getValue()};//正在进行
     public Integer[] nav20 = {OPERATION_LOG.getValue(), INVALID_SET.getValue(), PAUSE.getValue()};//我的催收
     public Integer[] nav21 = {OPERATION_LOG.getValue(),INVALID_SET.getValue(), PAUSE.getValue()};//最新任务
-    public Integer[] nav22 = {OPERATION_LOG.getValue(), UPDATE_EDIT.getValue(),PUBLISH.getValue(),AssetPackageEnum.PUBLISH.getValue()};//待发布
+    public Integer[] nav22 = {OPERATION_LOG.getValue(), UPDATE_EDIT.getValue(),PUBLISH.getValue()};//待发布
     public Integer[] nav99 = {OPERATION_LOG.getValue()};//全部
 
 
