@@ -584,7 +584,7 @@
             DATE_FORMAT(tze.decade,'%Y-%m-%d') decade,tze.build_type buildType,tze.house_use houseUse,tze.tenement_price tenementPrice,
             tze.heating_way heatingWay,tze.acreage,tzea.area,tzo.entrust_source entrustSource,
             tze.facility,tzex.express_price expressPrice,tzex.entrust_protocol_time expressStartTime,tzex.entrust_abort_time expressEndTime,
-            tze.entrust_type entrustType,tze.decorate_case decorateCase,tze.metro
+            tze.entrust_type entrustType,tze.decorate_case decorateCase,tze.metro,tzea.floor_total floorTotal,tze.selling_price sellingPrice
              from t_zcy_estates tze LEFT JOIN t_zcy_express tzex
             ON tze.id=tzex.estates_id LEFT JOIN t_zcy_maintain tzm
             ON tze.id=tzm.estates_id LEFT JOIN t_zcy_owner tzo
