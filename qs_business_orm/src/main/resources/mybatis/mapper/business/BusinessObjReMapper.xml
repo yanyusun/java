@@ -100,7 +100,13 @@
     <select id="auditObject" resultType="java.lang.Integer">
             SELECT bor.object_id from business b LEFT JOIN t_business_obj_re bor
             ON bor.business_id=b.id
-            WHERE bor.object_type=#{objectType} AND b.`status`=1 GROUP BY bor.object_id
+            WHERE bor.object_type=#{objectType} AND b.`status`=1
+AND bor.object_id NOT IN (SELECT tct.object_id FROM t_company_team tct LEFT JOIN t_company_team_re tctr
+ON tctr.company_team_id=tct.id LEFT JOIN t_user_tag tut
+ON tut.user_id=tctr.accepter_id
+WHERE tctr.stateflag=0 AND tut.user_type IN (31,32,33) AND tct.object_type=#{objectType}) AND
+bor.object_id IN (SELECT tct.object_id FROM t_company_team tct where tct.object_type=#{objectType})
+             GROUP BY bor.object_id
     </select>
 
     <select id="list" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.query.business.BusinessObjReQuery">
