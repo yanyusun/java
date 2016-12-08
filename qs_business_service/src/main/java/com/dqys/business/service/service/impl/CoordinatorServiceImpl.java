@@ -1750,69 +1750,102 @@ public class CoordinatorServiceImpl implements CoordinatorService {
      * @return
      */
     private List<CompanyDTO> companyList(Integer objectId, Integer objectType) {
-//        List<CompanyDTO> dtos = coordinatorMapper.companyList(objectId, objectType);
         List<CompanyDTO> newDto = new ArrayList<>();
         int coll = 1;//催收
         int law = 1;//律所
         int agent = 1;//中介
         int num = 1;
+        DistributionDTO distributionDTO = null;
         try {
-            DistributionDTO distributionDTO = distributionService.listDistribution_tx(objectType, objectId);
-            if (distributionDTO.getCompanyTeamReDTOList() != null) {//分配器成员
-                for (CompanyTeamReDTO dto : distributionDTO.getCompanyTeamReDTOList()) {
-                    if (dto.getStateflag() == 0) {
-                        CompanyDTO companyDTO = new CompanyDTO();
-                        companyDTO.setCompany_name(dto.getCompanyName());
-                        companyDTO.setUserType(dto.getUserType());
-                        companyDTO.setId(dto.getCompanyId());
-                        String alias = "";
-                        switch (dto.getUserType()) {
-                            case 1:
-                                alias = "平台方";
-                                break;
-                            case 2:
-                                alias = "委托方";
-                                break;
-                            default:
-                                alias = "所属处置方";
-                                companyDTO.setOrganizationStatus(0);
-                                break;
+            distributionDTO = distributionService.listDistribution_tx(objectType, objectId);
+            if (distributionDTO != null) {
+                if (distributionDTO.getCompanyTeamReDTOList() != null) {//分配器成员
+                    for (CompanyTeamReDTO dto : distributionDTO.getCompanyTeamReDTOList()) {
+                        if (dto.getStateflag() == 0) {
+                            CompanyDTO companyDTO = new CompanyDTO();
+                            companyDTO.setCompany_name(dto.getCompanyName());
+                            companyDTO.setUserType(dto.getUserType());
+                            companyDTO.setId(dto.getCompanyId());
+                            String alias = "";
+                            switch (dto.getUserType()) {
+                                case 1:
+                                    alias = "平台方";
+                                    break;
+                                case 2:
+                                    alias = "委托方";
+                                    break;
+                                default:
+                                    alias = "所属处置方";
+                                    companyDTO.setOrganizationStatus(0);
+                                    break;
+                            }
+                            companyDTO.setAlias(alias + "-" + companyDTO.getCompany_name());
+                            newDto.add(companyDTO);
                         }
-                        companyDTO.setAlias(alias + "-" + companyDTO.getCompany_name());
-                        newDto.add(companyDTO);
                     }
                 }
-            }
-            if (distributionDTO.getBusinessServiceDTOList() != null) {//业务流转成员
-                for (BusinessServiceDTO dto : distributionDTO.getBusinessServiceDTOList()) {
-                    if (dto.getStateflag() == 0) {
-                        CompanyDTO companyDTO = new CompanyDTO();
-                        companyDTO.setCompany_name(dto.getCompanyName());
-                        companyDTO.setUserType(dto.getUserType());
-                        companyDTO.setId(dto.getCompanyId());
-                        String alias = "";
-                        switch (dto.getUserType()) {
-                            case 31:
-                                alias = "参与处置方" + num + "-催收" + coll;
-                                coll++;
-                                break;
-                            case 32:
-                                alias = "参与处置方" + num + "-律所" + law;
-                                coll++;
-                                break;
-                            case 33:
-                                alias = "参与处置方" + num + "-中介" + agent;
-                                coll++;
-                                break;
+                if (distributionDTO.getBusinessServiceDTOList() != null) {//业务流转成员
+                    for (BusinessServiceDTO dto : distributionDTO.getBusinessServiceDTOList()) {
+                        if (dto.getStateflag() == 0) {
+                            CompanyDTO companyDTO = new CompanyDTO();
+                            companyDTO.setCompany_name(dto.getCompanyName());
+                            companyDTO.setUserType(dto.getUserType());
+                            companyDTO.setId(dto.getCompanyId());
+                            String alias = "";
+                            switch (dto.getUserType()) {
+                                case 31:
+                                    alias = "参与处置方" + num + "-催收" + coll;
+                                    coll++;
+                                    break;
+                                case 32:
+                                    alias = "参与处置方" + num + "-律所" + law;
+                                    coll++;
+                                    break;
+                                case 33:
+                                    alias = "参与处置方" + num + "-中介" + agent;
+                                    coll++;
+                                    break;
+                            }
+                            companyDTO.setAlias(alias + "-" + companyDTO.getCompany_name());
+                            newDto.add(companyDTO);
+                            num++;
                         }
-                        companyDTO.setAlias(alias + "-" + companyDTO.getCompany_name());
-                        newDto.add(companyDTO);
-                        num++;
                     }
                 }
             }
         } catch (BusinessLogException e) {
             e.printStackTrace();
+        }
+        if (distributionDTO == null) {
+            List<CompanyDTO> dtos = coordinatorMapper.companyList(objectId, objectType);
+            if (dtos != null && dtos.size() > 0) {
+                for (CompanyDTO dto : dtos) {
+                    String alias = "";
+                    switch (dto.getUserType()) {
+                        case 1:
+                            alias = "平台方";
+                            break;
+                        case 2:
+                            alias = "委托方";
+                            break;
+                        case 31:
+                            alias = "参与处置方" + num + "-催收" + coll;
+                            coll++;
+                            break;
+                        case 32:
+                            alias = "参与处置方" + num + "-律所" + law;
+                            coll++;
+                            break;
+                        case 33:
+                            alias = "参与处置方" + num + "-中介" + agent;
+                            coll++;
+                            break;
+                    }
+                    dto.setAlias(alias + "-" + dto.getCompany_name());
+                    newDto.add(dto);
+                    num++;
+                }
+            }
         }
         return newDto;
     }
