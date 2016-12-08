@@ -77,7 +77,7 @@ public class PermissionImp implements Permission {
         } else if (ObjectTabEnum.apply.getValue().intValue() == navId) {//如果为带申请为操作列表增加加入案组按钮
             AddApplyCompanyTeamOperTypeFilter addApplyCompanyTeamOperTypeFilter = new AddApplyCompanyTeamOperTypeFilter(navId, objectType, userType.toString(), userRole.toString());
             originOperTypeFiler.decorate(addApplyCompanyTeamOperTypeFilter);
-        } else if(ObjectTabEnum.handle.getValue().intValue() == navId){//待处置
+        } else if(ObjectTabEnum.assign.getValue().intValue() == navId){//待分配
             if(userType == UserInfoEnum.USER_TYPE_ADMIN.getValue().intValue()||userType == UserInfoEnum.USER_TYPE_ENTRUST.getValue().intValue()){
 
             }
