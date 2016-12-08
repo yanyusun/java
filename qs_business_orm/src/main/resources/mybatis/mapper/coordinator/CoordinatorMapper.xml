@@ -442,8 +442,7 @@
         ON tzex.estates_id=tze.id LEFT JOIN t_zcy_estates_address tzea
         ON tzea.estates_id=tze.id
         <where>
-            tze.stateflag=0 AND tzo.stateflag=0 AND tzex.stateflag=0 AND
-            tzm.stateflag=0 AND tzk.stateflag=0 AND tzea.stateflag=0
+            tze.stateflag=0
             <include refid="ZCY_WhERE"/>
         </where>
         LIMIT #{zcyListQuery.startPage},#{zcyListQuery.pageCount}
