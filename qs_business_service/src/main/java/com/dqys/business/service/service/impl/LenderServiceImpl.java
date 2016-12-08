@@ -380,7 +380,6 @@ public class LenderServiceImpl implements LenderService {
             return JsonResponseTool.failure("添加失败");
         }
         Integer lenderId = lenderInfo.getId();
-        addCoordinator(lenderInfo);//添加协作器
         // 增加借款人相关联系人的身份信息
         for (ContactDTO contactDTO : contactDTOList) {
             if (contactDTO.isOper()) {//客户有填写该相关联系人的信息
@@ -396,6 +395,7 @@ public class LenderServiceImpl implements LenderService {
             businessService.addServiceObject(ObjectTypeEnum.LENDER.getValue(), lenderId,
                     ObjectTypeEnum.ASSETPACKAGE.getValue(), lenderDTO.getAssetId());
         }
+        addCoordinator(lenderInfo);//创建协作器
         // 添加历史记录
         businessLogService.add(lenderId, ObjectTypeEnum.LENDER.getValue(), AssetPackageEnum.add.getValue(),
                 "", "", 0, 0);
@@ -412,7 +412,7 @@ public class LenderServiceImpl implements LenderService {
             coordinatorService.readByLenderOrAsset(map, detail.getCompanyId(), lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue(), lenderInfo.getOperator());
             if ("yes".equals(MessageUtils.transMapToString(map, "result")) && RoleTypeEnum.REGULATOR.getValue().intValue() == detail.getRoleType()) {//是管理者就加入到协作器
                 UserTeam userTeam = new UserTeam();
-                userTeam.setId(MessageUtils.transMapToInt(map, "userTeammateId"));
+                userTeam.setId(MessageUtils.transMapToInt(map, "userTeamId"));
                 UserTeam userT = userTeamMapper.selectByPrimaryKeySelective(userTeam);//团队信息
                 TeammateRe teammateRe = new TeammateRe();
                 teammateRe.setUserId(lenderInfo.getOperator());
@@ -1235,7 +1235,7 @@ public class LenderServiceImpl implements LenderService {
             //最新任务：规则-->管理者分给普通员工，普通员工在协作器中是待接收和（已接收状态并且是没有录入过跟进信息的情况）.
             List<Integer> ids = lenderInfoMapper.getObjectIdByNewTask(userId, ObjectTypeEnum.LENDER.getValue());
             setId(lenderQuery, ids);
-        } else if (ObjectTabEnum.new_task.getValue().equals(tab)) {
+        } else if (ObjectTabEnum.wait_publish.getValue().equals(tab)) {
             //待发布：规则--》委托方录入还未发布的，只有委托方自己录入的才能看到，其他人看不到
             List<Integer> ids = lenderInfoMapper.getObjectIdByUserIdAndStatus(userId, ObjectTypeEnum.LENDER.getValue(), BusinessStatusEnum.not_publish.getValue());
             setId(lenderQuery, ids);
