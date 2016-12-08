@@ -979,6 +979,7 @@ public class DistributionServiceImpl implements DistributionService {
             if (status == ObjectAcceptTypeEnum.accept.getValue() && companyTeam.getObjectType() == ObjectTypeEnum.LENDER.getValue().intValue()) {
                 //创建协作器
                 LenderInfo lenderInfo = lenderInfoMapper.get(companyTeam.getObjectType());
+                lenderInfo.setOperator(UserSession.getCurrent().getUserId());
                 lenderService.addCoordinator(lenderInfo);
             }
             return JsonResponseTool.success(id);
@@ -1646,6 +1647,7 @@ public class DistributionServiceImpl implements DistributionService {
                     if (companyTeam.getObjectType() == ObjectTypeEnum.LENDER.getValue().intValue()) {
                         //创建协作器
                         LenderInfo lenderInfo = lenderInfoMapper.get(companyTeam.getObjectId());
+                        lenderInfo.setOperator(UserSession.getCurrent().getUserId());
                         lenderService.addCoordinator(lenderInfo);
                     }
                 } else {
