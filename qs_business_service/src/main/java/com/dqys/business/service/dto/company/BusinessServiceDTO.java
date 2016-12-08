@@ -11,6 +11,7 @@ public class BusinessServiceDTO {
     private Integer id; // 主键
     private String avg; // 头像
     private String type; // 参与方类型
+    private Integer userType; // 参与方类型
     private String name; // 参与方名称
     private String address; // 地址
     private String rate; // 业绩比率
@@ -23,6 +24,14 @@ public class BusinessServiceDTO {
     private Integer status; // 接受状态
     private String companyName;//公司名称
     private Integer companyId;//公司id
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
 
     public String getCompanyName() {
         return companyName;

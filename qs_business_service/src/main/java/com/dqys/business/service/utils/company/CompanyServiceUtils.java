@@ -148,6 +148,7 @@ public class CompanyServiceUtils {
         companyTeamReDTO.setStatus(companyTeamRe.getStatus());
         companyTeamReDTO.setTask(task);
         companyTeamReDTO.setStateflag(companyTeamRe.getStateflag().intValue());
+        companyTeamReDTO.setUserType(companyDetailInfo.getType());
         switch (companyDetailInfo.getType()) {
             case 1:
                 companyTeamReDTO.setType("平台");

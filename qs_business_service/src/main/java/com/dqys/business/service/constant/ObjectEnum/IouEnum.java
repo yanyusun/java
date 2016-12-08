@@ -4,15 +4,15 @@ package com.dqys.business.service.constant.ObjectEnum;
  * 借据
  * Created by mkfeng on 2016/7/7.
  */
-public enum IouEnum implements ObjectEnumBase{
+public enum IouEnum implements ObjectEnumBase {
     //--------------------------------------------------->业务流转操作
     MAINTAIN_REGULAR(130, "常规催收"),
     MARKET_DISPOSITION(131, "市场处置"),
     CM_SIMULTANEOUS(132, "催收/市场处置同时进行"),
     EXECUTE_JUSTICE_RESOLVE(133, "司法化解"),
     CJ_SIMULTANEOUS(134, "催收/司法化解同时进行"),
-    CMJ_SIMULTANEOUS(135, "催收/市场/司法同时进行"),
-    SUBROGATION_OUTSIDE(136, "发布到外网"),
+    CMJ_SIMULTANEOUS(135, "催收/司法/市场同时进行"),
+    SUBROGATION_OUTSIDE(136, "发布到清搜网"),
 
     REIMBURSEMENT(137, "还款"),
     DISPOSAL_FINISH(138, "已处置"),

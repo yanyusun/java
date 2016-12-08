@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.coordinator;
 
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.pojo.coordinator.CompanyDTO;
 import com.dqys.business.orm.pojo.coordinator.UserDetail;
 import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.orm.pojo.zcy.dto.ZcyPawnDTO;
@@ -59,7 +60,7 @@ public interface CoordinatorMapper {
      *
      * @return
      */
-    List<Map<String, Object>> companyList(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType);
+    List<CompanyDTO> companyList(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType);
 
     /**
      * 根据公司id获取公司的管理员信息

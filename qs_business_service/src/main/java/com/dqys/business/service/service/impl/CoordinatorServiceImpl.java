@@ -1,13 +1,11 @@
 package com.dqys.business.service.service.impl;
 
-import com.dqys.auth.orm.constant.CompanyTypeEnum;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.auth.orm.pojo.TUserTag;
 import com.dqys.auth.orm.query.TUserTagQuery;
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
-import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.OURelationEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
@@ -31,15 +29,17 @@ import com.dqys.business.orm.pojo.coordinator.team.TeamDTO;
 import com.dqys.business.orm.pojo.flowBusiness.FlowBusiness;
 import com.dqys.business.orm.pojo.zcy.ZcyEstates;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
-import com.dqys.business.service.service.flowBusiness.FlowBusinessService;
-import com.dqys.core.constant.MessageBTEnum;
 import com.dqys.business.service.constant.MessageEnum;
 import com.dqys.business.service.constant.ObjectEnum.*;
 import com.dqys.business.service.constant.asset.ContactTypeEnum;
+import com.dqys.business.service.dto.company.BusinessServiceDTO;
+import com.dqys.business.service.dto.company.CompanyTeamReDTO;
 import com.dqys.business.service.dto.company.DistributionDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.*;
+import com.dqys.business.service.service.flowBusiness.FlowBusinessService;
 import com.dqys.business.service.utils.message.MessageUtils;
+import com.dqys.core.constant.MessageBTEnum;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.constant.UserInfoEnum;
@@ -1743,14 +1743,78 @@ public class CoordinatorServiceImpl implements CoordinatorService {
     }
 
     /**
-     * 获取相应的公司
+     * 协作器的获取相应的公司
      *
      * @param objectId
      * @param objectType
      * @return
      */
-    private List<Map<String, Object>> companyList(Integer objectId, Integer objectType) {
-        return coordinatorMapper.companyList(objectId, objectType);
+    private List<CompanyDTO> companyList(Integer objectId, Integer objectType) {
+//        List<CompanyDTO> dtos = coordinatorMapper.companyList(objectId, objectType);
+        List<CompanyDTO> newDto = new ArrayList<>();
+        int coll = 1;//催收
+        int law = 1;//律所
+        int agent = 1;//中介
+        int num = 1;
+        try {
+            DistributionDTO distributionDTO = distributionService.listDistribution_tx(objectType, objectId);
+            if (distributionDTO.getCompanyTeamReDTOList() != null) {//分配器成员
+                for (CompanyTeamReDTO dto : distributionDTO.getCompanyTeamReDTOList()) {
+                    if (dto.getStateflag() == 0) {
+                        CompanyDTO companyDTO = new CompanyDTO();
+                        companyDTO.setCompany_name(dto.getCompanyName());
+                        companyDTO.setUserType(dto.getUserType());
+                        companyDTO.setId(dto.getCompanyId());
+                        String alias = "";
+                        switch (dto.getUserType()) {
+                            case 1:
+                                alias = "平台方";
+                                break;
+                            case 2:
+                                alias = "委托方";
+                                break;
+                            default:
+                                alias = "所属处置方";
+                                companyDTO.setOrganizationStatus(0);
+                                break;
+                        }
+                        companyDTO.setAlias(alias + "-" + companyDTO.getCompany_name());
+                        newDto.add(companyDTO);
+                    }
+                }
+            }
+            if (distributionDTO.getBusinessServiceDTOList() != null) {//业务流转成员
+                for (BusinessServiceDTO dto : distributionDTO.getBusinessServiceDTOList()) {
+                    if (dto.getStateflag() == 0) {
+                        CompanyDTO companyDTO = new CompanyDTO();
+                        companyDTO.setCompany_name(dto.getCompanyName());
+                        companyDTO.setUserType(dto.getUserType());
+                        companyDTO.setId(dto.getCompanyId());
+                        String alias = "";
+                        switch (dto.getUserType()) {
+                            case 31:
+                                alias = "参与处置方" + num + "-催收" + coll;
+                                coll++;
+                                break;
+                            case 32:
+                                alias = "参与处置方" + num + "-律所" + law;
+                                coll++;
+                                break;
+                            case 33:
+                                alias = "参与处置方" + num + "-中介" + agent;
+                                coll++;
+                                break;
+                        }
+                        companyDTO.setAlias(alias + "-" + companyDTO.getCompany_name());
+                        newDto.add(companyDTO);
+                        num++;
+                    }
+                }
+            }
+        } catch (BusinessLogException e) {
+            e.printStackTrace();
+        }
+        return newDto;
     }
 
     public UserTeam getTeam(Integer objectId, Integer objectType, int userId) {
