@@ -84,6 +84,9 @@ public class ParticipationServiceImpl implements ParticipationService {
         List<PartDto> partDtos = new ArrayList<>();
         List<String> companyIds = new ArrayList<>();
         for (CompanyTeamReDTO com : companyTeamReDTOList) {
+            if (com.getStateflag() > 0) {
+                continue;
+            }
             TUserInfo info = tUserInfoMapper.selectByPrimaryKey(com.getUserId());
             if (info != null && info.getCompanyId() != null && !companyIds.contains(info.getCompanyId())) {
                 companyIds.add(info.getCompanyId().toString());
