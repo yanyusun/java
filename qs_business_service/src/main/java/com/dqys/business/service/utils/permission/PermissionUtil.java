@@ -41,6 +41,11 @@ public class PermissionUtil {
     }
 
     public static void addEditOperType(List<OperType> list, Integer value, String name) {
+        for(OperType operType:list){
+           if(operType.getOperType().intValue()==value){
+               return;
+           }
+        }
         OperType operType = new OperType();
         operType.setOperType(value);
         operType.setOperName(name);
