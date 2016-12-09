@@ -1646,7 +1646,7 @@ public class DistributionServiceImpl implements DistributionService {
                             zcyService.receivePawn(id, type, 0);//中介公司接受业务流转的抵押物添加到资产源信息
                         }
                         //是律所公司身份的流转需要把抵押物转变为案件
-                        if (UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().toString().equals(reg.substring(0, reg.lastIndexOf(",")))) {
+                        if (UserInfoEnum.USER_TYPE_JUDICIARY.getValue().toString().equals(reg.substring(0, reg.lastIndexOf(",")))) {
                             caseService.receivePawn(id, type);//律所公司接受业务流转的抵押物添加到案件信息
                         }
                     }
