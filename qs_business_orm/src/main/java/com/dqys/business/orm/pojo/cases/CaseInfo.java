@@ -8,7 +8,7 @@ import java.util.Date;
 /**
  * 案件基础信息
  */
-public class CaseInfo extends BaseModel  {
+public class CaseInfo extends BaseModel {
 
     private String caseNo; // 编号(显示)
     private String name; // 名称
@@ -42,6 +42,24 @@ public class CaseInfo extends BaseModel  {
     private String firstAttachmentCode; // 首封案号
     private Date firstAttachmentDate; // 首封时间
     private String attachmentMemo; // 查封情况
+    private Integer firstStair;//第一个过程
+    private Integer secondStait;//第二个过程
+
+    public Integer getFirstStair() {
+        return firstStair;
+    }
+
+    public void setFirstStair(Integer firstStair) {
+        this.firstStair = firstStair;
+    }
+
+    public Integer getSecondStait() {
+        return secondStait;
+    }
+
+    public void setSecondStait(Integer secondStait) {
+        this.secondStait = secondStait;
+    }
 
     public String getCaseNo() {
         return caseNo;

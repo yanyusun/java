@@ -45,7 +45,9 @@
             <if test="businessId != null">
                 AND business_id = #{businessId,jdbcType=INTEGER}
             </if>
-
+            <if test="visibleType != null">
+                AND visible_type = #{visibleType,jdbcType=INTEGER}
+            </if>
             <if test="startAt != null">
                 <![CDATA[ AND create_at >= #{startAt} ]]>
             </if>

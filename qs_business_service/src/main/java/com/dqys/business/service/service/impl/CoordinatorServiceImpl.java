@@ -203,7 +203,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         objectUserRelationQuery.setType(3);//业务流转类型
         List<ObjectUserRelation> list = objectUserRelationMapper.list(objectUserRelationQuery);
         for (ObjectUserRelation obj : list) {
-            if (obj.getVisibleType() != null && obj.getVisibleType() == 1) {
+            if (obj.getVisibleType() != null && obj.getVisibleType() == OURelationEnum.VISIBLE_TYPE_PORTION.getValue()) {
                 userTeam.setObjectOperStatus(1);//设置对象可操作状态
                 break;
             }

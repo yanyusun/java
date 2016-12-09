@@ -1,15 +1,23 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.auth.orm.pojo.UserDetail;
 import com.dqys.business.orm.constant.business.ObjectBusinessEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.constant.coordinator.OURelationEnum;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.asset.PiRelationMapper;
+import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
+import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.asset.PiRelation;
+import com.dqys.business.orm.pojo.business.ObjectUserRelation;
+import com.dqys.business.orm.pojo.coordinator.OURelation;
 import com.dqys.business.orm.query.asset.RelationQuery;
+import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
+import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.dto.asset.PawnDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
@@ -48,6 +56,10 @@ public class PawnServiceImpl implements PawnService {
     private BusinessService businessService;
     @Autowired
     private BusinessLogService businessLogService;
+    @Autowired
+    private CoordinatorMapper coordinatorMapper;
+    @Autowired
+    private ObjectUserRelationMapper objectUserRelationMapper;
 
     @Override
     public JsonResponse delete_tx(Integer id) throws BusinessLogException {
@@ -234,8 +246,21 @@ public class PawnServiceImpl implements PawnService {
         if (CommonUtil.checkParam(lenderId)) {
             return JsonResponseTool.paramErr("参数错误");
         }
+        Integer userId = UserSession.getCurrent().getUserId();
+        com.dqys.business.orm.pojo.coordinator.UserDetail detail = coordinatorMapper.getUserDetail(userId);
         List<PawnDTO> result = new ArrayList<>();
-        List<PawnInfo> pawnInfoList = pawnInfoMapper.listByLenderId(lenderId);
+        ObjectUserRelationQuery query = new ObjectUserRelationQuery();
+        query.setObjectType(ObjectTypeEnum.LENDER.getValue());
+        query.setObjectId(lenderId);
+        query.setUserId(userId);
+        query.setVisibleType(OURelationEnum.VISIBLE_TYPE_PORTION.getValue());
+        List<ObjectUserRelation> list = objectUserRelationMapper.list(query);
+        List<PawnInfo> pawnInfoList;
+        if (list != null && list.size() > 0) {
+            pawnInfoList = pawnInfoMapper.pawnListByLenderId(lenderId, userId, ObjectTypeEnum.PAWN.getValue(), MessageUtils.transStringToInt(detail.getUserType()));
+        } else {
+            pawnInfoList = pawnInfoMapper.listByLenderId(lenderId);
+        }
         pawnInfoList.forEach(pawnInfo -> {
             result.add(changeToDTO(pawnInfo));
         });

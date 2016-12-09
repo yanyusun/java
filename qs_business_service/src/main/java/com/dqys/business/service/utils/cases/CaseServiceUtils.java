@@ -120,7 +120,8 @@ public class CaseServiceUtils {
         caseDTO.setIouList(selectonDTOList);
         caseDTO.setCourtDTOList(toCaseCourtDTO(caseCourtList));
         caseDTO.setPawnName(pawnName);
-
+        caseDTO.setFirstStair(caseInfo.getFirstStair());
+        caseDTO.setSecondStait(caseInfo.getSecondStait());
         return caseDTO;
     }
 

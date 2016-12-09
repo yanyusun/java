@@ -300,5 +300,21 @@ public class CaseController {
         return JsonResponseTool.success(caseService.delete(id));
     }
 
+    /**
+     * @api {post} /case/process 记录过程
+     * @apiName process
+     * @apiGroup case
+     * @apiParam {int} id 案件id
+     * @apiParam {int} firstStair 第一个
+     * @apiParam {int} secondStait 第二个
+     */
+    @RequestMapping(value = "/process")
+    public JsonResponse process(Integer id, Integer firstStair, Integer secondStait) {
+        if (id == null) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return JsonResponseTool.success(caseService.process(id, firstStair, secondStait));
+    }
+
 
 }

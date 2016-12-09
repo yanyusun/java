@@ -11,7 +11,8 @@ public enum OURelationEnum {
     TYPE_ALLOCATION_TEAM(1, "团队分配"),
     TYPE_ALLOCATION_COMPANY(2, "公司分配"),
     ACCEPT_STATUS_INIT(0, "已接收"),
-    ACCEPT_STATUS_ACCEPT(1, "未接收");
+    ACCEPT_STATUS_ACCEPT(1, "未接收"),
+    VISIBLE_TYPE_PORTION(0, "部分可见");
     private Integer value;
     private String name;
 

@@ -25,12 +25,16 @@ import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.RandomUtil;
+import org.apache.ibatis.annotations.Case;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yvan on 16/7/26.
@@ -396,5 +400,15 @@ public class CaseServiceImpl implements CaseService {
     @Override
     public Object delete(Integer id) {
         return caseInfoMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public Object process(@Param("id") Integer id, @Param("firstStair") Integer firstStair, @Param("secondStait") Integer secondStait) {
+        CaseInfo info = new CaseInfo();
+        info.setId(id);
+        info.setFirstStair(firstStair);
+        info.setSecondStait(secondStait);
+        caseInfoMapper.update(info);
+        return JsonResponseTool.success(null);
     }
 }

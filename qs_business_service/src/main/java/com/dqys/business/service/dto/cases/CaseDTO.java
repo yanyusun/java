@@ -58,6 +58,24 @@ public class CaseDTO {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date firstAttachmentDate; // 首封时间
     private String attachmentMemo; // 查封情况
+    private Integer firstStair;//第一个过程
+    private Integer secondStait;//第二个过程
+
+    public Integer getFirstStair() {
+        return firstStair;
+    }
+
+    public void setFirstStair(Integer firstStair) {
+        this.firstStair = firstStair;
+    }
+
+    public Integer getSecondStait() {
+        return secondStait;
+    }
+
+    public void setSecondStait(Integer secondStait) {
+        this.secondStait = secondStait;
+    }
 
     private List<CaseCourtDTO> courtDTOList; // 相关联法院
 

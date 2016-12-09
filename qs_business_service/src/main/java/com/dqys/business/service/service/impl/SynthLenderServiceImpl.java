@@ -65,7 +65,7 @@ public class SynthLenderServiceImpl implements SynthLenderService {
         boolean flag = false;
         if (list.size() > 0) {
             ObjectUserRelation our = list.get(0);
-            if (our.getVisibleType() != null && our.getVisibleType() == 1) {
+            if (our.getVisibleType() != null && our.getVisibleType() == OURelationEnum.VISIBLE_TYPE_PORTION.getValue()) {
                 flag = true;
             }
         }
