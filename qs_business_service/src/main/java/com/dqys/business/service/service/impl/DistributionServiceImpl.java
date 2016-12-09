@@ -44,6 +44,7 @@ import com.dqys.business.service.dto.company.CompanyTeamReDTO;
 import com.dqys.business.service.dto.company.DistributionDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.*;
+import com.dqys.business.service.service.cases.CaseService;
 import com.dqys.business.service.service.flowBusiness.FlowBusinessService;
 import com.dqys.business.service.utils.company.CompanyServiceUtils;
 import com.dqys.business.service.utils.message.MessageUtils;
@@ -116,6 +117,8 @@ public class DistributionServiceImpl implements DistributionService {
     private FlowBusinessService flowBusinessService;
     @Autowired
     private LenderService lenderService;
+    @Autowired
+    private CaseService caseService;
 
     @Override
     public DistributionDTO listDistribution_tx(Integer type, Integer id) throws BusinessLogException {
@@ -1642,7 +1645,12 @@ public class DistributionServiceImpl implements DistributionService {
                         if (UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().toString().equals(reg.substring(0, reg.lastIndexOf(",")))) {
                             zcyService.receivePawn(id, type, 0);//中介公司接受业务流转的抵押物添加到资产源信息
                         }
+                        //是律所公司身份的流转需要把抵押物转变为案件
+                        if (UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue().toString().equals(reg.substring(0, reg.lastIndexOf(",")))) {
+                            caseService.receivePawn(id, type);//律所公司接受业务流转的抵押物添加到案件信息
+                        }
                     }
+
 
                     if (companyTeam.getObjectType() == ObjectTypeEnum.LENDER.getValue().intValue()) {
                         //创建协作器
@@ -1650,6 +1658,8 @@ public class DistributionServiceImpl implements DistributionService {
                         lenderInfo.setOperator(UserSession.getCurrent().getUserId());
                         lenderService.addCoordinator(lenderInfo);
                     }
+
+
                 } else {
                     if (list != null && list.size() > 0) {
                         // 理论上只有一条

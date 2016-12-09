@@ -135,4 +135,12 @@ public interface CaseService {
      * @return
      */
     Object process(@Param("id") Integer id, @Param("firstStair") Integer firstStair, @Param("secondStait") Integer secondStait);
+
+    /**
+     * 抵押物转成案件
+     *
+     * @param id
+     * @param type
+     */
+    void receivePawn(Integer id, Integer type);
 }
