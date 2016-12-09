@@ -5,6 +5,7 @@ import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.core.base.BaseSelectonDTO;
 import com.dqys.core.model.JsonResponse;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -117,10 +118,29 @@ public interface CaseService {
 
     /**
      * 根据案件ID查询借据
+     *
      * @param id
      * @return
      */
     List<BaseSelectonDTO> listIouByCaseId(Integer id);
 
     Object delete(Integer id);
+
+    /**
+     * 记录案件过程所在位置
+     *
+     * @param id
+     * @param firstStair
+     * @param secondStait
+     * @return
+     */
+    Object process(@Param("id") Integer id, @Param("firstStair") Integer firstStair, @Param("secondStait") Integer secondStait);
+
+    /**
+     * 抵押物转成案件
+     *
+     * @param id
+     * @param type
+     */
+    void receivePawn(Integer id, Integer type);
 }

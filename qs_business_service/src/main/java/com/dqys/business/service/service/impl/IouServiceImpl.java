@@ -2,10 +2,17 @@ package com.dqys.business.service.service.impl;
 
 import com.dqys.business.orm.constant.business.ObjectBusinessEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.constant.coordinator.OURelationEnum;
 import com.dqys.business.orm.mapper.asset.*;
+import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
+import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.pojo.asset.*;
+import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.query.asset.RelationQuery;
+import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.IouEnum;
+import com.dqys.business.service.dto.asset.PawnDTO;
+import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
@@ -48,6 +55,10 @@ public class IouServiceImpl implements IouService {
     private LenderInfoMapper lenderInfoMapper;
     @Autowired
     private AssetInfoMapper assetInfoMapper;
+    @Autowired
+    private CoordinatorMapper coordinatorMapper;
+    @Autowired
+    private ObjectUserRelationMapper objectUserRelationMapper;
 
     @Override
     public JsonResponse delete_tx(Integer id) throws BusinessLogException {
@@ -278,7 +289,20 @@ public class IouServiceImpl implements IouService {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        List<IOUInfo> iouList = iouInfoMapper.listByLenderId(id);
+        Integer userId = UserSession.getCurrent().getUserId();
+        com.dqys.business.orm.pojo.coordinator.UserDetail detail = coordinatorMapper.getUserDetail(userId);
+        ObjectUserRelationQuery query = new ObjectUserRelationQuery();
+        query.setObjectType(ObjectTypeEnum.LENDER.getValue());
+        query.setObjectId(id);
+        query.setUserId(userId);
+        query.setVisibleType(OURelationEnum.VISIBLE_TYPE_PORTION.getValue());
+        List<ObjectUserRelation> list = objectUserRelationMapper.list(query);
+        List<IOUInfo> iouList;
+        if (list != null && list.size() > 0) {
+            iouList = iouInfoMapper.iouListByLenderId(id, userId, ObjectTypeEnum.IOU.getValue(), MessageUtils.transStringToInt(detail.getUserType()));
+        } else {
+            iouList = iouInfoMapper.listByLenderId(id);
+        }
         List<IouDTO> iouDTOList = new ArrayList<>();
         for (IOUInfo iouInfo : iouList) {
             iouDTOList.add(changeToDTO(iouInfo));

@@ -40,6 +40,15 @@ public class ObjectUserRelationQuery extends BaseQuery {
 
     private Date startAt; // 开始时间
     private Date endAt; // 结束时间
+    private Integer visibleType;
+
+    public Integer getVisibleType() {
+        return visibleType;
+    }
+
+    public void setVisibleType(Integer visibleType) {
+        this.visibleType = visibleType;
+    }
 
     private List<Integer> userIds; // 操作人集合
 

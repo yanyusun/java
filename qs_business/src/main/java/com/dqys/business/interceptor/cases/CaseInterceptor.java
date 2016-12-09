@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
  * Created by Yvan on 16/7/27.
  */
 public class CaseInterceptor extends AuthenticationInterceptor {
-    
+
     public static final String API_ADD = "add";
     public static final String API_LIST_ADD = "listAdd";
     public static final String API_DIVIDE = "divide";
@@ -28,13 +28,14 @@ public class CaseInterceptor extends AuthenticationInterceptor {
     public static final String API_UPDATE_CASE_COURT = "updateCaseCourt";
     public static final String API_LIST_IOU_BY_CASE = "listIouByCase";
     public static final String API_DELETE = "delete";
+    public static final String API_PROCESS = "process";
 
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) throws Exception {
         String url = request.getRequestURI();
         String path = "";
-        if(url != null && url.length() > 0){
+        if (url != null && url.length() > 0) {
             path = url.substring(url.lastIndexOf("/") + 1, url.length());
         }
         if (API_ADD.equals(path)) {//待后期完善根据业务号，团队id，操作对象，人员控制权限
@@ -69,7 +70,9 @@ public class CaseInterceptor extends AuthenticationInterceptor {
             return true;
         } else if (API_DELETE.equals(path)) {
             return true;
-        } else {
+        } else if (API_PROCESS.equals(path)) {
+            return true;
+        }else {
             LogManager.getLogger("businessAsync").warn("未知请求链接错误:" + url);
             throw new UrlException("未知请求链接错误", UrlException.UNKNOWN_URL_ERROR);
         }

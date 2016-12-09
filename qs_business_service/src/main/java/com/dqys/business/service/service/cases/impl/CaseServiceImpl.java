@@ -25,12 +25,16 @@ import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.RandomUtil;
+import org.apache.ibatis.annotations.Case;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yvan on 16/7/26.
@@ -73,6 +77,11 @@ public class CaseServiceImpl implements CaseService {
         if (error != null) {
             return JsonResponseTool.paramErr(error);
         }
+        return addCase(caseDTO);
+
+    }
+
+    private JsonResponse addCase(CaseDTO caseDTO) throws BusinessLogException {
         // 案件基础信息
         CaseInfo caseInfo = CaseServiceUtils.toCaseInfo(caseDTO);
         if (caseInfo == null) {
@@ -94,16 +103,17 @@ public class CaseServiceImpl implements CaseService {
         }
         Integer caseId = caseInfo.getId();
         // 法院信息
-        for (CaseCourtDTO caseCourtDTO : caseDTO.getCourtDTOList()) {
-            CaseCourt caseCourt = CaseServiceUtils.toCaseCourt(caseCourtDTO);
-            caseCourt.setCaseId(caseId);
-            Integer courtAdd = caseCourtMapper.insert(caseCourt);
-            if (CommonUtil.checkParam(courtAdd)) {
-                // 增加法院信息失败
-                return JsonResponseTool.failure("增加关联法院信息失败");
+        if (caseDTO.getCourtDTOList() != null && caseDTO.getCourtDTOList().size() > 0) {
+            for (CaseCourtDTO caseCourtDTO : caseDTO.getCourtDTOList()) {
+                CaseCourt caseCourt = CaseServiceUtils.toCaseCourt(caseCourtDTO);
+                caseCourt.setCaseId(caseId);
+                Integer courtAdd = caseCourtMapper.insert(caseCourt);
+                if (CommonUtil.checkParam(courtAdd)) {
+                    // 增加法院信息失败
+                    return JsonResponseTool.failure("增加关联法院信息失败");
+                }
             }
         }
-
         // 案件与借据
         String[] idStr = caseDTO.getIouIds().split(",");
         CiRelation ciRelation = new CiRelation();
@@ -396,5 +406,39 @@ public class CaseServiceImpl implements CaseService {
     @Override
     public Object delete(Integer id) {
         return caseInfoMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public Object process(@Param("id") Integer id, @Param("firstStair") Integer firstStair, @Param("secondStait") Integer secondStait) {
+        CaseInfo info = new CaseInfo();
+        info.setId(id);
+        info.setFirstStair(firstStair);
+        info.setSecondStait(secondStait);
+        caseInfoMapper.update(info);
+        return JsonResponseTool.success(null);
+    }
+
+    @Override
+    public void receivePawn(Integer id, Integer type) {
+        if (ObjectTypeEnum.PAWN.getValue().intValue() == type) {
+            CaseDTO dto = new CaseDTO();
+            try {
+                dto.setPawnId(id);
+                List<IOUInfo> iouInfos = iouInfoMapper.findByPawnId(id);
+                if (iouInfos != null && iouInfos.size() > 0) {
+                    String iouIds = "";
+                    for (int i = 0; i < iouInfos.size(); i++) {
+                        iouIds += iouInfos.get(i).getId();
+                        if (i < iouInfos.size() - 1) {
+                            iouIds += ",";
+                        }
+                    }
+                    dto.setIouIds(iouIds);
+                }
+                addCase(dto);
+            } catch (BusinessLogException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
