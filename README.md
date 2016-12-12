@@ -39,6 +39,29 @@
 * rabbitmq 命令:/sbin/service rabbitmq-server start|stop
 * git 命令:gitlab-ctl start|stop|restart|status|reconfigure
 * jenkins 命令: sh /mnt/jenkins_start.sh
+*
+但是，现在，nginx增加了-s选项，实现nginx的停止，重新加载功能。
+1. 如果是平滑的重启nginx，可以用./nginx -s reload命令实现nginx的平滑重启。
+2. 如果是非平滑重启，则可以先停止nginx，然后再启动：
+./nginx -s stop && ./nginx
+
+当我们修改nginx配置后，希望重启nginx以便让nginx生效，此时为了保证nginx在重启阶段还能够提供正常的服务，一般采用平滑重启的方式（reload）重启nginx。此时，nginx会加载新的配置，然后fork出新的worker进程。同时，master进程会向老的worker进程发送信号，告诉老的worker进程当前的情况。老的worker进程受到master进程的信号后，如果当时没有处理请求则会退出，如果正在处理请求，则老的worker进程会处理完请求然后退出。nginx就是通过这种方式去reload新的配置，从而使得在重启的过程中，仍然可以提供服务。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 项目模块信息
 ### core.jar

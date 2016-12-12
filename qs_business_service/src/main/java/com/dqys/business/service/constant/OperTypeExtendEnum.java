@@ -4,7 +4,7 @@ package com.dqys.business.service.constant;
  * Created by yan on 16-11-17.
  */
 public enum OperTypeExtendEnum {
-    APPLY_COMPANYTEAM(10001, "加入案组"),
+    APPLY_COMPANYTEAM(10001, "申请处置"),
     ACCEPT_AGREE(10002,"同意"),
     ACCEPT_REJECT(10003,"拒绝")
     ;
