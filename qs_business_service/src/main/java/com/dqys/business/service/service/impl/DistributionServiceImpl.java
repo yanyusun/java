@@ -602,23 +602,8 @@ public class DistributionServiceImpl implements DistributionService {
                 };
                 smsUtil.sendSms(SmsEnum.SMS_DISTRIBUTION_JOIN_CODE.getValue(), platformDetail.getPhone(), msg); // 平台接收
                 // 添加消息
-                String code = ""; // 对象编号
-                if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
-                    AssetInfo assetInfo = assetInfoMapper.get(companyTeam.getObjectId());
-                    if (assetInfo != null) {
-                        code = assetInfo.getAssetNo();
-                    }
-                } else if (ObjectTypeEnum.LENDER.getValue().equals(companyTeam.getObjectType())) {
-                    LenderInfo lenderInfo = lenderInfoMapper.get(companyTeam.getObjectId());
-                    if (lenderInfo != null) {
-                        code = lenderInfo.getLenderNo();
-                    }
-                }
                 Message message = new Message();
-                message.setTitle(MessageEnum.TASK.getName() + " > "
-                                + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
-                                + code
-                ); // 业务类型 对象类型 对象编号
+                message.setTitle(coordinatorService.getMessageTitle(companyTeam.getObjectType(), companyTeam.getObjectId(), MessageBTEnum.COMPANY_JOIN.getValue())); // 业务类型 对象类型 对象编号
                 message.setContent(smsUtil.getSendContent(SmsEnum.SMS_DISTRIBUTION_JOIN_CODE.getValue(), msg));
                 message.setSenderId(userInfo.getId());
                 message.setReceiveId(platformDetail.getUserId()); // 平台接收审核
