@@ -101,4 +101,9 @@ public interface CompanyService {
      */
     List<CompanyDTO> listRelationByServiceType(Integer type, Integer id);
 
+    /**
+     * @param type
+     * @return
+     */
+    List<CompanyDTO> listByTypeAndIsJoin(Integer type, Integer userId);
 }

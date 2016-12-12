@@ -22,6 +22,7 @@ public interface TCompanyInfoMapper {
 
     /**
      * 根据用户信息获取公司详情
+     *
      * @param id
      * @return
      */
@@ -29,6 +30,7 @@ public interface TCompanyInfoMapper {
 
     /**
      * 根据用户Id获取公司详情
+     *
      * @param id
      * @return
      */
@@ -36,8 +38,11 @@ public interface TCompanyInfoMapper {
 
     /**
      * 根据公司类型获取公司列表
+     *
      * @param type
      * @return
      */
-    List<TCompanyInfo> listByType(@Param("typeId")Integer type);
+    List<TCompanyInfo> listByType(@Param("typeId") Integer type);
+
+    List<TCompanyInfo> listByTypeAndIsJoin(@Param("typeId") Integer type, @Param("userId") Integer userId);
 }

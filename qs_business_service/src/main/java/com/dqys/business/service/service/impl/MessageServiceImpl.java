@@ -279,7 +279,12 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public String respondInvite(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer sendUserId,
-                                Integer receiveUserId, Integer status, Integer flowBusinessId, Integer operType) {
+                                Integer receiveUserId, Integer status, Integer flowBusinessId, Integer operType,
+                                Integer toPlatform) {
+        //发送和接受同一个人不做以下操作
+        if (receiveUserId == sendUserId) {
+            return "no";
+        }
         SmsUtil smsUtil = new SmsUtil();
         TUserTag tUserTag = getAdmin();
         if (tUserTag != null) {
@@ -310,25 +315,25 @@ public class MessageServiceImpl implements MessageService {
                         ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
                         coordinatorService.getObjectName(flowType, flowId),
                         getOperTypeName(flowType, operType));
-
-                adminContent = smsUtil.sendSms(adminCode, tuserInfo.getMobile(),
-                        tuserInfo.getRealName(),
-                        userService.getCompayTypeToString(oper),
-                        oper.getCompanyName(),
-                        userService.getRoleNameToString(oper),
-                        oper.getRealName(),
-                        userService.getCompayTypeToString(userC),
-                        userC.getCompanyName(),
-                        userService.getRoleNameToString(userC),
-                        userC.getRealName(),
-                        ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
-                        coordinatorService.getObjectName(objectType, objectId),
-                        ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
-                        coordinatorService.getObjectName(flowType, flowId),
-                        getOperTypeName(flowType, operType));
                 add(title, content, sendUserId, receiveUserId, "", MessageEnum.SERVE.getValue(), MessageBTEnum.INVITE_RESULT.getValue(), "", flowBusinessId);
-
-                add(title, adminContent, sendUserId, tuserInfo.getId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INVITE_RESULT.getValue(), "", flowBusinessId);
+                if (toPlatform == 1) {//平台收到短信
+                    adminContent = smsUtil.sendSms(adminCode, tuserInfo.getMobile(),
+                            tuserInfo.getRealName(),
+                            userService.getCompayTypeToString(oper),
+                            oper.getCompanyName(),
+                            userService.getRoleNameToString(oper),
+                            oper.getRealName(),
+                            userService.getCompayTypeToString(userC),
+                            userC.getCompanyName(),
+                            userService.getRoleNameToString(userC),
+                            userC.getRealName(),
+                            ObjectTypeEnum.getObjectTypeEnum(objectType).getName(),
+                            coordinatorService.getObjectName(objectType, objectId),
+                            ObjectTypeEnum.getObjectTypeEnum(flowType).getName(),
+                            coordinatorService.getObjectName(flowType, flowId),
+                            getOperTypeName(flowType, operType));
+                    add(title, adminContent, sendUserId, tuserInfo.getId(), "", MessageEnum.SERVE.getValue(), MessageBTEnum.INVITE_RESULT.getValue(), "", flowBusinessId);
+                }
                 return "yes";
             }
         }

@@ -134,10 +134,11 @@ public interface MessageService {
      * @param sendUserId    发送者id（被邀请公司)
      * @param receiveUserId 接收者id（请求公司）
      * @param status        状态（0拒绝1接收）
+     * @param toPlatform    平台是否收到短信0否1是
      * @return
      */
     String respondInvite(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer sendUserId, Integer receiveUserId,
-                         Integer status, Integer flowBusinessId,Integer operType);
+                         Integer status, Integer flowBusinessId, Integer operType, Integer toPlatform);
 
     /**
      * 执行司法化解（律所接收到通知）

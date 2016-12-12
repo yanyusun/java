@@ -10,6 +10,7 @@ import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.DistributionService;
 import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +41,17 @@ public class CompanyController {
     /**
      * 查看特定类型的公司
      *
-     * @param type 特定类型
+     * @param type   特定类型
+     * @param isJoin 是否需要合作机构（1需要）
      * @return
      */
     @RequestMapping(value = "/listCompany")
-    public JsonResponse listCompany(@RequestParam(required = false) Integer type) {
-        return CommonUtil.responseBack(companyService.listByType(type));
+    public JsonResponse listCompany(@RequestParam(required = false) Integer type, Integer isJoin) {
+        if (isJoin != null && isJoin == 1) {
+            return CommonUtil.responseBack(companyService.listByTypeAndIsJoin(type, UserSession.getCurrent().getUserId()));
+        } else {
+            return CommonUtil.responseBack(companyService.listByType(type));
+        }
     }
 
 
@@ -275,7 +281,7 @@ public class CompanyController {
     }
 
     /**
-     * 平台为申请业务流转的公司添加业务流转伙伴接口
+     * 平台或处置机构公司添加业务流转伙伴接口
      *
      * @param type              对象类型
      * @param id                对象ID
@@ -304,11 +310,14 @@ public class CompanyController {
                 msg = response.getMsg() + "；";
             }
         }
-        coordinatorService.sendBusinessFlowResult(objectId, objectType, id, type, businessType, receiveUserId, 1,
-                inviteUserIds, flowBusinessId);//发送给流转申请方
         if (!"".equals(msg)) {
             return JsonResponseTool.failure(msg);
         } else {
+            //操作人不是请求发起方，就给请求发起方发送短信通知
+            if (UserSession.getCurrent().getUserId() != businessRequestId) {
+                coordinatorService.sendBusinessFlowResult(objectId, objectType, id, type, businessType, receiveUserId, 1,
+                        inviteUserIds, flowBusinessId);//发送给流转申请方
+            }
             return JsonResponseTool.success(null);
         }
     }
@@ -321,13 +330,15 @@ public class CompanyController {
      * @param distributionId 分配器成员ID
      * @param businessType   业务流转类型
      * @param status         状态码
+     * @param flowBusinessId  关联的业务表id
+     * @param toPlatform     (平台是否收到短信通知0否1是)
      * @return
      * @throws BusinessLogException
      */
     @RequestMapping(value = "/designBusinessService")
     public JsonResponse designBusinessService(@RequestParam Integer type, @RequestParam Integer id,
                                               @RequestParam Integer distributionId, @RequestParam Integer businessType,
-                                              @RequestParam Integer status, Integer flowBusinessId) throws BusinessLogException {
+                                              @RequestParam Integer status, Integer flowBusinessId, Integer toPlatform) throws BusinessLogException {
         if (CommonUtil.checkParam(type, id, distributionId, businessType, status)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -335,7 +346,7 @@ public class CompanyController {
             // 如果不是接受状态,全部设置为拒绝
             status = ObjectAcceptTypeEnum.refuse.getValue();
         }
-        return distributionService.updateBusinessService(type, id, distributionId, businessType, status, flowBusinessId);
+        return distributionService.updateBusinessService(type, id, distributionId, businessType, status, flowBusinessId, toPlatform);
     }
 
     /**

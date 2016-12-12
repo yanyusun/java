@@ -36,7 +36,7 @@ public enum SmsEnum {
     RESPOND_INVITE_RESULT_NO(130, "被邀请公司拒绝,通知请求公司短信"),
     FlOW_OPER(131, "流转通知"),
     BUSINESS_INVALID(132, "平台业务无效"),
-    ADD_FLOW_COMPANY(133, "添加流转公司"),
+    ADD_FLOW_COMPANY(133, "平台添加流转公司"),
     LEAVE_WORD(134, "留言操作"),
     REGISTER_AUDIT(135, "注册请求审核"),
     REGISTER_AUDIT_RESULT(136, "注册审核结果"),
@@ -46,7 +46,8 @@ public enum SmsEnum {
     APPLY_AGAIN(140, "业务重新提交审核"),
     FLOW_ADD_COMPANY(141, "通知请求公司平台为他添加的单家合作机构"),
     FLOW_ADD_COMPANY2(142, "通知请求公司平台为他添加的两家合作机构"),
-    FLOW_ADD_COMPANY3(143, "通知请求公司平台为他添加的三家合作机构");
+    FLOW_ADD_COMPANY3(143, "通知请求公司平台为他添加的三家合作机构"),
+    ADD_FLOW_ONESELF(144, "自己添加流转公司");
 
     private Integer value;
     private String name;

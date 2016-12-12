@@ -284,5 +284,21 @@
         )
     </select>
 
+    <select id="listByTypeAndIsJoin" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_company_info where stateflag=0 AND is_auth=1 AND id in (
+        SELECT  tcr.accept_company_id
+        FROM t_company_team_re tctr LEFT JOIN t_company_team_re tcr
+        ON tctr.company_team_id=tcr.company_team_id LEFT JOIN t_company_info tci
+        ON tci.id=tcr.accept_company_id
+        WHERE tctr.`status`=1
+        <if test="typeId != null">
+            AND tci.business_type=#{typeId,jdbcType=INTEGER}
+        </if>
+        AND tctr.accepter_id=#{userId,jdbcType=INTEGER}
+        GROUP BY tcr.accept_company_id
+        )
+    </select>
 
 </mapper>
