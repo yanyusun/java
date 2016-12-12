@@ -23,7 +23,8 @@ public enum CaseEnum implements ObjectEnumBase{
     REPAY_YET(1516,"已还款"),
     ADD(1517, "新增"),
     UPDATE(1518, "修改"),
-    DELETE(1519, "删除");
+    DELETE(1519, "删除"),
+    DUE_DILIGENCE(1520,"尽调");
     private Integer value;
     private String name;
 
