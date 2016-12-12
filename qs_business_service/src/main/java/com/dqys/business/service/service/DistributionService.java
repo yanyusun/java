@@ -80,7 +80,7 @@ public interface DistributionService {
      * @param receiveUserId
      */
     JsonResponse addBusinessService(Integer type, Integer id, Integer distributionId, Integer businessType, Integer companyId,
-                                    Integer businessRequestId, Integer flowBusinessId,List<Integer> inviteUserIds) throws BusinessLogException;
+                                    Integer businessRequestId, Integer flowBusinessId, List<Integer> inviteUserIds) throws BusinessLogException;
 
     /**
      * 被添加公司接受或者拒绝业务流转邀请
@@ -92,7 +92,8 @@ public interface DistributionService {
      * @return
      */
     JsonResponse updateBusinessService(Integer type, Integer id, Integer distributionId,
-                                       Integer businessType, Integer status, Integer flowBusinessId) throws BusinessLogException;
+                                       Integer businessType, Integer status, Integer flowBusinessId,
+                                       Integer toPlatform) throws BusinessLogException;
 
     /**
      * 删除业务流转的被添加公司

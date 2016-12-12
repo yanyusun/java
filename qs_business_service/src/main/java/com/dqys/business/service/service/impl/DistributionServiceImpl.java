@@ -1104,6 +1104,7 @@ public class DistributionServiceImpl implements DistributionService {
     @Override
     public JsonResponse addBusinessService(Integer type, Integer id, Integer distributionId, Integer businessType, Integer companyId,
                                            Integer businessRequestId, Integer flowBusinessId, List<Integer> inviteUserIds) throws BusinessLogException {
+        Integer userId = UserSession.getCurrent().getUserId();
         if (!ObjectTypeEnum.IOU.getValue().equals(type) && !PAWN.getValue().equals(type)) {
             return JsonResponseTool.paramErr("参数错误，不是可流转对象"); // 流转对象不对
         }
@@ -1165,11 +1166,11 @@ public class DistributionServiceImpl implements DistributionService {
                 String operUrl = MessageUtils.setOperUrl(
                         "/api/company/designBusinessService?type=" + type
                                 + "&id=" + id + "&distributionId=" + result + "&businessType=" + businessType
-                                + "&status=1" + "&flowBusinessId=" + flowBusinessId,
+                                + "&status=1" + "&flowBusinessId=" + flowBusinessId + "&toPlatform=" + (userId == businessRequestId ? 0 : 1),
                         "get",
                         "/api/company/designBusinessService?type=" + type
                                 + "&id=" + id + "&distributionId=" + result + "&businessType=" + businessType
-                                + "&status=0" + "&flowBusinessId=" + flowBusinessId,
+                                + "&status=0" + "&flowBusinessId=" + flowBusinessId + "&toPlatform=" + (userId == businessRequestId ? 0 : 1),
                         "get",
                         null
                 );
@@ -1180,7 +1181,7 @@ public class DistributionServiceImpl implements DistributionService {
                     operation = IouEnum.getIouEnum(businessType).getName();
                 }
                 setFlowBusiness(companyDetailInfo1.getUserId(), flowBusinessId, FlowBusinessEnum.FLOW_COMPANY_WAIT_AGREE.getValue());//修改业务状态
-                sendBusinessFlow(UserSession.getCurrent().getUserId(), companyDetailInfo1.getUserId(), businessRequestId,
+                sendBusinessFlow(userId, companyDetailInfo1.getUserId(), businessRequestId,
                         companyTeam.getObjectId(), companyTeam.getObjectType(), id, type, operUrl, operation, flowBusinessId);//发送短信给邀请的公司
                 inviteUserIds.add(companyDetailInfo1.getUserId());//添加的业务公司管理员
                 return JsonResponseTool.success(result);
@@ -1459,7 +1460,7 @@ public class DistributionServiceImpl implements DistributionService {
 
 
     /**
-     * 平台为处置机构添加业务流转公司发送的短信接口
+     * 平台或处置机构添加业务流转公司发送的短信接口
      *
      * @param userId            操作者
      * @param receiveUserId     邀请接收者
@@ -1475,7 +1476,14 @@ public class DistributionServiceImpl implements DistributionService {
         SmsUtil smsUtil = new SmsUtil();
         UserDetail userC = coordinatorMapper.getUserDetail(receiveUserId);
         UserDetail oper = coordinatorMapper.getUserDetail(businessRequestId);
-        String content = smsUtil.sendSms(SmsEnum.ADD_FLOW_COMPANY.getValue(), userC.getMobile(),
+        //操作和业务请求为同一个人就是自己发起邀请的
+        Integer code = 0;
+        if (userId == businessRequestId) {
+            code = SmsEnum.ADD_FLOW_ONESELF.getValue();
+        } else {
+            code = SmsEnum.ADD_FLOW_COMPANY.getValue();
+        }
+        String content = smsUtil.sendSms(code, userC.getMobile(),
                 userC.getRealName(),
                 userService.getCompayTypeToString(oper),
                 oper.getCompanyName(),
@@ -1492,7 +1500,9 @@ public class DistributionServiceImpl implements DistributionService {
 
     @Override
     public JsonResponse updateBusinessService(Integer type, Integer id, Integer distributionId,
-                                              Integer businessType, Integer status, Integer flowBusinessId) throws BusinessLogException {
+                                              Integer businessType, Integer status, Integer flowBusinessId,
+                                              Integer toPlatform) throws BusinessLogException {
+        Integer userId = UserSession.getCurrent().getUserId();
         if (CommonUtil.checkParam(type, id, distributionId, businessType, status)) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -1506,11 +1516,7 @@ public class DistributionServiceImpl implements DistributionService {
         if (companyTeamRe == null) {
             return JsonResponseTool.paramErr("参数错误，清收案组成员不存在"); // 分配器记录不存在
         }
-        TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(UserSession.getCurrent().getUserId());
-        if (userInfo == null || userInfo.getCompanyId() == null) {
-            return JsonResponseTool.paramErr("用户信息错误，请重新登录"); // 当前用户存在异常
-        }
-        if (!companyTeamRe.getAccepterId().equals(userInfo.getId())) {
+        if (!companyTeamRe.getAccepterId().equals(userId)) {
             return JsonResponseTool.failure("非流转公司管理员，无权限操作"); // 非被邀请公司的管理员
         }
         companyTeamRe.setStatus(status);
@@ -1543,7 +1549,7 @@ public class DistributionServiceImpl implements DistributionService {
                 query.setObjectId(id);
                 query.setType(BusinessRelationEnum.dispose.getValue());
                 query.setEmployerId(companyTeam.getId());
-                query.setUserId(userInfo.getId());
+                query.setUserId(userId);
                 List<ObjectUserRelation> list = objectUserRelationMapper.list(query);
                 if (status.equals(ObjectAcceptTypeEnum.accept.getValue())) {
                     // 修改数据对象
@@ -1629,7 +1635,7 @@ public class DistributionServiceImpl implements DistributionService {
                         query.setObjectType(ObjectTypeEnum.IOU.getValue());
                         query.setType(BusinessRelationEnum.dispose.getValue());
                         query.setEmployerId(companyTeam.getId());
-                        query.setUserId(userInfo.getId());
+                        query.setUserId(userId);
                         list = objectUserRelationMapper.list(query);
                         if (list == null || list.size() == 0) {
                             if (list == null || list.size() == 0) {
@@ -1674,8 +1680,8 @@ public class DistributionServiceImpl implements DistributionService {
                     }
                 }
                 // 消息提醒
-                messageService.respondInvite(companyTeam.getObjectId(), companyTeam.getObjectType(), id, type, userInfo.getId(),
-                        companyTeamRe.getRequesterId(), status, flowBusinessId, businessType);
+                messageService.respondInvite(companyTeam.getObjectId(), companyTeam.getObjectType(), id, type, userId,
+                        companyTeamRe.getRequesterId(), status, flowBusinessId, businessType, toPlatform);
             }
             return JsonResponseTool.success(result);
         }
