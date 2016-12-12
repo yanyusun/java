@@ -10,6 +10,7 @@ import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.DistributionService;
 import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,12 +41,17 @@ public class CompanyController {
     /**
      * 查看特定类型的公司
      *
-     * @param type 特定类型
+     * @param type   特定类型
+     * @param isJoin 是否需要合作机构（1需要）
      * @return
      */
     @RequestMapping(value = "/listCompany")
-    public JsonResponse listCompany(@RequestParam(required = false) Integer type) {
-        return CommonUtil.responseBack(companyService.listByType(type));
+    public JsonResponse listCompany(@RequestParam(required = false) Integer type, Integer isJoin) {
+        if (isJoin != null && isJoin == 1) {
+            return CommonUtil.responseBack(companyService.listByTypeAndIsJoin(type, UserSession.getCurrent().getUserId()));
+        } else {
+            return CommonUtil.responseBack(companyService.listByType(type));
+        }
     }
 
 

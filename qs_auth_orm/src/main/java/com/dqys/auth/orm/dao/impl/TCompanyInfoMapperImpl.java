@@ -58,7 +58,12 @@ public class TCompanyInfoMapperImpl extends BaseDao implements TCompanyInfoMappe
     }
 
     @Override
-    public List<TCompanyInfo> listByType(@Param("typeId")Integer type) {
+    public List<TCompanyInfo> listByType(@Param("typeId") Integer type) {
         return super.getSqlSession().getMapper(TCompanyInfoMapper.class).listByType(type);
+    }
+
+    @Override
+    public List<TCompanyInfo> listByTypeAndIsJoin(@Param("typeId") Integer type, @Param("userId") Integer userId) {
+        return super.getSqlSession().getMapper(TCompanyInfoMapper.class).listByTypeAndIsJoin(type, userId);
     }
 }

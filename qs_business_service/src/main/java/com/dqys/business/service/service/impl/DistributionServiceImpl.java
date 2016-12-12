@@ -800,18 +800,6 @@ public class DistributionServiceImpl implements DistributionService {
                         "", "决定是否接受清收案组成员：" + detail.getRealName() + "，接受状态：拒绝", 0, 0);
             }
             // 提醒消息
-            String code = ""; // 对象编号
-            if (ObjectTypeEnum.ASSETPACKAGE.getValue().equals(companyTeam.getObjectType())) {
-                AssetInfo assetInfo = assetInfoMapper.get(companyTeam.getObjectId());
-                if (assetInfo != null) {
-                    code = assetInfo.getAssetNo();
-                }
-            } else if (ObjectTypeEnum.LENDER.getValue().equals(companyTeam.getObjectType())) {
-                LenderInfo lenderInfo = lenderInfoMapper.get(companyTeam.getObjectId());
-                if (lenderInfo != null) {
-                    code = lenderInfo.getLenderNo();
-                }
-            }
             if (ObjectBusinessTypeEnum.join.getValue().equals(companyTeamRe.getType())) {
                 // 发送短信提醒
                 TUserInfo applicant = userInfoMapper.selectByPrimaryKey(companyTeamRe.getAccepterId()); // 申请人信息
@@ -833,16 +821,13 @@ public class DistributionServiceImpl implements DistributionService {
                     message.setContent(smsUtil.getSendContent(SmsEnum.DISTRIBUTION_JOIN_NO.getValue(), msg));
                 }
                 // 添加消息
-                message.setTitle(MessageEnum.TASK.getName() + " > "
-                                + ObjectTypeEnum.getObjectTypeEnum(companyTeam.getObjectType()).getName() + " > "
-                                + code
-                ); // 业务类型 对象类型 对象编号
+                message.setTitle(coordinatorService.getMessageTitle(companyTeam.getObjectType(), companyTeam.getObjectId(), MessageBTEnum.INSIDE_RESULT.getValue())); // 业务类型 对象类型 对象编号
                 message.setSenderId(userInfo.getId());
                 message.setReceiveId(companyTeamRe.getAccepterId()); // 申请人接收
                 message.setLabel(null);
                 message.setStatus(0);
-                message.setType(MessageEnum.TASK.getValue());
-                message.setBusinessType(MessageBTEnum.COMPANY_JOIN.getValue());
+                message.setType(MessageEnum.SERVE.getValue());
+                message.setBusinessType(MessageBTEnum.INSIDE_RESULT.getValue());
                 message.setOperUrl(null);
                 messageMapper.add(message);
                 message.setReceiveId(companyTeam.getSenderId()); // 创建人

@@ -1230,7 +1230,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             PawnInfo info = pawnInfoMapper.get(objectId);
             if (info != null) {
                 name = (info == null ? "" : info.getName())
-                        + (info.getPawnNo() == null ? "" : info.getPawnNo());
+                        + "-" + (info.getPawnNo() == null ? "" : info.getPawnNo());
             }
         } else if (ObjectTypeEnum.LENDER.getValue().equals(objectType)) {//借款人
             LenderInfo info = lenderInfoMapper.get(objectId);
@@ -1245,7 +1245,7 @@ public class CoordinatorServiceImpl implements CoordinatorService {
             IOUInfo info = iouInfoMapper.get(objectId);
             if (info != null) {
                 name = (info == null ? "" : info.getName())
-                        + (info.getIouNo() == null ? "" : info.getIouNo());
+                        + "-" + (info.getIouNo() == null ? "" : info.getIouNo());
             }
         } else if (ObjectTypeEnum.ASSETSOURCE.getValue().equals(objectType)) {//资产源
             ZcyEstates info = zcyEstatesMapper.selectByPrimaryKey(objectId);
