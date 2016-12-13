@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.organization.OrganizationCompanyMapper">
+
+    <resultMap id="BaseResultMapByOrgamiz" type="com.dqys.business.orm.pojo.organization.OrganizationCompanyDto">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="company_name" property="companyName" jdbcType="VARCHAR"/>
+        <result column="company_account" property="companyAccount" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="business_type" property="businessType" jdbcType="INTEGER"/>
+        <result column="is_auth" property="isAuth" jdbcType="INTEGER"/>
+        <result column="credential" property="credential" jdbcType="VARCHAR"/>
+        <result column="licence" property="licence" jdbcType="VARCHAR"/>
+        <result column="legal_person" property="legalPerson" jdbcType="VARCHAR"/>
+        <result column="province" property="province" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="INTEGER"/>
+        <result column="area" property="area" jdbcType="INTEGER"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="real_name" property="realName" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="identity" property="identity" jdbcType="VARCHAR"/>
+        <result column="sex" property="sex" jdbcType="INTEGER"/>
+        <result column="companyPeopleNum" property="companyPeopleNum" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Query_Company">
+        <if test="otherCondition !=null">
+            AND (tci.company_name like CONCAT('%',#{otherCondition},'%') or tci.credential like
+            CONCAT('%',#{otherCondition},'%'))
+        </if>
+        <if test="isAuth !=null">
+            AND tci.is_auth=#{isAuth}
+        </if>
+        <if test="otherCondition !=null and otherCondition.size>0">
+            AND tci.business_type IN
+            <foreach collection="businessTypes" item="businessType" index="index" open="(" separator="," close=")">
+                #{businessType}
+            </foreach>
+        </if>
+        <if test="type !=null">
+            AND tci.type=#{type}
+        </if>
+        <if test="province !=null">
+            AND tci.province=#{province}
+        </if>
+        <if test="city !=null">
+            AND tci.city=#{city}
+        </if>
+        <if test="area !=null">
+            AND tci.area=#{area}
+        </if>
+    </sql>
+
+    <select id="selectCompanyByOrganiz" parameterType="com.dqys.business.orm.pojo.organization.OrganizationCompanyQuery"
+            resultMap="BaseResultMapByOrgamiz">
+        SELECT tci.id,tci.company_name,tci.company_account,tci.type,tci.business_type,tci.is_auth,tci.credential,
+        tci.licence,tci.legal_person,tci.province,tci.city,tci.area,tci.address,tui.real_name,tui.email,tui.mobile,
+        tut.user_id,tui.identity,tui.sex,(SELECT COUNT(*) FROM t_user_info tui2 WHERE tui2.stateflag=0 AND
+        tui2.company_id=tci.id) companyPeopleNum,tui.status
+        FROM t_company_info tci LEFT JOIN t_user_info tui
+        ON tui.company_id=tci.id LEFT JOIN t_user_tag tut
+        ON tut.user_id=tui.id
+        WHERE tui.stateflag=0 AND tut.role_id=1
+        <include refid="Query_Company"/>
+        limit #{startPage},#{pageCount}
+    </select>
+
+    <select id="selectCount" parameterType="com.dqys.business.orm.pojo.organization.OrganizationCompanyQuery"
+            resultType="int">
+        SELECT count(tci.id) count
+        FROM t_company_info tci LEFT JOIN t_user_info tui
+        ON tui.company_id=tci.id LEFT JOIN t_user_tag tut
+        ON tut.user_id=tui.id
+        WHERE tui.stateflag=0 AND tut.role_id=1
+        <include refid="Query_Company"/>
+    </select>
+
+</mapper>
