@@ -36,6 +36,16 @@
         WHERE id=#{id}
     </update>
 
+    <update id="updateRSByUIAndPUI">
+        UPDATE t_partner_company
+        <set>
+            update_at=now(),
+            relation_status=#{relationStatus},
+        </set>
+        WHERE (user_id=#{userId} AND partner_user_id=#{partnerUserId}) OR
+        (user_id=#{partnerUserId} AND partner_user_id=#{userId})
+    </update>
+
     <select id="get" parameterType="int" resultMap="BaseResultMap">
         SELECT
         <include refid="ALL_PARAM"/>

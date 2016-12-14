@@ -27,4 +27,9 @@ public class PartnerMapperImpl extends BaseDao implements PartnerMapper {
     public Partner get(Integer id) {
         return super.getSqlSession().getMapper(PartnerMapper.class).get(id);
     }
+
+    @Override
+    public Integer updateRSByUIAndPUI(@Param("relationStatus") Integer relationStatus, @Param("userId") Integer userId, @Param("partnerUserId") Integer partnerUserId) {
+        return super.getSqlSession().getMapper(PartnerMapper.class).updateRSByUIAndPUI(relationStatus, userId, partnerUserId);
+    }
 }
