@@ -5,6 +5,7 @@ import com.dqys.business.service.dto.company.CompanyDTO;
 import com.dqys.business.service.dto.company.CompanyRelationDTO;
 import com.dqys.business.service.dto.company.OrganizationInsertDTO;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.ServiceResult;
 
 import java.util.List;
 
@@ -106,4 +107,10 @@ public interface CompanyService {
      * @return
      */
     List<CompanyDTO> listByTypeAndIsJoin(Integer type, Integer userId);
+    /**
+     * 验证公司是否已存在
+     * @param credential
+     * @return
+     */
+    ServiceResult<Integer> validateCompany(String credential);
 }

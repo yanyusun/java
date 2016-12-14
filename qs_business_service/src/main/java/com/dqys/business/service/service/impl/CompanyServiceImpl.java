@@ -5,6 +5,7 @@ import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.CompanyDetailInfo;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.auth.orm.query.CompanyQuery;
 import com.dqys.business.orm.mapper.company.CompanyRelationMapper;
 import com.dqys.business.orm.mapper.company.OrganizationMapper;
 import com.dqys.business.orm.pojo.company.Organization;
@@ -21,10 +22,12 @@ import com.dqys.business.service.utils.company.CompanyServiceUtils;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.ServiceResult;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.SysPropertyTool;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -264,5 +267,17 @@ public class CompanyServiceImpl implements CompanyService {
         List<TCompanyInfo> companyInfoList = companyInfoMapper.listByTypeAndIsJoin(type, userId);
         return CompanyServiceUtils.toCompanyDTO(companyInfoList);
         //获取当前用户所参与过的分配器，并且这个分配器中的机构
+    }
+
+    @Override
+    public ServiceResult<Integer> validateCompany(String credential) {
+        CompanyQuery companyQuery = new CompanyQuery();
+        companyQuery.setCredential(credential);
+        List<TCompanyInfo> tCompanyInfoList = companyInfoMapper.queryList(companyQuery);
+        if (null == tCompanyInfoList || tCompanyInfoList.isEmpty()) {
+            return ServiceResult.failure("没有数据", ObjectUtils.NULL);
+        }
+
+        return ServiceResult.success(tCompanyInfoList.get(0).getId());
     }
 }

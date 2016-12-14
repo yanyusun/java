@@ -43,15 +43,28 @@ public class CompanyServiceImpl implements CompanyService {
         if (tCompanyInfo.getLicence() != null && !"".equals(tCompanyInfo.getLicence())) {
             try {
                 if (!FileTool.saveFileSync(tCompanyInfo.getLicence())) {
-                    return ServiceResult.failure("头像保存失败，请重新上传", null);
+                    return ServiceResult.failure("营业执照保存失败，请重新上传", null);
                 }
             } catch (IOException e) {
-                return ServiceResult.failure("头像保存失败，请重新上传", null);
+                return ServiceResult.failure("营业执照保存失败，请重新上传", null);
             }
         }
-        Integer result = this.tCompanyInfoMapper.insertSelective(tCompanyInfo);
-        if (result <= 0) {
-            return ServiceResult.failure("新增失败", ObjectUtils.NULL);
+        if (tCompanyInfo.getLegalPerson() != null && !"".equals(tCompanyInfo.getLegalPerson())) {
+            try {
+                if (!FileTool.saveFileSync(tCompanyInfo.getLegalPerson())) {
+                    return ServiceResult.failure("手持身份证照保存失败，请重新上传", null);
+                }
+            } catch (IOException e) {
+                return ServiceResult.failure("手持身份证照保存失败，请重新上传", null);
+            }
+        }
+        if (tCompanyInfo.getId() != null) {
+            this.tCompanyInfoMapper.updateByPrimaryKeySelective(tCompanyInfo);
+        } else {
+            Integer result = this.tCompanyInfoMapper.insertSelective(tCompanyInfo);
+            if (result <= 0) {
+                return ServiceResult.failure("新增失败", ObjectUtils.NULL);
+            }
         }
         return ServiceResult.success(tCompanyInfo.getId());
     }
