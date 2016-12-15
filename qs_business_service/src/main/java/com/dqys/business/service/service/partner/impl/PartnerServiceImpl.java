@@ -9,6 +9,7 @@ import com.dqys.business.orm.mapper.partner.PartnerMapper;
 import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
 import com.dqys.business.orm.pojo.partner.Partner;
 import com.dqys.business.orm.pojo.partner.PartnerDTO;
+import com.dqys.business.orm.pojo.partner.PartnerQuery;
 import com.dqys.business.service.service.partner.PartnerService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -58,8 +59,13 @@ public class PartnerServiceImpl implements PartnerService {
     }
 
     @Override
-    public List<PartnerDTO> partnerList(CompanyQuery query) {
-        return null;
+    public List<PartnerDTO> partnerList(PartnerQuery query) {
+        query.setUserId(UserSession.getCurrent().getUserId());
+        if (query.getPage() > 0) {
+            query.setStartPage(query.getPage() * query.getPageCount());
+        }
+        List<PartnerDTO> list = partnerMapper.partnerList(query);
+        return list;
     }
 
 

@@ -6,6 +6,7 @@ import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.query.CompanyQuery;
 import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
 import com.dqys.business.orm.pojo.partner.Partner;
+import com.dqys.business.orm.pojo.partner.PartnerQuery;
 import com.dqys.business.service.service.partner.PartnerService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
@@ -60,13 +61,12 @@ public class PartnerController {
      * @api {post} partner/partnerList 合作伙伴列表
      * @apiName partner/partnerList
      * @apiSampleRequest partner/partnerList
-     * @apiParam {string} credential 营业执照号码
-     * @apiParam {string} nameLike 公司名称
+     * @apiParam {int} relationStatus 合作状态
      * @apiGroup　 partner
      * @apiSuccessExample {json} Data-Response:
      */
     @RequestMapping("/partnerList")
-    public JsonResponse partnerList(CompanyQuery query) {
+    public JsonResponse partnerList(PartnerQuery query) {
         return JsonResponseTool.success(partnerService.partnerList(query));
     }
 

@@ -5,6 +5,7 @@ import com.dqys.business.orm.pojo.coordinator.CompanyDTO;
 import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
 import com.dqys.business.orm.pojo.partner.Partner;
 import com.dqys.business.orm.pojo.partner.PartnerDTO;
+import com.dqys.business.orm.pojo.partner.PartnerQuery;
 import com.dqys.core.model.JsonResponse;
 
 import java.util.List;
@@ -23,5 +24,5 @@ public interface PartnerService {
     JsonResponse addPartner(CompanyRelation relation);
 
 
-    List<PartnerDTO> partnerList(CompanyQuery query);
+    List<PartnerDTO> partnerList(PartnerQuery query);
 }

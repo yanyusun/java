@@ -1,7 +1,12 @@
 package com.dqys.business.orm.mapper.partner;
 
+import com.dqys.auth.orm.query.CompanyQuery;
 import com.dqys.business.orm.pojo.partner.Partner;
+import com.dqys.business.orm.pojo.partner.PartnerDTO;
+import com.dqys.business.orm.pojo.partner.PartnerQuery;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * Created by mkfeng on 2016/12/14.
@@ -32,4 +37,6 @@ public interface PartnerMapper {
      * @return
      */
     Integer updateRSByUIAndPUI(@Param("relationStatus") Integer relationStatus, @Param("userId") Integer userId, @Param("partnerUserId") Integer partnerUserId);
+
+    List<PartnerDTO> partnerList(PartnerQuery query);
 }

@@ -51,6 +51,47 @@
         <include refid="ALL_PARAM"/>
         FROM t_partner_company WHERE id=#{id}
     </select>
+    <sql id="Partner_Where">
+        <if test="credential !=null">
+            AND (tci2.credential LIKE CONCAT('%',#{nameLike},'%') OR tci2.company_name LIKE CONCAT('%',#{nameLike},'%')
+            )
+        </if>
+        <if test="relationStatus !=null">
+            tcr.relation_status=#{relationStatus}
+        </if>
+        <if test="relationStatus !=null">
+            tcr.relation_status=#{relationStatus}
+        </if>
+    </sql>
+    <!--合作伙伴的列表-->
+    <select id="partnerList" parameterType="com.dqys.business.orm.pojo.partner.PartnerQuery"
+            resultType="com.dqys.business.orm.pojo.partner.PartnerDTO">
+        SELECT
+        SELECT tcr.id,tcr.company_a_id companyId,tcr.relation_status relationStatus,tci2.company_name companyName,
+        tci2.business_type businessType,tci2.credential,tui2.real_name realName,tui2.mobile,tui2.email,
+        CONCAT((SELECT name FROM t_area where id=tci2.province),(SELECT name FROM t_area where id=tci2.city),(SELECT name FROM t_area where id=tci2.area),IF(tci2.address IS NULL,'',tci2.address)) address
+        FROM t_company_relaiton tcr LEFT JOIN t_company_info tci
+        ON tci.id=tcr.company_b_id LEFT JOIN t_user_info tui
+        ON tui.company_id=tcr.company_b_id LEFT JOIN t_user_info tui2
+        ON tui2.company_id=tcr.company_a_id LEFT JOIN t_user_tag tut2
+        ON tut2.user_id=tui2.id LEFT JOIN t_company_info tci2
+        ON tci2.id=tui2.company_id
+        WHERE tui.id=#{userId} AND tut2.role_id=1
+        <include refid="Partner_Where"/>
+        UNION
+        SELECT tcr.id,tcr.company_b_id companyId,tcr.relation_status relationStatus,tci2.company_name companyName,
+        tci2.business_type businessType,tci2.credential,tui2.real_name realName,tui2.mobile,tui2.email,
+        CONCAT((SELECT name FROM t_area where id=tci2.province),(SELECT name FROM t_area where id=tci2.city),(SELECT name FROM t_area where id=tci2.area),IF(tci2.address IS NULL,'',tci2.address)) address
+        FROM t_company_relaiton tcr LEFT JOIN t_company_info tci
+        ON tci.id=tcr.company_a_id LEFT JOIN t_user_info tui
+        ON tui.company_id=tcr.company_a_id LEFT JOIN t_user_info tui2
+        ON tui2.company_id=tcr.company_b_id LEFT JOIN t_user_tag tut2
+        ON tut2.user_id=tui2.id LEFT JOIN t_company_info tci2
+        ON tci2.id=tui2.company_id
+        WHERE tui.id=#{userId} AND tut2.role_id=1
+        <include refid="Partner_Where"/>
+        LIMIT #{startPage},#{pageCount}
+    </select>
 
 
 </mapper>

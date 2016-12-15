@@ -13,15 +13,24 @@ public class PartnerDTO implements Serializable {
     private String companyName;//公司名称
     private String credential;//执照号
     private String address;//地址
-    private String contacter;//联系人
+    private String realName;//联系人
     private String mobile;//联系人手机号
+    private String email;//联系人邮箱
 
-    public String getContacter() {
-        return contacter;
+    public String getEmail() {
+        return email;
     }
 
-    public void setContacter(String contacter) {
-        this.contacter = contacter;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 
     public String getMobile() {
