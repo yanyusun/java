@@ -2,11 +2,13 @@ package com.dqys.business.service.service.partner.impl;
 
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.UserDetail;
+import com.dqys.auth.orm.query.CompanyQuery;
 import com.dqys.business.orm.constant.partner.PartnerEnum;
 import com.dqys.business.orm.mapper.company.CompanyRelationMapper;
 import com.dqys.business.orm.mapper.partner.PartnerMapper;
 import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
 import com.dqys.business.orm.pojo.partner.Partner;
+import com.dqys.business.orm.pojo.partner.PartnerDTO;
 import com.dqys.business.service.service.partner.PartnerService;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -14,6 +16,8 @@ import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by mkfeng on 2016/12/14.
@@ -51,6 +55,11 @@ public class PartnerServiceImpl implements PartnerService {
         } else {
             return JsonResponseTool.failure("添加合作伙伴失败");
         }
+    }
+
+    @Override
+    public List<PartnerDTO> partnerList(CompanyQuery query) {
+        return null;
     }
 
 
