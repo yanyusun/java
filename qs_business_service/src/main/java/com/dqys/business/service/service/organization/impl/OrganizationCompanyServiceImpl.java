@@ -26,7 +26,7 @@ public class OrganizationCompanyServiceImpl implements OrganizationCompanyServic
     @Override
     public Map organizList(OrganizationCompanyQuery query) {
         Map map = new HashMap<>();
-        map.put("result", "no");
+        map.put("result", "yes");
         if (query.getPage() > 0) {
             query.setPage(query.getPage() - 1);
         }
