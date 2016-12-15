@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.business.orm.mapper.partner.PartnerMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.partner.Partner">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="company_id" property="companyId" jdbcType="INTEGER"/>
+        <result column="partner_user_id" property="partnerUserId" jdbcType="INTEGER"></result>
+        <result column="partner_company_id" property="partnerCompanyId" jdbcType="VARCHAR"/>
+        <result column="relation_status" property="relationStatus" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="ALL_PARAM">
+        id,user_id,company_id,partner_user_id,partner_company_id,relation_status,update_at,create_at,remark
+    </sql>
+
+    <insert id="insertByCondition" parameterType="com.dqys.business.orm.pojo.partner.Partner">
+        INSERT INTO t_partner_company(user_id,company_id,partner_user_id,partner_company_id,relation_status,update_at,create_at,remark)
+        VALUES(#{userId},#{companyId},#{partnerUserId},#{partnerCompanyId},#{relationStatus},now(),now(),#{remark})
+    </insert>
+
+    <update id="updateByRelationStatusAndRemark" parameterType="int">
+        UPDATE t_partner_company
+        <set>
+            update_at=now(),
+            <if test="relationStatus !=null">
+                relation_status=#{relationStatus},
+            </if>
+            <if test="remark !=null">
+                remark=#{remark},
+            </if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <update id="updateRSByUIAndPUI">
+        UPDATE t_partner_company
+        <set>
+            update_at=now(),
+            relation_status=#{relationStatus},
+        </set>
+        WHERE (user_id=#{userId} AND partner_user_id=#{partnerUserId}) OR
+        (user_id=#{partnerUserId} AND partner_user_id=#{userId})
+    </update>
+
+    <select id="get" parameterType="int" resultMap="BaseResultMap">
+        SELECT
+        <include refid="ALL_PARAM"/>
+        FROM t_partner_company WHERE id=#{id}
+    </select>
+
+
+</mapper>
