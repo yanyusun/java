@@ -34,7 +34,7 @@
         <if test="isAuth !=null">
             AND tci.is_auth=#{isAuth}
         </if>
-        <if test="otherCondition !=null and otherCondition.size>0">
+        <if test="businessTypes !=null and businessTypes.size>0">
             AND tci.business_type IN
             <foreach collection="businessTypes" item="businessType" index="index" open="(" separator="," close=")">
                 #{businessType}
