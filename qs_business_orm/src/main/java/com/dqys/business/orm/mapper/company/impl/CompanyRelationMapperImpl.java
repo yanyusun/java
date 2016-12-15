@@ -54,4 +54,9 @@ public class CompanyRelationMapperImpl extends BaseDao implements CompanyRelatio
     public CompanyRelation get(Integer id) {
         return super.getSqlSession().getMapper(CompanyRelationMapper.class).get(id);
     }
+
+    @Override
+    public Integer update(CompanyRelation companyRelation) {
+        return super.getSqlSession().getMapper(CompanyRelationMapper.class).update(companyRelation);
+    }
 }

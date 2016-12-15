@@ -13,6 +13,7 @@ import com.dqys.business.orm.constant.company.ObjectAcceptTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectBusinessTypeEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.flowBusiness.FlowBusinessEnum;
+import com.dqys.business.orm.constant.partner.PartnerEnum;
 import com.dqys.business.orm.mapper.asset.*;
 import com.dqys.business.orm.mapper.business.BusinessMapper;
 import com.dqys.business.orm.mapper.business.BusinessObjReMapper;
@@ -1711,11 +1712,16 @@ public class DistributionServiceImpl implements DistributionService {
         }
         CompanyRelation relation = companyRelationMapper.getByCompanyId(aId, bId);
         if (relation != null) {
+            if (relation.getRelationStatus() != PartnerEnum.relation_status_agree.getValue()) {
+                relation.setRelationStatus(PartnerEnum.relation_status_agree.getValue());
+                companyRelationMapper.update(relation);
+            }
             return null; // 已经存在
         } else {
             relation = new CompanyRelation();
             relation.setCompanyAId(aId);
             relation.setCompanyBId(bId);
+            relation.setRelationStatus(PartnerEnum.relation_status_agree.getValue());
             Integer result = companyRelationMapper.insert(relation);
             if (CommonUtil.checkResult(result)) {
                 return result;

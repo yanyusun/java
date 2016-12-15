@@ -17,6 +17,16 @@ public class CompanyRelation {
 
     private Long stateflag;
 
+    private Integer relationStatus;
+
+    public Integer getRelationStatus() {
+        return relationStatus;
+    }
+
+    public void setRelationStatus(Integer relationStatus) {
+        this.relationStatus = relationStatus;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -1,6 +1,7 @@
 package com.dqys.business.service.service.partner;
 
-import com.dqys.business.orm.pojo.partner.Partner;
+import com.dqys.auth.orm.query.CompanyQuery;
+import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
 import com.dqys.core.model.JsonResponse;
 
 /**
@@ -11,8 +12,10 @@ public interface PartnerService {
     /**
      * 添加合作伙伴
      *
-     * @param partner
+     * @param relation
      * @return
      */
-    JsonResponse addPartner(Partner partner);
+    JsonResponse addPartner(CompanyRelation relation);
+
+
 }
