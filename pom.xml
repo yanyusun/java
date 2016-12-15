@@ -19,6 +19,8 @@
         <module>qs_business_orm</module>
         <module>qs_business_service</module>
         <module>qs_business</module>
+        <module>qs_sale_orm</module>
+        <module>qs_sale_service</module>
     </modules>
 
     <properties>
