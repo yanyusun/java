@@ -9,7 +9,6 @@ import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.company.CompanyTeamReMapper;
 import com.dqys.business.orm.mapper.zcy.ZcyEstatesMapper;
 import com.dqys.business.orm.pojo.operType.OperType;
-import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.OperTypeService;
@@ -18,6 +17,7 @@ import com.dqys.business.service.service.companyTeam.CompanyTeamService;
 import com.dqys.business.service.service.permission.Permission;
 import com.dqys.business.service.utils.permission.*;
 import com.dqys.business.service.utils.user.UserServiceUtils;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.core.model.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -78,7 +78,8 @@ public class PermissionImp implements Permission {
             AddApplyCompanyTeamOperTypeFilter addApplyCompanyTeamOperTypeFilter = new AddApplyCompanyTeamOperTypeFilter(navId, objectType, userType.toString(), userRole.toString());
             originOperTypeFiler.decorate(addApplyCompanyTeamOperTypeFilter);
         } else if(ObjectTabEnum.assign.getValue().intValue() == navId){//待分配
-            if(userType == UserInfoEnum.USER_TYPE_COLLECTION.getValue().intValue()||userType == UserInfoEnum.USER_TYPE_JUDICIARY.getValue().intValue()){
+            if((userType == UserInfoEnum.USER_TYPE_COLLECTION.getValue().intValue()&&objectType==ObjectTypeEnum.PAWN.getValue().intValue())
+                    ||(userType == UserInfoEnum.USER_TYPE_JUDICIARY.getValue().intValue()&&objectType==ObjectTypeEnum.IOU.getValue().intValue())){
                 AddBusinessOperTypeFilter addBusinessOperTypeFilter = new AddBusinessOperTypeFilter(objectType);
                 originOperTypeFiler.decorate(addBusinessOperTypeFilter);
             }

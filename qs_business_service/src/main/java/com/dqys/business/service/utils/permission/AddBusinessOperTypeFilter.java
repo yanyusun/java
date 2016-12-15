@@ -18,9 +18,9 @@ public class AddBusinessOperTypeFilter extends OperTypeFilter {
 
     @Override
     public List<OperType> getPermission(List<OperType> list) {
-        if (objectType == ObjectTypeEnum.PAWN.getValue()) {
+        if (objectType == ObjectTypeEnum.PAWN.getValue().intValue()) {
             PermissionUtil.addPawnBusinessOpertype(list);
-        } else if (objectType == ObjectTypeEnum.IOU.getValue()) {
+        } else if (objectType == ObjectTypeEnum.IOU.getValue().intValue()) {
             PermissionUtil.addIouBusinessOpertype(list);
         }
         operTypes=list;
