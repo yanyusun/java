@@ -347,7 +347,7 @@ public class AuthController extends BaseApiContorller {
             log.setIp(ip);
         }
         messageMapper.addLoginLog(log);//添加登入记录
-}
+    }
     /**
      * @apiDefine CommonHeader
      * @apiHeader {String} x-qs-user 账号加密字符串
@@ -728,12 +728,13 @@ public class AuthController extends BaseApiContorller {
      * @apiName addCompany
      * @apiGroup Auth
      * @apiParam {String} companyName 公司名称
-     * @apiParam {String} credential 加密Key
-     * @apiParam {String} licence 加密Key
+     * @apiParam {String} credential 统一社会信用代码
+     * @apiParam {String} licence 营业执照扫描件
      * @apiParam {number} type 公司类型
      * @apiParam {number} userType 用户类型
      * @apiParam {string} realName 姓名
      * @apiParam {string} identity 身份证
+     * @apiParam {String} legalPerson 企业法人扫描件
      * @apiParam {string} mobile 手机号
      * @apiParam {string} smsCode 验证码
      * @apiUse CommonHeader
@@ -741,7 +742,7 @@ public class AuthController extends BaseApiContorller {
      */
     @RequestMapping(value = "/addCompany_four", method = RequestMethod.POST)
     public JsonResponse addCompany_four(@RequestParam String companyName, @RequestParam String credential, @RequestParam String licence,
-                                        @RequestParam Integer type, @RequestParam Integer userType, @RequestParam String realName,
+                                        @RequestParam Integer type, @RequestParam Integer userType, @RequestParam String realName, String legalPerson,
                                         @RequestParam String identity, @RequestParam String mobile, @RequestParam String smsCode) throws Exception {
         Integer userId = UserSession.getCurrent() != null ? UserSession.getCurrent().getUserId() : 0;
         if (0 == userId) {
@@ -798,7 +799,7 @@ public class AuthController extends BaseApiContorller {
             tCompanyInfo.setCredential(credential);
             tCompanyInfo.setLicence(licence);
             tCompanyInfo.setType(type);
-            tCompanyInfo.setLegalPerson(realName);
+            tCompanyInfo.setLegalPerson(legalPerson);
             tCompanyInfo.setBusinessType(userType);
             if (userInfo.getCompanyId() != null) {
                 TCompanyInfo companyInfo = companyService.get(userInfo.getCompanyId());
@@ -808,7 +809,7 @@ public class AuthController extends BaseApiContorller {
                         tCompanyInfo.setIsAuth(0);
                     }
                     tCompanyInfo.setId(companyInfo.getId());
-                    Integer count = tCompanyInfoMapper.updateByPrimaryKeySelective(tCompanyInfo);
+                    companyResult = companyService.addCompany_tx(tCompanyInfo);
                 } else {
                     return JsonResponseTool.paramErr("公司信息修改失败");
                 }

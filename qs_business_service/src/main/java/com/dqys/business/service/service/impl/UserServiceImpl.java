@@ -328,7 +328,7 @@ public class UserServiceImpl implements UserService {
                             getCompayTypeToString(userC),
                             userC.getCompanyName(),
                             text);
-                    messageService.add("注册审核结果答复", content, operId, userId, "", MessageEnum.SERVE.getValue(), null, "");
+                    messageService.add("审核结果答复", content, operId, userId, "", MessageEnum.SERVE.getValue(), null, "");
                 }
             }
         } else {
