@@ -16,6 +16,15 @@ public class PartnerDTO implements Serializable {
     private String realName;//联系人
     private String mobile;//联系人手机号
     private String email;//联系人邮箱
+    private String teamworkTime;//最后合作时间
+
+    public String getTeamworkTime() {
+        return teamworkTime;
+    }
+
+    public void setTeamworkTime(String teamworkTime) {
+        this.teamworkTime = teamworkTime;
+    }
 
     public String getEmail() {
         return email;

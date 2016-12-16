@@ -334,4 +334,10 @@
             WHERE tui.id=#{userId} LIMIT 0,1
     </select>
 
+    <select id="queryLikeAccount" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_info WHERE stateflag=0 AND account LIKE CONCAT('%', #{account,jdbcType=VARCHAR}, '%')
+    </select>
+
 </mapper>

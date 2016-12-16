@@ -89,4 +89,9 @@ public class TUserInfoMapperImpl extends BaseDao implements TUserInfoMapper {
     public UserDetail getUserDetail(Integer userId) {
         return super.getSqlSession().getMapper(TUserInfoMapper.class).getUserDetail(userId);
     }
+
+    @Override
+    public List<TUserInfo> queryLikeAccount(String account) {
+        return super.getSqlSession().getMapper(TUserInfoMapper.class).queryLikeAccount(account);
+    }
 }

@@ -53,7 +53,7 @@
         <where>
             stateflag = 0
             <if test="credential != null">
-                AND credential = #{credential,jdbcType=VARCHAR}
+                AND credential like #{credential,jdbcType=VARCHAR}
             </if>
             <if test="province != null">
                 AND province = #{province,jdbcType=VARCHAR}
@@ -64,7 +64,12 @@
             <if test="district != null">
                 AND district = #{district,jdbcType=VARCHAR}
             </if>
-
+            <if test="companyIds !=null and companyIds.size>0">
+                AND id IN
+                <foreach collection="companyIds" index="index" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
             <if test="nameLike != null">
                 AND company_name LIKE CONCAT('%', #{nameLike,jdbcType=VARCHAR}, '%')
             </if>

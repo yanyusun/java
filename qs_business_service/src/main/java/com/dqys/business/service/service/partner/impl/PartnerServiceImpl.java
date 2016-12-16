@@ -68,5 +68,16 @@ public class PartnerServiceImpl implements PartnerService {
         return list;
     }
 
+    @Override
+    public Integer partnerListCount(PartnerQuery query) {
+        query.setUserId(UserSession.getCurrent().getUserId());
+        query.setIsPage(1);
+        List<PartnerDTO> list = partnerMapper.partnerList(query);
+        if (list == null) {
+            return 0;
+        }
+        return list.size();
+    }
+
 
 }

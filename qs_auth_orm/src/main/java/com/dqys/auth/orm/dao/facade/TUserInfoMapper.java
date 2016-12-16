@@ -61,4 +61,5 @@ public interface TUserInfoMapper {
      */
     UserDetail getUserDetail(Integer userId);
 
+    List<TUserInfo> queryLikeAccount(String account);
 }

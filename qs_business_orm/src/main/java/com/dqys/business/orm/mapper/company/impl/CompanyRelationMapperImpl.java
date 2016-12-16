@@ -1,5 +1,6 @@
 package com.dqys.business.orm.mapper.company.impl;
 
+import com.dqys.business.orm.constant.partner.PartnerEnum;
 import com.dqys.business.orm.mapper.company.CompanyRelationMapper;
 import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
 import com.dqys.core.base.BaseDao;
@@ -7,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,6 +34,9 @@ public class CompanyRelationMapperImpl extends BaseDao implements CompanyRelatio
 
     @Override
     public Integer insert(CompanyRelation record) {
+        if (record.getRelationStatus() != null && record.getRelationStatus() == PartnerEnum.relation_status_agree.getValue().intValue()) {
+            record.setTeamworkTime(new Date());
+        }
         return super.getSqlSession().getMapper(CompanyRelationMapper.class).insert(record);
     }
 
@@ -57,6 +62,9 @@ public class CompanyRelationMapperImpl extends BaseDao implements CompanyRelatio
 
     @Override
     public Integer update(CompanyRelation companyRelation) {
+        if (companyRelation.getRelationStatus() != null && companyRelation.getRelationStatus() == PartnerEnum.relation_status_agree.getValue().intValue()) {
+            companyRelation.setTeamworkTime(new Date());
+        }
         return super.getSqlSession().getMapper(CompanyRelationMapper.class).update(companyRelation);
     }
 }
