@@ -15,6 +15,15 @@ public class OrganizationCompanyQuery extends BasePagination {
     private Integer area;//区县
     private Integer type;//类别
     private String otherCondition;//营业执照号或公司名称
+    private Integer isPage;//是否分页(不传数值默认需要分页)
+
+    public Integer getIsPage() {
+        return isPage;
+    }
+
+    public void setIsPage(Integer isPage) {
+        this.isPage = isPage;
+    }
 
     public List<Integer> getBusinessTypes() {
         return businessTypes;

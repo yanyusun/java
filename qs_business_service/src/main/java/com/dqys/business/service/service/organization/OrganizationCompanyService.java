@@ -15,4 +15,12 @@ public interface OrganizationCompanyService {
      * @return
      */
     Map organizList(OrganizationCompanyQuery query);
+
+    /**
+     * 导出excel数据
+     *
+     * @param query
+     * @return
+     */
+    Map organizListToOutExcel(OrganizationCompanyQuery query);
 }

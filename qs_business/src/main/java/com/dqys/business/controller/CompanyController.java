@@ -54,6 +54,17 @@ public class CompanyController {
         }
     }
 
+    /**
+     * 查看公司
+     *
+     * @param companyId 公司id
+     * @return
+     */
+    @RequestMapping(value = "/getCompany")
+    public JsonResponse getCompany(@RequestParam Integer companyId) {
+        return JsonResponseTool.success(companyService.get(companyId));
+    }
+
 
     /**
      * 查看组织列表(部门|团队)
@@ -330,7 +341,7 @@ public class CompanyController {
      * @param distributionId 分配器成员ID
      * @param businessType   业务流转类型
      * @param status         状态码
-     * @param flowBusinessId  关联的业务表id
+     * @param flowBusinessId 关联的业务表id
      * @param toPlatform     (平台是否收到短信通知0否1是)
      * @return
      * @throws BusinessLogException
