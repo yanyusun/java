@@ -79,6 +79,7 @@ public class OrganizationCompanyController {
      * @apiParam {string} identity 身份证号
      * @apiParam {string} legalPerson 企业法人扫描件
      * @apiParam {string} companyAccount 帐号名称>>公司简称
+     * @apiParam {int} userId 用户id
      * @apiParam {string} introduction 功能介绍
      * @apiParam {int} province 省份
      * @apiParam {int} city 市
@@ -166,10 +167,6 @@ public class OrganizationCompanyController {
         if (userInfo.getCompanyId() != null) {
             TCompanyInfo companyInfo = tCompanyInfoMapper.selectByPrimaryKey(userInfo.getCompanyId());
             if (companyInfo != null) {
-                //修改公司信息
-                if (companyInfo.getIsAuth() == 2) {
-                    tCompanyInfo.setIsAuth(0);
-                }
                 tCompanyInfo.setId(companyInfo.getId());
                 Integer count = tCompanyInfoMapper.updateByPrimaryKeySelective(tCompanyInfo);
             } else {
