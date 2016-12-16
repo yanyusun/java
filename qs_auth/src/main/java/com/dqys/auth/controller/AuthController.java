@@ -809,6 +809,7 @@ public class AuthController extends BaseApiContorller {
                         tCompanyInfo.setIsAuth(0);
                     }
                     tCompanyInfo.setId(companyInfo.getId());
+                    tCompanyInfo.setVersion(companyInfo.getVersion());
                     companyResult = companyService.addCompany_tx(tCompanyInfo);
                 } else {
                     return JsonResponseTool.paramErr("公司信息修改失败");

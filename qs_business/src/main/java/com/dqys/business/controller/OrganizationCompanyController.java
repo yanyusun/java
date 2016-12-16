@@ -111,9 +111,9 @@ public class OrganizationCompanyController {
         if (StringUtils.isBlank(credential)) {
             return JsonResponseTool.paramErr("营业执照注册号不能为空");
         }
-        if (StringUtils.isBlank(licence)) {
-            return JsonResponseTool.paramErr("营业执照未上传");
-        }
+//        if (StringUtils.isBlank(licence)) {
+//            return JsonResponseTool.paramErr("营业执照未上传");
+//        }
         if (StringUtils.isBlank(realName)) {
             return JsonResponseTool.paramErr("姓名无效");
         }
@@ -168,6 +168,7 @@ public class OrganizationCompanyController {
             TCompanyInfo companyInfo = tCompanyInfoMapper.selectByPrimaryKey(userInfo.getCompanyId());
             if (companyInfo != null) {
                 tCompanyInfo.setId(companyInfo.getId());
+                tCompanyInfo.setVersion(companyInfo.getVersion());
                 Integer count = tCompanyInfoMapper.updateByPrimaryKeySelective(tCompanyInfo);
             } else {
                 return JsonResponseTool.paramErr("公司信息修改失败");
