@@ -1,11 +1,16 @@
 package com.dqys.business.orm.mapper.partner.impl;
 
+import com.dqys.auth.orm.query.CompanyQuery;
 import com.dqys.business.orm.mapper.part.ParticipationMapper;
 import com.dqys.business.orm.mapper.partner.PartnerMapper;
 import com.dqys.business.orm.pojo.partner.Partner;
+import com.dqys.business.orm.pojo.partner.PartnerDTO;
+import com.dqys.business.orm.pojo.partner.PartnerQuery;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/12/14.
@@ -31,5 +36,10 @@ public class PartnerMapperImpl extends BaseDao implements PartnerMapper {
     @Override
     public Integer updateRSByUIAndPUI(@Param("relationStatus") Integer relationStatus, @Param("userId") Integer userId, @Param("partnerUserId") Integer partnerUserId) {
         return super.getSqlSession().getMapper(PartnerMapper.class).updateRSByUIAndPUI(relationStatus, userId, partnerUserId);
+    }
+
+    @Override
+    public List<PartnerDTO> partnerList(PartnerQuery query) {
+        return super.getSqlSession().getMapper(PartnerMapper.class).partnerList(query);
     }
 }

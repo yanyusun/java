@@ -26,6 +26,7 @@ public interface CompanyRelationMapper {
 
     /**
      * 清空该公司的关联关系表
+     *
      * @param id
      * @return
      */
@@ -53,7 +54,7 @@ public interface CompanyRelationMapper {
      * @param id
      * @return
      */
-    List<CompanyRelation> listByCompanyIdAndType(@Param("id")Integer id, @Param("type")Integer type);
+    List<CompanyRelation> listByCompanyIdAndType(@Param("id") Integer id, @Param("type") Integer type);
 
     /**
      * 根据两公司ID获取关联关系
@@ -71,4 +72,7 @@ public interface CompanyRelationMapper {
      * @return
      */
     CompanyRelation get(Integer id);
+
+    Integer update(CompanyRelation companyRelation);
+
 }

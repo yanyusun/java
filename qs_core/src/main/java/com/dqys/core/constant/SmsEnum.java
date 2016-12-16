@@ -47,7 +47,9 @@ public enum SmsEnum {
     FLOW_ADD_COMPANY(141, "通知请求公司平台为他添加的单家合作机构"),
     FLOW_ADD_COMPANY2(142, "通知请求公司平台为他添加的两家合作机构"),
     FLOW_ADD_COMPANY3(143, "通知请求公司平台为他添加的三家合作机构"),
-    ADD_FLOW_ONESELF(144, "自己添加流转公司");
+    ADD_FLOW_ONESELF(144, "自己添加流转公司"),
+    ADD_COMPANY_RELATION(145, "合作伙伴请求"),
+    COMPANY_RELATION_RESULT(146, "合作伙伴的同意或拒绝或终止");
 
     private Integer value;
     private String name;

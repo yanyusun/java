@@ -1,71 +1,84 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dqys.business.orm.mapper.company.CompanyRelationMapper" >
-  <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.coordinator.CompanyRelation" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="company_a_id" property="companyAId" jdbcType="INTEGER" />
-    <result column="company_b_id" property="companyBId" jdbcType="INTEGER" />
-    <result column="version" property="version" jdbcType="INTEGER" />
-    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
-    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
-    <result column="stateflag" property="stateflag" jdbcType="BIGINT" />
-  </resultMap>
+<mapper namespace="com.dqys.business.orm.mapper.company.CompanyRelationMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.coordinator.CompanyRelation">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="company_a_id" property="companyAId" jdbcType="INTEGER"/>
+        <result column="company_b_id" property="companyBId" jdbcType="INTEGER"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+        <result column="relation_status" property="relationStatus" jdbcType="INTEGER"/>
+    </resultMap>
 
     <!-- 基础字段 -->
-  <sql id="Base_Column_List" >
-    id, company_a_id, company_b_id, version, create_at, update_at, stateflag
+    <sql id="Base_Column_List">
+    id, company_a_id, company_b_id, version, create_at, update_at, stateflag,relation_status
   </sql>
 
-  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
-    UPDATE t_company_relaiton SET stateflag = CURRENT_TIMESTAMP
+    <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    UPDATE t_company_relaiton SET stateflag = CURRENT_TIMESTAMP,update_at=now()
     where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </update>
 
-  <update id="deleteByCompanyId" >
-    UPDATE t_company_relaiton SET stateflag = CURRENT_TIMESTAMP
+    <update id="deleteByCompanyId">
+    UPDATE t_company_relaiton SET stateflag = CURRENT_TIMESTAMP,update_at=now()
     where stateflag = 0 AND
     (( company_a_id = #{aId,jdbcType=INTEGER} AND company_b_id = #{bId,jdbcType=INTEGER} ) OR
     ( company_a_id = #{bId,jdbcType=INTEGER} AND company_b_id = #{aId,jdbcType=INTEGER} ))
   </update>
 
-  <update id="clearByCompanyId" parameterType="java.lang.Integer" >
-    UPDATE t_company_relaiton SET stateflag = CURRENT_TIMESTAMP
+    <update id="clearByCompanyId" parameterType="java.lang.Integer">
+    UPDATE t_company_relaiton SET stateflag = CURRENT_TIMESTAMP,update_at=now()
     where stateflag = 0 AND (company_a_id = #{id,jdbcType=INTEGER} OR company_b_id = #{id,jdbcType=INTEGER})
   </update>
 
-  <insert id="insert" parameterType="com.dqys.business.orm.pojo.coordinator.CompanyRelation" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.coordinator.CompanyRelation" useGeneratedKeys="true"
+            keyProperty="id">
     insert into t_company_relaiton (company_a_id, company_b_id)
     values (#{companyAId,jdbcType=INTEGER}, #{companyBId,jdbcType=INTEGER})
   </insert>
 
-  <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
-    <include refid="Base_Column_List" />
-    from t_company_relaiton
-    where id = #{id,jdbcType=INTEGER} AND stateflag = 0
-  </select>
+    <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_company_relaiton
+        where id = #{id,jdbcType=INTEGER} AND stateflag = 0
+    </select>
 
-  <select id="getByCompanyId" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from t_company_relaiton
-    where stateflag = 0 AND
-    (( company_a_id = #{aId,jdbcType=INTEGER} AND company_b_id = #{bId,jdbcType=INTEGER} ) OR
-    ( company_a_id = #{bId,jdbcType=INTEGER} AND company_b_id = #{aId,jdbcType=INTEGER} ))
-  </select>
+    <select id="getByCompanyId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_company_relaiton
+        where stateflag = 0 AND
+        (( company_a_id = #{aId,jdbcType=INTEGER} AND company_b_id = #{bId,jdbcType=INTEGER} ) OR
+        ( company_a_id = #{bId,jdbcType=INTEGER} AND company_b_id = #{aId,jdbcType=INTEGER} ))
+    </select>
 
-  <select id="listByCompanyId" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from t_company_relaiton
-    where stateflag = 0 AND (company_a_id = #{id,jdbcType=INTEGER} OR company_b_id = #{id,jdbcType=INTEGER})
-  </select>
+    <select id="listByCompanyId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_company_relaiton
+        where stateflag = 0 AND (company_a_id = #{id,jdbcType=INTEGER} OR company_b_id = #{id,jdbcType=INTEGER})
+    </select>
 
-  <select id="listByCompanyIdAndType" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from t_company_relaiton
-    where stateflag = 0 AND (company_a_id = #{id,jdbcType=INTEGER} OR company_b_id = #{id,jdbcType=INTEGER})
-  </select>
+    <select id="listByCompanyIdAndType" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_company_relaiton
+        where stateflag = 0 AND (company_a_id = #{id,jdbcType=INTEGER} OR company_b_id = #{id,jdbcType=INTEGER})
+    </select>
+
+    <update id="update" parameterType="com.dqys.business.orm.pojo.coordinator.CompanyRelation">
+        UPDATE t_company_relaiton
+        <set>
+            update_at=now(),
+            <if test="relationStatus !=null">
+                relation_status =#{relationStatus},
+            </if>
+        </set>
+        WHERE stateflag=0 AND id=#{id}
+    </update>
 
 </mapper>
