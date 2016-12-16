@@ -65,7 +65,7 @@ public class OrganizationCompanyController {
     }
 
     /**
-     * @api {post} organiz/updateCompany 修改公司信息
+     * @api {post} organiz/updateCompany 修改或添加公司信息
      * @apiName organiz/updateCompany
      * @apiSampleRequest organiz/updateCompany
      * @apiParam {string} companyName 公司名称
@@ -83,6 +83,8 @@ public class OrganizationCompanyController {
      * @apiParam {int} province 省份
      * @apiParam {int} city 市
      * @apiParam {int} area 区县
+     * @apiParam {string} companyRemark 功能简介
+     * @apiParam {string} remark 备注
      * @apiGroup organiz
      * @apiSuccessExample {json} Data-Response:
      */
@@ -91,7 +93,8 @@ public class OrganizationCompanyController {
     public JsonResponse updateCompany(String companyName, String credential, String licence,
                                       Integer type, Integer userType, String realName, String legalPerson,
                                       String identity, String mobile, String companyAccount, Integer userId,
-                                      String introduction, Integer province, Integer city, Integer area) throws ParseException {
+                                      String introduction, Integer province, Integer city, Integer area, String companyRemark,
+                                      String remark) throws ParseException {
         //用户存在了继续下面的格式判断
 
         TUserInfo userInfo = tUserInfoMapper.selectByPrimaryKey(userId);
@@ -141,6 +144,7 @@ public class OrganizationCompanyController {
         tCompanyInfo.setArea(area);
         tCompanyInfo.setCompanyAccount(companyAccount);
         tCompanyInfo.setRemark(introduction);
+        tCompanyInfo.setRemark(companyRemark);
         if (tCompanyInfo.getLicence() != null && !"".equals(tCompanyInfo.getLicence())) {
             try {
                 if (!FileTool.saveFileSync(tCompanyInfo.getLicence())) {
@@ -182,9 +186,27 @@ public class OrganizationCompanyController {
         userInfo.setUserName(realName);
         userInfo.setIdentity(identity);
         userInfo.setMobile(mobile);
+        userInfo.setRemark(remark);
         tUserInfoMapper.updateByPrimaryKeySelective(userInfo);
         return JsonResponseTool.success("成功");
     }
 
+    /**
+     * @api {post} organiz/organizListToOutExcel 导出机构管理列表
+     * @apiName organiz/organizListToOutExcel
+     * @apiSampleRequest organiz/organizListToOutExcel
+     * @apiGroup organiz
+     * @apiSuccessExample {json} Data-Response:
+     */
+    @RequestMapping("/organizListToOutExcel")
+    @ResponseBody
+    public JsonResponse organizListToOutExcel(OrganizationCompanyQuery query) {
+        Map map = organizationService.organizListToOutExcel(query);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure("查询失败");
+        }
+    }
 
 }
