@@ -27,4 +27,6 @@ public interface PartnerService {
     List<PartnerDTO> partnerList(PartnerQuery query);
 
     Integer partnerListCount(PartnerQuery query);
+
+    JsonResponse audit(Integer status, Integer companyRelationId);
 }

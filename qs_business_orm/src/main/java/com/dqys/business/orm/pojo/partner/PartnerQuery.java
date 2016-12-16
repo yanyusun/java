@@ -3,12 +3,13 @@ package com.dqys.business.orm.pojo.partner;
 import com.dqys.core.base.BaseQuery;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/12/15.
  */
 public class PartnerQuery implements Serializable {
-    private Integer relationStatus = 1;//合作状态（0待合作，1建立合作，2拒绝合作，3终止合作）
+    private List<Integer> relationStatus;//合作状态（0待合作，1建立合作，2拒绝合作，3终止合作）
     private Integer page = 0;
     private Integer pageCount = 20;
     private Integer startPage = 0;
@@ -24,11 +25,11 @@ public class PartnerQuery implements Serializable {
         this.isPage = isPage;
     }
 
-    public Integer getRelationStatus() {
+    public List<Integer> getRelationStatus() {
         return relationStatus;
     }
 
-    public void setRelationStatus(Integer relationStatus) {
+    public void setRelationStatus(List<Integer> relationStatus) {
         this.relationStatus = relationStatus;
     }
 

@@ -52,15 +52,15 @@
         FROM t_partner_company WHERE id=#{id}
     </select>
     <sql id="Partner_Where">
-        <if test="credential !=null">
+        <if test="nameLike !=null">
             AND (tci2.credential LIKE CONCAT('%',#{nameLike},'%') OR tci2.company_name LIKE CONCAT('%',#{nameLike},'%')
             )
         </if>
-        <if test="relationStatus !=null">
-            tcr.relation_status=#{relationStatus}
-        </if>
-        <if test="relationStatus !=null">
-            tcr.relation_status=#{relationStatus}
+        <if test="relationStatus !=null and relationStatus.size>0">
+           AND tcr.relation_status IN
+            <foreach collection="relationStatus" index="index" item="status" open="(" separator="," close=")">
+                #{status}
+            </foreach>
         </if>
     </sql>
     <sql id="Part_Query">
@@ -71,7 +71,6 @@
     <!--合作伙伴的列表-->
     <select id="partnerList" parameterType="com.dqys.business.orm.pojo.partner.PartnerQuery"
             resultType="com.dqys.business.orm.pojo.partner.PartnerDTO">
-        SELECT
         SELECT tcr.company_a_id companyId,
         <include refid="Part_Query"/>
         FROM t_company_relaiton tcr LEFT JOIN t_company_info tci
@@ -83,7 +82,7 @@
         WHERE tui.id=#{userId} AND tut2.role_id=1
         <include refid="Partner_Where"/>
         UNION
-        SELECT tcr.company_b_i`d companyId,
+        SELECT tcr.company_b_id companyId,
         <include refid="Part_Query"/>
         FROM t_company_relaiton tcr LEFT JOIN t_company_info tci
         ON tci.id=tcr.company_a_id LEFT JOIN t_user_info tui

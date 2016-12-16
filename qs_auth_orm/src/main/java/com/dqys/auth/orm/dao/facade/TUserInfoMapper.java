@@ -61,5 +61,7 @@ public interface TUserInfoMapper {
      */
     UserDetail getUserDetail(Integer userId);
 
-    List<TUserInfo> queryLikeAccount(String account);
+    List<TUserInfo> queryLikeAccount(@Param("account") String account, @Param("userId") Integer userId);
+
+    Integer getUserByCompanyAdmin(Integer companyId);
 }

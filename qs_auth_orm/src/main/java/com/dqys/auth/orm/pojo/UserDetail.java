@@ -15,6 +15,15 @@ public class UserDetail implements Serializable {
     private Integer companyType;//用户所在公司的公司类型
     private String email;//用户邮箱
     private Integer companyId;//用户所在公司id
+    private String account;//用户帐号
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
 
     public Integer getId() {
         return id;

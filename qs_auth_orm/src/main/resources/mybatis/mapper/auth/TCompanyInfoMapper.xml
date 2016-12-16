@@ -53,7 +53,7 @@
         <where>
             stateflag = 0
             <if test="credential != null">
-                AND credential like #{credential,jdbcType=VARCHAR}
+                AND credential like CONCAT('%', #{credential,jdbcType=VARCHAR}, '%')
             </if>
             <if test="province != null">
                 AND province = #{province,jdbcType=VARCHAR}
