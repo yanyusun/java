@@ -8,6 +8,7 @@ import java.io.Serializable;
  * Created by mkfeng on 2016/12/13.
  */
 public class OrganizationCompanyDto extends BaseModel implements Serializable {
+    private Integer companyId;//公司id
     private String companyName;//公司名称
     private String companyAccount;//帐号名称
     private Integer type;//类别
@@ -25,6 +26,7 @@ public class OrganizationCompanyDto extends BaseModel implements Serializable {
     private String address;//详细地址
     private Integer companyPeopleNum;//公司人数
     private Integer accountStatus;//帐号状态（0未激活1未完善2注册成功）
+    private String companyRemark;//功能介绍
 
     //运营者信息
     private String email;//邮箱
@@ -34,6 +36,40 @@ public class OrganizationCompanyDto extends BaseModel implements Serializable {
     private String identity;//身份证号
     private Integer sex;//性别
     private Integer status;//用户是否激活
+    private String account;//清搜号
+    private String createTime;//创建时间
+
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getCompanyRemark() {
+        return companyRemark;
+    }
+
+    public void setCompanyRemark(String companyRemark) {
+        this.companyRemark = companyRemark;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
 
     public Integer getStatus() {
         return status;
