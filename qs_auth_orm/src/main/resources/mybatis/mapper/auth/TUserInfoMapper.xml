@@ -327,11 +327,26 @@
     <select id="getUserDetail" parameterType="int" resultType="com.dqys.auth.orm.pojo.UserDetail">
             SELECT tui.id userId,tui.mobile,tui.real_name realName,tut.role_id rold,
             tut.user_type userType,tci.company_name companyName,tci.type companyType,
-            tui.email,tui.company_id companyId
+            tui.email,tui.company_id companyId,tui.account
             from t_user_info tui LEFT JOIN t_user_tag tut
             ON tut.user_id=tui.id LEFT JOIN t_company_info tci
             ON tci.id=tui.company_id
             WHERE tui.id=#{userId} LIMIT 0,1
+    </select>
+
+    <select id="queryLikeAccount" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_user_info WHERE stateflag=0 AND account LIKE CONCAT('%', #{account,jdbcType=VARCHAR}, '%')
+        <if test="userId !=null">
+            AND id=#{userId}
+        </if>
+    </select>
+
+    <select id="getUserByCompanyAdmin" resultType="int">
+        SELECT tui.id FROM  t_user_info tui LEFT JOIN t_user_tag tut
+         ON  tut.user_id=tui.id
+         WHERE  tui.stateflag=0 AND tut.role_id=1 AND tui.company_id=#{companyId}
     </select>
 
 </mapper>

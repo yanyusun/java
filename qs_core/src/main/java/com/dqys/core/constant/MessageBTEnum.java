@@ -19,7 +19,8 @@ public enum MessageBTEnum {
     INVITE_RESULT(12, "被邀请公司答复结果"),
     INSIDE_RESULT(13, "结果回复"),
     register(14, "注册审核"),//调接口
-    COMPANY_BETWEEN_FLOW(15, "业务流转公司间邀请");
+    COMPANY_BETWEEN_FLOW(15, "业务流转公司间邀请"),
+    RELATION_PARTNER(16, "合作伙伴添加申请");//调接口
 
     private Integer value;
     private String name;

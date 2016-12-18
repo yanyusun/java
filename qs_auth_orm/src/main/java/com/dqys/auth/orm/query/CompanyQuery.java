@@ -2,6 +2,8 @@ package com.dqys.auth.orm.query;
 
 import com.dqys.core.base.BaseQuery;
 
+import java.util.List;
+
 /**
  * @author by pan on 16-5-3.
  */
@@ -12,6 +14,15 @@ public class CompanyQuery extends BaseQuery {
     private Integer city; // 城市
     private Integer district; // 地区
     private String nameLike; // 名称模糊查询
+    private List<Integer> companyIds;//公司id集合
+
+    public List<Integer> getCompanyIds() {
+        return companyIds;
+    }
+
+    public void setCompanyIds(List<Integer> companyIds) {
+        this.companyIds = companyIds;
+    }
 
     public String getCredential() {
         return credential;

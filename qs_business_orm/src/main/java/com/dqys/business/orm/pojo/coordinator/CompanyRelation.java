@@ -17,6 +17,26 @@ public class CompanyRelation {
 
     private Long stateflag;
 
+    private Integer relationStatus;//合作状态
+
+    private Date teamworkTime;//最后合作时间
+
+    public Date getTeamworkTime() {
+        return teamworkTime;
+    }
+
+    public void setTeamworkTime(Date teamworkTime) {
+        this.teamworkTime = teamworkTime;
+    }
+
+    public Integer getRelationStatus() {
+        return relationStatus;
+    }
+
+    public void setRelationStatus(Integer relationStatus) {
+        this.relationStatus = relationStatus;
+    }
+
     public Integer getId() {
         return id;
     }

@@ -53,7 +53,7 @@
         <where>
             stateflag = 0
             <if test="credential != null">
-                AND credential = #{credential,jdbcType=VARCHAR}
+                AND credential like CONCAT('%', #{credential,jdbcType=VARCHAR}, '%')
             </if>
             <if test="province != null">
                 AND province = #{province,jdbcType=VARCHAR}
@@ -64,7 +64,12 @@
             <if test="district != null">
                 AND district = #{district,jdbcType=VARCHAR}
             </if>
-
+            <if test="companyIds !=null and companyIds.size>0">
+                AND id IN
+                <foreach collection="companyIds" index="index" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
             <if test="nameLike != null">
                 AND company_name LIKE CONCAT('%', #{nameLike,jdbcType=VARCHAR}, '%')
             </if>
@@ -288,16 +293,21 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_company_info where stateflag=0 AND is_auth=1 AND id in (
-        SELECT  tcr.accept_company_id
-        FROM t_company_team_re tctr LEFT JOIN t_company_team_re tcr
-        ON tctr.company_team_id=tcr.company_team_id LEFT JOIN t_company_info tci
-        ON tci.id=tcr.accept_company_id
-        WHERE tctr.`status`=1
-        <if test="typeId != null">
-            AND tci.business_type=#{typeId,jdbcType=INTEGER}
+        SELECT tcr.company_b_id FROM t_company_relaiton tcr LEFT JOIN t_company_info tci
+        ON tci.id=tcr.company_a_id LEFT JOIN t_user_info tui
+        ON tui.company_id=tcr.company_a_id
+        WHERE tcr.relation_status=1 AND tui.id=#{userId}
+        <if test="typeId !=null">
+            AND tci.business_type=#{typeId}
         </if>
-        AND tctr.accepter_id=#{userId,jdbcType=INTEGER}
-        GROUP BY tcr.accept_company_id
+        UNION
+        SELECT tcr.company_a_id FROM t_company_relaiton tcr LEFT JOIN t_company_info tci
+        ON tci.id=tcr.company_b_id LEFT JOIN t_user_info tui
+        ON tui.company_id=tcr.company_b_id
+        WHERE tcr.relation_status=1 AND tui.id=#{userId}
+        <if test="typeId !=null">
+            AND tci.business_type=#{typeId}
+        </if>
         )
     </select>
 
