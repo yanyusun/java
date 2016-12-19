@@ -17,6 +17,42 @@ public class PartnerDTO implements Serializable {
     private String mobile;//联系人手机号
     private String email;//联系人邮箱
     private String teamworkTime;//最后合作时间
+    private String account;//帐号
+    private Integer operUser;//操作用户id
+    private Integer aReamrk;//a备注
+    private Integer bReamrk;//b备注
+
+    public Integer getaReamrk() {
+        return aReamrk;
+    }
+
+    public void setaReamrk(Integer aReamrk) {
+        this.aReamrk = aReamrk;
+    }
+
+    public Integer getbReamrk() {
+        return bReamrk;
+    }
+
+    public void setbReamrk(Integer bReamrk) {
+        this.bReamrk = bReamrk;
+    }
+
+    public Integer getOperUser() {
+        return operUser;
+    }
+
+    public void setOperUser(Integer operUser) {
+        this.operUser = operUser;
+    }
+
+    public String getAccount() {
+        return account;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
 
     public String getTeamworkTime() {
         return teamworkTime;

@@ -51,8 +51,12 @@ public class PartnerController {
     @ResponseBody
     public JsonResponse addPartner(@RequestParam Integer partnerCompanyId) {
         CompanyRelation relation = new CompanyRelation();
-        relation.setCompanyBId(partnerCompanyId);
-        return partnerService.addPartner(relation);
+        if (partnerCompanyId > 0) {
+            relation.setCompanyBId(partnerCompanyId);
+            return partnerService.addPartner(relation);
+        } else {
+            return JsonResponseTool.failure("数值有误");
+        }
     }
 
     /**
@@ -69,7 +73,7 @@ public class PartnerController {
     @ResponseBody
     public JsonResponse getCompanyList(@ModelAttribute ModulPartner modulPartner) {
         Map map = new HashMap<>();
-       partnerService.getCompanyList(modulPartner,map);
+        partnerService.getCompanyList(modulPartner, map);
         return JsonResponseTool.success(map);
     }
 
@@ -105,6 +109,21 @@ public class PartnerController {
     @ResponseBody
     public JsonResponse audit(@RequestParam Integer status, @RequestParam Integer companyRelationId) {
         return partnerService.audit(status, companyRelationId);
+    }
+
+    /**
+     * @api {post} parter/updateRemark 修改备注
+     * @apiName parter/updateRemark
+     * @apiSampleRequest parter/updateRemark
+     * @apiParam {int} companyRelationId 关系表id
+     * @apiParam {string} remark 备注
+     * @apiGroup　 partner
+     * @apiSuccessExample {json} Data-Response:
+     */
+    @RequestMapping("/updateRemark")
+    @ResponseBody
+    public JsonResponse updateRemark(@RequestParam String remark, @RequestParam Integer companyRelationId) {
+        return partnerService.updateRemark(remark, companyRelationId);
     }
 
 

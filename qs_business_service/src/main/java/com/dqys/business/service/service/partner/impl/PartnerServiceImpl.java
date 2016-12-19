@@ -23,6 +23,7 @@ import com.dqys.business.service.service.partner.PartnerService;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.MessageBTEnum;
 import com.dqys.core.constant.SmsEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.AreaTool;
@@ -61,6 +62,7 @@ public class PartnerServiceImpl implements PartnerService {
         }
         relation.setCompanyAId(detail.getCompanyId());
         relation.setRelationStatus(PartnerEnum.relation_status_wait.getValue());
+        relation.setOperUser(userId);
         CompanyRelation companyRelation = companyRelationMapper.getByCompanyId(relation.getCompanyAId(), relation.getCompanyBId());
         if (companyRelation == null && companyRelationMapper.insert(relation) > 0) {
             //发送通知短信
@@ -74,6 +76,7 @@ public class PartnerServiceImpl implements PartnerService {
             } else {
                 sendSmsByRelation(userId, companyRelation.getCompanyAId(), companyRelation, PartnerEnum.relation_status_wait.getValue());
             }
+            companyRelation.setOperUser(userId);
             companyRelation.setRelationStatus(PartnerEnum.relation_status_wait.getValue());
             companyRelationMapper.update(companyRelation);
             return JsonResponseTool.success(null);
@@ -111,7 +114,7 @@ public class PartnerServiceImpl implements PartnerService {
             String operUrl = MessageUtils.setOperUrl("/parter/audit?status=1&companyRelationId=" + relation.getId(), null,
                     "/parter/audit?status=2&companyRelationId=" + relation.getId(), null, null);
             messageService.add(operC.getRealName() + "申请加您为合作伙伴", content, senderId, receiveId, "合作伙伴添加", MessageEnum.TASK.getValue(), MessageBTEnum.RELATION_PARTNER.getValue(), operUrl);
-        } else if (relation.getRelationStatus() == PartnerEnum.relation_status_over.getValue().intValue() && PartnerEnum.relation_status_wait.getValue().intValue() == status) {
+        } else if ((relation.getRelationStatus() == PartnerEnum.relation_status_over.getValue().intValue()||relation.getRelationStatus() == PartnerEnum.relation_status_refush.getValue().intValue()) && PartnerEnum.relation_status_wait.getValue().intValue() == status) {
             String content = smsUtil.sendSms(SmsEnum.ADD_COMPANY_RELATION.getValue(), userC.getMobile(),
                     userC.getRealName(),
                     operC.getEmail(),
@@ -123,7 +126,7 @@ public class PartnerServiceImpl implements PartnerService {
             messageService.add(operC.getRealName() + "重启加您为合作伙伴", content, senderId, receiveId, "合作伙伴重启", MessageEnum.TASK.getValue(), MessageBTEnum.RELATION_PARTNER.getValue(), operUrl);
         } else if (PartnerEnum.relation_status_agree.getValue().intValue() == status) {
             String content = smsUtil.sendSms(SmsEnum.COMPANY_RELATION_RESULT.getValue(), userC.getMobile(),
-                    userC.getMobile(),
+                    userC.getRealName(),
                     operC.getEmail(),
                     operC.getCompanyName(),
                     "同意",
@@ -131,7 +134,7 @@ public class PartnerServiceImpl implements PartnerService {
             messageService.add(operC.getRealName() + "同意成为合作伙伴", content, senderId, receiveId, "合作伙伴验证", MessageEnum.SERVE.getValue(), MessageBTEnum.INSIDE_RESULT.getValue(), "");
         } else if (PartnerEnum.relation_status_refush.getValue().intValue() == status) {
             String content = smsUtil.sendSms(SmsEnum.COMPANY_RELATION_RESULT.getValue(), userC.getMobile(),
-                    userC.getMobile(),
+                    userC.getRealName(),
                     operC.getEmail(),
                     operC.getCompanyName(),
                     "拒绝",
@@ -139,7 +142,7 @@ public class PartnerServiceImpl implements PartnerService {
             messageService.add(operC.getRealName() + "拒绝成为合作伙伴", content, senderId, receiveId, "合作伙伴验证", MessageEnum.SERVE.getValue(), MessageBTEnum.INSIDE_RESULT.getValue(), "");
         } else if (PartnerEnum.relation_status_over.getValue().intValue() == status) {
             String content = smsUtil.sendSms(SmsEnum.COMPANY_RELATION_RESULT.getValue(), userC.getMobile(),
-                    userC.getMobile(),
+                    userC.getRealName(),
                     operC.getEmail(),
                     operC.getCompanyName(),
                     "终止了",
@@ -189,6 +192,9 @@ public class PartnerServiceImpl implements PartnerService {
         CompanyRelation relation = companyRelationMapper.get(companyRelationId);
         if (relation == null) {
             return JsonResponseTool.failure("关系已不存在，操作失败");
+        }
+        if (relation.getOperUser() == userId && (relation.getRelationStatus() == PartnerEnum.relation_status_wait.getValue())) {
+            return JsonResponseTool.failure("无权限，操作失败");
         }
         //操作状态变为待合作是不可行，关系已经是同意或拒绝或终止了的操作是不可行
         if ((status == PartnerEnum.relation_status_wait.getValue()) ||
@@ -252,6 +258,9 @@ public class PartnerServiceImpl implements PartnerService {
         List<TCompanyInfoDTO> list = new ArrayList<>();
         if (companyList != null) {
             for (TCompanyInfo info : companyList) {
+                if (info.getBusinessType() == UserInfoEnum.USER_TYPE_ADMIN.getValue().intValue()) {
+                    continue;
+                }
                 TCompanyInfoDTO dto = new TCompanyInfoDTO();
                 dto.setProvinceName(AreaTool.getAreaById(info.getProvince()).getLabel());
                 dto.setCityName(AreaTool.getAreaById(info.getCity()).getLabel());
@@ -272,6 +281,26 @@ public class PartnerServiceImpl implements PartnerService {
         }
         map.put("companyList", list);
         map.put("userList", userList);
+    }
+
+    @Override
+    public JsonResponse updateRemark(String remark, Integer companyRelationId) {
+        Integer userId = UserSession.getCurrent().getUserId();
+        UserDetail detail = tUserInfoMapper.getUserDetail(userId);
+        boolean flag = false;
+        CompanyRelation relation = companyRelationMapper.get(companyRelationId);
+        if (relation != null && detail.getCompanyId() == relation.getCompanyAId()) {
+            relation.setaRemark(remark);
+            flag = true;
+        } else if (relation != null && detail.getCompanyId() == relation.getCompanyBId()) {
+            relation.setbRemark(remark);
+            flag = true;
+        }
+        if (flag && companyRelationMapper.update(relation) > 0) {
+            return JsonResponseTool.success("操作成功");
+        } else {
+            return JsonResponseTool.failure("操作失败");
+        }
     }
 
 

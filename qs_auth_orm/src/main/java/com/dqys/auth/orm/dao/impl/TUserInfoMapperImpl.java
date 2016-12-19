@@ -79,7 +79,7 @@ public class TUserInfoMapperImpl extends BaseDao implements TUserInfoMapper {
         TUserInfo info = selectByPrimaryKey(userId);
         Map map = new HashMap<>();
         if (info != null) {
-            map.put("realName", info.getRealName());
+            map.put("account", info.getAccount());
             map.put("userId", info.getId());
         }
         return map;

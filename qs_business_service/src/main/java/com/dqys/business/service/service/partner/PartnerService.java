@@ -33,4 +33,6 @@ public interface PartnerService {
     JsonResponse audit(Integer status, Integer companyRelationId);
 
     void getCompanyList(ModulPartner modulPartner, Map map);
+
+    JsonResponse updateRemark(String remark, Integer companyRelationId);
 }
