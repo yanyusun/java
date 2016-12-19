@@ -19,12 +19,41 @@ public class TCompanyInfoDTO extends BaseModel implements Serializable {
 
     private Integer area;
 
+    private String provinceName;
+
+    private String cityName;
+
+    private String areaName;
     private String address;
 
     private Integer isAuth;
     private Integer type; // 公司类型
     private Integer businessType;//业务类型(目前含义与用户类型一致)
     private String companyAccount;//公司账号名称
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
 
     private static final long serialVersionUID = 1L;
 
