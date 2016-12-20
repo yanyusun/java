@@ -71,7 +71,7 @@ public class PartnerServiceImpl implements PartnerService {
         } else if (companyRelation != null && (companyRelation.getRelationStatus() == PartnerEnum.relation_status_refush.getValue() ||
                 companyRelation.getRelationStatus() == PartnerEnum.relation_status_over.getValue())) {
             //发送通知短信
-            if (userId == companyRelation.getCompanyAId().intValue()) {
+            if (detail.getCompanyId() == companyRelation.getCompanyAId().intValue()) {
                 sendSmsByRelation(userId, companyRelation.getCompanyBId(), companyRelation, PartnerEnum.relation_status_wait.getValue());
             } else {
                 sendSmsByRelation(userId, companyRelation.getCompanyAId(), companyRelation, PartnerEnum.relation_status_wait.getValue());
@@ -189,6 +189,10 @@ public class PartnerServiceImpl implements PartnerService {
     @Override
     public JsonResponse audit(Integer status, Integer companyRelationId) {
         Integer userId = UserSession.getCurrent().getUserId();
+        UserDetail detail = tUserInfoMapper.getUserDetail(userId);
+        if (detail == null || detail.getCompanyId() == null) {
+            return JsonResponseTool.failure("当前用户无权限操作");
+        }
         CompanyRelation relation = companyRelationMapper.get(companyRelationId);
         if (relation == null) {
             return JsonResponseTool.failure("关系已不存在，操作失败");
@@ -209,7 +213,7 @@ public class PartnerServiceImpl implements PartnerService {
         companyRelation.setRelationStatus(status);
         if (companyRelationMapper.update(companyRelation) > 0) {
             companyRelation = companyRelationMapper.get(companyRelationId);
-            if (userId == companyRelation.getCompanyAId().intValue()) {
+            if (detail.getCompanyId() == companyRelation.getCompanyAId().intValue()) {
                 sendSmsByRelation(userId, companyRelation.getCompanyBId(), companyRelation, status);
             } else {
                 sendSmsByRelation(userId, companyRelation.getCompanyAId(), companyRelation, status);

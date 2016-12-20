@@ -10,10 +10,7 @@ import com.dqys.business.service.dto.asset.PawnDTO;
 import com.dqys.business.service.dto.excel.ExcelMessage;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
-import com.dqys.core.utils.DateFormatTool;
-import com.dqys.core.utils.ExcelTool;
-import com.dqys.core.utils.FormatValidateTool;
-import com.dqys.core.utils.SysPropertyTool;
+import com.dqys.core.utils.*;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -128,7 +125,7 @@ public class ExcelUtilAsset {
             }
             if (transMapToString(l, "var" + "3").equals("")) {//*委托起始日期
                 placeByExcel(error, name, i, 3, transMapToString(map, "var" + "3"), "不能为空");
-            }else if (!FormatValidateTool.isDate(transMapToString(l, "var" + "3"))) {
+            } else if (!FormatValidateTool.isDate(transMapToString(l, "var" + "3"))) {
                 placeByExcel(error, name, i, 3, transMapToString(map, "var" + "3"), "格式错误");
             }
             if (transMapToString(l, "var" + "4").equals("")) {//*委托结束日期
@@ -502,8 +499,15 @@ public class ExcelUtilAsset {
             contactDTO.setHomeTel(transMapToString(map3, "var" + "5")); // 家庭电话
             contactDTO.setOfficeTel(transMapToString(map3, "var" + "6")); // 办公电话
             contactDTO.setEmail(transMapToString(map3, "var" + "7"));// 电子邮件
-            contactDTO.setCompany(transMapToString(map3, "var" + "11")); // 公司
-            contactDTO.setMemo(transMapToString(map3, "var" + "12"));// 备注
+            contactDTO.setOther1(transMapToString(map3, "var" + "8"));//其它联系方式01
+            contactDTO.setOther2(transMapToString(map3, "var" + "9"));//其它联系方式02
+            contactDTO.setOther3(transMapToString(map3, "var" + "10"));//其它联系方式03
+            contactDTO.setProvince(AreaTool.getAreaId(transMapToString(map3, "var" + "11")));//省
+            contactDTO.setCity(AreaTool.getAreaId(transMapToString(map3, "var" + "12")));//市
+            contactDTO.setDistrict(AreaTool.getAreaId(transMapToString(map3, "var" + "13")));//区县
+            contactDTO.setAddress(transMapToString(map3, "var" + "14"));
+            contactDTO.setCompany(transMapToString(map3, "var" + "15")); // 公司
+            contactDTO.setMemo(transMapToString(map3, "var" + "16"));// 备注
             contactDTOs.add(contactDTO);
         }
     }
@@ -518,7 +522,7 @@ public class ExcelUtilAsset {
             iouDTO.setId(transStringToInteger(transMapToString(map2, "var" + "1").split("-")[0]));
             iouDTO.setIouName(transMapToString(map2, "var" + "1").split("-")[1]);
             iouDTO.setIouCode(transMapToString(map2, "var" + "2"));//原始借据号
-            iouDTO.setType(transMapToString(map2, "var" + "3"));// 借据类型
+            iouDTO.setType(transMapToString(map2, "var" + "3"));// 贷款类型
             iouDTO.setAgency(transMapToString(map2, "var" + "4")); // 代理机构
             iouDTO.setLoanTime(DateFormatTool.parse(transMapToString(map2, "var" + "5"), DateFormatTool.DATE_FORMAT_10_REG2));// 放款时间
             iouDTO.setLoanAtTime(DateFormatTool.parse(transMapToString(map2, "var" + "6"), DateFormatTool.DATE_FORMAT_10_REG2));// 到款时间
@@ -555,11 +559,14 @@ public class ExcelUtilAsset {
             pawnDTO.setType(transMapToString(map1, "var" + "4"));// 抵押物类型
             pawnDTO.setSize(transMapToString(map1, "var" + "5"));// 规模大小
             pawnDTO.setPawnRate(transStringToDouble(transMapToString(map1, "var" + "6").replace("%", "")));// 抵押率
-            pawnDTO.setAddress(transMapToString(map1, "var" + "7"));//*抵押物中 详细地址
-            pawnDTO.setDisposeStatus(transMapToString(map1, "var" + "8")); // 处置状态
-            pawnDTO.setWorth(transStringToDouble(transMapToString(map1, "var" + "9")));// 价值
-            pawnDTO.setIouIds(transMapToString(map1, "var" + "10"));//*抵押物中的借据
-            pawnDTO.setMemo(transMapToString(map1, "var" + "11"));// 备注
+            pawnDTO.setProvince(AreaTool.getAreaId(transMapToString(map1, "var" + "7")));//*省
+            pawnDTO.setCity(AreaTool.getAreaId(transMapToString(map1, "var" + "8")));//*市
+            pawnDTO.setDistrict(AreaTool.getAreaId(transMapToString(map1, "var" + "9")));//*区县
+            pawnDTO.setAddress(transMapToString(map1, "var" + "10"));//*抵押物中 详细地址
+            pawnDTO.setDisposeStatus(transMapToString(map1, "var" + "11")); // 处置状态
+            pawnDTO.setWorth(transStringToDouble(transMapToString(map1, "var" + "12")));// 价值
+            pawnDTO.setIouIds(transMapToString(map1, "var" + "13"));//*抵押物中的借据
+            pawnDTO.setMemo(transMapToString(map1, "var" + "14"));// 备注
             pawnDTOs.add(pawnDTO);
         }
     }
@@ -572,23 +579,27 @@ public class ExcelUtilAsset {
             }
             LenderDTO lenderDTO = new LenderDTO();
             lenderDTO.setId(transStringToInteger(transMapToString(map0, "var" + "0")));//序号
-            lenderDTO.setEvaluateExcellent(ExcellentTypeEnum.getEnum(transMapToString(map0, "var" + "4")));//评优
-            lenderDTO.setEvaluateLevel(transMapToString(map0, "var" + "5"));//评级
-            lenderDTO.setDisposeMode(setDisposeMode(transMapToString(map0, "var" + "6")));//个性处置
-            lenderDTO.setTags(transMapToString(map0, "var" + "7"));//标签
-            lenderDTO.setGuaranteeType(transMapToString(map0, "var" + "8").equals("公司担保") == true ? "公司" : "个人");//担保方式
-            lenderDTO.setGuaranteeMode(transMapToString(map0, "var" + "9"));//公司担保
-            lenderDTO.setGuaranteeSource(lenderDTO.getGuaranteeMode().equals("") == true ? "" : lenderDTO.getGuaranteeMode().equals("抵押") == true ? transMapToString(map0, "var" + "10") : transMapToString(map0, "var" + "11"));// 担保源
-            lenderDTO.setIsGuaranteeConnection(transMapToString(map0, "var" + "12").equals("是") == true ? 1 : 0);//担保人是否能联系
-            lenderDTO.setGuaranteeEconomic(transMapToString(map0, "var" + "13"));//担保人经济状况
-            lenderDTO.setIsWorth(transMapToString(map0, "var" + "14").equals("否") == true ? 0 : transMapToString(map0, "var" + "14").equals("能") == true ? 1 : 2);//抵押物是否能覆盖债务
-            lenderDTO.setIsLawsuit(transMapToString(map0, "var" + "15").equals("未诉讼") == true ? 0 : transMapToString(map0, "var" + "15").equals("已诉讼") == true ? 1 : 2);//诉讼与否
-            lenderDTO.setIsDecision(transMapToString(map0, "var" + "16").equals("未判决") == true ? 0 : transMapToString(map0, "var" + "16").equals("已判决") == true ? 1 : 2);// 判决与否
-            lenderDTO.setRealUrgeTime(transStringToInteger(transMapToString(map0, "var" + "17")));//实地催收次数
-            lenderDTO.setPhoneUrgeTime(transStringToInteger(transMapToString(map0, "var" + "18")));//电话催收次数
-            lenderDTO.setEntrustUrgeTime(transStringToInteger(transMapToString(map0, "var" + "19")));//委托催收次数
-            lenderDTO.setCanContact(transMapToString(map0, "var" + "20").equals("是") == true ? 1 : 0);//债务方是否能正常联系
-            lenderDTO.setCanPay(transMapToString(map0, "var" + "21").equals("是") == true ? 1 : 0);//债务方是否能偿还
+            lenderDTO.setStartAt(DateFormatTool.parse(transMapToString(map0, "var" + "3"), DateFormatTool.DATE_FORMAT_10_REG2));//委托起始日期
+            lenderDTO.setEndAt(DateFormatTool.parse(transMapToString(map0, "var" + "4"), DateFormatTool.DATE_FORMAT_10_REG2));//委托结束日期
+            lenderDTO.setSourceWay(transMapToString(map0, "var" + "5"));//来源方式
+            lenderDTO.setSubsidiary(transMapToString(map0, "var" + "6"));//所属机构
+            lenderDTO.setEvaluateExcellent(ExcellentTypeEnum.getEnum(transMapToString(map0, "var" + "7")));//评优
+            lenderDTO.setEvaluateLevel(transMapToString(map0, "var" + "8"));//评级
+            lenderDTO.setDisposeMode(setDisposeMode(transMapToString(map0, "var" + "9")));//个性处置
+            lenderDTO.setTags(transMapToString(map0, "var" + "10"));//标签
+            lenderDTO.setGuaranteeType(transMapToString(map0, "var" + "11").equals("公司担保") == true ? "公司" : "个人");//担保方式
+            lenderDTO.setGuaranteeMode(transMapToString(map0, "var" + "12"));//公司担保
+            lenderDTO.setGuaranteeSource(lenderDTO.getGuaranteeMode().equals("") == true ? "" : lenderDTO.getGuaranteeMode().equals("抵押") == true ? transMapToString(map0, "var" + "13") : transMapToString(map0, "var" + "14"));// 担保源
+            lenderDTO.setIsGuaranteeConnection(transMapToString(map0, "var" + "15").equals("是") == true ? 1 : 0);//担保人是否能联系
+            lenderDTO.setGuaranteeEconomic(transMapToString(map0, "var" + "16"));//担保人经济状况
+            lenderDTO.setIsWorth(transMapToString(map0, "var" + "17").equals("否") == true ? 0 : transMapToString(map0, "var" + "17").equals("能") == true ? 1 : 2);//抵押物是否能覆盖债务
+            lenderDTO.setIsLawsuit(transMapToString(map0, "var" + "18").equals("未诉讼") == true ? 0 : transMapToString(map0, "var" + "18").equals("已诉讼") == true ? 1 : 2);//诉讼与否
+            lenderDTO.setIsDecision(transMapToString(map0, "var" + "19").equals("未判决") == true ? 0 : transMapToString(map0, "var" + "19").equals("已判决") == true ? 1 : 2);// 判决与否
+            lenderDTO.setRealUrgeTime(transStringToInteger(transMapToString(map0, "var" + "20")));//实地催收次数
+            lenderDTO.setPhoneUrgeTime(transStringToInteger(transMapToString(map0, "var" + "21")));//电话催收次数
+            lenderDTO.setEntrustUrgeTime(transStringToInteger(transMapToString(map0, "var" + "22")));//委托催收次数
+            lenderDTO.setCanContact(transMapToString(map0, "var" + "23").equals("是") == true ? 1 : 0);//债务方是否能正常联系
+            lenderDTO.setCanPay(transMapToString(map0, "var" + "24").equals("是") == true ? 1 : 0);//债务方是否能偿还
             lenderDTOs.add(lenderDTO);
         }
     }

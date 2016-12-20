@@ -64,6 +64,25 @@ public class LenderDTO {
     private Date createAt; // 录入时间
     private String assetCode; //资产包编号
 
+    private String subsidiary;//所属机构
+    private String sourceWay;//来源方式
+
+    public String getSourceWay() {
+        return sourceWay;
+    }
+
+    public void setSourceWay(String sourceWay) {
+        this.sourceWay = sourceWay;
+    }
+
+    public String getSubsidiary() {
+        return subsidiary;
+    }
+
+    public void setSubsidiary(String subsidiary) {
+        this.subsidiary = subsidiary;
+    }
+
     public String getOperator() {
         return operator;
     }

@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.jsp.tagext.TagInfo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -27,7 +28,7 @@ public class AreaTool implements ApplicationContextAware {
 
 
     private static final String AREA_RELATION_KEY = "area_relation_";      //地区
-    private static final String AREA_ALL="area_all";
+    private static final String AREA_ALL = "area_all";
     private static RedisTemplate<String, Object> redisTemplate;
     private static TAreaMapper tAreaMapper;
 
@@ -42,7 +43,7 @@ public class AreaTool implements ApplicationContextAware {
      */
     public static void loadArea() {
         List<TArea> tAreas = tAreaMapper.selectAll();
-        for(TArea tArea : tAreas) {
+        for (TArea tArea : tAreas) {
             redisTemplate.boundHashOps(TArea.class.getName()).put(tArea.getValue(), tArea);
         }
         //省份
@@ -56,7 +57,7 @@ public class AreaTool implements ApplicationContextAware {
         List<TArea> tAreaList = null;
         try {
             tAreaList = listAreaByUpperId(0);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         List<AreaList> result = new ArrayList<>();
@@ -65,14 +66,16 @@ public class AreaTool implements ApplicationContextAware {
             area.setChildren(listAllChildAreaById(area.getValue()));
             result.add(area);
         }
-        redisTemplate.boundHashOps(TArea.class.getName()).put(AREA_ALL,result);
+        redisTemplate.boundHashOps(TArea.class.getName()).put(AREA_ALL, result);
     }
-    public static List<AreaList>  getAllArea(){
-       return NoSQLWithRedisTool.getHashObject(TArea.class.getName(),AREA_ALL);
+
+    public static List<AreaList> getAllArea() {
+        return NoSQLWithRedisTool.getHashObject(TArea.class.getName(), AREA_ALL);
     }
+
     // TODO: 16-12-2  为了listAll接口提高效率暂时添加,后续当删除
-    private static AreaList toAreaList(TArea tarea){
-        if(CommonUtil.checkParam(tarea)){
+    private static AreaList toAreaList(TArea tarea) {
+        if (CommonUtil.checkParam(tarea)) {
             return null;
         }
         AreaList result = new AreaList();
@@ -85,14 +88,15 @@ public class AreaTool implements ApplicationContextAware {
 
         return result;
     }
+
     // TODO: 16-12-2  为了listAll接口提高效率暂时添加,后续当删除
-    private static List<AreaList> listAllChildAreaById(Integer id){
-        if(CommonUtil.checkParam(id)){
+    private static List<AreaList> listAllChildAreaById(Integer id) {
+        if (CommonUtil.checkParam(id)) {
             return null;
         }
         try {
             List<TArea> areaList = AreaTool.listAreaByUpperId(id);
-            if(CommonUtil.checkParam(areaList) || areaList.size() == 0){
+            if (CommonUtil.checkParam(areaList) || areaList.size() == 0) {
                 return null;
             }
             List<AreaList> result = new ArrayList<>();
@@ -113,11 +117,11 @@ public class AreaTool implements ApplicationContextAware {
      */
     private static void loadAreaByUpper(Integer upper) {
         List<TArea> tAreaList = tAreaMapper.selectByUpper(upper);
-        if(null != tAreaList && !tAreaList.isEmpty()) {
+        if (null != tAreaList && !tAreaList.isEmpty()) {
             List<Integer> ids = new ArrayList<>();
-            for(TArea tArea : tAreaList) {
+            for (TArea tArea : tAreaList) {
                 ids.add(tArea.getValue());
-                if(tArea.getIsLeaf()) {
+                if (tArea.getIsLeaf()) {
                     return;
                 }
                 loadAreaByUpper(tArea.getValue());
@@ -136,13 +140,13 @@ public class AreaTool implements ApplicationContextAware {
      */
     public static String validateArea(Integer province, Integer city, Integer area) {
 
-        if(null == NoSQLWithRedisTool.getHashObject(TArea.class.getName(), province)) {
+        if (null == NoSQLWithRedisTool.getHashObject(TArea.class.getName(), province)) {
             return "省份无效";
         }
-        if(null == NoSQLWithRedisTool.getHashObject(TArea.class.getName(), city) || !String.valueOf(city).startsWith(String.valueOf(province))) {
+        if (null == NoSQLWithRedisTool.getHashObject(TArea.class.getName(), city) || !String.valueOf(city).startsWith(String.valueOf(province))) {
             return "地市无效";
         }
-        if(null == NoSQLWithRedisTool.getHashObject(TArea.class.getName(), area) || !String.valueOf(area).startsWith(String.valueOf(city))) {
+        if (null == NoSQLWithRedisTool.getHashObject(TArea.class.getName(), area) || !String.valueOf(area).startsWith(String.valueOf(city))) {
             return "区县无效";
         }
 
@@ -183,8 +187,8 @@ public class AreaTool implements ApplicationContextAware {
      */
     public static List<TArea> listAreaByUpperId(Integer upperId) throws Exception {
         List<Integer> tAreaIds = NoSQLWithRedisTool.getValueObject(AREA_RELATION_KEY + upperId);
-        List<TArea> tAreaList =null;
-        if(tAreaIds!=null){
+        List<TArea> tAreaList = null;
+        if (tAreaIds != null) {
             tAreaList = new ArrayList<>();
             for (Integer aid : tAreaIds) {
                 tAreaList.add(getAreaById(aid));
@@ -248,5 +252,13 @@ public class AreaTool implements ApplicationContextAware {
             }
         }
         return pybf.toString().replaceAll("\\W", "").trim();
+    }
+
+    public static Integer getAreaId(String name) {
+        TArea info = tAreaMapper.getByName(name);
+        if (info != null) {
+            return info.getValue();
+        }
+        return null;
     }
 }
