@@ -33,7 +33,7 @@ public class SaleUserServiceImpl implements SaleUserService {
     @Override
     public JsonResponse enterLogin(String account, String paw) throws Exception {
         List<SaleUser> list = saleUserMapper.verifyUser(account, account, account);
-        if (list == null && list.size() == 0) {
+        if (list == null || list.size() == 0) {
             return JsonResponseTool.failure("帐号不存在");
         }
         if (list.size() > 1) {

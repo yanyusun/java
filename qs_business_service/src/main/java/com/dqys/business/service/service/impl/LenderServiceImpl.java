@@ -550,6 +550,7 @@ public class LenderServiceImpl implements LenderService {
             if (contactInfo.getType().equals(ContactTypeEnum.LENDER.getValue())
                     ) {
                 lenderDTO.setName(contactInfo.getName());
+                lenderDTO.setSex(contactInfo.getGender());
                 if (contactInfo.getProvince() != null
                         && contactInfo.getProvince() != null
                         && contactInfo.getDistrict() != null) {
@@ -576,7 +577,7 @@ public class LenderServiceImpl implements LenderService {
         boolean flag = false; // 是否业务流转
         if (list.size() > 0) {
             ObjectUserRelation our = list.get(0);
-            if (our.getVisibleType() != null && our.getVisibleType() ==OURelationEnum.VISIBLE_TYPE_PORTION.getValue()) {
+            if (our.getVisibleType() != null && our.getVisibleType() == OURelationEnum.VISIBLE_TYPE_PORTION.getValue()) {
                 flag = true;
             }
         }
@@ -594,7 +595,12 @@ public class LenderServiceImpl implements LenderService {
         Date date = null;
         for (IOUInfo iouInfo : iouList) {
             // 获取抵押物与借据的关联
-            iouDTOList.add(changeToDTO(iouInfo));
+            IouDTO iouDTO = changeToDTO(iouInfo);
+            iouDTO.setLenderName(lenderDTO.getName());
+            iouDTO.setLenderNo(lenderDTO.getLenderNo());
+            iouDTO.setOperator(lenderDTO.getOperator());
+            iouDTO.setOperTime(lenderDTO.getCreateAt());
+            iouDTOList.add(iouDTO);
             // 获取最大的结束时间
             if (date == null
                     || (iouInfo.getEndAt() != null && iouInfo.getEndAt().compareTo(date) > 0)) {

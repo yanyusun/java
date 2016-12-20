@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController extends BaseApiContorller {
 
     @Autowired
-    private SaleUserService salfUserService;
+    private SaleUserService saleUserService;
     @Autowired
     private CaptchaService captchaService;
     @Autowired
@@ -44,7 +44,7 @@ public class LoginController extends BaseApiContorller {
     @RequestMapping(value = "/enterLogin", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse enterLogin(@RequestParam String account, @RequestParam String paw) throws Exception {
-        return salfUserService.enterLogin(account, paw);
+        return saleUserService.enterLogin(account, paw);
     }
 
     /**
@@ -69,7 +69,7 @@ public class LoginController extends BaseApiContorller {
         if (CommonUtil.checkParam(saleUserModel)) {
             return JsonResponseTool.failure("参数有误");
         }
-        String msg = salfUserService.verifyUserMessage(saleUserModel.getSaleUser(), saleUserModel.getSaleUserTag());//验证数据的有效性
+        String msg = saleUserService.verifyUserMessage(saleUserModel.getSaleUser(), saleUserModel.getSaleUserTag());//验证数据的有效性
         if (!"".equals(msg)) {
             return JsonResponseTool.failure(msg);
         }
@@ -81,7 +81,7 @@ public class LoginController extends BaseApiContorller {
                 return JsonResponseTool.paramErr(validServiceResult.getMessage());
             }
         }
-        return salfUserService.register(saleUserModel);
+        return saleUserService.register(saleUserModel);
     }
 
     /**
@@ -105,13 +105,13 @@ public class LoginController extends BaseApiContorller {
         if (mobile != null && !FormatValidateTool.checkEmail(mobile)) {
             return JsonResponseTool.failure("手机号格式有误");
         }
-        if (account != null && salfUserService.queryUser(account, null, null) != null) {
+        if (account != null && saleUserService.queryUser(account, null, null) != null) {
             return JsonResponseTool.failure("用户名已存在");
         }
-        if (email != null && (salfUserService.queryUser(null, null, email) != null || userService.queryUser(null, null, email) != null)) {
+        if (email != null && (saleUserService.queryUser(null, null, email) != null || userService.queryUser(null, null, email) != null)) {
             return JsonResponseTool.failure("邮箱已注册");
         }
-        if (mobile != null && salfUserService.queryUser(null, mobile, null) != null) {
+        if (mobile != null && saleUserService.queryUser(null, mobile, null) != null) {
             return JsonResponseTool.failure("手机号已存在");
         }
         return JsonResponseTool.success(null);

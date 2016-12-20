@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.auth.orm.dao.facade.SaleUserTagMapper">
-    <resultMap id="BaseResultMap" type=" com.dqys.auth.orm.pojo.SaleUserTag">
+    <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.SaleUserTag">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="version" property="version" jdbcType="INTEGER"/>
         <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
@@ -25,7 +25,7 @@
     delete from t_sale_user_tag
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType=" com.dqys.auth.orm.pojo.SaleUserTag">
+    <insert id="insert" parameterType="com.dqys.auth.orm.pojo.SaleUserTag">
     insert into t_sale_user_tag (id, version, create_at, 
       update_at, stateflag, province, 
       city, area, user_id)
@@ -33,7 +33,7 @@
       #{updateAt,jdbcType=TIMESTAMP}, #{stateflag,jdbcType=BIGINT}, #{province,jdbcType=INTEGER}, 
       #{city,jdbcType=INTEGER}, #{area,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER})
   </insert>
-    <insert id="insertSelective" parameterType=" com.dqys.auth.orm.pojo.SaleUserTag">
+    <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.SaleUserTag">
         insert into t_sale_user_tag
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -94,7 +94,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType=" com.dqys.auth.orm.pojo.SaleUserTag">
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.SaleUserTag">
         update t_sale_user_tag
         <set>
             <if test="version != null">
@@ -124,7 +124,7 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType=" com.dqys.auth.orm.pojo.SaleUserTag">
+    <update id="updateByPrimaryKey" parameterType="com.dqys.auth.orm.pojo.SaleUserTag">
     update t_sale_user_tag
     set version = #{version,jdbcType=INTEGER},
       create_at = #{createAt,jdbcType=TIMESTAMP},

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.auth.orm.dao.facade.SaleUserMapper">
-    <resultMap id="BaseResultMap" type=" com.dqys.auth.orm.pojo.SaleUser">
+    <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.SaleUser">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="account" property="account" jdbcType="VARCHAR"/>
@@ -32,7 +32,7 @@
     delete from t_sale_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType=" com.dqys.auth.orm.pojo.SaleUser">
+    <insert id="insert" parameterType="com.dqys.auth.orm.pojo.SaleUser">
     insert into t_sale_user (id, name, account, 
       email, mobile, password, 
       salt, status, role_type, 
@@ -44,7 +44,7 @@
       #{userType,jdbcType=INTEGER}, now(), now(), 
       #{version,jdbcType=INTEGER}, #{stateflag,jdbcType=BIGINT},#{sex,jdbcType=INTEGER})
   </insert>
-    <insert id="insertSelective" parameterType=" com.dqys.auth.orm.pojo.SaleUser" useGeneratedKeys="true"
+    <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.SaleUser" useGeneratedKeys="true"
             keyProperty="id">
         insert into t_sale_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -177,7 +177,7 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType=" com.dqys.auth.orm.pojo.SaleUser">
+    <update id="updateByPrimaryKey" parameterType="com.dqys.auth.orm.pojo.SaleUser">
     update t_sale_user
     set name = #{name,jdbcType=VARCHAR},
       account = #{account,jdbcType=VARCHAR},
@@ -201,7 +201,7 @@
         <include refid="Base_Column_List"/>
         from t_sale_user
         where
-        ( 1=1
+        ( 1=2
         <if test="account != null">
             or account = #{account,jdbcType=VARCHAR}
         </if>
