@@ -11,6 +11,10 @@
 
     <artifactId>sale-orm</artifactId>
     <packaging>jar</packaging>
+    <properties>
+        <mybatis-generator.version>1.3.2</mybatis-generator.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.dqys</groupId>

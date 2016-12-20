@@ -14,14 +14,14 @@
         http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
 
     <context:component-scan base-package="com.dqys"/>
-    <context:annotation-config />
+    <context:annotation-config/>
     <aop:aspectj-autoproxy/>
 
     <!-- 配置文件 -->
     <context:property-placeholder location="classpath:config.properties"/>
 
     <!-- 定时任务调度 -->
-    <task:annotation-driven scheduler="taskScheduler" />
+    <task:annotation-driven scheduler="taskScheduler"/>
     <task:scheduler id="taskScheduler" pool-size="${task.scheduler.pool}"/>
 
     <!-- 数据源 -->
@@ -32,47 +32,34 @@
         <property name="password" value="${jdbc.password}"/>
     </bean>
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource" />
-        <property name="mapperLocations" value="classpath*:mybatis/mapper/**/*.xml"/>
-        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath*:mybatis/mapper/*/**/*.xml"/>
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
     </bean>
-
-    <!-- 数据源 -->
-    <bean id="dataSourceSale" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
-        <property name="driverClassName" value="${jdbc.driverClassName}"/>
-        <property name="url" value="${jdbc.url.sale}"/>
-        <property name="username" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
-    </bean>
-    <bean id="sqlSessionFactorySale" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource" />
-        <property name="mapperLocations" value="classpath*:mybatis/mapper/**/*.xml"/>
-        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
-    </bean>
-
 
 
     <!-- 配置事务管理器 -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource" />
+        <property name="dataSource" ref="dataSource"/>
         <property name="nestedTransactionAllowed" value="true"/>
     </bean>
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <tx:attributes>
             <tx:method name="get*" read-only="true" rollback-for="UnexpectedRollbackException"/>
             <!--<tx:method name="*_tx" rollback-for="Exception" propagation="REQUIRED"/>-->
-            <tx:method name="*"  rollback-for="Exception" propagation="REQUIRED"/>
+            <tx:method name="*" rollback-for="Exception" propagation="REQUIRED"/>
         </tx:attributes>
     </tx:advice>
     <aop:config>
-        <aop:pointcut id="txPointCut" expression="execution(* com.dqys.*..*(..))"/>
+        <aop:pointcut id="txPointCut" expression="execution(* com.dqys.core.*..*(..))"/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
     </aop:config>
 
+
     <!-- 映射扫描 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.dqys.persistent" />
-        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        <property name="basePackage" value="com.dqys.persistent"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 
     <!-- redis -->
@@ -169,7 +156,6 @@
           c:redisOperations-ref="cacheRedisTemplate"/>-->
 
 
-
     <!-- 自定义CacheManager，实现缓存有效期可配置 -->
     <bean name="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
         <constructor-arg name="redisOperations" ref="cacheRedisTemplate"/>
@@ -191,67 +177,56 @@
     <bean id="rabbitConnectionFactory"
           class="org.springframework.amqp.rabbit.connection.CachingConnectionFactory">
         <constructor-arg name="hostname" value="${rabbitmq.host}"/>
-        <constructor-arg name="port" value="${rabbitmq.port}" />
+        <constructor-arg name="port" value="${rabbitmq.port}"/>
         <property name="username" value="${rabbitmq.username}"/>
         <property name="password" value="${rabbitmq.password}"/>
-        <property name="channelCacheSize" value="${rabbitmq.channel.size}" />
-        <property name="publisherConfirms" value="true" />
-        <property name="publisherReturns" value="true" />
+        <property name="channelCacheSize" value="${rabbitmq.channel.size}"/>
+        <property name="publisherConfirms" value="true"/>
+        <property name="publisherReturns" value="true"/>
     </bean>
     <bean id="rabbitRetryTemplate" class="org.springframework.retry.support.RetryTemplate">
         <property name="backOffPolicy">
             <bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
                 <property name="initialInterval" value="10"/>
                 <property name="maxInterval" value="1000"/>
-                <property name="multiplier" value="10.0" />
+                <property name="multiplier" value="10.0"/>
             </bean>
         </property>
     </bean>
     <bean id="rabbitTemplate" class="org.springframework.amqp.rabbit.core.RabbitTemplate">
-        <property name="connectionFactory" ref="rabbitConnectionFactory" />
-        <property name="retryTemplate" ref="rabbitRetryTemplate" />
-        <property name="mandatory" value="true" />
+        <property name="connectionFactory" ref="rabbitConnectionFactory"/>
+        <property name="retryTemplate" ref="rabbitRetryTemplate"/>
+        <property name="mandatory" value="true"/>
     </bean>
     <!-- 邮件确认队列 -->
-    <rabbit:queue name="mail_send_queue_online" durable="true" />
+    <rabbit:queue name="mail_send_queue_online" durable="true"/>
     <rabbit:direct-exchange name="mailExchange" durable="true">
         <rabbit:bindings>
-            <rabbit:binding key="mail_online_route" queue="mail_send_queue_online" ></rabbit:binding>
+            <rabbit:binding key="mail_online_route" queue="mail_send_queue_online"></rabbit:binding>
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
     <!-- 短信队列 -->
-    <rabbit:queue name="sms_send_queue_online" durable="true" />
+    <rabbit:queue name="sms_send_queue_online" durable="true"/>
     <rabbit:direct-exchange name="smsExchange" durable="true">
         <rabbit:bindings>
-            <rabbit:binding key="sms_online_route" queue="sms_send_queue_online" ></rabbit:binding>
+            <rabbit:binding key="sms_online_route" queue="sms_send_queue_online"></rabbit:binding>
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
     <!--更进信息队列-->
-    <rabbit:queue name="follow_message_online" durable="true" />
+    <rabbit:queue name="follow_message_online" durable="true"/>
     <rabbit:direct-exchange name="followMessageExchange" durable="true">
         <rabbit:bindings>
-            <rabbit:binding key="fm_online_route" queue="follow_message_online" ></rabbit:binding>
+            <rabbit:binding key="fm_online_route" queue="follow_message_online"></rabbit:binding>
         </rabbit:bindings>
     </rabbit:direct-exchange>
-
-
-
-
-
-
-
-
-
-
 
 
     <!--<rabbit:listener-container connection-factory="rabbitConnectionFactory">
         <rabbit:listener ref="mailClient" method="sendMailFromMessage" queue-names="mail_send_queue" />
     </rabbit:listener-container>
     <bean id="mailClient" class="com.dqys.core.utils.EmailClientTool" />-->
-
 
 
     <!--<rabbit:connection-factory id="rabbitConnectionFactory"></rabbit:connection-factory>-->
@@ -278,7 +253,6 @@
     <bean id="rabbitClient" class="com.dqys.core.utils.RabbitMQClientTool" />-->
 
 
-
     <!--<rabbit:template id="amqpTemplate" connection-factory="rabbitConnectionFactory"/>
 
     <rabbit:admin connection-factory="rabbitConnectionFactory"/>
@@ -286,8 +260,6 @@
     <rabbit:queue name="myqueue"/>
 
     <bean id="foo" class="com.dqys.core.utils.RabbitMQConsumerTool" />-->
-
-
 
 
     <!--<rabbit:template id="rabbitTemplate" connection-factory="rabbitConnectionFactory" exchange="myExchange" routing-key="foo.bar" />

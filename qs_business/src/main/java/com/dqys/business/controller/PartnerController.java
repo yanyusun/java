@@ -48,7 +48,6 @@ public class PartnerController {
      * @apiSampleRequest parter/addPartner
      * @apiParam {int} partnerCompanyId 合作公司id
      * @apiGroup　 partner
-     * @apiSuccessExample {json} Data-Response:
      */
     @RequestMapping("/addPartner")
     @ResponseBody
@@ -66,7 +65,6 @@ public class PartnerController {
      * @apiParam {string} nameLike 公司名称
      * @apiParam {string} account 清搜帐号
      * @apiGroup　 partner
-     * @apiSuccessExample {json} Data-Response:
      */
     @RequestMapping("/getCompanyList")
     @ResponseBody
@@ -100,7 +98,6 @@ public class PartnerController {
      * @apiSampleRequest partner/partnerList
      * @apiParam {int} relationStatus 合作状态
      * @apiGroup　 partner
-     * @apiSuccessExample {json} Data-Response:
      */
     @RequestMapping("/partnerList")
     @ResponseBody
@@ -120,7 +117,6 @@ public class PartnerController {
      * @apiParam {int} companyRelationId 关系表id
      * @apiParam {int} status 状态（1同意2拒绝3终止）
      * @apiGroup　 partner
-     * @apiSuccessExample {json} Data-Response:
      */
     @RequestMapping("/audit")
     @ResponseBody

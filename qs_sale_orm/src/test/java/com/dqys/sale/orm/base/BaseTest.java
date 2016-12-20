@@ -1,4 +1,4 @@
-package com.dqys.business.orm.base;
+package com.dqys.sale.orm.base;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author by pan on 16-4-6.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"/spring/spring-core.xml"})
+@ContextConfiguration(locations={"/spring/spring-core.xml","/spring/spring-sale-orm.xml"})
 @Rollback(true)
 public abstract class BaseTest {
 

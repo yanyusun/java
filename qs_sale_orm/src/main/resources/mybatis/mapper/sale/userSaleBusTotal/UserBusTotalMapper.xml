@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.sale.orm.mapper.UserBusTotalMapper" >
+  <resultMap id="BaseResultMap" type="com.dqys.sale.orm.pojo.UserBusTotal" >
+    <id column="has_publish" property="hasPublish" jdbcType="INTEGER" />
+    <result column="on_collection" property="onCollection" jdbcType="INTEGER" />
+    <result column="on_business" property="onBusiness" jdbcType="INTEGER" />
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    has_publish, on_collection, on_business, id, user_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_user_bus_total
+    where has_publish = #{hasPublish,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_user_bus_total
+    where has_publish = #{hasPublish,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.dqys.sale.orm.pojo.UserBusTotal" >
+    insert into t_user_bus_total (has_publish, on_collection, on_business, 
+      id, user_id)
+    values (#{hasPublish,jdbcType=INTEGER}, #{onCollection,jdbcType=INTEGER}, #{onBusiness,jdbcType=INTEGER}, 
+      #{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.UserBusTotal" >
+    insert into t_user_bus_total
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="hasPublish != null" >
+        has_publish,
+      </if>
+      <if test="onCollection != null" >
+        on_collection,
+      </if>
+      <if test="onBusiness != null" >
+        on_business,
+      </if>
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="hasPublish != null" >
+        #{hasPublish,jdbcType=INTEGER},
+      </if>
+      <if test="onCollection != null" >
+        #{onCollection,jdbcType=INTEGER},
+      </if>
+      <if test="onBusiness != null" >
+        #{onBusiness,jdbcType=INTEGER},
+      </if>
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.sale.orm.pojo.UserBusTotal" >
+    update t_user_bus_total
+    <set >
+      <if test="onCollection != null" >
+        on_collection = #{onCollection,jdbcType=INTEGER},
+      </if>
+      <if test="onBusiness != null" >
+        on_business = #{onBusiness,jdbcType=INTEGER},
+      </if>
+      <if test="id != null" >
+        id = #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where has_publish = #{hasPublish,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dqys.sale.orm.pojo.UserBusTotal" >
+    update t_user_bus_total
+    set on_collection = #{onCollection,jdbcType=INTEGER},
+      on_business = #{onBusiness,jdbcType=INTEGER},
+      id = #{id,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER}
+    where has_publish = #{hasPublish,jdbcType=INTEGER}
+  </update>
+
+
+
+  <select id="list" resultMap="BaseResultMap" parameterType="com.dqys.sale.orm.query.UserBusTotalQuery" >
+    select
+    <include refid="Base_Column_List" />
+    from t_user_bus_total
+    where 1=1
+    <if test="userId != null" >
+      AND user_id = #{userId,jdbcType=INTEGER}
+    </if>
+    <if test="isPaging">
+      limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </if>
+  </select>
+
+
+
+
+
+</mapper>

@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(locations={"/unit-test.xml"})
 //@ContextConfiguration(locations={"/spring/spring-core.xml"})
 @Rollback(true)
-@Transactional(transactionManager = "transactionManager")
+//@Transactional(transactionManager = "transactionManagerCore")
 public abstract class BaseTest {
 
     @BeforeTransaction

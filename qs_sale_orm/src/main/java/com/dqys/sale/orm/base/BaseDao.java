@@ -1,4 +1,4 @@
-package com.dqys.core.base;
+package com.dqys.sale.orm.base;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.support.SqlSessionDaoSupport;
@@ -7,11 +7,10 @@ import javax.annotation.Resource;
 import java.io.Serializable;
 
 /**
- * @author by pan on 16-3-15.
+ * Created by yan on 16-12-19.
  */
-public abstract class BaseDao extends SqlSessionDaoSupport implements Serializable {
-
-    @Resource(name="sqlSessionFactory")
+public class BaseDao extends SqlSessionDaoSupport implements Serializable {
+    @Resource(name="sqlSessionFactorySale")
     public void setSqlSessionFactory(SqlSessionFactory sqlSessionFactory) {
         super.setSqlSessionFactory(sqlSessionFactory);
     }
