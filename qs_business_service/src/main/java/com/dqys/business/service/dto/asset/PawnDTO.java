@@ -1,5 +1,7 @@
 package com.dqys.business.service.dto.asset;
 
+import java.util.Map;
+
 /**
  * Created by Yvan on 16/6/16.
  */
@@ -23,6 +25,7 @@ public class PawnDTO {
     private Double worth;  // 价值
     private String memo;  // 备注
 
+
     private Integer lenderId;  // 借款人基础信息ID
 
     private String iouIds;
@@ -31,6 +34,16 @@ public class PawnDTO {
     private Integer agent; // 中介
     private Integer urge; // 催收
     private Integer lawyer; // 代理
+
+    private Map coord;//参与人员》协作器
+
+    public Map getCoord() {
+        return coord;
+    }
+
+    public void setCoord(Map coord) {
+        this.coord = coord;
+    }
 
     public Integer getAgent() {
         return agent;

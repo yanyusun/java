@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.auth.orm.dao.facade.SaleUserMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.SaleUser">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="salt" property="salt" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="role_type" property="roleType" jdbcType="INTEGER"/>
+        <result column="user_type" property="userType" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+        <result column="sex" property="sex" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, name, account, email, mobile, password, salt, status, role_type, user_type, create_at,
+    update_at, version, stateflag,sex
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sale_user
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_sale_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.dqys.auth.orm.pojo.SaleUser">
+    insert into t_sale_user (id, name, account, 
+      email, mobile, password, 
+      salt, status, role_type, 
+      user_type, create_at, update_at, 
+      version, stateflag,sex)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{account,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{salt,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{roleType,jdbcType=INTEGER}, 
+      #{userType,jdbcType=INTEGER}, now(), now(), 
+      #{version,jdbcType=INTEGER}, #{stateflag,jdbcType=BIGINT},#{sex,jdbcType=INTEGER})
+  </insert>
+    <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.SaleUser" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into t_sale_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="account != null">
+                account,
+            </if>
+            <if test="email != null">
+                email,
+            </if>
+            <if test="mobile != null">
+                mobile,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="salt != null">
+                salt,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="roleType != null">
+                role_type,
+            </if>
+            <if test="userType != null">
+                user_type,
+            </if>
+            create_at,
+            update_at,
+            <if test="version != null">
+                version,
+            </if>
+            <if test="stateflag != null">
+                stateflag,
+            </if>
+            <if test="sex != null">
+                sex,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null">
+                #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="roleType != null">
+                #{roleType,jdbcType=INTEGER},
+            </if>
+            <if test="userType != null">
+                #{userType,jdbcType=INTEGER},
+            </if>
+            now(),
+            now(),
+            <if test="version != null">
+                #{version,jdbcType=INTEGER},
+            </if>
+            <if test="stateflag != null">
+                #{stateflag,jdbcType=BIGINT},
+            </if>
+            <if test="sex != null">
+                #{sex,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.SaleUser">
+        update t_sale_user
+        <set>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="account != null">
+                account = #{account,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null">
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="salt != null">
+                salt = #{salt,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="roleType != null">
+                role_type = #{roleType,jdbcType=INTEGER},
+            </if>
+            <if test="userType != null">
+                user_type = #{userType,jdbcType=INTEGER},
+            </if>
+            <if test="sex != null">
+                sex = #{sex,jdbcType=INTEGER},
+            </if>
+            update_at = now(),
+            <if test="version != null">
+                version = #{version,jdbcType=INTEGER},
+            </if>
+            <if test="stateflag != null">
+                stateflag = #{stateflag,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.auth.orm.pojo.SaleUser">
+    update t_sale_user
+    set name = #{name,jdbcType=VARCHAR},
+      account = #{account,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      role_type = #{roleType,jdbcType=INTEGER},
+      user_type = #{userType,jdbcType=INTEGER},
+      update_at = now(),
+      version = #{version,jdbcType=INTEGER},
+      sex = #{sex,jdbcType=INTEGER},
+      stateflag = #{stateflag,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <!-- 检验账号是否存在 -->
+    <select id="verifyUser" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sale_user
+        where
+        ( 1=2
+        <if test="account != null">
+            or account = #{account,jdbcType=VARCHAR}
+        </if>
+        <if test="mobile != null">
+            or mobile = #{mobile,jdbcType=VARCHAR}
+        </if>
+        <if test="email != null">
+            or email = #{email,jdbcType=VARCHAR}
+        </if>
+        )
+        and stateflag=0
+    </select>
+
+
+</mapper>

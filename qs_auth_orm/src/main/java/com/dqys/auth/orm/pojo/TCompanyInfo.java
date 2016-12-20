@@ -25,9 +25,17 @@ public class TCompanyInfo extends BaseModel implements Serializable {
     private Integer type; // 公司类型
     private Integer businessType;//业务类型(目前含义与用户类型一致)
     private String companyAccount;//公司账号名称
+    private String accountCode;//清搜号
 
     private static final long serialVersionUID = 1L;
 
+    public String getAccountCode() {
+        return accountCode;
+    }
+
+    public void setAccountCode(String accountCode) {
+        this.accountCode = accountCode;
+    }
 
     public String getCompanyAccount() {
         return companyAccount;

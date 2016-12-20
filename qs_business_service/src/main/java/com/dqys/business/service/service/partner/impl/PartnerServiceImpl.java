@@ -71,7 +71,7 @@ public class PartnerServiceImpl implements PartnerService {
         } else if (companyRelation != null && (companyRelation.getRelationStatus() == PartnerEnum.relation_status_refush.getValue() ||
                 companyRelation.getRelationStatus() == PartnerEnum.relation_status_over.getValue())) {
             //发送通知短信
-            if (userId == companyRelation.getCompanyAId().intValue()) {
+            if (detail.getCompanyId() == companyRelation.getCompanyAId().intValue()) {
                 sendSmsByRelation(userId, companyRelation.getCompanyBId(), companyRelation, PartnerEnum.relation_status_wait.getValue());
             } else {
                 sendSmsByRelation(userId, companyRelation.getCompanyAId(), companyRelation, PartnerEnum.relation_status_wait.getValue());
@@ -114,7 +114,7 @@ public class PartnerServiceImpl implements PartnerService {
             String operUrl = MessageUtils.setOperUrl("/parter/audit?status=1&companyRelationId=" + relation.getId(), null,
                     "/parter/audit?status=2&companyRelationId=" + relation.getId(), null, null);
             messageService.add(operC.getRealName() + "申请加您为合作伙伴", content, senderId, receiveId, "合作伙伴添加", MessageEnum.TASK.getValue(), MessageBTEnum.RELATION_PARTNER.getValue(), operUrl);
-        } else if ((relation.getRelationStatus() == PartnerEnum.relation_status_over.getValue().intValue()||relation.getRelationStatus() == PartnerEnum.relation_status_refush.getValue().intValue()) && PartnerEnum.relation_status_wait.getValue().intValue() == status) {
+        } else if ((relation.getRelationStatus() == PartnerEnum.relation_status_over.getValue().intValue() || relation.getRelationStatus() == PartnerEnum.relation_status_refush.getValue().intValue()) && PartnerEnum.relation_status_wait.getValue().intValue() == status) {
             String content = smsUtil.sendSms(SmsEnum.ADD_COMPANY_RELATION.getValue(), userC.getMobile(),
                     userC.getRealName(),
                     operC.getEmail(),
@@ -189,6 +189,10 @@ public class PartnerServiceImpl implements PartnerService {
     @Override
     public JsonResponse audit(Integer status, Integer companyRelationId) {
         Integer userId = UserSession.getCurrent().getUserId();
+        UserDetail detail = tUserInfoMapper.getUserDetail(userId);
+        if (detail == null || detail.getCompanyId() == null) {
+            return JsonResponseTool.failure("当前用户无权限操作");
+        }
         CompanyRelation relation = companyRelationMapper.get(companyRelationId);
         if (relation == null) {
             return JsonResponseTool.failure("关系已不存在，操作失败");
@@ -209,7 +213,7 @@ public class PartnerServiceImpl implements PartnerService {
         companyRelation.setRelationStatus(status);
         if (companyRelationMapper.update(companyRelation) > 0) {
             companyRelation = companyRelationMapper.get(companyRelationId);
-            if (userId == companyRelation.getCompanyAId().intValue()) {
+            if (detail.getCompanyId() == companyRelation.getCompanyAId().intValue()) {
                 sendSmsByRelation(userId, companyRelation.getCompanyBId(), companyRelation, status);
             } else {
                 sendSmsByRelation(userId, companyRelation.getCompanyAId(), companyRelation, status);
@@ -221,40 +225,7 @@ public class PartnerServiceImpl implements PartnerService {
 
     @Override
     public void getCompanyList(ModulPartner modulPartner, Map map) {
-        List<UserDTO> userList = new ArrayList<>();
-        List<TCompanyInfo> companyList = new ArrayList<>();
-        if ((modulPartner.getAccount() != null && !modulPartner.getAccount().equals("")) || modulPartner.getUserId() != null) {
-            List<TUserInfo> list = tUserInfoMapper.queryLikeAccount(modulPartner.getAccount(), modulPartner.getUserId());
-            List<Integer> companyIds = new ArrayList<>();
-            for (TUserInfo userInfo : list) {
-                UserDTO dto = new UserDTO();
-                dto.setId(userInfo.getId());
-                dto.setName(userInfo.getAccount());
-                userList.add(dto);
-                companyIds.add(userInfo.getCompanyId());
-            }
-            if (userList.size() == 1) {
-                modulPartner.setQuery(new CompanyQuery());
-                modulPartner.getQuery().setCompanyIds(companyIds);
-                companyList = tCompanyInfoMapper.queryList(modulPartner.getQuery());
-            }
-        } else {
-            companyList = tCompanyInfoMapper.queryList(modulPartner.getQuery());
-            map.put("companyList", companyList);
-            if (companyList != null & companyList.size() == 1) {
-                TCompanyInfo info = companyList.get(0);
-                Integer userId = tUserInfoMapper.getUserByCompanyAdmin(info.getId());
-                if (userId != null) {
-                    UserDetail detail = tUserInfoMapper.getUserDetail(userId);
-                    if (detail != null) {
-                        UserDTO dto = new UserDTO();
-                        dto.setId(detail.getId());
-                        dto.setName(detail.getAccount());
-                        userList.add(dto);
-                    }
-                }
-            }
-        }
+        List<TCompanyInfo> companyList = tCompanyInfoMapper.queryList(modulPartner.getQuery());
         List<TCompanyInfoDTO> list = new ArrayList<>();
         if (companyList != null) {
             for (TCompanyInfo info : companyList) {
@@ -276,11 +247,11 @@ public class PartnerServiceImpl implements PartnerService {
                 dto.setIsAuth(info.getIsAuth());
                 dto.setLicence(info.getLicence());
                 dto.setCredential(info.getCredential());
+                dto.setAccountCode(info.getAccountCode());
                 list.add(dto);
             }
         }
         map.put("companyList", list);
-        map.put("userList", userList);
     }
 
     @Override
