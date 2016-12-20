@@ -617,14 +617,22 @@ public class LenderServiceImpl implements LenderService {
             long millis = (calendar.getTimeInMillis() - date.getTime()) / 24 / 3600 / 1000;
             lenderDTO.setOverdueDay(Integer.valueOf(String.valueOf(millis)));
         }
+        TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
         // 抵押物
         List<PawnDTO> pawnDTOList = new ArrayList<>();
         for (PawnInfo pawnInfo : pawnInfoList) {
-            pawnDTOList.add(changeToDTO(pawnInfo));
+            PawnDTO dto = changeToDTO(pawnInfo);
+            Map coordMap = new HashMap<>();
+            try {
+                coordinatorService.readByLenderOrAsset(coordMap, userInfo.getCompanyId(), dto.getId(), ObjectTypeEnum.PAWN.getValue(), userInfo.getId());
+                dto.setCoord(coordMap);//参与人员：查询就是协作器的人员
+            } catch (Exception e) {
+
+            }
+            pawnDTOList.add(dto);
         }
         resultMap.put("pawnDTOs", pawnDTOList);
         // 协作器
-        TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
         UserTeam userTeam = userTeamMapper.getByObject(
                 lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue(), userInfo.getCompanyId());
         if (userTeam != null) {
