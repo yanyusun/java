@@ -51,7 +51,6 @@ public class OrganizationCompanyController {
      * @apiName organiz/organizList
      * @apiSampleRequest organiz/organizList
      * @apiGroup organiz
-     * @apiSuccessExample {json} Data-Response:
      */
     @RequestMapping("/organizList")
     @ResponseBody
@@ -87,7 +86,6 @@ public class OrganizationCompanyController {
      * @apiParam {string} companyRemark 功能简介
      * @apiParam {string} remark 备注
      * @apiGroup organiz
-     * @apiSuccessExample {json} Data-Response:
      */
     @RequestMapping("/updateCompany")
     @ResponseBody
@@ -194,7 +192,6 @@ public class OrganizationCompanyController {
      * @apiName organiz/organizListToOutExcel
      * @apiSampleRequest organiz/organizListToOutExcel
      * @apiGroup organiz
-     * @apiSuccessExample {json} Data-Response:
      */
     @RequestMapping("/organizListToOutExcel")
     @ResponseBody
@@ -214,7 +211,6 @@ public class OrganizationCompanyController {
      * @apiGroup organiz
      * @apiParam {int[]} companyId 公司id
      * @apiParam {int} status 状态（1允许登入2禁止登入）
-     * @apiSuccessExample {json} Data-Response:
      */
     @RequestMapping("/audit")
     @ResponseBody

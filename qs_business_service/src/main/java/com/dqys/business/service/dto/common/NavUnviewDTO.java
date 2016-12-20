@@ -11,7 +11,7 @@ import com.dqys.business.service.dto.sourceAuth.UnviewReIdMap;
  * @apiParam {number} [navId] 资料实勘分类id
  * @apiParam {number} [objectId] 对象id
  * @apiParam {number} [objectType] 对象类型(借款人,资产源)
- * @apiParam {UnviewReIdMap}  未选中的项
+ * @apiParam {UnviewReIdMap}  [unviewReIdMap] 未选中的项
  *
  */
 public class NavUnviewDTO {
