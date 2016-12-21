@@ -291,7 +291,6 @@ public class DistributionServiceImpl implements DistributionService {
         objectUserRelationQuery.setUserIds(userIds);
         objectUserRelationQuery.setType(BusinessRelationEnum.dispose.getValue());
         List<ObjectUserRelation> relationList = objectUserRelationMapper.list(objectUserRelationQuery);
-        Integer num = relationList.size();
         for (ObjectUserRelation objectUserRelation : relationList) {
             // 对象遍历
             if (PAWN.getValue().equals(objectUserRelation.getObjectType())) {
@@ -306,7 +305,6 @@ public class DistributionServiceImpl implements DistributionService {
                                 if (ctr != null && detail != null) {
                                     BusinessServiceDTO dto = createBSDTO(ctr, detail, pawnInfo.getId(), PAWN.getValue(),
                                             pawnInfo.getName(), objectUserRelation.getCreateAt());
-                                    dto.setType(dto.getType() + num);
                                     serviceDTOList.add(dto);
                                 }
                             }
@@ -318,7 +316,6 @@ public class DistributionServiceImpl implements DistributionService {
                             if (ctr != null && detail != null) {
                                 BusinessServiceDTO dto = createBSDTO(ctr, detail, PAWN.getValue(),
                                         pawnInfo.getId(), pawnInfo.getName(), objectUserRelation.getCreateAt());
-                                dto.setType(dto.getType() + num);
                                 serviceDTOList.add(dto);
                             }
                         }
@@ -336,7 +333,6 @@ public class DistributionServiceImpl implements DistributionService {
                                 if (ctr != null && detail != null) {
                                     BusinessServiceDTO dto = createBSDTO(ctr, detail, ObjectTypeEnum.IOU.getValue(),
                                             iouInfo.getId(), iouInfo.getName(), objectUserRelation.getCreateAt());
-                                    dto.setType(dto.getType() + num);
                                     serviceDTOList.add(dto);
                                 }
                             }
@@ -348,14 +344,16 @@ public class DistributionServiceImpl implements DistributionService {
                             if (ctr != null && detail != null) {
                                 BusinessServiceDTO dto = createBSDTO(ctr, detail, ObjectTypeEnum.IOU.getValue(),
                                         iouInfo.getId(), iouInfo.getName(), objectUserRelation.getCreateAt());
-                                dto.setType(dto.getType() + num);
                                 serviceDTOList.add(dto);
                             }
                         }
                     }
                 }
             }
-            num--;
+        }
+        for (int i = 0; i < serviceDTOList.size(); i++) {
+            BusinessServiceDTO dto = serviceDTOList.get(i);
+            dto.setType(dto.getType() + (serviceDTOList.size() - i));
         }
         distributionDTO.setBusinessServiceDTOList(serviceDTOList);
     }
