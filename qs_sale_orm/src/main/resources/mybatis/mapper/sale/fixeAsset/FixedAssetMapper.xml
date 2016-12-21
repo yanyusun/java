@@ -528,6 +528,14 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
+    <sql id="Query_Where">
+        <if test="fixedAssetIds!=null&&fixedAssetIds.size>0">
+            AND id IN
+            <foreach collection="fixedAssetIds" item="id" index="index" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+    </sql>
 
     <select id="fixedList" parameterType="com.dqys.sale.orm.query.FixedAssetQuery"
             resultMap="ResultMapWithBLOBs">
@@ -536,7 +544,15 @@
         ,
         <include refid="Blob_Column_List"/>
         FROM t_fixed_asset WHERE 1=1
+        <include refid="Query_Where"/>
         Limit #{startPage},#{pageCount}
+    </select>
+    <select id="fixedListCount" parameterType="com.dqys.sale.orm.query.FixedAssetQuery"
+            resultType="int">
+        SELECT
+        count(*)
+        FROM t_fixed_asset WHERE 1=1
+        <include refid="Query_Where"/>
     </select>
 
 

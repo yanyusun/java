@@ -11,10 +11,10 @@ import java.util.List;
  * Created by mkfeng on 2016/12/21.
  */
 public class FixedAssetDTO {
-    private FixedAsset fixedAsset;
-    private List<Label> labels;
-    private List<Dispose> disposes;
-    private List<AssetFile> assetFiles;
+    private FixedAsset fixedAsset;//资产
+    private List<Label> labels;//标签
+    private List<Dispose> disposes;//处置方式
+    private List<AssetFile> assetFiles;//文件
 
     public FixedAsset getFixedAsset() {
         return fixedAsset;

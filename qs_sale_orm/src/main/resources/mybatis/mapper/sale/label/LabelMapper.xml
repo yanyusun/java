@@ -71,10 +71,13 @@
 
     <select id="selectByAssetId" resultMap="BaseResultMap">
         select
-         lab.*
+        lab.*
         from t_label lab LEFT JOIN t_label_asset_re lar
         ON lar.label_id=lab.id
-        WHERE lar.assset_id=#{assetId} AND lar.asset_type=#{assetType}
+        WHERE lar.assset_id=#{assetId}
+        <if test="assetType !=null">
+            AND lar.asset_type=#{assetType}
+        </if>
     </select>
 
 </mapper>

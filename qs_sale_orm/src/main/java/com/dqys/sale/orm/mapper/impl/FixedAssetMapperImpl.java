@@ -52,4 +52,9 @@ public class FixedAssetMapperImpl extends SaleBaseDao implements FixedAssetMappe
     public List<FixedAsset> fixedList(FixedAssetQuery query) {
         return super.getSqlSession().getMapper(FixedAssetMapper.class).fixedList(query);
     }
+
+    @Override
+    public Integer fixedListCount(FixedAssetQuery query) {
+        return super.getSqlSession().getMapper(FixedAssetMapper.class).fixedListCount(query);
+    }
 }

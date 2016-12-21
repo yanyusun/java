@@ -9,4 +9,6 @@ import java.util.List;
 public interface FixedAssetMapper extends BaseMapper<FixedAsset> {
 
     List<FixedAsset> fixedList(FixedAssetQuery query);
+
+    Integer fixedListCount(FixedAssetQuery query);
 }
