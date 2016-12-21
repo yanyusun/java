@@ -1,12 +1,13 @@
 package com.dqys.sale.orm.mapper.impl;
 
 
-import com.dqys.sale.orm.base.BaseDao;
+import com.dqys.core.base.SaleBaseDao;
 import com.dqys.sale.orm.mapper.UserBusTotalMapper;
 import com.dqys.sale.orm.pojo.UserBusTotal;
 import com.dqys.sale.orm.query.UserBusTotalQuery;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Repository
 @Primary
-public class UserBusTotalMapperImpl extends BaseDao implements UserBusTotalMapper{
+public class UserBusTotalMapperImpl extends SaleBaseDao implements UserBusTotalMapper{
     public int deleteByPrimaryKey(Integer hasPublish) {
         return 0;
     }
