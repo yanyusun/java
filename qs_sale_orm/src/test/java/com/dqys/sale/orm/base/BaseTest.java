@@ -8,13 +8,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.AfterTransaction;
 import org.springframework.test.context.transaction.BeforeTransaction;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author by pan on 16-4-6.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={"/spring/spring-core.xml","/spring/spring-sale-orm.xml"})
+@ContextConfiguration(locations={"/spring/spring-core.xml"})
 @Rollback(true)
 public abstract class BaseTest {
 
