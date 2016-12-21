@@ -66,7 +66,8 @@
     delete from t_fixed_asset
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.dqys.sale.orm.pojo.FixedAsset">
+    <insert id="insert" parameterType="com.dqys.sale.orm.pojo.FixedAsset" useGeneratedKeys="true"
+            keyProperty="id">
     insert into t_fixed_asset (id, source, asset_type, 
       is_special, is_home_page, comfrom, 
       entrust_begintime, entrust_endtime, asset_rental, 
@@ -94,7 +95,8 @@
       #{collectionNum,jdbcType=INTEGER}, #{disposeNum,jdbcType=INTEGER}, #{no,jdbcType=VARCHAR}, 
       #{businessid,jdbcType=INTEGER}, #{title,jdbcType=VARBINARY})
   </insert>
-    <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.FixedAsset">
+    <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.FixedAsset" useGeneratedKeys="true"
+            keyProperty="id">
         insert into t_fixed_asset
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">

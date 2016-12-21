@@ -74,4 +74,10 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         return JsonResponseTool.success(map);
     }
 
+    @Override
+    public JsonResponse addFixed(FixedAssetDTO fixedAssetDTO) {
+
+        return null;
+    }
+
 }
