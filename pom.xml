@@ -22,6 +22,8 @@
         <module>qs_sale_orm</module>
         <module>qs_sale_service</module>
         <module>qs_sale</module>
+        <module>qs_flowbusiness</module>
+        <module>qs_flowbusiness_orm</module>
     </modules>
 
     <properties>
