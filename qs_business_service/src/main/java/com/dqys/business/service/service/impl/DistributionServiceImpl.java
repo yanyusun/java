@@ -291,7 +291,8 @@ public class DistributionServiceImpl implements DistributionService {
         objectUserRelationQuery.setUserIds(userIds);
         objectUserRelationQuery.setType(BusinessRelationEnum.dispose.getValue());
         List<ObjectUserRelation> relationList = objectUserRelationMapper.list(objectUserRelationQuery);
-        relationList.forEach(objectUserRelation -> {
+        Integer num = relationList.size();
+        for (ObjectUserRelation objectUserRelation : relationList) {
             // 对象遍历
             if (PAWN.getValue().equals(objectUserRelation.getObjectType())) {
                 PawnInfo pawnInfo = pawnInfoMapper.get(objectUserRelation.getObjectId());
@@ -303,8 +304,10 @@ public class DistributionServiceImpl implements DistributionService {
                                 CompanyTeamRe ctr = companyTeamReList.get(keyMap.get(objectUserRelation.getUserId()));
                                 CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(ctr.getAcceptCompanyId());
                                 if (ctr != null && detail != null) {
-                                    serviceDTOList.add(createBSDTO(ctr, detail, pawnInfo.getId(), PAWN.getValue(),
-                                            pawnInfo.getName(), objectUserRelation.getCreateAt()));
+                                    BusinessServiceDTO dto = createBSDTO(ctr, detail, pawnInfo.getId(), PAWN.getValue(),
+                                            pawnInfo.getName(), objectUserRelation.getCreateAt());
+                                    dto.setType(dto.getType() + num);
+                                    serviceDTOList.add(dto);
                                 }
                             }
                         }
@@ -313,8 +316,10 @@ public class DistributionServiceImpl implements DistributionService {
                             CompanyTeamRe ctr = companyTeamReList.get(keyMap.get(objectUserRelation.getUserId()));
                             CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(ctr.getAcceptCompanyId());
                             if (ctr != null && detail != null) {
-                                serviceDTOList.add(createBSDTO(ctr, detail, PAWN.getValue(),
-                                        pawnInfo.getId(), pawnInfo.getName(), objectUserRelation.getCreateAt()));
+                                BusinessServiceDTO dto = createBSDTO(ctr, detail, PAWN.getValue(),
+                                        pawnInfo.getId(), pawnInfo.getName(), objectUserRelation.getCreateAt());
+                                dto.setType(dto.getType() + num);
+                                serviceDTOList.add(dto);
                             }
                         }
                     }
@@ -329,8 +334,10 @@ public class DistributionServiceImpl implements DistributionService {
                                 CompanyTeamRe ctr = companyTeamReList.get(keyMap.get(objectUserRelation.getUserId()));
                                 CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(ctr.getAcceptCompanyId());
                                 if (ctr != null && detail != null) {
-                                    serviceDTOList.add(createBSDTO(ctr, detail, ObjectTypeEnum.IOU.getValue(),
-                                            iouInfo.getId(), iouInfo.getName(), objectUserRelation.getCreateAt()));
+                                    BusinessServiceDTO dto = createBSDTO(ctr, detail, ObjectTypeEnum.IOU.getValue(),
+                                            iouInfo.getId(), iouInfo.getName(), objectUserRelation.getCreateAt());
+                                    dto.setType(dto.getType() + num);
+                                    serviceDTOList.add(dto);
                                 }
                             }
                         }
@@ -339,14 +346,17 @@ public class DistributionServiceImpl implements DistributionService {
                             CompanyTeamRe ctr = companyTeamReList.get(keyMap.get(objectUserRelation.getUserId()));
                             CompanyDetailInfo detail = companyInfoMapper.getDetailByCompanyId(ctr.getAcceptCompanyId());
                             if (ctr != null && detail != null) {
-                                serviceDTOList.add(createBSDTO(ctr, detail, ObjectTypeEnum.IOU.getValue(),
-                                        iouInfo.getId(), iouInfo.getName(), objectUserRelation.getCreateAt()));
+                                BusinessServiceDTO dto = createBSDTO(ctr, detail, ObjectTypeEnum.IOU.getValue(),
+                                        iouInfo.getId(), iouInfo.getName(), objectUserRelation.getCreateAt());
+                                dto.setType(dto.getType() + num);
+                                serviceDTOList.add(dto);
                             }
                         }
                     }
                 }
             }
-        });
+            num--;
+        }
         distributionDTO.setBusinessServiceDTOList(serviceDTOList);
     }
 
@@ -373,22 +383,22 @@ public class DistributionServiceImpl implements DistributionService {
         result.setName(detail.getCompanyName());
         switch (detail.getType()) {
             case 1:
-                result.setType("平台");
+                result.setType("参与处置方");
                 break;
             case 0:
-                result.setType("普通用户");
+                result.setType("参与处置方");
                 break;
             case 31:
-                result.setType("催收方");
+                result.setType("参与处置方");
                 break;
             case 32:
-                result.setType("律所");
+                result.setType("参与处置方");
                 break;
             case 33:
-                result.setType("中介");
+                result.setType("参与处置方");
                 break;
             case 2:
-                result.setType("委托方");
+                result.setType("参与处置方");
                 break;
         }
         result.setAddress(AreaTool.getAreaById(detail.getProvince()).getLabel()

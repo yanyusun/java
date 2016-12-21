@@ -72,7 +72,7 @@ public class ExcelUtilAsset {
      * @return
      */
     private static boolean checkExcel(List<Map<String, Object>> list0, List<Map<String, Object>> list1, List<Map<String, Object>> list2, List<Map<String, Object>> list3, List<ExcelMessage> error) {
-        String[] str0 = {"序号", "*借款人", "*类型", "*委托起止日期", "*来源", "*评优", "*评级", "个性处置方式", "标签", "*担保方式", "*公司担保", "*抵押",
+        String[] str0 = {"序号", "*借款人", "*类型", "*委托起止日期","", "来源方式","*所属机构", "*评优", "*评级", "个性处置方式", "标签", "*担保方式", "*公司担保", "*抵押",
                 "*质押", "*担保人是否能联系", "*担保人经济状况", "*抵押物估价能否覆盖债务", "*诉讼与否", "*判决与否", "*实地催收次数",
                 "*电话催收次数", "*委托催收次数", "*债务方是否能正常联系", "*债务方是否有能力偿还"};
         String[] str1 = {"序号", "*关系", "*所属原始借据（号）", "*贷款金额", "*抵押物类型", "*抵押物面积", "*抵押率", "*地址省", "*地址市", "*地址区", "*具体地址",
