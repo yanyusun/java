@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.sale.orm.mapper.FixedAssetMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.sale.orm.pojo.FixedAsset">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="source" property="source" jdbcType="INTEGER"/>
+        <result column="asset_type" property="assetType" jdbcType="INTEGER"/>
+        <result column="is_special" property="isSpecial" jdbcType="INTEGER"/>
+        <result column="is_home_page" property="isHomePage" jdbcType="INTEGER"/>
+        <result column="comfrom" property="comfrom" jdbcType="INTEGER"/>
+        <result column="entrust_begintime" property="entrustBegintime" jdbcType="TIMESTAMP"/>
+        <result column="entrust_endtime" property="entrustEndtime" jdbcType="TIMESTAMP"/>
+        <result column="asset_rental" property="assetRental" jdbcType="DOUBLE"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="province" property="province" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="INTEGER"/>
+        <result column="area" property="area" jdbcType="INTEGER"/>
+        <result column="floor" property="floor" jdbcType="INTEGER"/>
+        <result column="orientation" property="orientation" jdbcType="INTEGER"/>
+        <result column="year" property="year" jdbcType="INTEGER"/>
+        <result column="used_year" property="usedYear" jdbcType="INTEGER"/>
+        <result column="house_nature" property="houseNature" jdbcType="INTEGER"/>
+        <result column="house_size" property="houseSize" jdbcType="DOUBLE"/>
+        <result column="has_house_certificate" property="hasHouseCertificate" jdbcType="INTEGER"/>
+        <result column="is_pledge" property="isPledge" jdbcType="INTEGER"/>
+        <result column="is_law" property="isLaw" jdbcType="INTEGER"/>
+        <result column="is_judgement" property="isJudgement" jdbcType="INTEGER"/>
+        <result column="asset_describe" property="assetDescribe" jdbcType="VARCHAR"/>
+        <result column="righter_name" property="righterName" jdbcType="VARCHAR"/>
+        <result column="righter_address" property="righterAddress" jdbcType="VARCHAR"/>
+        <result column="righter_province" property="righterProvince" jdbcType="INTEGER"/>
+        <result column="righter_city" property="righterCity" jdbcType="INTEGER"/>
+        <result column="righter_area" property="righterArea" jdbcType="INTEGER"/>
+        <result column="righter_contact_phone" property="righterContactPhone" jdbcType="VARCHAR"/>
+        <result column="righter_contact_name" property="righterContactName" jdbcType="VARCHAR"/>
+        <result column="righter_type" property="righterType" jdbcType="INTEGER"/>
+        <result column="mark" property="mark" jdbcType="VARCHAR"/>
+        <result column="collection_num" property="collectionNum" jdbcType="INTEGER"/>
+        <result column="dispose_num" property="disposeNum" jdbcType="INTEGER"/>
+        <result column="no" property="no" jdbcType="VARCHAR"/>
+        <result column="businessid" property="businessid" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="ResultMapWithBLOBs" type="com.dqys.sale.orm.pojo.FixedAsset" extends="BaseResultMap">
+        <result column="title" property="title" jdbcType="VARBINARY"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, source, asset_type, is_special, is_home_page, comfrom, entrust_begintime, entrust_endtime, 
+    asset_rental, address, province, city, area, floor, orientation, year, used_year, 
+    house_nature, house_size, has_house_certificate, is_pledge, is_law, is_judgement, 
+    asset_describe, righter_name, righter_address, righter_province, righter_city, righter_area, 
+    righter_contact_phone, righter_contact_name, righter_type, mark, collection_num, 
+    dispose_num, no, businessid
+  </sql>
+    <sql id="Blob_Column_List">
+    title
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        from t_fixed_asset
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_fixed_asset
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.dqys.sale.orm.pojo.FixedAsset">
+    insert into t_fixed_asset (id, source, asset_type, 
+      is_special, is_home_page, comfrom, 
+      entrust_begintime, entrust_endtime, asset_rental, 
+      address, province, city, 
+      area, floor, orientation, 
+      year, used_year, house_nature, 
+      house_size, has_house_certificate, is_pledge, 
+      is_law, is_judgement, asset_describe, 
+      righter_name, righter_address, righter_province, 
+      righter_city, righter_area, righter_contact_phone, 
+      righter_contact_name, righter_type, mark, 
+      collection_num, dispose_num, no, 
+      businessid, title)
+    values (#{id,jdbcType=INTEGER}, #{source,jdbcType=INTEGER}, #{assetType,jdbcType=INTEGER}, 
+      #{isSpecial,jdbcType=INTEGER}, #{isHomePage,jdbcType=INTEGER}, #{comfrom,jdbcType=INTEGER}, 
+      #{entrustBegintime,jdbcType=TIMESTAMP}, #{entrustEndtime,jdbcType=TIMESTAMP}, #{assetRental,jdbcType=DOUBLE}, 
+      #{address,jdbcType=VARCHAR}, #{province,jdbcType=INTEGER}, #{city,jdbcType=INTEGER}, 
+      #{area,jdbcType=INTEGER}, #{floor,jdbcType=INTEGER}, #{orientation,jdbcType=INTEGER}, 
+      #{year,jdbcType=INTEGER}, #{usedYear,jdbcType=INTEGER}, #{houseNature,jdbcType=INTEGER}, 
+      #{houseSize,jdbcType=DOUBLE}, #{hasHouseCertificate,jdbcType=INTEGER}, #{isPledge,jdbcType=INTEGER}, 
+      #{isLaw,jdbcType=INTEGER}, #{isJudgement,jdbcType=INTEGER}, #{assetDescribe,jdbcType=VARCHAR}, 
+      #{righterName,jdbcType=VARCHAR}, #{righterAddress,jdbcType=VARCHAR}, #{righterProvince,jdbcType=INTEGER}, 
+      #{righterCity,jdbcType=INTEGER}, #{righterArea,jdbcType=INTEGER}, #{righterContactPhone,jdbcType=VARCHAR}, 
+      #{righterContactName,jdbcType=VARCHAR}, #{righterType,jdbcType=INTEGER}, #{mark,jdbcType=VARCHAR}, 
+      #{collectionNum,jdbcType=INTEGER}, #{disposeNum,jdbcType=INTEGER}, #{no,jdbcType=VARCHAR}, 
+      #{businessid,jdbcType=INTEGER}, #{title,jdbcType=VARBINARY})
+  </insert>
+    <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.FixedAsset">
+        insert into t_fixed_asset
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="source != null">
+                source,
+            </if>
+            <if test="assetType != null">
+                asset_type,
+            </if>
+            <if test="isSpecial != null">
+                is_special,
+            </if>
+            <if test="isHomePage != null">
+                is_home_page,
+            </if>
+            <if test="comfrom != null">
+                comfrom,
+            </if>
+            <if test="entrustBegintime != null">
+                entrust_begintime,
+            </if>
+            <if test="entrustEndtime != null">
+                entrust_endtime,
+            </if>
+            <if test="assetRental != null">
+                asset_rental,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="area != null">
+                area,
+            </if>
+            <if test="floor != null">
+                floor,
+            </if>
+            <if test="orientation != null">
+                orientation,
+            </if>
+            <if test="year != null">
+                year,
+            </if>
+            <if test="usedYear != null">
+                used_year,
+            </if>
+            <if test="houseNature != null">
+                house_nature,
+            </if>
+            <if test="houseSize != null">
+                house_size,
+            </if>
+            <if test="hasHouseCertificate != null">
+                has_house_certificate,
+            </if>
+            <if test="isPledge != null">
+                is_pledge,
+            </if>
+            <if test="isLaw != null">
+                is_law,
+            </if>
+            <if test="isJudgement != null">
+                is_judgement,
+            </if>
+            <if test="assetDescribe != null">
+                asset_describe,
+            </if>
+            <if test="righterName != null">
+                righter_name,
+            </if>
+            <if test="righterAddress != null">
+                righter_address,
+            </if>
+            <if test="righterProvince != null">
+                righter_province,
+            </if>
+            <if test="righterCity != null">
+                righter_city,
+            </if>
+            <if test="righterArea != null">
+                righter_area,
+            </if>
+            <if test="righterContactPhone != null">
+                righter_contact_phone,
+            </if>
+            <if test="righterContactName != null">
+                righter_contact_name,
+            </if>
+            <if test="righterType != null">
+                righter_type,
+            </if>
+            <if test="mark != null">
+                mark,
+            </if>
+            <if test="collectionNum != null">
+                collection_num,
+            </if>
+            <if test="disposeNum != null">
+                dispose_num,
+            </if>
+            <if test="no != null">
+                no,
+            </if>
+            <if test="businessid != null">
+                businessid,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="source != null">
+                #{source,jdbcType=INTEGER},
+            </if>
+            <if test="assetType != null">
+                #{assetType,jdbcType=INTEGER},
+            </if>
+            <if test="isSpecial != null">
+                #{isSpecial,jdbcType=INTEGER},
+            </if>
+            <if test="isHomePage != null">
+                #{isHomePage,jdbcType=INTEGER},
+            </if>
+            <if test="comfrom != null">
+                #{comfrom,jdbcType=INTEGER},
+            </if>
+            <if test="entrustBegintime != null">
+                #{entrustBegintime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="entrustEndtime != null">
+                #{entrustEndtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="assetRental != null">
+                #{assetRental,jdbcType=DOUBLE},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null">
+                #{province,jdbcType=INTEGER},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=INTEGER},
+            </if>
+            <if test="area != null">
+                #{area,jdbcType=INTEGER},
+            </if>
+            <if test="floor != null">
+                #{floor,jdbcType=INTEGER},
+            </if>
+            <if test="orientation != null">
+                #{orientation,jdbcType=INTEGER},
+            </if>
+            <if test="year != null">
+                #{year,jdbcType=INTEGER},
+            </if>
+            <if test="usedYear != null">
+                #{usedYear,jdbcType=INTEGER},
+            </if>
+            <if test="houseNature != null">
+                #{houseNature,jdbcType=INTEGER},
+            </if>
+            <if test="houseSize != null">
+                #{houseSize,jdbcType=DOUBLE},
+            </if>
+            <if test="hasHouseCertificate != null">
+                #{hasHouseCertificate,jdbcType=INTEGER},
+            </if>
+            <if test="isPledge != null">
+                #{isPledge,jdbcType=INTEGER},
+            </if>
+            <if test="isLaw != null">
+                #{isLaw,jdbcType=INTEGER},
+            </if>
+            <if test="isJudgement != null">
+                #{isJudgement,jdbcType=INTEGER},
+            </if>
+            <if test="assetDescribe != null">
+                #{assetDescribe,jdbcType=VARCHAR},
+            </if>
+            <if test="righterName != null">
+                #{righterName,jdbcType=VARCHAR},
+            </if>
+            <if test="righterAddress != null">
+                #{righterAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="righterProvince != null">
+                #{righterProvince,jdbcType=INTEGER},
+            </if>
+            <if test="righterCity != null">
+                #{righterCity,jdbcType=INTEGER},
+            </if>
+            <if test="righterArea != null">
+                #{righterArea,jdbcType=INTEGER},
+            </if>
+            <if test="righterContactPhone != null">
+                #{righterContactPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="righterContactName != null">
+                #{righterContactName,jdbcType=VARCHAR},
+            </if>
+            <if test="righterType != null">
+                #{righterType,jdbcType=INTEGER},
+            </if>
+            <if test="mark != null">
+                #{mark,jdbcType=VARCHAR},
+            </if>
+            <if test="collectionNum != null">
+                #{collectionNum,jdbcType=INTEGER},
+            </if>
+            <if test="disposeNum != null">
+                #{disposeNum,jdbcType=INTEGER},
+            </if>
+            <if test="no != null">
+                #{no,jdbcType=VARCHAR},
+            </if>
+            <if test="businessid != null">
+                #{businessid,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARBINARY},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.sale.orm.pojo.FixedAsset">
+        update t_fixed_asset
+        <set>
+            <if test="source != null">
+                source = #{source,jdbcType=INTEGER},
+            </if>
+            <if test="assetType != null">
+                asset_type = #{assetType,jdbcType=INTEGER},
+            </if>
+            <if test="isSpecial != null">
+                is_special = #{isSpecial,jdbcType=INTEGER},
+            </if>
+            <if test="isHomePage != null">
+                is_home_page = #{isHomePage,jdbcType=INTEGER},
+            </if>
+            <if test="comfrom != null">
+                comfrom = #{comfrom,jdbcType=INTEGER},
+            </if>
+            <if test="entrustBegintime != null">
+                entrust_begintime = #{entrustBegintime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="entrustEndtime != null">
+                entrust_endtime = #{entrustEndtime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="assetRental != null">
+                asset_rental = #{assetRental,jdbcType=DOUBLE},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="province != null">
+                province = #{province,jdbcType=INTEGER},
+            </if>
+            <if test="city != null">
+                city = #{city,jdbcType=INTEGER},
+            </if>
+            <if test="area != null">
+                area = #{area,jdbcType=INTEGER},
+            </if>
+            <if test="floor != null">
+                floor = #{floor,jdbcType=INTEGER},
+            </if>
+            <if test="orientation != null">
+                orientation = #{orientation,jdbcType=INTEGER},
+            </if>
+            <if test="year != null">
+                year = #{year,jdbcType=INTEGER},
+            </if>
+            <if test="usedYear != null">
+                used_year = #{usedYear,jdbcType=INTEGER},
+            </if>
+            <if test="houseNature != null">
+                house_nature = #{houseNature,jdbcType=INTEGER},
+            </if>
+            <if test="houseSize != null">
+                house_size = #{houseSize,jdbcType=DOUBLE},
+            </if>
+            <if test="hasHouseCertificate != null">
+                has_house_certificate = #{hasHouseCertificate,jdbcType=INTEGER},
+            </if>
+            <if test="isPledge != null">
+                is_pledge = #{isPledge,jdbcType=INTEGER},
+            </if>
+            <if test="isLaw != null">
+                is_law = #{isLaw,jdbcType=INTEGER},
+            </if>
+            <if test="isJudgement != null">
+                is_judgement = #{isJudgement,jdbcType=INTEGER},
+            </if>
+            <if test="assetDescribe != null">
+                asset_describe = #{assetDescribe,jdbcType=VARCHAR},
+            </if>
+            <if test="righterName != null">
+                righter_name = #{righterName,jdbcType=VARCHAR},
+            </if>
+            <if test="righterAddress != null">
+                righter_address = #{righterAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="righterProvince != null">
+                righter_province = #{righterProvince,jdbcType=INTEGER},
+            </if>
+            <if test="righterCity != null">
+                righter_city = #{righterCity,jdbcType=INTEGER},
+            </if>
+            <if test="righterArea != null">
+                righter_area = #{righterArea,jdbcType=INTEGER},
+            </if>
+            <if test="righterContactPhone != null">
+                righter_contact_phone = #{righterContactPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="righterContactName != null">
+                righter_contact_name = #{righterContactName,jdbcType=VARCHAR},
+            </if>
+            <if test="righterType != null">
+                righter_type = #{righterType,jdbcType=INTEGER},
+            </if>
+            <if test="mark != null">
+                mark = #{mark,jdbcType=VARCHAR},
+            </if>
+            <if test="collectionNum != null">
+                collection_num = #{collectionNum,jdbcType=INTEGER},
+            </if>
+            <if test="disposeNum != null">
+                dispose_num = #{disposeNum,jdbcType=INTEGER},
+            </if>
+            <if test="no != null">
+                no = #{no,jdbcType=VARCHAR},
+            </if>
+            <if test="businessid != null">
+                businessid = #{businessid,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                title = #{title,jdbcType=VARBINARY},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.dqys.sale.orm.pojo.FixedAsset">
+    update t_fixed_asset
+    set source = #{source,jdbcType=INTEGER},
+      asset_type = #{assetType,jdbcType=INTEGER},
+      is_special = #{isSpecial,jdbcType=INTEGER},
+      is_home_page = #{isHomePage,jdbcType=INTEGER},
+      comfrom = #{comfrom,jdbcType=INTEGER},
+      entrust_begintime = #{entrustBegintime,jdbcType=TIMESTAMP},
+      entrust_endtime = #{entrustEndtime,jdbcType=TIMESTAMP},
+      asset_rental = #{assetRental,jdbcType=DOUBLE},
+      address = #{address,jdbcType=VARCHAR},
+      province = #{province,jdbcType=INTEGER},
+      city = #{city,jdbcType=INTEGER},
+      area = #{area,jdbcType=INTEGER},
+      floor = #{floor,jdbcType=INTEGER},
+      orientation = #{orientation,jdbcType=INTEGER},
+      year = #{year,jdbcType=INTEGER},
+      used_year = #{usedYear,jdbcType=INTEGER},
+      house_nature = #{houseNature,jdbcType=INTEGER},
+      house_size = #{houseSize,jdbcType=DOUBLE},
+      has_house_certificate = #{hasHouseCertificate,jdbcType=INTEGER},
+      is_pledge = #{isPledge,jdbcType=INTEGER},
+      is_law = #{isLaw,jdbcType=INTEGER},
+      is_judgement = #{isJudgement,jdbcType=INTEGER},
+      asset_describe = #{assetDescribe,jdbcType=VARCHAR},
+      righter_name = #{righterName,jdbcType=VARCHAR},
+      righter_address = #{righterAddress,jdbcType=VARCHAR},
+      righter_province = #{righterProvince,jdbcType=INTEGER},
+      righter_city = #{righterCity,jdbcType=INTEGER},
+      righter_area = #{righterArea,jdbcType=INTEGER},
+      righter_contact_phone = #{righterContactPhone,jdbcType=VARCHAR},
+      righter_contact_name = #{righterContactName,jdbcType=VARCHAR},
+      righter_type = #{righterType,jdbcType=INTEGER},
+      mark = #{mark,jdbcType=VARCHAR},
+      collection_num = #{collectionNum,jdbcType=INTEGER},
+      dispose_num = #{disposeNum,jdbcType=INTEGER},
+      no = #{no,jdbcType=VARCHAR},
+      businessid = #{businessid,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARBINARY}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.sale.orm.pojo.FixedAsset">
+    update t_fixed_asset
+    set source = #{source,jdbcType=INTEGER},
+      asset_type = #{assetType,jdbcType=INTEGER},
+      is_special = #{isSpecial,jdbcType=INTEGER},
+      is_home_page = #{isHomePage,jdbcType=INTEGER},
+      comfrom = #{comfrom,jdbcType=INTEGER},
+      entrust_begintime = #{entrustBegintime,jdbcType=TIMESTAMP},
+      entrust_endtime = #{entrustEndtime,jdbcType=TIMESTAMP},
+      asset_rental = #{assetRental,jdbcType=DOUBLE},
+      address = #{address,jdbcType=VARCHAR},
+      province = #{province,jdbcType=INTEGER},
+      city = #{city,jdbcType=INTEGER},
+      area = #{area,jdbcType=INTEGER},
+      floor = #{floor,jdbcType=INTEGER},
+      orientation = #{orientation,jdbcType=INTEGER},
+      year = #{year,jdbcType=INTEGER},
+      used_year = #{usedYear,jdbcType=INTEGER},
+      house_nature = #{houseNature,jdbcType=INTEGER},
+      house_size = #{houseSize,jdbcType=DOUBLE},
+      has_house_certificate = #{hasHouseCertificate,jdbcType=INTEGER},
+      is_pledge = #{isPledge,jdbcType=INTEGER},
+      is_law = #{isLaw,jdbcType=INTEGER},
+      is_judgement = #{isJudgement,jdbcType=INTEGER},
+      asset_describe = #{assetDescribe,jdbcType=VARCHAR},
+      righter_name = #{righterName,jdbcType=VARCHAR},
+      righter_address = #{righterAddress,jdbcType=VARCHAR},
+      righter_province = #{righterProvince,jdbcType=INTEGER},
+      righter_city = #{righterCity,jdbcType=INTEGER},
+      righter_area = #{righterArea,jdbcType=INTEGER},
+      righter_contact_phone = #{righterContactPhone,jdbcType=VARCHAR},
+      righter_contact_name = #{righterContactName,jdbcType=VARCHAR},
+      righter_type = #{righterType,jdbcType=INTEGER},
+      mark = #{mark,jdbcType=VARCHAR},
+      collection_num = #{collectionNum,jdbcType=INTEGER},
+      dispose_num = #{disposeNum,jdbcType=INTEGER},
+      no = #{no,jdbcType=VARCHAR},
+      businessid = #{businessid,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+    <select id="fixedList" parameterType="com.dqys.sale.orm.query.FixedAssetQuery"
+            resultMap="ResultMapWithBLOBs">
+        SELECT
+        <include refid="Base_Column_List"/>
+        ,
+        <include refid="Blob_Column_List"/>
+        FROM t_fixed_asset WHERE 1=1
+        Limit #{startPage},#{pageCount}
+    </select>
+
+
+</mapper>
