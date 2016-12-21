@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.sale.orm.mapper.DisposeMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.sale.orm.pojo.Dispose">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="dispose_type" property="disposeType" jdbcType="INTEGER"/>
+        <result column="asset_id" property="assetId" jdbcType="INTEGER"/>
+        <result column="asset_type" property="assetType" jdbcType="INTEGER"/>
+        <result column="alg" property="alg" jdbcType="INTEGER"/>
+        <result column="value" property="value" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, dispose_type, asset_id, asset_type, alg, value
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_dispose
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_dispose
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.dqys.sale.orm.pojo.Dispose">
+    insert into t_dispose (id, dispose_type, asset_id, 
+      asset_type, alg, value
+      )
+    values (#{id,jdbcType=INTEGER}, #{disposeType,jdbcType=INTEGER}, #{assetId,jdbcType=INTEGER}, 
+      #{assetType,jdbcType=INTEGER}, #{alg,jdbcType=INTEGER}, #{value,jdbcType=VARCHAR}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.Dispose">
+        insert into t_dispose
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="disposeType != null">
+                dispose_type,
+            </if>
+            <if test="assetId != null">
+                asset_id,
+            </if>
+            <if test="assetType != null">
+                asset_type,
+            </if>
+            <if test="alg != null">
+                alg,
+            </if>
+            <if test="value != null">
+                value,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="disposeType != null">
+                #{disposeType,jdbcType=INTEGER},
+            </if>
+            <if test="assetId != null">
+                #{assetId,jdbcType=INTEGER},
+            </if>
+            <if test="assetType != null">
+                #{assetType,jdbcType=INTEGER},
+            </if>
+            <if test="alg != null">
+                #{alg,jdbcType=INTEGER},
+            </if>
+            <if test="value != null">
+                #{value,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.sale.orm.pojo.Dispose">
+        update t_dispose
+        <set>
+            <if test="disposeType != null">
+                dispose_type = #{disposeType,jdbcType=INTEGER},
+            </if>
+            <if test="assetId != null">
+                asset_id = #{assetId,jdbcType=INTEGER},
+            </if>
+            <if test="assetType != null">
+                asset_type = #{assetType,jdbcType=INTEGER},
+            </if>
+            <if test="alg != null">
+                alg = #{alg,jdbcType=INTEGER},
+            </if>
+            <if test="value != null">
+                value = #{value,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.sale.orm.pojo.Dispose">
+    update t_dispose
+    set dispose_type = #{disposeType,jdbcType=INTEGER},
+      asset_id = #{assetId,jdbcType=INTEGER},
+      asset_type = #{assetType,jdbcType=INTEGER},
+      alg = #{alg,jdbcType=INTEGER},
+      value = #{value,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectByAssetId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_dispose WHERE asset_id=#{assetId}
+    </select>
+</mapper>

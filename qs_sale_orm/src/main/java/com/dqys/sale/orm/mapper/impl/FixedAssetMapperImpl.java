@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/12/21.
+ * Created by mkfeng on 2016/12/21.
  */
 @Repository
 public class FixedAssetMapperImpl extends SaleBaseDao implements FixedAssetMapper {
