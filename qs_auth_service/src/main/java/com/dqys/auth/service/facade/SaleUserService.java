@@ -30,5 +30,5 @@ public interface SaleUserService {
     SaleUser queryUser(String account, String mobile, String email);
 
     //验证数据格式的正确性
-    String verifyUserMessage(SaleUser user, SaleUserTag tag);
+    String verifyUserMessage(SaleUserModel saleUserModel);
 }

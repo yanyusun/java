@@ -151,23 +151,13 @@ public class CompanyServiceUtils {
         companyTeamReDTO.setUserType(companyDetailInfo.getType());
         switch (companyDetailInfo.getType()) {
             case 1:
-                companyTeamReDTO.setType("平台");
-                break;
-            case 0:
-                companyTeamReDTO.setType("普通用户");
-                break;
-            case 31:
-                companyTeamReDTO.setType("催收方");
-                break;
-            case 32:
-                companyTeamReDTO.setType("律所");
-                break;
-            case 33:
-                companyTeamReDTO.setType("中介");
+                companyTeamReDTO.setType("平台方");
                 break;
             case 2:
                 companyTeamReDTO.setType("委托方");
                 break;
+            default:
+                companyTeamReDTO.setType("所属参与方");
         }
         return companyTeamReDTO;
     }

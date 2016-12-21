@@ -622,13 +622,7 @@ public class LenderServiceImpl implements LenderService {
         List<PawnDTO> pawnDTOList = new ArrayList<>();
         for (PawnInfo pawnInfo : pawnInfoList) {
             PawnDTO dto = changeToDTO(pawnInfo);
-            Map coordMap = new HashMap<>();
-            try {
-                coordinatorService.readByLenderOrAsset(coordMap, userInfo.getCompanyId(), dto.getId(), ObjectTypeEnum.PAWN.getValue(), userInfo.getId());
-                dto.setCoord(coordMap);//参与人员：查询就是协作器的人员
-            } catch (Exception e) {
-
-            }
+            setCoord(userInfo, dto);//参与人员
             pawnDTOList.add(dto);
         }
         resultMap.put("pawnDTOs", pawnDTOList);
@@ -649,6 +643,27 @@ public class LenderServiceImpl implements LenderService {
         }
         resultMap.put("lenderDTO", lenderDTO);
         return JsonResponseTool.success(resultMap);
+    }
+
+    private void setCoord(TUserInfo userInfo, PawnDTO dto) {
+        Map coordMap = new HashMap<>();
+        UserTeam team = new UserTeam();
+        PawnInfo info = pawnInfoMapper.get(dto.getId());
+        if (info != null) {
+            UserTeam userTeam = new UserTeam();
+            userTeam.setObjectType(ObjectTypeEnum.LENDER.getValue());
+            userTeam.setObjectId(info.getLenderId());
+            userTeam.setCompanyId(userInfo.getCompanyId());
+            team = userTeamMapper.selectByPrimaryKeySelective(userTeam);
+        }
+        if (team != null) {//查询相应协作器是否存在，不存在就不进行查询
+            try {
+                coordinatorService.readByLenderOrAsset(coordMap, userInfo.getCompanyId(), dto.getId(), ObjectTypeEnum.PAWN.getValue(), userInfo.getId());
+                dto.setCoord(coordMap);//参与人员：查询就是协作器的人员
+            } catch (Exception e) {
+
+            }
+        }
     }
 
 
