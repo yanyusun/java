@@ -100,12 +100,6 @@ public class SaleUserModel implements Serializable {
     }
 
     public SaleUser getSaleUser() {
-        saleUser.setAccount(account);
-        saleUser.setEmail(email);
-        saleUser.setMobile(mobile);
-        saleUser.setName(name);
-        saleUser.setPassword(password);
-        saleUser.setSex(sex);
         return saleUser;
     }
 
@@ -114,9 +108,6 @@ public class SaleUserModel implements Serializable {
     }
 
     public SaleUserTag getSaleUserTag() {
-        saleUserTag.setProvince(province);
-        saleUserTag.setCity(city);
-        saleUserTag.setArea(area);
         return saleUserTag;
     }
 

@@ -84,7 +84,8 @@ public class SaleUserServiceImpl implements SaleUserService {
     }
 
     @Override
-    public String verifyUserMessage(SaleUser user, SaleUserTag tag) {
+    public String verifyUserMessage(SaleUserModel saleUserModel) {
+        SaleUser user = saleUserModel.getSaleUser();
         if (user != null) {
             if (CommonUtil.checkParam(user.getAccount(), user.getName(), user.getEmail(), user.getMobile(), user.getPassword(), user.getSex())) {
                 return "请把信息填写完整";
