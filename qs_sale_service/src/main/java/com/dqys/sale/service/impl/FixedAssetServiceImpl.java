@@ -9,6 +9,7 @@ import com.dqys.sale.service.facade.FixedAssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +28,11 @@ public class FixedAssetServiceImpl implements FixedAssetService {
 
     @Override
     public JsonResponse getDetail(Integer fixedAssetId) {
+        FixedAsset fixedAsset = fixedAssetMapper.selectByPrimaryKey(fixedAssetId);
+        if (fixedAsset != null) {
 
-        return null;
+        }
+        return JsonResponseTool.success(null);
     }
+
 }

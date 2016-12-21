@@ -19,12 +19,24 @@ public class FixedAssetController {
     @Autowired
     private FixedAssetService fixedAssetService;
 
+    /**
+     * 获取列表
+     *
+     * @param fixedAssetQuery
+     * @return
+     */
     @RequestMapping("/fixedList")
     @ResponseBody
     public JsonResponse fixedList(FixedAssetQuery fixedAssetQuery) {
         return fixedAssetService.fixedList(fixedAssetQuery);
     }
 
+    /**
+     * 获取详情
+     *
+     * @param fixedAssetId
+     * @return
+     */
     @RequestMapping("/getDetail")
     @ResponseBody
     public JsonResponse getDetail(Integer fixedAssetId) {
