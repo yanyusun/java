@@ -171,6 +171,7 @@ public class ExcelUtilAsset {
                     placeByExcel(error, name, i, 14, transMapToString(map, "var" + "13"), "必须为空");
                 }
             }
+            /*
             if (transMapToString(l, "var" + "15").equals("")) {//*担保人是否能联系
                 placeByExcel(error, name, i, 15, transMapToString(map, "var" + "14"), "不能为空");
             }
@@ -200,8 +201,8 @@ public class ExcelUtilAsset {
             }
             if (transMapToString(l, "var" + "24").equals("")) {//*债务方是否有能力偿还
                 placeByExcel(error, name, i, 24, transMapToString(map, "var" + "23"), "不能为空");
-                ;
             }
+            */
         }
     }
 
