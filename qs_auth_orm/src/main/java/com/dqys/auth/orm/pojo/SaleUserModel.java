@@ -18,6 +18,24 @@ public class SaleUserModel implements Serializable {
     private Integer city;
     private Integer area;
     private String smsCode;//手机短信验证码
+    private String key;//验证码key
+    private String code;//验证码
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public Integer getSex() {
         return sex;
