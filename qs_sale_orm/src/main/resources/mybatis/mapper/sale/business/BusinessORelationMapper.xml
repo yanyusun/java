@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.sale.orm.mapper.business.BusinessORelationMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.sale.orm.pojo.BusinessORelation">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="object_id" property="objectId" jdbcType="INTEGER"/>
+        <result column="object_type" property="objectType" jdbcType="INTEGER"/>
+        <result column="business_id" property="businessId" jdbcType="INTEGER"/>
+        <result column="version" property="version" jdbcType="INTEGER"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
+        <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, object_id, object_type, business_id, version, create_at, update_at, stateflag
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_business_obj_re
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_business_obj_re
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.dqys.sale.orm.pojo.BusinessORelation">
+    insert into t_business_obj_re (id, object_id, object_type, 
+      business_id, version, create_at, 
+      update_at, stateflag)
+    values (#{id,jdbcType=INTEGER}, #{objectId,jdbcType=INTEGER}, #{objectType,jdbcType=INTEGER}, 
+      #{businessId,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, now(), 
+      now(), #{stateflag,jdbcType=BIGINT})
+  </insert>
+    <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.BusinessORelation">
+        insert into t_business_obj_re
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="objectId != null">
+                object_id,
+            </if>
+            <if test="objectType != null">
+                object_type,
+            </if>
+            <if test="businessId != null">
+                business_id,
+            </if>
+            <if test="version != null">
+                version,
+            </if>
+                create_at,
+                update_at,
+            <if test="stateflag != null">
+                stateflag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="objectId != null">
+                #{objectId,jdbcType=INTEGER},
+            </if>
+            <if test="objectType != null">
+                #{objectType,jdbcType=INTEGER},
+            </if>
+            <if test="businessId != null">
+                #{businessId,jdbcType=INTEGER},
+            </if>
+            <if test="version != null">
+                #{version,jdbcType=INTEGER},
+            </if>
+                now(),
+                now(),
+            <if test="stateflag != null">
+                #{stateflag,jdbcType=BIGINT},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.sale.orm.pojo.BusinessORelation">
+        update t_business_obj_re
+        <set>
+            <if test="objectId != null">
+                object_id = #{objectId,jdbcType=INTEGER},
+            </if>
+            <if test="objectType != null">
+                object_type = #{objectType,jdbcType=INTEGER},
+            </if>
+            <if test="businessId != null">
+                business_id = #{businessId,jdbcType=INTEGER},
+            </if>
+            <if test="version != null">
+                version = #{version,jdbcType=INTEGER},
+            </if>
+                update_at = now(),
+            <if test="stateflag != null">
+                stateflag = #{stateflag,jdbcType=BIGINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.sale.orm.pojo.BusinessORelation">
+    update t_business_obj_re
+    set object_id = #{objectId,jdbcType=INTEGER},
+      object_type = #{objectType,jdbcType=INTEGER},
+      business_id = #{businessId,jdbcType=INTEGER},
+      version = #{version,jdbcType=INTEGER},
+      update_at = now(),
+      stateflag = #{stateflag,jdbcType=BIGINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectObjectIdByObjectType" resultType="int">
+        SELECT * FROM t_business_obj_re bor LEFT JOIN business b
+        ON b.id=bor.business_id
+        WHERE bor.object_type=#{objectType}
+        <if test="status !=null and status.length>0">
+            AND b.status IN
+            <foreach collection="status" item="stat" index="index" open="(" separator="," close=")">
+                #{stat}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>
