@@ -3,7 +3,7 @@ package com.dqys.flowbusiness.orm.mapper;
 
 import com.dqys.flowbusiness.orm.pojo.Business;
 
-public interface PublicBusinessMapper {
+public interface BusinessMapper {
     /**
      * 逻辑删除
      * @param id

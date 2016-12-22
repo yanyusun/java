@@ -1,4 +1,4 @@
-import com.dqys.flowbusiness.orm.mapper.PublicBusinessMapper;
+import com.dqys.flowbusiness.orm.mapper.BusinessMapper;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -7,11 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class PublicBusinessTest extends baseTest{
    @Autowired
-    private PublicBusinessMapper publicBusinessMapper;
+    private BusinessMapper businessMapper;
     //@Autowired
     //private BusinessObjReMapper re;
     @Test
     public void get(){
-        publicBusinessMapper.get(1);
+        businessMapper.get(1);
     }
 }

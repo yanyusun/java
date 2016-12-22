@@ -26,9 +26,8 @@ public class UserBusTotalController {
      *
      * @return
      */
-    @RequestMapping(value = "/test")
+    @RequestMapping(value = "/list")
     public JsonResponse t() {
-
         UserBusTotalQuery query = new UserBusTotalQuery();
         List<UserBusTotal> list=userBusTotalService.list(query);
         return JsonResponseTool.success(list);
