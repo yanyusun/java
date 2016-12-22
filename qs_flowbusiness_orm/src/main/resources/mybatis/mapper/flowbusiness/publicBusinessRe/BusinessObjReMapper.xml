@@ -48,13 +48,13 @@
         where object_type= #{type,jdbcType=INTEGER} AND object_id = #{id,jdbcType=INTEGER} AND stateflag = 0
     </select>
 
-    <insert id="insert" parameterType="com.dqys.flowbusiness.orm.pojo.BusinessObjR" useGeneratedKeys="true"
+    <insert id="insert" parameterType="com.dqys.flowbusiness.orm.pojo.BusinessObjRe" useGeneratedKeys="true"
             keyProperty="id">
     insert into t_business_obj_re (object_id, object_type, business_id)
     values (#{objectId,jdbcType=INTEGER}, #{objectType,jdbcType=INTEGER}, #{businessId,jdbcType=INTEGER})
   </insert>
 
-    <update id="update" parameterType="com.dqys.flowbusiness.orm.pojo.BusinessObjR">
+    <update id="update" parameterType="com.dqys.flowbusiness.orm.pojo.BusinessObjRe">
         update t_business_obj_re
         <set>
             <if test="objectId != null">
@@ -109,7 +109,7 @@ bor.object_id IN (SELECT tct.object_id FROM t_company_team tct where tct.object_
              GROUP BY bor.object_id
     </select>
 
-    <select id="list" resultMap="BaseResultMap" parameterType="com.dqys.business.orm.query.business.BusinessObjReQuery">
+    <select id="list" resultMap="BaseResultMap" parameterType="com.dqys.flowbusiness.orm.query.BusinessObjReQuery">
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_business_obj_re
