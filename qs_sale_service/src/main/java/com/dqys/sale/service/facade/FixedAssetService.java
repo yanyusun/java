@@ -2,7 +2,12 @@ package com.dqys.sale.service.facade;
 
 import com.dqys.core.model.JsonResponse;
 import com.dqys.sale.orm.dto.FixedAssetDTO;
+import com.dqys.sale.orm.pojo.AssetFile;
+import com.dqys.sale.orm.pojo.Dispose;
+import com.dqys.sale.orm.pojo.Label;
 import com.dqys.sale.orm.query.FixedAssetQuery;
+
+import java.util.List;
 
 /**
  * Created by mkfeng on 2016/12/21.
@@ -31,4 +36,6 @@ public interface FixedAssetService {
      * @return
      */
     JsonResponse addFixed(FixedAssetDTO fixedAssetDTO);
+
+    void addOtherEntity(List<Label> labels, List<Dispose> disposes, List<AssetFile> assetFiles, Integer id, Integer objectType);
 }

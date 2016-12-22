@@ -3,6 +3,7 @@ package com.dqys.sale.orm.mapper.impl;
 import com.dqys.core.base.SaleBaseDao;
 import com.dqys.sale.orm.mapper.DisposeMapper;
 import com.dqys.sale.orm.pojo.Dispose;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class DisposeMapperImpl extends SaleBaseDao implements DisposeMapper {
     }
 
     @Override
-    public List<Dispose> selectByAssetId(Integer assetId) {
-        return super.getSqlSession().getMapper(DisposeMapper.class).selectByAssetId(assetId);
+    public List<Dispose> selectByAssetId(@Param("assetId") Integer assetId, @Param("objectType") Integer objectType) {
+        return super.getSqlSession().getMapper(DisposeMapper.class).selectByAssetId(assetId, objectType);
     }
 }

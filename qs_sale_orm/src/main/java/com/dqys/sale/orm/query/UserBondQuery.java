@@ -4,9 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by mkfeng on 2016/12/21.
+ * Created by mkfeng on 2016/12/22.
  */
-public class FixedAssetQuery extends PageEntity implements Serializable {
+public class UserBondQuery extends PageEntity implements Serializable {
     private List<Integer> ids;
 
     public List<Integer> getIds() {

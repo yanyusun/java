@@ -45,7 +45,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         if (objectIds == null || objectIds.size() == 0) {
             objectIds.add(SysProperty.NULL_DATA_ID);
         }
-        fixedAssetQuery.setFixedAssetIds(objectIds);
+        fixedAssetQuery.setIds(objectIds);
         List<FixedAsset> fixedAssetList = fixedAssetMapper.fixedList(fixedAssetQuery);
         Integer count = fixedAssetMapper.fixedListCount(fixedAssetQuery);
         fixedAssetQuery.setTotalCount(count);
@@ -54,8 +54,8 @@ public class FixedAssetServiceImpl implements FixedAssetService {
             FixedAssetDTO dto = new FixedAssetDTO();
             dto.setLabels(labelMapper.selectByAssetId(asset.getId(), ObjectTypeEnum.fixed_asset.getValue()));
             dto.setFixedAsset(asset);
-            dto.setAssetFiles(assetFileMapper.selectByAssetId(asset.getId()));
-            dto.setDisposes(disposeMapper.selectByAssetId(asset.getId()));
+            dto.setAssetFiles(assetFileMapper.selectByAssetId(asset.getId(), ObjectTypeEnum.fixed_asset.getValue()));
+            dto.setDisposes(disposeMapper.selectByAssetId(asset.getId(), ObjectTypeEnum.fixed_asset.getValue()));
             dtos.add(dto);
         }
         Map map = new HashMap<>();
@@ -67,8 +67,8 @@ public class FixedAssetServiceImpl implements FixedAssetService {
     @Override
     public JsonResponse getDetail(Integer fixedAssetId) {
         FixedAsset fixedAsset = fixedAssetMapper.selectByPrimaryKey(fixedAssetId);
-        List<AssetFile> assetFile = assetFileMapper.selectByAssetId(fixedAssetId);
-        List<Dispose> disposes = disposeMapper.selectByAssetId(fixedAssetId);
+        List<AssetFile> assetFile = assetFileMapper.selectByAssetId(fixedAssetId, ObjectTypeEnum.fixed_asset.getValue());
+        List<Dispose> disposes = disposeMapper.selectByAssetId(fixedAssetId, ObjectTypeEnum.fixed_asset.getValue());
         List<Label> labels = labelMapper.selectByAssetId(fixedAssetId, ObjectTypeEnum.fixed_asset.getValue());
         Map map = new HashMap<>();
         map.put("fixedAsset", fixedAsset);
@@ -88,33 +88,40 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         if (num == 0) {
             return JsonResponseTool.failure("添加失败");
         }
+        addOtherEntity(fixedAssetDTO.getLabels(), fixedAssetDTO.getDisposes(), fixedAssetDTO.getAssetFiles(), fixedAsset.getId(), ObjectTypeEnum.fixed_asset.getValue());
+        return null;
+    }
+
+    @Override
+    public void addOtherEntity(List<Label> labels, List<Dispose> disposes, List<AssetFile> assetFiles, Integer id, Integer objectType) {
         //文件
-        if (fixedAssetDTO.getAssetFiles() != null && fixedAssetDTO.getAssetFiles().size() > 0) {
-            for (AssetFile file : fixedAssetDTO.getAssetFiles()) {
-                file.setAssetId(fixedAsset.getId());
+        if (assetFiles != null && assetFiles.size() > 0) {
+            for (AssetFile file : assetFiles) {
+                file.setAssetId(id);
+                file.setAssetType(objectType);
                 assetFileMapper.insertSelective(file);
             }
         }
         //处置方式
-        if (fixedAssetDTO.getDisposes() != null && fixedAssetDTO.getDisposes().size() > 0) {
-            for (Dispose dis : fixedAssetDTO.getDisposes()) {
-                dis.setAssetId(fixedAsset.getId());
+        if (disposes != null && disposes.size() > 0) {
+            for (Dispose dis : disposes) {
+                dis.setAssetType(objectType);
+                dis.setAssetId(id);
                 disposeMapper.insertSelective(dis);
             }
         }
         //标签
-        if (fixedAssetDTO.getLabels() != null && fixedAssetDTO.getLabels().size() > 0) {
+        if (labels != null && labels.size() > 0) {
             LabelRe labelRe = new LabelRe();
-            labelRe.setAssetType(ObjectTypeEnum.fixed_asset.getValue());
-            for (Label label : fixedAssetDTO.getLabels()) {
+            labelRe.setAssetType(objectType);
+            for (Label label : labels) {
                 if (label.getId() != null) {
-                    labelRe.setAsssetId(fixedAsset.getId());
+                    labelRe.setAsssetId(id);
                     labelRe.setLabelId(label.getId());
                     labelReMapper.insertSelective(labelRe);
                 }
             }
         }
-        return null;
     }
 
 }
