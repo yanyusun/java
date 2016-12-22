@@ -30,6 +30,7 @@
             <mvc:exclude-mapping path="/auth/resetMobile"/>
             <mvc:exclude-mapping path="/auth/validSmsCodeByEmail"/>
             <mvc:exclude-mapping path="/auth/verifyLoginName"/>
+            <mvc:exclude-mapping path="/auth/sendSmsByCode"/>
             <mvc:exclude-mapping path="/login/*"/>
             <mvc:exclude-mapping path="/err/err"/>
 
