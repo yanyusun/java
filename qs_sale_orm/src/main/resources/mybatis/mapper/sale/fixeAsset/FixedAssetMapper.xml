@@ -531,7 +531,7 @@
   </update>
 
     <sql id="Query_Where">
-        <if test="fixedAssetIds!=null&&fixedAssetIds.size>0">
+        <if test="fixedAssetIds!=null and fixedAssetIds.size>0">
             AND id IN
             <foreach collection="fixedAssetIds" item="id" index="index" open="(" separator="," close=")">
                 #{id}

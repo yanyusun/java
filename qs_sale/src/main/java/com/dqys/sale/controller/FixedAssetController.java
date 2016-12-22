@@ -27,7 +27,7 @@ public class FixedAssetController {
      * @param fixedAssetQuery
      * @return
      */
-    @RequestMapping("/fixedList")
+    @RequestMapping("/noVerify/fixedList")
     @ResponseBody
     public JsonResponse fixedList(FixedAssetQuery fixedAssetQuery) {
         return fixedAssetService.fixedList(fixedAssetQuery);
@@ -39,7 +39,7 @@ public class FixedAssetController {
      * @param fixedAssetId
      * @return
      */
-    @RequestMapping("/getDetail")
+    @RequestMapping("/noVerify/getDetail")
     @ResponseBody
     public JsonResponse getDetail(Integer fixedAssetId) {
         return fixedAssetService.getDetail(fixedAssetId);

@@ -13,6 +13,7 @@
         <!--默认全部需要登录身份-->
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/fixed/noVerify/*"/>
             <bean class="com.dqys.core.interceptor.HeaderInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
