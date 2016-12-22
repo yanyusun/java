@@ -23,7 +23,7 @@
             <mvc:exclude-mapping path="/res/getSource"/>
             <mvc:exclude-mapping path="/res/download"/>
             <mvc:exclude-mapping path="/res/showPic"/>
-
+            <mvc:exclude-mapping path="/area/list"/>
             <bean class="com.dqys.core.interceptor.HeaderInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
