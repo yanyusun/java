@@ -2,9 +2,7 @@ package com.dqys.business.controller;
 
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
-import com.dqys.auth.orm.pojo.CompanyDetailInfo;
-import com.dqys.auth.orm.pojo.TCompanyInfo;
-import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.auth.orm.pojo.*;
 import com.dqys.auth.orm.query.CompanyQuery;
 import com.dqys.business.orm.pojo.coordinator.CompanyRelation;
 import com.dqys.business.orm.pojo.partner.ModulPartner;
@@ -21,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
@@ -38,8 +37,6 @@ public class PartnerController {
     @Autowired
     private PartnerService partnerService;
     @Autowired
-    private TCompanyInfoMapper tCompanyInfoMapper;
-    @Autowired
     private TUserInfoMapper tUserInfoMapper;
 
     /**
@@ -51,14 +48,18 @@ public class PartnerController {
      */
     @RequestMapping("/addPartner")
     @ResponseBody
-    public JsonResponse addPartner(@ModelAttribute Integer partnerCompanyId) {
+    public JsonResponse addPartner(@RequestParam Integer partnerCompanyId) {
         CompanyRelation relation = new CompanyRelation();
-        relation.setCompanyBId(partnerCompanyId);
-        return partnerService.addPartner(relation);
+        if (partnerCompanyId > 0) {
+            relation.setCompanyBId(partnerCompanyId);
+            return partnerService.addPartner(relation);
+        } else {
+            return JsonResponseTool.failure("数值有误");
+        }
     }
 
     /**
-     * @api {post} parter/getCompanyId 条件获取公司信息
+     * @api {post} parter/getCompanyList 条件获取公司信息
      * @apiName parter/getCompanyList
      * @apiSampleRequest parter/getCompanyList
      * @apiParam {string} credential 营业执照号码
@@ -70,26 +71,12 @@ public class PartnerController {
     @ResponseBody
     public JsonResponse getCompanyList(@ModelAttribute ModulPartner modulPartner) {
         Map map = new HashMap<>();
-        if (modulPartner.getAccount() != null && !modulPartner.getAccount().equals("")) {
-            List<TUserInfo> list = tUserInfoMapper.queryLikeAccount(modulPartner.getAccount(), modulPartner.getUserId());
-            List<Integer> companyIds = new ArrayList<>();
-            List<UserDTO> userList = new ArrayList<>();
-            for (TUserInfo userInfo : list) {
-                UserDTO dto = new UserDTO();
-                dto.setId(userInfo.getId());
-                dto.setName(userInfo.getAccount());
-                userList.add(dto);
-                companyIds.add(userInfo.getCompanyId());
-            }
-            map.put("userList", userList);
-            if (userList.size() == 1) {
-                modulPartner.getQuery().setCompanyIds(companyIds);
-                map.put("companyList", tCompanyInfoMapper.queryList(modulPartner.getQuery()));
-            }
+        if (modulPartner != null && modulPartner.getQuery() != null && modulPartner.getQuery().getBusinessType() != null) {
+            partnerService.getCompanyList(modulPartner, map);
+            return JsonResponseTool.success(map);
         } else {
-            map.put("companyList", tCompanyInfoMapper.queryList(modulPartner.getQuery()));
+            return JsonResponseTool.failure("请选择帐号类型");
         }
-        return JsonResponseTool.success(map);
     }
 
     /**
@@ -120,8 +107,22 @@ public class PartnerController {
      */
     @RequestMapping("/audit")
     @ResponseBody
-    public JsonResponse audit(@ModelAttribute Integer status, @ModelAttribute Integer companyRelationId) {
+    public JsonResponse audit(@RequestParam Integer status, @RequestParam Integer companyRelationId) {
         return partnerService.audit(status, companyRelationId);
+    }
+
+    /**
+     * @api {post} parter/updateRemark 修改备注
+     * @apiName parter/updateRemark
+     * @apiSampleRequest parter/updateRemark
+     * @apiParam {int} companyRelationId 关系表id
+     * @apiParam {string} remark 备注
+     * @apiGroup　 partner
+     */
+    @RequestMapping("/updateRemark")
+    @ResponseBody
+    public JsonResponse updateRemark(@RequestParam String remark, @RequestParam Integer companyRelationId) {
+        return partnerService.updateRemark(remark, companyRelationId);
     }
 
 

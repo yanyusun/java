@@ -36,8 +36,8 @@
 
     <insert id="insert" parameterType="com.dqys.business.orm.pojo.coordinator.CompanyRelation" useGeneratedKeys="true"
             keyProperty="id">
-    insert into t_company_relaiton (company_a_id, company_b_id)
-    values (#{companyAId,jdbcType=INTEGER}, #{companyBId,jdbcType=INTEGER})
+    insert into t_company_relaiton (company_a_id, company_b_id,oper_user)
+    values (#{companyAId,jdbcType=INTEGER}, #{companyBId,jdbcType=INTEGER},#{operUser,jdbcType=INTEGER})
   </insert>
 
     <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer">
@@ -76,6 +76,9 @@
             update_at=now(),
             <if test="relationStatus !=null">
                 relation_status =#{relationStatus},
+            </if>
+            <if test="operUser !=null">
+                oper_user =#{operUser},
             </if>
         </set>
         WHERE stateflag=0 AND id=#{id}

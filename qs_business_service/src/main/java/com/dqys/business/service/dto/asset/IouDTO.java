@@ -14,9 +14,12 @@ public class IouDTO {
 
     private String iouNo;  // 编号
     private String iouName;  // 借据名称
-    private String type;  // 借据类型
+    private String type;  // 贷款类型
     private String agency;  // 代理机构
-
+    private String lenderName;//借款人名称
+    private String lenderNo;//借款人编号
+    private String operator;//录入人
+    private Date operTime;//录入时间
 
 
     private String iouCode;  // 原始借据号
@@ -53,6 +56,38 @@ public class IouDTO {
     private Integer agent; //代理
     private Integer urge; //催收
     private Integer lawyer; //律所
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    public Date getOperTime() {
+        return operTime;
+    }
+
+    public void setOperTime(Date operTime) {
+        this.operTime = operTime;
+    }
+
+    public String getLenderName() {
+        return lenderName;
+    }
+
+    public void setLenderName(String lenderName) {
+        this.lenderName = lenderName;
+    }
+
+    public String getLenderNo() {
+        return lenderNo;
+    }
+
+    public void setLenderNo(String lenderNo) {
+        this.lenderNo = lenderNo;
+    }
 
     public Integer getAgent() {
         return agent;

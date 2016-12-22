@@ -4,7 +4,7 @@ import com.dqys.core.base.BaseModel;
 
 import java.io.Serializable;
 
-public class TCompanyInfo extends BaseModel implements Serializable {
+public class TCompanyInfoDTO extends BaseModel implements Serializable {
     private String companyName;
 
     private String credential;
@@ -19,6 +19,11 @@ public class TCompanyInfo extends BaseModel implements Serializable {
 
     private Integer area;
 
+    private String provinceName;
+
+    private String cityName;
+
+    private String areaName;
     private String address;
 
     private Integer isAuth;
@@ -27,8 +32,6 @@ public class TCompanyInfo extends BaseModel implements Serializable {
     private String companyAccount;//公司账号名称
     private String accountCode;//清搜号
 
-    private static final long serialVersionUID = 1L;
-
     public String getAccountCode() {
         return accountCode;
     }
@@ -36,6 +39,33 @@ public class TCompanyInfo extends BaseModel implements Serializable {
     public void setAccountCode(String accountCode) {
         this.accountCode = accountCode;
     }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
+
+    private static final long serialVersionUID = 1L;
+
 
     public String getCompanyAccount() {
         return companyAccount;

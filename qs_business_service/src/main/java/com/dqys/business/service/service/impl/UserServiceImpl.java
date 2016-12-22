@@ -550,7 +550,16 @@ public class UserServiceImpl implements UserService {
             }
         } else {
             userInsertDTO.setEmail(null);
-            userInsertDTO.setAccount(null);
+            if (userId.toString().equals(MessageUtils.transMapToString(adminUser, "id")) && tUserInfoMapper.getUserDetail(userId).getAccount() == null) {//管理员可以修改还未设置的帐号
+                List<TUserInfo> isExist2 = tUserInfoMapper.verifyUser(userInsertDTO.getAccount(), null, null);
+                if (isExist2 != null && isExist2.size() > 0) {
+                    if (isExist2.get(0).getId().intValue() != tUserTag.getUserId()) {
+                        return JsonResponseTool.failure("帐号已存在");
+                    }
+                }
+            } else {
+                userInsertDTO.setAccount(null);
+            }
             userInsertDTO.setRoleId(tUserTag.getRoleId().intValue());
         }
         boolean flag = false;

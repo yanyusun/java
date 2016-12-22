@@ -14,7 +14,25 @@ public class CompanyQuery extends BaseQuery {
     private Integer city; // 城市
     private Integer district; // 地区
     private String nameLike; // 名称模糊查询
+    private String accountCode;//清搜号
     private List<Integer> companyIds;//公司id集合
+    private Integer businessType;//公司帐号类型（委托或是处置机构）
+
+    public Integer getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(Integer businessType) {
+        this.businessType = businessType;
+    }
+
+    public String getAccountCode() {
+        return accountCode;
+    }
+
+    public void setAccountCode(String accountCode) {
+        this.accountCode = accountCode;
+    }
 
     public List<Integer> getCompanyIds() {
         return companyIds;

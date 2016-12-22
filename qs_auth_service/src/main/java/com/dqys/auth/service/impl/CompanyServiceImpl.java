@@ -7,6 +7,7 @@ import com.dqys.auth.service.facade.CompanyService;
 import com.dqys.core.model.ServiceResult;
 import com.dqys.core.utils.FileTool;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -26,15 +27,21 @@ public class CompanyServiceImpl implements CompanyService {
 
 
     @Override
-    public ServiceResult<Integer> validateCompany(String credential) {
+    public ServiceResult<Integer> validateCompany(@Param("credential") String credential, @Param("businessType") Integer businessType) {
         CompanyQuery companyQuery = new CompanyQuery();
         companyQuery.setCredential(credential);
+        companyQuery.setBusinessType(businessType);
         List<TCompanyInfo> tCompanyInfoList = this.queryCompany(companyQuery);
         if (null == tCompanyInfoList || tCompanyInfoList.isEmpty()) {
             return ServiceResult.failure("没有数据", ObjectUtils.NULL);
         }
 
         return ServiceResult.success(tCompanyInfoList.get(0).getId());
+    }
+
+    @Override
+    public ServiceResult<Integer> validateCompany(@Param("credential") String credential) {
+        return validateCompany(credential, null);
     }
 
     @Override
