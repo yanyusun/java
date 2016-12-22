@@ -51,7 +51,7 @@
         </tx:attributes>
     </tx:advice>
     <aop:config>
-        <aop:pointcut id="txPointCut" expression="execution(* com.dqys.core.*..*(..))"/>
+        <aop:pointcut id="txPointCut" expression="execution(* com.dqys.*..*(..))"/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
     </aop:config>
 
@@ -81,7 +81,7 @@
         </tx:attributes>
     </tx:advice>
     <aop:config>
-        <aop:pointcut id="txPointCut" expression="execution(* com.dqys.sale.*..*(..))"/>
+        <aop:pointcut id="txPointCut" expression="execution(* com.dqys.*..*(..))"/>
         <aop:advisor advice-ref="txAdviceSale" pointcut-ref="txPointCut"/>
     </aop:config>
 

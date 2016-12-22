@@ -14,9 +14,9 @@ import java.util.List;
 /**
  * Created by yan on 16/12/15.
  */
-@Repository
+@Repository("saleBusinessObjReMapper")
 @Primary
-public class BusinessObjReMapperImpl extends SaleBaseDao implements BusinessObjReMapper {
+public class SaleBusinessObjReMapperImpl extends SaleBaseDao implements BusinessObjReMapper {
     @Override
     public Integer deleteByPrimaryKey(Integer id) {
         return super.getSqlSession().getMapper(BusinessObjReMapper.class).deleteByPrimaryKey(id);

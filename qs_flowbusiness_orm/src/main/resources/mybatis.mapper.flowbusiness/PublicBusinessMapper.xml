@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.dqys.business.orm.mapper.business.BusinessMapper" >
+<mapper namespace="com.dqys.flowbusiness.orm.mapper.PublicBusinessMapper" >
 
-  <resultMap id="BaseResultMap" type="com.dqys.business.orm.pojo.business.Business" >
+  <resultMap id="BaseResultMap" type="com.dqys.flowbusiness.orm.pojo.Business" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="INTEGER" />
     <result column="type" property="type" jdbcType="INTEGER" />
@@ -30,12 +30,12 @@
     where id = #{id,jdbcType=INTEGER} AND stateflag = 0
   </select>
 
-  <insert id="insert" parameterType="com.dqys.business.orm.pojo.business.Business" useGeneratedKeys="true" keyProperty="id">
+  <insert id="insert" parameterType="com.dqys.flowbusiness.orm.pojo.Business" useGeneratedKeys="true" keyProperty="id">
     insert into business (status, type, create_id)
     values (#{status,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{createId,jdbcType=INTEGER})
   </insert>
 
-  <update id="update" parameterType="com.dqys.business.orm.pojo.business.Business" >
+  <update id="update" parameterType="com.dqys.flowbusiness.orm.pojo.Business" >
     update business
     <set >
       version = version + 1,
