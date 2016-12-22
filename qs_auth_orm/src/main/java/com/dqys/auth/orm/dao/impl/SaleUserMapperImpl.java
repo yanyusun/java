@@ -3,6 +3,7 @@ package com.dqys.auth.orm.dao.impl;
 import com.dqys.auth.orm.dao.facade.SaleUserMapper;
 import com.dqys.auth.orm.pojo.SaleUser;
 import com.dqys.core.base.BaseDao;
+import com.dqys.core.base.SaleBaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * Created by mfeng on 2016/12/20.
  */
 @Repository
-public class SaleUserMapperImpl extends BaseDao implements SaleUserMapper {
+public class SaleUserMapperImpl extends SaleBaseDao implements SaleUserMapper {
     @Override
     public int deleteByPrimaryKey(Integer id) {
         return super.getSqlSession().getMapper(SaleUserMapper.class).deleteByPrimaryKey(id);

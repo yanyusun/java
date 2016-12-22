@@ -96,7 +96,7 @@ public class SaleUserServiceImpl implements SaleUserService {
             if (!FormatValidateTool.checkEmail(user.getEmail())) {
                 return "邮箱格式有误";
             }
-            if (!FormatValidateTool.checkEmail(user.getMobile())) {
+            if (!FormatValidateTool.checkMobile(user.getMobile())) {
                 return "手机号格式有误";
             }
         }
