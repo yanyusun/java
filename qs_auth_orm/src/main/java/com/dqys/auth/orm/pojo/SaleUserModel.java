@@ -18,6 +18,24 @@ public class SaleUserModel implements Serializable {
     private Integer city;
     private Integer area;
     private String smsCode;//手机短信验证码
+    private String key;//验证码key
+    private String code;//验证码
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public Integer getSex() {
         return sex;
@@ -100,12 +118,6 @@ public class SaleUserModel implements Serializable {
     }
 
     public SaleUser getSaleUser() {
-        saleUser.setAccount(account);
-        saleUser.setEmail(email);
-        saleUser.setMobile(mobile);
-        saleUser.setName(name);
-        saleUser.setPassword(password);
-        saleUser.setSex(sex);
         return saleUser;
     }
 
@@ -114,9 +126,6 @@ public class SaleUserModel implements Serializable {
     }
 
     public SaleUserTag getSaleUserTag() {
-        saleUserTag.setProvince(province);
-        saleUserTag.setCity(city);
-        saleUserTag.setArea(area);
         return saleUserTag;
     }
 

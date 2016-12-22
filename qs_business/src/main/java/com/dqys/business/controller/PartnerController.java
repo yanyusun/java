@@ -71,8 +71,12 @@ public class PartnerController {
     @ResponseBody
     public JsonResponse getCompanyList(@ModelAttribute ModulPartner modulPartner) {
         Map map = new HashMap<>();
-        partnerService.getCompanyList(modulPartner, map);
-        return JsonResponseTool.success(map);
+        if (modulPartner != null && modulPartner.getQuery() != null && modulPartner.getQuery().getBusinessType() != null) {
+            partnerService.getCompanyList(modulPartner, map);
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure("请选择帐号类型");
+        }
     }
 
     /**

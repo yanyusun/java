@@ -40,10 +40,16 @@ public class LoginController extends BaseApiContorller {
      * @apiGroup login
      * @apiParam {String} account 帐号
      * @apiParam {String} paw 密码
+     * @apiParam {String} code 验证码
+     * @apiParam {String} key 验证码唯一标识
      */
     @RequestMapping(value = "/enterLogin", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse enterLogin(@RequestParam String account, @RequestParam String paw) throws Exception {
+    public JsonResponse enterLogin(@RequestParam String account, @RequestParam String paw, @RequestParam String code, @RequestParam String key) throws Exception {
+        ServiceResult result = captchaService.validImgCaptcha(key, code);
+        if (!result.getFlag()) {
+            return JsonResponseTool.failure(result.getMessage());
+        }
         return saleUserService.enterLogin(account, paw);
     }
 
@@ -62,14 +68,22 @@ public class LoginController extends BaseApiContorller {
      * @apiParam {int} city 市
      * @apiParam {int} area 区县
      * @apiParam {String} smsCode 手机短信验证码
+     * @apiParam {String} code 验证码
+     * @apiParam {String} key 验证码唯一标识
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse register(@ModelAttribute SaleUserModel saleUserModel) throws Exception {
-        if (CommonUtil.checkParam(saleUserModel)) {
+        if (CommonUtil.checkParam(saleUserModel) || CommonUtil.checkParam(saleUserModel.getKey(), saleUserModel.getCode())) {
             return JsonResponseTool.failure("参数有误");
         }
-        String msg = saleUserService.verifyUserMessage(saleUserModel.getSaleUser(), saleUserModel.getSaleUserTag());//验证数据的有效性
+        //验证图片验证码
+        ServiceResult result = captchaService.validImgCaptcha(saleUserModel.getKey(), saleUserModel.getCode());
+        if (!result.getFlag()) {
+            return JsonResponseTool.failure(result.getMessage());
+        }
+        toSaleUserAndTag(saleUserModel);//对象转换
+        String msg = saleUserService.verifyUserMessage(saleUserModel);//验证数据的有效性
         if (!"".equals(msg)) {
             return JsonResponseTool.failure(msg);
         }
@@ -82,6 +96,27 @@ public class LoginController extends BaseApiContorller {
             }
         }
         return saleUserService.register(saleUserModel);
+    }
+
+    private void toSaleUserAndTag(SaleUserModel saleUserModel) {
+        if (saleUserModel != null && saleUserModel.getSaleUser() == null) {
+            SaleUser user = new SaleUser();
+            user.setPassword(saleUserModel.getPassword());
+            user.setMobile(saleUserModel.getMobile());
+            user.setEmail(saleUserModel.getEmail());
+            user.setAccount(saleUserModel.getAccount());
+            user.setSex(saleUserModel.getSex());
+            user.setName(saleUserModel.getName());
+            saleUserModel.setSaleUser(user);
+        }
+        if (saleUserModel != null && saleUserModel.getSaleUserTag() == null) {
+            SaleUserTag tag = new SaleUserTag();
+            tag.setArea(saleUserModel.getArea());
+            tag.setCity(saleUserModel.getCity());
+            tag.setProvince(saleUserModel.getProvince());
+            saleUserModel.setSaleUserTag(tag);
+        }
+
     }
 
     /**
