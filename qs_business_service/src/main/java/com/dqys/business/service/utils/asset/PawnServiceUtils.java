@@ -15,11 +15,12 @@ public class PawnServiceUtils {
 
     /**
      * 量化转换抵押物DTO成DAO
+     *
      * @param pawnDTOList
      * @return
      */
-    public static List<PawnInfo> toPawnInfo(List<PawnDTO> pawnDTOList){
-        if(CommonUtil.checkParam(pawnDTOList)){
+    public static List<PawnInfo> toPawnInfo(List<PawnDTO> pawnDTOList) {
+        if (CommonUtil.checkParam(pawnDTOList)) {
             return null;
         }
         List<PawnInfo> pawnInfoList = new ArrayList<>();
@@ -31,10 +32,11 @@ public class PawnServiceUtils {
 
     /**
      * 抵押物信息装换成DAO
+     *
      * @param pawnDTO
      * @return
      */
-    public static PawnInfo toPawnInfo(PawnDTO pawnDTO){
+    public static PawnInfo toPawnInfo(PawnDTO pawnDTO) {
         PawnInfo pawnInfo = new PawnInfo();
         pawnInfo.setId(pawnDTO.getId());
         pawnInfo.setName(pawnDTO.getPawnName());
@@ -53,20 +55,23 @@ public class PawnServiceUtils {
         pawnInfo.setDisposeStatus(pawnDTO.getDisposeStatus());
         pawnInfo.setWorth(pawnDTO.getWorth());
         pawnInfo.setMemo(pawnDTO.getMemo());
-        if(pawnDTO.getAgent()!=null){
+        pawnInfo.setProvince(pawnDTO.getProvince());
+        pawnInfo.setCity(pawnDTO.getCity());
+        pawnInfo.setDistrict(pawnDTO.getDistrict());
+        if (pawnDTO.getAgent() != null) {
             pawnInfo.setOnAgent(pawnDTO.getAgent());
         }
-        if(pawnDTO.getUrge()!=null){
+        if (pawnDTO.getUrge() != null) {
             pawnInfo.setOnCollection(pawnDTO.getUrge());
         }
-        if(pawnDTO.getLawyer()!=null){
+        if (pawnDTO.getLawyer() != null) {
             pawnInfo.setOnLawyer(pawnDTO.getLawyer());
         }
         return pawnInfo;
     }
 
-    public static List<PawnDTO> toPawnDTO(List<PawnInfo> pawnInfoList){
-        if(CommonUtil.checkParam(pawnInfoList)){
+    public static List<PawnDTO> toPawnDTO(List<PawnInfo> pawnInfoList) {
+        if (CommonUtil.checkParam(pawnInfoList)) {
             return null;
         }
         List<PawnDTO> pawnDTOList = new ArrayList<>();
@@ -78,10 +83,11 @@ public class PawnServiceUtils {
 
     /**
      * 抵押物DAO转成DTO
+     *
      * @param pawnInfo
      * @return
      */
-    public static PawnDTO toPawnDTO(PawnInfo pawnInfo){
+    public static PawnDTO toPawnDTO(PawnInfo pawnInfo) {
         PawnDTO pawnDTO = new PawnDTO();
 
         pawnDTO.setId(pawnInfo.getId());
@@ -108,32 +114,32 @@ public class PawnServiceUtils {
         return pawnDTO;
     }
 
-    public static String checkData(PawnDTO pawnDTO){
-        if(CommonUtil.checkParam(pawnDTO,
+    public static String checkData(PawnDTO pawnDTO) {
+        if (CommonUtil.checkParam(pawnDTO,
                 pawnDTO.getPawnName(), pawnDTO.getAmount(), pawnDTO.getType(),
                 pawnDTO.getEvaluateExcellent(), pawnDTO.getEvaluateLevel(), pawnDTO.getSize(),
                 pawnDTO.getProvince(), pawnDTO.getCity(), pawnDTO.getDistrict(),
                 pawnDTO.getAddress(), pawnDTO.getPawnRate(), pawnDTO.getWorth(),
-                pawnDTO.getDisposeStatus(), pawnDTO.getLenderId())){
+                pawnDTO.getDisposeStatus(), pawnDTO.getLenderId())) {
             return "参数错误";
         }
-        if(!CommonUtil.isMoneyFormat(pawnDTO.getAmount(), pawnDTO.getPawnRate(), pawnDTO.getWorth())){
+        if (!CommonUtil.isMoneyFormat(pawnDTO.getAmount(), pawnDTO.getPawnRate(), pawnDTO.getWorth())) {
             return "存在非法金额参数";
         }
         String areaData = AreaTool.validateArea(pawnDTO.getProvince(), pawnDTO.getCity(), pawnDTO.getDistrict());
-        if(areaData != null){
+        if (areaData != null) {
             return areaData;
         }
         return null;
     }
 
-    public static String checkData(List<PawnDTO> pawnDTOList){
-        if(CommonUtil.checkParam(pawnDTOList) || pawnDTOList.size() == 0){
+    public static String checkData(List<PawnDTO> pawnDTOList) {
+        if (CommonUtil.checkParam(pawnDTOList) || pawnDTOList.size() == 0) {
             return "抵押物参数错误";
         }
         for (PawnDTO pawnDTO : pawnDTOList) {
             String data = checkData(pawnDTO);
-            if(data != null){
+            if (data != null) {
                 return data;
             }
         }

@@ -21,6 +21,35 @@ public class CompanyRelation {
 
     private Date teamworkTime;//最后合作时间
 
+    private Integer operUser;//操作用户
+
+    private String aRemark;//a备注
+    private String bRemark;//b备注
+
+    public String getaRemark() {
+        return aRemark;
+    }
+
+    public void setaRemark(String aRemark) {
+        this.aRemark = aRemark;
+    }
+
+    public String getbRemark() {
+        return bRemark;
+    }
+
+    public void setbRemark(String bRemark) {
+        this.bRemark = bRemark;
+    }
+
+    public Integer getOperUser() {
+        return operUser;
+    }
+
+    public void setOperUser(Integer operUser) {
+        this.operUser = operUser;
+    }
+
     public Date getTeamworkTime() {
         return teamworkTime;
     }

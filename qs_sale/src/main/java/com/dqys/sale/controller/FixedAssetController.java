@@ -22,34 +22,34 @@ public class FixedAssetController {
     private FixedAssetService fixedAssetService;
 
     /**
-     * 获取列表
-     *
-     * @param fixedAssetQuery
-     * @return
+     * @api {post} fixed/noVerify/fixedList 获取固定资产列表
+     * @apiName fixed/noVerify/fixedList
+     * @apiSampleRequest parter/noVerify/fixedList
+     * @apiGroup　 fixed
      */
-    @RequestMapping("/fixedList")
+    @RequestMapping("/noVerify/fixedList")
     @ResponseBody
     public JsonResponse fixedList(FixedAssetQuery fixedAssetQuery) {
         return fixedAssetService.fixedList(fixedAssetQuery);
     }
 
     /**
-     * 获取详情
-     *
-     * @param fixedAssetId
-     * @return
+     * @api {post} fixed/noVerify/getDetail 获取固定资产详情
+     * @apiName fixed/noVerify/getDetail
+     * @apiSampleRequest parter/noVerify/getDetail
+     * @apiGroup　 fixed
      */
-    @RequestMapping("/getDetail")
+    @RequestMapping("/noVerify/getDetail")
     @ResponseBody
     public JsonResponse getDetail(Integer fixedAssetId) {
         return fixedAssetService.getDetail(fixedAssetId);
     }
 
     /**
-     * 添加固定资产
-     *
-     * @param fixedAssetId
-     * @return
+     * @api {post} fixed/addFixed 添加固定资产
+     * @apiName fixed/addFixed
+     * @apiSampleRequest parter/addFixed
+     * @apiGroup　 fixed
      */
     @RequestMapping("/addFixed")
     @ResponseBody

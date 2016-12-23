@@ -8,6 +8,7 @@ import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.query.asset.LenderListQuery;
 import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.utils.asset.LenderServiceUtils;
+import com.dqys.business.service.utils.excel.ExcelUtilAsset;
 import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
@@ -33,6 +34,7 @@ public class LenderController {
 
     /**
      * 获取初始化数据
+     *
      * @return
      */
     @RequestMapping(value = "/getInit")
@@ -64,6 +66,7 @@ public class LenderController {
 
     /**
      * 获取借款人列表
+     *
      * @param nav
      * @param lenderListQuery
      * @return
@@ -87,7 +90,7 @@ public class LenderController {
             return JsonResponseTool.paramErr("参数错误");
         }
         String data = LenderServiceUtils.checkData(lenderInsertDTO.getLenderDTO());
-        if(data != null){
+        if (data != null) {
             return JsonResponseTool.paramErr(data);
         }
         return lenderService.add_tx(lenderInsertDTO.getContactDTOList(), lenderInsertDTO.getLenderDTO());
@@ -95,6 +98,7 @@ public class LenderController {
 
     /**
      * 删除借款人
+     *
      * @param id
      * @return
      * @throws BusinessLogException
@@ -110,6 +114,7 @@ public class LenderController {
 
     /**
      * 修改借款人
+     *
      * @param lenderInsertDTO
      * @return
      * @throws BusinessLogException
@@ -124,11 +129,11 @@ public class LenderController {
             return JsonResponseTool.paramErr("参数错误");
         }
         String data = LenderServiceUtils.checkData(lenderInsertDTO.getLenderDTO());
-        if(data != null){
+        if (data != null) {
             return JsonResponseTool.paramErr(data);
         }
         data = LenderServiceUtils.checkData(lenderInsertDTO.getContactDTOList());
-        if(data != null){
+        if (data != null) {
             return JsonResponseTool.paramErr(data);
         }
         return lenderService.update_tx(lenderInsertDTO.getContactDTOList(), lenderInsertDTO.getLenderDTO());
@@ -136,6 +141,7 @@ public class LenderController {
 
     /**
      * 获取借款人信息
+     *
      * @param id
      * @return
      */
@@ -150,6 +156,7 @@ public class LenderController {
 
     /**
      * 获取联系人所有相关信息
+     *
      * @param id
      * @return
      */
@@ -159,6 +166,7 @@ public class LenderController {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.success("参数错误");
         }
+        ExcelUtilAsset.uploadExcel("1_430_7758258.xls");
         return lenderService.getLenderAll(id);
     }
 

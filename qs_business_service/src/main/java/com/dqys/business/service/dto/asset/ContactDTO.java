@@ -27,6 +27,33 @@ public class ContactDTO {
     private String address;  // 详细地址
     private String memo;  // 备注
     private String code; // 工号
+    private String other1;//其它联系方式1
+    private String other2;//其它联系方式2
+    private String other3;//其它联系方式3
+
+    public String getOther1() {
+        return other1;
+    }
+
+    public void setOther1(String other1) {
+        this.other1 = other1;
+    }
+
+    public String getOther2() {
+        return other2;
+    }
+
+    public void setOther2(String other2) {
+        this.other2 = other2;
+    }
+
+    public String getOther3() {
+        return other3;
+    }
+
+    public void setOther3(String other3) {
+        this.other3 = other3;
+    }
 
     private String otherAddress; // 其他地址(json格式的地址,格式:[{province:11,city:1102,district:110228,address:""}...])
 
@@ -190,8 +217,8 @@ public class ContactDTO {
         this.otherAddress = otherAddress;
     }
 
-    public boolean isOper(){//该数据已被操作
-        if(name!=null||idcard!=null||mobile!=null||address!=null||mobile!=null||homeTel!=null||officeTel!=null||province!=null||province!=null||memo!=null){
+    public boolean isOper() {//该数据已被操作
+        if (name != null || idcard != null || mobile != null || address != null || mobile != null || homeTel != null || officeTel != null || province != null || province != null || memo != null) {
             return true;
         }
         return false;

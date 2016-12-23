@@ -781,7 +781,7 @@ public class AuthController extends BaseApiContorller {
             }
             ServiceResult<Integer> companyResult = new ServiceResult<>();
             //验证公司有效性
-            companyResult = companyService.validateCompany(credential);
+            companyResult = companyService.validateCompany(credential,userType);
             if (companyResult.getFlag()) {//防止重复存在
                 //返回营业执照注册号已经注册
                 if (userInfo.getCompanyId() == null || companyResult.getData().intValue() != userInfo.getCompanyId().intValue()) {

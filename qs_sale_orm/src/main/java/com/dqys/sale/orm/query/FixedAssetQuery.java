@@ -7,13 +7,13 @@ import java.util.List;
  * Created by mkfeng on 2016/12/21.
  */
 public class FixedAssetQuery extends PageEntity implements Serializable {
-    private List<Integer> fixedAssetIds;
+    private List<Integer> ids;
 
-    public List<Integer> getFixedAssetIds() {
-        return fixedAssetIds;
+    public List<Integer> getIds() {
+        return ids;
     }
 
-    public void setFixedAssetIds(List<Integer> fixedAssetIds) {
-        this.fixedAssetIds = fixedAssetIds;
+    public void setIds(List<Integer> ids) {
+        this.ids = ids;
     }
 }

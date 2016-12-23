@@ -3,6 +3,7 @@ package com.dqys.sale.orm.mapper.impl;
 import com.dqys.core.base.SaleBaseDao;
 import com.dqys.sale.orm.mapper.AssetFileMapper;
 import com.dqys.sale.orm.pojo.AssetFile;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -48,7 +49,7 @@ public class AssetFileMapperImpl extends SaleBaseDao implements AssetFileMapper 
     }
 
     @Override
-    public List<AssetFile> selectByAssetId(Integer assetId) {
-        return super.getSqlSession().getMapper(AssetFileMapper.class).selectByAssetId(assetId);
+    public List<AssetFile> selectByAssetId(@Param("assetId") Integer assetId, @Param("objectType") Integer objectType) {
+        return super.getSqlSession().getMapper(AssetFileMapper.class).selectByAssetId(assetId, objectType);
     }
 }

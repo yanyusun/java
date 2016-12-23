@@ -25,6 +25,15 @@ public class CompanyDetailInfo {
     // 处理后的数据
     private String companyType; // 公司类型
     private String position; // 位置(省份+城市+区域)
+    private String accountCode;
+
+    public String getAccountCode() {
+        return accountCode;
+    }
+
+    public void setAccountCode(String accountCode) {
+        this.accountCode = accountCode;
+    }
 
     public Integer getCompanyId() {
         return companyId;

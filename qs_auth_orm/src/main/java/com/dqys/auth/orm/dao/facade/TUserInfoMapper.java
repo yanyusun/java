@@ -63,5 +63,11 @@ public interface TUserInfoMapper {
 
     List<TUserInfo> queryLikeAccount(@Param("account") String account, @Param("userId") Integer userId);
 
+    /**
+     * 根据公司id获取运营者用户id
+     *
+     * @param companyId
+     * @return
+     */
     Integer getUserByCompanyAdmin(Integer companyId);
 }

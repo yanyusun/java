@@ -204,4 +204,31 @@ public class OrganizationCompanyController {
         }
     }
 
+    /**
+     * @api {post} organiz/audit 是否禁止登入
+     * @apiName organiz/audit
+     * @apiSampleRequest organiz/audit
+     * @apiGroup organiz
+     * @apiParam {int[]} companyId 公司id
+     * @apiParam {int} status 状态（1允许登入2禁止登入）
+     */
+    @RequestMapping("/audit")
+    @ResponseBody
+    public JsonResponse audit(Integer[] companyId, Integer status) {
+        Integer num = 0;
+        TCompanyInfo info = new TCompanyInfo();
+        for (int i = 0; i < companyId.length; i++) {
+            info.setId(companyId[i]);
+            info.setIsAuth(status);
+            num += tCompanyInfoMapper.updateByPrimaryKeySelective(info);
+        }
+
+        if (num > 0) {
+            return JsonResponseTool.success("操作成功" + num + "条");
+        } else {
+            return JsonResponseTool.failure("操作失败");
+        }
+    }
+
+
 }

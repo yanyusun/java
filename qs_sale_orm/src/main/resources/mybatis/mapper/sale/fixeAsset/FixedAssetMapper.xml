@@ -531,14 +531,13 @@
   </update>
 
     <sql id="Query_Where">
-        <if test="fixedAssetIds!=null and fixedAssetIds.size>0">
+        <if test="ids!=null and ids.size>0">
             AND id IN
-            <foreach collection="fixedAssetIds" item="id" index="index" open="(" separator="," close=")">
+            <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
                 #{id}
             </foreach>
         </if>
     </sql>
-
     <select id="fixedList" parameterType="com.dqys.sale.orm.query.FixedAssetQuery"
             resultMap="ResultMapWithBLOBs">
         SELECT

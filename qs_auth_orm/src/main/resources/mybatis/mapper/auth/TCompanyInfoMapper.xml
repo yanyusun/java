@@ -22,7 +22,8 @@
         <result column="is_auth" property="isAuth" jdbcType="INTEGER"/>
         <result column="type" property="type" jdbcType="INTEGER"/>
         <result column="business_type" property="businessType" jdbcType="INTEGER"/>
-        <result column="company_account" property="companyAccount" jdbcType="INTEGER"/>
+        <result column="company_account" property="companyAccount" jdbcType="VARCHAR"/>
+        <result column="account_code" property="accountCode" jdbcType="VARCHAR"/>
     </resultMap>
 
     <resultMap id="CompanyDetailMap" type="com.dqys.auth.orm.pojo.CompanyDetailInfo">
@@ -40,12 +41,14 @@
         <result column="phone" property="phone" jdbcType="VARCHAR"/>
         <result column="type" property="type" jdbcType="VARCHAR"/>
         <result column="company_type" property="companyType" jdbcType="INTEGER"/>
+        <result column="account_code" property="accountCode" jdbcType="VARCHAR"/>
     </resultMap>
 
     <!-- 基础字段 -->
     <sql id="Base_Column_List">
     id, version, create_at, update_at, stateflag, remark, company_name, credential, licence, 
-    legal_person, province, city, area, address, is_auth, type,business_type,company_account
+    legal_person, province, city, area, address, is_auth, type,business_type,company_account,
+    account_code
   </sql>
 
     <!-- 条件查询 -->
@@ -53,7 +56,13 @@
         <where>
             stateflag = 0
             <if test="credential != null">
-                AND credential like CONCAT('%', #{credential,jdbcType=VARCHAR}, '%')
+                AND credential=#{credential,jdbcType=VARCHAR}
+            </if>
+            <if test="accountCode != null">
+                AND account_code=#{accountCode,jdbcType=VARCHAR}
+            </if>
+            <if test="businessType != null">
+                AND business_type=#{businessType,jdbcType=INTEGER}
             </if>
             <if test="province != null">
                 AND province = #{province,jdbcType=VARCHAR}

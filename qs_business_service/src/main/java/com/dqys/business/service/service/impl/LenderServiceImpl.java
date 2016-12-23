@@ -550,6 +550,7 @@ public class LenderServiceImpl implements LenderService {
             if (contactInfo.getType().equals(ContactTypeEnum.LENDER.getValue())
                     ) {
                 lenderDTO.setName(contactInfo.getName());
+                lenderDTO.setSex(contactInfo.getGender());
                 if (contactInfo.getProvince() != null
                         && contactInfo.getProvince() != null
                         && contactInfo.getDistrict() != null) {
@@ -576,7 +577,7 @@ public class LenderServiceImpl implements LenderService {
         boolean flag = false; // 是否业务流转
         if (list.size() > 0) {
             ObjectUserRelation our = list.get(0);
-            if (our.getVisibleType() != null && our.getVisibleType() ==OURelationEnum.VISIBLE_TYPE_PORTION.getValue()) {
+            if (our.getVisibleType() != null && our.getVisibleType() == OURelationEnum.VISIBLE_TYPE_PORTION.getValue()) {
                 flag = true;
             }
         }
@@ -594,7 +595,12 @@ public class LenderServiceImpl implements LenderService {
         Date date = null;
         for (IOUInfo iouInfo : iouList) {
             // 获取抵押物与借据的关联
-            iouDTOList.add(changeToDTO(iouInfo));
+            IouDTO iouDTO = changeToDTO(iouInfo);
+            iouDTO.setLenderName(lenderDTO.getName());
+            iouDTO.setLenderNo(lenderDTO.getLenderNo());
+            iouDTO.setOperator(lenderDTO.getOperator());
+            iouDTO.setOperTime(lenderDTO.getCreateAt());
+            iouDTOList.add(iouDTO);
             // 获取最大的结束时间
             if (date == null
                     || (iouInfo.getEndAt() != null && iouInfo.getEndAt().compareTo(date) > 0)) {
@@ -611,14 +617,16 @@ public class LenderServiceImpl implements LenderService {
             long millis = (calendar.getTimeInMillis() - date.getTime()) / 24 / 3600 / 1000;
             lenderDTO.setOverdueDay(Integer.valueOf(String.valueOf(millis)));
         }
+        TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
         // 抵押物
         List<PawnDTO> pawnDTOList = new ArrayList<>();
         for (PawnInfo pawnInfo : pawnInfoList) {
-            pawnDTOList.add(changeToDTO(pawnInfo));
+            PawnDTO dto = changeToDTO(pawnInfo);
+            setCoord(userInfo, dto);//参与人员
+            pawnDTOList.add(dto);
         }
         resultMap.put("pawnDTOs", pawnDTOList);
         // 协作器
-        TUserInfo userInfo = userInfoMapper.selectByPrimaryKey(userId);
         UserTeam userTeam = userTeamMapper.getByObject(
                 lenderInfo.getId(), ObjectTypeEnum.LENDER.getValue(), userInfo.getCompanyId());
         if (userTeam != null) {
@@ -635,6 +643,27 @@ public class LenderServiceImpl implements LenderService {
         }
         resultMap.put("lenderDTO", lenderDTO);
         return JsonResponseTool.success(resultMap);
+    }
+
+    private void setCoord(TUserInfo userInfo, PawnDTO dto) {
+        Map coordMap = new HashMap<>();
+        UserTeam team = new UserTeam();
+        PawnInfo info = pawnInfoMapper.get(dto.getId());
+        if (info != null) {
+            UserTeam userTeam = new UserTeam();
+            userTeam.setObjectType(ObjectTypeEnum.LENDER.getValue());
+            userTeam.setObjectId(info.getLenderId());
+            userTeam.setCompanyId(userInfo.getCompanyId());
+            team = userTeamMapper.selectByPrimaryKeySelective(userTeam);
+        }
+        if (team != null) {//查询相应协作器是否存在，不存在就不进行查询
+            try {
+                coordinatorService.readByLenderOrAsset(coordMap, userInfo.getCompanyId(), dto.getId(), ObjectTypeEnum.PAWN.getValue(), userInfo.getId());
+                dto.setCoord(coordMap);//参与人员：查询就是协作器的人员
+            } catch (Exception e) {
+
+            }
+        }
     }
 
 
