@@ -3,6 +3,7 @@
 <mapper namespace="com.dqys.sale.orm.mapper.AssetPackageMapper">
     <resultMap id="BaseResultMap" type="com.dqys.sale.orm.pojo.AssetPackage">
         <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="asset_no" property="assetNo" jdbcType="VARCHAR"/>
         <result column="title" property="title" jdbcType="VARCHAR"/>
         <result column="is_special" property="isSpecial" jdbcType="INTEGER"/>
         <result column="is_home_page" property="isHomePage" jdbcType="INTEGER"/>
@@ -31,7 +32,7 @@
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, title, is_special, is_home_page, asset_type, grade, entrust_source, total_money, 
+    id,asset_no, title, is_special, is_home_page, asset_type, grade, entrust_source, total_money,
     province, city, area, address, entrust_name, entrust_province, entrust_city, entrust_area, 
     entrust_address, entrust_phone, entrust_contacts_name, entrust_contacts_phone, entrust_type, 
     is_bank, create_time, update_time, oper_user, describe, remark
@@ -48,7 +49,7 @@
   </delete>
     <insert id="insert" parameterType="com.dqys.sale.orm.pojo.AssetPackage" useGeneratedKeys="true"
             keyProperty="id">
-    insert into t_asset_package (id, title, is_special, 
+    insert into t_asset_package (id, asset_no,title, is_special,
       is_home_page, asset_type, grade, 
       entrust_source, total_money, province, 
       city, area, address, 
@@ -58,7 +59,7 @@
       entrust_type, is_bank, create_time, 
       update_time, oper_user, describe, 
       remark)
-    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{isSpecial,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER},#{assetNo,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{isSpecial,jdbcType=INTEGER},
       #{isHomePage,jdbcType=INTEGER}, #{assetType,jdbcType=INTEGER}, #{grade,jdbcType=INTEGER}, 
       #{entrustSource,jdbcType=VARCHAR}, #{totalMoney,jdbcType=DOUBLE}, #{province,jdbcType=INTEGER}, 
       #{city,jdbcType=INTEGER}, #{area,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, 
@@ -75,6 +76,9 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
+            </if>
+            <if test="assetNo != null">
+                asset_no,
             </if>
             <if test="title != null">
                 title,
@@ -154,6 +158,9 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 #{id,jdbcType=INTEGER},
+            </if>
+            <if test="assetNo != null">
+                #{assetNo,jdbcType=VARCHAR},
             </if>
             <if test="title != null">
                 #{title,jdbcType=VARCHAR},

@@ -5,59 +5,69 @@ import java.util.Date;
 public class AssetPackage {
     private Integer id;
 
-    private String title;
+    private String assetNo;//编号
 
-    private Integer isSpecial;
+    private String title;//标题
 
-    private Integer isHomePage;
+    private Integer isSpecial;//是否专项（0否1是）
 
-    private Integer assetType;
+    private Integer isHomePage;//是否至于首页
 
-    private Integer grade;
+    private Integer assetType;//资产类型（0房产包1小额信贷包2信用卡包3混合包4其它包）
 
-    private String entrustSource;
+    private Integer grade;//评分
 
-    private Double totalMoney;
+    private String entrustSource;//委托来源
 
-    private Integer province;
+    private Double totalMoney;//资产总额
 
-    private Integer city;
+    private Integer province;//省',
 
-    private Integer area;
+    private Integer city;//市',
 
-    private String address;
+    private Integer area;//区县',
 
-    private String entrustName;
+    private String address;//详细地址
 
-    private Integer entrustProvince;
+    private String entrustName;//委托方姓名
 
-    private Integer entrustCity;
+    private Integer entrustProvince;//委托方省份
 
-    private Integer entrustArea;
+    private Integer entrustCity;//委托方城市
 
-    private String entrustAddress;
+    private Integer entrustArea;//委托方区县
 
-    private String entrustPhone;
+    private String entrustAddress;//委托方详细地址
 
-    private String entrustContactsName;
+    private String entrustPhone;//委托方号码
 
-    private String entrustContactsPhone;
+    private String entrustContactsName;//委托联系人姓名
 
-    private Integer entrustType;
+    private String entrustContactsPhone;//委托联系人号码
 
-    private Integer isBank;
+    private Integer entrustType;//委托类型（0企业1个人）
 
-    private Date createTime;
+    private Integer isBank;//是否银行类金融机构(0银行类1非银行类）
 
-    private Date updateTime;
+    private Date createTime;//
 
-    private Integer operUser;
-    private String describe;
+    private Date updateTime;//
 
-    private String remark;
+    private Integer operUser;//操作人员
+    private String describe;//描述',
+
+    private String remark;//备注',
 
     public String getDescribe() {
         return describe;
+    }
+
+    public String getAssetNo() {
+        return assetNo;
+    }
+
+    public void setAssetNo(String assetNo) {
+        this.assetNo = assetNo;
     }
 
     public void setDescribe(String describe) {
