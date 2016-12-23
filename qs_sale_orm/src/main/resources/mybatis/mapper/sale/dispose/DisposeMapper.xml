@@ -107,6 +107,6 @@
     <select id="selectByAssetId" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from t_dispose WHERE asset_id=#{assetId}
+        from t_dispose WHERE asset_id=#{assetId} AND asset_type=#{objectType}
     </select>
 </mapper>
