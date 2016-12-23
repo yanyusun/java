@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 /**
  * Created by yan on 16/12/15.
  */
-@Repository
+@Repository("SaleBusinessMapper")
 @Primary
 public class SaleBusinessMapperImpl extends SaleBaseDao implements BusinessMapper {
 
