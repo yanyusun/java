@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.sale.orm.mapper.AssetPackageMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.sale.orm.pojo.AssetPackage">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="is_special" property="isSpecial" jdbcType="INTEGER"/>
+        <result column="is_home_page" property="isHomePage" jdbcType="INTEGER"/>
+        <result column="asset_type" property="assetType" jdbcType="INTEGER"/>
+        <result column="grade" property="grade" jdbcType="INTEGER"/>
+        <result column="entrust_source" property="entrustSource" jdbcType="VARCHAR"/>
+        <result column="total_money" property="totalMoney" jdbcType="DOUBLE"/>
+        <result column="province" property="province" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="INTEGER"/>
+        <result column="area" property="area" jdbcType="INTEGER"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="entrust_name" property="entrustName" jdbcType="VARCHAR"/>
+        <result column="entrust_province" property="entrustProvince" jdbcType="INTEGER"/>
+        <result column="entrust_city" property="entrustCity" jdbcType="INTEGER"/>
+        <result column="entrust_area" property="entrustArea" jdbcType="INTEGER"/>
+        <result column="entrust_address" property="entrustAddress" jdbcType="VARCHAR"/>
+        <result column="entrust_phone" property="entrustPhone" jdbcType="VARCHAR"/>
+        <result column="entrust_contacts_name" property="entrustContactsName" jdbcType="VARCHAR"/>
+        <result column="entrust_contacts_phone" property="entrustContactsPhone" jdbcType="VARCHAR"/>
+        <result column="entrust_type" property="entrustType" jdbcType="INTEGER"/>
+        <result column="is_bank" property="isBank" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="oper_user" property="operUser" jdbcType="INTEGER"/>
+        <result column="describe" property="describe" jdbcType="VARCHAR"/>
+        <result column="remark" property="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, title, is_special, is_home_page, asset_type, grade, entrust_source, total_money, 
+    province, city, area, address, entrust_name, entrust_province, entrust_city, entrust_area, 
+    entrust_address, entrust_phone, entrust_contacts_name, entrust_contacts_phone, entrust_type, 
+    is_bank, create_time, update_time, oper_user, describe, remark
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_asset_package
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_asset_package
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.dqys.sale.orm.pojo.AssetPackage" useGeneratedKeys="true"
+            keyProperty="id">
+    insert into t_asset_package (id, title, is_special, 
+      is_home_page, asset_type, grade, 
+      entrust_source, total_money, province, 
+      city, area, address, 
+      entrust_name, entrust_province, entrust_city, 
+      entrust_area, entrust_address, entrust_phone, 
+      entrust_contacts_name, entrust_contacts_phone, 
+      entrust_type, is_bank, create_time, 
+      update_time, oper_user, describe, 
+      remark)
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{isSpecial,jdbcType=INTEGER}, 
+      #{isHomePage,jdbcType=INTEGER}, #{assetType,jdbcType=INTEGER}, #{grade,jdbcType=INTEGER}, 
+      #{entrustSource,jdbcType=VARCHAR}, #{totalMoney,jdbcType=DOUBLE}, #{province,jdbcType=INTEGER}, 
+      #{city,jdbcType=INTEGER}, #{area,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, 
+      #{entrustName,jdbcType=VARCHAR}, #{entrustProvince,jdbcType=INTEGER}, #{entrustCity,jdbcType=INTEGER}, 
+      #{entrustArea,jdbcType=INTEGER}, #{entrustAddress,jdbcType=VARCHAR}, #{entrustPhone,jdbcType=VARCHAR}, 
+      #{entrustContactsName,jdbcType=VARCHAR}, #{entrustContactsPhone,jdbcType=VARCHAR}, 
+      #{entrustType,jdbcType=INTEGER}, #{isBank,jdbcType=INTEGER}, now(), 
+      now(), #{operUser,jdbcType=INTEGER}, #{describe,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.AssetPackage" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into t_asset_package
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="isSpecial != null">
+                is_special,
+            </if>
+            <if test="isHomePage != null">
+                is_home_page,
+            </if>
+            <if test="assetType != null">
+                asset_type,
+            </if>
+            <if test="grade != null">
+                grade,
+            </if>
+            <if test="entrustSource != null">
+                entrust_source,
+            </if>
+            <if test="totalMoney != null">
+                total_money,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="area != null">
+                area,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="entrustName != null">
+                entrust_name,
+            </if>
+            <if test="entrustProvince != null">
+                entrust_province,
+            </if>
+            <if test="entrustCity != null">
+                entrust_city,
+            </if>
+            <if test="entrustArea != null">
+                entrust_area,
+            </if>
+            <if test="entrustAddress != null">
+                entrust_address,
+            </if>
+            <if test="entrustPhone != null">
+                entrust_phone,
+            </if>
+            <if test="entrustContactsName != null">
+                entrust_contacts_name,
+            </if>
+            <if test="entrustContactsPhone != null">
+                entrust_contacts_phone,
+            </if>
+            <if test="entrustType != null">
+                entrust_type,
+            </if>
+            <if test="isBank != null">
+                is_bank,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            update_time,
+            oper_user,
+            <if test="describe != null">
+                describe,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="isSpecial != null">
+                #{isSpecial,jdbcType=INTEGER},
+            </if>
+            <if test="isHomePage != null">
+                #{isHomePage,jdbcType=INTEGER},
+            </if>
+            <if test="assetType != null">
+                #{assetType,jdbcType=INTEGER},
+            </if>
+            <if test="grade != null">
+                #{grade,jdbcType=INTEGER},
+            </if>
+            <if test="entrustSource != null">
+                #{entrustSource,jdbcType=VARCHAR},
+            </if>
+            <if test="totalMoney != null">
+                #{totalMoney,jdbcType=DOUBLE},
+            </if>
+            <if test="province != null">
+                #{province,jdbcType=INTEGER},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=INTEGER},
+            </if>
+            <if test="area != null">
+                #{area,jdbcType=INTEGER},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustName != null">
+                #{entrustName,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustProvince != null">
+                #{entrustProvince,jdbcType=INTEGER},
+            </if>
+            <if test="entrustCity != null">
+                #{entrustCity,jdbcType=INTEGER},
+            </if>
+            <if test="entrustArea != null">
+                #{entrustArea,jdbcType=INTEGER},
+            </if>
+            <if test="entrustAddress != null">
+                #{entrustAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustPhone != null">
+                #{entrustPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustContactsName != null">
+                #{entrustContactsName,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustContactsPhone != null">
+                #{entrustContactsPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustType != null">
+                #{entrustType,jdbcType=INTEGER},
+            </if>
+            <if test="isBank != null">
+                #{isBank,jdbcType=INTEGER},
+            </if>
+            now(),
+            now(),
+            <if test="operUser != null">
+                #{operUser,jdbcType=INTEGER},
+            </if>
+            <if test="describe != null">
+                #{describe,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.chebaiyong.biz.asset.domain.AssetPackageWithBLOBs">
+        update t_asset_package
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="isSpecial != null">
+                is_special = #{isSpecial,jdbcType=INTEGER},
+            </if>
+            <if test="isHomePage != null">
+                is_home_page = #{isHomePage,jdbcType=INTEGER},
+            </if>
+            <if test="assetType != null">
+                asset_type = #{assetType,jdbcType=INTEGER},
+            </if>
+            <if test="grade != null">
+                grade = #{grade,jdbcType=INTEGER},
+            </if>
+            <if test="entrustSource != null">
+                entrust_source = #{entrustSource,jdbcType=VARCHAR},
+            </if>
+            <if test="totalMoney != null">
+                total_money = #{totalMoney,jdbcType=DOUBLE},
+            </if>
+            <if test="province != null">
+                province = #{province,jdbcType=INTEGER},
+            </if>
+            <if test="city != null">
+                city = #{city,jdbcType=INTEGER},
+            </if>
+            <if test="area != null">
+                area = #{area,jdbcType=INTEGER},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustName != null">
+                entrust_name = #{entrustName,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustProvince != null">
+                entrust_province = #{entrustProvince,jdbcType=INTEGER},
+            </if>
+            <if test="entrustCity != null">
+                entrust_city = #{entrustCity,jdbcType=INTEGER},
+            </if>
+            <if test="entrustArea != null">
+                entrust_area = #{entrustArea,jdbcType=INTEGER},
+            </if>
+            <if test="entrustAddress != null">
+                entrust_address = #{entrustAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustPhone != null">
+                entrust_phone = #{entrustPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustContactsName != null">
+                entrust_contacts_name = #{entrustContactsName,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustContactsPhone != null">
+                entrust_contacts_phone = #{entrustContactsPhone,jdbcType=VARCHAR},
+            </if>
+            <if test="entrustType != null">
+                entrust_type = #{entrustType,jdbcType=INTEGER},
+            </if>
+            <if test="isBank != null">
+                is_bank = #{isBank,jdbcType=INTEGER},
+            </if>
+            update_time = now(),
+            <if test="operUser != null">
+                oper_user = #{operUser,jdbcType=INTEGER},
+            </if>
+            <if test="describe != null">
+                describe = #{describe,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.chebaiyong.biz.asset.domain.AssetPackageWithBLOBs">
+    update t_asset_package
+    set title = #{title,jdbcType=VARCHAR},
+      is_special = #{isSpecial,jdbcType=INTEGER},
+      is_home_page = #{isHomePage,jdbcType=INTEGER},
+      asset_type = #{assetType,jdbcType=INTEGER},
+      grade = #{grade,jdbcType=INTEGER},
+      entrust_source = #{entrustSource,jdbcType=VARCHAR},
+      total_money = #{totalMoney,jdbcType=DOUBLE},
+      province = #{province,jdbcType=INTEGER},
+      city = #{city,jdbcType=INTEGER},
+      area = #{area,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      entrust_name = #{entrustName,jdbcType=VARCHAR},
+      entrust_province = #{entrustProvince,jdbcType=INTEGER},
+      entrust_city = #{entrustCity,jdbcType=INTEGER},
+      entrust_area = #{entrustArea,jdbcType=INTEGER},
+      entrust_address = #{entrustAddress,jdbcType=VARCHAR},
+      entrust_phone = #{entrustPhone,jdbcType=VARCHAR},
+      entrust_contacts_name = #{entrustContactsName,jdbcType=VARCHAR},
+      entrust_contacts_phone = #{entrustContactsPhone,jdbcType=VARCHAR},
+      entrust_type = #{entrustType,jdbcType=INTEGER},
+      is_bank = #{isBank,jdbcType=INTEGER},
+      update_time = now(),
+      oper_user = #{operUser,jdbcType=INTEGER},
+      describe = #{describe,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.chebaiyong.biz.asset.domain.AssetPackage">
+    update t_asset_package
+    set title = #{title,jdbcType=VARCHAR},
+      is_special = #{isSpecial,jdbcType=INTEGER},
+      is_home_page = #{isHomePage,jdbcType=INTEGER},
+      asset_type = #{assetType,jdbcType=INTEGER},
+      grade = #{grade,jdbcType=INTEGER},
+      entrust_source = #{entrustSource,jdbcType=VARCHAR},
+      total_money = #{totalMoney,jdbcType=DOUBLE},
+      province = #{province,jdbcType=INTEGER},
+      city = #{city,jdbcType=INTEGER},
+      area = #{area,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      entrust_name = #{entrustName,jdbcType=VARCHAR},
+      entrust_province = #{entrustProvince,jdbcType=INTEGER},
+      entrust_city = #{entrustCity,jdbcType=INTEGER},
+      entrust_area = #{entrustArea,jdbcType=INTEGER},
+      entrust_address = #{entrustAddress,jdbcType=VARCHAR},
+      entrust_phone = #{entrustPhone,jdbcType=VARCHAR},
+      entrust_contacts_name = #{entrustContactsName,jdbcType=VARCHAR},
+      entrust_contacts_phone = #{entrustContactsPhone,jdbcType=VARCHAR},
+      entrust_type = #{entrustType,jdbcType=INTEGER},
+      is_bank = #{isBank,jdbcType=INTEGER},
+      create_time = now(),
+      update_time = now(),
+      oper_user = #{operUser,jdbcType=INTEGER},
+      describe = #{describe,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
