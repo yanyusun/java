@@ -40,8 +40,6 @@ public class UserBondServiceImpl implements UserBondService {
     private LabelMapper labelMapper;
     @Autowired
     private BusinessORelationMapper businessORelationMapper;
-    @Autowired
-    private LabelReMapper labelReMapper;
 
     @Override
     public JsonResponse bondList(UserBondQuery query) {
@@ -79,7 +77,7 @@ public class UserBondServiceImpl implements UserBondService {
             return JsonResponseTool.failure("添加失败");
         }
         fixedAssetService.addOtherEntity(userBondDTO.getLabels(), userBondDTO.getDisposes(), userBondDTO.getAssetFiles(), entity.getId(), ObjectTypeEnum.user_bond.getValue());
-        return null;
+        return JsonResponseTool.success(null);
     }
 
     @Override

@@ -89,7 +89,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
             return JsonResponseTool.failure("添加失败");
         }
         addOtherEntity(fixedAssetDTO.getLabels(), fixedAssetDTO.getDisposes(), fixedAssetDTO.getAssetFiles(), fixedAsset.getId(), ObjectTypeEnum.fixed_asset.getValue());
-        return null;
+        return JsonResponseTool.success(null);
     }
 
     @Override
