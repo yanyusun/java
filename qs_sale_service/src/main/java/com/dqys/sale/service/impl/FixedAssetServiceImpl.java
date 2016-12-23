@@ -2,17 +2,21 @@ package com.dqys.sale.service.impl;
 
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.sale.orm.constant.ObjectTypeEnum;
-import com.dqys.sale.orm.dto.FixedAssetDTO;
+import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
+import com.dqys.flowbusiness.service.dto.BusinessDto;
+import com.dqys.flowbusiness.service.service.BusinessService;
+import com.dqys.sale.service.constant.ObjectTypeEnum;
+import com.dqys.sale.service.dto.FixedAssetDTO;
 import com.dqys.sale.orm.mapper.*;
-import com.dqys.sale.orm.mapper.business.BusinessMapper;
 import com.dqys.sale.orm.mapper.business.BusinessORelationMapper;
 import com.dqys.sale.orm.pojo.*;
 import com.dqys.sale.orm.query.FixedAssetQuery;
 import com.dqys.sale.service.facade.FixedAssetService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -37,6 +41,8 @@ public class FixedAssetServiceImpl implements FixedAssetService {
     private BusinessORelationMapper businessORelationMapper;
     @Autowired
     private LabelReMapper labelReMapper;
+    @Autowired @Qualifier("saleBusinessService")
+    private BusinessService businessService;
 
 
     @Override
@@ -79,21 +85,36 @@ public class FixedAssetServiceImpl implements FixedAssetService {
     }
 
     @Override
-    public JsonResponse addFixed(FixedAssetDTO fixedAssetDTO) {
+    public JsonResponse addFixed_tx(FixedAssetDTO fixedAssetDTO) {
         if (CommonUtil.checkParam(fixedAssetDTO) || CommonUtil.checkParam(fixedAssetDTO.getFixedAsset())) {
             return JsonResponseTool.failure("参数错误");
         }
         FixedAsset fixedAsset = fixedAssetDTO.getFixedAsset();
-        Integer num = fixedAssetMapper.insertSelective(fixedAsset);
-        if (num == 0) {
+
+        Integer id = fixedAssetMapper.insertSelective(fixedAsset);
+        if (id == 0) {
             return JsonResponseTool.failure("添加失败");
         }
-        addOtherEntity(fixedAssetDTO.getLabels(), fixedAssetDTO.getDisposes(), fixedAssetDTO.getAssetFiles(), fixedAsset.getId(), ObjectTypeEnum.fixed_asset.getValue());
-        return null;
+        createBusiness(id);
+        addOtherEntity_tx(fixedAssetDTO.getLabels(), fixedAssetDTO.getDisposes(), fixedAssetDTO.getAssetFiles(), fixedAsset.getId(), ObjectTypeEnum.fixed_asset.getValue());
+        return JsonResponseTool.noData();
+    }
+
+    /**
+     * 更具当前对象的id创建业务
+     * @param id 数据id
+     * @return
+     */
+    private Integer createBusiness(Integer id) {
+        BusinessDto businessDto = new BusinessDto();
+        businessDto.setObjectId(id);
+        businessDto.setObjcetType(ObjectTypeEnum.fixed_asset.getValue());
+        Integer userId = UserSession.getCurrent().getUserId();
+        return businessService.createBusiness_tx(businessDto,userId, AssetBusiness.type,AssetBusiness.getBE_ANNOUNCED().getValue());
     }
 
     @Override
-    public void addOtherEntity(List<Label> labels, List<Dispose> disposes, List<AssetFile> assetFiles, Integer id, Integer objectType) {
+    public void addOtherEntity_tx(List<Label> labels, List<Dispose> disposes, List<AssetFile> assetFiles, Integer id, Integer objectType) {
         //文件
         if (assetFiles != null && assetFiles.size() > 0) {
             for (AssetFile file : assetFiles) {
