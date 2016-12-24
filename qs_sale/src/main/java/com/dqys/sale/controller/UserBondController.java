@@ -57,4 +57,16 @@ public class UserBondController {
         return userBondService.addBond(userBondDTO);
     }
 
+    /**
+     * @api {post} bond/updateBond 修改债权
+     * @apiName bond/updateBond
+     * @apiSampleRequest bond/updateBond
+     * @apiGroup　 bond
+     */
+    @RequestMapping("/updateBond")
+    @ResponseBody
+    public JsonResponse updateBond(@ModelAttribute UserBondDTO userBondDTO) {
+        return userBondService.updateBond(userBondDTO);
+    }
+
 }

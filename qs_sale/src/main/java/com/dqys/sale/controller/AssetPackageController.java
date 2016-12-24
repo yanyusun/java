@@ -56,6 +56,17 @@ public class AssetPackageController {
         return assetPackageService.addAsset(assetPackageDTO);
     }
 
+    /**
+     * @api {post} asset/updateAsset 修改资产包
+     * @apiName asset/updateAsset
+     * @apiSampleRequest asset/updateAsset
+     * @apiGroup　 asset
+     */
+    @RequestMapping("/updateAsset")
+    @ResponseBody
+    public JsonResponse updateAsset(@ModelAttribute AssetPackageDTO assetPackageDTO) {
+        return assetPackageService.updateAsset(assetPackageDTO);
+    }
 
 
 }

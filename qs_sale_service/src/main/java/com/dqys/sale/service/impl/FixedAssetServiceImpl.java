@@ -2,6 +2,7 @@ package com.dqys.sale.service.impl;
 
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.sale.orm.constant.ObjectTypeEnum;
@@ -81,7 +82,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
     @Override
     public JsonResponse addFixed(FixedAssetDTO fixedAssetDTO) {
         if (CommonUtil.checkParam(fixedAssetDTO) || CommonUtil.checkParam(fixedAssetDTO.getFixedAsset())) {
-            return JsonResponseTool.failure("参数错误");
+            return JsonResponseTool.failure("请把信息填写完整");
         }
         FixedAsset fixedAsset = fixedAssetDTO.getFixedAsset();
         setEntity(fixedAsset);
@@ -94,6 +95,9 @@ public class FixedAssetServiceImpl implements FixedAssetService {
     }
 
     private void setEntity(FixedAsset entity) {
+        if (entity.getOperUser() == null) {
+            entity.setOperUser(UserSession.getCurrent().getUserId());
+        }
         if (entity.getNo() == null) {
 
         }
@@ -149,6 +153,24 @@ public class FixedAssetServiceImpl implements FixedAssetService {
                 }
             }
         }
+    }
+
+    @Override
+    public JsonResponse updateFixed(FixedAssetDTO fixedAssetDTO) {
+        if (CommonUtil.checkParam(fixedAssetDTO) || CommonUtil.checkParam(fixedAssetDTO.getFixedAsset())) {
+            return JsonResponseTool.failure("请把信息填写完整");
+        }
+        FixedAsset fixedAsset = fixedAssetDTO.getFixedAsset();
+        if (fixedAsset == null && fixedAsset.getId() == null) {
+            return JsonResponseTool.failure("缺少必要数值");
+        }
+        setEntity(fixedAsset);
+        Integer num = fixedAssetMapper.updateByPrimaryKeySelective(fixedAsset);
+        if (num == 0) {
+            return JsonResponseTool.failure("修改失败");
+        }
+        addOtherEntity(fixedAssetDTO.getLabels(), fixedAssetDTO.getDisposes(), fixedAssetDTO.getAssetFiles(), fixedAsset.getId(), ObjectTypeEnum.fixed_asset.getValue());
+        return JsonResponseTool.success(null);
     }
 
 }

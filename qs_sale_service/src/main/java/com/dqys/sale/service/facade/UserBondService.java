@@ -13,4 +13,6 @@ public interface UserBondService {
     JsonResponse addBond(UserBondDTO userBondDTO);
 
     JsonResponse getDetail(Integer bondId);
+
+    JsonResponse updateBond(UserBondDTO userBondDTO);
 }
