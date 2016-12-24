@@ -1,16 +1,15 @@
 package com.dqys.auth.orm.dao.impl;
 
 import com.dqys.auth.orm.dao.facade.SaleUserTagMapper;
-import com.dqys.auth.orm.pojo.SaleUser;
-import com.dqys.auth.orm.pojo.SaleUserTag;
-import com.dqys.core.base.BaseDao;
+import com.dqys.auth.orm.pojo.saleUser.SaleUserTag;
+import com.dqys.core.base.SaleBaseDao;
 import org.springframework.stereotype.Repository;
 
 /**
  * Created by Administrator on 2016/12/20.
  */
 @Repository
-public class SaleUserTagMapperImpl extends BaseDao implements SaleUserTagMapper {
+public class SaleUserTagMapperImpl extends SaleBaseDao implements SaleUserTagMapper {
     @Override
     public int deleteByPrimaryKey(Integer id) {
         return super.getSqlSession().getMapper(SaleUserTagMapper.class).deleteByPrimaryKey(id);

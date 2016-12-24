@@ -2,17 +2,15 @@ package com.dqys.auth.service.impl;
 
 import com.dqys.auth.orm.dao.facade.SaleUserMapper;
 import com.dqys.auth.orm.dao.facade.SaleUserTagMapper;
-import com.dqys.auth.orm.pojo.SaleUser;
-import com.dqys.auth.orm.pojo.SaleUserModel;
-import com.dqys.auth.orm.pojo.SaleUserTag;
-import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.auth.orm.pojo.*;
+import com.dqys.auth.orm.pojo.saleUser.SaleUser;
+import com.dqys.auth.orm.pojo.saleUser.SaleUserModel;
+import com.dqys.auth.orm.pojo.saleUser.SaleUserTag;
 import com.dqys.auth.service.facade.SaleUserService;
 import com.dqys.auth.service.facade.UserService;
 import com.dqys.core.model.JsonResponse;
-import com.dqys.core.model.ServiceResult;
 import com.dqys.core.utils.*;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -90,17 +88,22 @@ public class SaleUserServiceImpl implements SaleUserService {
             if (CommonUtil.checkParam(user.getAccount(), user.getName(), user.getEmail(), user.getMobile(), user.getPassword(), user.getSex())) {
                 return "请把信息填写完整";
             }
-            if (FormatValidateTool.checkEmail(user.getAccount()) || FormatValidateTool.checkEmail(user.getMobile())) {
+            if (FormatValidateTool.checkEmail(user.getAccount()) || FormatValidateTool.checkMobile(user.getMobile())) {
                 return "用户名不能为邮箱或手机号";
             }
             if (!FormatValidateTool.checkEmail(user.getEmail())) {
                 return "邮箱格式有误";
             }
-            if (!FormatValidateTool.checkEmail(user.getMobile())) {
+            if (!FormatValidateTool.checkMobile(user.getMobile())) {
                 return "手机号格式有误";
             }
         }
         return "";
+    }
+
+    @Override
+    public void addLoginLog(LoginLog log) {
+        saleUserMapper.addLoginLog(log);
     }
 
 

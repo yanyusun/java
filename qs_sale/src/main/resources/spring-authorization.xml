@@ -15,6 +15,7 @@
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/fixed/noVerify/*"/>
             <mvc:exclude-mapping path="/bond/noVerify/*"/>
+            <mvc:exclude-mapping path="/saleUser/*"/>
             <bean class="com.dqys.core.interceptor.HeaderInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

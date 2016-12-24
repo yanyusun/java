@@ -7,8 +7,8 @@ public enum ObjectTypeEnum {
     fixed_asset(10, "固定资产"),
     user_bond(11, "个人债权"),
     overdue_asset(12, "逾期贷款"),
-    judicial_sale(13, "司法拍卖"),
-    company_bond(14, "企业债权"),
+    company_bond(13, "企业债权"),
+    judicial_sale(14, "司法拍卖"),
     attention_asset(15, "关注类资产"),
     asset_package(16, "资产包");
     private Integer value;

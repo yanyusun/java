@@ -4,12 +4,11 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by mkfeng on 2016/12/22.
+ * Created by mkfeng on 2016/12/23.
  */
-public class UserBondQuery extends PageEntity implements Serializable {
+public class AssetPackageQuery extends PageEntity implements Serializable {
     private List<Integer> ids;
     private Integer isHomePage;//是否首页
-    private Integer bondType;//债权类型
     private Integer checkStatus;//0待审核1审核未通过2审核已通过
     private Integer enable;//'是否无效0不是,1是
 
@@ -29,14 +28,6 @@ public class UserBondQuery extends PageEntity implements Serializable {
         this.enable = enable;
     }
 
-    public Integer getBondType() {
-        return bondType;
-    }
-
-    public void setBondType(Integer bondType) {
-        this.bondType = bondType;
-    }
-
     public Integer getIsHomePage() {
         return isHomePage;
     }
@@ -52,4 +43,5 @@ public class UserBondQuery extends PageEntity implements Serializable {
     public void setIds(List<Integer> ids) {
         this.ids = ids;
     }
+
 }

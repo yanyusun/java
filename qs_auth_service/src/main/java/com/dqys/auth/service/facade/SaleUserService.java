@@ -1,8 +1,8 @@
 package com.dqys.auth.service.facade;
 
-import com.dqys.auth.orm.pojo.SaleUser;
-import com.dqys.auth.orm.pojo.SaleUserModel;
-import com.dqys.auth.orm.pojo.SaleUserTag;
+import com.dqys.auth.orm.pojo.LoginLog;
+import com.dqys.auth.orm.pojo.saleUser.SaleUser;
+import com.dqys.auth.orm.pojo.saleUser.SaleUserModel;
 import com.dqys.core.model.JsonResponse;
 
 /**
@@ -31,4 +31,11 @@ public interface SaleUserService {
 
     //验证数据格式的正确性
     String verifyUserMessage(SaleUserModel saleUserModel);
+
+    /**
+     * 登入日志
+     *
+     * @param log
+     */
+    void addLoginLog(LoginLog log);
 }

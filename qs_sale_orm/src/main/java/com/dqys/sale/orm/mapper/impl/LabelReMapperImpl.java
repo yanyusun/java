@@ -2,11 +2,17 @@ package com.dqys.sale.orm.mapper.impl;
 
 import com.dqys.core.base.SaleBaseDao;
 import com.dqys.sale.orm.mapper.LabelReMapper;
+import com.dqys.sale.orm.pojo.Dispose;
 import com.dqys.sale.orm.pojo.LabelRe;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Created by mkfeng on 2016/12/21.
  */
+@Repository
 public class LabelReMapperImpl extends SaleBaseDao implements LabelReMapper {
     @Override
     public Integer deleteByPrimaryKey(Integer id) {
@@ -40,6 +46,11 @@ public class LabelReMapperImpl extends SaleBaseDao implements LabelReMapper {
 
     @Override
     public Integer updateByPrimaryKey(LabelRe record) {
-        return null;
+        return super.getSqlSession().getMapper(LabelReMapper.class).updateByPrimaryKey(record);
+    }
+
+    @Override
+    public List<Dispose> selectByAssetId(@Param("assetId") Integer assetId, @Param("objectType") Integer objectType) {
+        return super.getSqlSession().getMapper(LabelReMapper.class).selectByAssetId(assetId, objectType);
     }
 }

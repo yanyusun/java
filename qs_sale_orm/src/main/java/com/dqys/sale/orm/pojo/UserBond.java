@@ -131,6 +131,51 @@ public class UserBond {
     private String describe;//债权描述
 
     private String remark;//备注
+    private Date createTime;
+    private Date updateTime;
+    private Integer operUser;//操作人
+    private Integer checkStatus;//0待审核1审核未通过2审核已通过
+    private Integer enable;//'是否无效0不是,1是
+
+    public Integer getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(Integer checkStatus) {
+        this.checkStatus = checkStatus;
+    }
+
+    public Integer getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Integer enable) {
+        this.enable = enable;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public Integer getOperUser() {
+        return operUser;
+    }
+
+    public void setOperUser(Integer operUser) {
+        this.operUser = operUser;
+    }
 
     public String getDescribe() {
         return describe;
