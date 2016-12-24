@@ -13,4 +13,6 @@ public interface AssetPackageService {
     JsonResponse addAsset(AssetPackageDTO assetPackageDTO);
 
     JsonResponse getDetail(Integer assetId);
+
+    JsonResponse updateAsset(AssetPackageDTO assetPackageDTO);
 }

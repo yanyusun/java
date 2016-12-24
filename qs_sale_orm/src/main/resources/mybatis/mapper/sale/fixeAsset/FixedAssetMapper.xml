@@ -38,7 +38,6 @@
         <result column="collection_num" property="collectionNum" jdbcType="INTEGER"/>
         <result column="dispose_num" property="disposeNum" jdbcType="INTEGER"/>
         <result column="no" property="no" jdbcType="VARCHAR"/>
-        <result column="businessid" property="businessid" jdbcType="INTEGER"/>
         <result column="title" property="title" jdbcType="VARCHAR"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
@@ -52,7 +51,7 @@
     house_nature, house_size, has_house_certificate, is_pledge, is_law, is_judgement, 
     asset_describe, righter_name, righter_address, righter_province, righter_city, righter_area, 
     righter_contact_phone, righter_contact_name, righter_type, mark, collection_num, 
-    dispose_num, no, businessid,check_status,enable,title,create_time,update_time,oper_user
+    dispose_num, no,check_status,enable,title,create_time,update_time,oper_user
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -78,7 +77,7 @@
       righter_city, righter_area, righter_contact_phone, 
       righter_contact_name, righter_type, mark, 
       collection_num, dispose_num, no, 
-      businessid, title,create_time,update_time,oper_user)
+       title,create_time,update_time,oper_user)
     values (#{id,jdbcType=INTEGER}, #{source,jdbcType=INTEGER}, #{assetType,jdbcType=INTEGER}, 
       #{isSpecial,jdbcType=INTEGER}, #{isHomePage,jdbcType=INTEGER}, #{comfrom,jdbcType=INTEGER}, 
       #{entrustBegintime,jdbcType=TIMESTAMP}, #{entrustEndtime,jdbcType=TIMESTAMP}, #{assetRental,jdbcType=DOUBLE}, 
@@ -91,7 +90,7 @@
       #{righterCity,jdbcType=INTEGER}, #{righterArea,jdbcType=INTEGER}, #{righterContactPhone,jdbcType=VARCHAR}, 
       #{righterContactName,jdbcType=VARCHAR}, #{righterType,jdbcType=INTEGER}, #{mark,jdbcType=VARCHAR}, 
       #{collectionNum,jdbcType=INTEGER}, #{disposeNum,jdbcType=INTEGER}, #{no,jdbcType=VARCHAR}, 
-      #{businessid,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR},now(),now(),#{operUser,jdbcType=INTEGER})
+       #{title,jdbcType=VARCHAR},now(),now(),#{operUser,jdbcType=INTEGER})
   </insert>
     <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.FixedAsset" useGeneratedKeys="true"
             keyProperty="id">
@@ -204,9 +203,6 @@
             </if>
             <if test="no != null">
                 no,
-            </if>
-            <if test="businessid != null">
-                businessid,
             </if>
             <if test="title != null">
                 title,
@@ -326,9 +322,6 @@
             <if test="no != null">
                 #{no,jdbcType=VARCHAR},
             </if>
-            <if test="businessid != null">
-                #{businessid,jdbcType=INTEGER},
-            </if>
             <if test="title != null">
                 #{title,jdbcType=VARCHAR},
             </if>
@@ -447,9 +440,6 @@
             <if test="no != null">
                 no = #{no,jdbcType=VARCHAR},
             </if>
-            <if test="businessid != null">
-                businessid = #{businessid,jdbcType=INTEGER},
-            </if>
             <if test="title != null">
                 title = #{title,jdbcType=VARCHAR},
             </if>
@@ -494,7 +484,6 @@
       collection_num = #{collectionNum,jdbcType=INTEGER},
       dispose_num = #{disposeNum,jdbcType=INTEGER},
       no = #{no,jdbcType=VARCHAR},
-      businessid = #{businessid,jdbcType=INTEGER},
       title = #{title,jdbcType=VARCHAR},
       update_time=now()
     where id = #{id,jdbcType=INTEGER}
@@ -536,7 +525,6 @@
       collection_num = #{collectionNum,jdbcType=INTEGER},
       dispose_num = #{disposeNum,jdbcType=INTEGER},
       no = #{no,jdbcType=VARCHAR},
-      businessid = #{businessid,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
@@ -549,6 +537,12 @@
         </if>
         <if test="isHomePage !=null">
             AND is_home_page = #{isHomePage},
+        </if>
+        <if test="checkStatus !=null">
+            AND check_status=#{checkStatus}
+        </if>
+        <if test="enable !=null">
+            AND enable=#{enable}
         </if>
     </sql>
     <select id="fixedList" parameterType="com.dqys.sale.orm.query.FixedAssetQuery"

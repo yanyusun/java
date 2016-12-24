@@ -56,4 +56,17 @@ public class FixedAssetController {
         return fixedAssetService.addFixed_tx(fixedAssetDTO);
     }
 
+    /**
+     * @api {post} fixed/updateFixed 修改固定资产
+     * @apiName fixed/updateFixed
+     * @apiSampleRequest parter/updateFixed
+     * @apiGroup　 fixed
+     */
+    @RequestMapping("/updateFixed")
+    @ResponseBody
+    public JsonResponse updateFixed(@ModelAttribute FixedAssetDTO fixedAssetDTO) {
+        return fixedAssetService.updateFixed(fixedAssetDTO);
+    }
+
+
 }

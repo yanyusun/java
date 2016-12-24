@@ -86,6 +86,9 @@ public class AssetPackageServiceImpl implements AssetPackageService {
     }
 
     private void setEntity(AssetPackage entity) {
+        if (entity.getOperUser() == null) {
+            entity.setOperUser(UserSession.getCurrent().getUserId());
+        }
         if (entity.getAssetNo() == null) {
 
         }
@@ -105,4 +108,23 @@ public class AssetPackageServiceImpl implements AssetPackageService {
         map.put("labels", labels);
         return JsonResponseTool.success(map);
     }
+
+    @Override
+    public JsonResponse updateAsset(AssetPackageDTO assetPackageDTO) {
+        if (CommonUtil.checkParam(assetPackageDTO) || CommonUtil.checkParam(assetPackageDTO.getAssetPackage())) {
+            return JsonResponseTool.failure("请把信息填写完整");
+        }
+        AssetPackage entity = assetPackageDTO.getAssetPackage();
+        if (entity == null && entity.getId() == null) {
+            return JsonResponseTool.failure("缺少必要数值");
+        }
+        setEntity(entity);
+        Integer num = assetPackageMapper.updateByPrimaryKeySelective(entity);
+        if (num == 0) {
+            return JsonResponseTool.failure("修改失败");
+        }
+        fixedAssetService.addOtherEntity_tx(assetPackageDTO.getLabels(), assetPackageDTO.getDisposes(), assetPackageDTO.getAssetFiles(), entity.getId(), ObjectTypeEnum.asset_package.getValue());
+        return JsonResponseTool.success(null);
+    }
+
 }

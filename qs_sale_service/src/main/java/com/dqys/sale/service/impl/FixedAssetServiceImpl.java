@@ -87,7 +87,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
     @Override
     public JsonResponse addFixed_tx(FixedAssetDTO fixedAssetDTO) {
         if (CommonUtil.checkParam(fixedAssetDTO) || CommonUtil.checkParam(fixedAssetDTO.getFixedAsset())) {
-            return JsonResponseTool.failure("参数错误");
+            return JsonResponseTool.failure("请把信息填写完整");
         }
         FixedAsset fixedAsset = fixedAssetDTO.getFixedAsset();
 
@@ -161,6 +161,23 @@ public class FixedAssetServiceImpl implements FixedAssetService {
                 }
             }
         }
+    }
+
+    @Override
+    public JsonResponse updateFixed(FixedAssetDTO fixedAssetDTO) {
+        if (CommonUtil.checkParam(fixedAssetDTO) || CommonUtil.checkParam(fixedAssetDTO.getFixedAsset())) {
+            return JsonResponseTool.failure("请把信息填写完整");
+        }
+        FixedAsset fixedAsset = fixedAssetDTO.getFixedAsset();
+        if (fixedAsset == null && fixedAsset.getId() == null) {
+            return JsonResponseTool.failure("缺少必要数值");
+        }
+        Integer num = fixedAssetMapper.updateByPrimaryKeySelective(fixedAsset);
+        if (num == 0) {
+            return JsonResponseTool.failure("修改失败");
+        }
+        addOtherEntity_tx(fixedAssetDTO.getLabels(), fixedAssetDTO.getDisposes(), fixedAssetDTO.getAssetFiles(), fixedAsset.getId(), ObjectTypeEnum.fixed_asset.getValue());
+        return JsonResponseTool.success(null);
     }
 
 }

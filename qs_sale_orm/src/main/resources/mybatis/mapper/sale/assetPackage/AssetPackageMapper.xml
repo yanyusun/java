@@ -387,6 +387,12 @@
         <if test="isHomePage !=null">
             AND is_home_page = #{isHomePage},
         </if>
+        <if test="checkStatus !=null">
+            AND check_status=#{checkStatus}
+        </if>
+        <if test="enable !=null">
+            AND enable=#{enable}
+        </if>
     </sql>
     <select id="list" parameterType="com.dqys.sale.orm.query.AssetPackageQuery"
             resultMap="BaseResultMap">
