@@ -2,8 +2,6 @@ package com.dqys.business.orm.pojo.followUp;
 
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
-import com.dqys.business.orm.pojo.common.SourceInfo;
-import com.dqys.business.orm.pojo.common.SourceSource;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.core.base.BaseModel;
 

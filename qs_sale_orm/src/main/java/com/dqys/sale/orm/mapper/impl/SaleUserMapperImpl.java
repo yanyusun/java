@@ -1,8 +1,8 @@
 package com.dqys.sale.orm.mapper.impl;
 
 import com.dqys.core.base.SaleBaseDao;
-import com.dqys.sale.orm.dto.UserDetailDTO;
 import com.dqys.sale.orm.mapper.SaleUserMapper;
+import com.dqys.sale.orm.pojo.UserDetailDTO;
 import org.springframework.stereotype.Repository;
 
 /**

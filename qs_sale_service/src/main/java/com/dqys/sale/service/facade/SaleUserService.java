@@ -1,4 +1,4 @@
-package com.dqys.sale.service.impl;
+package com.dqys.sale.service.facade;
 
 import com.dqys.core.model.JsonResponse;
 

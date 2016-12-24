@@ -4,7 +4,7 @@ import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.sale.orm.dto.AssetPackageDTO;
+import com.dqys.sale.service.dto.AssetPackageDTO;
 import com.dqys.sale.orm.mapper.AssetFileMapper;
 import com.dqys.sale.orm.mapper.AssetPackageMapper;
 import com.dqys.sale.orm.mapper.DisposeMapper;

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.sale.orm.mapper.SaleUserMapper">
     <!--获取用户个人信息-->
-    <select id="getUserDetail" resultType="com.dqys.sale.orm.dto.UserDetailDTO">
+    <select id="getUserDetail" resultType="com.dqys.sale.orm.pojo.UserDetailDTO">
        SELECT su.id,su.name,su.account,su.email,su.mobile,su.status,su.role_type roleType,su.user_type userType,
         DATE_FORMAT(su.create_at,'%Y-%m-%d %H:%i:%s') createTime,sut.province,sut.city,sut.area,log.ip,DATE_FORMAT(log.time,'%Y-%m-%d %H:%i:%s') loginTime FROM t_sale_user su LEFT JOIN t_sale_user_tag sut
         ON sut.user_id=su.id LEFT JOIN (SELECT * from t_login_log log WHERE log.user_id=#{userId} ORDER BY log.time desc LIMIT 1,1) log

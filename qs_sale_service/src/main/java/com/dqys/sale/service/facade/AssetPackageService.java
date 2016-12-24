@@ -1,7 +1,7 @@
 package com.dqys.sale.service.facade;
 
 import com.dqys.core.model.JsonResponse;
-import com.dqys.sale.orm.dto.AssetPackageDTO;
+import com.dqys.sale.service.dto.AssetPackageDTO;
 import com.dqys.sale.orm.query.AssetPackageQuery;
 
 /**

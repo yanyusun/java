@@ -1,4 +1,4 @@
-package com.dqys.sale.orm.dto;
+package com.dqys.sale.orm.pojo;
 
 /**
  * Created by mkfeng on 2016/12/23.
