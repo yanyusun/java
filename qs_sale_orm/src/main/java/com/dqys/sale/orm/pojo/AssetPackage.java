@@ -58,6 +58,25 @@ public class AssetPackage {
 
     private String remark;//备注',
 
+    private Integer checkStatus;//0待审核1审核未通过2审核已通过
+    private Integer enable;//'是否无效0不是,1是
+
+    public Integer getCheckStatus() {
+        return checkStatus;
+    }
+
+    public void setCheckStatus(Integer checkStatus) {
+        this.checkStatus = checkStatus;
+    }
+
+    public Integer getEnable() {
+        return enable;
+    }
+
+    public void setEnable(Integer enable) {
+        this.enable = enable;
+    }
+
     public String getDescribe() {
         return describe;
     }

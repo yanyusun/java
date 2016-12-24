@@ -1,7 +1,7 @@
 package com.dqys.auth.orm.dao.facade;
 
 
-import com.dqys.auth.orm.pojo.SaleUserTag;
+import com.dqys.auth.orm.pojo.saleUser.SaleUserTag;
 
 public interface SaleUserTagMapper extends BaseMapper<SaleUserTag> {
     /**

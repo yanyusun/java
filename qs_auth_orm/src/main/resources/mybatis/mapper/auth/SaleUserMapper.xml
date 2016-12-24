@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.dqys.auth.orm.dao.facade.SaleUserMapper">
-    <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.SaleUser">
+    <resultMap id="BaseResultMap" type="com.dqys.auth.orm.pojo.saleUser.SaleUser">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
         <result column="account" property="account" jdbcType="VARCHAR"/>
@@ -32,7 +32,7 @@
     delete from t_sale_user
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.dqys.auth.orm.pojo.SaleUser">
+    <insert id="insert" parameterType="com.dqys.auth.orm.pojo.saleUser.SaleUser">
     insert into t_sale_user (id, name, account, 
       email, mobile, password, 
       salt, status, role_type, 
@@ -44,7 +44,7 @@
       #{userType,jdbcType=INTEGER}, now(), now(), 
       #{version,jdbcType=INTEGER}, #{stateflag,jdbcType=BIGINT},#{sex,jdbcType=INTEGER})
   </insert>
-    <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.SaleUser" useGeneratedKeys="true"
+    <insert id="insertSelective" parameterType="com.dqys.auth.orm.pojo.saleUser.SaleUser" useGeneratedKeys="true"
             keyProperty="id">
         insert into t_sale_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -134,7 +134,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.SaleUser">
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.auth.orm.pojo.saleUser.SaleUser">
         update t_sale_user
         <set>
             <if test="name != null">
@@ -177,7 +177,7 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.dqys.auth.orm.pojo.SaleUser">
+    <update id="updateByPrimaryKey" parameterType="com.dqys.auth.orm.pojo.saleUser.SaleUser">
     update t_sale_user
     set name = #{name,jdbcType=VARCHAR},
       account = #{account,jdbcType=VARCHAR},
@@ -201,19 +201,32 @@
         <include refid="Base_Column_List"/>
         from t_sale_user
         where
-        ( 1=2
-        <if test="account != null">
-            or account = #{account,jdbcType=VARCHAR}
-        </if>
-        <if test="mobile != null">
-            or mobile = #{mobile,jdbcType=VARCHAR}
-        </if>
-        <if test="email != null">
-            or email = #{email,jdbcType=VARCHAR}
-        </if>
+        (
+        <trim prefixOverrides="or">
+            <if test="account != null">
+                or account = #{account,jdbcType=VARCHAR}
+            </if>
+            <if test="mobile != null">
+                or mobile = #{mobile,jdbcType=VARCHAR}
+            </if>
+            <if test="email != null">
+                or email = #{email,jdbcType=VARCHAR}
+            </if>
+        </trim>
         )
         and stateflag=0
     </select>
-
+    <!--添加登入日志-->
+    <insert id="addLoginLog" parameterType="com.dqys.auth.orm.pojo.LoginLog">
+        INSERT INTO t_login_log(user_id,time,ip) VALUES(#{userId},now(),#{ip})
+    </insert>
+    <!--获取用户个人信息-->
+    <select id="getUserDetail" resultType="com.dqys.auth.orm.pojo.saleUser.dto.UserDetailDTO">
+       SELECT su.id,su.name,su.account,su.email,su.mobile,su.status,su.role_type roleType,su.user_type userType,
+        DATE_FORMAT(su.create_at,'%Y-%m-%d %H:%i:%s') createTime,sut.province,sut.city,sut.area,log.ip,DATE_FORMAT(log.time,'%Y-%m-%d %H:%i:%s') loginTime FROM t_sale_user su LEFT JOIN t_sale_user_tag sut
+        ON sut.user_id=su.id LEFT JOIN (SELECT * from t_login_log log WHERE log.user_id=#{userId} ORDER BY log.time desc LIMIT 1,1) log
+        ON log.user_id=su.id
+        WHERE  su.stateflag=0 AND su.id=#{userId}
+    </select>
 
 </mapper>

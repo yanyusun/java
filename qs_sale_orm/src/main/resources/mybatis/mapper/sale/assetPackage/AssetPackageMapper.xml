@@ -238,7 +238,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.chebaiyong.biz.asset.domain.AssetPackageWithBLOBs">
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.sale.orm.pojo.AssetPackage">
         update t_asset_package
         <set>
             <if test="title != null">
@@ -317,7 +317,7 @@
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.chebaiyong.biz.asset.domain.AssetPackageWithBLOBs">
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.dqys.sale.orm.pojo.AssetPackage">
     update t_asset_package
     set title = #{title,jdbcType=VARCHAR},
       is_special = #{isSpecial,jdbcType=INTEGER},
@@ -346,7 +346,7 @@
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-    <update id="updateByPrimaryKey" parameterType="com.chebaiyong.biz.asset.domain.AssetPackage">
+    <update id="updateByPrimaryKey" parameterType="com.dqys.sale.orm.pojo.AssetPackage">
     update t_asset_package
     set title = #{title,jdbcType=VARCHAR},
       is_special = #{isSpecial,jdbcType=INTEGER},
@@ -376,4 +376,32 @@
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+    <sql id="Query_Where">
+        <if test="ids!=null and ids.size>0">
+            AND id IN
+            <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="isHomePage !=null">
+            AND is_home_page = #{isHomePage},
+        </if>
+    </sql>
+    <select id="list" parameterType="com.dqys.sale.orm.query.AssetPackageQuery"
+            resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_asset_package WHERE 1=1
+        <include refid="Query_Where"/>
+        Limit #{startPage},#{pageCount}
+    </select>
+    <select id="listCount" parameterType="com.dqys.sale.orm.query.AssetPackageQuery"
+            resultType="int">
+        SELECT
+        count(*)
+        FROM t_asset_package WHERE 1=1
+        <include refid="Query_Where"/>
+    </select>
+
 </mapper>

@@ -1,7 +1,5 @@
 package com.dqys.auth.orm.dao.facade;
 
-import com.dqys.auth.orm.pojo.SaleUser;
-
 /**
  * Created by mkfeng on 2016/12/20.
  */

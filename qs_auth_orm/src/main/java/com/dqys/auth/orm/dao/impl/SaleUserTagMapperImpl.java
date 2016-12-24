@@ -1,9 +1,7 @@
 package com.dqys.auth.orm.dao.impl;
 
 import com.dqys.auth.orm.dao.facade.SaleUserTagMapper;
-import com.dqys.auth.orm.pojo.SaleUser;
-import com.dqys.auth.orm.pojo.SaleUserTag;
-import com.dqys.core.base.BaseDao;
+import com.dqys.auth.orm.pojo.saleUser.SaleUserTag;
 import com.dqys.core.base.SaleBaseDao;
 import org.springframework.stereotype.Repository;
 

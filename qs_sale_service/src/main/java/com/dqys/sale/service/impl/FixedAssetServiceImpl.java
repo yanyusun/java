@@ -84,6 +84,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
             return JsonResponseTool.failure("参数错误");
         }
         FixedAsset fixedAsset = fixedAssetDTO.getFixedAsset();
+        setEntity(fixedAsset);
         Integer num = fixedAssetMapper.insertSelective(fixedAsset);
         if (num == 0) {
             return JsonResponseTool.failure("添加失败");
@@ -92,10 +93,24 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         return JsonResponseTool.success(null);
     }
 
+    private void setEntity(FixedAsset entity) {
+        if (entity.getNo() == null) {
+
+        }
+
+    }
+
     @Override
     public void addOtherEntity(List<Label> labels, List<Dispose> disposes, List<AssetFile> assetFiles, Integer id, Integer objectType) {
+
         //文件
         if (assetFiles != null && assetFiles.size() > 0) {
+            List<AssetFile> list = assetFileMapper.selectByAssetId(id, objectType);
+            if (list != null && list.size() > 0) {
+                for (AssetFile file : list) {
+                    assetFileMapper.deleteByPrimaryKey(file.getId());
+                }
+            }
             for (AssetFile file : assetFiles) {
                 file.setAssetId(id);
                 file.setAssetType(objectType);
@@ -104,6 +119,12 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         }
         //处置方式
         if (disposes != null && disposes.size() > 0) {
+            List<Dispose> list = disposeMapper.selectByAssetId(id, objectType);
+            if (list != null && list.size() > 0) {
+                for (Dispose file : list) {
+                    disposeMapper.deleteByPrimaryKey(file.getId());
+                }
+            }
             for (Dispose dis : disposes) {
                 dis.setAssetType(objectType);
                 dis.setAssetId(id);
@@ -114,6 +135,12 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         if (labels != null && labels.size() > 0) {
             LabelRe labelRe = new LabelRe();
             labelRe.setAssetType(objectType);
+            List<Dispose> list = labelReMapper.selectByAssetId(id, objectType);
+            if (list != null && list.size() > 0) {
+                for (Dispose file : list) {
+                    labelReMapper.deleteByPrimaryKey(file.getId());
+                }
+            }
             for (Label label : labels) {
                 if (label.getId() != null) {
                     labelRe.setAsssetId(id);

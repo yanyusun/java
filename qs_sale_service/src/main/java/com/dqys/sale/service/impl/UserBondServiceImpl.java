@@ -4,6 +4,7 @@ import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.RandomUtil;
 import com.dqys.sale.orm.constant.ObjectTypeEnum;
 import com.dqys.sale.orm.dto.UserBondDTO;
 import com.dqys.sale.orm.mapper.*;
@@ -72,12 +73,26 @@ public class UserBondServiceImpl implements UserBondService {
             return JsonResponseTool.failure("参数错误");
         }
         UserBond entity = userBondDTO.getUserBond();
+        setEntity(entity);
         Integer num = userBondMapper.insertSelective(entity);
         if (num == 0) {
             return JsonResponseTool.failure("添加失败");
         }
         fixedAssetService.addOtherEntity(userBondDTO.getLabels(), userBondDTO.getDisposes(), userBondDTO.getAssetFiles(), entity.getId(), ObjectTypeEnum.user_bond.getValue());
         return JsonResponseTool.success(null);
+    }
+
+    private void setEntity(UserBond entity) {
+        if (entity.getBondNo() == null) {
+            if (entity.getBondType() == ObjectTypeEnum.user_bond.getValue().intValue()) {
+                entity.setBondNo(RandomUtil.getCode(RandomUtil.INDIVIDUAL_CREDITOR_CODE));
+            } else if (entity.getBondType() == ObjectTypeEnum.overdue_asset.getValue().intValue()) {
+                entity.setBondNo(RandomUtil.getCode(RandomUtil.INDIVIDUAL_CREDITOR_CODE));
+            } else if (entity.getBondType() == ObjectTypeEnum.company_bond.getValue().intValue()) {
+                entity.setBondNo(RandomUtil.getCode(RandomUtil.INDIVIDUAL_CREDITOR_CODE));
+            }
+        }
+
     }
 
     @Override

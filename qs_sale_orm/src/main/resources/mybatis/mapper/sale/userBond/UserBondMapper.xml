@@ -67,6 +67,11 @@
         <result column="debt_situation_social" property="debtSituationSocial" jdbcType="VARCHAR"/>
         <result column="describe" property="describe" jdbcType="VARCHAR"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="oper_user" property="operUser" jdbcType="INTEGER"/>
+        <result column="check_status" property="checkStatus" jdbcType="INTEGER"/>
+        <result column="enable" property="enable" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, bond_no, grade, bond_type, is_special, is_home_page, title, source, start_time, 
@@ -78,7 +83,7 @@
     bond_contacts_name, bond_contacts_phone, bond_contacts_idcode, debt_type, debt_is_address, 
     debt_phone, debt_is_operate, debt_idcode, debt_province, debt_city, debt_area, debt_situation_asset, 
     debt_situation_operate, debt_situation_industry, debt_situation_marriage, debt_situation_education, 
-    debt_situation_body, debt_situation_member, debt_situation_social,describe, remark
+    debt_situation_body, debt_situation_member, debt_situation_social,describe, remark,check_status,enable
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -90,7 +95,7 @@
     delete from t_user_bond
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.dqys.sale.orm.pojo.UserBondWithBLOBs">
+    <insert id="insert" parameterType="com.dqys.sale.orm.pojo.UserBond">
     insert into t_user_bond (id, bond_no, grade, 
       bond_type, is_special, is_home_page, 
       title, source, start_time, 
@@ -113,7 +118,7 @@
       debt_situation_operate, debt_situation_industry, 
       debt_situation_marriage, debt_situation_education, 
       debt_situation_body, debt_situation_member, 
-      debt_situation_social, describe, remark
+      debt_situation_social, describe, remark,create_time,update_time,oper_user
       )
     values (#{id,jdbcType=INTEGER}, #{bondNo,jdbcType=VARCHAR}, #{grade,jdbcType=TINYINT}, 
       #{bondType,jdbcType=TINYINT}, #{isSpecial,jdbcType=TINYINT}, #{isHomePage,jdbcType=TINYINT}, 
@@ -137,10 +142,10 @@
       #{debtSituationOperate,jdbcType=VARCHAR}, #{debtSituationIndustry,jdbcType=VARCHAR}, 
       #{debtSituationMarriage,jdbcType=VARCHAR}, #{debtSituationEducation,jdbcType=VARCHAR}, 
       #{debtSituationBody,jdbcType=VARCHAR}, #{debtSituationMember,jdbcType=VARCHAR}, 
-      #{debtSituationSocial,jdbcType=VARCHAR}, #{describe,jdbcType=LONGVARCHAR}, #{remark,jdbcType=LONGVARCHAR}
+      #{debtSituationSocial,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},now(),now(),#{operUser,jdbcType=INTEGER}
       )
   </insert>
-    <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.UserBondWithBLOBs">
+    <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.UserBond">
         insert into t_user_bond
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -338,6 +343,9 @@
             <if test="remark != null">
                 remark,
             </if>
+            create_time,
+            update_time,
+            oper_user,
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -530,14 +538,19 @@
                 #{debtSituationSocial,jdbcType=VARCHAR},
             </if>
             <if test="describe != null">
-                #{describe,jdbcType=LONGVARCHAR},
+                #{describe,jdbcType=VARCHAR},
             </if>
             <if test="remark != null">
-                #{remark,jdbcType=LONGVARCHAR},
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            now(),
+            now(),
+            <if test="operUser != null">
+                #{operUser,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.sale.orm.pojo.UserBondWithBLOBs">
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.sale.orm.pojo.UserBond">
         update t_user_bond
         <set>
             <if test="bondNo != null">
@@ -727,15 +740,16 @@
                 debt_situation_social = #{debtSituationSocial,jdbcType=VARCHAR},
             </if>
             <if test="describe != null">
-                describe = #{describe,jdbcType=LONGVARCHAR},
+                describe = #{describe,jdbcType=VARCHAR},
             </if>
             <if test="remark != null">
-                remark = #{remark,jdbcType=LONGVARCHAR},
+                remark = #{remark,jdbcType=VARCHAR},
             </if>
+            update_time = now(),
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
-    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.dqys.sale.orm.pojo.UserBondWithBLOBs">
+    <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.dqys.sale.orm.pojo.UserBond">
     update t_user_bond
     set bond_no = #{bondNo,jdbcType=VARCHAR},
       grade = #{grade,jdbcType=TINYINT},
@@ -799,8 +813,9 @@
       debt_situation_body = #{debtSituationBody,jdbcType=VARCHAR},
       debt_situation_member = #{debtSituationMember,jdbcType=VARCHAR},
       debt_situation_social = #{debtSituationSocial,jdbcType=VARCHAR},
-      describe = #{describe,jdbcType=LONGVARCHAR},
-      remark = #{remark,jdbcType=LONGVARCHAR}
+      describe = #{describe,jdbcType=VARCHAR},
+      update_time = now(),
+      remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
     <update id="updateByPrimaryKey" parameterType="com.dqys.sale.orm.pojo.UserBond">
@@ -867,6 +882,9 @@
       debt_situation_body = #{debtSituationBody,jdbcType=VARCHAR},
       debt_situation_member = #{debtSituationMember,jdbcType=VARCHAR},
       debt_situation_social = #{debtSituationSocial,jdbcType=VARCHAR}
+       describe = #{describe,jdbcType=VARCHAR},
+      update_time = now(),
+      remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
@@ -876,6 +894,12 @@
             <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
                 #{id}
             </foreach>
+        </if>
+        <if test="isHomePage !=null">
+            AND is_home_page = #{isHomePage},
+        </if>
+        <if test="bondType !=null">
+            AND bond_type = #{bondType},
         </if>
     </sql>
     <select id="list" parameterType="com.dqys.sale.orm.query.UserBondQuery"

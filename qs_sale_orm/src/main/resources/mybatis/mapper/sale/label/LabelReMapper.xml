@@ -79,4 +79,12 @@
       asset_type = #{assetType,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+    <select id="selectByAssetId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_label_asset_re WHERE assset_id=#{assetId} AND asset_type=#{objectType}
+    </select>
+
+
 </mapper>

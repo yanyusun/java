@@ -1,15 +1,18 @@
 package com.dqys.auth.controller;
 
-import com.dqys.auth.orm.pojo.SaleUser;
-import com.dqys.auth.orm.pojo.SaleUserModel;
-import com.dqys.auth.orm.pojo.SaleUserTag;
+import com.dqys.auth.orm.pojo.LoginLog;
+import com.dqys.auth.orm.pojo.saleUser.SaleUser;
+import com.dqys.auth.orm.pojo.saleUser.SaleUserModel;
+import com.dqys.auth.orm.pojo.saleUser.SaleUserTag;
 import com.dqys.auth.service.facade.SaleUserService;
 import com.dqys.auth.service.facade.UserService;
 import com.dqys.captcha.service.facade.CaptchaService;
 import com.dqys.core.base.BaseApiContorller;
+import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.constant.SmsEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.ServiceResult;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.JsonResponseTool;
@@ -17,6 +20,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 登入或注册管理
@@ -45,12 +50,27 @@ public class LoginController extends BaseApiContorller {
      */
     @RequestMapping(value = "/enterLogin", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse enterLogin(@RequestParam String account, @RequestParam String paw, @RequestParam String code, @RequestParam String key) throws Exception {
+    public JsonResponse enterLogin(@RequestParam String account, @RequestParam String paw, @RequestParam String code, @RequestParam String key, String ip, HttpServletRequest request) throws Exception {
         ServiceResult result = captchaService.validImgCaptcha(key, code);
         if (!result.getFlag()) {
             return JsonResponseTool.failure(result.getMessage());
         }
-        return saleUserService.enterLogin(account, paw);
+        JsonResponse response = saleUserService.enterLogin(account, paw);
+        if (response.getCode() == ResponseCodeEnum.SUCCESS.getValue().intValue()) {
+            addLoginLog(UserSession.getCurrent().getUserId(), request, ip);//添加登入日志
+        }
+        return response;
+    }
+
+    private void addLoginLog(Integer userId, HttpServletRequest request, String ip) {
+        LoginLog log = new LoginLog();
+        log.setUserId(userId);
+        if (ip == null || "".equals(ip)) {
+            log.setIp(request.getRemoteAddr().toString());
+        } else {
+            log.setIp(ip);
+        }
+        saleUserService.addLoginLog(log);//添加登入记录
     }
 
     /**
@@ -86,6 +106,10 @@ public class LoginController extends BaseApiContorller {
         String msg = saleUserService.verifyUserMessage(saleUserModel);//验证数据的有效性
         if (!"".equals(msg)) {
             return JsonResponseTool.failure(msg);
+        }
+        JsonResponse response = verifyUser(saleUserModel.getAccount(), saleUserModel.getEmail(), saleUserModel.getMobile());
+        if (response.getCode() != ResponseCodeEnum.SUCCESS.getValue().intValue()) {
+            return response;
         }
         //验证短信验证码
         if (StringUtils.isNotBlank(saleUserModel.getSmsCode())) {
@@ -131,13 +155,13 @@ public class LoginController extends BaseApiContorller {
     @RequestMapping(value = "/verifyUser", method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse verifyUser(String account, String email, String mobile) throws Exception {
-        if (account != null && (FormatValidateTool.checkEmail(account) || FormatValidateTool.checkEmail(account))) {
+        if (account != null && (FormatValidateTool.checkEmail(account) || FormatValidateTool.checkMobile(account))) {
             return JsonResponseTool.failure("用户名不能为邮箱或手机号");
         }
         if (email != null && !FormatValidateTool.checkEmail(email)) {
             return JsonResponseTool.failure("邮箱格式有误");
         }
-        if (mobile != null && !FormatValidateTool.checkEmail(mobile)) {
+        if (mobile != null && !FormatValidateTool.checkMobile(mobile)) {
             return JsonResponseTool.failure("手机号格式有误");
         }
         if (account != null && saleUserService.queryUser(account, null, null) != null) {
@@ -151,6 +175,5 @@ public class LoginController extends BaseApiContorller {
         }
         return JsonResponseTool.success(null);
     }
-
 
 }

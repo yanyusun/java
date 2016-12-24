@@ -1,4 +1,4 @@
-package com.dqys.auth.orm.pojo;
+package com.dqys.auth.orm.pojo.saleUser;
 
 import java.io.Serializable;
 

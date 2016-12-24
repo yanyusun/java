@@ -7,12 +7,14 @@ import com.dqys.sale.orm.pojo.AssetPackage;
 import com.dqys.sale.orm.pojo.UserBond;
 import com.dqys.sale.orm.query.AssetPackageQuery;
 import com.dqys.sale.orm.query.UserBondQuery;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * Created by Administrator on 2016/12/23.
  */
+@Repository
 public class AssetPackageMapperImpl extends SaleBaseDao implements AssetPackageMapper {
 
     @Override

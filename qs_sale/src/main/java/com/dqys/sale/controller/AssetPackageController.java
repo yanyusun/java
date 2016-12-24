@@ -55,4 +55,7 @@ public class AssetPackageController {
     public JsonResponse addAsset(@ModelAttribute AssetPackageDTO assetPackageDTO) {
         return assetPackageService.addAsset(assetPackageDTO);
     }
+
+
+
 }

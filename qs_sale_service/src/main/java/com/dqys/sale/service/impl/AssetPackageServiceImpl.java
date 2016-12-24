@@ -2,8 +2,10 @@ package com.dqys.sale.service.impl;
 
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.RandomUtil;
 import com.dqys.sale.orm.constant.ObjectTypeEnum;
 import com.dqys.sale.orm.dto.AssetPackageDTO;
 import com.dqys.sale.orm.dto.UserBondDTO;
@@ -70,12 +72,20 @@ public class AssetPackageServiceImpl implements AssetPackageService {
             return JsonResponseTool.failure("参数错误");
         }
         AssetPackage entity = assetPackageDTO.getAssetPackage();
+        setEntity(entity);
         Integer num = assetPackageMapper.insertSelective(entity);
         if (num == 0) {
             return JsonResponseTool.failure("添加失败");
         }
         fixedAssetService.addOtherEntity(assetPackageDTO.getLabels(), assetPackageDTO.getDisposes(), assetPackageDTO.getAssetFiles(), entity.getId(), ObjectTypeEnum.asset_package.getValue());
         return JsonResponseTool.success(null);
+    }
+
+    private void setEntity(AssetPackage entity) {
+        if (entity.getAssetNo() == null) {
+
+        }
+
     }
 
     @Override
