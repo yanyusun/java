@@ -2,15 +2,11 @@ package com.dqys.sale.controller;
 
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
-import com.dqys.sale.orm.dto.AssetPackageDTO;
-import com.dqys.sale.service.impl.SaleUserService;
+import com.dqys.sale.service.facade.SaleUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.jws.soap.SOAPBinding;
 
 /**
  * Created by mkfeng on 2016/12/23.
