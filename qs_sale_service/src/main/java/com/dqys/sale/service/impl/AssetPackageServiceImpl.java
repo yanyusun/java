@@ -47,11 +47,11 @@ public class AssetPackageServiceImpl implements AssetPackageService {
 
     @Override
     public JsonResponse assetList(AssetPackageQuery query) {
-        List<Integer> objectIds = businessORelationMapper.selectObjectIdByObjectType(ObjectTypeEnum.user_bond.getValue(), 1);//查询业务状态符合的对象id
-        if (objectIds == null || objectIds.size() == 0) {
-            objectIds.add(SysProperty.NULL_DATA_ID);
-        }
-        query.setIds(objectIds);
+//        List<Integer> objectIds = businessORelationMapper.selectObjectIdByObjectType(ObjectTypeEnum.user_bond.getValue(), 1);//查询业务状态符合的对象id
+//        if (objectIds == null || objectIds.size() == 0) {
+//            objectIds.add(SysProperty.NULL_DATA_ID);
+//        }
+//        query.setIds(objectIds);
         List<AssetPackage> list = assetPackageMapper.list(query);
         Integer count = assetPackageMapper.listCount(query);
         query.setTotalCount(count);

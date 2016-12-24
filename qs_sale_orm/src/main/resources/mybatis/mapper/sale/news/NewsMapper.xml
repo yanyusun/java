@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.sale.orm.mapper.NewsMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.sale.orm.pojo.News">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="auther" property="auther" jdbcType="INTEGER"/>
+        <result column="province" property="province" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="INTEGER"/>
+        <result column="area" property="area" jdbcType="INTEGER"/>
+        <result column="type" property="type" jdbcType="INTEGER"/>
+        <result column="is_refer" property="isRefer" jdbcType="INTEGER"/>
+        <result column="is_headline" property="isHeadline" jdbcType="INTEGER"/>
+        <result column="title" property="title" jdbcType="VARCHAR"/>
+        <result column="content" property="content" jdbcType="VARCHAR"/>
+        <result column="cover" property="cover" jdbcType="VARCHAR"/>
+        <result column="digest" property="digest" jdbcType="VARCHAR"/>
+        <result column="creat_at" property="creatAt" jdbcType="TIMESTAMP"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="open_time" property="openTime" jdbcType="TIMESTAMP"/>
+        <result column="read_num" property="readNum" jdbcType="INTEGER"/>
+        <result column="mark" property="mark" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, auther, province, city, area, type, is_refer, is_headline, title, content, cover, 
+    digest, creat_at, status, open_time, read_num, mark
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_news
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_news
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.dqys.sale.orm.pojo.News">
+    insert into t_news (id, auther, province, 
+      city, area, type, is_refer, 
+      is_headline, title, content, 
+      cover, digest, creat_at, 
+      status, open_time, read_num, 
+      mark)
+    values (#{id,jdbcType=INTEGER}, #{auther,jdbcType=INTEGER}, #{province,jdbcType=INTEGER}, 
+      #{city,jdbcType=INTEGER}, #{area,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{isRefer,jdbcType=INTEGER}, 
+      #{isHeadline,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{cover,jdbcType=VARCHAR}, #{digest,jdbcType=VARCHAR}, #{creatAt,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER}, #{openTime,jdbcType=TIMESTAMP}, #{readNum,jdbcType=INTEGER}, 
+      #{mark,jdbcType=VARCHAR})
+  </insert>
+    <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.News">
+        insert into t_news
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="auther != null">
+                auther,
+            </if>
+            <if test="province != null">
+                province,
+            </if>
+            <if test="city != null">
+                city,
+            </if>
+            <if test="area != null">
+                area,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="isRefer != null">
+                is_refer,
+            </if>
+            <if test="isHeadline != null">
+                is_headline,
+            </if>
+            <if test="title != null">
+                title,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="cover != null">
+                cover,
+            </if>
+            <if test="digest != null">
+                digest,
+            </if>
+            <if test="creatAt != null">
+                creat_at,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="openTime != null">
+                open_time,
+            </if>
+            <if test="readNum != null">
+                read_num,
+            </if>
+            <if test="mark != null">
+                mark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="auther != null">
+                #{auther,jdbcType=INTEGER},
+            </if>
+            <if test="province != null">
+                #{province,jdbcType=INTEGER},
+            </if>
+            <if test="city != null">
+                #{city,jdbcType=INTEGER},
+            </if>
+            <if test="area != null">
+                #{area,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=INTEGER},
+            </if>
+            <if test="isRefer != null">
+                #{isRefer,jdbcType=INTEGER},
+            </if>
+            <if test="isHeadline != null">
+                #{isHeadline,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="cover != null">
+                #{cover,jdbcType=VARCHAR},
+            </if>
+            <if test="digest != null">
+                #{digest,jdbcType=VARCHAR},
+            </if>
+            <if test="creatAt != null">
+                #{creatAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="openTime != null">
+                #{openTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="readNum != null">
+                #{readNum,jdbcType=INTEGER},
+            </if>
+            <if test="mark != null">
+                #{mark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.sale.orm.pojo.News">
+        update t_news
+        <set>
+            <if test="auther != null">
+                auther = #{auther,jdbcType=INTEGER},
+            </if>
+            <if test="province != null">
+                province = #{province,jdbcType=INTEGER},
+            </if>
+            <if test="city != null">
+                city = #{city,jdbcType=INTEGER},
+            </if>
+            <if test="area != null">
+                area = #{area,jdbcType=INTEGER},
+            </if>
+            <if test="type != null">
+                type = #{type,jdbcType=INTEGER},
+            </if>
+            <if test="isRefer != null">
+                is_refer = #{isRefer,jdbcType=INTEGER},
+            </if>
+            <if test="isHeadline != null">
+                is_headline = #{isHeadline,jdbcType=INTEGER},
+            </if>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="cover != null">
+                cover = #{cover,jdbcType=VARCHAR},
+            </if>
+            <if test="digest != null">
+                digest = #{digest,jdbcType=VARCHAR},
+            </if>
+            <if test="creatAt != null">
+                creat_at = #{creatAt,jdbcType=TIMESTAMP},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="openTime != null">
+                open_time = #{openTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="readNum != null">
+                read_num = #{readNum,jdbcType=INTEGER},
+            </if>
+            <if test="mark != null">
+                mark = #{mark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.sale.orm.pojo.News">
+    update t_news
+    set auther = #{auther,jdbcType=INTEGER},
+      province = #{province,jdbcType=INTEGER},
+      city = #{city,jdbcType=INTEGER},
+      area = #{area,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      is_refer = #{isRefer,jdbcType=INTEGER},
+      is_headline = #{isHeadline,jdbcType=INTEGER},
+      title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      cover = #{cover,jdbcType=VARCHAR},
+      digest = #{digest,jdbcType=VARCHAR},
+      creat_at = #{creatAt,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER},
+      open_time = #{openTime,jdbcType=TIMESTAMP},
+      read_num = #{readNum,jdbcType=INTEGER},
+      mark = #{mark,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <sql id="Query_Where">
+        <if test="ids!=null and ids.size>0">
+            AND id IN
+            <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="type !=null">
+            AND type=#{type}
+        </if>
+        <if test="isRefer !=null">
+            AND is_refer=#{isRefer}
+        </if>
+        <if test="isHeadline !=null">
+            AND is_headline=#{isHeadline}
+        </if>
+        <if test="status !=null">
+            AND status=#{status}
+        </if>
+    </sql>
+    <select id="list" parameterType="com.dqys.sale.orm.query.NewsQuery"
+            resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_news WHERE 1=1
+        <include refid="Query_Where"/>
+        <if test="isOrder">
+            ORDER BY open_time desc
+        </if>
+        <if test="isOrder == false">
+            ORDER BY open_time ASC
+        </if>
+        Limit #{startPage},#{pageCount}
+    </select>
+    <select id="listCount" parameterType="com.dqys.sale.orm.query.NewsQuery"
+            resultType="int">
+        SELECT
+        count(*)
+        FROM t_news WHERE 1=1
+        <include refid="Query_Where"/>
+    </select>
+
+    <select id="selectLableByNewId" resultType="com.dqys.sale.orm.pojo.NewsLable">
+        SELECT nl.* FROM t_news_label nl LEFT JOIN t_news_lable_re nlr
+            ON nlr.lable_id=nl.id
+            WHERE nlr.news_id=#{id}
+    </select>
+
+    <delete id="delLableReByNewsId" parameterType="int">
+        DELETE FROM t_news_lable_re where news_id=#{id}
+    </delete>
+
+</mapper>
