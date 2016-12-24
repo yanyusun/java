@@ -1,4 +1,4 @@
-package com.dqys.sale.orm.dto;
+package com.dqys.sale.service.dto;
 
 import com.dqys.sale.orm.pojo.*;
 

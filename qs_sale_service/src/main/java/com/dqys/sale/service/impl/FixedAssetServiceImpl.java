@@ -47,11 +47,11 @@ public class FixedAssetServiceImpl implements FixedAssetService {
 
     @Override
     public JsonResponse fixedList(FixedAssetQuery fixedAssetQuery) {
-        List<Integer> objectIds = businessORelationMapper.selectObjectIdByObjectType(ObjectTypeEnum.fixed_asset.getValue(), 1);//查询业务状态符合的对象id
-        if (objectIds == null || objectIds.size() == 0) {
-            objectIds.add(SysProperty.NULL_DATA_ID);
-        }
-        fixedAssetQuery.setIds(objectIds);
+//        List<Integer> objectIds = businessORelationMapper.selectObjectIdByObjectType(ObjectTypeEnum.fixed_asset.getValue(), 1);//查询业务状态符合的对象id
+//        if (objectIds == null || objectIds.size() == 0) {
+//            objectIds.add(SysProperty.NULL_DATA_ID);
+//        }
+//        fixedAssetQuery.setIds(objectIds);
         List<FixedAsset> fixedAssetList = fixedAssetMapper.fixedList(fixedAssetQuery);
         Integer count = fixedAssetMapper.fixedListCount(fixedAssetQuery);
         fixedAssetQuery.setTotalCount(count);
