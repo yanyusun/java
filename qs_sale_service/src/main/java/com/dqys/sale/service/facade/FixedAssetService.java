@@ -1,7 +1,7 @@
 package com.dqys.sale.service.facade;
 
 import com.dqys.core.model.JsonResponse;
-import com.dqys.sale.orm.dto.FixedAssetDTO;
+import com.dqys.sale.service.dto.FixedAssetDTO;
 import com.dqys.sale.orm.pojo.AssetFile;
 import com.dqys.sale.orm.pojo.Dispose;
 import com.dqys.sale.orm.pojo.Label;
@@ -35,9 +35,9 @@ public interface FixedAssetService {
      * @param fixedAssetDTO
      * @return
      */
-    JsonResponse addFixed(FixedAssetDTO fixedAssetDTO);
+    JsonResponse addFixed_tx(FixedAssetDTO fixedAssetDTO);
 
-    void addOtherEntity(List<Label> labels, List<Dispose> disposes, List<AssetFile> assetFiles, Integer id, Integer objectType);
+    void addOtherEntity_tx(List<Label> labels, List<Dispose> disposes, List<AssetFile> assetFiles, Integer id, Integer objectType);
 
     JsonResponse updateFixed(FixedAssetDTO fixedAssetDTO);
 }

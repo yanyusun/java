@@ -32,10 +32,10 @@ public interface BusinessService {
 
     /**
      * 创建单一对象的业务
-     * @param businessDto
-     * @param userId
-     * @param businessType
-     * @param BusinessStatus
+     * @param businessDto 业务对象
+     * @param userId 用户id
+     * @param businessType 业务类型
+     * @param BusinessStatus 业务状态
      * @return 业务id
      */
     int createBusiness_tx(BusinessDto businessDto,Integer userId,Integer businessType,Integer BusinessStatus);

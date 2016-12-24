@@ -1,4 +1,4 @@
-package com.dqys.sale.service.facade;
+package com.dqys.sale.service.impl;
 
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.AreaTool;
@@ -6,7 +6,7 @@ import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.sale.orm.dto.SaleIndexDTO;
 import com.dqys.sale.orm.dto.UserDetailDTO;
 import com.dqys.sale.orm.mapper.SaleUserMapper;
-import com.dqys.sale.service.impl.SaleUserService;
+import com.dqys.sale.service.facade.SaleUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

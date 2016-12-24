@@ -1,8 +1,7 @@
 package com.dqys.sale.controller;
 
 import com.dqys.core.model.JsonResponse;
-import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.sale.orm.dto.FixedAssetDTO;
+import com.dqys.sale.service.dto.FixedAssetDTO;
 import com.dqys.sale.orm.query.FixedAssetQuery;
 import com.dqys.sale.service.facade.FixedAssetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +53,7 @@ public class FixedAssetController {
     @RequestMapping("/addFixed")
     @ResponseBody
     public JsonResponse addFixed(@ModelAttribute FixedAssetDTO fixedAssetDTO) {
-        return fixedAssetService.addFixed(fixedAssetDTO);
+        return fixedAssetService.addFixed_tx(fixedAssetDTO);
     }
 
     /**

@@ -5,18 +5,15 @@ import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.RandomUtil;
-import com.dqys.sale.orm.constant.ObjectTypeEnum;
-import com.dqys.sale.orm.dto.UserBondDTO;
-import com.dqys.sale.orm.mapper.AssetFileMapper;
-import com.dqys.sale.orm.mapper.DisposeMapper;
-import com.dqys.sale.orm.mapper.LabelMapper;
-import com.dqys.sale.orm.mapper.UserBondMapper;
+import com.dqys.sale.orm.mapper.*;
 import com.dqys.sale.orm.mapper.business.BusinessORelationMapper;
 import com.dqys.sale.orm.pojo.AssetFile;
 import com.dqys.sale.orm.pojo.Dispose;
 import com.dqys.sale.orm.pojo.Label;
 import com.dqys.sale.orm.pojo.UserBond;
 import com.dqys.sale.orm.query.UserBondQuery;
+import com.dqys.sale.service.constant.ObjectTypeEnum;
+import com.dqys.sale.service.dto.UserBondDTO;
 import com.dqys.sale.service.facade.FixedAssetService;
 import com.dqys.sale.service.facade.UserBondService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +41,8 @@ public class UserBondServiceImpl implements UserBondService {
     private LabelMapper labelMapper;
     @Autowired
     private BusinessORelationMapper businessORelationMapper;
+    @Autowired
+    private LabelReMapper labelReMapper;
 
     @Override
     public JsonResponse bondList(UserBondQuery query) {
@@ -83,7 +82,7 @@ public class UserBondServiceImpl implements UserBondService {
         if (num == 0) {
             return JsonResponseTool.failure("添加失败");
         }
-        fixedAssetService.addOtherEntity(userBondDTO.getLabels(), userBondDTO.getDisposes(), userBondDTO.getAssetFiles(), entity.getId(), ObjectTypeEnum.user_bond.getValue());
+        fixedAssetService.addOtherEntity_tx(userBondDTO.getLabels(), userBondDTO.getDisposes(), userBondDTO.getAssetFiles(), entity.getId(), ObjectTypeEnum.user_bond.getValue());
         return JsonResponseTool.success(null);
     }
 
@@ -128,7 +127,7 @@ public class UserBondServiceImpl implements UserBondService {
         if (num == 0) {
             return JsonResponseTool.failure("添加失败");
         }
-        fixedAssetService.addOtherEntity(userBondDTO.getLabels(), userBondDTO.getDisposes(), userBondDTO.getAssetFiles(), entity.getId(), ObjectTypeEnum.user_bond.getValue());
+        fixedAssetService.addOtherEntity_tx(userBondDTO.getLabels(), userBondDTO.getDisposes(), userBondDTO.getAssetFiles(), entity.getId(), ObjectTypeEnum.user_bond.getValue());
         return JsonResponseTool.success(null);
     }
 

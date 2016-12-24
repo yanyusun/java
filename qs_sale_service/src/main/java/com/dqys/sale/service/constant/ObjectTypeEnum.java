@@ -1,4 +1,4 @@
-package com.dqys.sale.orm.constant;
+package com.dqys.sale.service.constant;
 
 /**
  * Created by mkfeng on 2016/12/21.

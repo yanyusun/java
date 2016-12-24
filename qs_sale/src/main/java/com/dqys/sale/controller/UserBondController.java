@@ -1,8 +1,7 @@
 package com.dqys.sale.controller;
 
 import com.dqys.core.model.JsonResponse;
-import com.dqys.sale.orm.dto.FixedAssetDTO;
-import com.dqys.sale.orm.dto.UserBondDTO;
+import com.dqys.sale.service.dto.UserBondDTO;
 import com.dqys.sale.orm.query.UserBondQuery;
 import com.dqys.sale.service.facade.UserBondService;
 import org.springframework.beans.factory.annotation.Autowired;
