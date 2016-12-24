@@ -2,17 +2,20 @@ package com.dqys.sale.service.impl;
 
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
-import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.core.utils.RandomUtil;
-import com.dqys.sale.orm.constant.ObjectTypeEnum;
 import com.dqys.sale.orm.dto.AssetPackageDTO;
-import com.dqys.sale.orm.dto.UserBondDTO;
-import com.dqys.sale.orm.mapper.*;
+import com.dqys.sale.orm.mapper.AssetFileMapper;
+import com.dqys.sale.orm.mapper.AssetPackageMapper;
+import com.dqys.sale.orm.mapper.DisposeMapper;
+import com.dqys.sale.orm.mapper.LabelMapper;
 import com.dqys.sale.orm.mapper.business.BusinessORelationMapper;
-import com.dqys.sale.orm.pojo.*;
+import com.dqys.sale.orm.pojo.AssetFile;
+import com.dqys.sale.orm.pojo.AssetPackage;
+import com.dqys.sale.orm.pojo.Dispose;
+import com.dqys.sale.orm.pojo.Label;
 import com.dqys.sale.orm.query.AssetPackageQuery;
+import com.dqys.sale.service.constant.ObjectTypeEnum;
 import com.dqys.sale.service.facade.AssetPackageService;
 import com.dqys.sale.service.facade.FixedAssetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * Created by mkfeng on 2016/12/23.
@@ -77,7 +81,7 @@ public class AssetPackageServiceImpl implements AssetPackageService {
         if (num == 0) {
             return JsonResponseTool.failure("添加失败");
         }
-        fixedAssetService.addOtherEntity(assetPackageDTO.getLabels(), assetPackageDTO.getDisposes(), assetPackageDTO.getAssetFiles(), entity.getId(), ObjectTypeEnum.asset_package.getValue());
+        fixedAssetService.addOtherEntity_tx(assetPackageDTO.getLabels(), assetPackageDTO.getDisposes(), assetPackageDTO.getAssetFiles(), entity.getId(), ObjectTypeEnum.asset_package.getValue());
         return JsonResponseTool.success(null);
     }
 
