@@ -2,7 +2,6 @@ package com.dqys.sale.service.impl;
 
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
-import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.sale.orm.dto.AssetPackageDTO;
@@ -26,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * Created by mkfeng on 2016/12/23.
