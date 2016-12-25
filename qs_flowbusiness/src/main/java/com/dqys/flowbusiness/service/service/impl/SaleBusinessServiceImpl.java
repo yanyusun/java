@@ -5,6 +5,7 @@ import com.dqys.flowbusiness.orm.mapper.BusinessObjReMapper;
 import com.dqys.flowbusiness.orm.pojo.Business;
 import com.dqys.flowbusiness.service.service.AbstractBusinessService;
 import com.dqys.flowbusiness.service.service.BusinessService;
+import com.dqys.flowbusiness.service.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -37,6 +38,8 @@ public class SaleBusinessServiceImpl extends AbstractBusinessService implements 
         return businessMapper.get(id);
     }
 
-
-
+    @Override
+    public Result flow(Integer businessId, Integer userId, Integer operType) {
+        return null;
+    }
 }

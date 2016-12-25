@@ -4,6 +4,7 @@ import com.dqys.flowbusiness.service.service.BusinessService;
 import com.dqys.sale.orm.mapper.UserBusTotalMapper;
 import com.dqys.sale.orm.pojo.UserBusTotal;
 import com.dqys.sale.orm.query.UserBusTotalQuery;
+import com.dqys.sale.service.constant.UserBusTotalEnum;
 import com.dqys.sale.service.facade.UserBusTotalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,7 +28,16 @@ public class UserBusTotalServiceImpl implements UserBusTotalService {
 
     @Override
     public List<UserBusTotal> list(UserBusTotalQuery query) {
-       // businessService.getBusiness(1);
         return userBusTotalMapper.list(query);
+    }
+
+    @Override
+    public UserBusTotal getByUserId(Integer userId) {
+        return null;
+    }
+
+    @Override
+    public void update(Integer userId, UserBusTotalEnum userBusTotalEnum) {
+
     }
 }

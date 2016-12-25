@@ -27,9 +27,21 @@ public class UserBusTotalController {
      * @return
      */
     @RequestMapping(value = "/list")
-    public JsonResponse t() {
+    public JsonResponse list() {
         UserBusTotalQuery query = new UserBusTotalQuery();
         List<UserBusTotal> list=userBusTotalService.list(query);
         return JsonResponseTool.success(list);
     }
+
+    /**
+     *
+     *
+     * @return
+     */
+    @RequestMapping(value = "/list/{userid}")
+    public JsonResponse listByUserId(Integer userId) {
+        return JsonResponseTool.success(userBusTotalService.getByUserId(userId));
+    }
+
+
 }
