@@ -52,7 +52,7 @@ public class AssetPackageController {
     @RequestMapping("/addAsset")
     @ResponseBody
     public JsonResponse addAsset(@ModelAttribute AssetPackageDTO assetPackageDTO) {
-        return assetPackageService.addAsset(assetPackageDTO);
+        return assetPackageService.addAsset_tx(assetPackageDTO);
     }
 
     /**
@@ -64,7 +64,7 @@ public class AssetPackageController {
     @RequestMapping("/updateAsset")
     @ResponseBody
     public JsonResponse updateAsset(@ModelAttribute AssetPackageDTO assetPackageDTO) {
-        return assetPackageService.updateAsset(assetPackageDTO);
+        return assetPackageService.updateAsset_tx(assetPackageDTO);
     }
 
 

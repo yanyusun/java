@@ -61,6 +61,8 @@ public class FixedAsset {
 
     private Integer righterArea;//产权方地区
 
+    private String righterPhone;//产权方电话
+
     private String righterContactPhone;//产权方联系电话
 
     private String righterContactName;//产权联系人姓名
@@ -85,6 +87,14 @@ public class FixedAsset {
 
     private Integer checkStatus;//0待审核1审核未通过2审核已通过
     private Integer enable;//'是否无效0不是,1是
+
+    public String getRighterPhone() {
+        return righterPhone;
+    }
+
+    public void setRighterPhone(String righterPhone) {
+        this.righterPhone = righterPhone;
+    }
 
     public Integer getCheckStatus() {
         return checkStatus;

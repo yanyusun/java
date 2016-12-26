@@ -51,6 +51,14 @@ public class FixedAssetServiceImpl implements FixedAssetService {
 //            objectIds.add(SysProperty.NULL_DATA_ID);
 //        }
 //        fixedAssetQuery.setIds(objectIds);
+        List<FixedAssetDTO> dtos = getFixedAssetDTOs(fixedAssetQuery);
+        Map map = new HashMap<>();
+        map.put("fixedAssetList", dtos);
+        map.put("query", fixedAssetQuery);
+        return JsonResponseTool.success(map);
+    }
+
+    private List<FixedAssetDTO> getFixedAssetDTOs(FixedAssetQuery fixedAssetQuery) {
         List<FixedAsset> fixedAssetList = fixedAssetMapper.fixedList(fixedAssetQuery);
         Integer count = fixedAssetMapper.fixedListCount(fixedAssetQuery);
         fixedAssetQuery.setTotalCount(count);
@@ -63,10 +71,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
             dto.setDisposes(disposeMapper.selectByAssetId(asset.getId(), ObjectTypeEnum.fixed_asset.getValue()));
             dtos.add(dto);
         }
-        Map map = new HashMap<>();
-        map.put("fixedAssetList", dtos);
-        map.put("query", fixedAssetQuery);
-        return JsonResponseTool.success(map);
+        return dtos;
     }
 
     @Override

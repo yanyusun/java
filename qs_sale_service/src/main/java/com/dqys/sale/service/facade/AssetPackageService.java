@@ -10,9 +10,9 @@ import com.dqys.sale.orm.query.AssetPackageQuery;
 public interface AssetPackageService {
     JsonResponse assetList(AssetPackageQuery query);
 
-    JsonResponse addAsset(AssetPackageDTO assetPackageDTO);
+    JsonResponse addAsset_tx(AssetPackageDTO assetPackageDTO);
 
     JsonResponse getDetail(Integer assetId);
 
-    JsonResponse updateAsset(AssetPackageDTO assetPackageDTO);
+    JsonResponse updateAsset_tx(AssetPackageDTO assetPackageDTO);
 }

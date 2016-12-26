@@ -2,6 +2,7 @@ package com.dqys.sale.service.impl;
 
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.sale.service.dto.AssetPackageDTO;
@@ -52,6 +53,14 @@ public class AssetPackageServiceImpl implements AssetPackageService {
 //            objectIds.add(SysProperty.NULL_DATA_ID);
 //        }
 //        query.setIds(objectIds);
+        List<AssetPackageDTO> dtos = getAssetPackageDTOs(query);
+        Map map = new HashMap<>();
+        map.put("assetPackageList", dtos);
+        map.put("query", query);
+        return JsonResponseTool.success(map);
+    }
+
+    private List<AssetPackageDTO> getAssetPackageDTOs(AssetPackageQuery query) {
         List<AssetPackage> list = assetPackageMapper.list(query);
         Integer count = assetPackageMapper.listCount(query);
         query.setTotalCount(count);
@@ -64,14 +73,11 @@ public class AssetPackageServiceImpl implements AssetPackageService {
             dto.setDisposes(disposeMapper.selectByAssetId(entity.getId(), ObjectTypeEnum.user_bond.getValue()));
             dtos.add(dto);
         }
-        Map map = new HashMap<>();
-        map.put("assetPackageList", dtos);
-        map.put("query", query);
-        return JsonResponseTool.success(map);
+        return dtos;
     }
 
     @Override
-    public JsonResponse addAsset(AssetPackageDTO assetPackageDTO) {
+    public JsonResponse addAsset_tx(AssetPackageDTO assetPackageDTO) {
         if (CommonUtil.checkParam(assetPackageDTO) || CommonUtil.checkParam(assetPackageDTO.getAssetPackage())) {
             return JsonResponseTool.failure("参数错误");
         }
@@ -110,7 +116,7 @@ public class AssetPackageServiceImpl implements AssetPackageService {
     }
 
     @Override
-    public JsonResponse updateAsset(AssetPackageDTO assetPackageDTO) {
+    public JsonResponse updateAsset_tx(AssetPackageDTO assetPackageDTO) {
         if (CommonUtil.checkParam(assetPackageDTO) || CommonUtil.checkParam(assetPackageDTO.getAssetPackage())) {
             return JsonResponseTool.failure("请把信息填写完整");
         }

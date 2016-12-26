@@ -3,9 +3,9 @@ package com.dqys.sale.orm.pojo;
 public class Label {
     private Integer id;
 
-    private Integer type;
+    private Integer type;//类型
 
-    private String name;
+    private String name;//名称
 
     public Integer getId() {
         return id;

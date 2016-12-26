@@ -5,9 +5,9 @@ public class AssetFile {
 
     private Integer assetId;
 
-    private String filename;
+    private String filename;//文件名
 
-    private Integer type;
+    private Integer type;//文件类型0主图，1副图，2凭证
 
     private Integer assetType;
 

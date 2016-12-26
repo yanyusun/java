@@ -53,7 +53,7 @@ public class UserBondController {
     @RequestMapping("/addBond")
     @ResponseBody
     public JsonResponse addBond(@ModelAttribute UserBondDTO userBondDTO) {
-        return userBondService.addBond(userBondDTO);
+        return userBondService.addBond_tx(userBondDTO);
     }
 
     /**
@@ -65,7 +65,7 @@ public class UserBondController {
     @RequestMapping("/updateBond")
     @ResponseBody
     public JsonResponse updateBond(@ModelAttribute UserBondDTO userBondDTO) {
-        return userBondService.updateBond(userBondDTO);
+        return userBondService.updateBond_tx(userBondDTO);
     }
 
 }
