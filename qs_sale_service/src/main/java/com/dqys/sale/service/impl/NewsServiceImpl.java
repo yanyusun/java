@@ -61,7 +61,7 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public JsonResponse addOrUpdateNews(NewsDTO newsDTO) {
+    public JsonResponse addOrUpdateNews_tx(NewsDTO newsDTO) {
         Integer num = 0;
         News news = newsDTO.getNews();
         if (news.getId() == null) {

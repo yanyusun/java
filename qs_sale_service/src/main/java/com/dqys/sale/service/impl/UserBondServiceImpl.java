@@ -72,7 +72,7 @@ public class UserBondServiceImpl implements UserBondService {
     }
 
     @Override
-    public JsonResponse addBond(UserBondDTO userBondDTO) {
+    public JsonResponse addBond_tx(UserBondDTO userBondDTO) {
         if (CommonUtil.checkParam(userBondDTO) || CommonUtil.checkParam(userBondDTO.getUserBond())) {
             return JsonResponseTool.failure("参数错误");
         }
@@ -114,7 +114,7 @@ public class UserBondServiceImpl implements UserBondService {
     }
 
     @Override
-    public JsonResponse updateBond(UserBondDTO userBondDTO) {
+    public JsonResponse updateBond_tx(UserBondDTO userBondDTO) {
         if (CommonUtil.checkParam(userBondDTO) || CommonUtil.checkParam(userBondDTO.getUserBond())) {
             return JsonResponseTool.failure("请把信息填写完整");
         }

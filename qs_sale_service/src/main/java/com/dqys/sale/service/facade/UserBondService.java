@@ -10,9 +10,9 @@ import com.dqys.sale.orm.query.UserBondQuery;
 public interface UserBondService {
     JsonResponse bondList(UserBondQuery query);
 
-    JsonResponse addBond(UserBondDTO userBondDTO);
+    JsonResponse addBond_tx(UserBondDTO userBondDTO);
 
     JsonResponse getDetail(Integer bondId);
 
-    JsonResponse updateBond(UserBondDTO userBondDTO);
+    JsonResponse updateBond_tx(UserBondDTO userBondDTO);
 }
