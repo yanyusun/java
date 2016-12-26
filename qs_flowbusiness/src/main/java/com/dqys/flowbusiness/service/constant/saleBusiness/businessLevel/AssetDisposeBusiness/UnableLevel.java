@@ -3,17 +3,16 @@ package com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.AssetD
 import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.BusinessLevel;
 
 /**
- * Created by pan on 16-12-26.
+ * Created by yan on 16-12-26.
  */
-public class TenderLevel implements BusinessLevel {
+public class UnableLevel implements BusinessLevel {
     @Override
     public Integer getLevel() {
-        return 1110;
+        return 1116;
     }
 
     @Override
     public String getName() {
-        return "招标中";
+        return "已取消";
     }
-
 }

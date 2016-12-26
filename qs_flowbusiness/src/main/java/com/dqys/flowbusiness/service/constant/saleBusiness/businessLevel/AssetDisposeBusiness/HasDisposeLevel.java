@@ -1,19 +1,23 @@
 package com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.AssetDisposeBusiness;
 
+import com.dqys.flowbusiness.service.constant.saleBusiness.BusinessOperTypeEnum;
 import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.BusinessLevel;
 
 /**
  * Created by pan on 16-12-26.
  */
-public class TenderLevel implements BusinessLevel {
+public class HasDisposeLevel implements BusinessLevel{
     @Override
     public Integer getLevel() {
-        return 1110;
+        return 1114;
     }
 
     @Override
     public String getName() {
-        return "招标中";
+        return "已处置";
     }
-
+    /**
+     * 重启
+     */
+    public static final int dispose_reset= BusinessOperTypeEnum.dispose_reset.getValue();
 }

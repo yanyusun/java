@@ -11,12 +11,16 @@ public enum BusinessOperTypeEnum {
     check_OK(104,"审核通过"),
     reject(105,"驳回"),
     under_line(106,"下架"),
-    on_line(107,"上架");
+    on_line(107,"上架"),
     //---------------------->资产处置业务
-//    dispose_unable(111,"无效"),
-//    cancel(112,"取消"),
-//    //dispose_re_announce(),
-
+    dispose_unable(111,"无效"),
+    dispose_cancel(112,"取消处置"),
+    dispose_re_announce(113,"重新申请"),
+    dispose_check_OK(114,"审核通过"),
+    dispose_reject(115,"驳回"),
+    dispose_reset(116,"重启"),
+    dispose_Ok(117,"已处置")
+    ;
     private Integer value;
     private String name;
 

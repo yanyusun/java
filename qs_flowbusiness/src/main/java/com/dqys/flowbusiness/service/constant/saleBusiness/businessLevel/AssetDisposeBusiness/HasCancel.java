@@ -5,15 +5,14 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.Busines
 /**
  * Created by pan on 16-12-26.
  */
-public class TenderLevel implements BusinessLevel {
+public class HasCancel implements BusinessLevel{
     @Override
     public Integer getLevel() {
-        return 1110;
+        return 1115;
     }
 
     @Override
     public String getName() {
-        return "招标中";
+        return "无效";
     }
-
 }
