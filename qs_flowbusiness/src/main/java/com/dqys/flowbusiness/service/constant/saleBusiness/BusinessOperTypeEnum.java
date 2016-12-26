@@ -8,15 +8,14 @@ public enum BusinessOperTypeEnum {
     announce(101, "发布"),
     re_announce(102,"重新发布"),
     unable(103,"无效"),
-    check(104,"审核通过");
-
-
-
-
-
-
-
-
+    check_OK(104,"审核通过"),
+    reject(105,"驳回"),
+    under_line(106,"下架"),
+    on_line(107,"上架");
+    //---------------------->资产处置业务
+//    dispose_unable(111,"无效"),
+//    cancel(112,"取消"),
+//    //dispose_re_announce(),
 
     private Integer value;
     private String name;

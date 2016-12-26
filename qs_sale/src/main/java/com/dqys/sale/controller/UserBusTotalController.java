@@ -1,6 +1,7 @@
 package com.dqys.sale.controller;
 
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.sale.orm.pojo.UserBusTotal;
 import com.dqys.sale.orm.query.UserBusTotalQuery;
@@ -35,11 +36,12 @@ public class UserBusTotalController {
 
     /**
      *
-     *
+     *查询用户的统计信息
      * @return
      */
-    @RequestMapping(value = "/list/{userid}")
-    public JsonResponse listByUserId(Integer userId) {
+    @RequestMapping(value = "/get")
+    public JsonResponse getByUserId() {
+        Integer userId = UserSession.getCurrent().getUserId();
         return JsonResponseTool.success(userBusTotalService.getByUserId(userId));
     }
 

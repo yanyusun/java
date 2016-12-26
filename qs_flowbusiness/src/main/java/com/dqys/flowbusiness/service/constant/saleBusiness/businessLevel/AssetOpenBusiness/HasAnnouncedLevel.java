@@ -4,19 +4,20 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.BusinessOperTypeEnum;
 import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.BusinessLevel;
 
 /**
- * Created by yan on 16-12-26.
+ * Created by pan on 16-12-26.
  */
-public class BeAnnouncedLevel implements BusinessLevel {
+public class HasAnnouncedLevel  implements BusinessLevel {
     @Override
     public Integer getLevel() {
-        return 1010;
+        return 1060;
     }
 
     @Override
     public String getName() {
-        return "待发布";
-    }//用户待发布
-
-    public static final int AnnounceOperType= BusinessOperTypeEnum.announce.getValue();
-
+        return "已发布";
+    }
+    /**
+     * 下架
+     */
+    public static final int under_line = BusinessOperTypeEnum.under_line.getValue();
 }
