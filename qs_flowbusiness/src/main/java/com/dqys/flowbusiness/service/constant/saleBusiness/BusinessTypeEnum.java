@@ -7,8 +7,8 @@ public enum BusinessTypeEnum {
     /**
      * 资产发布业务
      */
-    asset_announce(1, "资产发布业务"),
-    asset_dispose(2,"资产发布业务");
+    asset_announce(10, "资产发布业务"),
+    asset_dispose(11,"资产处置业务");
 
 
     private Integer value;
