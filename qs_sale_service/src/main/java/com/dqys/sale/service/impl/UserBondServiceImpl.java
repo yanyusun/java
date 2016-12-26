@@ -2,17 +2,18 @@ package com.dqys.sale.service.impl;
 
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.RandomUtil;
 import com.dqys.sale.orm.mapper.*;
 import com.dqys.sale.orm.mapper.business.BusinessORelationMapper;
-import com.dqys.sale.orm.pojo.AssetFile;
-import com.dqys.sale.orm.pojo.Dispose;
-import com.dqys.sale.orm.pojo.Label;
-import com.dqys.sale.orm.pojo.UserBond;
+import com.dqys.sale.orm.pojo.*;
 import com.dqys.sale.orm.query.UserBondQuery;
 import com.dqys.sale.service.constant.ObjectTypeEnum;
+import com.dqys.sale.service.dto.APDto;
+import com.dqys.sale.service.dto.AssetPackageDTO;
+import com.dqys.sale.service.dto.UBDto;
 import com.dqys.sale.service.dto.UserBondDTO;
 import com.dqys.sale.service.facade.FixedAssetService;
 import com.dqys.sale.service.facade.UserBondService;
@@ -45,20 +46,63 @@ public class UserBondServiceImpl implements UserBondService {
     private LabelReMapper labelReMapper;
 
     @Override
-    public JsonResponse bondList(UserBondQuery query) {
-        if (query != null && query.getBondType() != null) {
-            List<Integer> objectIds = businessORelationMapper.selectObjectIdByObjectType(query.getBondType(), 1);//查询业务状态符合的对象id
-            if (objectIds == null || objectIds.size() == 0) {
-                objectIds.add(SysProperty.NULL_DATA_ID);
-            }
-            query.setIds(objectIds);
-        }
+    public JsonResponse list(UserBondQuery query) {
         List<UserBondDTO> dtos = getUserBondDTOs(query);
         Map map = new HashMap<>();
         map.put("userBondList", dtos);
         map.put("query", query);
         return JsonResponseTool.success(map);
     }
+
+    @Override
+    public JsonResponse bondList(UserBondQuery query) {
+        List<UserBondDTO> dtos = getUserBondDTOs(query);
+        for (UserBondDTO dto : dtos) {
+            UBDto ubDto = new UBDto();
+            UserBond asset = dto.getUserBond();
+            if (asset != null) {
+                transformToUBDto(ubDto, asset);
+            }
+            dto.setUbDto(ubDto);
+            dto.setUserBond(null);
+        }
+        Map map = new HashMap<>();
+        map.put("userBondList", dtos);
+        map.put("query", query);
+        return JsonResponseTool.success(map);
+    }
+
+    private void transformToUBDto(UBDto ubDto, UserBond asset) {
+        String address = "";
+        if (asset.getProvince() != null && AreaTool.getAreaById(asset.getProvince()) != null) {
+            address += AreaTool.getAreaById(asset.getProvince()).getLabel();
+        }
+        if (asset.getCity() != null && AreaTool.getAreaById(asset.getCity()) != null) {
+            address += AreaTool.getAreaById(asset.getCity()).getLabel();
+        }
+        if (asset.getArea() != null && AreaTool.getAreaById(asset.getArea()) != null) {
+            AreaTool.getAreaById(asset.getArea()).getLabel();
+        }
+        if (asset.getAddress() != null) {
+            address += asset.getAddress();
+        }
+        ubDto.setAddress(address);
+        ubDto.setCollectionNum(asset.getCollectionNum());
+        ubDto.setDisposeNum(asset.getDisposeNum());
+        ubDto.setDisposeStatus(asset.getDisposeStatus());
+        ubDto.setId(asset.getId());
+        ubDto.setBondNo(asset.getBondNo());
+        ubDto.setIsSpecial(asset.getIsSpecial().intValue());
+        ubDto.setTitle(asset.getTitle());
+        ubDto.setEndTime(asset.getEndTime());
+        ubDto.setStartTime(asset.getStartTime());
+        ubDto.setTotalMoney(asset.getTotalMoney());
+        ubDto.setGrade(asset.getGrade().intValue());
+        ubDto.setAssessTotalPrice(asset.getAssessTotalPrice());
+        ubDto.setLoanMoney(asset.getLoanMoney());
+        ubDto.setTotalInterestMoney(asset.getTotalInterestMoney());
+    }
+
 
     private List<UserBondDTO> getUserBondDTOs(UserBondQuery query) {
         List<UserBond> userBonds = userBondMapper.list(query);
@@ -88,7 +132,7 @@ public class UserBondServiceImpl implements UserBondService {
             return JsonResponseTool.failure("添加失败");
         }
         fixedAssetService.addOtherEntity_tx(userBondDTO.getLabels(), userBondDTO.getDisposes(), userBondDTO.getAssetFiles(), entity.getId(), ObjectTypeEnum.user_bond.getValue());
-        return JsonResponseTool.success(null);
+        return JsonResponseTool.success(entity.getId());
     }
 
     private void setEntity(UserBond entity) {
@@ -135,5 +179,6 @@ public class UserBondServiceImpl implements UserBondService {
         fixedAssetService.addOtherEntity_tx(userBondDTO.getLabels(), userBondDTO.getDisposes(), userBondDTO.getAssetFiles(), entity.getId(), ObjectTypeEnum.user_bond.getValue());
         return JsonResponseTool.success(null);
     }
+
 
 }

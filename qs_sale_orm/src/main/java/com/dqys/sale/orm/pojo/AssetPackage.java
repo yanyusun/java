@@ -8,7 +8,8 @@ public class AssetPackage {
     private String assetNo;//编号
 
     private String title;//标题
-
+    private Date startTime;//委托开始时间
+    private Date endTime;//委托结束时间
     private Integer isSpecial;//是否专项（0否1是）
 
     private Integer isHomePage;//是否至于首页
@@ -55,11 +56,52 @@ public class AssetPackage {
 
     private Integer operUser;//操作人员
     private String describe;//描述',
-
     private String remark;//备注',
-
+    private Integer collectionNum;//收藏数量
+    private Integer disposeNum;//申请处置数量
+    private Integer disposeStatus;// 处置状态（0待处置1处置中2已处置）
     private Integer checkStatus;//0待审核1审核未通过2审核已通过
     private Integer enable;//'是否无效0不是,1是
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public Integer getCollectionNum() {
+        return collectionNum;
+    }
+
+    public void setCollectionNum(Integer collectionNum) {
+        this.collectionNum = collectionNum;
+    }
+
+    public Integer getDisposeNum() {
+        return disposeNum;
+    }
+
+    public void setDisposeNum(Integer disposeNum) {
+        this.disposeNum = disposeNum;
+    }
+
+    public Integer getDisposeStatus() {
+        return disposeStatus;
+    }
+
+    public void setDisposeStatus(Integer disposeStatus) {
+        this.disposeStatus = disposeStatus;
+    }
 
     public Integer getCheckStatus() {
         return checkStatus;

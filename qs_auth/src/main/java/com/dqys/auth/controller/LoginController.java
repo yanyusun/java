@@ -22,6 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * 登入或注册管理
@@ -55,11 +56,11 @@ public class LoginController extends BaseApiContorller {
         if (!result.getFlag()) {
             return JsonResponseTool.failure(result.getMessage());
         }
-        JsonResponse response = saleUserService.enterLogin(account, paw);
-        if (response.getCode() == ResponseCodeEnum.SUCCESS.getValue().intValue()) {
-            addLoginLog(UserSession.getCurrent().getUserId(), request, ip);//添加登入日志
+        Map map = saleUserService.enterLogin(account, paw);
+        if ("yes".equals(map.get("result"))) {
+            addLoginLog(Integer.valueOf(map.get("userId").toString()), request, ip);//添加登入日志
         }
-        return response;
+        return (JsonResponse) map.get("date");
     }
 
     private void addLoginLog(Integer userId, HttpServletRequest request, String ip) {

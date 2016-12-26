@@ -15,4 +15,6 @@ public interface UserBondService {
     JsonResponse getDetail(Integer bondId);
 
     JsonResponse updateBond_tx(UserBondDTO userBondDTO);
+
+    JsonResponse list(UserBondQuery query);
 }

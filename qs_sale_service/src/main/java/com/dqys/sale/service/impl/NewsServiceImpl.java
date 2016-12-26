@@ -78,7 +78,7 @@ public class NewsServiceImpl implements NewsService {
                 newsMapper.addNewsAndLableRe(news.getId(), lable.getId());
             }
         }
-        return JsonResponseTool.success(null);
+        return JsonResponseTool.success(news.getId());
     }
 
 

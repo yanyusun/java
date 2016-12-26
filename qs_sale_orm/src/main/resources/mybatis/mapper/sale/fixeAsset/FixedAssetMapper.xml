@@ -44,6 +44,7 @@
         <result column="oper_user" property="operUser" jdbcType="INTEGER"/>
         <result column="check_status" property="checkStatus" jdbcType="INTEGER"/>
         <result column="enable" property="enable" jdbcType="INTEGER"/>
+        <result column="dispose_status" property="disposeStatus" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, source, asset_type, is_special, is_home_page, comfrom, entrust_begintime, entrust_endtime, 
@@ -51,7 +52,7 @@
     house_nature, house_size, has_house_certificate, is_pledge, is_law, is_judgement, 
     asset_describe, righter_name, righter_address, righter_province, righter_city, righter_area, 
     righter_contact_phone, righter_contact_name, righter_type, mark, collection_num, 
-    dispose_num, no,check_status,enable,title,create_time,update_time,oper_user
+    dispose_num, no,check_status,enable,title,create_time,update_time,oper_user,dispose_status
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
