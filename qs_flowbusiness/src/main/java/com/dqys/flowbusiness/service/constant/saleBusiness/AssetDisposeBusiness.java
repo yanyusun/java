@@ -1,6 +1,8 @@
 package com.dqys.flowbusiness.service.constant.saleBusiness;
 
-import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.AssetOpenBusiness.BeAnnouncedLevel;
+import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.AssetDisposeBusiness.CheckLevel;
+import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.AssetDisposeBusiness.OnDisposeLevel;
+import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.AssetDisposeBusiness.TenderLevel;
 
 /**
  * 资产处置业务
@@ -9,12 +11,23 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.AssetOp
 public class AssetDisposeBusiness {
     private static int type = BusinessTypeEnum.asset_dispose.getValue();
     /**
-     * 用户待发布
+     * 招标中
      * @return
      */
-    public static BeAnnouncedLevel getBeAnnounced() {
-        return new BeAnnouncedLevel();
+    public static TenderLevel getTenderLevel() {
+        return new TenderLevel();
     }
 
+    /**
+     * 待审核
+     * @return
+     */
+    public static CheckLevel getCheckLevel(){return new CheckLevel();}
+
+    /**
+     *
+     * @return
+     */
+    public static OnDisposeLevel getOnDisposeLevel(){return new OnDisposeLevel();}
 
 }
