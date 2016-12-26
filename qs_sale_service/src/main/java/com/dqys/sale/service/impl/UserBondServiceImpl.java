@@ -53,6 +53,14 @@ public class UserBondServiceImpl implements UserBondService {
             }
             query.setIds(objectIds);
         }
+        List<UserBondDTO> dtos = getUserBondDTOs(query);
+        Map map = new HashMap<>();
+        map.put("userBondList", dtos);
+        map.put("query", query);
+        return JsonResponseTool.success(map);
+    }
+
+    private List<UserBondDTO> getUserBondDTOs(UserBondQuery query) {
         List<UserBond> userBonds = userBondMapper.list(query);
         Integer count = userBondMapper.listCount(query);
         query.setTotalCount(count);
@@ -65,10 +73,7 @@ public class UserBondServiceImpl implements UserBondService {
             dto.setDisposes(disposeMapper.selectByAssetId(entity.getId(), entity.getBondType().intValue()));
             dtos.add(dto);
         }
-        Map map = new HashMap<>();
-        map.put("userBondList", dtos);
-        map.put("query", query);
-        return JsonResponseTool.success(map);
+        return dtos;
     }
 
     @Override

@@ -3,15 +3,15 @@ package com.dqys.sale.orm.pojo;
 public class Dispose {
     private Integer id;
 
-    private Integer disposeType;
+    private Integer disposeType;//处置方式类型
 
     private Integer assetId;
 
     private Integer assetType;
 
-    private Integer alg;
+    private Integer alg;//算法（比如1为%）
 
-    private String value;
+    private String value;//数值
 
     public Integer getId() {
         return id;

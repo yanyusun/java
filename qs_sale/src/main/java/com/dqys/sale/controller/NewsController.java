@@ -157,7 +157,7 @@ public class NewsController {
     @RequestMapping("/addOrUpdateNews")
     @ResponseBody
     public JsonResponse addOrUpdateNews(@ModelAttribute NewsDTO newsDTO) {
-        return newsService.addOrUpdateNews(newsDTO);
+        return newsService.addOrUpdateNews_tx(newsDTO);
     }
 
 }

@@ -53,6 +53,14 @@ public class AssetPackageServiceImpl implements AssetPackageService {
 //            objectIds.add(SysProperty.NULL_DATA_ID);
 //        }
 //        query.setIds(objectIds);
+        List<AssetPackageDTO> dtos = getAssetPackageDTOs(query);
+        Map map = new HashMap<>();
+        map.put("assetPackageList", dtos);
+        map.put("query", query);
+        return JsonResponseTool.success(map);
+    }
+
+    private List<AssetPackageDTO> getAssetPackageDTOs(AssetPackageQuery query) {
         List<AssetPackage> list = assetPackageMapper.list(query);
         Integer count = assetPackageMapper.listCount(query);
         query.setTotalCount(count);
@@ -65,10 +73,7 @@ public class AssetPackageServiceImpl implements AssetPackageService {
             dto.setDisposes(disposeMapper.selectByAssetId(entity.getId(), ObjectTypeEnum.user_bond.getValue()));
             dtos.add(dto);
         }
-        Map map = new HashMap<>();
-        map.put("assetPackageList", dtos);
-        map.put("query", query);
-        return JsonResponseTool.success(map);
+        return dtos;
     }
 
     @Override
