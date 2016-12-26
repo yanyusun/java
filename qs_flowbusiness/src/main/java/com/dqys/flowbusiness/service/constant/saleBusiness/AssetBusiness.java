@@ -1,5 +1,6 @@
 package com.dqys.flowbusiness.service.constant.saleBusiness;
 
+import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.AssetOpenBusiness.BeAnnouncedLevel;
 import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.BusinessLevel;
 
 /**
@@ -10,7 +11,7 @@ public class AssetBusiness {
     public static int type = 1;
 
     public static BusinessLevel getBeAnnounced() {
-        return null;
+        return new BeAnnouncedLevel();
     }
     ;
 

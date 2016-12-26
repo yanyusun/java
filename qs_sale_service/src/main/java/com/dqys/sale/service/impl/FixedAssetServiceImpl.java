@@ -1,6 +1,5 @@
 package com.dqys.sale.service.impl;
 
-import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
@@ -8,12 +7,12 @@ import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
 import com.dqys.flowbusiness.service.dto.BusinessDto;
 import com.dqys.flowbusiness.service.service.BusinessService;
-import com.dqys.sale.service.constant.ObjectTypeEnum;
-import com.dqys.sale.service.dto.FixedAssetDTO;
 import com.dqys.sale.orm.mapper.*;
 import com.dqys.sale.orm.mapper.business.BusinessORelationMapper;
 import com.dqys.sale.orm.pojo.*;
 import com.dqys.sale.orm.query.FixedAssetQuery;
+import com.dqys.sale.service.constant.ObjectTypeEnum;
+import com.dqys.sale.service.dto.FixedAssetDTO;
 import com.dqys.sale.service.facade.FixedAssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -110,7 +109,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         businessDto.setObjectId(id);
         businessDto.setObjcetType(ObjectTypeEnum.fixed_asset.getValue());
         Integer userId = UserSession.getCurrent().getUserId();
-        return businessService.createBusiness_tx(businessDto,userId, AssetBusiness.type,AssetBusiness.getBE_ANNOUNCED().getValue());
+        return businessService.createBusiness_tx(businessDto,userId, AssetBusiness.type,AssetBusiness.getBeAnnounced().getLevel());
     }
 
     @Override
