@@ -9,7 +9,7 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.Busines
 public class HasRejectLevel implements BusinessLevel {
     @Override
     public Integer getLevel() {
-        return 1112;
+        return 1130;
     }
 
     @Override

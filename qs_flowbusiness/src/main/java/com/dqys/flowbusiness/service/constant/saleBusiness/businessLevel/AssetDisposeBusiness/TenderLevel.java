@@ -8,7 +8,7 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.Busines
 public class TenderLevel implements BusinessLevel {
     @Override
     public Integer getLevel() {
-        return 1110;
+        return 1100;
     }
 
     @Override

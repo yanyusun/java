@@ -8,11 +8,11 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.Busines
 public class UnableLevel implements BusinessLevel {
     @Override
     public Integer getLevel() {
-        return 1116;
+        return 1160;
     }
 
     @Override
     public String getName() {
-        return "已取消";
+        return "无效";
     }
 }

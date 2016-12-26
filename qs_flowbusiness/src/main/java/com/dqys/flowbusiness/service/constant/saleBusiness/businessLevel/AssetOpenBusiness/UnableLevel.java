@@ -9,7 +9,7 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.Busines
 public class UnableLevel implements BusinessLevel{
     @Override
     public Integer getLevel() {
-        return 1080;
+        return 1070;
     }
 
     @Override

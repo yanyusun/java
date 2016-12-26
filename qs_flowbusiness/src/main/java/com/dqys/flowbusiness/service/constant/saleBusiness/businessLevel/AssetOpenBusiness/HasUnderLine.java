@@ -9,7 +9,7 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.Busines
 public class HasUnderLine implements BusinessLevel {
     @Override
     public Integer getLevel() {
-        return 1070;
+        return 1060;
     }
 
     @Override

@@ -9,7 +9,7 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.Busines
 public class CheckLevel implements BusinessLevel{
     @Override
     public Integer getLevel() {
-        return 1111;
+        return 1110;
     }
 
     @Override

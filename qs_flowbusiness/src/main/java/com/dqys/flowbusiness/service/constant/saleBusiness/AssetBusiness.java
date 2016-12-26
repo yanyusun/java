@@ -36,7 +36,7 @@ public class AssetBusiness {
     }
 
     /**
-     * 平台待审核
+     * 平台待发布
      * @return
      */
     public static BeAnnouncedAdmin getBeAnnouncedAdmin() {
@@ -47,7 +47,7 @@ public class AssetBusiness {
      * 已发布
      * @return
      */
-    public static HasAnnouncedLevel getOpen() {
+    public static HasAnnouncedLevel getHasAnnouncedLevel() {
         return new HasAnnouncedLevel();
     }
 

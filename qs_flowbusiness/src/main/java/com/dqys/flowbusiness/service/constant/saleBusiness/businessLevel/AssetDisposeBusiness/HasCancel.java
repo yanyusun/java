@@ -8,11 +8,11 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.Busines
 public class HasCancel implements BusinessLevel{
     @Override
     public Integer getLevel() {
-        return 1115;
+        return 1150;
     }
 
     @Override
     public String getName() {
-        return "无效";
+        return "已取消";
     }
 }

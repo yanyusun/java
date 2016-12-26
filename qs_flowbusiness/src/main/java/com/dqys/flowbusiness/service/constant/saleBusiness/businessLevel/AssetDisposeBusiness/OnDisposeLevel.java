@@ -9,7 +9,7 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.Busines
 public class OnDisposeLevel implements BusinessLevel {
     @Override
     public Integer getLevel() {
-        return 1113;
+        return 1120;
     }
 
     @Override
