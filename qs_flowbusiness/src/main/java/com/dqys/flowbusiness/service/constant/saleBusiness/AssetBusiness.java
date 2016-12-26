@@ -45,9 +45,9 @@ public class AssetBusiness {
 //        be_announced(1010, "待发布"),//客服
 //        be_check(1020, "待审核"),
 //        reject(1030, "已驳回"),
-    //be_announced_(1010, "待发布"),//客服
-//        open(1040, "已发布"),
-//        under_line(1050, "已下架"),
+    //be_announced_(1040, "待发布"),//平台
+//        open(1050, "已发布"),
+//        under_line(1060, "已下架"),
 //        unable(1099, "无效");
 //        private Integer value;
 //        private String name;

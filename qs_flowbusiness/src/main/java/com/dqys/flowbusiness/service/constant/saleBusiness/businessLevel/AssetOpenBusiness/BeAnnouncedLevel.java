@@ -9,7 +9,7 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.Busines
 public class BeAnnouncedLevel implements BusinessLevel {
     @Override
     public Integer getLevel() {
-        return 101;
+        return 1010;
     }
 
     @Override

@@ -39,7 +39,7 @@ public class SaleBusinessServiceImpl extends AbstractBusinessService implements 
     }
 
     @Override
-    public Result flow(Integer businessId, Integer userId, Integer operType) {
+    public Result flow(Integer businessId,Integer userId,Integer businessType,Integer businessLevel, Integer operType){
         return null;
     }
 }

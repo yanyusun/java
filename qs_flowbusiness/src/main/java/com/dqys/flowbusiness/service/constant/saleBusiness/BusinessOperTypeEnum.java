@@ -5,8 +5,10 @@ package com.dqys.flowbusiness.service.constant.saleBusiness;
  */
 public enum BusinessOperTypeEnum {
     //----------------------->资产发布业务
-    announce(101, "发布");
-
+    announce(101, "发布"),
+    re_announce(102,"重新发布"),
+    unable(103,"无效"),
+    check(104,"审核通过");
 
 
 
