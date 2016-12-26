@@ -70,8 +70,11 @@
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="oper_user" property="operUser" jdbcType="INTEGER"/>
-        <result column="check_status" property="checkStatus" jdbcType="INTEGER"/>
         <result column="enable" property="enable" jdbcType="INTEGER"/>
+        <result column="check_status" property="checkStatus" jdbcType="INTEGER"/>
+        <result column="dispose_num" property="disposeNum" jdbcType="INTEGER"/>
+        <result column="collection_num" property="collectionNum" jdbcType="INTEGER"/>
+        <result column="dispose_status" property="disposeStatus" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, bond_no, grade, bond_type, is_special, is_home_page, title, source, start_time, 
@@ -83,7 +86,7 @@
     bond_contacts_name, bond_contacts_phone, bond_contacts_idcode, debt_type, debt_is_address, 
     debt_phone, debt_is_operate, debt_idcode, debt_province, debt_city, debt_area, debt_situation_asset, 
     debt_situation_operate, debt_situation_industry, debt_situation_marriage, debt_situation_education, 
-    debt_situation_body, debt_situation_member, debt_situation_social,describe, remark,check_status,enable
+    debt_situation_body, debt_situation_member, debt_situation_social,describe, remark,enable,check_status,dispose_num,collection_num,dispose_status
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select

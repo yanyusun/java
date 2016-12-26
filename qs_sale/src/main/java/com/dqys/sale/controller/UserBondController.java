@@ -45,6 +45,18 @@ public class UserBondController {
     }
 
     /**
+     * @api {post} bond/list 获取债权列表
+     * @apiName bond/list
+     * @apiSampleRequest bond/list
+     * @apiGroup　 bond
+     */
+    @RequestMapping("/list")
+    @ResponseBody
+    public JsonResponse list(UserBondQuery query) {
+        return userBondService.list(query);
+    }
+
+    /**
      * @api {post} bond/addBond 添加债权
      * @apiName bond/addBond
      * @apiSampleRequest bond/addBond

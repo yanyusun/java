@@ -2,6 +2,7 @@ package com.dqys.sale.service.impl;
 
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
+import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
@@ -12,6 +13,7 @@ import com.dqys.sale.orm.mapper.business.BusinessORelationMapper;
 import com.dqys.sale.orm.pojo.*;
 import com.dqys.sale.orm.query.FixedAssetQuery;
 import com.dqys.sale.service.constant.ObjectTypeEnum;
+import com.dqys.sale.service.dto.FADto;
 import com.dqys.sale.service.dto.FixedAssetDTO;
 import com.dqys.sale.service.facade.FixedAssetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,22 +42,66 @@ public class FixedAssetServiceImpl implements FixedAssetService {
     private BusinessORelationMapper businessORelationMapper;
     @Autowired
     private LabelReMapper labelReMapper;
-    @Autowired @Qualifier("saleBusinessService")
+    @Autowired
+    @Qualifier("saleBusinessService")
     private BusinessService businessService;
 
-
     @Override
-    public JsonResponse fixedList(FixedAssetQuery fixedAssetQuery) {
-//        List<Integer> objectIds = businessORelationMapper.selectObjectIdByObjectType(ObjectTypeEnum.fixed_asset.getValue(), 1);//查询业务状态符合的对象id
-//        if (objectIds == null || objectIds.size() == 0) {
-//            objectIds.add(SysProperty.NULL_DATA_ID);
-//        }
-//        fixedAssetQuery.setIds(objectIds);
+    public JsonResponse list(FixedAssetQuery fixedAssetQuery) {
         List<FixedAssetDTO> dtos = getFixedAssetDTOs(fixedAssetQuery);
         Map map = new HashMap<>();
         map.put("fixedAssetList", dtos);
         map.put("query", fixedAssetQuery);
         return JsonResponseTool.success(map);
+    }
+
+    @Override
+    public JsonResponse fixedList(FixedAssetQuery fixedAssetQuery) {
+        List<FixedAssetDTO> dtos = getFixedAssetDTOs(fixedAssetQuery);
+        for (FixedAssetDTO dto : dtos) {
+            FADto faDto = new FADto();
+            FixedAsset asset = dto.getFixedAsset();
+            if (asset != null) {
+                transformToFADto(faDto, asset);
+            }
+            dto.setFaDto(faDto);
+            dto.setFixedAsset(null);
+        }
+        Map map = new HashMap<>();
+        map.put("fixedAssetList", dtos);
+        map.put("query", fixedAssetQuery);
+        return JsonResponseTool.success(map);
+    }
+
+    private void transformToFADto(FADto faDto, FixedAsset asset) {
+        faDto.setAssetType(asset.getAssetType());
+        String address = "";
+        if (asset.getProvince() != null && AreaTool.getAreaById(asset.getProvince()) != null) {
+            address += AreaTool.getAreaById(asset.getProvince()).getLabel();
+        }
+        if (asset.getCity() != null && AreaTool.getAreaById(asset.getCity()) != null) {
+            address += AreaTool.getAreaById(asset.getCity()).getLabel();
+        }
+        if (asset.getArea() != null && AreaTool.getAreaById(asset.getArea()) != null) {
+            AreaTool.getAreaById(asset.getArea()).getLabel();
+        }
+        if (asset.getAddress() != null) {
+            address += asset.getAddress();
+        }
+        faDto.setAddress(address);
+        faDto.setCollectionNum(asset.getCollectionNum());
+        faDto.setDisposeNum(asset.getDisposeNum());
+        faDto.setDisposeStatus(asset.getDisposeStatus());
+        faDto.setEntrustBegintime(asset.getEntrustBegintime());
+        faDto.setEntrustEndtime(asset.getEntrustEndtime());
+        faDto.setFloor(asset.getFloor());
+        faDto.setId(asset.getId());
+        faDto.setNo(asset.getNo());
+        faDto.setIsSpecial(asset.getIsSpecial());
+        faDto.setOrientation(asset.getOrientation());
+        faDto.setRighterType(asset.getRighterType());
+        faDto.setTitle(asset.getTitle());
+        faDto.setYear(asset.getYear());
     }
 
     private List<FixedAssetDTO> getFixedAssetDTOs(FixedAssetQuery fixedAssetQuery) {
@@ -101,11 +147,12 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         }
         createBusiness(id);
         addOtherEntity_tx(fixedAssetDTO.getLabels(), fixedAssetDTO.getDisposes(), fixedAssetDTO.getAssetFiles(), fixedAsset.getId(), ObjectTypeEnum.fixed_asset.getValue());
-        return JsonResponseTool.noData();
+        return JsonResponseTool.success(id);
     }
 
     /**
      * 更具当前对象的id创建业务
+     *
      * @param id 数据id
      * @return
      */
@@ -114,7 +161,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         businessDto.setObjectId(id);
         businessDto.setObjcetType(ObjectTypeEnum.fixed_asset.getValue());
         Integer userId = UserSession.getCurrent().getUserId();
-        return businessService.createBusiness_tx(businessDto,userId, AssetBusiness.type,AssetBusiness.getBeAnnounced().getLevel());
+        return businessService.createBusiness_tx(businessDto, userId, AssetBusiness.type, AssetBusiness.getBeAnnounced().getLevel());
     }
 
     @Override
@@ -183,5 +230,6 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         addOtherEntity_tx(fixedAssetDTO.getLabels(), fixedAssetDTO.getDisposes(), fixedAssetDTO.getAssetFiles(), fixedAsset.getId(), ObjectTypeEnum.fixed_asset.getValue());
         return JsonResponseTool.success(null);
     }
+
 
 }

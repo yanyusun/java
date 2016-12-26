@@ -8,13 +8,23 @@ import com.dqys.sale.orm.pojo.Label;
 import java.util.List;
 
 /**
+ * 固定资产
  * Created by mkfeng on 2016/12/21.
  */
 public class FixedAssetDTO {
     private FixedAsset fixedAsset;//资产
+    private FADto faDto;//资产
     private List<Label> labels;//标签
     private List<Dispose> disposes;//处置方式
     private List<AssetFile> assetFiles;//文件
+
+    public FADto getFaDto() {
+        return faDto;
+    }
+
+    public void setFaDto(FADto faDto) {
+        this.faDto = faDto;
+    }
 
     public FixedAsset getFixedAsset() {
         return fixedAsset;

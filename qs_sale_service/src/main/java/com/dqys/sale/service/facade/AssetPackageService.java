@@ -15,4 +15,6 @@ public interface AssetPackageService {
     JsonResponse getDetail(Integer assetId);
 
     JsonResponse updateAsset_tx(AssetPackageDTO assetPackageDTO);
+
+    JsonResponse list(AssetPackageQuery query);
 }

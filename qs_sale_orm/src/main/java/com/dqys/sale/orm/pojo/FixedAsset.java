@@ -75,6 +75,8 @@ public class FixedAsset {
 
     private Integer disposeNum;//申请处置数量
 
+    private Integer disposeStatus;// 处置状态（0待处置1处置中2已处置）
+
     private String no;//固定资产编号:自动生成，生成方案参考"实体id代号管理"+b端规则
 
     private Integer businessid;//
@@ -87,6 +89,14 @@ public class FixedAsset {
 
     private Integer checkStatus;//0待审核1审核未通过2审核已通过
     private Integer enable;//'是否无效0不是,1是
+
+    public Integer getDisposeStatus() {
+        return disposeStatus;
+    }
+
+    public void setDisposeStatus(Integer disposeStatus) {
+        this.disposeStatus = disposeStatus;
+    }
 
     public String getRighterPhone() {
         return righterPhone;

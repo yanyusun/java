@@ -44,6 +44,18 @@ public class AssetPackageController {
     }
 
     /**
+     * @api {post} asset/list 获取资产包列表
+     * @apiName asset/list
+     * @apiSampleRequest asset/list
+     * @apiGroup　 asset
+     */
+    @RequestMapping("/list")
+    @ResponseBody
+    public JsonResponse list(AssetPackageQuery query) {
+        return assetPackageService.list(query);
+    }
+
+    /**
      * @api {post} asset/addAsset 添加资产包
      * @apiName asset/addAsset
      * @apiSampleRequest asset/addAsset

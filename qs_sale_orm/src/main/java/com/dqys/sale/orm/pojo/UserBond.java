@@ -134,8 +134,35 @@ public class UserBond {
     private Date createTime;
     private Date updateTime;
     private Integer operUser;//操作人
+    private Integer collectionNum;//收藏数量
+    private Integer disposeNum;//申请处置数量
+    private Integer disposeStatus;// 处置状态（0待处置1处置中2已处置）
     private Integer checkStatus;//0待审核1审核未通过2审核已通过
     private Integer enable;//'是否无效0不是,1是
+
+    public Integer getCollectionNum() {
+        return collectionNum;
+    }
+
+    public void setCollectionNum(Integer collectionNum) {
+        this.collectionNum = collectionNum;
+    }
+
+    public Integer getDisposeNum() {
+        return disposeNum;
+    }
+
+    public void setDisposeNum(Integer disposeNum) {
+        this.disposeNum = disposeNum;
+    }
+
+    public Integer getDisposeStatus() {
+        return disposeStatus;
+    }
+
+    public void setDisposeStatus(Integer disposeStatus) {
+        this.disposeStatus = disposeStatus;
+    }
 
     public Integer getCheckStatus() {
         return checkStatus;

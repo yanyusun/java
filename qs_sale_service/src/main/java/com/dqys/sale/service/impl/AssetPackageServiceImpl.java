@@ -3,20 +3,21 @@ package com.dqys.sale.service.impl;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
+import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.sale.orm.pojo.*;
+import com.dqys.sale.service.dto.APDto;
 import com.dqys.sale.service.dto.AssetPackageDTO;
 import com.dqys.sale.orm.mapper.AssetFileMapper;
 import com.dqys.sale.orm.mapper.AssetPackageMapper;
 import com.dqys.sale.orm.mapper.DisposeMapper;
 import com.dqys.sale.orm.mapper.LabelMapper;
 import com.dqys.sale.orm.mapper.business.BusinessORelationMapper;
-import com.dqys.sale.orm.pojo.AssetFile;
-import com.dqys.sale.orm.pojo.AssetPackage;
-import com.dqys.sale.orm.pojo.Dispose;
-import com.dqys.sale.orm.pojo.Label;
 import com.dqys.sale.orm.query.AssetPackageQuery;
 import com.dqys.sale.service.constant.ObjectTypeEnum;
+import com.dqys.sale.service.dto.FADto;
+import com.dqys.sale.service.dto.FixedAssetDTO;
 import com.dqys.sale.service.facade.AssetPackageService;
 import com.dqys.sale.service.facade.FixedAssetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,17 +48,60 @@ public class AssetPackageServiceImpl implements AssetPackageService {
     private BusinessORelationMapper businessORelationMapper;
 
     @Override
-    public JsonResponse assetList(AssetPackageQuery query) {
-//        List<Integer> objectIds = businessORelationMapper.selectObjectIdByObjectType(ObjectTypeEnum.user_bond.getValue(), 1);//查询业务状态符合的对象id
-//        if (objectIds == null || objectIds.size() == 0) {
-//            objectIds.add(SysProperty.NULL_DATA_ID);
-//        }
-//        query.setIds(objectIds);
+    public JsonResponse list(AssetPackageQuery query) {
         List<AssetPackageDTO> dtos = getAssetPackageDTOs(query);
         Map map = new HashMap<>();
         map.put("assetPackageList", dtos);
         map.put("query", query);
         return JsonResponseTool.success(map);
+    }
+
+    @Override
+    public JsonResponse assetList(AssetPackageQuery query) {
+        List<AssetPackageDTO> dtos = getAssetPackageDTOs(query);
+        for (AssetPackageDTO dto : dtos) {
+            APDto apDto = new APDto();
+            AssetPackage asset = dto.getAssetPackage();
+            if (asset != null) {
+                transformToAPDto(apDto, asset);
+            }
+            dto.setApDto(apDto);
+            dto.setAssetPackage(null);
+        }
+        Map map = new HashMap<>();
+        map.put("assetPackageList", dtos);
+        map.put("query", query);
+        return JsonResponseTool.success(map);
+    }
+
+    private void transformToAPDto(APDto apDto, AssetPackage asset) {
+        apDto.setAssetType(asset.getAssetType());
+        String address = "";
+        if (asset.getProvince() != null && AreaTool.getAreaById(asset.getProvince()) != null) {
+            address += AreaTool.getAreaById(asset.getProvince()).getLabel();
+        }
+        if (asset.getCity() != null && AreaTool.getAreaById(asset.getCity()) != null) {
+            address += AreaTool.getAreaById(asset.getCity()).getLabel();
+        }
+        if (asset.getArea() != null && AreaTool.getAreaById(asset.getArea()) != null) {
+            AreaTool.getAreaById(asset.getArea()).getLabel();
+        }
+        if (asset.getAddress() != null) {
+            address += asset.getAddress();
+        }
+        apDto.setAddress(address);
+        apDto.setCollectionNum(asset.getCollectionNum());
+        apDto.setDisposeNum(asset.getDisposeNum());
+        apDto.setDisposeStatus(asset.getDisposeStatus());
+        apDto.setId(asset.getId());
+        apDto.setAssetNo(asset.getAssetNo());
+        apDto.setIsSpecial(asset.getIsSpecial());
+        apDto.setTitle(asset.getTitle());
+        apDto.setEndTime(asset.getEndTime());
+        apDto.setStartTime(asset.getStartTime());
+        apDto.setTotalMoney(asset.getTotalMoney());
+        apDto.setGrade(asset.getGrade());
+        apDto.setEntrustType(asset.getEntrustType());
     }
 
     private List<AssetPackageDTO> getAssetPackageDTOs(AssetPackageQuery query) {
@@ -88,7 +132,7 @@ public class AssetPackageServiceImpl implements AssetPackageService {
             return JsonResponseTool.failure("添加失败");
         }
         fixedAssetService.addOtherEntity_tx(assetPackageDTO.getLabels(), assetPackageDTO.getDisposes(), assetPackageDTO.getAssetFiles(), entity.getId(), ObjectTypeEnum.asset_package.getValue());
-        return JsonResponseTool.success(null);
+        return JsonResponseTool.success(entity.getId());
     }
 
     private void setEntity(AssetPackage entity) {

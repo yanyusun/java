@@ -40,4 +40,6 @@ public interface FixedAssetService {
     void addOtherEntity_tx(List<Label> labels, List<Dispose> disposes, List<AssetFile> assetFiles, Integer id, Integer objectType);
 
     JsonResponse updateFixed(FixedAssetDTO fixedAssetDTO);
+
+    JsonResponse list(FixedAssetQuery fixedAssetQuery);
 }

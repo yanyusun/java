@@ -5,6 +5,8 @@ import com.dqys.auth.orm.pojo.saleUser.SaleUser;
 import com.dqys.auth.orm.pojo.saleUser.SaleUserModel;
 import com.dqys.core.model.JsonResponse;
 
+import java.util.Map;
+
 /**
  * Created by mkfeng on 2016/12/20.
  */
@@ -16,7 +18,7 @@ public interface SaleUserService {
      * @param paw
      * @return
      */
-    JsonResponse enterLogin(String account, String paw) throws Exception;
+    Map enterLogin(String account, String paw) throws Exception;
 
     /**
      * 注册

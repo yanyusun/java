@@ -14,7 +14,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mkfeng on 2016/12/20.
@@ -29,23 +31,32 @@ public class SaleUserServiceImpl implements SaleUserService {
     private UserService userService;
 
     @Override
-    public JsonResponse enterLogin(String account, String paw) throws Exception {
+    public Map enterLogin(String account, String paw) throws Exception {
         List<SaleUser> list = saleUserMapper.verifyUser(account, account, account);
+        Map map = new HashMap<>();
+        map.put("result", "no");
         if (list == null || list.size() == 0) {
-            return JsonResponseTool.failure("帐号不存在");
+            map.put("date", JsonResponseTool.failure("帐号不存在"));
+            return map;
         }
         if (list.size() > 1) {
-            return JsonResponseTool.failure("该帐号存在异常，请联系平台");
+            map.put("date", JsonResponseTool.failure("该帐号存在异常，请联系平台"));
+            return map;
         }
         SaleUser user = list.get(0);
         if (user.getStatus() == 0) {
-            return JsonResponseTool.failure("帐号不允许登入");
+            map.put("date", JsonResponseTool.failure("帐号不允许登入"));
+            return map;
         }
         if (!SignatureTool.md5Encode(SignatureTool.md5Encode(paw, "utf-8") + user.getSalt(), "utf-8").equals(user.getPassword())) {
-            return JsonResponseTool.failure("帐号或密码错误");
+            map.put("date", JsonResponseTool.failure("帐号或密码错误"));
+            return map;
         }
-        return JsonResponseTool.success(ProtocolTool.createUserHeader(user.getId(), user.getUserType() + ",", user.getRoleType() + ",",
-                user.getAccount(), user.getStatus()));
+        map.put("result", "yes");
+        map.put("userId", user.getId());
+        map.put("date", JsonResponseTool.success(ProtocolTool.createUserHeader(user.getId(), user.getUserType() + ",", user.getRoleType() + ",",
+                user.getAccount(), user.getStatus())));
+        return map;
     }
 
     @Override

@@ -8,13 +8,23 @@ import com.dqys.sale.orm.pojo.UserBond;
 import java.util.List;
 
 /**
+ * 债权
  * Created by mkfeng on 2016/12/22.
  */
 public class UserBondDTO {
-    private UserBond userBond;
+    private UserBond userBond;//债权
+    private UBDto ubDto;
     private List<Label> labels;//标签
     private List<Dispose> disposes;//处置方式
     private List<AssetFile> assetFiles;//文件
+
+    public UBDto getUbDto() {
+        return ubDto;
+    }
+
+    public void setUbDto(UBDto ubDto) {
+        this.ubDto = ubDto;
+    }
 
     public UserBond getUserBond() {
         return userBond;
