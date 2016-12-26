@@ -6,7 +6,17 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.Busines
 /**
  * Created by yan on 16-12-26.
  */
-public class BeAnnouncedLevel extends BusinessLevel {
+public class BeAnnouncedLevel implements BusinessLevel {
+    @Override
+    public Integer getLevel() {
+        return 1;
+    }
+
+    @Override
+    public String getName() {
+        return "待发布";
+    }
+
     public static final int AnnounceOperType= BusinessOperTypeEnum.announce.getValue();
 
 }

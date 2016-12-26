@@ -4,23 +4,11 @@ package com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel;
 /**
  * Created by yan on 16-12-26.
  */
-public  abstract class BusinessLevel {
-    public  Integer level;
-    public  String name;
+public interface BusinessLevel {
 
-    public Integer getLevel() {
-        return level;
-    }
 
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
+    Integer getLevel();
 
-    public String getName() {
-        return name;
-    }
+    String getName();
 
-    public void setName(String name) {
-        this.name = name;
-    }
 }

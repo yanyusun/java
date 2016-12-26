@@ -42,12 +42,13 @@ public class AssetBusiness {
 
 
 //    public enum BusinessStatusEnum {
-//        be_announced(10, "待发布"),
-//        be_check(20, "待审核"),
-//        reject(30, "已驳回"),
-//        open(40, "已发布"),
-//        under_line(50, "已下架"),
-//        unable(99, "无效");
+//        be_announced(1010, "待发布"),//客服
+//        be_check(1020, "待审核"),
+//        reject(1030, "已驳回"),
+    //be_announced_(1010, "待发布"),//客服
+//        open(1040, "已发布"),
+//        under_line(1050, "已下架"),
+//        unable(1099, "无效");
 //        private Integer value;
 //        private String name;
 //        BusinessStatusEnum(int value, String name) {

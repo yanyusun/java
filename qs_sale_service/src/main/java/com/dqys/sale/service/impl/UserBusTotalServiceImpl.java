@@ -37,7 +37,7 @@ public class UserBusTotalServiceImpl implements UserBusTotalService {
     }
 
     @Override
-    public void update(Integer userId, UserBusTotalEnum userBusTotalEnum) {
+    public void update(Integer userId, UserBusTotalEnum userBusTotalEnum,Integer assetType,Integer assetId) {
 
     }
 }

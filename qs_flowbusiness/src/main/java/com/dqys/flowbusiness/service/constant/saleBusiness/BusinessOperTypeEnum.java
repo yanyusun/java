@@ -4,7 +4,18 @@ package com.dqys.flowbusiness.service.constant.saleBusiness;
  * Created by yan on 16-12-26.
  */
 public enum BusinessOperTypeEnum {
-    announce(1, "跟进");
+    //----------------------->资产发布业务
+    announce(101, "发布");
+
+
+
+
+
+
+
+
+
+
     private Integer value;
     private String name;
 

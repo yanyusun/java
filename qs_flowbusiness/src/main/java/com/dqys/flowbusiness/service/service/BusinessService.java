@@ -1,11 +1,8 @@
 package com.dqys.flowbusiness.service.service;
 
 import com.dqys.flowbusiness.orm.pojo.Business;
-import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
 import com.dqys.flowbusiness.service.dto.BusinessDto;
 import com.dqys.flowbusiness.service.util.Result;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -40,5 +37,5 @@ public interface BusinessService {
      */
     int createBusiness_tx(BusinessDto businessDto,Integer userId,Integer businessType,Integer BusinessStatus);
 
-    Result flow(Integer businessId,Integer userId,Integer operType);
+    Result flow(Integer businessId,Integer userId,Integer businessType,Integer businessLevel, Integer operType);
 }
