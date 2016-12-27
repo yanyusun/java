@@ -12,7 +12,16 @@ public class NewsQuery extends PageEntity implements Serializable {
     private Integer isRefer;//是否推荐1是0否
     private Integer isHeadline;//是否头条1是0否
     private Integer status;//草稿0，待发布1，已发布2，无效-1
+    private Integer userId;//用户id
     private boolean isOrder = true;//默认从最早的发布时间算起
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public boolean isOrder() {
         return isOrder;

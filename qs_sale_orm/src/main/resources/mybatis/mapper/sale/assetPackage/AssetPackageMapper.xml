@@ -28,7 +28,7 @@
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="oper_user" property="operUser" jdbcType="INTEGER"/>
-        <result column="describe" property="describe" jdbcType="VARCHAR"/>
+        <result column="describes" property="describes" jdbcType="VARCHAR"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
         <result column="enable" property="enable" jdbcType="INTEGER"/>
         <result column="check_status" property="checkStatus" jdbcType="INTEGER"/>
@@ -40,7 +40,7 @@
     id,asset_no, title, is_special, is_home_page, asset_type, grade, entrust_source, total_money,
     province, city, area, address, entrust_name, entrust_province, entrust_city, entrust_area, 
     entrust_address, entrust_phone, entrust_contacts_name, entrust_contacts_phone, entrust_type, 
-    is_bank, create_time, update_time, oper_user, describe, remark,enable,check_status,dispose_num,collection_num,dispose_status
+    is_bank, create_time, update_time, oper_user, describes, remark,enable,check_status,dispose_num,collection_num,dispose_status
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -62,7 +62,7 @@
       entrust_area, entrust_address, entrust_phone, 
       entrust_contacts_name, entrust_contacts_phone, 
       entrust_type, is_bank, create_time, 
-      update_time, oper_user, describe, 
+      update_time, oper_user, describes, 
       remark)
     values (#{id,jdbcType=INTEGER},#{assetNo,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{isSpecial,jdbcType=INTEGER},
       #{isHomePage,jdbcType=INTEGER}, #{assetType,jdbcType=INTEGER}, #{grade,jdbcType=INTEGER}, 
@@ -72,7 +72,7 @@
       #{entrustArea,jdbcType=INTEGER}, #{entrustAddress,jdbcType=VARCHAR}, #{entrustPhone,jdbcType=VARCHAR}, 
       #{entrustContactsName,jdbcType=VARCHAR}, #{entrustContactsPhone,jdbcType=VARCHAR}, 
       #{entrustType,jdbcType=INTEGER}, #{isBank,jdbcType=INTEGER}, now(), 
-      now(), #{operUser,jdbcType=INTEGER}, #{describe,jdbcType=VARCHAR}, 
+      now(), #{operUser,jdbcType=INTEGER}, #{describes,jdbcType=VARCHAR}, 
       #{remark,jdbcType=VARCHAR})
   </insert>
     <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.AssetPackage" useGeneratedKeys="true"
@@ -148,13 +148,11 @@
             <if test="isBank != null">
                 is_bank,
             </if>
-            <if test="createTime != null">
-                create_time,
-            </if>
+            create_time,
             update_time,
             oper_user,
-            <if test="describe != null">
-                describe,
+            <if test="describes != null">
+                describes,
             </if>
             <if test="remark != null">
                 remark,
@@ -235,8 +233,8 @@
             <if test="operUser != null">
                 #{operUser,jdbcType=INTEGER},
             </if>
-            <if test="describe != null">
-                #{describe,jdbcType=VARCHAR},
+            <if test="describes != null">
+                #{describes,jdbcType=VARCHAR},
             </if>
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},
@@ -313,8 +311,8 @@
             <if test="operUser != null">
                 oper_user = #{operUser,jdbcType=INTEGER},
             </if>
-            <if test="describe != null">
-                describe = #{describe,jdbcType=VARCHAR},
+            <if test="describes != null">
+                describes = #{describes,jdbcType=VARCHAR},
             </if>
             <if test="remark != null">
                 remark = #{remark,jdbcType=VARCHAR},
@@ -347,7 +345,7 @@
       is_bank = #{isBank,jdbcType=INTEGER},
       update_time = now(),
       oper_user = #{operUser,jdbcType=INTEGER},
-      describe = #{describe,jdbcType=VARCHAR},
+      describes = #{describes,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -377,7 +375,7 @@
       create_time = now(),
       update_time = now(),
       oper_user = #{operUser,jdbcType=INTEGER},
-      describe = #{describe,jdbcType=VARCHAR},
+      describes = #{describes,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

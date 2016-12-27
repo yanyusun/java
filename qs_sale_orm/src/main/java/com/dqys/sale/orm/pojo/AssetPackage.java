@@ -55,7 +55,7 @@ public class AssetPackage {
     private Date updateTime;//
 
     private Integer operUser;//操作人员
-    private String describe;//描述',
+    private String describes;//描述',
     private String remark;//备注',
     private Integer collectionNum;//收藏数量
     private Integer disposeNum;//申请处置数量
@@ -119,8 +119,8 @@ public class AssetPackage {
         this.enable = enable;
     }
 
-    public String getDescribe() {
-        return describe;
+    public String getDescribes() {
+        return describes;
     }
 
     public String getAssetNo() {
@@ -131,8 +131,8 @@ public class AssetPackage {
         this.assetNo = assetNo;
     }
 
-    public void setDescribe(String describe) {
-        this.describe = describe;
+    public void setDescribes(String describes) {
+        this.describes = describes;
     }
 
     public String getRemark() {
