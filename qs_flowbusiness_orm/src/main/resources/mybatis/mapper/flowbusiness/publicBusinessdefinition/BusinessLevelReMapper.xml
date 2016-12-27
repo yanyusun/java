@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.flowbusiness.orm.mapper.BusinessLevelReMapper" >
+  <resultMap id="BaseResultMap" type="com.dqys.flowbusiness.orm.pojo.BusinessLevelRe" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="at_business_type" property="atBusinessType" jdbcType="VARCHAR" />
+    <result column="go_business_type" property="goBusinessType" jdbcType="VARCHAR" />
+    <result column="oper_type" property="operType" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, status, at_business_type, go_business_type, oper_type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_business_level_re
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_business_level_re
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.dqys.flowbusiness.orm.pojo.BusinessLevelRe" >
+    insert into t_business_level_re (id, status, at_business_type, 
+      go_business_type, oper_type)
+    values (#{id,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{atBusinessType,jdbcType=VARCHAR}, 
+      #{goBusinessType,jdbcType=VARCHAR}, #{operType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.dqys.flowbusiness.orm.pojo.BusinessLevelRe" >
+    insert into t_business_level_re
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="atBusinessType != null" >
+        at_business_type,
+      </if>
+      <if test="goBusinessType != null" >
+        go_business_type,
+      </if>
+      <if test="operType != null" >
+        oper_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="atBusinessType != null" >
+        #{atBusinessType,jdbcType=VARCHAR},
+      </if>
+      <if test="goBusinessType != null" >
+        #{goBusinessType,jdbcType=VARCHAR},
+      </if>
+      <if test="operType != null" >
+        #{operType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.flowbusiness.orm.pojo.BusinessLevelRe" >
+    update t_business_level_re
+    <set >
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="atBusinessType != null" >
+        at_business_type = #{atBusinessType,jdbcType=VARCHAR},
+      </if>
+      <if test="goBusinessType != null" >
+        go_business_type = #{goBusinessType,jdbcType=VARCHAR},
+      </if>
+      <if test="operType != null" >
+        oper_type = #{operType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dqys.flowbusiness.orm.pojo.BusinessLevelRe" >
+    update t_business_level_re
+    set status = #{status,jdbcType=INTEGER},
+      at_business_type = #{atBusinessType,jdbcType=VARCHAR},
+      go_business_type = #{goBusinessType,jdbcType=VARCHAR},
+      oper_type = #{operType,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

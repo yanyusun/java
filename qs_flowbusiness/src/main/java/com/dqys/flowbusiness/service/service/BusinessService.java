@@ -37,14 +37,15 @@ public interface BusinessService {
      */
     int createBusiness_tx(BusinessDto businessDto,Integer userId,Integer businessType,Integer BusinessStatus);
 
+    // TODO: 16-12-27  加缓存处理
     /**
      * 加事物控制!!!!
      * 业务控制
      * @param businessId　业务id
-     * @param userId
+     * @param userId 用户id
      * @param businessType 业务类型
-     * @param businessLevel
-     * @param operType
+     * @param businessLevel 业务阶段
+     * @param operType 操作类型
      * @return
      */
     Result flow(Integer businessId,Integer userId,Integer businessType,Integer businessLevel, Integer operType);

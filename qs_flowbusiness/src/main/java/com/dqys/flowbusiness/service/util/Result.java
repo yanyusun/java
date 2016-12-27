@@ -23,4 +23,9 @@ public class Result {
     public void setMsg(String msg) {
         this.msg = msg;
     }
+
+    public Result(BusinessResultEnum businessResultEnum) {
+        this.code=businessResultEnum.getValue();
+        this.msg=businessResultEnum.getName();
+    }
 }

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.flowbusiness.orm.mapper.BusinesslevelUserReMapper" >
+  <resultMap id="BaseResultMap" type="com.dqys.flowbusiness.orm.pojo.BusinesslevelUserRe" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="businesslevelre_id" property="businesslevelreId" jdbcType="VARCHAR" />
+    <result column="role_type" property="roleType" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="create_at" property="createAt" jdbcType="TIMESTAMP" />
+    <result column="update_at" property="updateAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, businesslevelre_id, role_type, status, create_at, update_at
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_businesslevel_user_re
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_businesslevel_user_re
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.dqys.flowbusiness.orm.pojo.BusinesslevelUserRe" >
+    insert into t_businesslevel_user_re (id, businesslevelre_id, role_type, 
+      status, create_at, update_at
+      )
+    values (#{id,jdbcType=INTEGER}, #{businesslevelreId,jdbcType=VARCHAR}, #{roleType,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.dqys.flowbusiness.orm.pojo.BusinesslevelUserRe" >
+    insert into t_businesslevel_user_re
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="businesslevelreId != null" >
+        businesslevelre_id,
+      </if>
+      <if test="roleType != null" >
+        role_type,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createAt != null" >
+        create_at,
+      </if>
+      <if test="updateAt != null" >
+        update_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="businesslevelreId != null" >
+        #{businesslevelreId,jdbcType=VARCHAR},
+      </if>
+      <if test="roleType != null" >
+        #{roleType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.dqys.flowbusiness.orm.pojo.BusinesslevelUserRe" >
+    update t_businesslevel_user_re
+    <set >
+      <if test="businesslevelreId != null" >
+        businesslevelre_id = #{businesslevelreId,jdbcType=VARCHAR},
+      </if>
+      <if test="roleType != null" >
+        role_type = #{roleType,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createAt != null" >
+        create_at = #{createAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateAt != null" >
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.dqys.flowbusiness.orm.pojo.BusinesslevelUserRe" >
+    update t_businesslevel_user_re
+    set businesslevelre_id = #{businesslevelreId,jdbcType=VARCHAR},
+      role_type = #{roleType,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      create_at = #{createAt,jdbcType=TIMESTAMP},
+      update_at = #{updateAt,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

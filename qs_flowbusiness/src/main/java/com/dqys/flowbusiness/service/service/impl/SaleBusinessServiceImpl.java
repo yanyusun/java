@@ -1,11 +1,11 @@
 package com.dqys.flowbusiness.service.service.impl;
 
+import com.dqys.flowbusiness.orm.mapper.BusinessLevelReMapper;
 import com.dqys.flowbusiness.orm.mapper.BusinessMapper;
 import com.dqys.flowbusiness.orm.mapper.BusinessObjReMapper;
-import com.dqys.flowbusiness.orm.pojo.Business;
+import com.dqys.flowbusiness.orm.mapper.BusinesslevelUserReMapper;
 import com.dqys.flowbusiness.service.service.AbstractBusinessService;
 import com.dqys.flowbusiness.service.service.BusinessService;
-import com.dqys.flowbusiness.service.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
@@ -23,6 +23,12 @@ public class SaleBusinessServiceImpl extends AbstractBusinessService implements 
     @Autowired @Qualifier("saleBusinessObjReMapper")
     private BusinessObjReMapper businessObjReMapper;
 
+    @Autowired @Qualifier("saleBusinessObjReMapper")
+    private BusinessLevelReMapper businessLevelReMapper;
+
+    @Autowired @Qualifier("saleBusinessObjReMapper")
+    private BusinesslevelUserReMapper businesslevelUserReMapper;
+
     @Override
     protected BusinessMapper getBusinessMapper() {
         return businessMapper;
@@ -33,13 +39,16 @@ public class SaleBusinessServiceImpl extends AbstractBusinessService implements 
         return businessObjReMapper;
     }
 
+
     @Override
-    public Business getBusiness(Integer id) {
-        return businessMapper.get(id);
+    protected BusinessLevelReMapper getBusinessLevelReMapper() {
+        return businessLevelReMapper;
     }
 
     @Override
-    public Result flow(Integer businessId,Integer userId,Integer businessType,Integer businessLevel, Integer operType){
-        return null;
+    protected BusinesslevelUserReMapper getBusinesslevelUserReMapper() {
+        return businesslevelUserReMapper;
     }
+
+
 }

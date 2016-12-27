@@ -20,4 +20,5 @@ public class UnableLevel implements BusinessLevel{
      * 重新发布
      */
     public static final int re_announce = BusinessOperTypeEnum.re_announce.getValue();
+
 }
