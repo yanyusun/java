@@ -80,4 +80,13 @@
         </if>
     </select>
 
+    <select id="getLableList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_label
+        <if test="name !=null">
+            where name like CONCAT('%',#{name},'%')
+        </if>
+    </select>
+
 </mapper>

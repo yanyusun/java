@@ -14,6 +14,15 @@ public class AssetPackageDTO {
     private List<Label> labels;//标签
     private List<Dispose> disposes;//处置方式
     private List<AssetFile> assetFiles;//文件
+    private BusinessORelation oRelation;//业务与对象关系表
+
+    public BusinessORelation getoRelation() {
+        return oRelation;
+    }
+
+    public void setoRelation(BusinessORelation oRelation) {
+        this.oRelation = oRelation;
+    }
 
     public APDto getApDto() {
         return apDto;

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
+ * 资产包管理
  * Created by mkfeng on 2016/12/23.
  */
 @Controller

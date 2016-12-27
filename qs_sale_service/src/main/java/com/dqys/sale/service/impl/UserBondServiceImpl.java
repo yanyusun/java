@@ -105,6 +105,12 @@ public class UserBondServiceImpl implements UserBondService {
 
 
     private List<UserBondDTO> getUserBondDTOs(UserBondQuery query) {
+        if (query != null && query.getBusinessStatus() != null) {
+            query.setIds(businessORelationMapper.selectObjectIdByObjectType(query.getBondType(), query.getBusinessStatus()));
+            if (query.getIds().size() == 0) {
+                query.getIds().add(SysProperty.NULL_DATA_ID);
+            }
+        }
         List<UserBond> userBonds = userBondMapper.list(query);
         Integer count = userBondMapper.listCount(query);
         query.setTotalCount(count);
@@ -115,6 +121,7 @@ public class UserBondServiceImpl implements UserBondService {
             dto.setUserBond(entity);
             dto.setAssetFiles(assetFileMapper.selectByAssetId(entity.getId(), entity.getBondType().intValue()));
             dto.setDisposes(disposeMapper.selectByAssetId(entity.getId(), entity.getBondType().intValue()));
+            dto.setoRelation(businessORelationMapper.getORelation(entity.getId(), entity.getBondType().intValue()));
             dtos.add(dto);
         }
         return dtos;

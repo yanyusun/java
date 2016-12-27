@@ -42,4 +42,7 @@ public interface FixedAssetService {
     JsonResponse updateFixed(FixedAssetDTO fixedAssetDTO);
 
     JsonResponse list(FixedAssetQuery fixedAssetQuery);
+
+    //标签库
+    JsonResponse getLable(String name);
 }

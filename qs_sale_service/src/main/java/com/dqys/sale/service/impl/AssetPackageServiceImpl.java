@@ -105,16 +105,23 @@ public class AssetPackageServiceImpl implements AssetPackageService {
     }
 
     private List<AssetPackageDTO> getAssetPackageDTOs(AssetPackageQuery query) {
+        if (query != null && query.getBusinessStatus() != null) {
+            query.setIds(businessORelationMapper.selectObjectIdByObjectType(ObjectTypeEnum.asset_package.getValue(), query.getBusinessStatus()));
+            if (query.getIds().size() == 0) {
+                query.getIds().add(SysProperty.NULL_DATA_ID);
+            }
+        }
         List<AssetPackage> list = assetPackageMapper.list(query);
         Integer count = assetPackageMapper.listCount(query);
         query.setTotalCount(count);
         List<AssetPackageDTO> dtos = new ArrayList<>();
         for (AssetPackage entity : list) {
             AssetPackageDTO dto = new AssetPackageDTO();
-            dto.setLabels(labelMapper.selectByAssetId(entity.getId(), ObjectTypeEnum.user_bond.getValue()));
+            dto.setLabels(labelMapper.selectByAssetId(entity.getId(), ObjectTypeEnum.asset_package.getValue()));
             dto.setAssetPackage(entity);
-            dto.setAssetFiles(assetFileMapper.selectByAssetId(entity.getId(), ObjectTypeEnum.user_bond.getValue()));
-            dto.setDisposes(disposeMapper.selectByAssetId(entity.getId(), ObjectTypeEnum.user_bond.getValue()));
+            dto.setAssetFiles(assetFileMapper.selectByAssetId(entity.getId(), ObjectTypeEnum.asset_package.getValue()));
+            dto.setDisposes(disposeMapper.selectByAssetId(entity.getId(), ObjectTypeEnum.asset_package.getValue()));
+            dto.setoRelation(businessORelationMapper.getORelation(entity.getId(), ObjectTypeEnum.asset_package.getValue()));
             dtos.add(dto);
         }
         return dtos;

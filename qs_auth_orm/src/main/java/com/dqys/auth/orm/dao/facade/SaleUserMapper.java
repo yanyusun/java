@@ -17,4 +17,7 @@ public interface SaleUserMapper extends BaseMapper<SaleUser> {
     void addLoginLog(LoginLog log);
 
     UserDetailDTO getUserDetail(Integer userId);
+
+    // t_user_bus_total添加记录
+    void insetUserBusTotal(Integer userId);
 }

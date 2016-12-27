@@ -6,18 +6,6 @@ import com.dqys.sale.orm.query.UserBusTotalQuery;
 
 import java.util.List;
 
-public interface UserBusTotalMapper {
-    int deleteByPrimaryKey(Integer hasPublish);
-
-    int insert(UserBusTotal record);
-
-    int insertSelective(UserBusTotal record);
-
-    UserBusTotal selectByPrimaryKey(Integer hasPublish);
-
-    int updateByPrimaryKeySelective(UserBusTotal record);
-
-    int updateByPrimaryKey(UserBusTotal record);
-
+public interface UserBusTotalMapper extends BaseMapper<UserBusTotal> {
     List<UserBusTotal> list(UserBusTotalQuery query);
 }

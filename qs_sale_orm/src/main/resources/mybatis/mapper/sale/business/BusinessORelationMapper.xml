@@ -50,8 +50,8 @@
             <if test="version != null">
                 version,
             </if>
-                create_at,
-                update_at,
+            create_at,
+            update_at,
             <if test="stateflag != null">
                 stateflag,
             </if>
@@ -72,8 +72,8 @@
             <if test="version != null">
                 #{version,jdbcType=INTEGER},
             </if>
-                now(),
-                now(),
+            now(),
+            now(),
             <if test="stateflag != null">
                 #{stateflag,jdbcType=BIGINT},
             </if>
@@ -94,7 +94,7 @@
             <if test="version != null">
                 version = #{version,jdbcType=INTEGER},
             </if>
-                update_at = now(),
+            update_at = now(),
             <if test="stateflag != null">
                 stateflag = #{stateflag,jdbcType=BIGINT},
             </if>
@@ -113,7 +113,7 @@
   </update>
 
     <select id="selectObjectIdByObjectType" resultType="int">
-        SELECT * FROM t_business_obj_re bor LEFT JOIN business b
+        SELECT bor.object_id FROM t_business_obj_re bor LEFT JOIN business b
         ON b.id=bor.business_id
         WHERE bor.object_type=#{objectType}
         <if test="status !=null and status.length>0">
@@ -122,6 +122,13 @@
                 #{stat}
             </foreach>
         </if>
+    </select>
+
+    <select id="getORelation" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_business_obj_re
+        where stateflag=0 AND object_id = #{objectId,jdbcType=INTEGER} AND object_type = #{objectType,jdbcType=INTEGER}
     </select>
 
 </mapper>

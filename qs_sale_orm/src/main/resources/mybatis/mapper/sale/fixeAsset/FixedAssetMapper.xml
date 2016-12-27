@@ -537,7 +537,7 @@
             </foreach>
         </if>
         <if test="isHomePage !=null">
-            AND is_home_page = #{isHomePage},
+            AND is_home_page = #{isHomePage}
         </if>
         <if test="checkStatus !=null">
             AND check_status=#{checkStatus}

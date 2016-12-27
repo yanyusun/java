@@ -1,5 +1,6 @@
 package com.dqys.sale.service.impl;
 
+import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.AreaTool;
@@ -56,6 +57,12 @@ public class FixedAssetServiceImpl implements FixedAssetService {
     }
 
     @Override
+    public JsonResponse getLable(String name) {
+        List<Label> list = labelMapper.getLableList(name);
+        return JsonResponseTool.success(list);
+    }
+
+    @Override
     public JsonResponse fixedList(FixedAssetQuery fixedAssetQuery) {
         List<FixedAssetDTO> dtos = getFixedAssetDTOs(fixedAssetQuery);
         for (FixedAssetDTO dto : dtos) {
@@ -105,6 +112,13 @@ public class FixedAssetServiceImpl implements FixedAssetService {
     }
 
     private List<FixedAssetDTO> getFixedAssetDTOs(FixedAssetQuery fixedAssetQuery) {
+        //业务状态查询
+        if (fixedAssetQuery != null && fixedAssetQuery.getBusinessStatus() != null) {
+            fixedAssetQuery.setIds(businessORelationMapper.selectObjectIdByObjectType(ObjectTypeEnum.fixed_asset.getValue(), fixedAssetQuery.getBusinessStatus()));
+            if (fixedAssetQuery.getIds().size() == 0) {
+                fixedAssetQuery.getIds().add(SysProperty.NULL_DATA_ID);
+            }
+        }
         List<FixedAsset> fixedAssetList = fixedAssetMapper.fixedList(fixedAssetQuery);
         Integer count = fixedAssetMapper.fixedListCount(fixedAssetQuery);
         fixedAssetQuery.setTotalCount(count);
@@ -115,6 +129,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
             dto.setFixedAsset(asset);
             dto.setAssetFiles(assetFileMapper.selectByAssetId(asset.getId(), ObjectTypeEnum.fixed_asset.getValue()));
             dto.setDisposes(disposeMapper.selectByAssetId(asset.getId(), ObjectTypeEnum.fixed_asset.getValue()));
+            dto.setoRelation(businessORelationMapper.getORelation(asset.getId(), ObjectTypeEnum.fixed_asset.getValue()));
             dtos.add(dto);
         }
         return dtos;
@@ -145,7 +160,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         if (id == 0) {
             return JsonResponseTool.failure("添加失败");
         }
-        createBusiness(id);
+        createBusiness(fixedAsset.getId());
         addOtherEntity_tx(fixedAssetDTO.getLabels(), fixedAssetDTO.getDisposes(), fixedAssetDTO.getAssetFiles(), fixedAsset.getId(), ObjectTypeEnum.fixed_asset.getValue());
         return JsonResponseTool.success(id);
     }

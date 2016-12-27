@@ -80,6 +80,7 @@ public class SaleUserServiceImpl implements SaleUserService {
             return JsonResponseTool.failure("注册失败");
         }
         saleUserTagMapper.insertSelective(tag);
+        saleUserMapper.insetUserBusTotal(user.getId());
         return JsonResponseTool.success(null);
     }
 

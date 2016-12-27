@@ -53,4 +53,9 @@ public class BusinessORelationMapperImpl extends SaleBaseDao implements Business
     public List<Integer> selectObjectIdByObjectType(@Param("objectType") Integer objectType, @Param("status") Integer... status) {
         return super.getSqlSession().getMapper(BusinessORelationMapper.class).selectObjectIdByObjectType(objectType, status);
     }
+
+    @Override
+    public BusinessORelation getORelation(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType) {
+        return super.getSqlSession().getMapper(BusinessORelationMapper.class).getORelation(objectId, objectType);
+    }
 }

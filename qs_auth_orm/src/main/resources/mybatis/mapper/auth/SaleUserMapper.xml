@@ -228,5 +228,9 @@
         ON log.user_id=su.id
         WHERE  su.stateflag=0 AND su.id=#{userId}
     </select>
+    <!--添加统计数量-->
+    <insert id="insetUserBusTotal">
+    INSERT INTO t_user_bus_total(user_id,on_business,on_collection,has_publish) VALUES(#{userId},0,0,0)
+    </insert>
 
 </mapper>

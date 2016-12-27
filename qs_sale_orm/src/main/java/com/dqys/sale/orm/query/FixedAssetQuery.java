@@ -11,7 +11,15 @@ public class FixedAssetQuery extends PageEntity implements Serializable {
     private Integer isHomePage;//是否首页
     private Integer checkStatus;//0待审核1审核未通过2审核已通过
     private Integer enable;//'是否无效0不是,1是
+    private Integer businessStatus;//业务状态
 
+    public Integer getBusinessStatus() {
+        return businessStatus;
+    }
+
+    public void setBusinessStatus(Integer businessStatus) {
+        this.businessStatus = businessStatus;
+    }
     public Integer getCheckStatus() {
         return checkStatus;
     }

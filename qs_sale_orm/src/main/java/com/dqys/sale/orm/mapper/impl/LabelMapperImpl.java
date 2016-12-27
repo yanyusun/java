@@ -16,7 +16,12 @@ import java.util.List;
 public class LabelMapperImpl extends SaleBaseDao implements LabelMapper {
     @Override
     public List<Label> selectByAssetId(@Param("assetId") Integer assetId, @Param("assetType") Integer assetType) {
-        return super.getSqlSession().getMapper(LabelMapper.class).selectByAssetId(assetId,assetType);
+        return super.getSqlSession().getMapper(LabelMapper.class).selectByAssetId(assetId, assetType);
+    }
+
+    @Override
+    public List<Label> getLableList(String name) {
+        return super.getSqlSession().getMapper(LabelMapper.class).getLableList(name);
     }
 
     @Override

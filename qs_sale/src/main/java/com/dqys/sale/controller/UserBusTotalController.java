@@ -37,7 +37,7 @@ public class UserBusTotalController extends BaseApiContorller {
     }
 
     /**
-     * @api {GET} http://{url}/UserBusTotal/get 读取未读的数量
+     * @api {GET} http://{url}/UserBusTotal/get 用户业务信息统计
      * @apiName get
      * @apiGroup UserBusTotal
      * @apiSuccessExample {json} Data-Response:
@@ -45,11 +45,11 @@ public class UserBusTotalController extends BaseApiContorller {
         "code": 2000,
         "msg": "成功",
         "data": {
-        "hasPublish": 1,
-        "onCollection": 1,
-        "onBusiness": 1,
+        "hasPublish": 1,//已发布数量
+        "onCollection": 1,已收藏数量
+        "onBusiness": 1,处置中数量
         "id": 1,
-        "userId": 3
+        "userId": 3 用户id
         }
         }
      */

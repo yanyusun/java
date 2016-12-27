@@ -15,29 +15,34 @@ import java.util.List;
  */
 @Repository
 @Primary
-public class UserBusTotalMapperImpl extends SaleBaseDao implements UserBusTotalMapper{
-    public int deleteByPrimaryKey(Integer hasPublish) {
-        return 0;
+public class UserBusTotalMapperImpl extends SaleBaseDao implements UserBusTotalMapper {
+    public Integer deleteByPrimaryKey(Integer id) {
+        return super.getSqlSession().getMapper(UserBusTotalMapper.class).deleteByPrimaryKey(id);
     }
 
-    public int insert(UserBusTotal record) {
-        return 0;
+    public Integer insert(UserBusTotal record) {
+        return super.getSqlSession().getMapper(UserBusTotalMapper.class).insert(record);
     }
 
-    public int insertSelective(UserBusTotal record) {
-        return 0;
+    public Integer insertSelective(UserBusTotal record) {
+        return super.getSqlSession().getMapper(UserBusTotalMapper.class).insertSelective(record);
     }
 
-    public UserBusTotal selectByPrimaryKey(Integer hasPublish) {
+    public UserBusTotal selectByPrimaryKey(Integer id) {
+        return super.getSqlSession().getMapper(UserBusTotalMapper.class).selectByPrimaryKey(id);
+    }
+
+    public Integer updateByPrimaryKeySelective(UserBusTotal record) {
+        return super.getSqlSession().getMapper(UserBusTotalMapper.class).updateByPrimaryKeySelective(record);
+    }
+
+    @Override
+    public Integer updateByPrimaryKeyWithBLOBs(UserBusTotal record) {
         return null;
     }
 
-    public int updateByPrimaryKeySelective(UserBusTotal record) {
-        return 0;
-    }
-
-    public int updateByPrimaryKey(UserBusTotal record) {
-        return 0;
+    public Integer updateByPrimaryKey(UserBusTotal record) {
+        return super.getSqlSession().getMapper(UserBusTotalMapper.class).updateByPrimaryKey(record);
     }
 
     @Override

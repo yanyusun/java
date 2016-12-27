@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.sale.orm.mapper.business.AssetUserReMapper">
+    <resultMap id="BaseResultMap" type="com.dqys.sale.orm.pojo.AssetUserRe">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="asset_id" property="assetId" jdbcType="INTEGER"/>
+        <result column="asset_type" property="assetType" jdbcType="INTEGER"/>
+        <result column="is_collection" property="isCollection" jdbcType="INTEGER"/>
+        <result column="is_dispose" property="isDispose" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, user_id, asset_id, asset_type, is_collection, is_dispose
+  </sql>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List"/>
+        from t_asset_user_re
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_asset_user_re
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+    <insert id="insert" parameterType="com.dqys.sale.orm.pojo.AssetUserRe">
+    insert into t_asset_user_re (id, user_id, asset_id, 
+      asset_type, is_collection, is_dispose
+      )
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{assetId,jdbcType=INTEGER}, 
+      #{assetType,jdbcType=INTEGER}, #{isCollection,jdbcType=INTEGER}, #{isDispose,jdbcType=INTEGER}
+      )
+  </insert>
+    <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.AssetUserRe">
+        insert into t_asset_user_re
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="assetId != null">
+                asset_id,
+            </if>
+            <if test="assetType != null">
+                asset_type,
+            </if>
+            <if test="isCollection != null">
+                is_collection,
+            </if>
+            <if test="isDispose != null">
+                is_dispose,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="assetId != null">
+                #{assetId,jdbcType=INTEGER},
+            </if>
+            <if test="assetType != null">
+                #{assetType,jdbcType=INTEGER},
+            </if>
+            <if test="isCollection != null">
+                #{isCollection,jdbcType=INTEGER},
+            </if>
+            <if test="isDispose != null">
+                #{isDispose,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.dqys.sale.orm.pojo.AssetUserRe">
+        update t_asset_user_re
+        <set>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="assetId != null">
+                asset_id = #{assetId,jdbcType=INTEGER},
+            </if>
+            <if test="assetType != null">
+                asset_type = #{assetType,jdbcType=INTEGER},
+            </if>
+            <if test="isCollection != null">
+                is_collection = #{isCollection,jdbcType=INTEGER},
+            </if>
+            <if test="isDispose != null">
+                is_dispose = #{isDispose,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.dqys.sale.orm.pojo.AssetUserRe">
+    update t_asset_user_re
+    set user_id = #{userId,jdbcType=INTEGER},
+      asset_id = #{assetId,jdbcType=INTEGER},
+      asset_type = #{assetType,jdbcType=INTEGER},
+      is_collection = #{isCollection,jdbcType=INTEGER},
+      is_dispose = #{isDispose,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+    <select id="selectByUserRe" parameterType="com.dqys.sale.orm.pojo.AssetUserRe" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_asset_user_re
+        WHERE 1=1
+        <if test="userId !=null">
+            AND user_id=#{userId}
+        </if>
+        <if test="assetId !=null">
+            AND asset_id=#{assetId}
+        </if>
+        <if test="assetType !=null">
+            AND asset_type=#{assetType}
+        </if>
+    </select>
+</mapper>
