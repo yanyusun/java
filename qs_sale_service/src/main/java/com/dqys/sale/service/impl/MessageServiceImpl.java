@@ -1,28 +1,5 @@
 package com.dqys.sale.service.impl;
 
-import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
-import com.dqys.auth.orm.dao.facade.TUserTagMapper;
-import com.dqys.auth.orm.pojo.TUserInfo;
-import com.dqys.auth.orm.pojo.TUserTag;
-import com.dqys.auth.orm.query.TUserTagQuery;
-import com.dqys.business.orm.constant.company.ObjectTypeEnum;
-import com.dqys.business.orm.constant.flowBusiness.FlowBusinessEnum;
-import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
-import com.dqys.business.orm.mapper.message.MessageMapper;
-import com.dqys.business.orm.pojo.coordinator.TeammateRe;
-import com.dqys.business.orm.pojo.coordinator.UserDetail;
-import com.dqys.business.orm.pojo.coordinator.UserTeam;
-import com.dqys.business.orm.pojo.flowBusiness.FlowBusiness;
-import com.dqys.business.orm.pojo.message.Message;
-import com.dqys.business.orm.pojo.message.MessageOperinfo;
-import com.dqys.business.service.constant.MessageEnum;
-import com.dqys.business.service.constant.ObjectEnum.IouEnum;
-import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
-import com.dqys.business.service.service.CoordinatorService;
-import com.dqys.business.service.service.MessageService;
-import com.dqys.business.service.service.UserService;
-import com.dqys.business.service.service.flowBusiness.FlowBusinessService;
-import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.constant.MessageBTEnum;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
@@ -31,6 +8,8 @@ import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.RabbitMQProducerTool;
 import com.dqys.core.utils.SmsUtil;
+import com.dqys.sale.orm.mapper.message.MessageMapper;
+import com.dqys.sale.orm.pojo.message.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -46,18 +25,6 @@ public class MessageServiceImpl implements MessageService {
 
     @Autowired
     private MessageMapper messageMapper;
-    @Autowired
-    private TUserInfoMapper tUserInfoMapper;
-    @Autowired
-    private CoordinatorMapper coordinatorMapper;
-    @Autowired
-    private TUserTagMapper tUserTagMapper;
-    @Autowired
-    private CoordinatorService coordinatorService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private FlowBusinessService flowBusinessService;
 
     @Override
     public List<Message> selectByMessage(Message message) {

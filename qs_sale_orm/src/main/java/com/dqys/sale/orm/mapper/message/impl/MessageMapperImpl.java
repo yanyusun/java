@@ -1,9 +1,10 @@
 package com.dqys.sale.orm.mapper.message.impl;
 
-import com.dqys.business.orm.mapper.message.MessageMapper;
-import com.dqys.business.orm.pojo.message.Message;
-import com.dqys.business.orm.pojo.message.MessageOperinfo;
 import com.dqys.core.base.BaseDao;
+import com.dqys.core.base.SaleBaseDao;
+import com.dqys.sale.orm.mapper.message.MessageMapper;
+import com.dqys.sale.orm.pojo.message.Message;
+import com.dqys.sale.orm.pojo.message.MessageOperinfo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * Created by mkfeng on 2016/7/8.
  */
 @Repository
-public class MessageMapperImpl extends BaseDao implements MessageMapper {
+public class MessageMapperImpl extends SaleBaseDao implements MessageMapper {
 
 
     @Override

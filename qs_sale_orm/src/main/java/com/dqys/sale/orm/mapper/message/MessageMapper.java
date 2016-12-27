@@ -1,7 +1,7 @@
 package com.dqys.sale.orm.mapper.message;
 
-import com.dqys.business.orm.pojo.message.Message;
-import com.dqys.business.orm.pojo.message.MessageOperinfo;
+import com.dqys.sale.orm.pojo.message.Message;
+import com.dqys.sale.orm.pojo.message.MessageOperinfo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
