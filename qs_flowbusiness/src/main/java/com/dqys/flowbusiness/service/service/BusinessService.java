@@ -37,5 +37,14 @@ public interface BusinessService {
      */
     int createBusiness_tx(BusinessDto businessDto,Integer userId,Integer businessType,Integer BusinessStatus);
 
+    /**
+     * 业务控制
+     * @param businessId　业务id
+     * @param userId
+     * @param businessType 业务类型
+     * @param businessLevel
+     * @param operType
+     * @return
+     */
     Result flow(Integer businessId,Integer userId,Integer businessType,Integer businessLevel, Integer operType);
 }

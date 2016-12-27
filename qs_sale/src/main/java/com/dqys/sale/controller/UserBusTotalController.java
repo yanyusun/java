@@ -1,10 +1,12 @@
 package com.dqys.sale.controller;
 
+import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.sale.orm.pojo.UserBusTotal;
 import com.dqys.sale.orm.query.UserBusTotalQuery;
+import com.dqys.sale.service.exception.bean.UserBusTotalException;
 import com.dqys.sale.service.facade.UserBusTotalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,13 +19,13 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/UserBusTotal")
-public class UserBusTotalController {
+public class UserBusTotalController extends BaseApiContorller {
 
     @Autowired
     private UserBusTotalService userBusTotalService;
 
     /**
-     * 查看特定类型的公司
+     * 用户统计信息列表
      *
      * @return
      */
@@ -35,12 +37,24 @@ public class UserBusTotalController {
     }
 
     /**
-     *
-     *查询用户的统计信息
-     * @return
+     * @api {GET} http://{url}/UserBusTotal/get 读取未读的数量
+     * @apiName get
+     * @apiGroup UserBusTotal
+     * @apiSuccessExample {json} Data-Response:
+        {
+        "code": 2000,
+        "msg": "成功",
+        "data": {
+        "hasPublish": 1,
+        "onCollection": 1,
+        "onBusiness": 1,
+        "id": 1,
+        "userId": 3
+        }
+        }
      */
     @RequestMapping(value = "/get")
-    public JsonResponse getByUserId() {
+    public JsonResponse getByUserId() throws UserBusTotalException {
         Integer userId = UserSession.getCurrent().getUserId();
         return JsonResponseTool.success(userBusTotalService.getByUserId(userId));
     }
