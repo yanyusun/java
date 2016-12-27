@@ -251,6 +251,9 @@
         <if test="status !=null">
             AND status=#{status}
         </if>
+        <if test="userId !=null">
+            AND auther=#{userId}
+        </if>
     </sql>
     <select id="list" parameterType="com.dqys.sale.orm.query.NewsQuery"
             resultMap="BaseResultMap">

@@ -148,9 +148,7 @@
             <if test="isBank != null">
                 is_bank,
             </if>
-            <if test="createTime != null">
-                create_time,
-            </if>
+            create_time,
             update_time,
             oper_user,
             <if test="describes != null">
