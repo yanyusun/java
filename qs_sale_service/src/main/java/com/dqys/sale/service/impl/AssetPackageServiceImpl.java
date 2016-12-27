@@ -6,6 +6,7 @@ import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.RandomUtil;
 import com.dqys.sale.orm.pojo.*;
 import com.dqys.sale.service.dto.APDto;
 import com.dqys.sale.service.dto.AssetPackageDTO;
@@ -147,7 +148,7 @@ public class AssetPackageServiceImpl implements AssetPackageService {
             entity.setOperUser(UserSession.getCurrent().getUserId());
         }
         if (entity.getAssetNo() == null) {
-
+            entity.setAssetNo(RandomUtil.getCode(RandomUtil.ASSET_PACKAGE_CODE));
         }
 
     }

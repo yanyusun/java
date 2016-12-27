@@ -6,6 +6,7 @@ import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.RandomUtil;
 import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
 import com.dqys.flowbusiness.service.dto.BusinessDto;
 import com.dqys.flowbusiness.service.service.BusinessService;
@@ -155,7 +156,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
             return JsonResponseTool.failure("请把信息填写完整");
         }
         FixedAsset fixedAsset = fixedAssetDTO.getFixedAsset();
-
+        setEntity(fixedAsset);
         Integer id = fixedAssetMapper.insertSelective(fixedAsset);
         if (id == 0) {
             return JsonResponseTool.failure("添加失败");
@@ -163,6 +164,16 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         createBusiness(id);
         addOtherEntity_tx(fixedAssetDTO.getLabels(), fixedAssetDTO.getDisposes(), fixedAssetDTO.getAssetFiles(), fixedAsset.getId(), ObjectTypeEnum.fixed_asset.getValue());
         return JsonResponseTool.success(id);
+    }
+
+    private void setEntity(FixedAsset entity) {
+        if (entity.getOperUser() == null) {
+            entity.setOperUser(UserSession.getCurrent().getUserId());
+        }
+        if (entity.getNo() == null) {
+            entity.setNo(RandomUtil.getCode(RandomUtil.FIXED_ASSET_CODE));//编号
+        }
+
     }
 
     /**
