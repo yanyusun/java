@@ -11,4 +11,6 @@ public interface BusinessORelationMapper extends BaseMapper<BusinessORelation> {
 
     List<Integer> selectObjectIdByObjectType(@Param("objectType") Integer objectType, @Param("status") Integer... status);
 
+    BusinessORelation getORelation(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType);
+
 }

@@ -11,6 +11,11 @@ import java.util.List;
  */
 public interface UserBusTotalService {
     UserBusTotal getByUserId(Integer userId);
+
     List<UserBusTotal> list(UserBusTotalQuery query);
-    void update(Integer userId, UserBusTotalEnum userBusTotalEnum,Integer assetType,Integer assetId);
+
+    void update(Integer userId, UserBusTotalEnum userBusTotalEnum, Integer assetType, Integer assetId);
+
+    Integer createUserBusTotal(UserBusTotal userBusTotal);
+
 }

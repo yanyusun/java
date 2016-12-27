@@ -59,4 +59,9 @@ public class SaleUserMapperImpl extends SaleBaseDao implements SaleUserMapper {
     public UserDetailDTO getUserDetail(Integer userId) {
         return super.getSqlSession().getMapper(SaleUserMapper.class).getUserDetail(userId);
     }
+
+    @Override
+    public void insetUserBusTotal(Integer userId) {
+        super.getSqlSession().getMapper(SaleUserMapper.class).insetUserBusTotal(userId);
+    }
 }

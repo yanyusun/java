@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
+ * 固定资产管理
  * Created by mkfeng on 2016/12/21.
  */
 @Controller
@@ -79,7 +80,7 @@ public class FixedAssetController {
      * "id": 1,
      * "assetId": 1,
      * "filename": "11.jpg",//文件名称
-     * "type": 1,//文件类型
+     * "type": 1,//文件类型0主图，1副图，2凭证
      * "assetType": 10
      * }
      * ]
@@ -141,6 +142,18 @@ public class FixedAssetController {
     @ResponseBody
     public JsonResponse updateFixed(@ModelAttribute FixedAssetDTO fixedAssetDTO) {
         return fixedAssetService.updateFixed(fixedAssetDTO);
+    }
+
+    /**
+     * @api {post} fixed/getLable 标签库
+     * @apiName fixed/getLable
+     * @apiSampleRequest parter/getLable
+     * @apiGroup　 fixed
+     */
+    @RequestMapping("/getLable")
+    @ResponseBody
+    public JsonResponse getLable(String name) {
+        return fixedAssetService.getLable(name);
     }
 
 

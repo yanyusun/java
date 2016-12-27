@@ -10,4 +10,6 @@ public interface LabelMapper extends BaseMapper<Label> {
 
     List<Label> selectByAssetId(@Param("assetId") Integer assetId, @Param("assetType") Integer assetType);
 
+    List<Label> getLableList(String name);
+
 }

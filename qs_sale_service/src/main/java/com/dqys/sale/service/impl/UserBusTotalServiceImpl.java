@@ -37,7 +37,14 @@ public class UserBusTotalServiceImpl implements UserBusTotalService {
     }
 
     @Override
-    public void update(Integer userId, UserBusTotalEnum userBusTotalEnum,Integer assetType,Integer assetId) {
+    public void update(Integer userId, UserBusTotalEnum userBusTotalEnum, Integer assetType, Integer assetId) {
 
     }
+
+    @Override
+    public Integer createUserBusTotal(UserBusTotal userBusTotal) {
+        return userBusTotalMapper.insertSelective(userBusTotal);
+    }
+
+
 }

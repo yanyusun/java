@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
+ * 新闻管理
  * Created by mkfeng on 2016/12/24.
  */
 @Controller

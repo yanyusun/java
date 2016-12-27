@@ -1,9 +1,6 @@
 package com.dqys.sale.service.dto;
 
-import com.dqys.sale.orm.pojo.AssetFile;
-import com.dqys.sale.orm.pojo.Dispose;
-import com.dqys.sale.orm.pojo.FixedAsset;
-import com.dqys.sale.orm.pojo.Label;
+import com.dqys.sale.orm.pojo.*;
 
 import java.util.List;
 
@@ -17,6 +14,15 @@ public class FixedAssetDTO {
     private List<Label> labels;//标签
     private List<Dispose> disposes;//处置方式
     private List<AssetFile> assetFiles;//文件
+    private BusinessORelation oRelation;//业务与对象关系表
+
+    public BusinessORelation getoRelation() {
+        return oRelation;
+    }
+
+    public void setoRelation(BusinessORelation oRelation) {
+        this.oRelation = oRelation;
+    }
 
     public FADto getFaDto() {
         return faDto;
