@@ -1,11 +1,11 @@
 package com.dqys.sale.orm.pojo;
 
 public class UserBusTotal {
-    private Integer hasPublish;
+    private Integer hasPublish;//已发布数量
 
-    private Integer onCollection;
+    private Integer onCollection;//已收藏数量
 
-    private Integer onBusiness;
+    private Integer onBusiness;//正在处置数量
 
     private Integer id;
 

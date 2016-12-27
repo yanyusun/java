@@ -60,6 +60,7 @@ public class BusinessController {
      * @apiName /business/release
      * @apiSampleRequest /business/release
      * @apiGroup　 businessSale
+     * @apiParam {int} [reqUserId] 请求者id
      * @apiParam {int} businessId 业务id
      * @apiParam {int} businessType 业务类型
      * @apiParam {int} businessLevel 业务所在位置
@@ -67,8 +68,8 @@ public class BusinessController {
      */
     @RequestMapping("/release")
     @ResponseBody
-    public JsonResponse release(@RequestParam Integer businessId, @RequestParam Integer businessLevel, @RequestParam Integer operType) {
-        Map map = businessService.release(businessId, businessLevel, operType);
+    public JsonResponse release(Integer reqUserId, @RequestParam Integer businessId, @RequestParam Integer businessLevel, @RequestParam Integer operType) {
+        Map map = businessService.release(reqUserId, businessId, businessLevel, operType);
         return CommonUtil.jsonResponse(map);
     }
 
@@ -77,14 +78,15 @@ public class BusinessController {
      * @apiName /business/dispose
      * @apiSampleRequest /business/dispose
      * @apiGroup　 businessSale
+     * @apiParam {int} [reqUserId] 请求者id
      * @apiParam {int} businessId 业务id
      * @apiParam {int} businessLevel 业务所在位置
      * @apiParam {int} operType 操作
      */
     @RequestMapping("/dispose")
     @ResponseBody
-    public JsonResponse dispose(@RequestParam Integer businessId, @RequestParam Integer businessLevel, @RequestParam Integer operType) {
-        Map map = businessService.dispose(businessId, businessLevel, operType);
+    public JsonResponse dispose(Integer reqUserId, @RequestParam Integer businessId, @RequestParam Integer businessLevel, @RequestParam Integer operType) {
+        Map map = businessService.dispose(reqUserId, businessId, businessLevel, operType);
         return CommonUtil.jsonResponse(map);
     }
 

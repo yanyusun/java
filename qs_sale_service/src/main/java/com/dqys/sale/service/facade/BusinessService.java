@@ -36,12 +36,12 @@ public interface BusinessService {
      *
      * @return
      */
-    Map release(Integer businessId, Integer businessLevel, Integer operType);
+    Map release(Integer reqUserId,Integer businessId, Integer businessLevel, Integer operType);
 
     /**
      * 处置>>平台同意处置,用户可以跟进
      *
      * @return
      */
-    Map dispose(Integer businessId, Integer businessLevel, Integer operType);
+    Map dispose(Integer reqUserId,Integer businessId, Integer businessLevel, Integer operType);
 }
