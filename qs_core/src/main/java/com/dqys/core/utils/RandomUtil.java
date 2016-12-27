@@ -25,6 +25,8 @@ public class RandomUtil {
     public final static String INDIVIDUAL_CREDITOR_CODE = "CZ";//个人债权
     public final static String ENTERPRISE_CREDITOR_CODE = "QZ";//企业债权
     public final static String PAST_LOANS_CODE = "YQ";//逾期贷款
+    public final static String FIXED_ASSET_CODE = "GD";//固定资产
+    public final static String ASSET_PACKAGE_CODE = "AP";//资产包（B端）
     private static String timeFormat = "yyMM";//日期格式
     private static Integer count = 10000;//循环数
     private static Integer codePlaces = 4;//随机位数的个数
@@ -43,6 +45,8 @@ public class RandomUtil {
         List<String> individualList = setCodeList(INDIVIDUAL_CREDITOR_CODE + time);
         List<String> enterpriseList = setCodeList(ENTERPRISE_CREDITOR_CODE + time);
         List<String> pastList = setCodeList(PAST_LOANS_CODE + time);
+        List<String> fixdeList = setCodeList(FIXED_ASSET_CODE + time);
+        List<String> packageList = setCodeList(ASSET_PACKAGE_CODE + time);
 //        MybatisRedisCache mybatisRedisCache = new MybatisRedisCache();
 //        mybatisRedisCache.putObject(ASSET_CODE + time, assetList);
 //        mybatisRedisCache.putObject(CASE_CODE + time, caseList);
@@ -60,6 +64,8 @@ public class RandomUtil {
         NoSQLWithRedisTool.setValueObject(INDIVIDUAL_CREDITOR_CODE + time, individualList, 31L, TimeUnit.DAYS);
         NoSQLWithRedisTool.setValueObject(ENTERPRISE_CREDITOR_CODE + time, enterpriseList, 31L, TimeUnit.DAYS);
         NoSQLWithRedisTool.setValueObject(PAST_LOANS_CODE + time, pastList, 31L, TimeUnit.DAYS);
+        NoSQLWithRedisTool.setValueObject(FIXED_ASSET_CODE + time, fixdeList, 31L, TimeUnit.DAYS);
+        NoSQLWithRedisTool.setValueObject(ASSET_PACKAGE_CODE + time, packageList, 31L, TimeUnit.DAYS);
         return "yes";
     }
 
@@ -83,7 +89,7 @@ public class RandomUtil {
         if (!ASSET_CODE.equals(code) && !CASE_CODE.equals(code) && !IOU_CODE.equals(code)
                 && !LENDER_CODE.equals(code) && !PAWN_CODE.equals(code) && !ESTATES_CODE.equals(code)
                 && !OWNER_CODE.equals(code) && !INDIVIDUAL_CREDITOR_CODE.equals(code) && !ENTERPRISE_CREDITOR_CODE.equals(code)
-                && !PAST_LOANS_CODE.equals(code)) {
+                && !PAST_LOANS_CODE.equals(code) && !FIXED_ASSET_CODE.equals(code) && !ASSET_PACKAGE_CODE.equals(code)) {
             return null;
         }
         String time = new SimpleDateFormat(timeFormat).format(new Date());

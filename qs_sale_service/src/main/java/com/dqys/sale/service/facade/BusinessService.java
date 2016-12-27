@@ -33,7 +33,15 @@ public interface BusinessService {
 
     /**
      * 发布>>平台发布能显示在前台，用户发布则需要平台审核
+     *
      * @return
      */
-    Map release(Integer businessId, Integer businessType, Integer businessLevel, Integer operType);
+    Map release(Integer reqUserId,Integer businessId, Integer businessLevel, Integer operType);
+
+    /**
+     * 处置>>平台同意处置,用户可以跟进
+     *
+     * @return
+     */
+    Map dispose(Integer reqUserId,Integer businessId, Integer businessLevel, Integer operType);
 }

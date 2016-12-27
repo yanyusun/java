@@ -2,6 +2,7 @@ package com.dqys.sale.service.impl;
 
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
@@ -143,6 +144,9 @@ public class UserBondServiceImpl implements UserBondService {
     }
 
     private void setEntity(UserBond entity) {
+        if (entity.getOperUser() == null) {
+            entity.setOperUser(UserSession.getCurrent().getUserId());
+        }
         if (entity.getBondNo() == null) {
             if (entity.getBondType() == ObjectTypeEnum.user_bond.getValue().intValue()) {
                 entity.setBondNo(RandomUtil.getCode(RandomUtil.INDIVIDUAL_CREDITOR_CODE));
@@ -178,7 +182,6 @@ public class UserBondServiceImpl implements UserBondService {
         if (entity == null && entity.getId() == null) {
             return JsonResponseTool.failure("缺少必要数值");
         }
-        setEntity(entity);
         Integer num = userBondMapper.updateByPrimaryKeySelective(entity);
         if (num == 0) {
             return JsonResponseTool.failure("添加失败");

@@ -24,12 +24,13 @@ public class BusinessController {
     private BusinessService businessService;
 
     /**
-     * 前台收藏操作
-     *
-     * @param status
-     * @param objectId
-     * @param objectType
-     * @return
+     * @api {post} /business/collect 前台收藏操作
+     * @apiName /business/collect
+     * @apiSampleRequest /business/collect
+     * @apiGroup　 businessSale
+     * @apiParam {int} status 是否收藏（0否1是）
+     * @apiParam {int} objectId 对象id
+     * @apiParam {int} objectType 对象类型(10固定资产11个人债权12逾期贷款13企业债权14司法拍卖15关注类资产16资产包)
      */
     @RequestMapping("/collect")
     @ResponseBody
@@ -39,12 +40,13 @@ public class BusinessController {
     }
 
     /**
-     * 前台处置申请操作
-     *
-     * @param status
-     * @param objectId
-     * @param objectType
-     * @return
+     * @api {post} /business/applyDispose 前台处置申请操作
+     * @apiName /business/applyDispose
+     * @apiSampleRequest /business/applyDispose
+     * @apiGroup　 businessSale
+     * @apiParam {int} status 是否申请处置（0否1是）
+     * @apiParam {int} objectId 对象id
+     * @apiParam {int} objectType 对象类型(10固定资产11个人债权12逾期贷款13企业债权14司法拍卖15关注类资产16资产包)
      */
     @RequestMapping("/applyDispose")
     @ResponseBody
@@ -54,16 +56,38 @@ public class BusinessController {
     }
 
     /**
-     * 发布业务
-     *
-     * @return
+     * @api {post} /business/release 发业务操作
+     * @apiName /business/release
+     * @apiSampleRequest /business/release
+     * @apiGroup　 businessSale
+     * @apiParam {int} [reqUserId] 请求者id
+     * @apiParam {int} businessId 业务id
+     * @apiParam {int} businessType 业务类型
+     * @apiParam {int} businessLevel 业务所在位置
+     * @apiParam {int} operType 操作
      */
     @RequestMapping("/release")
     @ResponseBody
-    public JsonResponse release(@RequestParam Integer businessId, @RequestParam Integer businessType, @RequestParam Integer businessLevel, @RequestParam Integer operType) {
-        Map map = businessService.release(businessId,businessType, businessLevel, operType);
+    public JsonResponse release(Integer reqUserId, @RequestParam Integer businessId, @RequestParam Integer businessLevel, @RequestParam Integer operType) {
+        Map map = businessService.release(reqUserId, businessId, businessLevel, operType);
         return CommonUtil.jsonResponse(map);
     }
 
+    /**
+     * @api {post} /business/dispose 发业务操作
+     * @apiName /business/dispose
+     * @apiSampleRequest /business/dispose
+     * @apiGroup　 businessSale
+     * @apiParam {int} [reqUserId] 请求者id
+     * @apiParam {int} businessId 业务id
+     * @apiParam {int} businessLevel 业务所在位置
+     * @apiParam {int} operType 操作
+     */
+    @RequestMapping("/dispose")
+    @ResponseBody
+    public JsonResponse dispose(Integer reqUserId, @RequestParam Integer businessId, @RequestParam Integer businessLevel, @RequestParam Integer operType) {
+        Map map = businessService.dispose(reqUserId, businessId, businessLevel, operType);
+        return CommonUtil.jsonResponse(map);
+    }
 
 }

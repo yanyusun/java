@@ -65,16 +65,19 @@
         <result column="debt_situation_body" property="debtSituationBody" jdbcType="VARCHAR"/>
         <result column="debt_situation_member" property="debtSituationMember" jdbcType="VARCHAR"/>
         <result column="debt_situation_social" property="debtSituationSocial" jdbcType="VARCHAR"/>
-        <result column="describe" property="describe" jdbcType="VARCHAR"/>
+        <result column="describes" property="describes" jdbcType="VARCHAR"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
         <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="oper_user" property="operUser" jdbcType="INTEGER"/>
-        <result column="enable" property="enable" jdbcType="INTEGER"/>
+        <result column="enables" property="enables" jdbcType="INTEGER"/>
         <result column="check_status" property="checkStatus" jdbcType="INTEGER"/>
         <result column="dispose_num" property="disposeNum" jdbcType="INTEGER"/>
         <result column="collection_num" property="collectionNum" jdbcType="INTEGER"/>
         <result column="dispose_status" property="disposeStatus" jdbcType="INTEGER"/>
+        <result column="bond_address" property="bondAddress" jdbcType="VARCHAR"/>
+        <result column="debt_address" property="debtAddress" jdbcType="VARCHAR"/>
+        <result column="debt_name" property="debtName" jdbcType="VARCHAR"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, bond_no, grade, bond_type, is_special, is_home_page, title, source, start_time, 
@@ -86,7 +89,8 @@
     bond_contacts_name, bond_contacts_phone, bond_contacts_idcode, debt_type, debt_is_address, 
     debt_phone, debt_is_operate, debt_idcode, debt_province, debt_city, debt_area, debt_situation_asset, 
     debt_situation_operate, debt_situation_industry, debt_situation_marriage, debt_situation_education, 
-    debt_situation_body, debt_situation_member, debt_situation_social,describe, remark,enable,check_status,dispose_num,collection_num,dispose_status
+    debt_situation_body, debt_situation_member, debt_situation_social,describes, remark,enables,check_status,
+    dispose_num,collection_num,dispose_status,bond_address,debt_address,debt_name
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -121,7 +125,8 @@
       debt_situation_operate, debt_situation_industry, 
       debt_situation_marriage, debt_situation_education, 
       debt_situation_body, debt_situation_member, 
-      debt_situation_social, describe, remark,create_time,update_time,oper_user
+      debt_situation_social, describes, remark,create_time,
+      update_time,oper_user,bond_address,debt_address,debt_name
       )
     values (#{id,jdbcType=INTEGER}, #{bondNo,jdbcType=VARCHAR}, #{grade,jdbcType=TINYINT}, 
       #{bondType,jdbcType=TINYINT}, #{isSpecial,jdbcType=TINYINT}, #{isHomePage,jdbcType=TINYINT}, 
@@ -145,7 +150,8 @@
       #{debtSituationOperate,jdbcType=VARCHAR}, #{debtSituationIndustry,jdbcType=VARCHAR}, 
       #{debtSituationMarriage,jdbcType=VARCHAR}, #{debtSituationEducation,jdbcType=VARCHAR}, 
       #{debtSituationBody,jdbcType=VARCHAR}, #{debtSituationMember,jdbcType=VARCHAR}, 
-      #{debtSituationSocial,jdbcType=VARCHAR}, #{describe,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},now(),now(),#{operUser,jdbcType=INTEGER}
+      #{debtSituationSocial,jdbcType=VARCHAR}, #{describes,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR},now(),now(),
+      #{operUser,jdbcType=INTEGER}, #{bondAddress,jdbcType=VARCHAR}, #{debtAddress,jdbcType=VARCHAR}, #{debtName,jdbcType=VARCHAR}
       )
   </insert>
     <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.UserBond">
@@ -340,15 +346,26 @@
             <if test="debtSituationSocial != null">
                 debt_situation_social,
             </if>
-            <if test="describe != null">
-                describe,
+            <if test="describes != null">
+                describes,
             </if>
             <if test="remark != null">
                 remark,
             </if>
             create_time,
             update_time,
-            oper_user,
+            <if test="operUser !=null">
+                oper_user,
+            </if>
+            <if test="debtName != null">
+                debt_name,
+            </if>
+            <if test="debtAddress != null">
+                debt_address,
+            </if>
+            <if test="bondAddress != null">
+                bond_address,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -540,8 +557,8 @@
             <if test="debtSituationSocial != null">
                 #{debtSituationSocial,jdbcType=VARCHAR},
             </if>
-            <if test="describe != null">
-                #{describe,jdbcType=VARCHAR},
+            <if test="describes != null">
+                #{describes,jdbcType=VARCHAR},
             </if>
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},
@@ -550,6 +567,15 @@
             now(),
             <if test="operUser != null">
                 #{operUser,jdbcType=INTEGER},
+            </if>
+            <if test="debtName != null">
+                #{debtName,jdbcType=VARCHAR},
+            </if>
+            <if test="debtAddress != null">
+                #{debtAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="bondAddress != null">
+                #{bondAddress,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
@@ -742,13 +768,22 @@
             <if test="debtSituationSocial != null">
                 debt_situation_social = #{debtSituationSocial,jdbcType=VARCHAR},
             </if>
-            <if test="describe != null">
-                describe = #{describe,jdbcType=VARCHAR},
+            <if test="describes != null">
+                describes = #{describes,jdbcType=VARCHAR},
             </if>
             <if test="remark != null">
                 remark = #{remark,jdbcType=VARCHAR},
             </if>
             update_time = now(),
+            <if test="debtName != null">
+                debt_name=#{debtName,jdbcType=VARCHAR},
+            </if>
+            <if test="debtAddress != null">
+                debt_address=#{debtAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="bondAddress != null">
+                bond_address=#{bondAddress,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -816,9 +851,12 @@
       debt_situation_body = #{debtSituationBody,jdbcType=VARCHAR},
       debt_situation_member = #{debtSituationMember,jdbcType=VARCHAR},
       debt_situation_social = #{debtSituationSocial,jdbcType=VARCHAR},
-      describe = #{describe,jdbcType=VARCHAR},
+      describes = #{describes,jdbcType=VARCHAR},
       update_time = now(),
-      remark = #{remark,jdbcType=VARCHAR}
+      remark = #{remark,jdbcType=VARCHAR},
+      debt_name=#{debtName,jdbcType=VARCHAR},
+      debt_address=#{debtAddress,jdbcType=VARCHAR},
+      bond_address=#{bondAddress,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
     <update id="updateByPrimaryKey" parameterType="com.dqys.sale.orm.pojo.UserBond">
@@ -885,9 +923,12 @@
       debt_situation_body = #{debtSituationBody,jdbcType=VARCHAR},
       debt_situation_member = #{debtSituationMember,jdbcType=VARCHAR},
       debt_situation_social = #{debtSituationSocial,jdbcType=VARCHAR}
-       describe = #{describe,jdbcType=VARCHAR},
+       describes = #{describes,jdbcType=VARCHAR},
       update_time = now(),
-      remark = #{remark,jdbcType=VARCHAR}
+      remark = #{remark,jdbcType=VARCHAR},
+        debt_name=#{debtName,jdbcType=VARCHAR},
+      debt_address=#{debtAddress,jdbcType=VARCHAR},
+      bond_address=#{bondAddress,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 
@@ -899,16 +940,19 @@
             </foreach>
         </if>
         <if test="isHomePage !=null">
-            AND is_home_page = #{isHomePage},
+            AND is_home_page = #{isHomePage}
         </if>
         <if test="bondType !=null">
-            AND bond_type = #{bondType},
+            AND bond_type = #{bondType}
         </if>
         <if test="checkStatus !=null">
             AND check_status=#{checkStatus}
         </if>
-        <if test="enable !=null">
-            AND enable=#{enable}
+        <if test="enables !=null">
+            AND enables=#{enables}
+        </if>
+        <if test="userId !=null">
+            AND oper_user=#{userId}
         </if>
     </sql>
     <select id="list" parameterType="com.dqys.sale.orm.query.UserBondQuery"

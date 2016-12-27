@@ -7,7 +7,7 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.AssetDi
  * Created by pan on 16-12-26.
  */
 public class AssetDisposeBusiness {
-    private static int type = BusinessTypeEnum.asset_dispose.getValue();
+    public static int type = BusinessTypeEnum.asset_dispose.getValue();
     /**
      * 带审核
      * @return

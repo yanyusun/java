@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dqys.sale.orm.mapper.message.MessageMapper">
+
+    <sql id="WHERE_QUERY">
+        <where>
+            tm.status!=2
+            <if test="type !=null">
+                and tm.type=#{type}
+            </if>
+            <if test="status !=null">
+                and tm.status=#{status}
+            </if>
+            <if test="receiveId !=null">
+                and tm.receive_id=#{receiveId}
+            </if>
+        </where>
+    </sql>
+    <sql id="QUERY_ALL">
+        tm.id,tm.content,tm.label,tm.receive_id receiveId ,tm.sender_id senderId
+        ,tm.status ,tm.title,type,DATE_FORMAT( tm.send_time,'%Y-%m-%d %H:%i:%s') sendTime,tm.oper_url operUrl
+        ,tm.business_type businessType,tm.oper_status operStatus,tm.public_message_no messageNo,tm.flow_business_id
+        flowBusinessId
+    </sql>
+
+    <!--查询记录数量-->
+    <select id="selectCount" parameterType="com.dqys.sale.orm.pojo.message.Message"
+            resultType="int">
+        SELECT count(*) amount
+        from t_message tm
+        <include refid="WHERE_QUERY"/>
+    </select>
+    <!--分页查询列表-->
+    <select id="selectByMessage" parameterType="com.dqys.sale.orm.pojo.message.Message"
+            resultType="com.dqys.sale.orm.pojo.message.Message">
+        SELECT
+        <include refid="QUERY_ALL"/>,tui.real_name operUserName
+        from t_message tm LEFT JOIN t_message_public_operinfo tmp
+        ON tmp.public_message_no=tm.public_message_no LEFT JOIN t_user_info tui
+        ON tui.id=tmp.user_id
+        <include refid="WHERE_QUERY"/>
+        ORDER BY send_time DESC
+        LIMIT #{startPageNum},#{pageSize}
+    </select>
+    <!--标记为已读-->
+    <update id="readMessage">
+        UPDATE t_message SET status=1
+        <where>
+            status !=2 AND
+            id IN
+            <foreach collection="array" item="ids" index="index" open="(" close=")" separator=",">
+                #{ids}
+            </foreach>
+        </where>
+    </update>
+    <!--删除消息-->
+    <update id="del">
+        UPDATE t_message SET status=2
+        <where>
+            id IN
+            <foreach collection="array" item="ids" index="index" open="(" close=")" separator=",">
+                #{ids}
+            </foreach>
+        </where>
+    </update>
+    <!--添加消息-->
+    <insert id="add" parameterType="com.dqys.sale.orm.pojo.message.Message">
+        INSERT INTO t_message
+        <trim prefix="(" suffix=")">
+            <if test="title !=null">
+                title,
+            </if>
+            <if test="content !=null">
+                content,
+            </if>
+            <if test="senderId !=null">
+                sender_id,
+            </if>
+            <if test="receiveId !=null">
+                receive_id,
+            </if>
+            <if test="label !=null">
+                label,
+            </if>
+            <if test="type !=null">
+                type,
+            </if>
+            <if test="businessType !=null">
+                business_type,
+            </if>
+            <if test="operUrl !=null">
+                oper_url,
+            </if>
+            <if test="messageNo !=null">
+                public_message_no,
+            </if>
+            <if test="flowBusinessId !=null">
+                flow_business_id,
+            </if>
+            status,send_time
+        </trim>
+        <trim prefix=" values(" suffix=")">
+            <if test="title !=null">
+                #{title},
+            </if>
+            <if test="content !=null">
+                #{content},
+            </if>
+            <if test="senderId !=null">
+                #{senderId},
+            </if>
+            <if test="receiveId !=null">
+                #{receiveId},
+            </if>
+            <if test="label !=null">
+                #{label},
+            </if>
+            <if test="type !=null">
+                #{type},
+            </if>
+            <if test="businessType !=null">
+                #{businessType},
+            </if>
+            <if test="operUrl !=null">
+                #{operUrl},
+            </if>
+            <if test="messageNo !=null">
+                #{messageNo},
+            </if>
+            <if test="flowBusinessId !=null">
+                #{flowBusinessId},
+            </if>
+            0,now()
+        </trim>
+    </insert>
+
+    <select id="get" resultType="com.dqys.sale.orm.pojo.message.Message" parameterType="int">
+        SELECT
+        <include refid="QUERY_ALL"/>
+        FROM t_message tm
+        WHERE id=#{id,jdbcType=INTEGER}
+    </select>
+
+    <update id="updateOperStatus" parameterType="com.dqys.sale.orm.pojo.message.Message">
+        UPDATE t_message
+        set oper_status=#{operStatus}
+        WHERE status!=2
+        <if test="id!=null">
+            AND id=#{id}
+        </if>
+        <if test="messageNo!=null">
+            AND public_message_no=#{messageNo}
+        </if>
+    </update>
+
+    <select id="getMessageNo" resultType="int">
+        SELECT nextval('messageSeq') messageNo
+    </select>
+
+    <insert id="insertMessageNoByOperinfo" parameterType="com.dqys.sale.orm.pojo.message.MessageOperinfo">
+        INSERT INTO t_message_public_operinfo(user_id,oper_status,public_message_no)
+        VALUES(#{userId},#{operStatus},#{messageMo})
+    </insert>
+
+    <select id="selectMessageByUFO" resultType="com.dqys.sale.orm.pojo.message.Message">
+        SELECT
+        <include refid="QUERY_ALL"/>
+        FROM t_message tm LEFT JOIN t_user_tag tut
+        ON tut.user_id=tm.receive_id
+        WHERE tm.status!=2 AND tut.user_type=#{userType} AND tm.oper_status=#{operStatus} AND
+        tm.flow_business_id=#{flowBusinessId} AND tm.business_type=#{messageBusinessType}
+    </select>
+
+</mapper>

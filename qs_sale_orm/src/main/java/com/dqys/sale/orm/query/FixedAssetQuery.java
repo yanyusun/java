@@ -12,6 +12,15 @@ public class FixedAssetQuery extends PageEntity implements Serializable {
     private Integer checkStatus;//0待审核1审核未通过2审核已通过
     private Integer enable;//'是否无效0不是,1是
     private Integer businessStatus;//业务状态
+    private Integer userId;
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     public Integer getBusinessStatus() {
         return businessStatus;
@@ -20,6 +29,7 @@ public class FixedAssetQuery extends PageEntity implements Serializable {
     public void setBusinessStatus(Integer businessStatus) {
         this.businessStatus = businessStatus;
     }
+
     public Integer getCheckStatus() {
         return checkStatus;
     }

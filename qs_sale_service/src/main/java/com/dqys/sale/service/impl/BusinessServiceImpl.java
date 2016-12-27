@@ -1,6 +1,9 @@
 package com.dqys.sale.service.impl;
 
 import com.dqys.core.model.UserSession;
+import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
+import com.dqys.flowbusiness.service.constant.saleBusiness.AssetDisposeBusiness;
+import com.dqys.flowbusiness.service.util.BusinessResultEnum;
 import com.dqys.flowbusiness.service.util.Result;
 import com.dqys.sale.orm.mapper.UserBusTotalMapper;
 import com.dqys.sale.orm.mapper.business.AssetUserReMapper;
@@ -76,6 +79,14 @@ public class BusinessServiceImpl implements BusinessService {
         return map;
     }
 
+    /**
+     * @param id
+     * @param userId
+     * @param hasPublish   //已发布数量
+     * @param onCollection //已收藏数量
+     * @param onBusiness   //正在处置数量
+     * @return
+     */
     @Override
     public Integer setUserBus(Integer id, Integer userId, Integer hasPublish, Integer onCollection, Integer
             onBusiness) {
@@ -98,13 +109,13 @@ public class BusinessServiceImpl implements BusinessService {
             return 0;
         }
         if (hasPublish != null) {
-            busTotal.setHasPublish(busTotal.getHasPublish() + hasPublish);
+            busTotal.setHasPublish(busTotal.getHasPublish() + hasPublish);//已发布数量
         }
         if (onCollection != null) {
-            busTotal.setOnCollection(busTotal.getOnCollection() + onCollection);
+            busTotal.setOnCollection(busTotal.getOnCollection() + onCollection);//已收藏数量
         }
         if (onBusiness != null) {
-            busTotal.setOnBusiness(busTotal.getOnBusiness() + onBusiness);
+            busTotal.setOnBusiness(busTotal.getOnBusiness() + onBusiness);//正在处置数量
         }
         return userBusTotalMapper.updateByPrimaryKeySelective(busTotal);
     }
@@ -150,10 +161,50 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public Map release(Integer businessId, Integer businessType, Integer businessLevel, Integer operType) {
+    public Map release(Integer reqUserId, Integer businessId, Integer businessLevel, Integer operType) {
+        Map map = new HashMap<>();
+        map.put("result", "no");
         Integer userId = UserSession.getCurrent().getUserId();
-        Result result = businessService.flow(businessId, userId, businessType, businessLevel, operType);
-        return null;
+        Result result = businessService.flow(businessId, userId, AssetBusiness.type, businessLevel, operType);
+        if (result.getCode() == BusinessResultEnum.sucesss.getValue().intValue()) {
+            //还有后续的业务逻辑，如果是平台进行发布操作
+            if (AssetBusiness.getBeAnnouncedAdmin().AnnounceOperType == operType) {
+                setUserBus(null, reqUserId, 1, null, null);
+            }
+            if (AssetBusiness.getHasAnnouncedLevel().under_line == operType) {
+                setUserBus(null, reqUserId, -1, null, null);
+            }
+
+            map.put("result", "yes");
+            return map;
+        } else {
+            map.put("msg", result.getMsg());
+        }
+        return map;
     }
+
+    @Override
+    public Map dispose(Integer reqUserId, Integer businessId, Integer businessLevel, Integer operType) {
+        Map map = new HashMap<>();
+        map.put("result", "no");
+        Integer userId = UserSession.getCurrent().getUserId();
+        Result result = businessService.flow(businessId, userId, AssetDisposeBusiness.type, businessLevel, operType);
+        if (result.getCode() == BusinessResultEnum.sucesss.getValue().intValue()) {
+            //还有后续的业务逻辑，如果是平台进行处置操作
+            if (AssetDisposeBusiness.getCheckLevel().dispose_check_OK == operType) {
+                setUserBus(null, reqUserId, null, null, 1);
+            }
+            if (AssetDisposeBusiness.getOnDisposeLevel().dispose_cancel == operType) {
+                setUserBus(null, reqUserId, null, null, -1);
+            }
+
+            map.put("result", "yes");
+            return map;
+        } else {
+            map.put("msg", result.getMsg());
+        }
+        return map;
+    }
+
 
 }

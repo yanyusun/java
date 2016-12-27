@@ -545,6 +545,9 @@
         <if test="enable !=null">
             AND enable=#{enable}
         </if>
+        <if test="userId !=null">
+            AND oper_user=#{userId}
+        </if>
     </sql>
     <select id="fixedList" parameterType="com.dqys.sale.orm.query.FixedAssetQuery"
             resultMap="BaseResultMap">
