@@ -38,6 +38,7 @@ public interface BusinessService {
     int createBusiness_tx(BusinessDto businessDto,Integer userId,Integer businessType,Integer BusinessStatus);
 
     /**
+     * 加事物控制!!!!
      * 业务控制
      * @param businessId　业务id
      * @param userId

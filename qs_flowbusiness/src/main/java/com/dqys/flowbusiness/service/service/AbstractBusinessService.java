@@ -17,26 +17,27 @@ public abstract class  AbstractBusinessService implements BusinessService{
 
     @Override
     public int createBusiness_tx(List<BusinessDto> businessDtoList, Integer userId, Integer businessType, Integer BusinessStatus) {
-        int id=insert(userId,businessType,BusinessStatus);
+        Business business=insert(userId,businessType,BusinessStatus);
         for(BusinessDto businessDto:businessDtoList){
-            createBusinessRe(businessDto,id);
+            createBusinessRe(businessDto,business.getId());
         }
-        return id;
+        return business.getId();
     }
 
     @Override
     public int createBusiness_tx(BusinessDto businessDto,Integer userId,Integer businessType,Integer BusinessStatus) {
-        int id=insert(userId,businessType,BusinessStatus);
-        createBusinessRe(businessDto,id);
-        return id;
+        Business business=insert(userId,businessType,BusinessStatus);
+        createBusinessRe(businessDto,business.getId());
+        return business.getId();
     }
 
-    private int insert(Integer userId,Integer businessType,Integer BusinessStatus){
+    private Business insert(Integer userId,Integer businessType,Integer BusinessStatus){
         Business business = new Business();
         business.setType(businessType);
         business.setStatus(BusinessStatus);
         business.setCreateId(userId);
-        return getBusinessMapper().insert(business);
+        getBusinessMapper().insert(business);
+        return business;
     }
     private void createBusinessRe(BusinessDto businessDto,Integer businessId){
         BusinessObjRe businessObjRe = new BusinessObjRe();
