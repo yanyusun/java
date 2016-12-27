@@ -1,6 +1,5 @@
 package com.dqys.sale.orm.pojo.message;
 
-import com.dqys.business.orm.pojo.flowBusiness.FlowBusiness;
 import com.dqys.core.base.BaseQuery;
 
 import java.io.Serializable;
@@ -24,17 +23,8 @@ public class Message extends BaseQuery implements Serializable {
     private Integer operStatus;//int(2) NOT NULL COMMENT '操作状态(0未操作1已同意2未同意)',
     private Integer messageNo;//统一编号
     private String operUserName;//操作人姓名
-    private FlowBusiness flowBusiness;//业务流转业务状态
     private Integer flowBusinessId;//业务表id
 
-
-    public FlowBusiness getFlowBusiness() {
-        return flowBusiness;
-    }
-
-    public void setFlowBusiness(FlowBusiness flowBusiness) {
-        this.flowBusiness = flowBusiness;
-    }
 
     public Integer getFlowBusinessId() {
         return flowBusinessId;

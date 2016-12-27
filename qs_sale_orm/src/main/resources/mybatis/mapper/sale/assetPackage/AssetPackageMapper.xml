@@ -396,6 +396,9 @@
         <if test="enable !=null">
             AND enable=#{enable}
         </if>
+        <if test="userId !=null">
+            AND oper_user=#{userId}
+        </if>
     </sql>
     <select id="list" parameterType="com.dqys.sale.orm.query.AssetPackageQuery"
             resultMap="BaseResultMap">

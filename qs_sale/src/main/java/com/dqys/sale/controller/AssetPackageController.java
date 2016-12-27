@@ -1,8 +1,10 @@
 package com.dqys.sale.controller;
 
 import com.dqys.core.model.JsonResponse;
-import com.dqys.sale.service.dto.AssetPackageDTO;
+import com.dqys.core.model.UserSession;
+import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
 import com.dqys.sale.orm.query.AssetPackageQuery;
+import com.dqys.sale.service.dto.AssetPackageDTO;
 import com.dqys.sale.service.facade.AssetPackageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +31,7 @@ public class AssetPackageController {
     @RequestMapping("/noVerify/assetList")
     @ResponseBody
     public JsonResponse assetList(AssetPackageQuery query) {
+        query.setBusinessStatus(AssetBusiness.getHasAnnouncedLevel().getLevel());
         return assetPackageService.assetList(query);
     }
 
@@ -53,6 +56,7 @@ public class AssetPackageController {
     @RequestMapping("/list")
     @ResponseBody
     public JsonResponse list(AssetPackageQuery query) {
+        query.setUserId(UserSession.getCurrent().getUserId());
         return assetPackageService.list(query);
     }
 

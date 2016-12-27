@@ -87,6 +87,8 @@ public class UserBond {
 
     private Integer bondArea;//债权所在区县
 
+    private String bondAddress;//债权方所在具体地址
+
     private String bondPhone;//债权方号码
 
     private String bondIdcode;//债权方证件号
@@ -101,6 +103,8 @@ public class UserBond {
 
     private Byte debtIsAddress;//债务方住址是否清楚（0不清楚1清楚）
 
+    private String debtName;//债务方姓名
+
     private String debtPhone;//债务方联系电话
 
     private Byte debtIsOperate;//债务方经营地址是否清楚（0不清楚1清楚）
@@ -112,6 +116,8 @@ public class UserBond {
     private Integer debtCity;//债务方所在城市
 
     private Integer debtArea;//债务方所在区县
+
+    private String debtAddress;//债务方所在具体地址
 
     private String debtSituationAsset;//债务方资产状况
 
@@ -128,7 +134,7 @@ public class UserBond {
     private String debtSituationMember;//债务方家庭成员
 
     private String debtSituationSocial;//债务方社会关系
-    private String describe;//债权描述
+    private String describes;//债权描述
 
     private String remark;//备注
     private Date createTime;
@@ -138,7 +144,15 @@ public class UserBond {
     private Integer disposeNum;//申请处置数量
     private Integer disposeStatus;// 处置状态（0待处置1处置中2已处置）
     private Integer checkStatus;//0待审核1审核未通过2审核已通过
-    private Integer enable;//'是否无效0不是,1是
+    private Integer enables;//'是否无效0不是,1是
+
+    public String getDebtName() {
+        return debtName;
+    }
+
+    public void setDebtName(String debtName) {
+        this.debtName = debtName;
+    }
 
     public Integer getCollectionNum() {
         return collectionNum;
@@ -172,12 +186,12 @@ public class UserBond {
         this.checkStatus = checkStatus;
     }
 
-    public Integer getEnable() {
-        return enable;
+    public Integer getEnables() {
+        return enables;
     }
 
-    public void setEnable(Integer enable) {
-        this.enable = enable;
+    public void setEnables(Integer enables) {
+        this.enables = enables;
     }
 
     public Date getCreateTime() {
@@ -204,12 +218,12 @@ public class UserBond {
         this.operUser = operUser;
     }
 
-    public String getDescribe() {
-        return describe;
+    public String getDescribes() {
+        return describes;
     }
 
-    public void setDescribe(String describe) {
-        this.describe = describe;
+    public void setDescribes(String describes) {
+        this.describes = describes;
     }
 
     public String getRemark() {
@@ -722,5 +736,21 @@ public class UserBond {
 
     public void setDebtSituationSocial(String debtSituationSocial) {
         this.debtSituationSocial = debtSituationSocial;
+    }
+
+    public String getBondAddress() {
+        return bondAddress;
+    }
+
+    public void setBondAddress(String bondAddress) {
+        this.bondAddress = bondAddress;
+    }
+
+    public String getDebtAddress() {
+        return debtAddress;
+    }
+
+    public void setDebtAddress(String debtAddress) {
+        this.debtAddress = debtAddress;
     }
 }

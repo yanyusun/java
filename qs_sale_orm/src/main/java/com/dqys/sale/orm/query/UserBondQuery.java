@@ -11,9 +11,17 @@ public class UserBondQuery extends PageEntity implements Serializable {
     private Integer isHomePage;//是否首页
     private Integer bondType;//债权类型
     private Integer checkStatus;//0待审核1审核未通过2审核已通过
-    private Integer enable;//'是否无效0不是,1是
+    private Integer enables;//'是否无效0不是,1是
     private Integer businessStatus;//业务状态
+    private Integer userId;
 
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
     public Integer getBusinessStatus() {
         return businessStatus;
     }
@@ -29,12 +37,12 @@ public class UserBondQuery extends PageEntity implements Serializable {
         this.checkStatus = checkStatus;
     }
 
-    public Integer getEnable() {
-        return enable;
+    public Integer getEnables() {
+        return enables;
     }
 
-    public void setEnable(Integer enable) {
-        this.enable = enable;
+    public void setEnables(Integer enables) {
+        this.enables = enables;
     }
 
     public Integer getBondType() {

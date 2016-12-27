@@ -1,13 +1,13 @@
 package com.dqys.sale.controller;
 
-import com.dqys.business.orm.pojo.message.Message;
-import com.dqys.business.orm.pojo.message.MessageQuery;
-import com.dqys.business.service.constant.MessageEnum;
-import com.dqys.business.service.service.MessageService;
-import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.sale.orm.pojo.message.Message;
+import com.dqys.sale.orm.pojo.message.MessageQuery;
+import com.dqys.sale.service.constant.MessageEnum;
+import com.dqys.sale.service.facade.MessageService;
+import com.dqys.sale.service.util.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;

@@ -1,10 +1,8 @@
 package com.dqys.sale.service.facade;
 
-import com.dqys.auth.orm.pojo.TUserTag;
-import com.dqys.business.orm.pojo.coordinator.TeammateRe;
-import com.dqys.business.orm.pojo.coordinator.UserTeam;
-import com.dqys.business.orm.pojo.message.Message;
-import com.dqys.business.orm.pojo.message.MessageOperinfo;
+
+import com.dqys.sale.orm.pojo.message.Message;
+import com.dqys.sale.orm.pojo.message.MessageOperinfo;
 
 import java.util.List;
 import java.util.Map;
@@ -81,112 +79,6 @@ public interface MessageService {
      * @return
      */
     Integer sendSMS(Integer receiveUserId, String mobilePhone, String content);
-
-    /**
-     * 团队协作
-     *
-     * @param userTeam 协作器
-     * @param map      发送者信息
-     * @param uid      接收者
-     * @param remark   备注
-     */
-    void sendSmsByTeammate(UserTeam userTeam, TeammateRe teammateRe, Map<String, Object> map, Integer uid, String remark);
-
-    /**
-     * 业务流转请求短信通知(发送给平台)
-     *
-     * @param objectId   对象id
-     * @param objectType 对象类型
-     * @param flowId     流转对象id
-     * @param flowType   流转对象类型
-     * @param operation  流转操作
-     * @param userId     操作人id
-     * @return
-     */
-    String businessFlow(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer userId, String operUrl, Integer flowBusinessId);
-
-    //    获取平台管理员账户
-    public TUserTag getAdmin();
-
-    /**
-     * 流转结果，平台接受或拒绝
-     *
-     * @param objectId      对象id
-     * @param objectType    对象类型
-     * @param flowId        业务流转对象id
-     * @param flowType      业务流转对象类型
-     * @param operation     流转操作
-     * @param sendUserId    发送者id（平台管理员）
-     * @param receiveUserId 接收者id（请求公司）
-     * @param status        状态（0拒绝1接收）
-     * @return
-     */
-    String businessFlowResult(Integer objectId, Integer objectType, Integer flowId, Integer flowType, String operation, Integer sendUserId,
-                              Integer receiveUserId, Integer status, List<Integer> inviteUserIds, Integer flowBusinessId);
-
-    /**
-     * 被邀请公司同意拒绝
-     *
-     * @param objectId      对象id
-     * @param objectType    对象类型
-     * @param flowId        业务流转对象id
-     * @param flowType      业务流转对象类型
-     * @param sendUserId    发送者id（被邀请公司)
-     * @param receiveUserId 接收者id（请求公司）
-     * @param status        状态（0拒绝1接收）
-     * @param toPlatform    平台是否收到短信0否1是
-     * @return
-     */
-    String respondInvite(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer sendUserId, Integer receiveUserId,
-                         Integer status, Integer flowBusinessId, Integer operType, Integer toPlatform);
-
-    /**
-     * 执行司法化解（律所接收到通知）
-     *
-     * @param objectId   对象id
-     * @param objectType 对象类型
-     * @param flowId     流转对象id
-     * @param flowType   流转对象类型
-     * @param userId     操作人
-     * @param operation  业务操作
-     * @param onStatus   (0加入1移除)
-     * @param modify     是否对数据修改（是true否false）
-     * @return
-     */
-    String judicature(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation,
-                      Integer onStatus, boolean modify, Integer flowBusinessId);
-
-    /**
-     * 市场处置（中介接收短信通知）
-     *
-     * @param objectId   对象id
-     * @param objectType 对象类型
-     * @param flowId     流转对象id
-     * @param flowType   流转对象类型
-     * @param userId     操作人
-     * @param operation  业务操作
-     * @param onStatus   (0加入1移除)
-     * @param modify     是否对数据修改（是true否false）
-     * @return
-     */
-    String intermediary(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation,
-                        Integer onStatus, boolean modify, Integer flowBusinessId);
-
-    /**
-     * 维持常规催收（催收接收短信通知）
-     *
-     * @param objectId   对象id
-     * @param objectType 对象类型
-     * @param flowId     流转对象id
-     * @param flowType   流转对象类型
-     * @param userId     操作人
-     * @param operation  业务操作
-     * @param onStatus   (0加入1移除)
-     * @param modify     是否对数据修改（是true否false）
-     * @return
-     */
-    String collectiones(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation,
-                        Integer onStatus, boolean modify, Integer flowBusinessId);
 
     /**
      * 设置消息的操作状态

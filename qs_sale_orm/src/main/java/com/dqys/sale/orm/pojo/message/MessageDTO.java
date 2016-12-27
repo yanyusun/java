@@ -1,7 +1,5 @@
 package com.dqys.sale.orm.pojo.message;
 
-import com.dqys.business.orm.pojo.flowBusiness.FlowBusiness;
-
 /**
  * Created by mkfeng on 2016/7/11.
  */
@@ -18,15 +16,6 @@ public class MessageDTO {
     private Integer operStatus;//int(2) NOT NULL COMMENT '操作状态(0未操作1已同意2未同意)',
     private String operUserName;//操作人姓名
     private Integer messageNo;//操作人编号
-    private FlowBusiness flowBusiness;
-
-    public FlowBusiness getFlowBusiness() {
-        return flowBusiness;
-    }
-
-    public void setFlowBusiness(FlowBusiness flowBusiness) {
-        this.flowBusiness = flowBusiness;
-    }
 
     public String getOperUserName() {
         return operUserName;

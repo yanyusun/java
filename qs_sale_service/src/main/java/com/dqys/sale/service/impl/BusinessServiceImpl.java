@@ -1,6 +1,9 @@
 package com.dqys.sale.service.impl;
 
 import com.dqys.core.model.UserSession;
+import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
+import com.dqys.flowbusiness.service.constant.saleBusiness.AssetDisposeBusiness;
+import com.dqys.flowbusiness.service.util.BusinessResultEnum;
 import com.dqys.flowbusiness.service.util.Result;
 import com.dqys.sale.orm.mapper.UserBusTotalMapper;
 import com.dqys.sale.orm.mapper.business.AssetUserReMapper;
@@ -150,10 +153,37 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public Map release(Integer businessId, Integer businessType, Integer businessLevel, Integer operType) {
+    public Map release(Integer businessId, Integer businessLevel, Integer operType) {
+        Map map = new HashMap<>();
+        map.put("result", "no");
         Integer userId = UserSession.getCurrent().getUserId();
-        Result result = businessService.flow(businessId, userId, businessType, businessLevel, operType);
-        return null;
+        Result result = businessService.flow(businessId, userId, AssetBusiness.type, businessLevel, operType);
+        if (result.getCode() == BusinessResultEnum.sucesss.getValue().intValue()) {
+            //还有后续的业务逻辑，如果是平台进行发布操作
+
+            map.put("result", "yes");
+            return map;
+        } else {
+            map.put("msg", result.getMsg());
+        }
+        return map;
+    }
+
+    @Override
+    public Map dispose(Integer businessId, Integer businessLevel, Integer operType) {
+        Map map = new HashMap<>();
+        map.put("result", "no");
+        Integer userId = UserSession.getCurrent().getUserId();
+        Result result = businessService.flow(businessId, userId, AssetDisposeBusiness.type, businessLevel, operType);
+        if (result.getCode() == BusinessResultEnum.sucesss.getValue().intValue()) {
+            //还有后续的业务逻辑，如果是平台进行处置操作
+
+            map.put("result", "yes");
+            return map;
+        } else {
+            map.put("msg", result.getMsg());
+        }
+        return map;
     }
 
 }

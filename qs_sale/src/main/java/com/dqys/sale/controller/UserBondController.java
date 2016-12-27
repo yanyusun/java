@@ -1,8 +1,10 @@
 package com.dqys.sale.controller;
 
 import com.dqys.core.model.JsonResponse;
-import com.dqys.sale.service.dto.UserBondDTO;
+import com.dqys.core.model.UserSession;
+import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
 import com.dqys.sale.orm.query.UserBondQuery;
+import com.dqys.sale.service.dto.UserBondDTO;
 import com.dqys.sale.service.facade.UserBondService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,6 +31,7 @@ public class UserBondController {
     @RequestMapping("/noVerify/bondList")
     @ResponseBody
     public JsonResponse bondList(UserBondQuery query) {
+        query.setBusinessStatus(AssetBusiness.getHasAnnouncedLevel().getLevel());
         return userBondService.bondList(query);
     }
 
@@ -53,6 +56,7 @@ public class UserBondController {
     @RequestMapping("/list")
     @ResponseBody
     public JsonResponse list(UserBondQuery query) {
+        query.setUserId(UserSession.getCurrent().getUserId());
         return userBondService.list(query);
     }
 

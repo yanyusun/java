@@ -182,7 +182,6 @@ public class UserBondServiceImpl implements UserBondService {
         if (entity == null && entity.getId() == null) {
             return JsonResponseTool.failure("缺少必要数值");
         }
-        setEntity(entity);
         Integer num = userBondMapper.updateByPrimaryKeySelective(entity);
         if (num == 0) {
             return JsonResponseTool.failure("添加失败");

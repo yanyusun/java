@@ -1,6 +1,8 @@
 package com.dqys.sale.controller;
 
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
+import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
 import com.dqys.sale.service.dto.FixedAssetDTO;
 import com.dqys.sale.orm.query.FixedAssetQuery;
 import com.dqys.sale.service.facade.FixedAssetService;
@@ -92,6 +94,7 @@ public class FixedAssetController {
     @RequestMapping("/noVerify/fixedList")
     @ResponseBody
     public JsonResponse fixedList(FixedAssetQuery fixedAssetQuery) {
+        fixedAssetQuery.setBusinessStatus(AssetBusiness.getHasAnnouncedLevel().getLevel());
         return fixedAssetService.fixedList(fixedAssetQuery);
     }
 
@@ -116,6 +119,7 @@ public class FixedAssetController {
     @RequestMapping("/list")
     @ResponseBody
     public JsonResponse list(FixedAssetQuery fixedAssetQuery) {
+        fixedAssetQuery.setUserId(UserSession.getCurrent().getUserId());
         return fixedAssetService.list(fixedAssetQuery);
     }
 

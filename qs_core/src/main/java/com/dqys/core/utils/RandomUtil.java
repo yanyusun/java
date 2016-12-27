@@ -26,7 +26,7 @@ public class RandomUtil {
     public final static String ENTERPRISE_CREDITOR_CODE = "QZ";//企业债权
     public final static String PAST_LOANS_CODE = "YQ";//逾期贷款
     public final static String FIXED_ASSET_CODE = "GD";//固定资产
-    public final static String ASSET_PACKAGE_CODE = "AS";//资产包（B端）
+    public final static String ASSET_PACKAGE_CODE = "AP";//资产包（B端）
     private static String timeFormat = "yyMM";//日期格式
     private static Integer count = 10000;//循环数
     private static Integer codePlaces = 4;//随机位数的个数
