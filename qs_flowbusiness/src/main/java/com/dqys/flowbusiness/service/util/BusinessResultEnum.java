@@ -1,16 +1,16 @@
-package com.dqys.flowbusiness.service.constant.saleBusiness;
+package com.dqys.flowbusiness.service.util;
 
 /**
- * Created by yan on 16-12-26.
+ * Created by yan on 16-12-27.
  */
-public enum BusinessTypeEnum {
+public enum BusinessResultEnum {
     /**
      * 资产发布业务
      */
-    asset_announce(10, "资产发布业务"),
-    asset_dispose(11,"资产处置业务");
-
-
+    sucesss(100, "操作成功"),
+    not_find(1,"业务记录找不到"),
+    level_error(2,"流程不在当前阶段"),
+    auth_error(3,"用户没有该权限");
     private Integer value;
     private String name;
 
@@ -30,7 +30,7 @@ public enum BusinessTypeEnum {
         this.name = name;
     }
 
-    BusinessTypeEnum(Integer value, String name) {
+    BusinessResultEnum(Integer value, String name) {
         this.value = value;
         this.name = name;
     }

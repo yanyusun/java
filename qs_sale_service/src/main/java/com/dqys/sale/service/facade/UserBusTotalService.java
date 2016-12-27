@@ -10,8 +10,7 @@ import java.util.List;
  * Created by yan on 16-12-21.
  */
 public interface UserBusTotalService {
-    UserBusTotal getByUserId(Integer userId);
-
+    UserBusTotal getByUserId(Integer userId) throws UserBusTotalException;
     List<UserBusTotal> list(UserBusTotalQuery query);
 
     void update(Integer userId, UserBusTotalEnum userBusTotalEnum, Integer assetType, Integer assetId);

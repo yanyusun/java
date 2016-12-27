@@ -19,4 +19,6 @@ public class BeAnnouncedLevel implements BusinessLevel {
 
     public static final int AnnounceOperType= BusinessOperTypeEnum.announce.getValue();
 
+    public static final int unable=BusinessOperTypeEnum.unable.getValue();
+
 }
