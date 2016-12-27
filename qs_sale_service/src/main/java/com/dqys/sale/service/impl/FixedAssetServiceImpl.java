@@ -160,7 +160,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         if (id == 0) {
             return JsonResponseTool.failure("添加失败");
         }
-        createBusiness(id);
+        createBusiness(fixedAsset.getId());
         addOtherEntity_tx(fixedAssetDTO.getLabels(), fixedAssetDTO.getDisposes(), fixedAssetDTO.getAssetFiles(), fixedAsset.getId(), ObjectTypeEnum.fixed_asset.getValue());
         return JsonResponseTool.success(id);
     }
