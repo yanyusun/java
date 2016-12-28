@@ -109,4 +109,9 @@ public abstract class  AbstractBusinessService implements BusinessService{
         String s = head.split(",")[0];
         return Integer.valueOf(s);
     }
+
+    // TODO: 16-12-28 录历史操作
+    protected  Result toLs(Integer id){
+        return null;
+    };
 }

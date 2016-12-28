@@ -19,7 +19,11 @@ public enum BusinessOperTypeEnum {
     dispose_check_OK(114,"审核通过"),
     dispose_reject(115,"驳回"),
     dispose_reset(116,"重启"),
-    dispose_Ok(117,"已处置")
+    dispose_Ok(117,"已处置"),
+    //---------------------->新闻发布业务
+    news_announce_draft(120,"草稿"),
+    news_announce_announce(122,"发布"),
+    news_announce_ubable(123,"无效"),
     ;
     private Integer value;
     private String name;
