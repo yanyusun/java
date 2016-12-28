@@ -23,10 +23,10 @@ public class SaleBusinessServiceImpl extends AbstractBusinessService implements 
     @Autowired @Qualifier("saleBusinessObjReMapper")
     private BusinessObjReMapper businessObjReMapper;
 
-    @Autowired @Qualifier("saleBusinessObjReMapper")
+    @Autowired @Qualifier("saleBusinessLevelReMapper")
     private BusinessLevelReMapper businessLevelReMapper;
 
-    @Autowired @Qualifier("saleBusinessObjReMapper")
+    @Autowired @Qualifier("saleBusinesslevelUserReMapper")
     private BusinesslevelUserReMapper businesslevelUserReMapper;
 
     @Override

@@ -63,7 +63,7 @@ public abstract class  AbstractBusinessService implements BusinessService{
     }
 
     @Override
-    public Result flow(Integer businessId, Integer userId, Integer businessType, Integer businessLevel, Integer operType){
+    public Result flow_tx(Integer businessId, Integer userId, Integer businessType, Integer businessLevel, Integer operType){
         if(businessId==null||userId==null||businessType==null||businessLevel==null||operType==null){
             return new Result(BusinessResultEnum.param_error);
         }
@@ -75,7 +75,7 @@ public abstract class  AbstractBusinessService implements BusinessService{
         if(business.getStatus()!=businessLevel){
             return new Result(BusinessResultEnum.level_error);
         }
-        //查询通向的阶段
+        //查询通向的阶段 // TODO: 16-12-28 添加缓存 
         List<BusinessLevelRe> businessLevelReList=getBusinessLevelReMapper().list(getBusinessLevelReQuery(businessLevel,operType));
         if(businessLevelReList==null||businessLevelReList.size()!=1){
             return new Result(BusinessResultEnum.flow_re_error);
@@ -83,19 +83,19 @@ public abstract class  AbstractBusinessService implements BusinessService{
         //查询是否有该权限
         BusinessLevelRe businessLevelRe = businessLevelReList.get(0);
         //// TODO: 16-12-27 修改成更具userid由表中获得
-        int roleType= headerStringToInt(UserSession.getCurrent().getRoleId());
+        int roleType= headerStringToInt(UserSession.getCurrent().getRoleId()); // TODO: 16-12-28 添加缓存
         List<BusinesslevelUserRe> BusinesslevelUserReList=getBusinesslevelUserReMapper().list(getBusinesslevelUserRe(businessLevelRe.getId(),roleType));
         if(BusinesslevelUserReList==null||BusinesslevelUserReList.size()!=1){
             return new Result(BusinessResultEnum.auth_error);
         }
         //改变业务状态
-        business.setStatus(businessLevelRe.getGoBusinessType());
+        business.setStatus(businessLevelRe.getGoBusinessLevel());
         getBusinessMapper().update(business);
         return new Result(BusinessResultEnum.sucesss);
     }
     private BusinessLevelReQuery getBusinessLevelReQuery(Integer businessLevel, Integer operType){
         BusinessLevelReQuery query = new BusinessLevelReQuery();
-        query.setAtBusinessType(businessLevel);
+        query.setAtBusinessLevel(businessLevel);
         query.setOperType(operType);
         return query;
     }

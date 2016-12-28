@@ -4,12 +4,12 @@
   <resultMap id="BaseResultMap" type="com.dqys.flowbusiness.orm.pojo.BusinessLevelRe" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="status" property="status" jdbcType="INTEGER" />
-    <result column="at_business_type" property="atBusinessType" jdbcType="VARCHAR" />
-    <result column="go_business_type" property="goBusinessType" jdbcType="VARCHAR" />
+    <result column="at_business_level" property="atBusinessLevel" jdbcType="INTEGER" />
+    <result column="go_business_level" property="goBusinessLevel" jdbcType="INTEGER" />
     <result column="oper_type" property="operType" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    id, status, at_business_type, go_business_type, oper_type
+    id, status, at_business_level, go_business_level, oper_type
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -22,10 +22,10 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.dqys.flowbusiness.orm.pojo.BusinessLevelRe" >
-    insert into t_business_level_re (id, status, at_business_type, 
-      go_business_type, oper_type)
-    values (#{id,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{atBusinessType,jdbcType=VARCHAR}, 
-      #{goBusinessType,jdbcType=VARCHAR}, #{operType,jdbcType=INTEGER})
+    insert into t_business_level_re (id, status, at_business_level, 
+      go_business_level, oper_type)
+    values (#{id,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{atBusinessLevel,jdbcType=INTEGER},
+      #{goBusinessLevel,jdbcType=INTEGER}, #{operType,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.dqys.flowbusiness.orm.pojo.BusinessLevelRe" >
     insert into t_business_level_re
@@ -36,11 +36,11 @@
       <if test="status != null" >
         status,
       </if>
-      <if test="atBusinessType != null" >
-        at_business_type,
+      <if test="atBusinessLevel != null" >
+        at_business_level,
       </if>
-      <if test="goBusinessType != null" >
-        go_business_type,
+      <if test="goBusinessLevel != null" >
+        go_business_level,
       </if>
       <if test="operType != null" >
         oper_type,
@@ -53,11 +53,11 @@
       <if test="status != null" >
         #{status,jdbcType=INTEGER},
       </if>
-      <if test="atBusinessType != null" >
-        #{atBusinessType,jdbcType=VARCHAR},
+      <if test="atBusinessLevel != null" >
+        #{atBusinessLevel,jdbcType=INTEGER},
       </if>
-      <if test="goBusinessType != null" >
-        #{goBusinessType,jdbcType=VARCHAR},
+      <if test="goBusinessLevel != null" >
+        #{goBusinessLevel,jdbcType=INTEGER},
       </if>
       <if test="operType != null" >
         #{operType,jdbcType=INTEGER},
@@ -70,11 +70,11 @@
       <if test="status != null" >
         status = #{status,jdbcType=INTEGER},
       </if>
-      <if test="atBusinessType != null" >
-        at_business_type = #{atBusinessType,jdbcType=VARCHAR},
+      <if test="atBusinessLevel != null" >
+        at_business_level = #{atBusinessLevel,jdbcType=INTEGER},
       </if>
-      <if test="goBusinessType != null" >
-        go_business_type = #{goBusinessType,jdbcType=VARCHAR},
+      <if test="goBusinessLevel != null" >
+        go_business_level = #{goBusinessLevel,jdbcType=INTEGER},
       </if>
       <if test="operType != null" >
         oper_type = #{operType,jdbcType=INTEGER},
@@ -85,9 +85,29 @@
   <update id="updateByPrimaryKey" parameterType="com.dqys.flowbusiness.orm.pojo.BusinessLevelRe" >
     update t_business_level_re
     set status = #{status,jdbcType=INTEGER},
-      at_business_type = #{atBusinessType,jdbcType=VARCHAR},
-      go_business_type = #{goBusinessType,jdbcType=VARCHAR},
+      at_business_level = #{atBusinessLevel,jdbcType=INTEGER},
+      go_business_level = #{goBusinessLevel,jdbcType=INTEGER},
       oper_type = #{operType,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+  <select id="list" resultMap="BaseResultMap" parameterType="com.dqys.flowbusiness.orm.query.BusinessLevelReQuery">
+    select
+    <include refid="Base_Column_List"/>
+    from t_business_level_re
+    where 1=1
+    <if test="atBusinessLevel != null">
+      AND at_business_level = #{atBusinessLevel,jdbcType=INTEGER}
+    </if>
+    <if test="roleType != null">
+      AND role_type = #{roleType,jdbcType=INTEGER}
+    </if>
+    <if test="isPaging">
+      limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+    </if>
+  </select>
+
+
+
 </mapper>

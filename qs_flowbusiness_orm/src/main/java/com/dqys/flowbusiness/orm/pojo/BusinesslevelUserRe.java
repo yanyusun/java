@@ -5,7 +5,7 @@ import java.util.Date;
 public class BusinesslevelUserRe {
     private Integer id;
 
-    private String businesslevelreId;
+    private Integer businesslevelreId;
 
     private Integer roleType;
 
@@ -23,11 +23,11 @@ public class BusinesslevelUserRe {
         this.id = id;
     }
 
-    public String getBusinesslevelreId() {
+    public Integer getBusinesslevelreId() {
         return businesslevelreId;
     }
 
-    public void setBusinesslevelreId(String businesslevelreId) {
+    public void setBusinesslevelreId(Integer businesslevelreId) {
         this.businesslevelreId = businesslevelreId;
     }
 

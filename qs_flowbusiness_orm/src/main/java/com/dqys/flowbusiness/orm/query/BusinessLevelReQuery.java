@@ -6,16 +6,16 @@ import com.dqys.core.base.BaseQuery;
  * Created by yan on 16-12-27.
  */
 public class BusinessLevelReQuery extends BaseQuery {
-    private Integer atBusinessType;
+    private Integer atBusinessLevel;
 
     private Integer operType;
 
-    public Integer getAtBusinessType() {
-        return atBusinessType;
+    public Integer getAtBusinessLevel() {
+        return atBusinessLevel;
     }
 
-    public void setAtBusinessType(Integer atBusinessType) {
-        this.atBusinessType = atBusinessType;
+    public void setAtBusinessLevel(Integer atBusinessLevel) {
+        this.atBusinessLevel = atBusinessLevel;
     }
 
     public Integer getOperType() {

@@ -48,5 +48,5 @@ public interface BusinessService {
      * @param operType 操作类型
      * @return
      */
-    Result flow(Integer businessId,Integer userId,Integer businessType,Integer businessLevel, Integer operType);
+    Result flow_tx(Integer businessId,Integer userId,Integer businessType,Integer businessLevel, Integer operType);
 }

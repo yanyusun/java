@@ -5,9 +5,9 @@ public class BusinessLevelRe {
 
     private Integer status;
 
-    private Integer atBusinessType;
+    private Integer atBusinessLevel;
 
-    private Integer goBusinessType;
+    private Integer goBusinessLevel;
 
     private Integer operType;
 
@@ -27,20 +27,20 @@ public class BusinessLevelRe {
         this.status = status;
     }
 
-    public Integer getAtBusinessType() {
-        return atBusinessType;
+    public Integer getAtBusinessLevel() {
+        return atBusinessLevel;
     }
 
-    public void setAtBusinessType(Integer atBusinessType) {
-        this.atBusinessType = atBusinessType;
+    public void setAtBusinessLevel(Integer atBusinessLevel) {
+        this.atBusinessLevel = atBusinessLevel;
     }
 
-    public Integer getGoBusinessType() {
-        return goBusinessType;
+    public Integer getGoBusinessLevel() {
+        return goBusinessLevel;
     }
 
-    public void setGoBusinessType(Integer goBusinessType) {
-        this.goBusinessType = goBusinessType;
+    public void setGoBusinessLevel(Integer goBusinessLevel) {
+        this.goBusinessLevel = goBusinessLevel;
     }
 
     public Integer getOperType() {
