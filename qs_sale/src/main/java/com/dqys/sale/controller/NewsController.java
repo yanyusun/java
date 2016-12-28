@@ -31,7 +31,7 @@ public class NewsController {
      * @apiParam {int} [isRefer] 是否推荐1是0否
      * @apiParam {int} [isHeadline] 是否头条1是0否
      * @apiParam {boolean} [isOrder] //默认true从大到小 false 是从小到大
-     * @apiGroup　 news
+     * @apiGroup　 SaleNews
      * @apiSuccessExample {json} Data-Response:
      * {
      * "code": 2000,
@@ -90,7 +90,7 @@ public class NewsController {
     @RequestMapping("/noVerify/newsList")
     @ResponseBody
     public JsonResponse newsList(NewsQuery query) {
-        query.setStatus(1);
+//        query.setStatus(1);
         return newsService.newsList(query);
     }
 
@@ -98,7 +98,7 @@ public class NewsController {
      * @api {post} news/noVerify/getDetail 获取新闻详情
      * @apiName news/noVerify/getDetail
      * @apiSampleRequest news/noVerify/getDetail
-     * @apiGroup　 news
+     * @apiGroup　 SaleNews
      * @apiSuccessExample {json} Data-Response:
      * {
      * "code": 2000,
@@ -145,14 +145,14 @@ public class NewsController {
     }
 
     /**
-     * @api {post} news/noVerify/newsList 获取新闻列表
-     * @apiName news/noVerify/newsList
-     * @apiSampleRequest news/noVerify/newsList
+     * @api {post} news/list 获取新闻列表
+     * @apiName news/list
+     * @apiSampleRequest news/list
      * @apiParam {int} [type] 类别:新闻资讯0，行业动态1，业务信息2
      * @apiParam {int} [isRefer] 是否推荐1是0否
      * @apiParam {int} [isHeadline] 是否头条1是0否
      * @apiParam {boolean} [isOrder] //默认true从大到小 false 是从小到大
-     * @apiGroup　 news
+     * @apiGroup　 SaleNews
      * @apiSuccessExample {json} Data-Response:
      * {
      * "code": 2000,
@@ -220,7 +220,7 @@ public class NewsController {
      * @api {post} news/addOrUpdateNews 添加或修改新闻
      * @apiName news/addOrUpdateNews
      * @apiSampleRequest news/addOrUpdateNews
-     * @apiGroup　 news
+     * @apiGroup　 SaleNews
      * @apiSuccessExample {json} Data-Response:
      * {
      * "code": 2000,

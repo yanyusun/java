@@ -40,4 +40,6 @@ public interface SaleUserService {
      * @param log
      */
     void addLoginLog(LoginLog log);
+
+    JsonResponse verifyUser(String account, String email, String mobile) throws Exception;
 }
