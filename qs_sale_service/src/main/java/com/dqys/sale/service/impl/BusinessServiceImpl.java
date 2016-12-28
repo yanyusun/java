@@ -165,7 +165,7 @@ public class BusinessServiceImpl implements BusinessService {
         Map map = new HashMap<>();
         map.put("result", "no");
         Integer userId = UserSession.getCurrent().getUserId();
-        Result result = businessService.flow(businessId, userId, AssetBusiness.type, businessLevel, operType);
+        Result result = businessService.flow_tx(businessId, userId, AssetBusiness.type, businessLevel, operType);
         if (result.getCode() == BusinessResultEnum.sucesss.getValue().intValue()) {
             //还有后续的业务逻辑，如果是平台进行发布操作
             if (AssetBusiness.getBeAnnouncedAdmin().AnnounceOperType == operType) {
@@ -188,7 +188,7 @@ public class BusinessServiceImpl implements BusinessService {
         Map map = new HashMap<>();
         map.put("result", "no");
         Integer userId = UserSession.getCurrent().getUserId();
-        Result result = businessService.flow(businessId, userId, AssetDisposeBusiness.type, businessLevel, operType);
+        Result result = businessService.flow_tx(businessId, userId, AssetDisposeBusiness.type, businessLevel, operType);
         if (result.getCode() == BusinessResultEnum.sucesss.getValue().intValue()) {
             //还有后续的业务逻辑，如果是平台进行处置操作
             if (AssetDisposeBusiness.getCheckLevel().dispose_check_OK == operType) {

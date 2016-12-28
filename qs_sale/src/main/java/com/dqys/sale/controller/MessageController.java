@@ -38,7 +38,7 @@ public class MessageController {
      * @apiParam {int} status 状态（0未读，1已读）
      * @apiDescription 查询消息列表信息
      * @apiSampleRequest message/pageList
-     * @apiGroup Message
+     * @apiGroup SaleMessage
      * @apiName message/pageList
      * @apiSuccessExample {json} Data-Response:
      * {
@@ -72,10 +72,7 @@ public class MessageController {
     public JsonResponse messageList(@ModelAttribute MessageQuery messageQuery) {
         Message message = MessageUtils.transToMessage(messageQuery);
         Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
-        String userType = UserSession.getCurrent() == null ? "0" : UserSession.getCurrent().getUserType();
-//        if (!userType.equals(UserInfoEnum.USER_TYPE_ADMIN.getValue() + ",")) {//不是平台管理员，只能看自己的信息
         message.setReceiveId(userId);
-//        }
         List<Message> list = messageService.selectByMessage(message);
         if (list == null) {
             return JsonResponseTool.noData();
@@ -83,7 +80,6 @@ public class MessageController {
             Map<String, Object> map = new HashMap<>();
             map.put("list", MessageUtils.transToMessageDTO(list));
             Message sage = new Message();
-//            map.put("total", messageService.selectCount(sage));//总共的记录数目
             sage.setReceiveId(message.getReceiveId());
             sage.setStatus(0);//标记的未读消息
             map.put("totalMes", messageService.selectCount(sage));//全部未读消息数
@@ -105,7 +101,7 @@ public class MessageController {
      * @apiParam {int[]} id  消息id
      * @apiDescription 标记为已读(单个或批量)
      * @apiSampleRequest message/read
-     * @apiGroup Message
+     * @apiGroup SaleMessage
      * @apiName message/read
      */
     @RequestMapping("/read")
@@ -124,7 +120,7 @@ public class MessageController {
      * @apiParam {int[]} ids 消息id
      * @apiDescription 批量删除
      * @apiSampleRequest message/del
-     * @apiGroup Message
+     * @apiGroup SaleMessage
      * @apiName message/del
      */
     @RequestMapping("/del")
@@ -143,7 +139,7 @@ public class MessageController {
      * @apiParam {int} id 消息id
      * @apiParam {int} status 操作状态（0默认未操作1同意2拒绝）
      * @apiSampleRequest message/setOper
-     * @apiGroup Message
+     * @apiGroup SaleMessage
      * @apiName message/setOper
      */
     @RequestMapping("/setOper")
@@ -165,7 +161,7 @@ public class MessageController {
      * @apiParam {int} [type]  消息类型(0, "任务消息"),(1, "产品消息"), (2, "安全消息"),(3, "服务消息"),
      * @apiParam {int} [status]  消息状态（0未读1已读）
      * @apiSampleRequest message/getCount
-     * @apiGroup Message
+     * @apiGroup SaleMessage
      * @apiName message/getCount
      */
     @RequestMapping("/getCount")
