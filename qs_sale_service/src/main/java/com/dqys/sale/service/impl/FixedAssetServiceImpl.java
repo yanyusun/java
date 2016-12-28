@@ -155,7 +155,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         if (id == 0) {
             return JsonResponseTool.failure("添加失败");
         }
-        createBusiness(fixedAsset.getId());
+        createBusiness(fixedAsset.getId(), ObjectTypeEnum.fixed_asset.getValue());
         addOtherEntity_tx(fixedAssetDTO.getLabels(), fixedAssetDTO.getDisposes(), fixedAssetDTO.getAssetFiles(), fixedAsset.getId(), ObjectTypeEnum.fixed_asset.getValue());
         return JsonResponseTool.success(id);
     }
@@ -176,10 +176,11 @@ public class FixedAssetServiceImpl implements FixedAssetService {
      * @param id 数据id
      * @return
      */
-    private Integer createBusiness(Integer id) {
+    @Override
+    public Integer createBusiness(Integer id, Integer objectType) {
         BusinessDto businessDto = new BusinessDto();
         businessDto.setObjectId(id);
-        businessDto.setObjcetType(ObjectTypeEnum.fixed_asset.getValue());
+        businessDto.setObjcetType(objectType);
         Integer userId = UserSession.getCurrent().getUserId();
         return businessService.createBusiness_tx(businessDto, userId, AssetBusiness.type, AssetBusiness.getBeAnnounced().getLevel());
     }

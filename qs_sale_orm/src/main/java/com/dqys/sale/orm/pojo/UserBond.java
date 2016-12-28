@@ -1,5 +1,7 @@
 package com.dqys.sale.orm.pojo;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class UserBond {
@@ -18,9 +20,9 @@ public class UserBond {
     private String title;//标题',
 
     private String source;//委托来源
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startTime;//委托开始时间
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endTime;//委托结束时间
 
     private Double totalMoney;//债权总额
@@ -32,9 +34,9 @@ public class UserBond {
     private Integer area;//资产所在区县
 
     private String address;//具体地址
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date borrowTime;//借款时间
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date refundTime;//'还款时间
 
     private Integer noAgreement;//未约定时间(0否1是)

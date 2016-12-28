@@ -100,7 +100,7 @@ public class SaleUserServiceImpl implements SaleUserService {
             if (CommonUtil.checkParam(user.getAccount(), user.getName(), user.getEmail(), user.getMobile(), user.getPassword(), user.getSex())) {
                 return "请把信息填写完整";
             }
-            if (FormatValidateTool.checkEmail(user.getAccount()) || FormatValidateTool.checkMobile(user.getMobile())) {
+            if (FormatValidateTool.checkEmail(user.getAccount()) || FormatValidateTool.checkMobile(user.getAccount())) {
                 return "用户名不能为邮箱或手机号";
             }
             if (!FormatValidateTool.checkEmail(user.getEmail())) {

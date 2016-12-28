@@ -125,8 +125,8 @@ public class UserBondServiceImpl implements UserBondService {
 
     @Override
     public JsonResponse addBond_tx(UserBondDTO userBondDTO) {
-        if (CommonUtil.checkParam(userBondDTO) || CommonUtil.checkParam(userBondDTO.getUserBond())) {
-            return JsonResponseTool.failure("参数错误");
+        if (CommonUtil.checkParam(userBondDTO) || CommonUtil.checkParam(userBondDTO.getUserBond()) || CommonUtil.checkParam(userBondDTO.getUserBond().getBondType())) {
+            return JsonResponseTool.failure("请把信息填写完整");
         }
         UserBond entity = userBondDTO.getUserBond();
         setEntity(entity);
@@ -134,7 +134,8 @@ public class UserBondServiceImpl implements UserBondService {
         if (num == 0) {
             return JsonResponseTool.failure("添加失败");
         }
-        fixedAssetService.addOtherEntity_tx(userBondDTO.getLabels(), userBondDTO.getDisposes(), userBondDTO.getAssetFiles(), entity.getId(), ObjectTypeEnum.user_bond.getValue());
+        fixedAssetService.addOtherEntity_tx(userBondDTO.getLabels(), userBondDTO.getDisposes(), userBondDTO.getAssetFiles(), entity.getId(), entity.getBondType());
+        fixedAssetService.createBusiness(entity.getId(), entity.getBondType());
         return JsonResponseTool.success(entity.getId());
     }
 

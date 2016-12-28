@@ -37,6 +37,15 @@ public interface FixedAssetService {
      */
     JsonResponse addFixed_tx(FixedAssetDTO fixedAssetDTO);
 
+    /**
+     * 创建初始业务状态
+     *
+     * @param id
+     * @param objectType
+     * @return
+     */
+    Integer createBusiness(Integer id, Integer objectType);
+
     void addOtherEntity_tx(List<Label> labels, List<Dispose> disposes, List<AssetFile> assetFiles, Integer id, Integer objectType);
 
     JsonResponse updateFixed(FixedAssetDTO fixedAssetDTO);

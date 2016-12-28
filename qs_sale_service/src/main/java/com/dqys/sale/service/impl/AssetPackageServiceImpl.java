@@ -126,7 +126,7 @@ public class AssetPackageServiceImpl implements AssetPackageService {
     @Override
     public JsonResponse addAsset_tx(AssetPackageDTO assetPackageDTO) {
         if (CommonUtil.checkParam(assetPackageDTO) || CommonUtil.checkParam(assetPackageDTO.getAssetPackage())) {
-            return JsonResponseTool.failure("参数错误");
+            return JsonResponseTool.failure("请把信息填写完整");
         }
         AssetPackage entity = assetPackageDTO.getAssetPackage();
         setEntity(entity);
@@ -135,6 +135,7 @@ public class AssetPackageServiceImpl implements AssetPackageService {
             return JsonResponseTool.failure("添加失败");
         }
         fixedAssetService.addOtherEntity_tx(assetPackageDTO.getLabels(), assetPackageDTO.getDisposes(), assetPackageDTO.getAssetFiles(), entity.getId(), ObjectTypeEnum.asset_package.getValue());
+        fixedAssetService.createBusiness(entity.getId(), ObjectTypeEnum.asset_package.getValue());
         return JsonResponseTool.success(entity.getId());
     }
 
