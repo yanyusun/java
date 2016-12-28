@@ -112,17 +112,11 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         faDto.setYear(asset.getYear());
     }
 
-    private List<FixedAssetDTO> getFixedAssetDTOs(FixedAssetQuery fixedAssetQuery) {
-        //业务状态查询
-        if (fixedAssetQuery != null && fixedAssetQuery.getBusinessStatus() != null) {
-            fixedAssetQuery.setIds(businessORelationMapper.selectObjectIdByObjectType(ObjectTypeEnum.fixed_asset.getValue(), fixedAssetQuery.getBusinessStatus()));
-            if (fixedAssetQuery.getIds().size() == 0) {
-                fixedAssetQuery.getIds().add(SysProperty.NULL_DATA_ID);
-            }
-        }
-        List<FixedAsset> fixedAssetList = fixedAssetMapper.fixedList(fixedAssetQuery);
-        Integer count = fixedAssetMapper.fixedListCount(fixedAssetQuery);
-        fixedAssetQuery.setTotalCount(count);
+    private List<FixedAssetDTO> getFixedAssetDTOs(FixedAssetQuery query) {
+        query.setObjectType(ObjectTypeEnum.fixed_asset.getValue());
+        List<FixedAsset> fixedAssetList = fixedAssetMapper.fixedList(query);
+        Integer count = fixedAssetMapper.fixedListCount(query);
+        query.setTotalCount(count);
         List<FixedAssetDTO> dtos = new ArrayList<>();
         for (FixedAsset asset : fixedAssetList) {
             FixedAssetDTO dto = new FixedAssetDTO();

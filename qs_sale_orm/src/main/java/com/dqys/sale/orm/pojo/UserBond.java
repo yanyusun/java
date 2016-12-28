@@ -7,13 +7,13 @@ public class UserBond {
 
     private String bondNo;//编码
 
-    private Byte grade;//评分
+    private Integer grade;//评分
 
-    private Byte bondType;//债权类型
+    private Integer bondType;//债权类型
 
-    private Byte isSpecial;//是否专项
+    private Integer isSpecial;//是否专项
 
-    private Byte isHomePage;//是否首页（0否1是）
+    private Integer isHomePage;//是否首页（0否1是）
 
     private String title;//标题',
 
@@ -37,7 +37,7 @@ public class UserBond {
 
     private Date refundTime;//'还款时间
 
-    private Byte noAgreement;//未约定时间(0否1是)
+    private Integer noAgreement;//未约定时间(0否1是)
 
     private Double totalInterestMoney;//'总利息
 
@@ -47,7 +47,7 @@ public class UserBond {
 
     private String loanType;//贷款类型
 
-    private Byte collStage;//催收阶段
+    private Integer collStage;//催收阶段
 
     private String assureOne;//担保方式1
 
@@ -55,29 +55,29 @@ public class UserBond {
 
     private String assureThree;//担保方式3
 
-    private Byte pledgeD;//抵押
+    private Integer pledgeD;//抵押
 
-    private Byte pledgeZ;//质押
+    private Integer pledgeZ;//质押
 
-    private Byte bondsmanContact;//担保人是否能联系
+    private Integer bondsmanContact;//担保人是否能联系
 
-    private Byte bondsmanEconomic;//担保人经济上的状况
+    private Integer bondsmanEconomic;//担保人经济上的状况
 
-    private Byte isWorth;//抵押物能否覆盖债务
+    private Integer isWorth;//抵押物能否覆盖债务
 
-    private Byte canContact;//债务方是否能正常联系
+    private Integer canContact;//债务方是否能正常联系
 
-    private Byte canPay;//债务方是否能偿还
+    private Integer canPay;//债务方是否能偿还
 
-    private Byte isLawsuit;//诉讼与否
+    private Integer isLawsuit;//诉讼与否
 
-    private Byte isDecision;//判决与否
+    private Integer isDecision;//判决与否
 
-    private Byte realUrgeNum;//实地催收次数
+    private Integer realUrgeNum;//实地催收次数
 
-    private Byte phoneUrgeNum;//电话催收次数
+    private Integer phoneUrgeNum;//电话催收次数
 
-    private Byte entrustUrgeNum;//委托催收次数
+    private Integer entrustUrgeNum;//委托催收次数
 
     private String bondName;//债权方姓名
 
@@ -99,15 +99,15 @@ public class UserBond {
 
     private String bondContactsIdcode;//债权方联系人证件号
 
-    private Byte debtType;//债务方类型
+    private Integer debtType;//债务方类型
 
-    private Byte debtIsAddress;//债务方住址是否清楚（0不清楚1清楚）
+    private Integer debtIsAddress;//债务方住址是否清楚（0不清楚1清楚）
 
     private String debtName;//债务方姓名
 
     private String debtPhone;//债务方联系电话
 
-    private Byte debtIsOperate;//债务方经营地址是否清楚（0不清楚1清楚）
+    private Integer debtIsOperate;//债务方经营地址是否清楚（0不清楚1清楚）
 
     private String debtIdcode;//债务方证件号
 
@@ -250,35 +250,35 @@ public class UserBond {
         this.bondNo = bondNo;
     }
 
-    public Byte getGrade() {
+    public Integer getGrade() {
         return grade;
     }
 
-    public void setGrade(Byte grade) {
+    public void setGrade(Integer grade) {
         this.grade = grade;
     }
 
-    public Byte getBondType() {
+    public Integer getBondType() {
         return bondType;
     }
 
-    public void setBondType(Byte bondType) {
+    public void setBondType(Integer bondType) {
         this.bondType = bondType;
     }
 
-    public Byte getIsSpecial() {
+    public Integer getIsSpecial() {
         return isSpecial;
     }
 
-    public void setIsSpecial(Byte isSpecial) {
+    public void setIsSpecial(Integer isSpecial) {
         this.isSpecial = isSpecial;
     }
 
-    public Byte getIsHomePage() {
+    public Integer getIsHomePage() {
         return isHomePage;
     }
 
-    public void setIsHomePage(Byte isHomePage) {
+    public void setIsHomePage(Integer isHomePage) {
         this.isHomePage = isHomePage;
     }
 
@@ -370,11 +370,11 @@ public class UserBond {
         this.refundTime = refundTime;
     }
 
-    public Byte getNoAgreement() {
+    public Integer getNoAgreement() {
         return noAgreement;
     }
 
-    public void setNoAgreement(Byte noAgreement) {
+    public void setNoAgreement(Integer noAgreement) {
         this.noAgreement = noAgreement;
     }
 
@@ -410,11 +410,11 @@ public class UserBond {
         this.loanType = loanType;
     }
 
-    public Byte getCollStage() {
+    public Integer getCollStage() {
         return collStage;
     }
 
-    public void setCollStage(Byte collStage) {
+    public void setCollStage(Integer collStage) {
         this.collStage = collStage;
     }
 
@@ -442,99 +442,99 @@ public class UserBond {
         this.assureThree = assureThree;
     }
 
-    public Byte getPledgeD() {
+    public Integer getPledgeD() {
         return pledgeD;
     }
 
-    public void setPledgeD(Byte pledgeD) {
+    public void setPledgeD(Integer pledgeD) {
         this.pledgeD = pledgeD;
     }
 
-    public Byte getPledgeZ() {
+    public Integer getPledgeZ() {
         return pledgeZ;
     }
 
-    public void setPledgeZ(Byte pledgeZ) {
+    public void setPledgeZ(Integer pledgeZ) {
         this.pledgeZ = pledgeZ;
     }
 
-    public Byte getBondsmanContact() {
+    public Integer getBondsmanContact() {
         return bondsmanContact;
     }
 
-    public void setBondsmanContact(Byte bondsmanContact) {
+    public void setBondsmanContact(Integer bondsmanContact) {
         this.bondsmanContact = bondsmanContact;
     }
 
-    public Byte getBondsmanEconomic() {
+    public Integer getBondsmanEconomic() {
         return bondsmanEconomic;
     }
 
-    public void setBondsmanEconomic(Byte bondsmanEconomic) {
+    public void setBondsmanEconomic(Integer bondsmanEconomic) {
         this.bondsmanEconomic = bondsmanEconomic;
     }
 
-    public Byte getIsWorth() {
+    public Integer getIsWorth() {
         return isWorth;
     }
 
-    public void setIsWorth(Byte isWorth) {
+    public void setIsWorth(Integer isWorth) {
         this.isWorth = isWorth;
     }
 
-    public Byte getCanContact() {
+    public Integer getCanContact() {
         return canContact;
     }
 
-    public void setCanContact(Byte canContact) {
+    public void setCanContact(Integer canContact) {
         this.canContact = canContact;
     }
 
-    public Byte getCanPay() {
+    public Integer getCanPay() {
         return canPay;
     }
 
-    public void setCanPay(Byte canPay) {
+    public void setCanPay(Integer canPay) {
         this.canPay = canPay;
     }
 
-    public Byte getIsLawsuit() {
+    public Integer getIsLawsuit() {
         return isLawsuit;
     }
 
-    public void setIsLawsuit(Byte isLawsuit) {
+    public void setIsLawsuit(Integer isLawsuit) {
         this.isLawsuit = isLawsuit;
     }
 
-    public Byte getIsDecision() {
+    public Integer getIsDecision() {
         return isDecision;
     }
 
-    public void setIsDecision(Byte isDecision) {
+    public void setIsDecision(Integer isDecision) {
         this.isDecision = isDecision;
     }
 
-    public Byte getRealUrgeNum() {
+    public Integer getRealUrgeNum() {
         return realUrgeNum;
     }
 
-    public void setRealUrgeNum(Byte realUrgeNum) {
+    public void setRealUrgeNum(Integer realUrgeNum) {
         this.realUrgeNum = realUrgeNum;
     }
 
-    public Byte getPhoneUrgeNum() {
+    public Integer getPhoneUrgeNum() {
         return phoneUrgeNum;
     }
 
-    public void setPhoneUrgeNum(Byte phoneUrgeNum) {
+    public void setPhoneUrgeNum(Integer phoneUrgeNum) {
         this.phoneUrgeNum = phoneUrgeNum;
     }
 
-    public Byte getEntrustUrgeNum() {
+    public Integer getEntrustUrgeNum() {
         return entrustUrgeNum;
     }
 
-    public void setEntrustUrgeNum(Byte entrustUrgeNum) {
+    public void setEntrustUrgeNum(Integer entrustUrgeNum) {
         this.entrustUrgeNum = entrustUrgeNum;
     }
 
@@ -610,19 +610,19 @@ public class UserBond {
         this.bondContactsIdcode = bondContactsIdcode;
     }
 
-    public Byte getDebtType() {
+    public Integer getDebtType() {
         return debtType;
     }
 
-    public void setDebtType(Byte debtType) {
+    public void setDebtType(Integer debtType) {
         this.debtType = debtType;
     }
 
-    public Byte getDebtIsAddress() {
+    public Integer getDebtIsAddress() {
         return debtIsAddress;
     }
 
-    public void setDebtIsAddress(Byte debtIsAddress) {
+    public void setDebtIsAddress(Integer debtIsAddress) {
         this.debtIsAddress = debtIsAddress;
     }
 
@@ -634,11 +634,11 @@ public class UserBond {
         this.debtPhone = debtPhone;
     }
 
-    public Byte getDebtIsOperate() {
+    public Integer getDebtIsOperate() {
         return debtIsOperate;
     }
 
-    public void setDebtIsOperate(Byte debtIsOperate) {
+    public void setDebtIsOperate(Integer debtIsOperate) {
         this.debtIsOperate = debtIsOperate;
     }
 

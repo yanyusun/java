@@ -106,12 +106,7 @@ public class UserBondServiceImpl implements UserBondService {
 
 
     private List<UserBondDTO> getUserBondDTOs(UserBondQuery query) {
-        if (query != null && query.getBusinessStatus() != null) {
-            query.setIds(businessORelationMapper.selectObjectIdByObjectType(query.getBondType(), query.getBusinessStatus()));
-            if (query.getIds().size() == 0) {
-                query.getIds().add(SysProperty.NULL_DATA_ID);
-            }
-        }
+        query.setObjectType(query.getBondType());
         List<UserBond> userBonds = userBondMapper.list(query);
         Integer count = userBondMapper.listCount(query);
         query.setTotalCount(count);

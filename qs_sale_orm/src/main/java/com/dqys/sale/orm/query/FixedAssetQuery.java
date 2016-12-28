@@ -13,6 +13,15 @@ public class FixedAssetQuery extends PageEntity implements Serializable {
     private Integer enable;//'是否无效0不是,1是
     private Integer businessStatus;//业务状态
     private Integer userId;
+    private Integer objectType;
+
+    public Integer getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(Integer objectType) {
+        this.objectType = objectType;
+    }
 
     public Integer getUserId() {
         return userId;

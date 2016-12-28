@@ -106,12 +106,7 @@ public class AssetPackageServiceImpl implements AssetPackageService {
     }
 
     private List<AssetPackageDTO> getAssetPackageDTOs(AssetPackageQuery query) {
-        if (query != null && query.getBusinessStatus() != null) {
-            query.setIds(businessORelationMapper.selectObjectIdByObjectType(ObjectTypeEnum.asset_package.getValue(), query.getBusinessStatus()));
-            if (query.getIds().size() == 0) {
-                query.getIds().add(SysProperty.NULL_DATA_ID);
-            }
-        }
+        query.setObjectType(ObjectTypeEnum.asset_package.getValue());
         List<AssetPackage> list = assetPackageMapper.list(query);
         Integer count = assetPackageMapper.listCount(query);
         query.setTotalCount(count);

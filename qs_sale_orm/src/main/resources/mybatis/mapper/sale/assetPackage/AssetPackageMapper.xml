@@ -388,7 +388,7 @@
             </foreach>
         </if>
         <if test="isHomePage !=null">
-            AND is_home_page = #{isHomePage},
+            AND is_home_page = #{isHomePage}
         </if>
         <if test="checkStatus !=null">
             AND check_status=#{checkStatus}
@@ -402,18 +402,30 @@
     </sql>
     <select id="list" parameterType="com.dqys.sale.orm.query.AssetPackageQuery"
             resultMap="BaseResultMap">
-        SELECT
+        SELECT tap.* FROM t_business_obj_re bor LEFT JOIN business b
+        ON b.id=bor.business_id LEFT JOIN ( SELECT
         <include refid="Base_Column_List"/>
         FROM t_asset_package WHERE 1=1
-        <include refid="Query_Where"/>
+        <include refid="Query_Where"/>) tap
+        ON tap.id=bor.object_id
+        WHERE bor.object_type=#{objectType}
+        <if test="businessStatus !=null">
+            AND b.status=#{businessStatus}
+        </if>
         Limit #{startPage},#{pageCount}
     </select>
     <select id="listCount" parameterType="com.dqys.sale.orm.query.AssetPackageQuery"
             resultType="int">
-        SELECT
-        count(*)
+        SELECT count(tap.id) FROM t_business_obj_re bor LEFT JOIN business b
+        ON b.id=bor.business_id LEFT JOIN ( SELECT
+        <include refid="Base_Column_List"/>
         FROM t_asset_package WHERE 1=1
-        <include refid="Query_Where"/>
+        <include refid="Query_Where"/>) tap
+        ON tap.id=bor.object_id
+        WHERE tap.id not null AND bor.object_type=#{objectType}
+        <if test="businessStatus !=null">
+            AND b.status=#{businessStatus}
+        </if>
     </select>
 
 </mapper>

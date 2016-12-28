@@ -14,6 +14,15 @@ public class UserBondQuery extends PageEntity implements Serializable {
     private Integer enables;//'是否无效0不是,1是
     private Integer businessStatus;//业务状态
     private Integer userId;
+    private Integer objectType;
+
+    public Integer getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(Integer objectType) {
+        this.objectType = objectType;
+    }
 
     public Integer getUserId() {
         return userId;
@@ -22,6 +31,7 @@ public class UserBondQuery extends PageEntity implements Serializable {
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
+
     public Integer getBusinessStatus() {
         return businessStatus;
     }
@@ -29,6 +39,7 @@ public class UserBondQuery extends PageEntity implements Serializable {
     public void setBusinessStatus(Integer businessStatus) {
         this.businessStatus = businessStatus;
     }
+
     public Integer getCheckStatus() {
         return checkStatus;
     }

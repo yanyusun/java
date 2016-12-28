@@ -551,18 +551,30 @@
     </sql>
     <select id="fixedList" parameterType="com.dqys.sale.orm.query.FixedAssetQuery"
             resultMap="BaseResultMap">
-        SELECT
+        SELECT tap.* FROM t_business_obj_re bor LEFT JOIN business b
+        ON b.id=bor.business_id LEFT JOIN (SELECT
         <include refid="Base_Column_List"/>
         FROM t_fixed_asset WHERE 1=1
-        <include refid="Query_Where"/>
+        <include refid="Query_Where"/>) tap
+        ON tap.id=bor.object_id
+        WHERE  bor.object_type=#{objectType}
+        <if test="businessStatus !=null">
+            AND b.status=#{businessStatus}
+        </if>
         Limit #{startPage},#{pageCount}
     </select>
     <select id="fixedListCount" parameterType="com.dqys.sale.orm.query.FixedAssetQuery"
             resultType="int">
-        SELECT
-        count(*)
+        SELECT  count(tap.id) FROM t_business_obj_re bor LEFT JOIN business b
+        ON b.id=bor.business_id LEFT JOIN (SELECT
+        <include refid="Base_Column_List"/>
         FROM t_fixed_asset WHERE 1=1
-        <include refid="Query_Where"/>
+        <include refid="Query_Where"/>) tap
+        ON tap.id=bor.object_id
+        WHERE tap.id is not null AND bor.object_type=#{objectType}
+        <if test="businessStatus !=null">
+            AND b.status=#{businessStatus}
+        </if>
     </select>
 
 

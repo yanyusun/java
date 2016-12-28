@@ -4,10 +4,10 @@
     <resultMap id="BaseResultMap" type="com.dqys.sale.orm.pojo.UserBond">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="bond_no" property="bondNo" jdbcType="VARCHAR"/>
-        <result column="grade" property="grade" jdbcType="TINYINT"/>
-        <result column="bond_type" property="bondType" jdbcType="TINYINT"/>
-        <result column="is_special" property="isSpecial" jdbcType="TINYINT"/>
-        <result column="is_home_page" property="isHomePage" jdbcType="TINYINT"/>
+        <result column="grade" property="grade" jdbcType="INTEGER"/>
+        <result column="bond_type" property="bondType" jdbcType="INTEGER"/>
+        <result column="is_special" property="isSpecial" jdbcType="INTEGER"/>
+        <result column="is_home_page" property="isHomePage" jdbcType="INTEGER"/>
         <result column="title" property="title" jdbcType="VARCHAR"/>
         <result column="source" property="source" jdbcType="VARCHAR"/>
         <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
@@ -19,27 +19,27 @@
         <result column="address" property="address" jdbcType="VARCHAR"/>
         <result column="borrow_time" property="borrowTime" jdbcType="TIMESTAMP"/>
         <result column="refund_time" property="refundTime" jdbcType="TIMESTAMP"/>
-        <result column="no_agreement" property="noAgreement" jdbcType="TINYINT"/>
+        <result column="no_agreement" property="noAgreement" jdbcType="INTEGER"/>
         <result column="total_interest_money" property="totalInterestMoney" jdbcType="DOUBLE"/>
         <result column="loan_money" property="loanMoney" jdbcType="DOUBLE"/>
         <result column="assess_total_price" property="assessTotalPrice" jdbcType="DOUBLE"/>
         <result column="loan_type" property="loanType" jdbcType="VARCHAR"/>
-        <result column="coll_stage" property="collStage" jdbcType="TINYINT"/>
+        <result column="coll_stage" property="collStage" jdbcType="INTEGER"/>
         <result column="assure_one" property="assureOne" jdbcType="VARCHAR"/>
         <result column="assure_two" property="assureTwo" jdbcType="VARCHAR"/>
         <result column="assure_three" property="assureThree" jdbcType="VARCHAR"/>
-        <result column="pledge_d" property="pledgeD" jdbcType="TINYINT"/>
-        <result column="pledge_z" property="pledgeZ" jdbcType="TINYINT"/>
-        <result column="bondsman_contact" property="bondsmanContact" jdbcType="TINYINT"/>
-        <result column="bondsman_economic" property="bondsmanEconomic" jdbcType="TINYINT"/>
-        <result column="is_worth" property="isWorth" jdbcType="TINYINT"/>
-        <result column="can_contact" property="canContact" jdbcType="TINYINT"/>
-        <result column="can_pay" property="canPay" jdbcType="TINYINT"/>
-        <result column="is_lawsuit" property="isLawsuit" jdbcType="TINYINT"/>
-        <result column="is_decision" property="isDecision" jdbcType="TINYINT"/>
-        <result column="real_urge_num" property="realUrgeNum" jdbcType="TINYINT"/>
-        <result column="phone_urge_num" property="phoneUrgeNum" jdbcType="TINYINT"/>
-        <result column="entrust_urge_num" property="entrustUrgeNum" jdbcType="TINYINT"/>
+        <result column="pledge_d" property="pledgeD" jdbcType="INTEGER"/>
+        <result column="pledge_z" property="pledgeZ" jdbcType="INTEGER"/>
+        <result column="bondsman_contact" property="bondsmanContact" jdbcType="INTEGER"/>
+        <result column="bondsman_economic" property="bondsmanEconomic" jdbcType="INTEGER"/>
+        <result column="is_worth" property="isWorth" jdbcType="INTEGER"/>
+        <result column="can_contact" property="canContact" jdbcType="INTEGER"/>
+        <result column="can_pay" property="canPay" jdbcType="INTEGER"/>
+        <result column="is_lawsuit" property="isLawsuit" jdbcType="INTEGER"/>
+        <result column="is_decision" property="isDecision" jdbcType="INTEGER"/>
+        <result column="real_urge_num" property="realUrgeNum" jdbcType="INTEGER"/>
+        <result column="phone_urge_num" property="phoneUrgeNum" jdbcType="INTEGER"/>
+        <result column="entrust_urge_num" property="entrustUrgeNum" jdbcType="INTEGER"/>
         <result column="bond_name" property="bondName" jdbcType="VARCHAR"/>
         <result column="bond_province" property="bondProvince" jdbcType="INTEGER"/>
         <result column="bond_city" property="bondCity" jdbcType="INTEGER"/>
@@ -49,10 +49,10 @@
         <result column="bond_contacts_name" property="bondContactsName" jdbcType="VARCHAR"/>
         <result column="bond_contacts_phone" property="bondContactsPhone" jdbcType="VARCHAR"/>
         <result column="bond_contacts_idcode" property="bondContactsIdcode" jdbcType="VARCHAR"/>
-        <result column="debt_type" property="debtType" jdbcType="TINYINT"/>
-        <result column="debt_is_address" property="debtIsAddress" jdbcType="TINYINT"/>
+        <result column="debt_type" property="debtType" jdbcType="INTEGER"/>
+        <result column="debt_is_address" property="debtIsAddress" jdbcType="INTEGER"/>
         <result column="debt_phone" property="debtPhone" jdbcType="VARCHAR"/>
-        <result column="debt_is_operate" property="debtIsOperate" jdbcType="TINYINT"/>
+        <result column="debt_is_operate" property="debtIsOperate" jdbcType="INTEGER"/>
         <result column="debt_idcode" property="debtIdcode" jdbcType="VARCHAR"/>
         <result column="debt_province" property="debtProvince" jdbcType="INTEGER"/>
         <result column="debt_city" property="debtCity" jdbcType="INTEGER"/>
@@ -128,24 +128,24 @@
       debt_situation_social, describes, remark,create_time,
       update_time,oper_user,bond_address,debt_address,debt_name
       )
-    values (#{id,jdbcType=INTEGER}, #{bondNo,jdbcType=VARCHAR}, #{grade,jdbcType=TINYINT}, 
-      #{bondType,jdbcType=TINYINT}, #{isSpecial,jdbcType=TINYINT}, #{isHomePage,jdbcType=TINYINT}, 
+    values (#{id,jdbcType=INTEGER}, #{bondNo,jdbcType=VARCHAR}, #{grade,jdbcType=INTEGER}, 
+      #{bondType,jdbcType=INTEGER}, #{isSpecial,jdbcType=INTEGER}, #{isHomePage,jdbcType=INTEGER}, 
       #{title,jdbcType=VARCHAR}, #{source,jdbcType=VARCHAR}, #{startTime,jdbcType=TIMESTAMP}, 
       #{endTime,jdbcType=TIMESTAMP}, #{totalMoney,jdbcType=DOUBLE}, #{province,jdbcType=INTEGER}, 
       #{city,jdbcType=INTEGER}, #{area,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, 
-      #{borrowTime,jdbcType=TIMESTAMP}, #{refundTime,jdbcType=TIMESTAMP}, #{noAgreement,jdbcType=TINYINT}, 
+      #{borrowTime,jdbcType=TIMESTAMP}, #{refundTime,jdbcType=TIMESTAMP}, #{noAgreement,jdbcType=INTEGER}, 
       #{totalInterestMoney,jdbcType=DOUBLE}, #{loanMoney,jdbcType=DOUBLE}, #{assessTotalPrice,jdbcType=DOUBLE}, 
-      #{loanType,jdbcType=VARCHAR}, #{collStage,jdbcType=TINYINT}, #{assureOne,jdbcType=VARCHAR}, 
-      #{assureTwo,jdbcType=VARCHAR}, #{assureThree,jdbcType=VARCHAR}, #{pledgeD,jdbcType=TINYINT}, 
-      #{pledgeZ,jdbcType=TINYINT}, #{bondsmanContact,jdbcType=TINYINT}, #{bondsmanEconomic,jdbcType=TINYINT}, 
-      #{isWorth,jdbcType=TINYINT}, #{canContact,jdbcType=TINYINT}, #{canPay,jdbcType=TINYINT}, 
-      #{isLawsuit,jdbcType=TINYINT}, #{isDecision,jdbcType=TINYINT}, #{realUrgeNum,jdbcType=TINYINT}, 
-      #{phoneUrgeNum,jdbcType=TINYINT}, #{entrustUrgeNum,jdbcType=TINYINT}, #{bondName,jdbcType=VARCHAR}, 
+      #{loanType,jdbcType=VARCHAR}, #{collStage,jdbcType=INTEGER}, #{assureOne,jdbcType=VARCHAR}, 
+      #{assureTwo,jdbcType=VARCHAR}, #{assureThree,jdbcType=VARCHAR}, #{pledgeD,jdbcType=INTEGER}, 
+      #{pledgeZ,jdbcType=INTEGER}, #{bondsmanContact,jdbcType=INTEGER}, #{bondsmanEconomic,jdbcType=INTEGER}, 
+      #{isWorth,jdbcType=INTEGER}, #{canContact,jdbcType=INTEGER}, #{canPay,jdbcType=INTEGER}, 
+      #{isLawsuit,jdbcType=INTEGER}, #{isDecision,jdbcType=INTEGER}, #{realUrgeNum,jdbcType=INTEGER}, 
+      #{phoneUrgeNum,jdbcType=INTEGER}, #{entrustUrgeNum,jdbcType=INTEGER}, #{bondName,jdbcType=VARCHAR}, 
       #{bondProvince,jdbcType=INTEGER}, #{bondCity,jdbcType=INTEGER}, #{bondArea,jdbcType=INTEGER}, 
       #{bondPhone,jdbcType=VARCHAR}, #{bondIdcode,jdbcType=VARCHAR}, #{bondContactsName,jdbcType=VARCHAR}, 
       #{bondContactsPhone,jdbcType=VARCHAR}, #{bondContactsIdcode,jdbcType=VARCHAR}, 
-      #{debtType,jdbcType=TINYINT}, #{debtIsAddress,jdbcType=TINYINT}, #{debtPhone,jdbcType=VARCHAR}, 
-      #{debtIsOperate,jdbcType=TINYINT}, #{debtIdcode,jdbcType=VARCHAR}, #{debtProvince,jdbcType=INTEGER}, 
+      #{debtType,jdbcType=INTEGER}, #{debtIsAddress,jdbcType=INTEGER}, #{debtPhone,jdbcType=VARCHAR}, 
+      #{debtIsOperate,jdbcType=INTEGER}, #{debtIdcode,jdbcType=VARCHAR}, #{debtProvince,jdbcType=INTEGER}, 
       #{debtCity,jdbcType=INTEGER}, #{debtArea,jdbcType=INTEGER}, #{debtSituationAsset,jdbcType=VARCHAR}, 
       #{debtSituationOperate,jdbcType=VARCHAR}, #{debtSituationIndustry,jdbcType=VARCHAR}, 
       #{debtSituationMarriage,jdbcType=VARCHAR}, #{debtSituationEducation,jdbcType=VARCHAR}, 
@@ -375,16 +375,16 @@
                 #{bondNo,jdbcType=VARCHAR},
             </if>
             <if test="grade != null">
-                #{grade,jdbcType=TINYINT},
+                #{grade,jdbcType=INTEGER},
             </if>
             <if test="bondType != null">
-                #{bondType,jdbcType=TINYINT},
+                #{bondType,jdbcType=INTEGER},
             </if>
             <if test="isSpecial != null">
-                #{isSpecial,jdbcType=TINYINT},
+                #{isSpecial,jdbcType=INTEGER},
             </if>
             <if test="isHomePage != null">
-                #{isHomePage,jdbcType=TINYINT},
+                #{isHomePage,jdbcType=INTEGER},
             </if>
             <if test="title != null">
                 #{title,jdbcType=VARCHAR},
@@ -420,7 +420,7 @@
                 #{refundTime,jdbcType=TIMESTAMP},
             </if>
             <if test="noAgreement != null">
-                #{noAgreement,jdbcType=TINYINT},
+                #{noAgreement,jdbcType=INTEGER},
             </if>
             <if test="totalInterestMoney != null">
                 #{totalInterestMoney,jdbcType=DOUBLE},
@@ -435,7 +435,7 @@
                 #{loanType,jdbcType=VARCHAR},
             </if>
             <if test="collStage != null">
-                #{collStage,jdbcType=TINYINT},
+                #{collStage,jdbcType=INTEGER},
             </if>
             <if test="assureOne != null">
                 #{assureOne,jdbcType=VARCHAR},
@@ -447,40 +447,40 @@
                 #{assureThree,jdbcType=VARCHAR},
             </if>
             <if test="pledgeD != null">
-                #{pledgeD,jdbcType=TINYINT},
+                #{pledgeD,jdbcType=INTEGER},
             </if>
             <if test="pledgeZ != null">
-                #{pledgeZ,jdbcType=TINYINT},
+                #{pledgeZ,jdbcType=INTEGER},
             </if>
             <if test="bondsmanContact != null">
-                #{bondsmanContact,jdbcType=TINYINT},
+                #{bondsmanContact,jdbcType=INTEGER},
             </if>
             <if test="bondsmanEconomic != null">
-                #{bondsmanEconomic,jdbcType=TINYINT},
+                #{bondsmanEconomic,jdbcType=INTEGER},
             </if>
             <if test="isWorth != null">
-                #{isWorth,jdbcType=TINYINT},
+                #{isWorth,jdbcType=INTEGER},
             </if>
             <if test="canContact != null">
-                #{canContact,jdbcType=TINYINT},
+                #{canContact,jdbcType=INTEGER},
             </if>
             <if test="canPay != null">
-                #{canPay,jdbcType=TINYINT},
+                #{canPay,jdbcType=INTEGER},
             </if>
             <if test="isLawsuit != null">
-                #{isLawsuit,jdbcType=TINYINT},
+                #{isLawsuit,jdbcType=INTEGER},
             </if>
             <if test="isDecision != null">
-                #{isDecision,jdbcType=TINYINT},
+                #{isDecision,jdbcType=INTEGER},
             </if>
             <if test="realUrgeNum != null">
-                #{realUrgeNum,jdbcType=TINYINT},
+                #{realUrgeNum,jdbcType=INTEGER},
             </if>
             <if test="phoneUrgeNum != null">
-                #{phoneUrgeNum,jdbcType=TINYINT},
+                #{phoneUrgeNum,jdbcType=INTEGER},
             </if>
             <if test="entrustUrgeNum != null">
-                #{entrustUrgeNum,jdbcType=TINYINT},
+                #{entrustUrgeNum,jdbcType=INTEGER},
             </if>
             <if test="bondName != null">
                 #{bondName,jdbcType=VARCHAR},
@@ -510,16 +510,16 @@
                 #{bondContactsIdcode,jdbcType=VARCHAR},
             </if>
             <if test="debtType != null">
-                #{debtType,jdbcType=TINYINT},
+                #{debtType,jdbcType=INTEGER},
             </if>
             <if test="debtIsAddress != null">
-                #{debtIsAddress,jdbcType=TINYINT},
+                #{debtIsAddress,jdbcType=INTEGER},
             </if>
             <if test="debtPhone != null">
                 #{debtPhone,jdbcType=VARCHAR},
             </if>
             <if test="debtIsOperate != null">
-                #{debtIsOperate,jdbcType=TINYINT},
+                #{debtIsOperate,jdbcType=INTEGER},
             </if>
             <if test="debtIdcode != null">
                 #{debtIdcode,jdbcType=VARCHAR},
@@ -586,16 +586,16 @@
                 bond_no = #{bondNo,jdbcType=VARCHAR},
             </if>
             <if test="grade != null">
-                grade = #{grade,jdbcType=TINYINT},
+                grade = #{grade,jdbcType=INTEGER},
             </if>
             <if test="bondType != null">
-                bond_type = #{bondType,jdbcType=TINYINT},
+                bond_type = #{bondType,jdbcType=INTEGER},
             </if>
             <if test="isSpecial != null">
-                is_special = #{isSpecial,jdbcType=TINYINT},
+                is_special = #{isSpecial,jdbcType=INTEGER},
             </if>
             <if test="isHomePage != null">
-                is_home_page = #{isHomePage,jdbcType=TINYINT},
+                is_home_page = #{isHomePage,jdbcType=INTEGER},
             </if>
             <if test="title != null">
                 title = #{title,jdbcType=VARCHAR},
@@ -631,7 +631,7 @@
                 refund_time = #{refundTime,jdbcType=TIMESTAMP},
             </if>
             <if test="noAgreement != null">
-                no_agreement = #{noAgreement,jdbcType=TINYINT},
+                no_agreement = #{noAgreement,jdbcType=INTEGER},
             </if>
             <if test="totalInterestMoney != null">
                 total_interest_money = #{totalInterestMoney,jdbcType=DOUBLE},
@@ -646,7 +646,7 @@
                 loan_type = #{loanType,jdbcType=VARCHAR},
             </if>
             <if test="collStage != null">
-                coll_stage = #{collStage,jdbcType=TINYINT},
+                coll_stage = #{collStage,jdbcType=INTEGER},
             </if>
             <if test="assureOne != null">
                 assure_one = #{assureOne,jdbcType=VARCHAR},
@@ -658,40 +658,40 @@
                 assure_three = #{assureThree,jdbcType=VARCHAR},
             </if>
             <if test="pledgeD != null">
-                pledge_d = #{pledgeD,jdbcType=TINYINT},
+                pledge_d = #{pledgeD,jdbcType=INTEGER},
             </if>
             <if test="pledgeZ != null">
-                pledge_z = #{pledgeZ,jdbcType=TINYINT},
+                pledge_z = #{pledgeZ,jdbcType=INTEGER},
             </if>
             <if test="bondsmanContact != null">
-                bondsman_contact = #{bondsmanContact,jdbcType=TINYINT},
+                bondsman_contact = #{bondsmanContact,jdbcType=INTEGER},
             </if>
             <if test="bondsmanEconomic != null">
-                bondsman_economic = #{bondsmanEconomic,jdbcType=TINYINT},
+                bondsman_economic = #{bondsmanEconomic,jdbcType=INTEGER},
             </if>
             <if test="isWorth != null">
-                is_worth = #{isWorth,jdbcType=TINYINT},
+                is_worth = #{isWorth,jdbcType=INTEGER},
             </if>
             <if test="canContact != null">
-                can_contact = #{canContact,jdbcType=TINYINT},
+                can_contact = #{canContact,jdbcType=INTEGER},
             </if>
             <if test="canPay != null">
-                can_pay = #{canPay,jdbcType=TINYINT},
+                can_pay = #{canPay,jdbcType=INTEGER},
             </if>
             <if test="isLawsuit != null">
-                is_lawsuit = #{isLawsuit,jdbcType=TINYINT},
+                is_lawsuit = #{isLawsuit,jdbcType=INTEGER},
             </if>
             <if test="isDecision != null">
-                is_decision = #{isDecision,jdbcType=TINYINT},
+                is_decision = #{isDecision,jdbcType=INTEGER},
             </if>
             <if test="realUrgeNum != null">
-                real_urge_num = #{realUrgeNum,jdbcType=TINYINT},
+                real_urge_num = #{realUrgeNum,jdbcType=INTEGER},
             </if>
             <if test="phoneUrgeNum != null">
-                phone_urge_num = #{phoneUrgeNum,jdbcType=TINYINT},
+                phone_urge_num = #{phoneUrgeNum,jdbcType=INTEGER},
             </if>
             <if test="entrustUrgeNum != null">
-                entrust_urge_num = #{entrustUrgeNum,jdbcType=TINYINT},
+                entrust_urge_num = #{entrustUrgeNum,jdbcType=INTEGER},
             </if>
             <if test="bondName != null">
                 bond_name = #{bondName,jdbcType=VARCHAR},
@@ -721,16 +721,16 @@
                 bond_contacts_idcode = #{bondContactsIdcode,jdbcType=VARCHAR},
             </if>
             <if test="debtType != null">
-                debt_type = #{debtType,jdbcType=TINYINT},
+                debt_type = #{debtType,jdbcType=INTEGER},
             </if>
             <if test="debtIsAddress != null">
-                debt_is_address = #{debtIsAddress,jdbcType=TINYINT},
+                debt_is_address = #{debtIsAddress,jdbcType=INTEGER},
             </if>
             <if test="debtPhone != null">
                 debt_phone = #{debtPhone,jdbcType=VARCHAR},
             </if>
             <if test="debtIsOperate != null">
-                debt_is_operate = #{debtIsOperate,jdbcType=TINYINT},
+                debt_is_operate = #{debtIsOperate,jdbcType=INTEGER},
             </if>
             <if test="debtIdcode != null">
                 debt_idcode = #{debtIdcode,jdbcType=VARCHAR},
@@ -790,10 +790,10 @@
     <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.dqys.sale.orm.pojo.UserBond">
     update t_user_bond
     set bond_no = #{bondNo,jdbcType=VARCHAR},
-      grade = #{grade,jdbcType=TINYINT},
-      bond_type = #{bondType,jdbcType=TINYINT},
-      is_special = #{isSpecial,jdbcType=TINYINT},
-      is_home_page = #{isHomePage,jdbcType=TINYINT},
+      grade = #{grade,jdbcType=INTEGER},
+      bond_type = #{bondType,jdbcType=INTEGER},
+      is_special = #{isSpecial,jdbcType=INTEGER},
+      is_home_page = #{isHomePage,jdbcType=INTEGER},
       title = #{title,jdbcType=VARCHAR},
       source = #{source,jdbcType=VARCHAR},
       start_time = #{startTime,jdbcType=TIMESTAMP},
@@ -805,27 +805,27 @@
       address = #{address,jdbcType=VARCHAR},
       borrow_time = #{borrowTime,jdbcType=TIMESTAMP},
       refund_time = #{refundTime,jdbcType=TIMESTAMP},
-      no_agreement = #{noAgreement,jdbcType=TINYINT},
+      no_agreement = #{noAgreement,jdbcType=INTEGER},
       total_interest_money = #{totalInterestMoney,jdbcType=DOUBLE},
       loan_money = #{loanMoney,jdbcType=DOUBLE},
       assess_total_price = #{assessTotalPrice,jdbcType=DOUBLE},
       loan_type = #{loanType,jdbcType=VARCHAR},
-      coll_stage = #{collStage,jdbcType=TINYINT},
+      coll_stage = #{collStage,jdbcType=INTEGER},
       assure_one = #{assureOne,jdbcType=VARCHAR},
       assure_two = #{assureTwo,jdbcType=VARCHAR},
       assure_three = #{assureThree,jdbcType=VARCHAR},
-      pledge_d = #{pledgeD,jdbcType=TINYINT},
-      pledge_z = #{pledgeZ,jdbcType=TINYINT},
-      bondsman_contact = #{bondsmanContact,jdbcType=TINYINT},
-      bondsman_economic = #{bondsmanEconomic,jdbcType=TINYINT},
-      is_worth = #{isWorth,jdbcType=TINYINT},
-      can_contact = #{canContact,jdbcType=TINYINT},
-      can_pay = #{canPay,jdbcType=TINYINT},
-      is_lawsuit = #{isLawsuit,jdbcType=TINYINT},
-      is_decision = #{isDecision,jdbcType=TINYINT},
-      real_urge_num = #{realUrgeNum,jdbcType=TINYINT},
-      phone_urge_num = #{phoneUrgeNum,jdbcType=TINYINT},
-      entrust_urge_num = #{entrustUrgeNum,jdbcType=TINYINT},
+      pledge_d = #{pledgeD,jdbcType=INTEGER},
+      pledge_z = #{pledgeZ,jdbcType=INTEGER},
+      bondsman_contact = #{bondsmanContact,jdbcType=INTEGER},
+      bondsman_economic = #{bondsmanEconomic,jdbcType=INTEGER},
+      is_worth = #{isWorth,jdbcType=INTEGER},
+      can_contact = #{canContact,jdbcType=INTEGER},
+      can_pay = #{canPay,jdbcType=INTEGER},
+      is_lawsuit = #{isLawsuit,jdbcType=INTEGER},
+      is_decision = #{isDecision,jdbcType=INTEGER},
+      real_urge_num = #{realUrgeNum,jdbcType=INTEGER},
+      phone_urge_num = #{phoneUrgeNum,jdbcType=INTEGER},
+      entrust_urge_num = #{entrustUrgeNum,jdbcType=INTEGER},
       bond_name = #{bondName,jdbcType=VARCHAR},
       bond_province = #{bondProvince,jdbcType=INTEGER},
       bond_city = #{bondCity,jdbcType=INTEGER},
@@ -835,10 +835,10 @@
       bond_contacts_name = #{bondContactsName,jdbcType=VARCHAR},
       bond_contacts_phone = #{bondContactsPhone,jdbcType=VARCHAR},
       bond_contacts_idcode = #{bondContactsIdcode,jdbcType=VARCHAR},
-      debt_type = #{debtType,jdbcType=TINYINT},
-      debt_is_address = #{debtIsAddress,jdbcType=TINYINT},
+      debt_type = #{debtType,jdbcType=INTEGER},
+      debt_is_address = #{debtIsAddress,jdbcType=INTEGER},
       debt_phone = #{debtPhone,jdbcType=VARCHAR},
-      debt_is_operate = #{debtIsOperate,jdbcType=TINYINT},
+      debt_is_operate = #{debtIsOperate,jdbcType=INTEGER},
       debt_idcode = #{debtIdcode,jdbcType=VARCHAR},
       debt_province = #{debtProvince,jdbcType=INTEGER},
       debt_city = #{debtCity,jdbcType=INTEGER},
@@ -862,10 +862,10 @@
     <update id="updateByPrimaryKey" parameterType="com.dqys.sale.orm.pojo.UserBond">
     update t_user_bond
     set bond_no = #{bondNo,jdbcType=VARCHAR},
-      grade = #{grade,jdbcType=TINYINT},
-      bond_type = #{bondType,jdbcType=TINYINT},
-      is_special = #{isSpecial,jdbcType=TINYINT},
-      is_home_page = #{isHomePage,jdbcType=TINYINT},
+      grade = #{grade,jdbcType=INTEGER},
+      bond_type = #{bondType,jdbcType=INTEGER},
+      is_special = #{isSpecial,jdbcType=INTEGER},
+      is_home_page = #{isHomePage,jdbcType=INTEGER},
       title = #{title,jdbcType=VARCHAR},
       source = #{source,jdbcType=VARCHAR},
       start_time = #{startTime,jdbcType=TIMESTAMP},
@@ -877,27 +877,27 @@
       address = #{address,jdbcType=VARCHAR},
       borrow_time = #{borrowTime,jdbcType=TIMESTAMP},
       refund_time = #{refundTime,jdbcType=TIMESTAMP},
-      no_agreement = #{noAgreement,jdbcType=TINYINT},
+      no_agreement = #{noAgreement,jdbcType=INTEGER},
       total_interest_money = #{totalInterestMoney,jdbcType=DOUBLE},
       loan_money = #{loanMoney,jdbcType=DOUBLE},
       assess_total_price = #{assessTotalPrice,jdbcType=DOUBLE},
       loan_type = #{loanType,jdbcType=VARCHAR},
-      coll_stage = #{collStage,jdbcType=TINYINT},
+      coll_stage = #{collStage,jdbcType=INTEGER},
       assure_one = #{assureOne,jdbcType=VARCHAR},
       assure_two = #{assureTwo,jdbcType=VARCHAR},
       assure_three = #{assureThree,jdbcType=VARCHAR},
-      pledge_d = #{pledgeD,jdbcType=TINYINT},
-      pledge_z = #{pledgeZ,jdbcType=TINYINT},
-      bondsman_contact = #{bondsmanContact,jdbcType=TINYINT},
-      bondsman_economic = #{bondsmanEconomic,jdbcType=TINYINT},
-      is_worth = #{isWorth,jdbcType=TINYINT},
-      can_contact = #{canContact,jdbcType=TINYINT},
-      can_pay = #{canPay,jdbcType=TINYINT},
-      is_lawsuit = #{isLawsuit,jdbcType=TINYINT},
-      is_decision = #{isDecision,jdbcType=TINYINT},
-      real_urge_num = #{realUrgeNum,jdbcType=TINYINT},
-      phone_urge_num = #{phoneUrgeNum,jdbcType=TINYINT},
-      entrust_urge_num = #{entrustUrgeNum,jdbcType=TINYINT},
+      pledge_d = #{pledgeD,jdbcType=INTEGER},
+      pledge_z = #{pledgeZ,jdbcType=INTEGER},
+      bondsman_contact = #{bondsmanContact,jdbcType=INTEGER},
+      bondsman_economic = #{bondsmanEconomic,jdbcType=INTEGER},
+      is_worth = #{isWorth,jdbcType=INTEGER},
+      can_contact = #{canContact,jdbcType=INTEGER},
+      can_pay = #{canPay,jdbcType=INTEGER},
+      is_lawsuit = #{isLawsuit,jdbcType=INTEGER},
+      is_decision = #{isDecision,jdbcType=INTEGER},
+      real_urge_num = #{realUrgeNum,jdbcType=INTEGER},
+      phone_urge_num = #{phoneUrgeNum,jdbcType=INTEGER},
+      entrust_urge_num = #{entrustUrgeNum,jdbcType=INTEGER},
       bond_name = #{bondName,jdbcType=VARCHAR},
       bond_province = #{bondProvince,jdbcType=INTEGER},
       bond_city = #{bondCity,jdbcType=INTEGER},
@@ -907,10 +907,10 @@
       bond_contacts_name = #{bondContactsName,jdbcType=VARCHAR},
       bond_contacts_phone = #{bondContactsPhone,jdbcType=VARCHAR},
       bond_contacts_idcode = #{bondContactsIdcode,jdbcType=VARCHAR},
-      debt_type = #{debtType,jdbcType=TINYINT},
-      debt_is_address = #{debtIsAddress,jdbcType=TINYINT},
+      debt_type = #{debtType,jdbcType=INTEGER},
+      debt_is_address = #{debtIsAddress,jdbcType=INTEGER},
       debt_phone = #{debtPhone,jdbcType=VARCHAR},
-      debt_is_operate = #{debtIsOperate,jdbcType=TINYINT},
+      debt_is_operate = #{debtIsOperate,jdbcType=INTEGER},
       debt_idcode = #{debtIdcode,jdbcType=VARCHAR},
       debt_province = #{debtProvince,jdbcType=INTEGER},
       debt_city = #{debtCity,jdbcType=INTEGER},
@@ -957,17 +957,29 @@
     </sql>
     <select id="list" parameterType="com.dqys.sale.orm.query.UserBondQuery"
             resultMap="BaseResultMap">
-        SELECT
+        SELECT tap.* FROM t_business_obj_re bor LEFT JOIN business b
+        ON b.id=bor.business_id LEFT JOIN ( SELECT
         <include refid="Base_Column_List"/>
         FROM t_user_bond WHERE 1=1
-        <include refid="Query_Where"/>
+        <include refid="Query_Where"/>) tap
+        ON tap.id=bor.object_id
+        WHERE  bor.object_type=#{objectType}
+        <if test="businessStatus !=null">
+            AND b.status=#{businessStatus}
+        </if>
         Limit #{startPage},#{pageCount}
     </select>
     <select id="listCount" parameterType="com.dqys.sale.orm.query.UserBondQuery"
             resultType="int">
-        SELECT
-        count(*)
+        SELECT count(tap.id) FROM t_business_obj_re bor LEFT JOIN business b
+        ON b.id=bor.business_id LEFT JOIN ( SELECT
+        <include refid="Base_Column_List"/>
         FROM t_user_bond WHERE 1=1
-        <include refid="Query_Where"/>
+        <include refid="Query_Where"/>) tap
+        ON tap.id=bor.object_id
+        WHERE tap.id IS NOT NULL AND bor.object_type=#{objectType}
+        <if test="businessStatus !=null">
+            AND b.status=#{businessStatus}
+        </if>
     </select>
 </mapper>
