@@ -20,4 +20,9 @@ public class HasRejectLevel implements BusinessLevel {
      * 审核通过
      */
     public static final int check_OK = BusinessOperTypeEnum.check_OK.getValue();
+
+    /**
+     * 重新发布
+     */
+    public static final int re_announce = BusinessOperTypeEnum.re_announce.getValue();
 }
