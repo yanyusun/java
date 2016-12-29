@@ -1,5 +1,7 @@
 package com.dqys.sale.orm.pojo;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class FixedAsset {
@@ -14,9 +16,9 @@ public class FixedAsset {
     private Integer isHomePage;//是否至于首页，只有平台可以操作，最多4个
 
     private Integer comfrom;//委托来源：0清搜网，1后台录入，2请搜公众平台
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date entrustBegintime;//开始委托时间
-
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date entrustEndtime;//委托结束时间
 
     private Double assetRental;//资产总额单位元

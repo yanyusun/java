@@ -51,7 +51,7 @@ public class NewsAnnounceBusiness {
         }
         return okLevel;
     }
-    public static UnableLevel unableLevel(){
+    public static UnableLevel getUnableLevel(){
         if(unableLevel==null){
             unableLevel=new UnableLevel();
         }

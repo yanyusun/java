@@ -10,13 +10,23 @@ public enum ObjectTypeEnum {
     company_bond(13, "企业债权"),
     judicial_sale(14, "司法拍卖"),
     attention_asset(15, "关注类资产"),
-    asset_package(16, "资产包");
+    asset_package(16, "资产包"),
+    news(21, "新闻");
     private Integer value;
     private String name;
 
     ObjectTypeEnum(Integer value, String name) {
         this.value = value;
         this.name = name;
+    }
+
+    public static String getNameByValue(Integer value) {
+        for (ObjectTypeEnum objectTypeEnum : ObjectTypeEnum.values()) {
+            if (objectTypeEnum.getValue() == value) {
+                return objectTypeEnum.getName();
+            }
+        }
+        return null;
     }
 
     public Integer getValue() {

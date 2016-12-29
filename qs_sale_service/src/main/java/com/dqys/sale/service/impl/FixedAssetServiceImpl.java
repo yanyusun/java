@@ -113,6 +113,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
     }
 
     private List<FixedAssetDTO> getFixedAssetDTOs(FixedAssetQuery query) {
+        query.setStartPage(query.getStartPage());
         query.setObjectType(ObjectTypeEnum.fixed_asset.getValue());
         List<FixedAsset> fixedAssetList = fixedAssetMapper.fixedList(query);
         Integer count = fixedAssetMapper.fixedListCount(query);

@@ -75,4 +75,9 @@ public class SaleUserMapperImpl extends SaleBaseDao implements SaleUserMapper {
     public Integer listCount(SaleUserQuery query) {
         return super.getSqlSession().getMapper(SaleUserMapper.class).listCount(query);
     }
+
+    @Override
+    public SaleUser getAdmin() {
+        return super.getSqlSession().getMapper(SaleUserMapper.class).getAdmin();
+    }
 }

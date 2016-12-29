@@ -25,4 +25,7 @@ public interface SaleUserMapper extends BaseMapper<SaleUser> {
     List<SaleUser> list(SaleUserQuery query);
 
     Integer listCount(SaleUserQuery query);
+
+    SaleUser getAdmin();
+
 }

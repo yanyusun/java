@@ -12,6 +12,8 @@ import com.dqys.sale.orm.pojo.UserBusTotal;
 import com.dqys.sale.orm.query.UserBusTotalQuery;
 import com.dqys.sale.service.constant.AssetUserReEnum;
 import com.dqys.sale.service.facade.BusinessService;
+import com.dqys.sale.service.facade.MessageService;
+import com.dqys.sale.service.facade.TSaleUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,10 @@ public class BusinessServiceImpl implements BusinessService {
     @Autowired
     @Qualifier("saleBusinessService")
     private com.dqys.flowbusiness.service.service.BusinessService businessService;
+    @Autowired
+    private MessageService messageService;
+    @Autowired
+    private TSaleUserService tSaleUserService;
 
     @Override
     public Map collect(Integer status, Integer objectId, Integer objectType) {
@@ -167,14 +173,18 @@ public class BusinessServiceImpl implements BusinessService {
         Integer userId = UserSession.getCurrent().getUserId();
         Result result = businessService.flow_tx(businessId, userId, AssetBusiness.type, businessLevel, operType);
         if (result.getCode() == BusinessResultEnum.sucesss.getValue().intValue()) {
-            //还有后续的业务逻辑，如果是平台进行发布操作
+            //统计数据的加减，如果是平台进行发布操作
             if (AssetBusiness.getBeAnnouncedAdmin().AnnounceOperType == operType) {
                 setUserBus(null, reqUserId, 1, null, null);
             }
             if (AssetBusiness.getHasAnnouncedLevel().under_line == operType) {
                 setUserBus(null, reqUserId, -1, null, null);
             }
-
+//发送短信通知
+            if (reqUserId == null) {
+                reqUserId = tSaleUserService.getAdmin().getId();//获取管理员
+            }
+            messageService.addMessageAndSendSMS(userId, reqUserId, businessId, AssetBusiness.type, businessLevel, operType);
             map.put("result", "yes");
             return map;
         } else {
@@ -190,14 +200,18 @@ public class BusinessServiceImpl implements BusinessService {
         Integer userId = UserSession.getCurrent().getUserId();
         Result result = businessService.flow_tx(businessId, userId, AssetDisposeBusiness.type, businessLevel, operType);
         if (result.getCode() == BusinessResultEnum.sucesss.getValue().intValue()) {
-            //还有后续的业务逻辑，如果是平台进行处置操作
+            //统计数据的加减，如果是平台进行处置操作
             if (AssetDisposeBusiness.getCheckLevel().dispose_check_OK == operType) {
                 setUserBus(null, reqUserId, null, null, 1);
             }
             if (AssetDisposeBusiness.getOnDisposeLevel().dispose_cancel == operType) {
                 setUserBus(null, reqUserId, null, null, -1);
             }
-
+//发送短信通知
+            if (reqUserId == null) {
+                reqUserId = tSaleUserService.getAdmin().getId();//获取管理员
+            }
+            messageService.addMessageAndSendSMS(userId, reqUserId, businessId, AssetDisposeBusiness.type, businessLevel, operType);
             map.put("result", "yes");
             return map;
         } else {

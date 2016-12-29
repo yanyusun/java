@@ -3,7 +3,7 @@
 <mapper namespace="com.dqys.sale.orm.mapper.NewsMapper">
     <resultMap id="BaseResultMap" type="com.dqys.sale.orm.pojo.News">
         <id column="id" property="id" jdbcType="INTEGER"/>
-        <result column="auther" property="auther" jdbcType="INTEGER"/>
+        <result column="auther" property="auther" jdbcType="VARCHAR"/>
         <result column="province" property="province" jdbcType="INTEGER"/>
         <result column="city" property="city" jdbcType="INTEGER"/>
         <result column="area" property="area" jdbcType="INTEGER"/>
@@ -19,10 +19,11 @@
         <result column="open_time" property="openTime" jdbcType="TIMESTAMP"/>
         <result column="read_num" property="readNum" jdbcType="INTEGER"/>
         <result column="mark" property="mark" jdbcType="VARCHAR"/>
+        <result column="oper_user" property="operUser" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, auther, province, city, area, type, is_refer, is_headline, title, content, cover, 
-    digest, creat_at, status, open_time, read_num, mark
+    digest, creat_at, status, open_time, read_num, mark,oper_user
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -41,14 +42,14 @@
       cover, digest, creat_at, 
       status, open_time, read_num, 
       mark)
-    values (#{id,jdbcType=INTEGER}, #{auther,jdbcType=INTEGER}, #{province,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{auther,jdbcType=VARCHAR}, #{province,jdbcType=INTEGER}, 
       #{city,jdbcType=INTEGER}, #{area,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{isRefer,jdbcType=INTEGER}, 
       #{isHeadline,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
       #{cover,jdbcType=VARCHAR}, #{digest,jdbcType=VARCHAR}, #{creatAt,jdbcType=TIMESTAMP}, 
       #{status,jdbcType=INTEGER}, #{openTime,jdbcType=TIMESTAMP}, #{readNum,jdbcType=INTEGER}, 
       #{mark,jdbcType=VARCHAR})
   </insert>
-    <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.News">
+    <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.News" keyProperty="id" useGeneratedKeys="true">
         insert into t_news
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -102,13 +103,16 @@
             <if test="mark != null">
                 mark,
             </if>
+            <if test="operUser != null">
+                oper_user,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 #{id,jdbcType=INTEGER},
             </if>
             <if test="auther != null">
-                #{auther,jdbcType=INTEGER},
+                #{auther,jdbcType=VARCHAR},
             </if>
             <if test="province != null">
                 #{province,jdbcType=INTEGER},
@@ -155,13 +159,16 @@
             <if test="mark != null">
                 #{mark,jdbcType=VARCHAR},
             </if>
+            <if test="operUser != null">
+                #{operUser,jdbcType=INTEGER},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.dqys.sale.orm.pojo.News">
         update t_news
         <set>
             <if test="auther != null">
-                auther = #{auther,jdbcType=INTEGER},
+                auther = #{auther,jdbcType=VARCHAR},
             </if>
             <if test="province != null">
                 province = #{province,jdbcType=INTEGER},
@@ -213,7 +220,7 @@
     </update>
     <update id="updateByPrimaryKey" parameterType="com.dqys.sale.orm.pojo.News">
     update t_news
-    set auther = #{auther,jdbcType=INTEGER},
+    set auther = #{auther,jdbcType=VARCHAR},
       province = #{province,jdbcType=INTEGER},
       city = #{city,jdbcType=INTEGER},
       area = #{area,jdbcType=INTEGER},
@@ -252,15 +259,22 @@
             AND status=#{status}
         </if>
         <if test="userId !=null">
-            AND auther=#{userId}
+            AND oper_user=#{userId}
         </if>
     </sql>
     <select id="list" parameterType="com.dqys.sale.orm.query.NewsQuery"
             resultMap="BaseResultMap">
-        SELECT
+        SELECT tap.* FROM t_business_obj_re bor LEFT JOIN business b
+        ON b.id=bor.business_id RIGHT JOIN ( SELECT
         <include refid="Base_Column_List"/>
         FROM t_news WHERE 1=1
         <include refid="Query_Where"/>
+        ) tap
+        ON tap.id=bor.object_id
+        WHERE bor.object_type=#{objectType}
+        <if test="businessStatus !=null">
+            AND b.status=#{businessStatus}
+        </if>
         <if test="isOrder">
             ORDER BY open_time desc
         </if>
@@ -271,10 +285,17 @@
     </select>
     <select id="listCount" parameterType="com.dqys.sale.orm.query.NewsQuery"
             resultType="int">
-        SELECT
-        count(*)
+        SELECT COUNT(tap.id) FROM t_business_obj_re bor LEFT JOIN business b
+        ON b.id=bor.business_id RIGHT JOIN ( SELECT
+        <include refid="Base_Column_List"/>
         FROM t_news WHERE 1=1
         <include refid="Query_Where"/>
+        ) tap
+        ON tap.id=bor.object_id
+        WHERE bor.object_type=#{objectType}
+        <if test="businessStatus !=null">
+            AND b.status=#{businessStatus}
+        </if>
     </select>
 
     <select id="selectLableByNewId" resultType="com.dqys.sale.orm.pojo.NewsLable">

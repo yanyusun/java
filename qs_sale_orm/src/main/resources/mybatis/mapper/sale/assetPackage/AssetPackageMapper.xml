@@ -35,12 +35,15 @@
         <result column="dispose_num" property="disposeNum" jdbcType="INTEGER"/>
         <result column="collection_num" property="collectionNum" jdbcType="INTEGER"/>
         <result column="dispose_status" property="disposeStatus" jdbcType="INTEGER"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
     </resultMap>
     <sql id="Base_Column_List">
     id,asset_no, title, is_special, is_home_page, asset_type, grade, entrust_source, total_money,
     province, city, area, address, entrust_name, entrust_province, entrust_city, entrust_area, 
     entrust_address, entrust_phone, entrust_contacts_name, entrust_contacts_phone, entrust_type, 
-    is_bank, create_time, update_time, oper_user, describes, remark,enable,check_status,dispose_num,collection_num,dispose_status
+    is_bank, create_time, update_time, oper_user, describes, remark,enable,check_status,dispose_num,collection_num,dispose_status,
+    start_time,end_time
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -157,6 +160,12 @@
             <if test="remark != null">
                 remark,
             </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -239,6 +248,12 @@
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},
             </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType="TIMESTAMP"},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType="TIMESTAMP"},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.dqys.sale.orm.pojo.AssetPackage">
@@ -316,6 +331,12 @@
             </if>
             <if test="remark != null">
                 remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                start_time=#{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time=#{endTime,jdbcType=TIMESTAMP},
             </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
@@ -422,7 +443,7 @@
         FROM t_asset_package WHERE 1=1
         <include refid="Query_Where"/>) tap
         ON tap.id=bor.object_id
-        WHERE  bor.object_type=#{objectType}
+        WHERE bor.object_type=#{objectType}
         <if test="businessStatus !=null">
             AND b.status=#{businessStatus}
         </if>

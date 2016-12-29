@@ -56,7 +56,7 @@ public class BusinessController {
     }
 
     /**
-     * @api {post} /business/release 发业务操作
+     * @api {post} /business/release 发布业务操作
      * @apiName /business/release
      * @apiSampleRequest /business/release
      * @apiGroup　 businessSale
@@ -74,7 +74,7 @@ public class BusinessController {
     }
 
     /**
-     * @api {post} /business/dispose 发业务操作
+     * @api {post} /business/dispose 处置业务操作
      * @apiName /business/dispose
      * @apiSampleRequest /business/dispose
      * @apiGroup　 businessSale
