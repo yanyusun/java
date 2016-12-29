@@ -1,15 +1,12 @@
 package com.dqys.sale.service.impl;
 
-import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.sale.orm.mapper.NewsMapper;
 import com.dqys.sale.orm.pojo.News;
 import com.dqys.sale.orm.pojo.NewsLable;
-import com.dqys.sale.orm.pojo.UserBond;
 import com.dqys.sale.orm.query.NewsQuery;
 import com.dqys.sale.service.dto.NewsDTO;
-import com.dqys.sale.service.dto.UserBondDTO;
 import com.dqys.sale.service.facade.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,5 +78,13 @@ public class NewsServiceImpl implements NewsService {
         return JsonResponseTool.success(news.getId());
     }
 
+    @Override
+    public JsonResponse indexList(NewsQuery query) {
+        return null;
+    }
 
+    @Override
+    public JsonResponse List(NewsQuery query) {
+        return null;
+    }
 }
