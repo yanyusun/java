@@ -24,7 +24,7 @@ public class NewsAnnounceBusiness {
      */
     private static WaitLevel waitLevel=null;
     /**
-     * 发布
+     * 已发布
      */
     private static OkLevel okLevel=null;
     /**
