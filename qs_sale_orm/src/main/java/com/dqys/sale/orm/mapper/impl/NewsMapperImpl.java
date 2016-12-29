@@ -5,6 +5,7 @@ import com.dqys.sale.orm.mapper.NewsMapper;
 import com.dqys.sale.orm.pojo.News;
 import com.dqys.sale.orm.pojo.NewsLable;
 import com.dqys.sale.orm.query.NewsQuery;
+import com.dqys.sale.orm.query.NewsQueryY;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -73,5 +74,15 @@ public class NewsMapperImpl extends SaleBaseDao implements NewsMapper {
     @Override
     public Integer delLableReByNewsId(Integer id) {
         return super.getSqlSession().getMapper(NewsMapper.class).delLableReByNewsId(id);
+    }
+
+    @Override
+    public List<News> listWithOutLables(NewsQueryY query) {
+        return super.getSqlSession().getMapper(NewsMapper.class).listWithOutLables(query);
+    }
+
+    @Override
+    public List<News> listY(NewsQueryY query) {
+        return super.getSqlSession().getMapper(NewsMapper.class).listY(query);
     }
 }

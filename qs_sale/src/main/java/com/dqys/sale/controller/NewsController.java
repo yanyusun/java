@@ -2,16 +2,19 @@ package com.dqys.sale.controller;
 
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
+import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.sale.orm.query.NewsQuery;
-import com.dqys.sale.orm.query.UserBondQuery;
 import com.dqys.sale.service.dto.NewsDTO;
-import com.dqys.sale.service.dto.UserBondDTO;
+import com.dqys.sale.service.dto.news.NewsDtoY;
+import com.dqys.sale.service.dto.news.SecondLevelDtoList;
 import com.dqys.sale.service.facade.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 新闻管理
@@ -91,7 +94,7 @@ public class NewsController {
     @ResponseBody
     public JsonResponse newsList(NewsQuery query) {
 //        query.setStatus(1);
-        return newsService.newsList(query);
+        return newsService.indexList(query);
     }
 
     /**
@@ -232,6 +235,26 @@ public class NewsController {
     @ResponseBody
     public JsonResponse addOrUpdateNews(@ModelAttribute NewsDTO newsDTO) {
         return newsService.addOrUpdateNews_tx(newsDTO);
+    }
+
+    /**
+     * 二级页面
+     * @return
+     */
+    @RequestMapping("/secondLeveL")
+    public JsonResponse getSecondLevelDto() {
+        SecondLevelDtoList secondLevelDtoList=newsService.sencondLevelPage();
+        return JsonResponseTool.success(secondLevelDtoList);
+    }
+
+    /**
+     * 二级页面的列表
+     * @return
+     */
+    @RequestMapping("/secondNewsList")
+    public JsonResponse getSecondLevelDto(int type,int page) {
+        List<NewsDtoY> newsDtoYList=newsService.sencondNewsList(type,page);
+        return JsonResponseTool.success(newsDtoYList);
     }
 
 }

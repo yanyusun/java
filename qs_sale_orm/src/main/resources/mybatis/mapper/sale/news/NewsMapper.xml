@@ -21,6 +21,15 @@
         <result column="mark" property="mark" jdbcType="VARCHAR"/>
         <result column="oper_user" property="operUser" jdbcType="INTEGER"/>
     </resultMap>
+
+    <resultMap id="ResultMapWithLabels" type="com.dqys.sale.orm.pojo.News" extends="BaseResultMap">
+        <collection column="id" property="lables"  ofType="com.dqys.sale.orm.pojo.NewsLable">
+            <result column="lable_type" property="type"/>
+            <result column="lable_name" property="name"/>
+        </collection>
+    </resultMap>
+
+
     <sql id="Base_Column_List">
     id, auther, province, city, area, type, is_refer, is_headline, title, content, cover, 
     digest, creat_at, status, open_time, read_num, mark,oper_user
@@ -307,5 +316,28 @@
     <delete id="delLableReByNewsId" parameterType="int">
         DELETE FROM t_news_lable_re where news_id=#{id}
     </delete>
+
+
+
+
+    <select id="listY" resultMap="ResultMapWithLabels" parameterType="com.dqys.sale.orm.query.NewsQueryY">
+        select  news.id,label .type label_type,label.name label_name  ,news.open_time from t_news news  ,t_news_label label ,t_news_lable_re re
+        where  re.lable_id=label.id and re.news_id = news.id
+        ORDER BY  news.open_time DESC
+        <if test="isPaging">
+            limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+        </if>
+    </select>
+
+
+
+
+
+
+
+
+
+
+
 
 </mapper>
