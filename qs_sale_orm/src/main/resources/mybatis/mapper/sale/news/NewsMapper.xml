@@ -20,6 +20,15 @@
         <result column="read_num" property="readNum" jdbcType="INTEGER"/>
         <result column="mark" property="mark" jdbcType="VARCHAR"/>
     </resultMap>
+
+    <resultMap id="ResultMapWithLabels" type="com.dqys.sale.orm.pojo.News" extends="BaseResultMap">
+        <collection column="id" property="lables"  ofType="com.dqys.sale.orm.pojo.NewsLable">
+            <result column="lable_type" property="type"/>
+            <result column="lable_name" property="name"/>
+        </collection>
+    </resultMap>
+
+
     <sql id="Base_Column_List">
     id, auther, province, city, area, type, is_refer, is_headline, title, content, cover, 
     digest, creat_at, status, open_time, read_num, mark
@@ -286,5 +295,21 @@
     <delete id="delLableReByNewsId" parameterType="int">
         DELETE FROM t_news_lable_re where news_id=#{id}
     </delete>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </mapper>
