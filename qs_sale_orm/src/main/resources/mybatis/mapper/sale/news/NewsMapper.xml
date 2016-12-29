@@ -299,7 +299,14 @@
 
 
 
-
+    <select id="listY" resultMap="ResultMapWithLabels" parameterType="com.dqys.sale.orm.query.NewsQueryY">
+        select  news.id,label .type label_type,label.name label_name  ,news.open_time from t_news news  ,t_news_label label ,t_news_lable_re re
+        where  re.lable_id=label.id and re.news_id = news.id
+        ORDER BY  news.open_time DESC
+        <if test="isPaging">
+            limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
+        </if>
+    </select>
 
 
 
