@@ -1,5 +1,6 @@
 package com.dqys.sale.service.impl;
 
+import com.dqys.auth.orm.dao.facade.SaleUserMapper;
 import com.dqys.core.constant.MessageBTEnum;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.constant.SmsEnum;
@@ -8,7 +9,6 @@ import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.FormatValidateTool;
 import com.dqys.core.utils.RabbitMQProducerTool;
 import com.dqys.core.utils.SmsUtil;
-import com.dqys.sale.orm.mapper.SaleUserMapper;
 import com.dqys.sale.orm.mapper.message.MessageMapper;
 import com.dqys.sale.orm.pojo.UserDetailDTO;
 import com.dqys.sale.orm.pojo.message.Message;
@@ -105,7 +105,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Integer sendSMS(Integer receiveUserId, String mobilePhone, String content) {
         if (mobilePhone == null) {
-            UserDetailDTO tUserInfo = saleUserMapper.getUserDetail(receiveUserId);
+            com.dqys.auth.orm.pojo.saleUser.dto.UserDetailDTO tUserInfo = saleUserMapper.getUserDetail(receiveUserId);
             if (tUserInfo != null) {
                 mobilePhone = tUserInfo.getMobile();
             }
@@ -149,6 +149,11 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public Integer insertMessageNoByOperinfo(MessageOperinfo messageOperinfo) {
         return messageMapper.insertMessageNoByOperinfo(messageOperinfo);
+    }
+
+    @Override
+    public Integer addMessageAndSendSMS(Integer sendUserId, Integer receiveUserId, Integer operType) {
+        return null;
     }
 
 

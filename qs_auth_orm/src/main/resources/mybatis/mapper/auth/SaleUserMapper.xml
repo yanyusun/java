@@ -233,4 +233,45 @@
     INSERT INTO t_user_bus_total(user_id,on_business,on_collection,has_publish) VALUES(#{userId},0,0,0)
     </insert>
 
+
+    <sql id="Query_Where">
+        <if test="ids!=null and ids.size>0">
+            AND id IN
+            <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="account !=null">
+            AND account LIKE CONCAT('%',#{email},'%')
+        </if>
+        <if test="email !=null">
+            AND email LIKE CONCAT('%',#{email},'%')
+        </if>
+        <if test="mobile !=null">
+            AND mobile LIKE CONCAT('%',#{email},'%')
+        </if>
+        <if test="userId !=null">
+            AND id=#{userId}
+        </if>
+    </sql>
+    <select id="list" parameterType="com.dqys.auth.orm.query.SaleUserQuery"
+            resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_sale_user
+        where 1=1
+        <include refid="Query_Where"/>
+        ORDER BY create_at DESC
+        Limit #{startPage},#{pageCount}
+    </select>
+    <select id="listCount" parameterType="com.dqys.auth.orm.query.SaleUserQuery"
+            resultType="int">
+        select
+        COUNT(id)
+        from t_sale_user
+        where 1=1
+        <include refid="Query_Where"/>
+    </select>
+
+
 </mapper>

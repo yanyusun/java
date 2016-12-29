@@ -93,4 +93,6 @@ public interface MessageService {
 
     Integer insertMessageNoByOperinfo(MessageOperinfo messageOperinfo);
 
+    Integer addMessageAndSendSMS(Integer sendUserId, Integer receiveUserId, Integer operType);
+
 }

@@ -4,6 +4,7 @@ import com.dqys.auth.orm.dao.facade.SaleUserMapper;
 import com.dqys.auth.orm.pojo.LoginLog;
 import com.dqys.auth.orm.pojo.saleUser.SaleUser;
 import com.dqys.auth.orm.pojo.saleUser.dto.UserDetailDTO;
+import com.dqys.auth.orm.query.SaleUserQuery;
 import com.dqys.core.base.SaleBaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -63,5 +64,15 @@ public class SaleUserMapperImpl extends SaleBaseDao implements SaleUserMapper {
     @Override
     public void insetUserBusTotal(Integer userId) {
         super.getSqlSession().getMapper(SaleUserMapper.class).insetUserBusTotal(userId);
+    }
+
+    @Override
+    public List<SaleUser> list(SaleUserQuery query) {
+        return super.getSqlSession().getMapper(SaleUserMapper.class).list(query);
+    }
+
+    @Override
+    public Integer listCount(SaleUserQuery query) {
+        return super.getSqlSession().getMapper(SaleUserMapper.class).listCount(query);
     }
 }

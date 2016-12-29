@@ -63,10 +63,6 @@ public class SaleUserServiceImpl implements SaleUserService {
     public JsonResponse register(SaleUserModel saleUserModel) throws Exception {
         SaleUser user = saleUserModel.getSaleUser();
         SaleUserTag tag = saleUserModel.getSaleUserTag();
-        TUserInfo tUserInfo = userService.queryUser(null, null, user.getEmail());//查询的是清搜公众平台邮箱帐号是否存在
-        if (tUserInfo != null) {
-            return JsonResponseTool.failure("该邮箱已经注册");
-        }
         List<SaleUser> list = saleUserMapper.verifyUser(user.getAccount(), user.getMobile(), user.getEmail());
         if (list == null && list.size() > 0) {
             return JsonResponseTool.failure("帐号或邮箱或手机号已存在");
@@ -116,6 +112,29 @@ public class SaleUserServiceImpl implements SaleUserService {
     @Override
     public void addLoginLog(LoginLog log) {
         saleUserMapper.addLoginLog(log);
+    }
+
+    @Override
+    public JsonResponse verifyUser(String account, String email, String mobile) throws Exception {
+        if (account != null && (FormatValidateTool.checkEmail(account) || FormatValidateTool.checkMobile(account))) {
+            return JsonResponseTool.failure("用户名不能为邮箱或手机号");
+        }
+        if (email != null && !FormatValidateTool.checkEmail(email)) {
+            return JsonResponseTool.failure("邮箱格式有误");
+        }
+        if (mobile != null && !FormatValidateTool.checkMobile(mobile)) {
+            return JsonResponseTool.failure("手机号格式有误");
+        }
+        if (account != null && (queryUser(account, null, null) != null || userService.queryUser(account, null, null) != null)) {
+            return JsonResponseTool.failure("用户名已存在");
+        }
+        if (email != null && (queryUser(null, null, email) != null || userService.queryUser(null, null, email) != null)) {
+            return JsonResponseTool.failure("邮箱已注册");
+        }
+        if (mobile != null && queryUser(null, mobile, null) != null) {
+            return JsonResponseTool.failure("手机号已存在");
+        }
+        return JsonResponseTool.success(null);
     }
 
 
