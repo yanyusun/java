@@ -1,12 +1,11 @@
 package com.dqys.sale.orm.query;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by mkfeng on 2016/12/22.
  */
-public class NewsQuery extends PageEntity implements Serializable {
+public class NewsQuery extends PageEntity {
     private List<Integer> ids;
     private Integer type;//类别:新闻资讯0，行业动态1，业务信息2
     private Integer isRefer;//是否推荐1是0否

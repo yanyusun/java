@@ -1,6 +1,7 @@
 package com.dqys.sale.orm.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 public class News {
     private Integer id;
@@ -36,6 +37,8 @@ public class News {
     private Integer readNum;//阅读数
 
     private String mark;//'备注
+
+    private List<NewsLable> lables;
 
     public String getDigest() {
         return digest;
@@ -171,5 +174,13 @@ public class News {
 
     public void setMark(String mark) {
         this.mark = mark;
+    }
+
+    public List<NewsLable> getLables() {
+        return lables;
+    }
+
+    public void setLables(List<NewsLable> lables) {
+        this.lables = lables;
     }
 }
