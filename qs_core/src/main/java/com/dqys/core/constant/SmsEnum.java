@@ -55,7 +55,16 @@ public enum SmsEnum {
     INVALID_BUSINESS(1002, "无效"),
     RESULT_BUSINESS(1003, "审核通过或驳回"),
     FB_BUSINESS(1004, "平台发布"),
-    WX_BUSINESS(1005, "平台无效");
+    WX_BUSINESS(1005, "平台无效"),
+    XJ_BUSINESS(1006, "平台下架"),
+    SJ_BUSINESS(1007, "平台上架"),
+    CX_BUSINESS(1008, "无效用户重新发布"),
+    DISPOSE_RESULT_YES(1009, "处置申请的审核通过"),
+    DISPOSE_RESULT_NO(1010, "处置申请的驳回"),
+    CANCEL_DISPOSE(1011, "取消处置"),
+    HAS_DISPOSE(1012, "已处置"),
+    DISSENT_DISPOSE(1013, "异议"),
+    CX_DISPOSE(1013, "驳回的重新申请");
 
     private Integer value;
     private String name;

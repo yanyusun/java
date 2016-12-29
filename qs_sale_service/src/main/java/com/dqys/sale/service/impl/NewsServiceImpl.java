@@ -1,6 +1,7 @@
 package com.dqys.sale.service.impl;
 
 import com.dqys.core.model.JsonResponse;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
 import com.dqys.flowbusiness.service.constant.saleBusiness.NewsAnnounceBusiness;

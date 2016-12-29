@@ -211,37 +211,83 @@ public class MessageServiceImpl implements MessageService {
     private String disposeSms(UserDetailDTO sendUser, UserDetailDTO receiveUser, BusinessORelation oRelation, Integer businessLevel, Integer operType) {
         SmsUtil smsUtil = new SmsUtil();
         String content = "";
+        String admin = "管理员";
         if (businessLevel == AssetDisposeBusiness.getCheckLevel().getLevel() && operType == AssetDisposeBusiness.getCheckLevel().dispose_check_OK) {//平台点击审核通过，信息发送给用户
-
+            content = smsUtil.sendSms(SmsEnum.DISPOSE_RESULT_YES.getValue(), receiveUser.getMobile(),
+                    getUserName(receiveUser),
+                    admin,
+                    ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                    getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+            );
         }
         if (businessLevel == AssetDisposeBusiness.getCheckLevel().getLevel() && operType == AssetDisposeBusiness.getCheckLevel().dispose_reject) {//平台点击驳回，信息发送给用户
-
+            content = smsUtil.sendSms(SmsEnum.DISPOSE_RESULT_NO.getValue(), receiveUser.getMobile(),
+                    getUserName(receiveUser),
+                    admin,
+                    ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                    getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+            );
         }
         if (businessLevel == AssetDisposeBusiness.getCheckLevel().getLevel() && operType == AssetDisposeBusiness.getCheckLevel().dispose_unable) {//用户或平台点击无效，信息发送给平台或用户
             if (verifyAdmin(sendUser.getId())) {
-
+                content = smsUtil.sendSms(SmsEnum.WX_BUSINESS.getValue(), receiveUser.getMobile(),
+                        getUserName(receiveUser),
+                        admin,
+                        ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                        getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+                );
             } else {
-
+                content = smsUtil.sendSms(SmsEnum.WX_BUSINESS.getValue(), receiveUser.getMobile(),
+                        admin,
+                        getUserName(sendUser),
+                        ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                        getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+                );
             }
         }
         if (businessLevel == AssetDisposeBusiness.getOnDisposeLevel().getLevel() && operType == AssetDisposeBusiness.getOnDisposeLevel().dispose_cancel) {//用户或平台点击取消处置，信息发送给平台或用户
             if (verifyAdmin(sendUser.getId())) {
-
+                content = smsUtil.sendSms(SmsEnum.CANCEL_DISPOSE.getValue(), receiveUser.getMobile(),
+                        getUserName(receiveUser),
+                        admin,
+                        ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                        getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+                );
             } else {
-
+                content = smsUtil.sendSms(SmsEnum.CANCEL_DISPOSE.getValue(), receiveUser.getMobile(),
+                        admin,
+                        getUserName(sendUser),
+                        ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                        getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+                );
             }
         }
         if (businessLevel == AssetDisposeBusiness.getOnDisposeLevel().getLevel() && operType == AssetDisposeBusiness.getOnDisposeLevel().dispose_Ok) {//平台点击已处置，信息发送给用户
-
+            content = smsUtil.sendSms(SmsEnum.HAS_DISPOSE.getValue(), receiveUser.getMobile(),
+                    getUserName(receiveUser),
+                    admin,
+                    ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                    getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+            );
         }
         if (businessLevel == AssetDisposeBusiness.getHasRejectLevel().getLevel() && operType == AssetDisposeBusiness.getHasRejectLevel().dispose_re_announce) {//用户点击重新申请，信息发送给平台
-
+            content = smsUtil.sendSms(SmsEnum.CX_DISPOSE.getValue(), receiveUser.getMobile(),
+                    admin,
+                    getUserName(sendUser),
+                    ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                    getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+            );
         }
         if (businessLevel == AssetDisposeBusiness.getHasDisposeLevel().getLevel() && operType == AssetDisposeBusiness.getHasDisposeLevel().dispose_reset) {//平台点击重启，信息发送给用户
 
         }
         if (businessLevel == AssetDisposeBusiness.getHasDisposeLevel().getLevel() && operType == AssetDisposeBusiness.getHasDisposeLevel().dispose_reset) {//用户点击异议，信息发送给平台
-
+            content = smsUtil.sendSms(SmsEnum.DISSENT_DISPOSE.getValue(), receiveUser.getMobile(),
+                    admin,
+                    getUserName(sendUser),
+                    ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                    getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+            );
         }
         return content;
     }
@@ -254,8 +300,7 @@ public class MessageServiceImpl implements MessageService {
         if (businessLevel == AssetBusiness.getBeAnnounced().getLevel() && operType == AssetBusiness.getBeAnnounced().AnnounceOperType) {//用户点击发布，信息发送给平台
             content = smsUtil.sendSms(SmsEnum.PUBLISH_BUSINESS.getValue(), receiveUser.getMobile(),
                     admin,
-                    sendUser.getName(),
-                    sendUser.getAccount(),
+                    getUserName(sendUser),
                     "刚发布了",
                     ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
                     getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
@@ -280,7 +325,7 @@ public class MessageServiceImpl implements MessageService {
         }
         if (businessLevel == AssetBusiness.getCheckLevel().getLevel() && operType == AssetBusiness.getCheckLevel().reject) {//平台点击驳回，信息发送给用户
             content = smsUtil.sendSms(SmsEnum.RESULT_BUSINESS.getValue(), receiveUser.getMobile(),
-                    getUserName(sendUser),
+                    getUserName(receiveUser),
                     admin,
                     "驳回",
                     ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
@@ -289,7 +334,7 @@ public class MessageServiceImpl implements MessageService {
         }
         if (businessLevel == AssetBusiness.getCheckLevel().getLevel() && operType == AssetBusiness.getCheckLevel().check_OK) {//平台点击审核通过，信息发送给用户
             content = smsUtil.sendSms(SmsEnum.RESULT_BUSINESS.getValue(), receiveUser.getMobile(),
-                    getUserName(sendUser),
+                    getUserName(receiveUser),
                     admin,
                     "审核通过",
                     ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
@@ -307,7 +352,7 @@ public class MessageServiceImpl implements MessageService {
         }
         if (businessLevel == AssetBusiness.getReject().getLevel() && operType == AssetBusiness.getReject().check_OK) {//平台点击审核通过，信息发送给用户
             content = smsUtil.sendSms(SmsEnum.RESULT_BUSINESS.getValue(), receiveUser.getMobile(),
-                    getUserName(sendUser),
+                    getUserName(receiveUser),
                     admin,
                     "审核通过",
                     ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
@@ -316,20 +361,35 @@ public class MessageServiceImpl implements MessageService {
         }
         if (businessLevel == AssetBusiness.getBeAnnouncedAdmin().getLevel() && operType == AssetBusiness.getBeAnnouncedAdmin().AnnounceOperType) {//平台点击发布，信息发送给用户
             content = smsUtil.sendSms(SmsEnum.FB_BUSINESS.getValue(), receiveUser.getMobile(),
-                    getUserName(sendUser),
+                    getUserName(receiveUser),
                     admin,
                     ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
                     getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
             );
         }
         if (businessLevel == AssetBusiness.getBeAnnouncedAdmin().getLevel() && operType == AssetBusiness.getBeAnnouncedAdmin().AnnounceOperType) {//*平台点击无效，信息发送给用户
-
+            content = smsUtil.sendSms(SmsEnum.WX_BUSINESS.getValue(), receiveUser.getMobile(),
+                    getUserName(receiveUser),
+                    admin,
+                    ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                    getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+            );
         }
         if (businessLevel == AssetBusiness.getHasAnnouncedLevel().getLevel() && operType == AssetBusiness.getHasAnnouncedLevel().under_line) {//用户或平台点击下架，信息发送给平台或用户
             if (verifyAdmin(sendUser.getId())) {
-
+                content = smsUtil.sendSms(SmsEnum.XJ_BUSINESS.getValue(), receiveUser.getMobile(),
+                        getUserName(receiveUser),
+                        admin,
+                        ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                        getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+                );
             } else {
-
+                content = smsUtil.sendSms(SmsEnum.XJ_BUSINESS.getValue(), receiveUser.getMobile(),
+                        admin,
+                        getUserName(sendUser),
+                        ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                        getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+                );
             }
         }
         if (businessLevel == AssetBusiness.getHasUnderLine().getLevel() && operType == AssetBusiness.getHasUnderLine().re_announce) {//用户点击重新发布，信息发送给平台
@@ -342,16 +402,46 @@ public class MessageServiceImpl implements MessageService {
             );
         }
         if (businessLevel == AssetBusiness.getHasUnderLine().getLevel() && operType == AssetBusiness.getHasUnderLine().on_line) {//平台点击上架，信息发送给用户
-
+            content = smsUtil.sendSms(SmsEnum.SJ_BUSINESS.getValue(), receiveUser.getMobile(),
+                    getUserName(receiveUser),
+                    admin,
+                    ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                    getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+            );
         }
-        if (businessLevel == AssetBusiness.getHasUnderLine().getLevel() && operType == AssetBusiness.getHasUnderLine().unable) {//用户或平台点击下架，信息发送给平台或用户
-
+        if (businessLevel == AssetBusiness.getHasUnderLine().getLevel() && operType == AssetBusiness.getHasUnderLine().unable) {//用户或平台点击无效，信息发送给平台或用户
+            if (verifyAdmin(sendUser.getId())) {
+                content = smsUtil.sendSms(SmsEnum.WX_BUSINESS.getValue(), receiveUser.getMobile(),
+                        getUserName(receiveUser),
+                        admin,
+                        ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                        getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+                );
+            } else {
+                content = smsUtil.sendSms(SmsEnum.WX_BUSINESS.getValue(), receiveUser.getMobile(),
+                        admin,
+                        getUserName(sendUser),
+                        ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                        getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+                );
+            }
         }
         if (businessLevel == AssetBusiness.getUnable().getLevel() && operType == AssetBusiness.getUnable().re_announce) {//用户或平台点击重新发布，信息发送给平台或用户
             if (verifyAdmin(sendUser.getId())) {
-
+                content = smsUtil.sendSms(SmsEnum.CX_BUSINESS.getValue(), receiveUser.getMobile(),
+                        getUserName(receiveUser),
+                        admin,
+                        ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                        getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+                );
             } else {
-
+                content = smsUtil.sendSms(SmsEnum.PUBLISH_BUSINESS.getValue(), receiveUser.getMobile(),
+                        admin,
+                        getUserName(sendUser),
+                        "重新发布了[已无效]的",
+                        ObjectTypeEnum.getNameByValue(oRelation.getObjectType()),
+                        getObjectNO(oRelation.getObjectId(), oRelation.getObjectType())
+                );
             }
         }
         return content;
