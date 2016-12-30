@@ -33,6 +33,16 @@ public class SaleUser {
 
     private Integer sex;
 
+    private SaleUserTag userTag;
+
+    public SaleUserTag getUserTag() {
+        return userTag;
+    }
+
+    public void setUserTag(SaleUserTag userTag) {
+        this.userTag = userTag;
+    }
+
     public Integer getSex() {
         return sex;
     }

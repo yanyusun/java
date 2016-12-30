@@ -114,11 +114,11 @@ public class AssetPackageServiceImpl implements AssetPackageService {
         List<AssetPackageDTO> dtos = new ArrayList<>();
         for (AssetPackage entity : list) {
             AssetPackageDTO dto = new AssetPackageDTO();
-            dto.setLabels(labelMapper.selectByAssetId(entity.getId(), ObjectTypeEnum.asset_package.getValue()));
+            dto.setLabels(entity.getLabels());
             dto.setAssetPackage(entity);
-            dto.setAssetFiles(assetFileMapper.selectByAssetId(entity.getId(), ObjectTypeEnum.asset_package.getValue()));
-            dto.setDisposes(disposeMapper.selectByAssetId(entity.getId(), ObjectTypeEnum.asset_package.getValue()));
-            dto.setoRelation(businessORelationMapper.getORelation(entity.getId(), ObjectTypeEnum.asset_package.getValue()));
+            dto.setAssetFiles(entity.getAssetFiles());
+            dto.setDisposes(entity.getDisposes());
+            dto.setBusiness(entity.getBusiness());
             dtos.add(dto);
         }
         return dtos;

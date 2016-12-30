@@ -40,6 +40,7 @@ public class UserBondController {
      * @apiName bond/noVerify/getDetail
      * @apiSampleRequest bond/noVerify/getDetail
      * @apiGroup　 bond
+     * @apiParam {int} bondId 债权id
      */
     @RequestMapping("/noVerify/getDetail")
     @ResponseBody
@@ -56,7 +57,9 @@ public class UserBondController {
     @RequestMapping("/list")
     @ResponseBody
     public JsonResponse list(UserBondQuery query) {
-        query.setUserId(UserSession.getCurrent().getUserId());
+        if (!UserSession.getCurrent().getUserType().equals("1,")) {
+            query.setUserId(UserSession.getCurrent().getUserId());
+        }
         return userBondService.list(query);
     }
 

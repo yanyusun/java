@@ -97,9 +97,7 @@
             <if test="digest != null">
                 digest,
             </if>
-            <if test="creatAt != null">
                 creat_at,
-            </if>
             <if test="status != null">
                 status,
             </if>
@@ -153,9 +151,7 @@
             <if test="digest != null">
                 #{digest,jdbcType=VARCHAR},
             </if>
-            <if test="creatAt != null">
-                #{creatAt,jdbcType=TIMESTAMP},
-            </if>
+                now(),
             <if test="status != null">
                 #{status,jdbcType=INTEGER},
             </if>
@@ -208,9 +204,6 @@
             </if>
             <if test="digest != null">
                 digest = #{digest,jdbcType=VARCHAR},
-            </if>
-            <if test="creatAt != null">
-                creat_at = #{creatAt,jdbcType=TIMESTAMP},
             </if>
             <if test="status != null">
                 status = #{status,jdbcType=INTEGER},

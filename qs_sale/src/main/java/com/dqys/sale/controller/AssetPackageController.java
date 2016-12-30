@@ -39,6 +39,7 @@ public class AssetPackageController {
      * @api {post} asset/noVerify/getDetail 获取资产包详情
      * @apiName asset/noVerify/getDetail
      * @apiSampleRequest asset/noVerify/getDetail
+     * @apiParam {int} assetId 资产包id
      * @apiGroup　 asset
      */
     @RequestMapping("/noVerify/getDetail")
@@ -56,7 +57,9 @@ public class AssetPackageController {
     @RequestMapping("/list")
     @ResponseBody
     public JsonResponse list(AssetPackageQuery query) {
-        query.setUserId(UserSession.getCurrent().getUserId());
+        if (!UserSession.getCurrent().getUserType().equals("1,")) {
+            query.setUserId(UserSession.getCurrent().getUserId());
+        }
         return assetPackageService.list(query);
     }
 

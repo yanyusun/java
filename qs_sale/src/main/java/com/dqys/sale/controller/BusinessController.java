@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
@@ -62,7 +63,6 @@ public class BusinessController {
      * @apiGroup　 businessSale
      * @apiParam {int} [reqUserId] 请求者id
      * @apiParam {int} businessId 业务id
-     * @apiParam {int} businessType 业务类型
      * @apiParam {int} businessLevel 业务所在位置
      * @apiParam {int} operType 操作
      */

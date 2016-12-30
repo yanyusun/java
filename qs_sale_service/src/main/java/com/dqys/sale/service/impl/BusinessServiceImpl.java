@@ -3,14 +3,20 @@ package com.dqys.sale.service.impl;
 import com.dqys.core.model.UserSession;
 import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
 import com.dqys.flowbusiness.service.constant.saleBusiness.AssetDisposeBusiness;
+import com.dqys.flowbusiness.service.dto.BusinessDto;
 import com.dqys.flowbusiness.service.util.BusinessResultEnum;
 import com.dqys.flowbusiness.service.util.Result;
+import com.dqys.sale.orm.mapper.NewsMapper;
 import com.dqys.sale.orm.mapper.UserBusTotalMapper;
 import com.dqys.sale.orm.mapper.business.AssetUserReMapper;
+import com.dqys.sale.orm.mapper.business.BusinessORelationMapper;
 import com.dqys.sale.orm.pojo.AssetUserRe;
+import com.dqys.sale.orm.pojo.BusinessORelation;
+import com.dqys.sale.orm.pojo.News;
 import com.dqys.sale.orm.pojo.UserBusTotal;
 import com.dqys.sale.orm.query.UserBusTotalQuery;
 import com.dqys.sale.service.constant.AssetUserReEnum;
+import com.dqys.sale.service.constant.ObjectTypeEnum;
 import com.dqys.sale.service.facade.BusinessService;
 import com.dqys.sale.service.facade.MessageService;
 import com.dqys.sale.service.facade.TSaleUserService;
@@ -18,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +45,10 @@ public class BusinessServiceImpl implements BusinessService {
     private MessageService messageService;
     @Autowired
     private TSaleUserService tSaleUserService;
+    @Autowired
+    private BusinessORelationMapper businessORelationMapper;
+    @Autowired
+    private NewsMapper newsMapper;
 
     @Override
     public Map collect(Integer status, Integer objectId, Integer objectType) {
@@ -157,6 +168,10 @@ public class BusinessServiceImpl implements BusinessService {
             }
             re.setIsDispose(status);
             if (assetUserReMapper.updateByPrimaryKeySelective(re) > 0) {
+                BusinessDto dto = new BusinessDto();
+                dto.setObjcetType(objectType);
+                dto.setObjectId(objectId);
+                businessService.createBusiness_tx(dto, userId, AssetDisposeBusiness.type, AssetDisposeBusiness.getCheckLevel().getLevel());
                 map.put("result", "yes");
             } else {
                 map.put("msg", "请稍后重试");
@@ -175,6 +190,8 @@ public class BusinessServiceImpl implements BusinessService {
         if (result.getCode() == BusinessResultEnum.sucesss.getValue().intValue()) {
             //统计数据的加减，如果是平台进行发布操作
             if (AssetBusiness.getBeAnnouncedAdmin().AnnounceOperType == operType) {
+                BusinessORelation oRelation = businessORelationMapper.getORelationByBusinessId(businessId);
+                publish(oRelation.getObjectId(), oRelation.getObjectType());//
                 setUserBus(null, reqUserId, 1, null, null);
             }
             if (AssetBusiness.getHasAnnouncedLevel().under_line == operType) {
@@ -193,6 +210,22 @@ public class BusinessServiceImpl implements BusinessService {
         return map;
     }
 
+    /**
+     * 修改发布时间
+     *
+     * @param objectId
+     * @param objectType
+     */
+    private void publish(Integer objectId, Integer objectType) {
+        if (objectType == ObjectTypeEnum.news.getValue().intValue()) {
+            News news = newsMapper.selectByPrimaryKey(objectId);
+            if (news != null) {
+                news.setOpenTime(new Date());
+                newsMapper.updateByPrimaryKeySelective(news);
+            }
+        }
+    }
+
     @Override
     public Map dispose(Integer reqUserId, Integer businessId, Integer businessLevel, Integer operType) {
         Map map = new HashMap<>();
@@ -206,6 +239,7 @@ public class BusinessServiceImpl implements BusinessService {
             }
             if (AssetDisposeBusiness.getOnDisposeLevel().dispose_cancel == operType) {
                 setUserBus(null, reqUserId, null, null, -1);
+                //把
             }
 //发送短信通知
             if (reqUserId == null) {

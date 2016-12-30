@@ -239,9 +239,7 @@
             </if>
             now(),
             now(),
-            <if test="operUser != null">
-                #{operUser,jdbcType=INTEGER},
-            </if>
+            #{operUser,jdbcType=INTEGER},
             <if test="describes != null">
                 #{describes,jdbcType=VARCHAR},
             </if>
@@ -249,10 +247,10 @@
                 #{remark,jdbcType=VARCHAR},
             </if>
             <if test="startTime != null">
-                #{startTime,jdbcType="TIMESTAMP"},
+                #{startTime,jdbcType=TIMESTAMP},
             </if>
             <if test="endTime != null">
-                #{endTime,jdbcType="TIMESTAMP"},
+                #{endTime,jdbcType=TIMESTAMP},
             </if>
         </trim>
     </insert>
@@ -401,52 +399,74 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
+    <resultMap id="BaseResultMapWithAll" type="com.dqys.sale.orm.pojo.AssetPackage" extends="BaseResultMap"
+               autoMapping="true">
+        <collection column="id" property="labels" ofType="com.dqys.sale.orm.pojo.Label">
+            <result column="type" property="type"/>
+            <result column="name" property="name"/>
+        </collection>
+        <collection column="id" property="disposes" ofType="com.dqys.sale.orm.pojo.Dispose">
+            <result column="dispose_type" property="disposeType"/>
+            <result column="alg" property="alg"/>
+            <result column="value" property="value"/>
+        </collection>
+        <collection column="id" property="assetFiles" ofType="com.dqys.sale.orm.pojo.AssetFile">
+            <result column="filename" property="filename"/>
+            <result column="file_type" property="type"/>
+        </collection>
+        <collection column="id" property="business" ofType="com.dqys.sale.orm.pojo.Business">
+            <result column="business_id" property="id"/>
+            <result column="create_id" property="createId"/>
+        </collection>
+    </resultMap>
+
     <sql id="Query_Where">
         <if test="ids!=null and ids.size>0">
-            AND id IN
+            AND tap.id IN
             <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
                 #{id}
             </foreach>
         </if>
         <if test="isHomePage !=null">
-            AND is_home_page = #{isHomePage}
+            AND tap.is_home_page = #{isHomePage}
         </if>
         <if test="checkStatus !=null">
-            AND check_status=#{checkStatus}
+            AND tap.check_status=#{checkStatus}
         </if>
         <if test="enable !=null">
-            AND enable=#{enable}
+            AND tap.enable=#{enable}
         </if>
-        <if test="userId !=null">
-            AND oper_user=#{userId}
-        </if>
-    </sql>
-    <select id="list" parameterType="com.dqys.sale.orm.query.AssetPackageQuery"
-            resultMap="BaseResultMap">
-        SELECT tap.* FROM t_business_obj_re bor LEFT JOIN business b
-        ON b.id=bor.business_id RIGHT JOIN ( SELECT
-        <include refid="Base_Column_List"/>
-        FROM t_asset_package WHERE 1=1
-        <include refid="Query_Where"/>) tap
-        ON tap.id=bor.object_id
-        WHERE bor.object_type=#{objectType}
         <if test="businessStatus !=null">
             AND b.status=#{businessStatus}
         </if>
+        <if test="userId !=null">
+            AND b.create_id=#{userId}
+        </if>
+    </sql>
+    <select id="list" parameterType="com.dqys.sale.orm.query.AssetPackageQuery"
+            resultMap="BaseResultMapWithAll">
+        SELECT tap.*,(SELECT su.name FROM t_sale_user su WHERE id=tap.oper_user)
+        operUserName,dis.dispose_type,dis.alg,dis.value,taf.type file_type,taf.filename,lab.name lable_name,
+        lab.type lable_type,b.id business_id,b.create_id
+        FROM t_business_obj_re bor LEFT JOIN business b
+        ON b.id=bor.business_id LEFT JOIN t_asset_package tap
+        ON tap.id=bor.object_id LEFT JOIN t_dispose dis
+        ON dis.asset_id=tap.id AND dis.asset_type=#{objectType} LEFT JOIN t_asset_file taf
+        ON taf.asset_id=tap.id AND taf.asset_type=#{objectType} LEFT JOIN
+        (SELECT lar.id,lar.asset_type,lar.assset_id,l.name,l.type FROM t_label_asset_re lar,t_label l WHERE
+        l.id=lar.label_id) lab
+        ON lab.assset_id=tap.id AND lab.asset_type=#{objectType}
+        WHERE bor.object_type=#{objectType}
+        <include refid="Query_Where"/>
         Limit #{startPage},#{pageCount}
     </select>
     <select id="listCount" parameterType="com.dqys.sale.orm.query.AssetPackageQuery"
             resultType="int">
         SELECT count(tap.id) FROM t_business_obj_re bor LEFT JOIN business b
-        ON b.id=bor.business_id RIGHT JOIN ( SELECT
-        <include refid="Base_Column_List"/>
-        FROM t_asset_package WHERE 1=1
-        <include refid="Query_Where"/>) tap
+        ON b.id=bor.business_id LEFT JOIN  t_asset_package tap
         ON tap.id=bor.object_id
         WHERE bor.object_type=#{objectType}
-        <if test="businessStatus !=null">
-            AND b.status=#{businessStatus}
-        </if>
+        <include refid="Query_Where"/>
     </select>
 
 </mapper>
