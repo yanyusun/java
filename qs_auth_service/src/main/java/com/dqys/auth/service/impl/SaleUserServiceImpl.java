@@ -44,7 +44,7 @@ public class SaleUserServiceImpl implements SaleUserService {
             return map;
         }
         SaleUser user = list.get(0);
-        if (user.getStatus() == 0) {
+        if (user.getStatus() != 1) {
             map.put("date", JsonResponseTool.failure("帐号不允许登入"));
             return map;
         }

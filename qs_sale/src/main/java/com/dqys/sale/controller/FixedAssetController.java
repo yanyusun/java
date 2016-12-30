@@ -119,7 +119,9 @@ public class FixedAssetController {
     @RequestMapping("/list")
     @ResponseBody
     public JsonResponse list(FixedAssetQuery fixedAssetQuery) {
-        fixedAssetQuery.setUserId(UserSession.getCurrent().getUserId());
+        if (!UserSession.getCurrent().getUserType().equals("1,")) {
+            fixedAssetQuery.setUserId(UserSession.getCurrent().getUserId());
+        }
         return fixedAssetService.list(fixedAssetQuery);
     }
 

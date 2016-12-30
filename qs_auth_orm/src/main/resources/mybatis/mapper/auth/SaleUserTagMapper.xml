@@ -118,11 +118,17 @@
             <if test="area != null">
                 area = #{area,jdbcType=INTEGER},
             </if>
-            <if test="userId != null">
-                user_id = #{userId,jdbcType=INTEGER},
+            <if test="userId !=null">
+                user_id=#{userId},
             </if>
         </set>
-        where id = #{id,jdbcType=INTEGER}
+        where stateflag=0
+        <if test="id !=null">
+            AND id = #{id,jdbcType=INTEGER}
+        </if>
+        <if test="userId !=null">
+            AND user_id=#{userId}
+        </if>
     </update>
     <update id="updateByPrimaryKey" parameterType="com.dqys.auth.orm.pojo.saleUser.SaleUserTag">
     update t_sale_user_tag

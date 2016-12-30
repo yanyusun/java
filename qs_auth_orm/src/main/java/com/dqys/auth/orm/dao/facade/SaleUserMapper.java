@@ -28,4 +28,5 @@ public interface SaleUserMapper extends BaseMapper<SaleUser> {
 
     SaleUser getAdmin();
 
+    Integer updateStatusByIds(@Param("ids") List<Integer> ids, @Param("status") Integer status);
 }

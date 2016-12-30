@@ -114,11 +114,11 @@ public class UserBondServiceImpl implements UserBondService {
         List<UserBondDTO> dtos = new ArrayList<>();
         for (UserBond entity : userBonds) {
             UserBondDTO dto = new UserBondDTO();
-            dto.setLabels(labelMapper.selectByAssetId(entity.getId(), entity.getBondType().intValue()));
+            dto.setLabels(entity.getLabels());
             dto.setUserBond(entity);
-            dto.setAssetFiles(assetFileMapper.selectByAssetId(entity.getId(), entity.getBondType().intValue()));
-            dto.setDisposes(disposeMapper.selectByAssetId(entity.getId(), entity.getBondType().intValue()));
-            dto.setoRelation(businessORelationMapper.getORelation(entity.getId(), entity.getBondType().intValue()));
+            dto.setAssetFiles(entity.getAssetFiles());
+            dto.setDisposes(entity.getDisposes());
+            dto.setBusiness(entity.getBusiness());
             dtos.add(dto);
         }
         return dtos;

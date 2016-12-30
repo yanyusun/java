@@ -80,4 +80,9 @@ public class SaleUserMapperImpl extends SaleBaseDao implements SaleUserMapper {
     public SaleUser getAdmin() {
         return super.getSqlSession().getMapper(SaleUserMapper.class).getAdmin();
     }
+
+    @Override
+    public Integer updateStatusByIds(@Param("ids") List<Integer> ids, @Param("status") Integer status) {
+        return super.getSqlSession().getMapper(SaleUserMapper.class).updateStatusByIds(ids, status);
+    }
 }

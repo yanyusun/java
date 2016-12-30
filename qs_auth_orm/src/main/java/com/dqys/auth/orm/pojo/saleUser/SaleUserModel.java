@@ -8,6 +8,7 @@ import java.io.Serializable;
 public class SaleUserModel implements Serializable {
     private SaleUser saleUser;
     private SaleUserTag saleUserTag;
+    private Integer id;
     private String name;
     private String account;
     private String email;
@@ -20,6 +21,14 @@ public class SaleUserModel implements Serializable {
     private String smsCode;//手机短信验证码
     private String key;//验证码key
     private String code;//验证码
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getKey() {
         return key;

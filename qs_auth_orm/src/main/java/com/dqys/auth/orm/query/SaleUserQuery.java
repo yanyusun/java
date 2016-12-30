@@ -12,11 +12,20 @@ public class SaleUserQuery implements Serializable {
     private Integer startPage = 0;//起始位置
     private Integer totalCount = 0;//总数量
 
-    private List<Integer> ids;
-    private Integer userId;
-    private String account;
-    private String email;
-    private String mobile;
+    private List<Integer> ids;//用户id 集合
+    private Integer userId;//用户id
+    private String account;//用户名
+    private String email;//邮箱
+    private String mobile;//手机号
+    private Integer status;//状态
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public Integer getPage() {
         return page;
@@ -35,6 +44,9 @@ public class SaleUserQuery implements Serializable {
     }
 
     public Integer getStartPage() {
+        if (page > 0) {
+            return startPage = (page - 1) * pageCount;
+        }
         return startPage;
     }
 

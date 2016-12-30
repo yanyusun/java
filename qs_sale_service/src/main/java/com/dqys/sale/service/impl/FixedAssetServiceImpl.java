@@ -1,5 +1,6 @@
 package com.dqys.sale.service.impl;
 
+import com.dqys.auth.orm.pojo.saleUser.SaleUser;
 import com.dqys.core.base.SysProperty;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -18,6 +19,7 @@ import com.dqys.sale.service.constant.ObjectTypeEnum;
 import com.dqys.sale.service.dto.FADto;
 import com.dqys.sale.service.dto.FixedAssetDTO;
 import com.dqys.sale.service.facade.FixedAssetService;
+import com.dqys.sale.service.facade.TSaleUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -47,6 +49,8 @@ public class FixedAssetServiceImpl implements FixedAssetService {
     @Autowired
     @Qualifier("saleBusinessService")
     private BusinessService businessService;
+    @Autowired
+    private TSaleUserService tSaleUserService;
 
     @Override
     public JsonResponse list(FixedAssetQuery fixedAssetQuery) {
@@ -119,13 +123,13 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         Integer count = fixedAssetMapper.fixedListCount(query);
         query.setTotalCount(count);
         List<FixedAssetDTO> dtos = new ArrayList<>();
-        for (FixedAsset asset : fixedAssetList) {
+        for (FixedAsset entity : fixedAssetList) {
             FixedAssetDTO dto = new FixedAssetDTO();
-            dto.setLabels(labelMapper.selectByAssetId(asset.getId(), ObjectTypeEnum.fixed_asset.getValue()));
-            dto.setFixedAsset(asset);
-            dto.setAssetFiles(assetFileMapper.selectByAssetId(asset.getId(), ObjectTypeEnum.fixed_asset.getValue()));
-            dto.setDisposes(disposeMapper.selectByAssetId(asset.getId(), ObjectTypeEnum.fixed_asset.getValue()));
-            dto.setoRelation(businessORelationMapper.getORelation(asset.getId(), ObjectTypeEnum.fixed_asset.getValue()));
+            dto.setLabels(entity.getLabels());
+            dto.setFixedAsset(entity);
+            dto.setAssetFiles(entity.getAssetFiles());
+            dto.setDisposes(entity.getDisposes());
+            dto.setBusiness(entity.getBusiness());
             dtos.add(dto);
         }
         return dtos;
@@ -183,7 +187,11 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         businessDto.setObjectId(id);
         businessDto.setObjcetType(objectType);
         Integer userId = UserSession.getCurrent().getUserId();
-        return businessService.createBusiness_tx(businessDto, userId, AssetBusiness.type, AssetBusiness.getBeAnnounced().getLevel());
+        SaleUser saleUser = tSaleUserService.getAdmin();
+        if (userId == saleUser.getId().intValue()) {
+            return businessService.createBusiness_tx(businessDto, userId, AssetBusiness.type, AssetBusiness.getBeAnnouncedAdmin().getLevel());//平台待发布
+        }
+        return businessService.createBusiness_tx(businessDto, userId, AssetBusiness.type, AssetBusiness.getBeAnnounced().getLevel());//用户待发布
     }
 
     @Override

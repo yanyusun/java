@@ -132,6 +132,7 @@ public class LoginController extends BaseApiContorller {
             user.setAccount(saleUserModel.getAccount());
             user.setSex(saleUserModel.getSex());
             user.setName(saleUserModel.getName());
+            user.setStatus(1);//注册状态（0不允许登入1可以）
             saleUserModel.setSaleUser(user);
         }
         if (saleUserModel != null && saleUserModel.getSaleUserTag() == null) {
