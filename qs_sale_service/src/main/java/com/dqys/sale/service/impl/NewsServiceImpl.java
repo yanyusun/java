@@ -3,19 +3,17 @@ package com.dqys.sale.service.impl;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
 import com.dqys.flowbusiness.service.constant.saleBusiness.NewsAnnounceBusiness;
 import com.dqys.flowbusiness.service.dto.BusinessDto;
 import com.dqys.flowbusiness.service.service.BusinessService;
-import com.dqys.flowbusiness.service.constant.saleBusiness.NewsAnnounceBusiness;
 import com.dqys.sale.orm.mapper.NewsMapper;
 import com.dqys.sale.orm.pojo.News;
 import com.dqys.sale.orm.pojo.NewsLable;
 import com.dqys.sale.orm.query.NewsQuery;
-import com.dqys.sale.service.constant.NewsEnum;
-import com.dqys.sale.service.constant.ObjectTypeEnum;
 import com.dqys.sale.orm.query.NewsQueryY;
+import com.dqys.sale.service.constant.NewsEnum;
 import com.dqys.sale.service.constant.NewsTypeEnum;
+import com.dqys.sale.service.constant.ObjectTypeEnum;
 import com.dqys.sale.service.dto.NewsDTO;
 import com.dqys.sale.service.dto.news.NewsDtoY;
 import com.dqys.sale.service.dto.news.RecommendDto;
@@ -55,12 +53,13 @@ public class NewsServiceImpl implements NewsService {
         query.setTotalCount(count);
         List<NewsDTO> dtos = new ArrayList<>();
         getNewsDTOMkf(newses, dtos);
-//        for (News entity : newses) {
-//            NewsDTO dto = new NewsDTO();
-//            dto.setNews(entity);
-//            dto.setLables(newsMapper.selectLableByNewId(entity.getId()));
-//            dtos.add(dto);
-//        }
+        //// TODO: 16-12-30 后期优化用一条语句解决,并与前端沟通
+        for (News entity : newses) {
+            NewsDTO dto = new NewsDTO();
+            dto.setNews(entity);
+            dto.setLables(newsMapper.selectLableByNewId(entity.getId()));
+            dtos.add(dto);
+        }
         Map map = new HashMap<>();
         map.put("newsList", dtos);
         map.put("query", query);

@@ -24,8 +24,9 @@
 
     <resultMap id="ResultMapWithLabels" type="com.dqys.sale.orm.pojo.News" extends="BaseResultMap">
         <collection column="id" property="lables"  ofType="com.dqys.sale.orm.pojo.NewsLable">
-            <result column="lable_type" property="type"/>
-            <result column="lable_name" property="name"/>
+            <result column="label_type" property="type"/>
+            <result column="label_name" property="name"/>
+            <result column="label_id" property="id"/>
         </collection>
     </resultMap>
 
@@ -277,6 +278,22 @@
             AND oper_user=#{userId}
         </if>
     </sql>
+    <sql id="ListY_Query_Where">
+        <if test="type !=null">
+            AND news.type=#{type}
+        </if>
+        <if test="isRefer !=null">
+            AND news.is_refer=#{isRefer}
+        </if>
+        <if test="isHeadline !=null">
+            AND news.is_headline=#{isHeadline}
+        </if>
+        <if test="status !=null">
+            AND b.status=#{status}
+        </if>
+    </sql>
+
+
     <select id="list" parameterType="com.dqys.sale.orm.query.NewsQuery"
             resultMap="BaseResultMap">
         SELECT tap.* FROM t_business_obj_re bor LEFT JOIN business b
@@ -328,18 +345,25 @@
 
     <select id="listY" resultMap="ResultMapWithLabels" parameterType="com.dqys.sale.orm.query.NewsQueryY">
         select  <include refid="Re_Base_Column_List"/>,
-        label .type label_type,label.name label_name  ,news.open_time from t_news news
+        label.type label_type,label.name label_name,label.id label_id from t_news news
         LEFT JOIN t_news_lable_re re ON news.id=re.news_id
         LEFT JOIN t_news_label label ON re.lable_id=label.id
+        JOIN t_business_obj_re  bre ON bre.object_id=news.id and bre.object_type=21
+        JOIN business  b ON b.id = bre.business_id
+        <include refid="ListY_Query_Where"/>
         ORDER BY  news.open_time DESC
         <if test="isPaging">
             limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
         </if>
     </select>
 
-    <select id="listWithOutLables" resultMap="ResultMap" parameterType="com.dqys.sale.orm.query.NewsQueryY">
-        SELECT  <include refid="Re_Base_Column_List"/>
-        ORDER BY open_time DESC
+    <select id="listWithOutLables" resultMap="BaseResultMap" parameterType="com.dqys.sale.orm.query.NewsQueryY">
+        select  <include refid="Re_Base_Column_List"/>
+        from t_news news
+        JOIN t_business_obj_re  bre ON bre.object_id=news.id and bre.object_type=21
+        JOIN business b ON b.id = bre.business_id
+        <include refid="ListY_Query_Where"/>
+        ORDER BY  news.open_time DESC
         <if test="isPaging">
             limit #{pageNo,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
         </if>

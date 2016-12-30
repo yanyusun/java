@@ -9,7 +9,7 @@ public class NewsQueryY extends BaseQuery{
     private Integer type;//类别:新闻资讯0，行业动态1，业务信息2
     private Integer isRefer;//是否推荐1是0否
     private Integer isHeadline;//是否头条1是0否
-    private Integer status;//草稿0，待发布1，已发布2，无效-1
+    private Integer status;//草稿1210，待发布1220，已发布1230，无效1240
 
     public Integer getType() {
         return type;

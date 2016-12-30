@@ -9,10 +9,9 @@ import com.dqys.sale.service.dto.news.NewsDtoY;
 import com.dqys.sale.service.dto.news.SecondLevelDtoList;
 import com.dqys.sale.service.facade.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ import java.util.List;
  * 新闻管理
  * Created by mkfeng on 2016/12/24.
  */
-@Controller
+@RestController
 @RequestMapping("/news")
 public class NewsController {
     @Autowired
@@ -91,7 +90,6 @@ public class NewsController {
      * }
      */
     @RequestMapping("/noVerify/newsList")
-    @ResponseBody
     public JsonResponse newsList(NewsQuery query) {
 //        query.setStatus(1);
         return newsService.indexList(query);
@@ -142,7 +140,6 @@ public class NewsController {
      * }
      */
     @RequestMapping("/noVerify/getDetail")
-    @ResponseBody
     public JsonResponse getDetail(Integer newsId) {
         return newsService.getDetail(newsId);
     }
@@ -212,7 +209,6 @@ public class NewsController {
      * }
      */
     @RequestMapping("/list")
-    @ResponseBody
     public JsonResponse list(NewsQuery query) {
         query.setUserId(UserSession.getCurrent().getUserId());
         return newsService.newsList(query);
@@ -232,7 +228,6 @@ public class NewsController {
      * }
      */
     @RequestMapping("/addOrUpdateNews")
-    @ResponseBody
     public JsonResponse addOrUpdateNews(@ModelAttribute NewsDTO newsDTO) {
         return newsService.addOrUpdateNews_tx(newsDTO);
     }
@@ -241,7 +236,7 @@ public class NewsController {
      * 二级页面
      * @return
      */
-    @RequestMapping("/secondLeveL")
+    @RequestMapping("/noVerify/secondLeveL")
     public JsonResponse getSecondLevelDto() {
         SecondLevelDtoList secondLevelDtoList=newsService.sencondLevelPage();
         return JsonResponseTool.success(secondLevelDtoList);
@@ -251,7 +246,7 @@ public class NewsController {
      * 二级页面的列表
      * @return
      */
-    @RequestMapping("/secondNewsList")
+    @RequestMapping("/noVerify/secondNewsList")
     public JsonResponse getSecondLevelDto(int type,int page) {
         List<NewsDtoY> newsDtoYList=newsService.sencondNewsList(type,page);
         return JsonResponseTool.success(newsDtoYList);
