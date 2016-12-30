@@ -13,4 +13,6 @@ public interface BusinessORelationMapper extends BaseMapper<BusinessORelation> {
 
     BusinessORelation getORelation(@Param("objectId") Integer objectId, @Param("objectType") Integer objectType);
 
+    BusinessORelation getORelationByBusinessId(Integer businessId);
+
 }

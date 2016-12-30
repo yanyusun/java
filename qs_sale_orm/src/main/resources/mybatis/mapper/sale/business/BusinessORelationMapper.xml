@@ -131,4 +131,11 @@
         where stateflag=0 AND object_id = #{objectId,jdbcType=INTEGER} AND object_type = #{objectType,jdbcType=INTEGER}
     </select>
 
+    <select id="getORelationByBusinessId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_business_obj_re
+        where stateflag=0 AND business_id = #{businessId,jdbcType=INTEGER} limit 0,1
+    </select>
+
 </mapper>

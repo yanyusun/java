@@ -1,17 +1,13 @@
-package com.dqys.flowbusiness.service.constant.saleBusiness;
+package com.dqys.sale.service.constant;
 
 /**
- * Created by yan on 16-12-26.
+ * Created by mkfeng on 2016/12/29.
  */
-public enum BusinessTypeEnum {
-    /**
-     * 资产发布业务
-     */
-    asset_announce(10, "资产发布业务"),
-    asset_dispose(11, "资产处置业务"),
-    news_announce(12, "新闻发布业务");
-
-
+public enum NewsEnum {
+    status_draft(0, "草稿"),
+    status_wait(1, "待发布"),
+    status_publish(2, "发布"),
+    status_invalid(-1, "无效");
     private Integer value;
     private String name;
 
@@ -31,7 +27,7 @@ public enum BusinessTypeEnum {
         this.name = name;
     }
 
-    BusinessTypeEnum(Integer value, String name) {
+    NewsEnum(Integer value, String name) {
         this.value = value;
         this.name = name;
     }

@@ -1,5 +1,7 @@
 package com.dqys.sale.orm.pojo;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 public class AssetPackage {
@@ -8,7 +10,9 @@ public class AssetPackage {
     private String assetNo;//编号
 
     private String title;//标题
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startTime;//委托开始时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endTime;//委托结束时间
     private Integer isSpecial;//是否专项（0否1是）
 

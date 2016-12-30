@@ -13,6 +13,24 @@ public class NewsQuery extends PageEntity {
     private Integer status;//草稿0，待发布1，已发布2，无效-1
     private Integer userId;//用户id
     private boolean isOrder = true;//默认从最早的发布时间算起
+    private Integer businessStatus;//业务状态
+    private Integer objectType;
+
+    public Integer getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(Integer objectType) {
+        this.objectType = objectType;
+    }
+
+    public Integer getBusinessStatus() {
+        return businessStatus;
+    }
+
+    public void setBusinessStatus(Integer businessStatus) {
+        this.businessStatus = businessStatus;
+    }
 
     public Integer getUserId() {
         return userId;

@@ -106,6 +106,7 @@ public class AssetPackageServiceImpl implements AssetPackageService {
     }
 
     private List<AssetPackageDTO> getAssetPackageDTOs(AssetPackageQuery query) {
+        query.setStartPage(query.getStartPage());
         query.setObjectType(ObjectTypeEnum.asset_package.getValue());
         List<AssetPackage> list = assetPackageMapper.list(query);
         Integer count = assetPackageMapper.listCount(query);

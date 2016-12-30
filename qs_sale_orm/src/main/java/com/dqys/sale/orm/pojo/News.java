@@ -6,7 +6,7 @@ import java.util.List;
 public class News {
     private Integer id;
 
-    private Integer auther;//作者
+    private String auther;//作者
 
     private Integer province;//'省
 
@@ -38,6 +38,16 @@ public class News {
 
     private String mark;//'备注
 
+    private Integer operUser;//录入人
+
+    public Integer getOperUser() {
+        return operUser;
+    }
+
+    public void setOperUser(Integer operUser) {
+        this.operUser = operUser;
+    }
+
     private List<NewsLable> lables;
 
     public String getDigest() {
@@ -56,11 +66,11 @@ public class News {
         this.id = id;
     }
 
-    public Integer getAuther() {
+    public String getAuther() {
         return auther;
     }
 
-    public void setAuther(Integer auther) {
+    public void setAuther(String auther) {
         this.auther = auther;
     }
 

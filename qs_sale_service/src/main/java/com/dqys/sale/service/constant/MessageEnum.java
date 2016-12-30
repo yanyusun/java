@@ -6,9 +6,9 @@ package com.dqys.sale.service.constant;
  */
 public enum MessageEnum {
     TASK(0, "任务消息"),
-    PRODUCT(1, "产品消息"),
-    SAFETY(2, "安全消息"),
-    SERVE(3, "服务消息"),;
+    PRODUCT(1, "帐号消息"),
+    SAFETY(2, "系统消息"),
+    SERVE(3, "发布消息"),;
     private Integer value;
     private String name;
 

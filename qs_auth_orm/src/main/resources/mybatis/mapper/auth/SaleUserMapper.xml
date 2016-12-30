@@ -273,5 +273,13 @@
         <include refid="Query_Where"/>
     </select>
 
+    <select id="getAdmin" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from t_sale_user
+        where stateflag=0 AND user_type=1
+        limit 0,1
+    </select>
+
 
 </mapper>
