@@ -6,7 +6,7 @@ package com.dqys.sale.orm.query;
 public class PageEntity {
     private Integer page = 0;//当前页
     private Integer pageCount = 20;//每页展示数量
-    private Integer startPage = 1;//起始位置
+    private Integer startPage = 0;//起始位置
     private Integer totalCount = 0;//总数量
 
     public Integer getPage() {

@@ -15,6 +15,8 @@ public interface TSaleUserService {
 
     SaleUser getAdmin();
 
+    boolean isAdmin();
+
     JsonResponse detail(Integer userId);
 
     JsonResponse list(SaleUserQuery query);

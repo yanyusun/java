@@ -61,7 +61,7 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from t_fixed_asset
+    UPDATE t_fixed_asset SET stateflag=now()
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.dqys.sale.orm.pojo.FixedAsset" useGeneratedKeys="true"
@@ -552,6 +552,7 @@
     </resultMap>
 
     <sql id="Query_Where">
+        AND tap.stateflag=0
         <if test="ids!=null and ids.size>0">
             AND tap.id IN
             <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
@@ -594,11 +595,19 @@
     <select id="fixedListCount" parameterType="com.dqys.sale.orm.query.FixedAssetQuery"
             resultType="int">
         SELECT count(tap.id) FROM t_business_obj_re bor LEFT JOIN business b
-        ON b.id=bor.business_id LEFT JOIN  t_fixed_asset tap
+        ON b.id=bor.business_id LEFT JOIN t_fixed_asset tap
         ON tap.id=bor.object_id
         WHERE bor.object_type=#{objectType}
         <include refid="Query_Where"/>
     </select>
 
+    <!--统计数据-->
+    <select id="getFixedAssetCount" resultType="java.util.Map">
+        SELECT (SELECT count(ub1.id) FROM t_fixed_asset ub1
+        WHERE ub1.stateflag=0 AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt; ub1.create_time) addCount,
+        (SELECT count(ub2.id) FROM t_fixed_asset ub2
+        WHERE ub2.stateflag=0 ) totalCount
+        FROM DUAL
+    </select>
 
 </mapper>

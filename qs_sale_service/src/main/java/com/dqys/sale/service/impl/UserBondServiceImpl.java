@@ -158,7 +158,13 @@ public class UserBondServiceImpl implements UserBondService {
 
     @Override
     public JsonResponse getDetail(Integer bondId) {
+        if (bondId == null) {
+            JsonResponseTool.failure("参数缺失");
+        }
         UserBond userBond = userBondMapper.selectByPrimaryKey(bondId);
+        if (userBond == null) {
+            return JsonResponseTool.failure("查不到详情");
+        }
         List<AssetFile> assetFile = assetFileMapper.selectByAssetId(bondId, userBond.getBondType().intValue());
         List<Dispose> disposes = disposeMapper.selectByAssetId(bondId, userBond.getBondType().intValue());
         List<Label> labels = labelMapper.selectByAssetId(bondId, userBond.getBondType().intValue());

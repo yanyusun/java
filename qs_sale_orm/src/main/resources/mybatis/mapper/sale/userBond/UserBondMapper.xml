@@ -99,7 +99,7 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from t_user_bond
+    UPDATE t_user_bond SET stateflag=now()
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.dqys.sale.orm.pojo.UserBond">
@@ -955,6 +955,7 @@
     </resultMap>
 
     <sql id="Query_Where">
+        AND tap.stateflag=0
         <if test="ids!=null and ids.size>0">
             AND tap.id IN
             <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
@@ -1005,4 +1006,13 @@
         WHERE bor.object_type=#{objectType}
         <include refid="Query_Where"/>
     </select>
+    <!--统计数据-->
+    <select id="getUserBondCount" resultType="java.util.Map">
+        SELECT (SELECT count(ub1.id) FROM t_user_bond ub1
+        WHERE ub1.stateflag=0 AND ub1.bond_type=#{bondType} AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt; ub1.create_time) addCount,
+        (SELECT count(ub2.id) FROM t_user_bond ub2
+        WHERE ub2.stateflag=0 AND ub2.bond_type=#{bondType}) totalCount
+        FROM DUAL
+    </select>
+
 </mapper>

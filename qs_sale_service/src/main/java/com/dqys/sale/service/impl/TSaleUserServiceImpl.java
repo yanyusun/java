@@ -12,8 +12,12 @@ import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.auth.orm.pojo.saleUser.SaleUserModel;
+import com.dqys.sale.orm.mapper.AssetPackageMapper;
+import com.dqys.sale.orm.mapper.FixedAssetMapper;
+import com.dqys.sale.orm.mapper.UserBondMapper;
 import com.dqys.sale.orm.pojo.message.Message;
 import com.dqys.sale.service.constant.MessageEnum;
+import com.dqys.sale.service.constant.ObjectTypeEnum;
 import com.dqys.sale.service.facade.MessageService;
 import com.dqys.sale.service.facade.TSaleUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +40,27 @@ public class TSaleUserServiceImpl implements TSaleUserService {
     private SaleUserTagMapper saleUserTagMapper;
     @Autowired
     private MessageService messageService;
+    @Autowired
+    private AssetPackageMapper assetPackageMapper;
+    @Autowired
+    private FixedAssetMapper fixedAssetMapper;
+    @Autowired
+    private UserBondMapper userBondMapper;
 
 
     @Override
     public SaleUser getAdmin() {
         return saleUserMapper.getAdmin();
+    }
+
+    @Override
+    public boolean isAdmin() {
+        String userType = UserSession.getCurrent().getUserType();
+        if ("1,".equals(userType)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -137,7 +157,7 @@ public class TSaleUserServiceImpl implements TSaleUserService {
         if (operId == userId) {
             return JsonResponseTool.failure("无法对自己进行删除");
         }
-        if (verifyAdmin(operId)) return JsonResponseTool.failure("不是管理员无法进行操作");
+        if (!isAdmin()) return JsonResponseTool.failure("不是管理员无法进行操作");
         if (saleUserMapper.deleteByPrimaryKey(userId) > 0) {
             return JsonResponseTool.success(null);
         } else {
@@ -145,20 +165,11 @@ public class TSaleUserServiceImpl implements TSaleUserService {
         }
     }
 
-    //不是管理员
-    private boolean verifyAdmin(Integer operId) {
-        SaleUser user = saleUserMapper.getAdmin();
-        if (user.getId() != operId) {
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public Map setLogin(List<Integer> ids, Integer status) {
         Map map = new HashMap<>();
         map.put("result", "no");
-        if (verifyAdmin(UserSession.getCurrent().getUserId())) {
+        if (!isAdmin()) {
             map.put("msg", "无权限操作");
             return map;
         }
@@ -179,14 +190,33 @@ public class TSaleUserServiceImpl implements TSaleUserService {
         if (response.getCode() == ResponseCodeEnum.SUCCESS.getValue().intValue()) {
             map.put("detail", response.getData());
         }
-        Message sage = new Message();
-        sage.setStatus(0);
-        sage.setType(MessageEnum.PRODUCT.getValue());
-        map.put("accTotal", messageService.selectCount(sage));//"帐号未读消息数");
-        sage.setType(MessageEnum.SAFETY.getValue());
-        map.put("sysTotal", messageService.selectCount(sage));//"系统未读消息数");
-        sage.setType(MessageEnum.SERVE.getValue());
-        map.put("pubTotal", messageService.selectCount(sage));//"发布未读消息数");
+        if (isAdmin()) {//管理员的首页统计中心
+            statistics(map);
+        } else {
+            Message sage = new Message();
+            sage.setStatus(0);
+            sage.setType(MessageEnum.PRODUCT.getValue());
+            map.put("accTotal", messageService.selectCount(sage));//"帐号未读消息数");
+            sage.setType(MessageEnum.SAFETY.getValue());
+            map.put("sysTotal", messageService.selectCount(sage));//"系统未读消息数");
+            sage.setType(MessageEnum.SERVE.getValue());
+            map.put("pubTotal", messageService.selectCount(sage));//"发布未读消息数");
+        }
         return map;
     }
+
+    private void statistics(Map map) {
+        Integer bondType = ObjectTypeEnum.user_bond.getValue();
+        map.put("userBond", userBondMapper.getUserBondCount(bondType));//个人债权
+        bondType = ObjectTypeEnum.overdue_asset.getValue();
+        map.put("overdueAsset", userBondMapper.getUserBondCount(bondType));//逾期贷款
+        bondType = ObjectTypeEnum.company_bond.getValue();
+        map.put("companyBond", userBondMapper.getUserBondCount(bondType));//企业债权
+
+        map.put("fixedAsset", fixedAssetMapper.getFixedAssetCount());//固定资产
+        map.put("assetPackage", assetPackageMapper.getAssetPackageCount());//资产包
+
+
+    }
+
 }
