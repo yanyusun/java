@@ -119,7 +119,7 @@ public class UserBondServiceImpl implements UserBondService {
             dto.setAssetFiles(entity.getAssetFiles());
             dto.setDisposes(entity.getDisposes());
             dto.setBusiness(entity.getBusiness());
-            dto.setAssetUserRe(fixedAssetService.getAssetUserRe(entity.getId(), ObjectTypeEnum.asset_package.getValue()));
+            dto.setAssetUserRe(fixedAssetService.getAssetUserRe(entity.getId(), entity.getBondType()));
             dtos.add(dto);
         }
         return dtos;
