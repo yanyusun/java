@@ -74,7 +74,7 @@
                 on_business = #{onBusiness,jdbcType=INTEGER},
             </if>
             <if test="hasPublish != null">
-                has_publish = #{hasPublish,jdbcType=INTEGER}
+                has_publish = #{hasPublish,jdbcType=INTEGER},
             </if>
             <if test="userId != null">
                 user_id = #{userId,jdbcType=INTEGER},
