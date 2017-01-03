@@ -80,7 +80,7 @@
                 user_id = #{userId,jdbcType=INTEGER},
             </if>
         </set>
-        where id = #{id,jdbcType=INTEGER},
+        where id = #{id,jdbcType=INTEGER}
     </update>
     <update id="updateByPrimaryKey" parameterType="com.dqys.sale.orm.pojo.UserBusTotal">
     update t_user_bus_total

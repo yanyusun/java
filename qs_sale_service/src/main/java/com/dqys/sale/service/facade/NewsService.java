@@ -51,4 +51,6 @@ public interface NewsService {
     JsonResponse getDetail(Integer newsId);
 
     JsonResponse addOrUpdateNews_tx(NewsDTO newsDTO);
+
+    JsonResponse delNews(Integer newsId);
 }

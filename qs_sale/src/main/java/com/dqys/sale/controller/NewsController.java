@@ -11,6 +11,7 @@ import com.dqys.sale.service.facade.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -233,22 +234,41 @@ public class NewsController {
     }
 
     /**
+     * @api {post} news/delNews 删除新闻
+     * @apiName news/delNews
+     * @apiSampleRequest news/delNews
+     * @apiGroup　 SaleNews
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {}
+     * }
+     */
+    @RequestMapping("/delNews")
+    public JsonResponse delNews(@RequestParam Integer newsId) {
+        return newsService.delNews(newsId);
+    }
+
+    /**
      * 二级页面
+     *
      * @return
      */
     @RequestMapping("/noVerify/secondLeveL")
     public JsonResponse getSecondLevelDto() {
-        SecondLevelDtoList secondLevelDtoList=newsService.sencondLevelPage();
+        SecondLevelDtoList secondLevelDtoList = newsService.sencondLevelPage();
         return JsonResponseTool.success(secondLevelDtoList);
     }
 
     /**
      * 二级页面的列表
+     *
      * @return
      */
     @RequestMapping("/noVerify/secondNewsList")
-    public JsonResponse getSecondLevelDto(int type,int page) {
-        List<NewsDtoY> newsDtoYList=newsService.sencondNewsList(type,page);
+    public JsonResponse getSecondLevelDto(int type, int page) {
+        List<NewsDtoY> newsDtoYList = newsService.sencondNewsList(type, page);
         return JsonResponseTool.success(newsDtoYList);
     }
 

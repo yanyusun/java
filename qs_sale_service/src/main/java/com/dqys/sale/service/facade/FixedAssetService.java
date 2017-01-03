@@ -8,6 +8,7 @@ import com.dqys.sale.orm.pojo.Label;
 import com.dqys.sale.orm.query.FixedAssetQuery;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mkfeng on 2016/12/21.
@@ -28,6 +29,8 @@ public interface FixedAssetService {
      * @return
      */
     JsonResponse getDetail(Integer fixedAssetId);
+
+    void getDisposeAndCollect(Integer id, Integer type, Map map);
 
     /**
      * 添加固定资产

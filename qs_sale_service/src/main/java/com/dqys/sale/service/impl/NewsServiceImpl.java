@@ -54,12 +54,6 @@ public class NewsServiceImpl implements NewsService {
         List<NewsDTO> dtos = new ArrayList<>();
         getNewsDTOMkf(newses, dtos);
         //// TODO: 16-12-30 后期优化用一条语句解决,并与前端沟通
-        for (News entity : newses) {
-            NewsDTO dto = new NewsDTO();
-            dto.setNews(entity);
-            dto.setLables(newsMapper.selectLableByNewId(entity.getId()));
-            dtos.add(dto);
-        }
         Map map = new HashMap<>();
         map.put("newsList", dtos);
         map.put("query", query);
@@ -109,6 +103,16 @@ public class NewsServiceImpl implements NewsService {
         return JsonResponseTool.success(news.getId());
     }
 
+    @Override
+    public JsonResponse delNews(Integer newsId) {
+        Integer num = newsMapper.deleteByPrimaryKey(newsId);
+        if (num == 0) {
+            return JsonResponseTool.failure("删除失败");
+        }
+        newsMapper.delLableReByNewsId(newsId);
+        return JsonResponseTool.success(null);
+    }
+
     private Integer getBusinessStatusByNews(Integer status) {
         Integer businessStatus = null;
         if (status == NewsEnum.status_draft.getValue().intValue()) {
@@ -132,7 +136,7 @@ public class NewsServiceImpl implements NewsService {
         map.put("newsList", dtos);
         return JsonResponseTool.success(map);
     }
-    
+
     //// TODO: 16-12-29 整体加缓存处理
     @Override
     public SecondLevelDtoList sencondLevelPage() {
@@ -156,6 +160,7 @@ public class NewsServiceImpl implements NewsService {
 
     /**
      * 得到二级头条
+     *
      * @param type
      * @return
      */
@@ -168,21 +173,24 @@ public class NewsServiceImpl implements NewsService {
         query.setIsPaging(true);
         return newsMapper.listWithOutLables(query);
     }
+
     /**
      * 得到初始化信息
+     *
      * @param type
      * @return
      */
     private List<News> getinitNewsList(int type) {
-        return getinitNewsList(type,1);
+        return getinitNewsList(type, 1);
     }
 
     /**
      * 得到二级列表信息
+     *
      * @param type
      * @return
      */
-    private List<News> getinitNewsList(int type,int page) {
+    private List<News> getinitNewsList(int type, int page) {
         NewsQueryY query = new NewsQueryY();
         query.setStatus(NewsAnnounceBusiness.getOkLevel().getLevel());
         query.setType(type);
@@ -194,10 +202,11 @@ public class NewsServiceImpl implements NewsService {
 
     /**
      * 得到推荐
+     *
      * @param type
      * @return
      */
-    private List<RecommendDto> getRecommendDtoList(int type){
+    private List<RecommendDto> getRecommendDtoList(int type) {
         NewsQueryY query = new NewsQueryY();
         query.setType(type);
         query.setStatus(NewsAnnounceBusiness.getOkLevel().getLevel());
@@ -205,13 +214,13 @@ public class NewsServiceImpl implements NewsService {
         query.setIsPaging(true);
         query.setStartPageNum(1);
         query.setPageSize(3);
-        List<News> newsList= newsMapper.listWithOutLables(query);
+        List<News> newsList = newsMapper.listWithOutLables(query);
         return NewsUtil.getRecommendDto(newsList);
     }
 
     @Override
-    public List<NewsDtoY> sencondNewsList(int type,int page) {
-        return NewsUtil.getNewsDtoYList(getinitNewsList(type,page));
+    public List<NewsDtoY> sencondNewsList(int type, int page) {
+        return NewsUtil.getNewsDtoYList(getinitNewsList(type, page));
     }
 
     private void getNewsDTOMkf(List<News> newses, List<NewsDTO> dtos) {
@@ -223,7 +232,7 @@ public class NewsServiceImpl implements NewsService {
         }
     }
 
-  
+
     @Override
     public JsonResponse List(NewsQuery query) {
         return null;

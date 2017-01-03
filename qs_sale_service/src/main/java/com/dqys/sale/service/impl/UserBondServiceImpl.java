@@ -173,6 +173,7 @@ public class UserBondServiceImpl implements UserBondService {
         map.put("assetFile", assetFile);
         map.put("disposes", disposes);
         map.put("labels", labels);
+        fixedAssetService.getDisposeAndCollect(bondId, userBond.getBondType().intValue(), map);
         return JsonResponseTool.success(map);
     }
 

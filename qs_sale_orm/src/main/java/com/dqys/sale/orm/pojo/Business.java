@@ -11,6 +11,8 @@ public class Business {
 
     private Integer createId;
 
+    private String createName;//创建者姓名
+
     private Integer version;
 
     private Date createAt;
@@ -18,6 +20,14 @@ public class Business {
     private Date updateAt;
 
     private Long stateflag;
+
+    public String getCreateName() {
+        return createName;
+    }
+
+    public void setCreateName(String createName) {
+        this.createName = createName;
+    }
 
     public Integer getId() {
         return id;

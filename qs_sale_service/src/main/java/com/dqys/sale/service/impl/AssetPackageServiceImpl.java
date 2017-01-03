@@ -161,6 +161,7 @@ public class AssetPackageServiceImpl implements AssetPackageService {
         map.put("assetFile", assetFile);
         map.put("disposes", disposes);
         map.put("labels", labels);
+        fixedAssetService.getDisposeAndCollect(assetId, ObjectTypeEnum.asset_package.getValue(), map);
         return JsonResponseTool.success(map);
     }
 

@@ -1,7 +1,9 @@
 package com.dqys.sale.controller;
 
+import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
+import com.dqys.core.utils.ProtocolTool;
 import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
 import com.dqys.sale.service.dto.FixedAssetDTO;
 import com.dqys.sale.orm.query.FixedAssetQuery;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 固定资产管理
@@ -106,7 +110,14 @@ public class FixedAssetController {
      */
     @RequestMapping("/noVerify/getDetail")
     @ResponseBody
-    public JsonResponse getDetail(Integer fixedAssetId) {
+    public JsonResponse getDetail(Integer fixedAssetId, HttpServletRequest httpServletRequest) throws Exception {
+        Integer userId = ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+        );
         return fixedAssetService.getDetail(fixedAssetId);
     }
 

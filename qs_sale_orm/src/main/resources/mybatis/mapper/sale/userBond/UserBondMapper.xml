@@ -951,6 +951,7 @@
         <collection column="id" property="business" ofType="com.dqys.sale.orm.pojo.Business">
             <result column="business_id" property="id"/>
             <result column="create_id" property="createId"/>
+            <result column="createName" property="createName"/>
         </collection>
     </resultMap>
 
@@ -987,6 +988,24 @@
         operUserName,dis.dispose_type,dis.alg,dis.value,taf.type file_type,taf.filename,lab.name lable_name,
         lab.type lable_type,b.id business_id,b.create_id
         FROM t_business_obj_re bor LEFT JOIN business b
+        ON b.id=bor.business_id LEFT JOIN t_user_bond tap
+        ON tap.id=bor.object_id LEFT JOIN t_dispose dis
+        ON dis.asset_id=tap.id AND dis.asset_type=#{objectType} LEFT JOIN t_asset_file taf
+        ON taf.asset_id=tap.id AND taf.asset_type=#{objectType} LEFT JOIN
+        (SELECT lar.id,lar.asset_type,lar.assset_id,l.name,l.type FROM t_label_asset_re lar,t_label l WHERE
+        l.id=lar.label_id) lab
+        ON lab.assset_id=tap.id AND lab.asset_type=#{objectType}
+        WHERE bor.object_type=#{objectType}
+        <include refid="Query_Where"/>
+        Limit #{startPage},#{pageCount}
+    </select>
+    <select id="listBusiness" parameterType="com.dqys.sale.orm.query.UserBondQuery"
+            resultMap="BaseResultMapWithAll">
+        SELECT tap.*,(SELECT su.name FROM t_sale_user su WHERE id=tap.oper_user)
+        operUserName,dis.dispose_type,dis.alg,dis.value,taf.type file_type,taf.filename,lab.name lable_name,
+        lab.type lable_type,b.id business_id,b.create_id,(SELECT su.name FROM t_sale_user su WHERE id=b.create_id)
+        createName
+        FROM t_business_obj_re bor RIGHT JOIN business b
         ON b.id=bor.business_id LEFT JOIN t_user_bond tap
         ON tap.id=bor.object_id LEFT JOIN t_dispose dis
         ON dis.asset_id=tap.id AND dis.asset_type=#{objectType} LEFT JOIN t_asset_file taf

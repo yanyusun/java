@@ -12,6 +12,7 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
 import com.dqys.flowbusiness.service.dto.BusinessDto;
 import com.dqys.flowbusiness.service.service.BusinessService;
 import com.dqys.sale.orm.mapper.*;
+import com.dqys.sale.orm.mapper.business.AssetUserReMapper;
 import com.dqys.sale.orm.mapper.business.BusinessORelationMapper;
 import com.dqys.sale.orm.pojo.*;
 import com.dqys.sale.orm.query.FixedAssetQuery;
@@ -51,6 +52,8 @@ public class FixedAssetServiceImpl implements FixedAssetService {
     private BusinessService businessService;
     @Autowired
     private TSaleUserService tSaleUserService;
+    @Autowired
+    private AssetUserReMapper assetUserReMapper;
 
     @Override
     public JsonResponse list(FixedAssetQuery fixedAssetQuery) {
@@ -146,7 +149,28 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         map.put("assetFile", assetFile);
         map.put("disposes", disposes);
         map.put("labels", labels);
+        getDisposeAndCollect(fixedAssetId, ObjectTypeEnum.fixed_asset.getValue(), map);
         return JsonResponseTool.success(map);
+    }
+
+    @Override
+    public void getDisposeAndCollect(Integer id, Integer type, Map map) {
+        if (UserSession.getCurrent() != null && UserSession.getCurrent().getUserId() != 0) {
+            AssetUserRe re = new AssetUserRe();
+            re.setAssetId(id);
+            re.setAssetType(type);
+            re.setUserId(UserSession.getCurrent().getUserId());
+            List<AssetUserRe> list = assetUserReMapper.selectByUserRe(re);
+            if (list != null && list.size() > 0) {
+                re = list.get(0);
+                map.put("assetUserRe", re);
+                map.put("result", "yes");
+            } else {
+                map.put("result", "no");
+            }
+        } else {
+            map.put("result", "no_login");
+        }
     }
 
     @Override

@@ -417,6 +417,7 @@
         <collection column="id" property="business" ofType="com.dqys.sale.orm.pojo.Business">
             <result column="business_id" property="id"/>
             <result column="create_id" property="createId"/>
+            <result column="createName" property="createName"/>
         </collection>
     </resultMap>
 
@@ -448,7 +449,8 @@
             resultMap="BaseResultMapWithAll">
         SELECT tap.*,(SELECT su.name FROM t_sale_user su WHERE id=tap.oper_user)
         operUserName,dis.dispose_type,dis.alg,dis.value,taf.type file_type,taf.filename,lab.name lable_name,
-        lab.type lable_type,b.id business_id,b.create_id
+        lab.type lable_type,b.id business_id,b.create_id,(SELECT su.name FROM t_sale_user su WHERE id=b.create_id)
+        createName
         FROM t_business_obj_re bor LEFT JOIN business b
         ON b.id=bor.business_id LEFT JOIN t_asset_package tap
         ON tap.id=bor.object_id LEFT JOIN t_dispose dis
