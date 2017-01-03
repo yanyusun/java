@@ -34,7 +34,14 @@ public class AssetPackageController {
      */
     @RequestMapping("/noVerify/assetList")
     @ResponseBody
-    public JsonResponse assetList(AssetPackageQuery query) {
+    public JsonResponse assetList(AssetPackageQuery query, HttpServletRequest httpServletRequest) throws Exception {
+        ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+        );
         query.setBusinessStatus(AssetBusiness.getHasAnnouncedLevel().getLevel());
         return assetPackageService.assetList(query);
     }

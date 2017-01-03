@@ -34,7 +34,14 @@ public class UserBondController {
      */
     @RequestMapping("/noVerify/bondList")
     @ResponseBody
-    public JsonResponse bondList(UserBondQuery query) {
+    public JsonResponse bondList(UserBondQuery query, HttpServletRequest httpServletRequest) throws Exception {
+        ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+        );
         query.setBusinessStatus(AssetBusiness.getHasAnnouncedLevel().getLevel());
         return userBondService.bondList(query);
     }

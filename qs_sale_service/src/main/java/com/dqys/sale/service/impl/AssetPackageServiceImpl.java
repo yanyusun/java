@@ -119,6 +119,7 @@ public class AssetPackageServiceImpl implements AssetPackageService {
             dto.setAssetFiles(entity.getAssetFiles());
             dto.setDisposes(entity.getDisposes());
             dto.setBusiness(entity.getBusiness());
+            dto.setAssetUserRe(fixedAssetService.getAssetUserRe(entity.getId(), ObjectTypeEnum.asset_package.getValue()));
             dtos.add(dto);
         }
         return dtos;

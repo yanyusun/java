@@ -133,9 +133,22 @@ public class FixedAssetServiceImpl implements FixedAssetService {
             dto.setAssetFiles(entity.getAssetFiles());
             dto.setDisposes(entity.getDisposes());
             dto.setBusiness(entity.getBusiness());
+            dto.setAssetUserRe(getAssetUserRe(entity.getId(), ObjectTypeEnum.fixed_asset.getValue()));
             dtos.add(dto);
         }
         return dtos;
+    }
+
+    @Override
+    public AssetUserRe getAssetUserRe(Integer objectId, Integer objectType) {
+        if (UserSession.getCurrent() == null || UserSession.getCurrent().getUserId() == 0) {
+            return null;
+        }
+        List<AssetUserRe> list = getAssetUserRes(objectId, objectType);
+        if (list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
     }
 
     @Override
@@ -156,11 +169,8 @@ public class FixedAssetServiceImpl implements FixedAssetService {
     @Override
     public void getDisposeAndCollect(Integer id, Integer type, Map map) {
         if (UserSession.getCurrent() != null && UserSession.getCurrent().getUserId() != 0) {
-            AssetUserRe re = new AssetUserRe();
-            re.setAssetId(id);
-            re.setAssetType(type);
-            re.setUserId(UserSession.getCurrent().getUserId());
-            List<AssetUserRe> list = assetUserReMapper.selectByUserRe(re);
+            List<AssetUserRe> list = getAssetUserRes(id, type);
+            AssetUserRe re;
             if (list != null && list.size() > 0) {
                 re = list.get(0);
                 map.put("assetUserRe", re);
@@ -171,6 +181,14 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         } else {
             map.put("result", "no_login");
         }
+    }
+
+    private List<AssetUserRe> getAssetUserRes(Integer id, Integer type) {
+        AssetUserRe re = new AssetUserRe();
+        re.setAssetId(id);
+        re.setAssetType(type);
+        re.setUserId(UserSession.getCurrent().getUserId());
+        return assetUserReMapper.selectByUserRe(re);
     }
 
     @Override

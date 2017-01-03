@@ -97,7 +97,14 @@ public class FixedAssetController {
      */
     @RequestMapping("/noVerify/fixedList")
     @ResponseBody
-    public JsonResponse fixedList(FixedAssetQuery fixedAssetQuery) {
+    public JsonResponse fixedList(FixedAssetQuery fixedAssetQuery, HttpServletRequest httpServletRequest) throws Exception {
+        ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+        );
         fixedAssetQuery.setBusinessStatus(AssetBusiness.getHasAnnouncedLevel().getLevel());
         return fixedAssetService.fixedList(fixedAssetQuery);
     }

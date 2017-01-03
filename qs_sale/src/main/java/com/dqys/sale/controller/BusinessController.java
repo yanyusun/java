@@ -36,6 +36,9 @@ public class BusinessController {
     @RequestMapping("/collect")
     @ResponseBody
     public JsonResponse collect(Integer status, Integer objectId, Integer objectType) {
+        if (status == null || objectId == null || objectType == null) {
+            return JsonResponseTool.failure("参数缺少");
+        }
         Map map = businessService.collect(status, objectId, objectType);
         return CommonUtil.jsonResponse(map);
     }

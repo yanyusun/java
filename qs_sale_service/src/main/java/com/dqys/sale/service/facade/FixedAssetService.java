@@ -1,6 +1,7 @@
 package com.dqys.sale.service.facade;
 
 import com.dqys.core.model.JsonResponse;
+import com.dqys.sale.orm.pojo.AssetUserRe;
 import com.dqys.sale.service.dto.FixedAssetDTO;
 import com.dqys.sale.orm.pojo.AssetFile;
 import com.dqys.sale.orm.pojo.Dispose;
@@ -21,6 +22,8 @@ public interface FixedAssetService {
      * @return
      */
     JsonResponse fixedList(FixedAssetQuery fixedAssetQuery);
+
+    AssetUserRe getAssetUserRe(Integer objectId, Integer objectType);
 
     /**
      * 固定资产详情
