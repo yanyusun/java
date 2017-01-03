@@ -23,6 +23,7 @@ public class NewsUtil {
     public static NewsDtoY getNewsDtoY(News news){
         NewsDtoY newsDtoY = new NewsDtoY();
         newsDtoY.setId(news.getId());
+        newsDtoY.setTitle(news.getTitle());
         newsDtoY.setCover(news.getCover());
         Date openTime = news.getOpenTime();
         if(openTime!=null){
