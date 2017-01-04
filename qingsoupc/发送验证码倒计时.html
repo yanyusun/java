@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>倒计时代码-前端开发博客</title>
+	<style type="text/css">
+	*{margin:0; padding:0;}
+	/*form*/
+/*加入我们*/
+.col-b{margin:0 30px 0; padding-bottom:5px; }
+.col-b .tit{border-bottom:2px solid #e5e5e5; font-size:12px; padding-bottom:8px; padding-left:2px; margin-bottom:25px;}
+.col-b .tit .subMark{ margin-top:5px;}
+.col-b .tit strong{font-size:16px; color:#225599; font-weight:bold;}
+.col-b .tit small{color:#777; font-size:12px;}
+.ulist .group{*zoom:1; margin-bottom:15px;}
+.ulist .group:before, .ulist .group:after{display:table; content:"";}
+.ulist .group:after{clear:both;}
+.group .label{float:left; width:72px; text-align:right; padding-top:5px; font-size:14px; color:#777; cursor:pointer;}
+.group .label i{color:#F64868; margin-right:5px;}
+.group .controls{margin-left:72px;}
+.biglabel .group .label{width:84px;}
+.biglabel .group .controls{margin-left:84px;}
+.biglabel .group{margin-bottom:20px;}
+	/*表单和按钮*/
+.group select, .group .txt, .group .btn{float:left; display:inline; line-height:24px; height:24px; padding:2px 3px; border:1px solid #DADADA;overflow: visible;width: auto;*width: 1;margin:0;margin-right:10px;}
+.group select:focus, .group input:focus, .group button:focus{outline:none;}
+.group .help, .group .muted{line-height:28px;}
+.group .help{color:#777; font-size:12px; margin-right:10px;}
+.group .muted{font-size:14px;}
+.group select{padding:2px 3px; border:1px solid #DADADA; height:28px; line-height:28px; *line-height:22px; display:inline; width:130px;}
+.group .larget-st{width:410px;}
+.group .pinpai{width:420px; float:left; margin-top:-10px;}
+.group .pinpai .larget-st{float:none; display:block; margin-top:10px;}
+.group .txt{width:144px;}
+.group .larget-txt{width:404px;}
+.group .btn{border:0 none; background:#E5E5E5;  font-size:14px; width:87px; line-height:28px; height:28px; padding:0; text-align:center;}
+.group .btn:hover{color:#333; text-decoration:none;}
+.group .btn-small{ line-height:25px; height:25px; margin-top:2px; width:80px; font-size:12px;}
+.group .btn-orange{background:#FF9900; color:#fff;}
+.group .btn-blue{background:#216AC3; color:#fff;}
+.group .btn-orange:hover, .group .btn-blue:hover{color:#fff;}
+.group .btn-larget{width:95px;}
+.group .get-code{background:#FFE8BB; color:#FF6600; margin-right:10px; display:inline;cursor:pointer;}
+.group .reset-code{color:#777;}
+	</style>
+</head>
+<body>
+	<ul class="ulist">
+	<li class="group">
+		<label class="label" for="phone">联系电话：</label>
+		<div class="controls">
+			<input type="text" id="phone" class="txt">
+		</div>
+	</li>
+	<li class="group">
+		<label class="label" for="code">验证码：</label>
+		<div class="controls">
+			<input type="text" id="code" class="txt">
+			<button class="btn btn-small get-code" onclick="getCode(this)" id="J_getCode">获取验证码</button>
+			<button class="btn btn-small reset-code" id="J_resetCode" style="display:none;"><span id="J_second">60</span>秒后重发</button>
+		</div>
+	</li>
+</ul>
+	<!-- 页面脚本区S -->
+	<!-- 所有页面用到的js脚本都必须放到此位置，包括外链js和内嵌js -->
+	<script src="http://js.3conline.com/min/temp/v1/lib-jquery1.4.2.js"></script>
+	<script>
+
+	/*获取验证码*/
+	var isPhone = 1;
+	function getCode(e){
+	//checkPhone(); //验证手机号码
+	if(isPhone){
+		resetCode(); //倒计时
+	}else{
+		$('#phone').focus();
+	}
+	
+}
+//验证手机号码
+/*function checkPhone(){
+	var phone = $('#phone').val();
+	var pattern = /^1[0-9]{10}$/;
+	isPhone = 1;
+	if(phone == '') {
+		alert('请输入手机号码');
+		isPhone = 0;
+		return;
+	}
+	if(!pattern.test(phone)){
+		alert('请输入正确的手机号码');
+		isPhone = 0;
+		return;
+	}
+}*/
+//倒计时
+function resetCode(){
+	$('#J_getCode').hide();
+	$('#J_second').html('10');
+	$('#J_resetCode').show();
+	var second = 10;
+	var timer = null;
+	timer = setInterval(function(){
+		second -= 1;
+		if(second >0 ){
+			$('#J_second').html(second);
+		}else{
+			clearInterval(timer);
+			$('#J_getCode').show();
+			$('#J_resetCode').hide();
+		}
+	},1000);
+}
+</script>
+<!-- /页面脚本区E -->
+</body>
+</html>
