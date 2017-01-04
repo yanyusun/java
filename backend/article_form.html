@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>文章管理</title>
+	<link rel="stylesheet" href="css/index.css" />
+	<link rel="stylesheet" href="css/article_form.css" />
+    <link href="common/jquery-tags/css/jquery.tagsinput.css" rel="stylesheet" />
+    <link href="common/jquery-tags/css/jquery-ui.css" rel="stylesheet" />
+	<link rel="stylesheet" href="common/layui-master/build/css/layui.css" />
+</head>
+<body>
+	<div class="lbagrzxtop">
+		<div class="lbaabl">	
+			<div class="lbagrzxtopf"><a href=""><img src="img/logo.png"></a></div>
+			<div class="lbagxtopm">清搜网后台管理系统</div>
+			<div class="lbagxtopr">
+				<span class="lbagxtoprhe"><em></em><i>帮助</i></span>
+				<span class="lbagxtoprxx"><em></em><i>9</i></span>
+				<span class="lbagxtoprtz"><em></em></span>
+				<div class="lbagxtoprimg"><img src="img/lbasfkflog.png"></div>
+				<div class="lbagxtoprmc">
+					<em>954397513@qq.com</em>
+					<i class="lbagxtoprmcura"></i>
+					<!--个人中心的弹窗-->
+					<ul class="lbagrzxlbtc">
+						<li><a href="个人中心-账号中心.html">账号中心</a></li>
+						<li><a href="个人中心-消息中心.html">消息中心</a></li>
+						<li><a href="个人中心-系统通知.html">系统通知</a></li>
+						<li><a href="个人中心-意见反馈.html">意见反馈</a></li>
+						<li><a href="javascript:;" class="backend_logout">退出</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>	
+	</div>
+
+
+	<div class="lbagxnrv">
+		<div class="lbagxnrvf">
+			<ul>
+				<li><p onclick="location.href='index.html'" class="lbakjsyftp"><span class="lbakjsyloga"></span><em>首页</em></p></li>
+				<li>
+					<p class="lbakjsyftp"><span class="lbakjsyloga"></span><em>资源管理</em><i class="lbakjjtcur"></i></p>
+					<div class="lbakjejdh">
+						<p onclick="location.href='fixed-assets.html'">固定资产</p>
+						<p onclick="location.href='assets.html'">资产包</p>
+						<p onclick="location.href='bond.html?bondType=11'">个人债权</p>
+						<p onclick="location.href='bond.html?bondType=13'">企业债权</p>
+					</div>
+				</li>
+
+				<li>
+					<p class="lbakjsyftp"><span class="lbakjsyloga"></span><em>业务管理</em><i class="lbakjjtcur"></i></p>
+					<div class="lbakjejdh">
+						<p onclick="location.href='fixed-assets_bs.html'">固定资产</p>
+						<p onclick="location.href='assets_bs.html'">资产包</p>
+						<p onclick="location.href='bond_bs.html?bondType=11'">个人债权</p>
+						<p onclick="location.href='bond_bs.html?bondType=13'">企业债权</p>
+					</div>
+				</li>
+
+				<li><p onclick="location.href='user.html'" class="lbakjsyftp"><span class="lbakjsyloga"></span><em>用户管理</em></p></li>
+				<li class="lbagxfdhcur"><p onclick="location.href='article.html'" class="lbakjsyftp"><span class="lbakjsyloga"></span><em>文章管理</em></p></li>
+				<li><p onclick="location.href='feedback.html'" class="lbakjsyftp"><span class="lbakjsyloga"></span><em>反馈管理</em></p></li>
+				<li><p class="lbakjsyftp"><span class="lbakjsyloga"></span><em>数据统计</em></p></li>
+				<li><p onclick="location.href='login-logs.html'" class="lbakjsyftp"><span class="lbakjsyloga"></span><em>操作日志</em></p></li>
+				<li><p onclick="location.href='setting.html'" class="lbakjsyftp"><span class="lbakjsylogj"></span><em>系统设置</em></p></li>
+			</ul>
+		</div>
+
+		<div class="lbagxnrvr">
+			<div class="lbagxrzt">
+				<div class="lbakjztnrdhx"><span>首页</span> / <span>文章管理<span>/ <span>编辑<span></div>
+
+				<div class="lbakjztnrv">
+					<div style="padding:40px 30px 20px 30px">
+						<a href="article.html"><img src="img/u23.png" style="vertical-align: middle"/></a>
+						<span>文章管理 / 编辑或发布</span>
+					</div>
+					
+					<div class="form_wrap">
+						<form method="post" enctype="multipart/form-data" id="article_form">
+							<div class="article_form_line">
+								<span>
+									<label>文章标题：</label><input name="news.title" />
+								</span>	
+								<span>
+									<label>作者：</label><input name="news.auther" />
+								</span>	
+							</div>
+
+							<div class="article_form_line">
+								<span>
+									<select name="news.province">
+										<option value=''>全部地区</option>
+									</select>
+									<select name="news.city">
+										<option value=''>请选择</option>
+									</select>
+									<select name="news.area">
+										<option value=''>请选择</option>
+									</select>
+								</span>
+
+								<span>
+									<select name="news.type">
+										<option value=''>类别</option>
+										<option value='0'>新闻资讯</option>
+										<option value='1'>行业动态</option>
+										<option value='2'>业务信息</option>
+									</select>
+								</span>
+
+								<div class="onoffswitch" style="display: inline-block;">
+								    <input value=1 type="checkbox" name="news.isRefer" class="onoffswitch-checkbox" id="myonoffswitch" checked>
+								    <label class="onoffswitch-label" for="myonoffswitch">
+								        <span class="onoffswitch-inner"></span>
+								        <span class="onoffswitch-switch"></span>
+								    </label>
+								</div>
+
+								<span>
+									<input type="checkbox" value=1 name="news.isHeadline">头条
+								</span>
+							</div>
+
+							<div class="article_form_block">
+								<p><input id="self_tags" type="text" class="tags" value="标签一,标签二" /></p>
+							</div>
+
+							<div class="article_form_block">
+								<script id="editor" type="text/plain" style="width:1024px;height:500px;"></script>
+							</div>
+
+							<div class="article_form_block">
+								<div>
+									<span>封面</span>
+									<span class="article_form_info">大图建议尺寸：900像素 * 500像素</span>
+								</div>
+
+								<!-- 文件上传部分 -->
+							    <div style="border:1px solid #e4e4e4;background: #f5f5f5;margin:10px 0;">
+							    	<input id="filesUpload" data-url="http://192.168.1.51:8080/r/res/upload" type="file" name="file" >
+							    	<div class="clear"></div>	
+
+								    <div style="margin-top:5px;width:200px;" id="progress">
+								        <div class="bar" style="width:0%;height:4px;background:#00A2CA"></div>
+								    </div>
+								    <div id="extend-bar" style="display: none;"><a>取消</a></div>
+
+								    <div class="attaches"></div>
+								</div>
+								<!-- 文件上传部分结束 -->
+								<div>
+									<input type="checkbox">
+									<span class="article_form_info">封面图片显示在正文中</span>
+								</div>
+							</div>
+
+							<div class="article_form_block">
+								<div>
+									<span>摘要</span>
+									<span class="article_form_info">选填，如果不填写会默认抓取正文前54个字</span>
+								</div>
+
+								<textarea id="digest" rows="5" cols="220"></textarea>
+							</div>
+
+							<div class="article_form_line">
+								<button id="saveBtn">保存</button>
+								<button id="save">保存为草稿</button>
+								<button id="saveAndPub">保存并发布</button>
+								<button id="resetBtn">重置</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<p class="lbagxrfot">Copyright@2012-2015 XXXXXXXX.ALL Rights Reserved</p>
+		</div>
+	</div>
+</body>
+<script type="text/javascript" src="common/js.cookie.js"></script>
+<script type="text/javascript" src="common/config.js"></script>
+<script type="text/javascript" src="common/jquery-min.js"></script>
+<script type="text/javascript" src="common/laydate/laydate.js"></script>
+<script type="text/javascript" src="common/layer-v3.0.1/layer.js"></script>
+<script type="text/javascript" src="common/function.js"></script>
+<script type="text/javascript" src="common/options.js"></script>
+<script type="text/javascript" src="common/jquery.validate.js"></script>
+<script type="text/javascript" src="common/layui-master/build/layui.js"></script>
+<script type="text/javascript" src="common/layui-master/build/lay/dest/layui.all.js"></script>
+<script type="text/javascript" src="common/simplePagination/jquery.simplePagination.js"></script>
+
+<script type="text/javascript" charset="utf-8" src="common/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="common/ueditor/ueditor.all.js"> </script>
+
+<script type="text/javascript" src="common/jQuery-File-Upload-9.14.2/js/vendor/jquery.ui.widget.js"></script>
+<script type="text/javascript" src="common/jQuery-File-Upload-9.14.2/js/jquery.iframe-transport.js"></script>
+<script type="text/javascript" src="common/jQuery-File-Upload-9.14.2/js/jquery.fileupload.js"></script>
+
+<script type="text/javascript" src="common/jquery-tags/js/jquery.tagsinput.min.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/article_form.js"></script>
+</html>

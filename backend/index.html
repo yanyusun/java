@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>首页</title>
+		<link rel="stylesheet" href="css/index.css" />
+		<link rel="stylesheet" href="common/layer-v3.0.1/skin/default/layer.css" />
+		<script type="text/javascript" src="common/js.cookie.js"></script>
+		<script type="text/javascript" src="common/config.js"></script>
+		<script type="text/javascript" src="common/jquery-min.js"></script>
+		<script type="text/javascript" src="common/layer-v3.0.1/layer.js"></script>
+		<script type="text/javascript" src="common/function.js"></script>
+	</head>
+	<body>
+		<div class="lbagrzxtop">
+			<div class="lbagrzxtopf"><a href=""><img src="img/logo.png"></a></div>
+			<div class="lbagxtopm">清搜网后台管理系统</div>
+			<div class="lbagxtopr">
+				<span class="lbagxtoprhe"><em></em><i>帮助</i></span>
+				<span class="lbagxtoprxx"><em></em><i>9</i></span>
+				<span class="lbagxtoprtz"><em></em></span>
+				<div class="lbagxtoprimg"><img src="img/lbasfkflog.png"></div>
+				<div class="lbagxtoprmc">
+					<em>954397513@qq.com</em>
+					<i class="lbagxtoprmcura"></i>
+					<!--个人中心的弹窗-->
+					<ul class="lbagrzxlbtc">
+						<li><a href="member-account.html">账号中心</a></li>
+						<li><a href="member-message.html">消息中心</a></li>
+						<li><a href="member-notice.html">系统通知</a></li>
+						<li><a href="member-feedback.html">意见反馈</a></li>
+						<li><a href="javascript:;" class="backend_logout">退出</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		<div class="lbagxnrv">
+			
+			<div class="lbagxnrvf">
+				<ul>
+					<li class="lbagxfdhcur"><p class="lbakjsyftp"><span class="lbakjsyloga"></span><em>首页</em></p></li>
+					<li>
+						<p class="lbakjsyftp"><span class="lbakjsyloga"></span><em>资源管理</em><i class="lbakjjtcur"></i></p>
+						<div class="lbakjejdh">
+							<p onclick="location.href='fixed-assets.html'">固定资产</p>
+							<p onclick="location.href='assets.html'">资产包</p>
+							<p onclick="location.href='bond.html?bondType=11'">个人债权</p>
+							<p onclick="location.href='bond.html?bondType=13'">企业债权</p>
+						</div>
+					</li>
+
+					<li>
+						<p class="lbakjsyftp"><span class="lbakjsyloga"></span><em>业务管理</em><i class="lbakjjtcur"></i></p>
+						<div class="lbakjejdh">
+							<p onclick="location.href='fixed-assets_bs.html'">固定资产</p>
+							<p onclick="location.href='assets_bs.html'">资产包</p>
+							<p onclick="location.href='bond_bs.html?bondType=11'">个人债权</p>
+							<p onclick="location.href='bond_bs.html?bondType=13'">企业债权</p>
+						</div>
+					</li>
+
+					<li><p onclick="location.href='user.html'" class="lbakjsyftp"><span class="lbakjsyloga"></span><em>用户管理</em></p></li>
+					<li><p onclick="location.href='article.html'" class="lbakjsyftp"><span class="lbakjsyloga"></span><em>文章管理</em></p></li>
+					<li><p onclick="location.href='feedback.html'" class="lbakjsyftp"><span class="lbakjsyloga"></span><em>反馈管理</em></p></li>
+					<li><p class="lbakjsyftp"><span class="lbakjsyloga"></span><em>数据统计</em></p></li>
+					<li><p onclick="location.href='login-logs.html'" class="lbakjsyftp"><span class="lbakjsyloga"></span><em>操作日志</em></p></li>
+					<li><p onclick="location.href='setting.html'" class="lbakjsyftp"><span class="lbakjsylogj"></span><em>系统设置</em></p></li>
+				</ul>
+			</div>
+			
+			<div class="lbagxnrvr">
+				<div class="lbagxrzt">
+					<div class="lbakjztnrdhx"><span>首页</span> / <span>概况</span></div>
+					
+					<div class="lbakjztnrv">
+						
+						<div class="lbasynra">
+							<p><img src="img/lbasfkflog.png"></p>
+							<div class="lbasynram">
+								<p class="lbasynrampa"><span></span><b>欢迎页</b><em>欢迎你：</em><i id="user_name"></i></p>
+								<p class="lbasynrampb"><span></span><i id="user_addr"></i></p>
+							</div>
+							<span>
+								<em>IP地址：XXXXXXXXXXXXX</em>
+								<em id="user_last_login"></em>
+							</span>
+						</div>
+						
+						<div class="lbasynrb">
+							<ul>
+								<li class="lbasynrbcur">概况</li>
+								<li>数据分析</li>
+								<li>代办事项</li>
+							</ul>
+							<p></p>
+						</div>
+						
+						<div class="lbasynrbqhv">
+							
+							<div class="labsynrbqhvaa">
+								<span class="labsynrbqhvaatit">固定资产/资产包</span>
+								<div class="lsynbqvaamv">
+									
+									<ul>
+										<li>
+										  <span>新增固定资产</span>
+										  <em>132</em>
+										  <a href="">查看</a>
+										</li>
+										<li>
+										  <span>总固定资产</span>
+										  <em>12720</em>
+										  <a href="">查看</a>
+										</li>
+										<li>
+										  <span>新增资产包</span>
+										  <em>120</em>
+										  <a href="">查看</a>
+										</li>
+										<li>
+										  <span>总资产包</span>
+										  <em>5</em>
+										  <a href="">查看</a>
+										</li>
+									</ul>
+									
+									<a href="">查看数据图表</a>
+									
+								</div>
+							</div>
+							
+							<div class="labsynrbqhvaa">
+								<span class="labsynrbqhvaatit">债券/逾期贷款</span>
+								<div class="lsynbqvaamv">
+									
+									<ul>
+										<li>
+										  <span>新增企业债权</span>
+										  <em>0</em>
+										  <a href="">审核</a>
+										</li>
+										<li>
+										  <span>总企业债权</span>
+										  <em>12720</em>
+										  <a href="">查看</a>
+										</li>
+										<li>
+										  <span>新增个人债权</span>
+										  <em>120</em>
+										  <a href="">查看</a>
+										</li>
+										<li>
+										  <span>总个人债权</span>
+										  <em>765</em>
+										  <a href="">查看</a>
+										</li>
+										<li>
+										  <span>新增逾期贷款</span>
+										  <em>54</em>
+										  <a href="">查看</a>
+										</li>
+										<li>
+										  <span>总逾期贷款</span>
+										  <em>32</em>
+										  <a href="">查看</a>
+										</li>
+									</ul>
+									
+									<a href="">查看数据图表</a>
+									
+								</div>
+							</div>
+							
+							
+							<div class="labsynrbqhvaa">
+								<span class="labsynrbqhvaatit">逾期贷款</span>
+								<div class="lsynbqvaamv">
+									
+									<ul>
+										<li>
+										  <span>新增关注类资产</span>
+										  <em>32132</em>
+										  <a href="">查看</a>
+										</li>
+										<li>
+										  <span>总关注类资产</span>
+										  <em>1273120</em>
+										  <a href="">查看</a>
+										</li>
+										<li>
+										  <span>新增拍卖资产</span>
+										  <em>12032</em>
+										  <a href="">查看</a>
+										</li>
+										<li>
+										  <span>总拍卖资产</span>
+										  <em>54324</em>
+										  <a href="">查看</a>
+										</li>
+									</ul>
+									
+									<a href="">查看数据图表</a>
+									
+								</div>
+							</div>
+							<div class="lksnbmm"><span>平台商总数：</span><em>e632949个</em><a href="">查看</a></div>
+
+						</div>
+						
+						<div class="lbasynrbqhv curdis">
+							<p class="lksnbbtit"><span>业务数据</span><a href=""> >>更多>> </a></p>
+						</div>
+						
+						<div class="lbasynrbqhv curdis">
+							<p class="lksnbctit"><span></span><em>代办事项</em><i>(21)</i></p>
+							<div class="labsynrbqhvac">
+								<p class="lksnbqhcp">
+									<span>状态</span>
+									<em>业务名称</em>
+									<i>XXXXXX</i>
+									<b>操作</b>
+									<strong>时间</strong>
+								</p>
+								<ul class="lksnqhbcul">
+									<li>
+										<span class="lksqbbbcura">待处理</span>
+										<em>【QS2344324】对象名称xxxxxxxxx</em>
+										<i>XXXXxXX</i>
+										<b>操作</b>
+										<strong>2015-05-28 17:25:32</strong>	
+									</li>
+									<li>
+										<span class="lksqbbbcurb">暂停</span>
+										<em>【QS2344324】对象名称xxxxxxxxxxxxxxx</em>
+										<i>XXxxxxxXXXX</i>
+										<b>操作</b>
+										<strong>2015-05-28 17:25:32</strong>	
+									</li>
+									<li>
+										<span class="lksqbbbcurc">无效</span>
+										<em>【QS2344324】对象名称xxxxxxxxx</em>
+										<i>XXXxxxxxxxxxxxxXXX</i>
+										<b>操作</b>
+										<strong>2015-05-28 17:25:32</strong>	
+									</li>
+									<li>
+										<span class="lksqbbbcurd">已完成</span>
+										<em>【QS2344324】对象名称xxxxxxxxx</em>
+										<i>XXXxxxxxxxxxxxxXXX</i>
+										<b>操作</b>
+										<strong>2015-05-28 17:25:32</strong>	
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				<p class="lbagxrfot">Copyright@2012-2015 XXXXXXXX.ALL Rights Reserved</p>
+			</div>
+		</div>
+		
+	</body>
+	<script type="text/javascript" src="js/index.js"></script>
+	<script type="text/javascript" src="js/welcome.js"></script>
+</html>
