@@ -93,12 +93,12 @@ public class UserBondServiceImpl implements UserBondService {
         ubDto.setDisposeStatus(asset.getDisposeStatus());
         ubDto.setId(asset.getId());
         ubDto.setBondNo(asset.getBondNo());
-        ubDto.setIsSpecial(asset.getIsSpecial().intValue());
+        ubDto.setIsSpecial(asset.getIsSpecial());
         ubDto.setTitle(asset.getTitle());
         ubDto.setEndTime(asset.getEndTime());
         ubDto.setStartTime(asset.getStartTime());
         ubDto.setTotalMoney(asset.getTotalMoney());
-        ubDto.setGrade(asset.getGrade().intValue());
+        ubDto.setGrade(asset.getGrade());
         ubDto.setAssessTotalPrice(asset.getAssessTotalPrice());
         ubDto.setLoanMoney(asset.getLoanMoney());
         ubDto.setTotalInterestMoney(asset.getTotalInterestMoney());

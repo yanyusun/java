@@ -102,7 +102,7 @@ public class UserBond {
 
     private String bondContactsIdcode;//债权方联系人证件号
 
-    private Integer debtType;//债务方类型
+    private Integer debtType;//债务方类型(0企业1个人)
 
     private Integer debtIsAddress;//债务方住址是否清楚（0不清楚1清楚）
 
@@ -110,7 +110,7 @@ public class UserBond {
 
     private String debtPhone;//债务方联系电话
 
-    private Integer debtIsOperate;//债务方经营地址是否清楚（0不清楚1清楚）
+    private Integer debtIsOperate;//债务方经营地址是否清楚（0清楚1不清楚）
 
     private String debtIdcode;//债务方证件号
 
