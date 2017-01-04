@@ -67,13 +67,14 @@ console.log('证券详情',data);*/
 		}
 		
 		var collectionNum='';
-		if(!!bb.collectionNum){
-			collectionNum=bb.collectionNum;
+		if(bb.collectionNum){
+			collectionNum='收藏：'+'<em>'+bb.collectionNum+'</em>';
+			//收藏：<em>'+collectionNum+'</em>
 		}
 		
 		var disposeNum='';
 		if(!!bb.disposeNum){
-			disposeNum=bb.disposeNum;
+			disposeNum='申请处置：'+'<em>'+bb.disposeNum+'</em>';
 		}
 		
 		var province='';
@@ -186,8 +187,8 @@ console.log('证券详情',data);*/
 		$(".bafadtopr").append(
 			'<p class="bafadtoprp bafadtoprpa">资产总额：<em>'+assetRental+'</em> 元</p>'+
 			'<p class="bafadtoprp bafadtoprpb">委托剩余：<em>35 </em>天</p>'+
-			'<p class="bafadtoprp bafadtoprpc">收藏：<em>'+collectionNum+'</em></p>'+
-			'<p class="bafadtoprp bafadtoprpc">申请处置：<em>'+disposeNum+'</em></p>'+
+			'<p class="bafadtoprp bafadtoprpc">'+collectionNum+'</p>'+
+			'<p class="bafadtoprp bafadtoprpc">'+disposeNum+'</p>'+
 			'<div class="lbasfxqfdz lbasfxqfdzba">'+
 			   '<p><span>位置：</span><em>'+province+city+area +'</em><i>'+ address +'</i></p>'+
 			   '<span><em></em><i></i></span>'+
@@ -211,8 +212,37 @@ console.log('证券详情',data);*/
 			'<span>'+righterType +'</span>'+
 			'<em>'+ title+'</em>'
 		);
-				
-				
+		
+		var righterName='';
+		if(bb.hasOwnProperty('righterName')){
+			righterName='产权方姓名：'+bb.righterName;
+		}
+		var righterAddress='';
+		if(bb.hasOwnProperty('righterAddress')){
+			righterAddress='产权方地址：'+bb.righterAddress;
+		}
+		var righterPhone='';
+		if(bb.hasOwnProperty('righterPhone')){
+			righterPhone='产权方联系电话：'+bb.righterPhone;
+		}
+		var righterContactName='';
+		if(bb.hasOwnProperty('righterContactName')){
+			righterContactName='产权方联系电话：'+bb.righterContactName;
+		}
+		var righterContactPhone='';
+		if(bb.hasOwnProperty('righterContactPhone')){
+			righterContactPhone='产权方联系电话：'+bb.righterContactPhone;
+		}
+
+		$(".fixassetba").append(
+			'righterName'+
+			'righterAddress'+
+			'righterPhone'+
+			'righterContactName'+
+			'righterContactPhone'
+		);
+		
+			
 				
 				
 				

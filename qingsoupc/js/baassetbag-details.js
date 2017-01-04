@@ -240,7 +240,34 @@ $(document).ready(function() {
 								
 				
 						
-						
+				var righterName='';
+				if(bb.hasOwnProperty('righterName')){
+					righterName='产权方姓名：'+bb.righterName;
+				}
+				var righterAddress='';
+				if(bb.hasOwnProperty('righterAddress')){
+					righterAddress='产权方地址：'+bb.righterAddress;
+				}
+				var righterPhone='';
+				if(bb.hasOwnProperty('righterPhone')){
+					righterPhone='产权方联系电话：'+bb.righterPhone;
+				}
+				var righterContactName='';
+				if(bb.hasOwnProperty('righterContactName')){
+					righterContactName='产权方联系电话：'+bb.righterContactName;
+				}
+				var righterContactPhone='';
+				if(bb.hasOwnProperty('righterContactPhone')){
+					righterContactPhone='产权方联系电话：'+bb.righterContactPhone;
+				}
+		
+				$(".fixassetba").append(
+					'righterName'+
+					'righterAddress'+
+					'righterPhone'+
+					'righterContactName'+
+					'righterContactPhone'
+				);		
 						
 						
 						
