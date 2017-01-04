@@ -197,7 +197,8 @@ public class NewsServiceImpl implements NewsService {
         query.setIsPaging(true);
         query.setStartPageNum(page);
         query.setPageSize(3);//默认三条
-        return newsMapper.listY(query);
+        List list=newsMapper.listY(query);
+        return list;
     }
 
     /**

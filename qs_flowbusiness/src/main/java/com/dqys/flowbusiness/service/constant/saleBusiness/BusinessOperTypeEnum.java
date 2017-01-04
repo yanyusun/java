@@ -24,6 +24,8 @@ public enum BusinessOperTypeEnum {
     news_announce_draft(120,"草稿"),
     news_announce_announce(122,"发布"),
     news_announce_ubable(123,"无效"),
+
+    //
     ;
     private Integer value;
     private String name;
