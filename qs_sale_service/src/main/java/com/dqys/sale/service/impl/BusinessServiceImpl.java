@@ -10,6 +10,7 @@ import com.dqys.sale.orm.mapper.*;
 import com.dqys.sale.orm.mapper.business.AssetUserReMapper;
 import com.dqys.sale.orm.mapper.business.BusinessORelationMapper;
 import com.dqys.sale.orm.pojo.*;
+import com.dqys.sale.orm.query.AssetUserReQuery;
 import com.dqys.sale.orm.query.UserBusTotalQuery;
 import com.dqys.sale.service.constant.AssetUserReEnum;
 import com.dqys.sale.service.constant.ObjectDisposeEnum;
@@ -262,6 +263,21 @@ public class BusinessServiceImpl implements BusinessService {
         } else {
             map.put("msg", result.getMsg());
         }
+        return map;
+    }
+
+    @Override
+    public Map collectionList(AssetUserReQuery query) {
+        Map map = new HashMap<>();
+        map.put("result","yes");
+        query.getUserRe().setUserId(UserSession.getCurrent().getUserId());
+        query.setStartPage(query.getStartPage());
+        List<AssetUserRe> list = assetUserReMapper.selectByUserReList(query);
+        query.setIsPage(false);
+        Integer count = assetUserReMapper.selectByUserReList(query).size();
+        query.setTotalCount(count);
+        map.put("collectionList", list);
+        map.put("query", query);
         return map;
     }
 

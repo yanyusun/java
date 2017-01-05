@@ -3,13 +3,11 @@ package com.dqys.sale.controller;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.sale.orm.query.AssetUserReQuery;
 import com.dqys.sale.service.facade.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -90,6 +88,20 @@ public class BusinessController {
     @ResponseBody
     public JsonResponse dispose(Integer reqUserId, @RequestParam Integer businessId, @RequestParam Integer businessLevel, @RequestParam Integer operType) {
         Map map = businessService.dispose(reqUserId, businessId, businessLevel, operType);
+        return CommonUtil.jsonResponse(map);
+    }
+
+    /**
+     * @api {post} /business/collectionList 收藏或无效的对象
+     * @apiName /business/collectionList
+     * @apiSampleRequest /business/collectionList
+     * @apiGroup　 businessSale
+     * @apiParam {int} status 状态（1收藏2无效）
+     */
+    @RequestMapping("/collectionList")
+    @ResponseBody
+    public JsonResponse collectionList(@ModelAttribute AssetUserReQuery query) {
+        Map map = businessService.collectionList(query);
         return CommonUtil.jsonResponse(map);
     }
 

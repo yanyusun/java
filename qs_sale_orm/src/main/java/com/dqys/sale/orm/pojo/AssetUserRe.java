@@ -13,6 +13,16 @@ public class AssetUserRe {
 
     private Integer isDispose;//是否处置（0否1是）
 
+    private ObjectEntity objectEntity;//公有对象属性
+
+    public ObjectEntity getObjectEntity() {
+        return objectEntity;
+    }
+
+    public void setObjectEntity(ObjectEntity objectEntity) {
+        this.objectEntity = objectEntity;
+    }
+
     public Integer getId() {
         return id;
     }

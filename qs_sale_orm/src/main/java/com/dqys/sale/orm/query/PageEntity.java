@@ -8,6 +8,15 @@ public class PageEntity {
     private Integer pageCount = 20;//每页展示数量
     private Integer startPage = 0;//起始位置
     private Integer totalCount = 0;//总数量
+    private boolean isPage = true;//是否分页，默认分页
+
+    public boolean getIsPage() {
+        return isPage;
+    }
+
+    public void setIsPage(boolean isPage) {
+        this.isPage = isPage;
+    }
 
     public Integer getPage() {
         return page;
