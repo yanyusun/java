@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>后台登陆</title>
+		<link rel="stylesheet" href="css/index.css" />
+		
+	</head>
+	<body>
+		<div class="htloginv">
+			
+			  <p class="htlogintit">清搜网管理系统</p>
+			  <div class="htlogk">
+			  	<span>用户名</span>
+			  	<input type="text" class="htlogna"/>
+			  </div>
+			  <div class="htlogk">
+			  	<span>密码</span>
+			  	<input type="password" class="htlogpw"/>
+			  </div>
+			  <div class="htlogyzk">
+			  	<span>验证码</span>
+			  	<div class="htlogymzv">
+			  	  <input class="htlogyk" type="text" />
+			  	  <img class="htlogykimg" id="htlogymm"/>
+			  	  <em class="htlogykchag" onclick='getCaptchaFromApi("htlogymm")'>换一张</em>
+			    </div>
+			  </div>
+			  <input type="button" class="htlogbtn" value="登录" />
+			  
+			  
+		</div>
+	</body>
+	<script type="text/javascript" src="common/config.js"></script>
+	<script type="text/javascript" src="common/js.cookie.js"></script>
+
+	<script type="text/javascript" src="js/jquery-min.js"></script>
+	<script type="text/javascript" src="common/layer-v3.0.1/layer.js"></script>
+	<script type="text/javascript" src="common/function.js"></script>
+	<script type="text/javascript" src="js/bahtlogin.js"></script>
+</html>

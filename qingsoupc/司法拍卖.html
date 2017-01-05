@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		
+
+		<meta charset="utf-8" />
+		<title>司法拍卖</title>
+		<link href="css/index.css" rel="stylesheet" />
+		
+	</head>
+	<body>
+		
+		
+		
+		
+		
+		
+		
+		
+		<!--头部-s-->
+		<div class="lbaheaddv">
+
+			<div class="lbahetop lbahebja">
+				<div class="lbahetopma">
+					<p>逾期贷款一站式立体化清收服务商  </p>
+					<ul>
+						<li class="lbasinbtn">
+							<span>你好，请 <em> 登录</em></span>
+							<div class="sindv">
+								<span class="sinsj"></span>
+								<!--登录-s-->
+								<div class="lbasinma">
+									<span class="lbasintit">登录</span>
+									<div class="siinput"><span></span><input type="text" placeholder="邮箱/手机号" /></div>
+									<div class="reinput"><span></span><input type="text" placeholder="请输入密码" /><em></em></div>
+									<div class="lbats">
+										<input type="checkbox" />
+										<span>记住密码</span>
+										<a href="">忘记密码？</a>
+									</div>
+									<input type="submit" class="lbasitjbtn" value="登录" onclick="window.location.href='个人中心-首页.html'"/>
+								</div>
+								<!--登录-e-->
+							</div>
+						</li>
+						<li class="regdivan"><a href="注册a.html">抢先注册</a></li>
+						<li><a href="">联系客服</a></li>
+						<li><a href="">一键推广</a></li>
+						<li><a href="" onclick="AddFavorite();" >收藏</a></li>
+					</ul>
+				</div>
+			</div>
+			<div class="lbahebm lbahebjb">
+				<div class="lbahebmv">
+					<a href="首页.html" class="lbalogoimg lbaimg"><img src="img/logo.png"></a>
+					<ul class="lbadhul">
+						<li><a href="首页.html">首页</a></li>
+						<li class="lbadhej lbadhlogx">
+							<a href="">资产-债权</a>
+							<p class="lbadhp lbahebjb">
+								<a href="资产-债券-固定资产.html">固定资产</a>
+								<a href="资产-债券-资产包.html">资产包</a>
+								<a href="资产-债券-资产包.html">个人债券</a>
+								<a href="资产-债券-企业债券.html">企业债券</a>
+								<a href="资产-债券-逾期贷款.html">逾期贷款</a>
+							</p>
+						</li>
+						<li><a href="关注类.html">关注类</a></li>
+						<li class="lbadhulcur"><a href="司法拍卖.html">司法拍卖</a></li>
+						<div style="clear: both;"></div>
+					</ul>	
+					<a href="http://www.iqingsou.com/" class="lbagzpta">公众平台</a>
+					<div class="lbadhssk"><input type="text" placeholder="关键词/编号" class="lbasskf"><input type="submit" value="" class="lbatj"></div>
+					<div style="clear: both;height: 1px;"></div>
+				</div>
+			</div>
+		</div>
+		<!--头部-e-->
+	
+	
+		<div class="lbanrbjv">
+			
+			<p class="lbadhsy"><span></span><a href="首页.html">首页</a> > <a href="司法拍卖详情.html">司法拍卖</a></p>
+			
+			<div class="lbanysxv">
+				
+				<div class="lbanysxvnrv">
+					<div class="lbanysxnrva">
+						<span>区域：</span>
+						<a href="" class="lbanysxnrvbx">不限</a>
+						<a href="">拱墅</a>
+						<a href="">江干</a>
+						<a href="">西湖</a>
+						<a href="">滨江</a>
+						<a href="">余杭</a>
+						<a href="">下沙</a>
+						<a href="">临平</a>
+						<a href="">富阳</a>
+					</div>
+					<div class="lbanysxnrva">
+						<span>面积：</span>
+						<a href="" class="lbanysxnrvbx">不限</a>
+						<a href="">90方以下</a>
+						<a href="">90-100方</a>
+						<a href="">100-110方</a>
+						<a href="">110-120方</a>
+						<a href="">120-130方</a>
+						<a href="">130-140方</a>
+						<a href="">140-150方</a>
+						<a href="">150-160方</a>
+						<a href="">160-170方</a>
+						<a href="">170-180方</a>
+						<a href="">180-190方</a>
+						<a href="">200方以上</a>
+						
+						<p><input type="text" class="lbanysxaiu"> - <input type="text" class="lbanysxaiu"><input type="button" value="确定" class="lbanysxaqd"></p>
+					</div>
+					<div class="lbanysxnrva">
+						<span>售价：</span>
+						<a href="" class="lbanysxnrvbx">不限</a>
+						<a href="">100万以下</a>
+						<a href="">100-200万</a>
+						<a href="">200-300万</a>
+						<a href="">300-400万</a>
+						<a href="">400-500万</a>
+						<a href="">500-600万</a>
+						<a href="">600-700万</a>
+						<a href="">700-800万</a>
+						<a href="">800-900万</a>
+						<a href="">900-1000万</a>
+						<p><input type="text" class="lbanysxaiu"> - <input type="text" class="lbanysxaiu"><input type="button" value="确定" class="lbanysxaqd"></p>
+					</div>
+					<div class="lbanysxnrva">
+						<span>房型：</span>
+						<a href="" class="lbanysxnrvbx">不限</a>
+						<a href="">1室</a>
+						<a href="">2室</a>
+						<a href="">3室</a>
+						<a href="">4室</a>
+						<a href="">5室</a>
+					</div>
+					<div class="lbanysxnrva">
+						<span>类别：</span>
+						<a href="" class="lbanysxnrvbx">不限</a>
+						<a href="">商品房</a>
+						<a href="">公寓</a>
+						<a href="">商业门面</a>
+						<a href="">写字楼</a>
+						<a href="">洋房</a>
+						<a href="">别墅</a>
+						<a href="">高层</a>
+					</div>
+					<div class="lbanysxnrva">
+						<span>默认：</span>
+						<a href="" class="lbanysxnrvbx">默认</a>
+						<a href="">最新发布</a>
+						<select>
+							<option>起拍价</option>
+							<option>100万以下</option>
+							<option>100-200万</option>
+							<option>200-300万</option>
+						</select>
+						<select>
+							<option>评估价</option>
+							<option>1万以下</option>
+							<option>1-1.5万</option>
+							<option>1.5-2万</option>
+						</select>
+						<select>
+							<option>面积</option>
+							<option>90方以下</option>
+							<option>100-200方</option>
+							<option>200-300方</option>
+							<option>300-400方</option>
+						</select>
+						<a href="">出价次数由多到少</a>
+					</div>
+				</div>
+				
+				<span class="lbanysxzdan">收起</span>
+				
+			</div>
+			
+			
+			<div class="lbanytjsxv lbanysxmcur">
+				<span class="lbanytjsxvf">当前筛选：<em>17</em>个</span>
+				<span class="lbanysxsf lbanysxsfcur">正在进行</span>
+				<span class="lbanysxsf">即将开始</span>
+				<p>
+					<input type="checkbox">
+					<span>一拍</span>
+				</p>
+				<p>
+					<input type="checkbox">
+					<span>二拍</span>
+				</p>
+				<p>
+					<input type="checkbox">
+					<span>三拍</span>
+				</p>
+				<p>
+					<input type="checkbox">
+					<span>重新拍卖</span>
+				</p>
+				<p>
+					<input type="checkbox">
+					<span>变卖</span>
+				</p>
+				<em class="labnytjsxqc">清除</em>
+			</div>
+			
+			
+			
+			
+			
+			<p class="lbasfpmtita ov1190">
+				<span><em>司法</em>拍卖</span>
+				<em>1393次关注</em>
+			</p>
+			
+			<!--司法拍卖列表-s-->
+			<div class="lbagznv">
+				<ul class="lbagzulv">
+					<li><a href="司法拍卖详情.html">
+					  <p class="lbagzgg"><span><em>8折</em><i>17人代理</i></span><b></b></p>
+					  <div class="lbagznr">
+					  	  <p class="lbagznrimg lbaimg"><img src="img/lbagzimg.png"></p>
+					  	  <span class="lbagzimgy">普陀区兴建路461号金鹰海兴建路461号金鹰海景苑2幢4景苑2幢401金鹰海</span>
+					  	  <div class="lbasfs">
+					  	  	<p class="lbasfspa">
+					  	  		<span><em>起拍价</em><i>￥</i><b>82</b><i>万</i></span>
+					  	  		<em>可贷款</em>
+					  	  		<i>11次出价</i>
+					  	  	</p>
+					  	  	<p class="lbasfspa lbasfspb">
+					  	  		<span><em>评估价</em><i>￥</i><b>102</b><i>万</i></span>
+					  	  		<i>11次出价</i>
+					  	  	</p>
+					  	  	<p class="lbasfspc">
+					  	  		<span>距结束</span>
+					  	  		<em>14小时45分15秒</em>
+					  	  		<i>正在进行中</i>
+					  	  	</p>
+					  	  </div>
+					  </div>
+					 </a>
+					 <div class="lbagzlj"><span>211次围观</span><a href="">关注</a></div>
+					</li>
+					<li><a href="司法拍卖详情.html">
+					  <p class="lbagzgg"><span><em>8折</em><i>17人代理</i></span><b></b></p>
+					  <div class="lbagznr">
+					  	  <p class="lbagznrimg lbaimg"><img src="img/lbagzimg.png"></p>
+					  	  <span class="lbagzimgy">普陀区兴建路461号金鹰海兴建路461号金鹰海景苑2幢4景苑2幢401金鹰海</span>
+					  	  <div class="lbasfs">
+					  	  	<p class="lbasfspa">
+					  	  		<span><em>起拍价</em><i>￥</i><b>82</b><i>万</i></span>
+					  	  		<em>可贷款</em>
+					  	  		<i>11次出价</i>
+					  	  	</p>
+					  	  	<p class="lbasfspa lbasfspb">
+					  	  		<span><em>评估价</em><i>￥</i><b>102</b><i>万</i></span>
+					  	  		<i>11次出价</i>
+					  	  	</p>
+					  	  	<p class="lbasfspc">
+					  	  		<span>距结束</span>
+					  	  		<em>14小时45分15秒</em>
+					  	  		<i>正在进行中</i>
+					  	  	</p>
+					  	  </div>
+					  </div>
+					 </a>
+					 <div class="lbagzlj"><span>211次围观</span><a href="">关注</a></div>
+					</li>
+					<li><a href="司法拍卖详情.html">
+					  <p class="lbagzgg"><span><em>8折</em><i>17人代理</i></span><b></b></p>
+					  <div class="lbagznr">
+					  	  <p class="lbagznrimg lbaimg"><img src="img/lbagzimg.png"></p>
+					  	  <span class="lbagzimgy">普陀区兴建路461号金鹰海兴建路461号金鹰海景苑2幢4景苑2幢401金鹰海</span>
+					  	  <div class="lbasfs">
+					  	  	<p class="lbasfspa">
+					  	  		<span><em>起拍价</em><i>￥</i><b>82</b><i>万</i></span>
+					  	  		<em>可贷款</em>
+					  	  		<i>11次出价</i>
+					  	  	</p>
+					  	  	<p class="lbasfspa lbasfspb">
+					  	  		<span><em>评估价</em><i>￥</i><b>102</b><i>万</i></span>
+					  	  		<i>11次出价</i>
+					  	  	</p>
+					  	  	<p class="lbasfspc">
+					  	  		<span>距结束</span>
+					  	  		<em>14小时45分15秒</em>
+					  	  		<i>正在进行中</i>
+					  	  	</p>
+					  	  </div>
+					  </div>
+					 </a>
+					 <div class="lbagzlj"><span>211次围观</span><a href="">关注</a></div>
+					</li>
+					<li><a href="司法拍卖详情.html">
+					  <p class="lbagzgg"><span><em>8折</em><i>17人代理</i></span><b></b></p>
+					  <div class="lbagznr">
+					  	  <p class="lbagznrimg lbaimg"><img src="img/lbagzimg.png"></p>
+					  	  <span class="lbagzimgy">普陀区兴建路461号金鹰海兴建路461号金鹰海景苑2幢4景苑2幢401金鹰海</span>
+					  	  <div class="lbasfs">
+					  	  	<p class="lbasfspa">
+					  	  		<span><em>起拍价</em><i>￥</i><b>82</b><i>万</i></span>
+					  	  		<em>可贷款</em>
+					  	  		<i>11次出价</i>
+					  	  	</p>
+					  	  	<p class="lbasfspa lbasfspb">
+					  	  		<span><em>评估价</em><i>￥</i><b>102</b><i>万</i></span>
+					  	  		<i>11次出价</i>
+					  	  	</p>
+					  	  	<p class="lbasfspc">
+					  	  		<span>距结束</span>
+					  	  		<em>14小时45分15秒</em>
+					  	  		<i>正在进行中</i>
+					  	  	</p>
+					  	  </div>
+					  </div>
+					 </a>
+					 <div class="lbagzlj"><span>211次围观</span><a href="">关注</a></div>
+					</li>
+					
+					
+				</ul>
+				<a href="" class="lbasftlball">展开全部 1233 套</a>
+				
+				
+				<div class="lbasfygv ov1190">
+					<span><em>明天</em><i>开拍</i></span>
+					<em></em>
+					<i></i>
+					<p><span>明天</span><em>6月9日</em><a href="">更多343套</a></p>
+				</div>
+				
+				
+				
+				<ul class="lbagzulv">
+					<li><a href="">
+					  <p class="lbagzgg"><span><em class="lbasfgreencur">8折</em><i>17人代理</i></span><b></b></p>
+					  <div class="lbagznr">
+					  	  <p class="lbagznrimg lbaimg"><img src="img/lbagzimg.png"></p>
+					  	  <span class="lbagzimgy">普陀区兴建路461号金鹰海兴建路461号金鹰海景苑2幢4景苑2幢401金鹰海</span>
+					  	  <div class="lbasfs">
+					  	  	<p class="lbasfspa">
+					  	  		<span class="lbasfgreenb"><em>起拍价</em><i>￥</i><b>82</b><i>万</i></span>
+					  	  		<em class="lbasfgreencur">可贷款</em>
+					  	  	</p>
+					  	  	<p class="lbasfspa lbasfspb">
+					  	  		<span><em>评估价</em><i>￥</i><b>102</b><i>万</i></span>
+					  	  		<i>11次出价</i>
+					  	  	</p>
+					  	  	<p class="lbasfspc">
+					  	  		<span>距结束</span>
+					  	  		<em>14小时45分15秒</em>
+					  	  		<i class="lbasfgreencur">即将开始</i>
+					  	  	</p>
+					  	  </div>
+					  </div>
+					 </a>
+					 <div class="lbagzlj"><span>211次围观</span><a href="">关注</a></div>
+				    </li>
+                    <li><a href="">
+					  <p class="lbagzgg"><span><em class="lbasfgreencur">8折</em><i>17人代理</i></span><b></b></p>
+					  <div class="lbagznr">
+					  	  <p class="lbagznrimg lbaimg"><img src="img/lbagzimg.png"></p>
+					  	  <span class="lbagzimgy">普陀区兴建路461号金鹰海兴建路461号金鹰海景苑2幢4景苑2幢401金鹰海</span>
+					  	  <div class="lbasfs">
+					  	  	<p class="lbasfspa">
+					  	  		<span class="lbasfgreenb"><em>起拍价</em><i>￥</i><b>82</b><i>万</i></span>
+					  	  		<em class="lbasfgreencur">可贷款</em>
+					  	  	</p>
+					  	  	<p class="lbasfspa lbasfspb">
+					  	  		<span><em>评估价</em><i>￥</i><b>102</b><i>万</i></span>
+					  	  		<i>11次出价</i>
+					  	  	</p>
+					  	  	<p class="lbasfspc">
+					  	  		<span>距结束</span>
+					  	  		<em>14小时45分15秒</em>
+					  	  		<i class="lbasfgreencur">即将开始</i>
+					  	  	</p>
+					  	  </div>
+					  </div>
+					 </a>
+					 <div class="lbagzlj"><span>211次围观</span><a href="">关注</a></div>
+				    </li>
+				    <li><a href="">
+					  <p class="lbagzgg"><span><em class="lbasfgreencur">8折</em><i>17人代理</i></span><b></b></p>
+					  <div class="lbagznr">
+					  	  <p class="lbagznrimg lbaimg"><img src="img/lbagzimg.png"></p>
+					  	  <span class="lbagzimgy">普陀区兴建路461号金鹰海兴建路461号金鹰海景苑2幢4景苑2幢401金鹰海</span>
+					  	  <div class="lbasfs">
+					  	  	<p class="lbasfspa">
+					  	  		<span class="lbasfgreenb"><em>起拍价</em><i>￥</i><b>82</b><i>万</i></span>
+					  	  		<em class="lbasfgreencur">可贷款</em>
+					  	  	</p>
+					  	  	<p class="lbasfspa lbasfspb">
+					  	  		<span><em>评估价</em><i>￥</i><b>102</b><i>万</i></span>
+					  	  		<i>11次出价</i>
+					  	  	</p>
+					  	  	<p class="lbasfspc">
+					  	  		<span>距结束</span>
+					  	  		<em>14小时45分15秒</em>
+					  	  		<i class="lbasfgreencur">即将开始</i>
+					  	  	</p>
+					  	  </div>
+					  </div>
+					 </a>
+					 <div class="lbagzlj"><span>211次围观</span><a href="">关注</a></div>
+				    </li>
+				    <li><a href="">
+					  <p class="lbagzgg"><span><em class="lbasfgreencur">8折</em><i>17人代理</i></span><b></b></p>
+					  <div class="lbagznr">
+					  	  <p class="lbagznrimg lbaimg"><img src="img/lbagzimg.png"></p>
+					  	  <span class="lbagzimgy">普陀区兴建路461号金鹰海兴建路461号金鹰海景苑2幢4景苑2幢401金鹰海</span>
+					  	  <div class="lbasfs">
+					  	  	<p class="lbasfspa">
+					  	  		<span class="lbasfgreenb"><em>起拍价</em><i>￥</i><b>82</b><i>万</i></span>
+					  	  		<em class="lbasfgreencur">可贷款</em>
+					  	  	</p>
+					  	  	<p class="lbasfspa lbasfspb">
+					  	  		<span><em>评估价</em><i>￥</i><b>102</b><i>万</i></span>
+					  	  		<i>11次出价</i>
+					  	  	</p>
+					  	  	<p class="lbasfspc">
+					  	  		<span>距结束</span>
+					  	  		<em>14小时45分15秒</em>
+					  	  		<i class="lbasfgreencur">即将开始</i>
+					  	  	</p>
+					  	  </div>
+					  </div>
+					 </a>
+					 <div class="lbagzlj"><span>211次围观</span><a href="">关注</a></div>
+				    </li>
+				    
+				</ul>
+				<a href="" class="lbasftlball">展开全部 1233 套</a>
+				
+				
+			</div>
+			
+			
+			<!--司法拍卖列表-e-->
+			
+			
+			
+			
+			
+			
+			
+
+	
+			
+		</div>		
+		
+		
+		
+		
+		
+		<!--尾部-s-->
+		<div class="lbafotv">
+			<div class="lbafotvtop">
+				<div class="lbafottopma ov1190">
+					
+					<div class="lbafottopmaf">
+						<ul>
+							<li><a href="关于我们.html">关于我们</a></li>
+							<li><a href="公司愿景（模板）.html">企业文化</a></li>
+							<li><a href="公司愿景（模板）.html">联系我们</a></li>
+							<li><a href="公司愿景（模板）.html">招聘专区</a></li>
+							<li><a href="公司愿景（模板）.html">法律声明</a></li>
+						</ul>
+						<ul>
+							<li><a href="公司简介.html">清搜网</a></li>
+							<li><a href="公司简介.html">什么是清搜？</a></li>
+							<li><a href="公司简介.html">为什么要用清搜公众平台？</a></li>
+							<li><a href="公司简介.html">清搜公众平台的优势？</a></li>
+							<li><a href="公司简介.html">攻略</a></li>
+						</ul>
+						<p>
+							<i>请搜网客服</i>
+							<em></em>
+							<i>400-0000-0000</i>
+							<span>周一至周六（9:0018:00）</span>
+						</p>
+						<p>
+							<i>清搜网招商</i>
+							<span>专线1:0371-00000000</span>
+							<span>专线1:0371-00000000</span>
+						</p>
+					</div>
+					
+					<div class="lbafottopmaz">
+						<a href="" class="lbafotlja">关注新浪微博</a>
+						<a href="" class="lbafotljb">企业QQ咨询</a>
+					</div>
+					
+					<div class="lbafottoprewm"><img src="img/erweima.png"></div>
+					
+				</div>
+			</div>
+			
+			<div class="lbafotbm">
+				<p>
+					<span>杭州多清赢收资产管理有限公司版权所有</span>
+					<span>地址：杭州市江干区秋涛北路72号三新银座-资募大厦18楼</span>
+				</p>
+				<p>
+					<span>电话：0571-81901997</span>
+					<span>传真：0571-81901997</span>
+					<span>E-mail：iqingsou@126.com</span>
+				</p>
+				<p>
+					<span>经营许可证：XXXXXXXXXXXXXXXX</span>
+					<span>增值电信业务经营许可证：XXXXXXXXXXXXX</span>
+					<span>法律顾问：杭州鼎亚律师事务所</span>
+				</p>
+				<p>
+					<span>浙ICP备15045237号</span>
+					<span>Copyright @ 2015-2016 www.iqingsou.com. ALL Rights Reserved</span>
+				</p>
+			</div>
+			
+		</div>
+		<!--尾部-e-->
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</body>
+	<script type="text/javascript" src="js/jquery-min.js"></script>
+	<script type="text/javascript" src="js/index.js"></script>
+</html>
