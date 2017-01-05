@@ -32,7 +32,7 @@ public enum BusinessTypeEnum {
         this.name = name;
     }
 
-    BusinessTypeEnum(Integer value, String name) {
+    BusinessTypeEnum(Integer value, String name ) {
         this.value = value;
         this.name = name;
     }
