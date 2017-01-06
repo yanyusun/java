@@ -52,4 +52,9 @@ public class DisposeMapperImpl extends SaleBaseDao implements DisposeMapper {
     public List<Dispose> selectByAssetId(@Param("assetId") Integer assetId, @Param("objectType") Integer objectType) {
         return super.getSqlSession().getMapper(DisposeMapper.class).selectByAssetId(assetId, objectType);
     }
+
+    @Override
+    public Integer deleteByPrimaryKeyObject(@Param("assetId") Integer assetId, @Param("objectType") Integer objectType) {
+        return super.getSqlSession().getMapper(DisposeMapper.class).deleteByPrimaryKeyObject(assetId, objectType);
+    }
 }

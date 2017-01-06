@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface DisposeMapper extends BaseMapper<Dispose> {
     List<Dispose> selectByAssetId(@Param("assetId") Integer assetId, @Param("objectType") Integer objectType);
+
+    Integer deleteByPrimaryKeyObject(@Param("assetId") Integer assetId, @Param("objectType") Integer objectType);
 }

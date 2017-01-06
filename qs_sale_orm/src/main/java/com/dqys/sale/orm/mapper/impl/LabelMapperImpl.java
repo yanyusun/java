@@ -25,6 +25,11 @@ public class LabelMapperImpl extends SaleBaseDao implements LabelMapper {
     }
 
     @Override
+    public List<Label> selectByLable(Label label) {
+        return super.getSqlSession().getMapper(LabelMapper.class).selectByLable(label);
+    }
+
+    @Override
     public Integer deleteByPrimaryKey(Integer id) {
         return super.getSqlSession().getMapper(LabelMapper.class).deleteByPrimaryKey(id);
     }

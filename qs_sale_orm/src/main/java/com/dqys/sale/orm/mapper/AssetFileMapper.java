@@ -9,4 +9,6 @@ import java.util.List;
 public interface AssetFileMapper extends BaseMapper<AssetFile> {
 
     List<AssetFile> selectByAssetId(@Param("assetId") Integer assetId, @Param("objectType") Integer objectType);
+
+    Integer deleteByPrimaryKeyObject(@Param("assetId") Integer assetId, @Param("objectType") Integer objectType);
 }

@@ -240,12 +240,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
     public void addOtherEntity_tx(List<Label> labels, List<Dispose> disposes, List<AssetFile> assetFiles, Integer id, Integer objectType) {
         //文件
         if (assetFiles != null && assetFiles.size() > 0) {
-            List<AssetFile> list = assetFileMapper.selectByAssetId(id, objectType);
-            if (list != null && list.size() > 0) {
-                for (AssetFile file : list) {
-                    assetFileMapper.deleteByPrimaryKey(file.getId());
-                }
-            }
+            assetFileMapper.deleteByPrimaryKeyObject(id, objectType);
             for (AssetFile file : assetFiles) {
                 file.setAssetId(id);
                 file.setAssetType(objectType);
@@ -254,12 +249,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         }
         //处置方式
         if (disposes != null && disposes.size() > 0) {
-            List<Dispose> list = disposeMapper.selectByAssetId(id, objectType);
-            if (list != null && list.size() > 0) {
-                for (Dispose file : list) {
-                    disposeMapper.deleteByPrimaryKey(file.getId());
-                }
-            }
+            disposeMapper.deleteByPrimaryKeyObject(id, objectType);
             for (Dispose dis : disposes) {
                 dis.setAssetType(objectType);
                 dis.setAssetId(id);
@@ -269,16 +259,20 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         //标签
         if (labels != null && labels.size() > 0) {
             LabelRe labelRe = new LabelRe();
-            labelRe.setAssetType(objectType);
-            List<Dispose> list = labelReMapper.selectByAssetId(id, objectType);
-            if (list != null && list.size() > 0) {
-                for (Dispose file : list) {
-                    labelReMapper.deleteByPrimaryKey(file.getId());
-                }
-            }
+            labelReMapper.deleteByPrimaryKeyObject(id, objectType);
             for (Label label : labels) {
+                if (label.getId() == null && label.getName() != null) {
+                    //查询标签库是否存在。不存在就新增
+                    List<Label> las = labelMapper.selectByLable(label);
+                    if (las != null && las.size() > 0) {
+                        label.setId(las.get(0).getId());
+                    } else {
+                        labelMapper.insertSelective(label);
+                    }
+                }
                 if (label.getId() != null) {
                     labelRe.setAsssetId(id);
+                    labelRe.setAssetType(objectType);
                     labelRe.setLabelId(label.getId());
                     labelReMapper.insertSelective(labelRe);
                 }

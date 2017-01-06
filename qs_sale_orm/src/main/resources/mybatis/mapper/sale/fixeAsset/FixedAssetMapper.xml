@@ -27,6 +27,7 @@
         <result column="is_judgement" property="isJudgement" jdbcType="INTEGER"/>
         <result column="asset_describe" property="assetDescribe" jdbcType="VARCHAR"/>
         <result column="righter_name" property="righterName" jdbcType="VARCHAR"/>
+        <result column="righter_phone" property="righterPhone" jdbcType="VARCHAR"/>
         <result column="righter_address" property="righterAddress" jdbcType="VARCHAR"/>
         <result column="righter_province" property="righterProvince" jdbcType="INTEGER"/>
         <result column="righter_city" property="righterCity" jdbcType="INTEGER"/>
@@ -52,7 +53,7 @@
     house_nature, house_size, has_house_certificate, is_pledge, is_law, is_judgement, 
     asset_describe, righter_name, righter_address, righter_province, righter_city, righter_area, 
     righter_contact_phone, righter_contact_name, righter_type, mark, collection_num, 
-    dispose_num, no,check_status,enable,title,create_time,update_time,oper_user,dispose_status
+    dispose_num, no,check_status,enable,title,create_time,update_time,oper_user,dispose_status,righter_phone
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -213,6 +214,9 @@
             <if test="operUser != null">
                 oper_user,
             </if>
+            <if test="righterPhone !=null">
+                righter_phone,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -331,6 +335,9 @@
             <if test="operUser != null">
                 #{operUser,jdbcType=VARCHAR},
             </if>
+            <if test="righterPhone !=null">
+                #{righterPhone,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.dqys.sale.orm.pojo.FixedAsset">
@@ -445,6 +452,9 @@
                 title = #{title,jdbcType=VARCHAR},
             </if>
             update_time=now(),
+            <if test="righterPhone != null">
+                righter_phone = #{righterPhone,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>

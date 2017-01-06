@@ -86,5 +86,8 @@
         from t_label_asset_re WHERE assset_id=#{assetId} AND asset_type=#{objectType}
     </select>
 
+    <delete id="deleteByPrimaryKeyObject">
+        DELETE FROM t_label_asset_re WHERE assset_id=#{assetId} AND asset_type=#{objectType}
+    </delete>
 
 </mapper>

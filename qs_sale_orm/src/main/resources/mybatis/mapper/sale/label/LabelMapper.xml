@@ -25,7 +25,7 @@
     values (#{id,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}
       )
   </insert>
-    <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.Label">
+    <insert id="insertSelective" parameterType="com.dqys.sale.orm.pojo.Label" useGeneratedKeys="true" keyProperty="id">
         insert into t_label
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -86,6 +86,16 @@
         from t_label
         <if test="name !=null">
             where name like CONCAT('%',#{name},'%')
+        </if>
+    </select>
+
+    <select id="selectByLable" parameterType="com.dqys.sale.orm.pojo.Label" resultMap="BaseResultMap">
+        SELECT * FROM t_label WHERE 1=1
+        <if test="type !=null">
+            AND type=#{type}
+        </if>
+        <if test="name !=null">
+            AND name=#{name}
         </if>
     </select>
 
