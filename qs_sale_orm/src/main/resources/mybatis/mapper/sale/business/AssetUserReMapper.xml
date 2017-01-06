@@ -123,6 +123,7 @@
     <resultMap id="BaseResultMapWithObject" type="com.dqys.sale.orm.pojo.AssetUserRe" extends="BaseResultMap"
                autoMapping="true">
         <collection column="id" property="objectEntity" ofType="com.dqys.sale.orm.pojo.ObjectEntity">
+            <result column="objectId" property="id"/>
             <result column="assetNo" property="assetNo"/>
             <result column="title" property="title"/>
             <result column="endTime" property="endTime"/>
@@ -146,7 +147,7 @@
     <select id="selectByUserReList" resultMap="BaseResultMapWithObject"
             parameterType="com.dqys.sale.orm.query.AssetUserReQuery">
         SELECT aur.*,tap.asset_no assetNo,tap.title,tap.total_money totalMoney,DATE_FORMAT(tap.end_time,'%Y-%m-%d')
-        endTime,DATE_FORMAT(tap.update_time ,'%Y-%m-%d %T') createTime,
+        endTime,DATE_FORMAT(tap.update_time ,'%Y-%m-%d %T') createTime,tap.id objectId,
         dis.dispose_type,dis.alg,dis.value
         FROM t_asset_user_re aur LEFT JOIN t_asset_package tap
         ON tap.id=aur.asset_id LEFT JOIN t_dispose dis
@@ -155,7 +156,7 @@
         <include refid="Query_Object"/>
         UNION
         SELECT aur.*,tap.no assetNo,tap.title,tap.asset_rental totalMoney,DATE_FORMAT(tap.entrust_endtime,'%Y-%m-%d')
-        endTime,DATE_FORMAT(tap.update_time ,'%Y-%m-%d %T') createTime,
+        endTime,DATE_FORMAT(tap.update_time ,'%Y-%m-%d %T') createTime,tap.id objectId,
         dis.dispose_type,dis.alg,dis.value
         FROM t_asset_user_re aur LEFT JOIN t_fixed_asset tap
         ON tap.id=aur.asset_id LEFT JOIN t_dispose dis
@@ -164,7 +165,7 @@
         <include refid="Query_Object"/>
         UNION
         SELECT aur.*,tap.bond_no assetNo,tap.title,tap.total_money totalMoney,DATE_FORMAT(tap.end_time,'%Y-%m-%d')
-        endTime,DATE_FORMAT(tap.update_time ,'%Y-%m-%d %T') createTime,
+        endTime,DATE_FORMAT(tap.update_time ,'%Y-%m-%d %T') createTime,tap.id objectId,
         dis.dispose_type,dis.alg,dis.value
         FROM t_asset_user_re aur LEFT JOIN t_user_bond tap
         ON tap.id=aur.asset_id LEFT JOIN t_dispose dis
