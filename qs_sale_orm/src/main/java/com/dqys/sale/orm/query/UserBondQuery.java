@@ -1,5 +1,7 @@
 package com.dqys.sale.orm.query;
 
+import com.dqys.sale.orm.pojo.Dispose;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,6 +17,30 @@ public class UserBondQuery extends PageEntity implements Serializable {
     private Integer businessStatus;//业务状态
     private Integer userId;
     private Integer objectType;
+
+
+    //-----------------------------------------> 新增
+
+    private Integer gradeSort;//评分
+
+    private Double totalMoney;//债权总额
+
+    private Integer province;//资产所在省份
+
+    private Integer city;//资产所在城市
+
+    private Integer area;//资产所在区县
+
+    private Double totalInterestMoney;//'总利息
+
+    private Double loanMoney;//贷款金额
+
+    private Double assessTotalPrice;//评估总价
+
+    private String loanType;//贷款类型
+
+    private List<Dispose> disposes;//处置方式
+
 
     public Integer getObjectType() {
         return objectType;
@@ -78,5 +104,85 @@ public class UserBondQuery extends PageEntity implements Serializable {
 
     public void setIds(List<Integer> ids) {
         this.ids = ids;
+    }
+
+    public Integer getGradeSort() {
+        return gradeSort;
+    }
+
+    public void setGradeSort(Integer gradeSort) {
+        this.gradeSort = gradeSort;
+    }
+
+    public List<Dispose> getDisposes() {
+        return disposes;
+    }
+
+    public void setDisposes(List<Dispose> disposes) {
+        this.disposes = disposes;
+    }
+
+    public String getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(String loanType) {
+        this.loanType = loanType;
+    }
+
+    public Double getAssessTotalPrice() {
+        return assessTotalPrice;
+    }
+
+    public void setAssessTotalPrice(Double assessTotalPrice) {
+        this.assessTotalPrice = assessTotalPrice;
+    }
+
+    public Double getLoanMoney() {
+        return loanMoney;
+    }
+
+    public void setLoanMoney(Double loanMoney) {
+        this.loanMoney = loanMoney;
+    }
+
+    public Double getTotalInterestMoney() {
+        return totalInterestMoney;
+    }
+
+    public void setTotalInterestMoney(Double totalInterestMoney) {
+        this.totalInterestMoney = totalInterestMoney;
+    }
+
+    public Integer getArea() {
+        return area;
+    }
+
+    public void setArea(Integer area) {
+        this.area = area;
+    }
+
+    public Integer getCity() {
+        return city;
+    }
+
+    public void setCity(Integer city) {
+        this.city = city;
+    }
+
+    public Integer getProvince() {
+        return province;
+    }
+
+    public void setProvince(Integer province) {
+        this.province = province;
+    }
+
+    public Double getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(Double totalMoney) {
+        this.totalMoney = totalMoney;
     }
 }
