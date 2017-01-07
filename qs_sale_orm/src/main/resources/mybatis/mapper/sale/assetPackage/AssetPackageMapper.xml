@@ -444,6 +444,46 @@
         <if test="userId !=null">
             AND b.create_id=#{userId}
         </if>
+
+        <if test="entrustType !=null">
+            AND tap.entrust_type=#{entrustType}
+        </if>
+        <if test="assetType !=null">
+            AND tap.asset_type=#{assetType}
+        </if>
+        <if test="totalMoneyBegin !=null and totalMoneyEnd !=null">
+            AND (tap.total_money BETWEEN #{totalMoneyBegin} AND #{totalMoneyEnd})
+        </if>
+        <if test="isBank !=null">
+            AND tap.is_bank=#{isBank}
+        </if>
+        <if test="province !=null">
+            AND tap.province=#{province}
+        </if>
+        <if test="city !=null">
+            AND tap.city=#{city}
+        </if>
+        <if test="area !=null">
+            AND tap.area=#{area}
+        </if>
+        <if test="disposeStatus !=null">
+            AND tap.dispose_status=#{disposeStatus}
+        </if>
+        <if test="disposes !=null">
+            AND dis.dispose_type=#{disposes}
+        </if>
+        <if test="collectionNumSort !=null and collectionNumSort==1">
+            ORDER BY tap.collection_num DESC
+        </if>
+        <if test="collectionNumSort !=null and collectionNumSort==2">
+            ORDER BY tap.collection_num ASC
+        </if>
+        <if test="disposeStatusSort !=null and disposeStatusSort==1">
+            ORDER BY tap.dispose_status DESC
+        </if>
+        <if test="disposeStatusSort !=null and disposeStatusSort==2">
+            ORDER BY tap.dispose_status ASC
+        </if>
     </sql>
     <select id="list" parameterType="com.dqys.sale.orm.query.AssetPackageQuery"
             resultMap="BaseResultMapWithAll">

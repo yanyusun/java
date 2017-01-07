@@ -20,4 +20,8 @@ public class HasDisposeLevel implements BusinessLevel{
      * 重启
      */
     public static final int dispose_reset= BusinessOperTypeEnum.dispose_reset.getValue();
+    /**
+     * 异议
+     */
+    public static final int dispose_dissent= BusinessOperTypeEnum.dispose_dissent.getValue();
 }

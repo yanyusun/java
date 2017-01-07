@@ -981,6 +981,37 @@
         <if test="userId !=null">
             AND b.create_id=#{userId}
         </if>
+
+        <if test="loanType !=null">
+            AND tap.loan_type=#{loanType}
+        </if>
+        <if test="totalInterestMoneyBegin !=null and totalInterestMoneyEnd !=null">
+            AND (tap.total_interest_money BETWEEN #{totalInterestMoneyBegin} AND #{totalInterestMoneyEnd})
+        </if>
+        <if test="loanMoneyBegin !=null and loanMoneyEnd !=null">
+            AND (tap.loan_money BETWEEN #{loanMoneyBegin} AND #{loanMoneyEnd})
+        </if>
+        <if test="assessTotalPriceBegin !=null and assessTotalPriceEnd !=null">
+            AND (tap.assess_total_price BETWEEN #{assessTotalPriceBegin} AND #{assessTotalPriceEnd})
+        </if>
+        <if test="province !=null">
+            AND tap.province=#{province}
+        </if>
+        <if test="city !=null">
+            AND tap.city=#{city}
+        </if>
+        <if test="area !=null">
+            AND tap.area=#{area}
+        </if>
+        <if test="disposes !=null">
+            AND dis.dispose_type=#{disposes}
+        </if>
+        <if test="gradeSort!=null and gradeSort==1">
+            GROUP BY tap.grade DESC
+        </if>
+        <if test="gradeSort!=null and gradeSort==1">
+            GROUP BY tap.grade ASC
+        </if>
     </sql>
     <select id="list" parameterType="com.dqys.sale.orm.query.UserBondQuery"
             resultMap="BaseResultMapWithAll">

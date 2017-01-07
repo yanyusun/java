@@ -19,9 +19,7 @@ public class UserBondQuery extends PageEntity implements Serializable {
 
     //-----------------------------------------> 新增
 
-    private Integer gradeSort;//评分
-
-    private Double totalMoney;//债权总额
+    private Integer gradeSort;//评分(1倒叙2正)
 
     private Integer province;//资产所在省份
 
@@ -37,7 +35,8 @@ public class UserBondQuery extends PageEntity implements Serializable {
 
     private Double loanMoneyEnd;//贷款金额
 
-    private Double assessTotalPrice;//评估总价
+    private Double assessTotalPriceBegin;//评估总价
+    private Double assessTotalPriceEnd;//评估总价
 
     private String loanType;//贷款类型
 
@@ -132,12 +131,20 @@ public class UserBondQuery extends PageEntity implements Serializable {
         this.loanType = loanType;
     }
 
-    public Double getAssessTotalPrice() {
-        return assessTotalPrice;
+    public Double getAssessTotalPriceBegin() {
+        return assessTotalPriceBegin;
     }
 
-    public void setAssessTotalPrice(Double assessTotalPrice) {
-        this.assessTotalPrice = assessTotalPrice;
+    public void setAssessTotalPriceBegin(Double assessTotalPriceBegin) {
+        this.assessTotalPriceBegin = assessTotalPriceBegin;
+    }
+
+    public Double getAssessTotalPriceEnd() {
+        return assessTotalPriceEnd;
+    }
+
+    public void setAssessTotalPriceEnd(Double assessTotalPriceEnd) {
+        this.assessTotalPriceEnd = assessTotalPriceEnd;
     }
 
     public Double getTotalInterestMoneyBegin() {
@@ -196,11 +203,4 @@ public class UserBondQuery extends PageEntity implements Serializable {
         this.province = province;
     }
 
-    public Double getTotalMoney() {
-        return totalMoney;
-    }
-
-    public void setTotalMoney(Double totalMoney) {
-        this.totalMoney = totalMoney;
-    }
 }

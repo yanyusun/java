@@ -585,6 +585,55 @@
         <if test="userId !=null">
             AND b.create_id=#{userId}
         </if>
+
+        <if test="comfrom !=null">
+            AND tap.comfrom=#{comfrom}
+        </if>
+        <if test="floor !=null">
+            AND tap.floor=#{floor}
+        </if>
+        <if test="orientation !=null">
+            AND tap.orientation=#{orientation}
+        </if>
+        <if test="year !=null">
+            AND tap.year=#{year}
+        </if>
+        <if test="houseSizeBegin !=null and houseSizeEnd !=null">
+            AND (tap.house_size BETWEEN #{houseSizeBegin} AND #{houseSizeEnd})
+        </if>
+        <if test="assetRentalBegin !=null and assetRentalEnd !=null">
+            AND (tap.asset_rental BETWEEN #{assetRentalBegin} AND #{assetRentalEnd})
+        </if>
+        <if test="usedYear !=null">
+            AND tap.used_year=#{usedYear}
+        </if>
+        <if test="province !=null">
+            AND tap.province=#{province}
+        </if>
+        <if test="city !=null">
+            AND tap.city=#{city}
+        </if>
+        <if test="area !=null">
+            AND tap.area=#{area}
+        </if>
+        <if test="disposeStatus !=null">
+            AND tap.dispose_status=#{disposeStatus}
+        </if>
+        <if test="disposes !=null">
+            AND dis.dispose_type=#{disposes}
+        </if>
+        <if test="collectionNumSort !=null and collectionNumSort==1">
+            ORDER BY tap.collection_num DESC
+        </if>
+        <if test="collectionNumSort !=null and collectionNumSort==2">
+            ORDER BY tap.collection_num ASC
+        </if>
+        <if test="disposeStatusSort !=null and disposeStatusSort==1">
+            ORDER BY tap.dispose_status DESC
+        </if>
+        <if test="disposeStatusSort !=null and disposeStatusSort==2">
+            ORDER BY tap.dispose_status ASC
+        </if>
     </sql>
     <select id="fixedList" parameterType="com.dqys.sale.orm.query.FixedAssetQuery"
             resultMap="BaseResultMapWithAll">

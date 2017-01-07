@@ -281,7 +281,7 @@ public class MessageServiceImpl implements MessageService {
         if (businessLevel == AssetDisposeBusiness.getHasDisposeLevel().getLevel() && operType == AssetDisposeBusiness.getHasDisposeLevel().dispose_reset) {//平台点击重启，信息发送给用户
 
         }
-        if (businessLevel == AssetDisposeBusiness.getHasDisposeLevel().getLevel() && operType == AssetDisposeBusiness.getHasDisposeLevel().dispose_reset) {//用户点击异议，信息发送给平台
+        if (businessLevel == AssetDisposeBusiness.getHasDisposeLevel().getLevel() && operType == AssetDisposeBusiness.getHasDisposeLevel().dispose_dissent) {//用户点击异议，信息发送给平台
             content = smsUtil.sendSms(SmsEnum.DISSENT_DISPOSE.getValue(), receiveUser.getMobile(),
                     admin,
                     getUserName(sendUser),

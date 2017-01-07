@@ -20,6 +20,7 @@ public enum BusinessOperTypeEnum {
     dispose_reject(115,"驳回"),
     dispose_reset(116,"重启"),
     dispose_Ok(117,"已处置"),
+    dispose_dissent(118,"异议"),
     //---------------------->新闻发布业务
     news_announce_draft(120,"草稿"),
     news_announce_announce(122,"发布"),
