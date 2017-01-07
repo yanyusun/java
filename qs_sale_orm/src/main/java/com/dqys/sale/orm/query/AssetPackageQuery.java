@@ -20,7 +20,9 @@ public class AssetPackageQuery extends PageEntity implements Serializable {
     //-----------------------------------------> 新增
     private Integer assetType;//资产类型（0房产包1小额信贷包2信用卡包3混合包4其它包）
 
-    private Double totalMoney;//资产总额
+    private Double totalMoneyBegin;//资产总额开始
+
+    private Double totalMoneyEnd;//资产总额结束
 
     private Integer province;//省',
 
@@ -176,11 +178,19 @@ public class AssetPackageQuery extends PageEntity implements Serializable {
         this.province = province;
     }
 
-    public Double getTotalMoney() {
-        return totalMoney;
+    public Double getTotalMoneyBegin() {
+        return totalMoneyBegin;
     }
 
-    public void setTotalMoney(Double totalMoney) {
-        this.totalMoney = totalMoney;
+    public void setTotalMoneyBegin(Double totalMoneyBegin) {
+        this.totalMoneyBegin = totalMoneyBegin;
+    }
+
+    public Double getTotalMoneyEnd() {
+        return totalMoneyEnd;
+    }
+
+    public void setTotalMoneyEnd(Double totalMoneyEnd) {
+        this.totalMoneyEnd = totalMoneyEnd;
     }
 }

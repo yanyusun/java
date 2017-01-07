@@ -20,7 +20,9 @@ public class FixedAssetQuery extends PageEntity implements Serializable {
     //---------------------------->查询新增
     private Integer comfrom;//委托来源：0清搜网，1后台录入，2请搜公众平台
 
-    private Double assetRental;//资产总额单位元
+    private Double assetRentalBegin;//资产总额单位元
+    private Double assetRentalEnd;//资产总额单位元
+
 
     private Integer province;//所在省
 
@@ -36,7 +38,10 @@ public class FixedAssetQuery extends PageEntity implements Serializable {
 
     private Integer usedYear;//已使用年限
 
-    private Double houseSize;//房产面积： 平方米
+    private Double houseSizeBegin;//房产面积： 平方米
+
+    private Double houseSizeEnd;//房产面积： 平方米
+
 
     private Integer collectionNumSort;//收藏数量 排序 1倒叙  2正叙
 
@@ -71,12 +76,20 @@ public class FixedAssetQuery extends PageEntity implements Serializable {
         this.collectionNumSort = collectionNumSort;
     }
 
-    public Double getHouseSize() {
-        return houseSize;
+    public Double getHouseSizeBegin() {
+        return houseSizeBegin;
     }
 
-    public void setHouseSize(Double houseSize) {
-        this.houseSize = houseSize;
+    public void setHouseSizeBegin(Double houseSizeBegin) {
+        this.houseSizeBegin = houseSizeBegin;
+    }
+
+    public Double getHouseSizeEnd() {
+        return houseSizeEnd;
+    }
+
+    public void setHouseSizeEnd(Double houseSizeEnd) {
+        this.houseSizeEnd = houseSizeEnd;
     }
 
     public Integer getUsedYear() {
@@ -135,13 +148,7 @@ public class FixedAssetQuery extends PageEntity implements Serializable {
         this.province = province;
     }
 
-    public Double getAssetRental() {
-        return assetRental;
-    }
 
-    public void setAssetRental(Double assetRental) {
-        this.assetRental = assetRental;
-    }
 
     public Integer getObjectType() {
         return objectType;
@@ -213,5 +220,21 @@ public class FixedAssetQuery extends PageEntity implements Serializable {
 
     public void setDisposeStatus(Integer disposeStatus) {
         this.disposeStatus = disposeStatus;
+    }
+
+    public Double getAssetRentalBegin() {
+        return assetRentalBegin;
+    }
+
+    public void setAssetRentalBegin(Double assetRentalBegin) {
+        this.assetRentalBegin = assetRentalBegin;
+    }
+
+    public Double getAssetRentalEnd() {
+        return assetRentalEnd;
+    }
+
+    public void setAssetRentalEnd(Double assetRentalEnd) {
+        this.assetRentalEnd = assetRentalEnd;
     }
 }

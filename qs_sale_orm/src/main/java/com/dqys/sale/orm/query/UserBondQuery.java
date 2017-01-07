@@ -31,9 +31,13 @@ public class UserBondQuery extends PageEntity implements Serializable {
 
     private Integer area;//资产所在区县
 
-    private Double totalInterestMoney;//'总利息
+    private Double totalInterestMoneyBegin;//'总利息
 
-    private Double loanMoney;//贷款金额
+    private Double totalInterestMoneyEnd;//'总利息
+
+    private Double loanMoneyBegin;//贷款金额
+
+    private Double loanMoneyEnd;//贷款金额
 
     private Double assessTotalPrice;//评估总价
 
@@ -138,20 +142,36 @@ public class UserBondQuery extends PageEntity implements Serializable {
         this.assessTotalPrice = assessTotalPrice;
     }
 
-    public Double getLoanMoney() {
-        return loanMoney;
+    public Double getTotalInterestMoneyBegin() {
+        return totalInterestMoneyBegin;
     }
 
-    public void setLoanMoney(Double loanMoney) {
-        this.loanMoney = loanMoney;
+    public void setTotalInterestMoneyBegin(Double totalInterestMoneyBegin) {
+        this.totalInterestMoneyBegin = totalInterestMoneyBegin;
     }
 
-    public Double getTotalInterestMoney() {
-        return totalInterestMoney;
+    public Double getLoanMoneyEnd() {
+        return loanMoneyEnd;
     }
 
-    public void setTotalInterestMoney(Double totalInterestMoney) {
-        this.totalInterestMoney = totalInterestMoney;
+    public void setLoanMoneyEnd(Double loanMoneyEnd) {
+        this.loanMoneyEnd = loanMoneyEnd;
+    }
+
+    public Double getLoanMoneyBegin() {
+        return loanMoneyBegin;
+    }
+
+    public void setLoanMoneyBegin(Double loanMoneyBegin) {
+        this.loanMoneyBegin = loanMoneyBegin;
+    }
+
+    public Double getTotalInterestMoneyEnd() {
+        return totalInterestMoneyEnd;
+    }
+
+    public void setTotalInterestMoneyEnd(Double totalInterestMoneyEnd) {
+        this.totalInterestMoneyEnd = totalInterestMoneyEnd;
     }
 
     public Integer getArea() {
