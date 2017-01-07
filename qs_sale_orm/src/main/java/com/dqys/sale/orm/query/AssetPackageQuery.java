@@ -1,7 +1,5 @@
 package com.dqys.sale.orm.query;
 
-import com.dqys.sale.orm.pojo.Dispose;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -39,7 +37,7 @@ public class AssetPackageQuery extends PageEntity implements Serializable {
     private Integer disposeStatus; //处置状态
     private Integer disposeStatusSort;// 处置状态（0待处置1处置中2已处置） 1倒叙  2正叙
 
-    private List<Dispose> disposes;//处置方式
+    private Integer disposes;//处置方式
 
 
     public Integer getObjectType() {
@@ -106,11 +104,11 @@ public class AssetPackageQuery extends PageEntity implements Serializable {
         this.assetType = assetType;
     }
 
-    public List<Dispose> getDisposes() {
+    public Integer getDisposes() {
         return disposes;
     }
 
-    public void setDisposes(List<Dispose> disposes) {
+    public void setDisposes(Integer disposes) {
         this.disposes = disposes;
     }
 

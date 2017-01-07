@@ -1,7 +1,5 @@
 package com.dqys.sale.orm.query;
 
-import com.dqys.sale.orm.pojo.Dispose;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -50,7 +48,7 @@ public class FixedAssetQuery extends PageEntity implements Serializable {
     private Integer disposeStatusSort;// 处置状态（0待处置1处置中2已处置） 1倒叙  2正叙
 
 
-    private List<Dispose> disposes;//处置方式
+    private Integer disposes;//处置方式
 
     public Integer getComfrom() {
         return comfrom;
@@ -206,11 +204,11 @@ public class FixedAssetQuery extends PageEntity implements Serializable {
         this.ids = ids;
     }
 
-    public List<Dispose> getDisposes() {
+    public Integer getDisposes() {
         return disposes;
     }
 
-    public void setDisposes(List<Dispose> disposes) {
+    public void setDisposes(Integer disposes) {
         this.disposes = disposes;
     }
 
