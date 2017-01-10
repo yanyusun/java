@@ -26,7 +26,7 @@ public class FollowUpUtil {
         if(null!=followUpMessageDTO.getSecondObjectId()){
             followUpMessage.setSecondObjectId(followUpMessageDTO.getSecondObjectId());
         }
-        if(null!=followUpMessageDTO.getSecondObjectId()){
+        if(null!=followUpMessageDTO.getSecondObjectType()){
             followUpMessage.setSecondObjectType(followUpMessageDTO.getSecondObjectType());
         }
 
