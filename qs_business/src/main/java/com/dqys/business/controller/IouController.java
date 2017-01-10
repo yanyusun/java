@@ -24,6 +24,7 @@ public class IouController {
 
     /**
      * 删除借据
+     *
      * @param id
      * @return
      * @throws BusinessLogException
@@ -39,6 +40,7 @@ public class IouController {
 
     /**
      * 新增借据
+     *
      * @param iouDTO
      * @return
      * @throws BusinessLogException
@@ -47,7 +49,7 @@ public class IouController {
     @ResponseBody
     public JsonResponse add(@ModelAttribute IouDTO iouDTO) throws BusinessLogException {
         String data = IouServiceUtils.checkData(iouDTO);
-        if(data != null){
+        if (data != null) {
             return JsonResponseTool.paramErr(data);
         }
         return iouService.add_tx(iouDTO);
@@ -55,6 +57,7 @@ public class IouController {
 
     /**
      * 新增借据
+     *
      * @param iouDTOList
      * @return
      * @throws BusinessLogException
@@ -66,7 +69,7 @@ public class IouController {
             return JsonResponseTool.paramErr("参数错误");
         }
         String data = IouServiceUtils.checkData(iouDTOList.getIouDTOList());
-        if(data != null){
+        if (data != null) {
             return JsonResponseTool.paramErr(data);
         }
         return iouService.listAdd(iouDTOList.getIouDTOList());
@@ -74,6 +77,7 @@ public class IouController {
 
     /**
      * 修改借据信息
+     *
      * @param iouDTO
      * @return
      * @throws BusinessLogException
@@ -82,10 +86,10 @@ public class IouController {
     @ResponseBody
     public JsonResponse update(@ModelAttribute IouDTO iouDTO) throws BusinessLogException {
         String data = IouServiceUtils.checkData(iouDTO);
-        if(data != null){
+        if (data != null) {
             return JsonResponseTool.paramErr(data);
         }
-        if(iouDTO.getId() == null){
+        if (iouDTO.getId() == null) {
             return JsonResponseTool.paramErr("参数错误,找不到该借据");
         }
         return iouService.update_tx(iouDTO);
@@ -93,6 +97,7 @@ public class IouController {
 
     /**
      * 获取借据信息
+     *
      * @param id
      * @return
      */
@@ -106,7 +111,23 @@ public class IouController {
     }
 
     /**
+     * 获取借据信息(C端)
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/c/get")
+    @ResponseBody
+    public JsonResponse getC(@RequestParam Integer id) {
+        if (CommonUtil.checkParam(id)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return iouService.get(id);
+    }
+
+    /**
      * 获取借款人的借据信息
+     *
      * @param id
      * @return
      */
@@ -117,6 +138,21 @@ public class IouController {
             return JsonResponseTool.paramErr("参数错误");
         }
         return iouService.listIouByLenderId(id);
+    }
+
+    /**
+     * 获取借款人的借据信息(C端)
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/c/listIou")
+    @ResponseBody
+    public JsonResponse listIouC(@RequestParam Integer id) {
+        if (CommonUtil.checkParam(id)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return iouService.listIouByLenderIdC(id);
     }
 
 
