@@ -47,10 +47,7 @@ import com.dqys.business.service.utils.asset.PawnServiceUtils;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.core.base.BaseSelectonDTO;
 import com.dqys.core.base.SysProperty;
-import com.dqys.core.constant.KeyEnum;
-import com.dqys.core.constant.RoleTypeEnum;
-import com.dqys.core.constant.SysPropertyTypeEnum;
-import com.dqys.core.constant.UserInfoEnum;
+import com.dqys.core.constant.*;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.*;
@@ -58,6 +55,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -719,6 +717,58 @@ public class LenderServiceImpl implements LenderService {
             }
         }
         return statisticsLender;
+    }
+
+    @Override
+    public JsonResponse transformLenderC(LenderListQuery lenderListQuery, Integer type) {
+        JsonResponse response = queryList(lenderListQuery, type);
+        if (response.getCode() == ResponseCodeEnum.SUCCESS.getValue()) {
+            Map map = (Map) response.getData();
+            List<LenderCDTO> cdtos = new ArrayList<>();
+            if (map != null && map.get("data") != null) {
+                List<LenderListDTO> lenderListDTOList = (List<LenderListDTO>) map.get("data");
+                for (LenderListDTO dto : lenderListDTOList) {
+                    LenderCDTO cdto = new LenderCDTO();
+                    setDto(dto, cdto);
+                    cdtos.add(cdto);
+                }
+            } else {
+                return response;
+            }
+            map.put("data", cdtos);
+            return JsonResponseTool.success(null);
+        } else {
+            return response;
+        }
+    }
+
+    private void setDto(LenderListDTO dto, LenderCDTO cdto) {
+        ContactInfo info = contactInfoMapper.getByModel(ObjectTypeEnum.LENDER.getValue().toString(), ContactTypeEnum.LENDER.getValue(), dto.getLenderId());
+        cdto.setAvg(dto.getAvg());
+        cdto.setName(dto.getName());
+        cdto.setSex(dto.getSex());
+        cdto.setRate("");
+        cdto.setDeadline("");
+        cdto.setOverdueNum(0);
+        if (dto.getLastFollow() != null) {
+            cdto.setLastTime(new SimpleDateFormat("MM月dd日 hh:mm").format(dto.getLastFollow()));
+        }
+        cdto.setDebtMoney(dto.getAccrual() + dto.getLoan());
+        cdto.setLenderId(dto.getLenderId());
+        List<IOUInfo> infos = iouInfoMapper.listByLenderId(dto.getLenderId());
+        if (infos != null && infos.size() > 0) {
+            for (IOUInfo iouInfo : infos) {
+                if (iouInfo.getOutDays() != null && iouInfo.getOutDays() > cdto.getOverdueNum()) {
+                    cdto.setOverdueNum(iouInfo.getOutDays());
+                }
+            }
+        }
+        if (info != null) {
+            cdto.setAddress(AreaTool.getAreaById(info.getProvince()).getLabel() + AreaTool.getAreaById(info.getCity()).getLabel() +
+                    AreaTool.getAreaById(info.getDistrict()).getLabel() + info.getAddress());
+            cdto.setIdCard(info.getIdCard());
+            cdto.setOrganizationConpany(info.getCompany());
+        }
     }
 
     /**

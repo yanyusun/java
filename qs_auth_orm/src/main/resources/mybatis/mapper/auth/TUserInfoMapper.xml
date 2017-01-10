@@ -268,6 +268,29 @@
         and stateflag=0
     </select>
 
+    <!-- 检验账号是否存在 -->
+    <select id="verifyUser2" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        tui.*
+        from t_user_info tui,t_user_tag tut
+        where tui.id=tut.user_id
+        AND
+        ( 1=2
+        <if test="account != null">
+            or tui.account = #{account,jdbcType=VARCHAR}
+        </if>
+        <if test="mobile != null">
+            or tui.mobile = #{mobile,jdbcType=VARCHAR}
+        </if>
+        <if test="email != null">
+            or tui.email = #{email,jdbcType=VARCHAR}
+        </if>
+        ) and tui.stateflag=0 AND
+        <if test="userType!=null">
+            tut.user_type=#{userType}
+        </if>
+    </select>
+
     <!-- 多条件统计 -->
     <select id="queryCount" parameterType="com.dqys.auth.orm.query.TUserQuery" resultType="java.lang.Integer">
         SELECT COUNT(id) FROM t_user_info

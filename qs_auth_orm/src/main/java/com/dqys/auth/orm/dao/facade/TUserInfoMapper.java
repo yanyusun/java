@@ -21,6 +21,11 @@ public interface TUserInfoMapper {
                                @Param("mobile") String mobile,
                                @Param("email") String email);
 
+    List<TUserInfo> verifyUser2(@Param("account") String account,
+                               @Param("mobile") String mobile,
+                               @Param("email") String email, @Param("userType") Integer userType);
+
+
     Integer queryCount(TUserQuery tUserQuery);
 
     List<TUserInfo> queryList(TUserQuery tUserQuery);

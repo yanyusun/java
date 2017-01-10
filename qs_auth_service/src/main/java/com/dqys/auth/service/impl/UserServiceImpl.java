@@ -1,8 +1,7 @@
 package com.dqys.auth.service.impl;
 
-import com.dqys.auth.orm.constant.CompanyTypeEnum;
-import com.dqys.auth.orm.dao.facade.TMessageMapper;
 import com.dqys.auth.orm.dao.facade.TCompanyInfoMapper;
+import com.dqys.auth.orm.dao.facade.TMessageMapper;
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.dao.facade.TUserTagMapper;
 import com.dqys.auth.orm.pojo.*;
@@ -62,6 +61,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ServiceResult<Integer> validateUser(String account, String mobile, String email, Integer userType) throws Exception {
+        List<TUserInfo> infos = tUserInfoMapper.verifyUser2(account, mobile, email, userType);
+        if (infos != null && infos.size() > 0) {
+            return ServiceResult.success(infos.get(0).getId());
+        } else {
+            return ServiceResult.failure("用户不存在", ObjectUtils.NULL);
+        }
+
+    }
+
+    @Override
     public ServiceResult<UserDTO> userRegister_tx(String account, String mobile, String email, String pwd) throws Exception {
         TUserInfo tUserInfo = this.queryUser(account, mobile, email);
         if (null != tUserInfo) {
@@ -88,6 +98,21 @@ public class UserServiceImpl implements UserService {
         } else {
             tUserInfo = this.queryUser(userName, mobile, email);
         }
+        return getUserDTOServiceResult(pwd, tUserInfo);
+    }
+
+    @Override
+    public ServiceResult<UserDTO> userLogin(Integer uid, String userName, String mobile, String email, String pwd, Integer userType) throws Exception {
+        TUserInfo tUserInfo;
+        if (null != uid) {
+            tUserInfo = this.queryUser(uid);
+        } else {
+            tUserInfo = this.queryUser(userName, mobile, email, userType);
+        }
+        return getUserDTOServiceResult(pwd, tUserInfo);
+    }
+
+    private ServiceResult<UserDTO> getUserDTOServiceResult(String pwd, TUserInfo tUserInfo) throws Exception {
         if (null == tUserInfo) {
             return ServiceResult.failure("用户不存在", ObjectUtils.NULL);
         }
@@ -278,6 +303,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public TUserInfo queryUser(String account, String mobile, String email) throws Exception {
         List<TUserInfo> tUserInfos = this.tUserInfoMapper.verifyUser(account, mobile, email);
+        if (null == tUserInfos || tUserInfos.isEmpty()) {
+            return null;
+        }
+        return tUserInfos.get(0);
+    }
+
+    /* 验证用户存在性 */
+    @Override
+    public TUserInfo queryUser(String account, String mobile, String email, Integer userType) throws Exception {
+        List<TUserInfo> tUserInfos = this.tUserInfoMapper.verifyUser2(account, mobile, email, userType);
         if (null == tUserInfos || tUserInfos.isEmpty()) {
             return null;
         }

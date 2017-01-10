@@ -229,7 +229,9 @@ public class NewsServiceImpl implements NewsService {
         for (News entity : newses) {
             NewsDTO dto = new NewsDTO();
             dto.setNews(entity);
-            dto.setLables(entity.getLables());
+            if (entity.getLables() != null) {
+                dto.setLables(entity.getLables());
+            }
             dtos.add(dto);
         }
     }
