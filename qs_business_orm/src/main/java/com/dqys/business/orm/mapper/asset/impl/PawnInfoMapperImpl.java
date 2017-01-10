@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yvan on 16/6/8.
@@ -81,6 +82,11 @@ public class PawnInfoMapperImpl extends BaseDao implements PawnInfoMapper {
     @Override
     public List<PawnInfo> findByIouId(Integer iouId) {
         return super.getSqlSession().getMapper(PawnInfoMapper.class).findByIouId(iouId);
+    }
+
+    @Override
+    public List<Map> listPawnByLenderIdC(Integer lenderId) {
+        return super.getSqlSession().getMapper(PawnInfoMapper.class).listPawnByLenderIdC(lenderId);
     }
 
 }

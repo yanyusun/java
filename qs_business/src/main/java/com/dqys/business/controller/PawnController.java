@@ -27,6 +27,7 @@ public class PawnController {
 
     /**
      * 删除抵押物
+     *
      * @param id
      * @return
      * @throws BusinessLogException
@@ -42,6 +43,7 @@ public class PawnController {
 
     /**
      * 增加抵押物信息
+     *
      * @param pawnDTO
      * @return
      * @throws BusinessLogException
@@ -50,7 +52,7 @@ public class PawnController {
     @ResponseBody
     public JsonResponse add(@ModelAttribute PawnDTO pawnDTO) throws BusinessLogException {
         String data = PawnServiceUtils.checkData(pawnDTO);
-        if(data != null){
+        if (data != null) {
             return JsonResponseTool.paramErr(data);
         }
         return pawnService.add_tx(pawnDTO);
@@ -58,6 +60,7 @@ public class PawnController {
 
     /**
      * 增加抵押物信息(多条)
+     *
      * @param pawnDTOList
      * @return
      * @throws BusinessLogException
@@ -69,7 +72,7 @@ public class PawnController {
             return JsonResponseTool.paramErr("参数错误");
         }
         String data = PawnServiceUtils.checkData(pawnDTOList.getPawnDTOList());
-        if(data != null){
+        if (data != null) {
             return JsonResponseTool.paramErr(data);
         }
         return pawnService.listAdd(pawnDTOList.getPawnDTOList());
@@ -77,6 +80,7 @@ public class PawnController {
 
     /**
      * 修改抵押物信息
+     *
      * @param pawnDTO
      * @return
      * @throws BusinessLogException
@@ -88,7 +92,7 @@ public class PawnController {
             return JsonResponseTool.paramErr("参数错误");
         }
         String data = PawnServiceUtils.checkData(pawnDTO);
-        if(data != null){
+        if (data != null) {
             return JsonResponseTool.paramErr(data);
         }
         return pawnService.update_tx(pawnDTO);
@@ -96,6 +100,7 @@ public class PawnController {
 
     /**
      * 获取抵押物信息
+     *
      * @param id
      * @return
      */
@@ -109,7 +114,23 @@ public class PawnController {
     }
 
     /**
+     * 获取抵押物信息(C端)
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/c/get")
+    @ResponseBody
+    public JsonResponse getC(@RequestParam Integer id) {
+        if (CommonUtil.checkParam(id)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return pawnService.get(id);
+    }
+
+    /**
      * 获取借款人的抵押物信息
+     *
      * @param id
      * @return
      */
@@ -120,6 +141,21 @@ public class PawnController {
             return JsonResponseTool.paramErr("参数错误");
         }
         return pawnService.listPawnByLenderId(id);
+    }
+
+    /**
+     * 获取借款人的抵押物列表(C端)
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/c/listPawnC")
+    @ResponseBody
+    public JsonResponse listPawnC(@RequestParam Integer id) {
+        if (CommonUtil.checkParam(id)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return pawnService.listPawnByLenderIdC(id);
     }
 
 }

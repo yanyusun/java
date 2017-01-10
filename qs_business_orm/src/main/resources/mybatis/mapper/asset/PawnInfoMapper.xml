@@ -327,4 +327,8 @@
       SELECT p.* from bt_pawn p,bt_pi_relation pr WHERE pr.pawn_id=p.id AND pr.iou_id=#{iouId}
     </select>
 
+    <select id="listPawnByLenderIdC" resultType="Map">
+    SELECT paw.id,paw.name FROM bt_pawn paw WHERE paw.stateflag=0 AND paw.lender_id=#{lenderId}
+    </select>
+
 </mapper>

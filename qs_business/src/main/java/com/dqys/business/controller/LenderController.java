@@ -170,7 +170,20 @@ public class LenderController {
         }
         return lenderService.get(id);
     }
-
+    /**
+     * 获取借款人信息(C端)
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/c/get")
+    @ResponseBody
+    public JsonResponse getC(@RequestParam(required = true) Integer id) {
+        if (CommonUtil.checkParam(id)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return lenderService.get(id);
+    }
     /**
      * 获取联系人所有相关信息
      *

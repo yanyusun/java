@@ -1,34 +1,37 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.UserDetail;
 import com.dqys.business.orm.constant.business.ObjectBusinessEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.OURelationEnum;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
+import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.asset.PiRelationMapper;
 import com.dqys.business.orm.mapper.business.ObjectUserRelationMapper;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.pojo.asset.IOUInfo;
+import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.asset.PawnInfo;
 import com.dqys.business.orm.pojo.asset.PiRelation;
 import com.dqys.business.orm.pojo.business.ObjectUserRelation;
-import com.dqys.business.orm.pojo.coordinator.OURelation;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.PawnEnum;
-import com.dqys.business.service.utils.message.MessageUtils;
-import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.dto.asset.PawnDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.PawnService;
 import com.dqys.business.service.utils.asset.PawnServiceUtils;
+import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.constant.ResponseCodeEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
+import com.dqys.core.utils.AreaTool;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.core.utils.RandomUtil;
@@ -38,6 +41,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yvan on 16/7/12.
@@ -60,6 +64,10 @@ public class PawnServiceImpl implements PawnService {
     private CoordinatorMapper coordinatorMapper;
     @Autowired
     private ObjectUserRelationMapper objectUserRelationMapper;
+    @Autowired
+    private LenderInfoMapper lenderInfoMapper;
+    @Autowired
+    private TUserInfoMapper tUserInfoMapper;
 
     @Override
     public JsonResponse delete_tx(Integer id) throws BusinessLogException {
@@ -201,6 +209,12 @@ public class PawnServiceImpl implements PawnService {
         return JsonResponseTool.success(null);
     }
 
+    @Override
+    public JsonResponse listPawnByLenderIdC(Integer lenderId) {
+        List<Map> maps = pawnInfoMapper.listPawnByLenderIdC(lenderId);
+        return JsonResponseTool.success(maps);
+    }
+
 
     @Override
     public JsonResponse update_tx(PawnDTO pawnDTO) throws BusinessLogException {
@@ -285,6 +299,18 @@ public class PawnServiceImpl implements PawnService {
                     }
                 }
             });
+            if (pawnDTO.getProvince() != null) {
+                pawnDTO.setProvinceName(AreaTool.getAreaById(pawnDTO.getProvince()).getLabel());
+            }
+            if (pawnDTO.getCity() != null) {
+                pawnDTO.setCityName(AreaTool.getAreaById(pawnDTO.getCity()).getLabel());
+            }
+            if (pawnDTO.getDistrict() != null) {
+                pawnDTO.setDistrictName(AreaTool.getAreaById(pawnDTO.getDistrict()).getLabel());
+            }
+            LenderInfo info = lenderInfoMapper.get(pawnDTO.getLenderId());
+            pawnDTO.setOperator(tUserInfoMapper.getUserDetail(info.getOperator()).getRealName());
+            pawnDTO.setCreateAt(info.getCreateAt());
             return pawnDTO;
         }
         return null;
