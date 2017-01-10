@@ -93,12 +93,12 @@ public class UserBondServiceImpl implements UserBondService {
         ubDto.setDisposeStatus(asset.getDisposeStatus());
         ubDto.setId(asset.getId());
         ubDto.setBondNo(asset.getBondNo());
-        ubDto.setIsSpecial(asset.getIsSpecial().intValue());
+        ubDto.setIsSpecial(asset.getIsSpecial());
         ubDto.setTitle(asset.getTitle());
         ubDto.setEndTime(asset.getEndTime());
         ubDto.setStartTime(asset.getStartTime());
         ubDto.setTotalMoney(asset.getTotalMoney());
-        ubDto.setGrade(asset.getGrade().intValue());
+        ubDto.setGrade(asset.getGrade());
         ubDto.setAssessTotalPrice(asset.getAssessTotalPrice());
         ubDto.setLoanMoney(asset.getLoanMoney());
         ubDto.setTotalInterestMoney(asset.getTotalInterestMoney());
@@ -106,6 +106,7 @@ public class UserBondServiceImpl implements UserBondService {
 
 
     private List<UserBondDTO> getUserBondDTOs(UserBondQuery query) {
+        query.setStartPage(query.getStartPage());
         query.setObjectType(query.getBondType());
         List<UserBond> userBonds = userBondMapper.list(query);
         Integer count = userBondMapper.listCount(query);
@@ -113,11 +114,12 @@ public class UserBondServiceImpl implements UserBondService {
         List<UserBondDTO> dtos = new ArrayList<>();
         for (UserBond entity : userBonds) {
             UserBondDTO dto = new UserBondDTO();
-            dto.setLabels(labelMapper.selectByAssetId(entity.getId(), entity.getBondType().intValue()));
+            dto.setLabels(entity.getLabels());
             dto.setUserBond(entity);
-            dto.setAssetFiles(assetFileMapper.selectByAssetId(entity.getId(), entity.getBondType().intValue()));
-            dto.setDisposes(disposeMapper.selectByAssetId(entity.getId(), entity.getBondType().intValue()));
-            dto.setoRelation(businessORelationMapper.getORelation(entity.getId(), entity.getBondType().intValue()));
+            dto.setAssetFiles(entity.getAssetFiles());
+            dto.setDisposes(entity.getDisposes());
+            dto.setBusiness(entity.getBusiness());
+            dto.setAssetUserRe(fixedAssetService.getAssetUserRe(entity.getId(), entity.getBondType()));
             dtos.add(dto);
         }
         return dtos;
@@ -157,7 +159,13 @@ public class UserBondServiceImpl implements UserBondService {
 
     @Override
     public JsonResponse getDetail(Integer bondId) {
+        if (bondId == null) {
+            JsonResponseTool.failure("参数缺失");
+        }
         UserBond userBond = userBondMapper.selectByPrimaryKey(bondId);
+        if (userBond == null) {
+            return JsonResponseTool.failure("查不到详情");
+        }
         List<AssetFile> assetFile = assetFileMapper.selectByAssetId(bondId, userBond.getBondType().intValue());
         List<Dispose> disposes = disposeMapper.selectByAssetId(bondId, userBond.getBondType().intValue());
         List<Label> labels = labelMapper.selectByAssetId(bondId, userBond.getBondType().intValue());
@@ -166,6 +174,7 @@ public class UserBondServiceImpl implements UserBondService {
         map.put("assetFile", assetFile);
         map.put("disposes", disposes);
         map.put("labels", labels);
+        fixedAssetService.getDisposeAndCollect(bondId, userBond.getBondType().intValue(), map);
         return JsonResponseTool.success(map);
     }
 

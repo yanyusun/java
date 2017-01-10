@@ -10,6 +10,7 @@ import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.utils.asset.LenderServiceUtils;
 import com.dqys.business.service.utils.excel.ExcelUtilAsset;
 import com.dqys.core.constant.KeyEnum;
+import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
@@ -78,6 +79,22 @@ public class LenderController {
             return JsonResponseTool.paramErr("参数错误");
         }
         return lenderService.queryList(lenderListQuery, nav);
+    }
+
+    /**
+     * 获取借款人列表(C端)
+     *
+     * @param nav
+     * @param lenderListQuery
+     * @return
+     */
+    @RequestMapping(value = "/c/list")
+    @ResponseBody
+    public JsonResponse listC(@RequestParam(required = true) Integer nav, @ModelAttribute LenderListQuery lenderListQuery) {
+        if (ObjectTabEnum.getObjectTabEnum(nav) == null) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        return lenderService.transformLenderC(lenderListQuery, nav);
     }
 
     /**

@@ -1,12 +1,11 @@
 package com.dqys.sale.orm.query;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by mkfeng on 2016/12/22.
  */
-public class NewsQuery extends PageEntity implements Serializable {
+public class NewsQuery extends PageEntity {
     private List<Integer> ids;
     private Integer type;//类别:新闻资讯0，行业动态1，业务信息2
     private Integer isRefer;//是否推荐1是0否
@@ -14,6 +13,24 @@ public class NewsQuery extends PageEntity implements Serializable {
     private Integer status;//草稿0，待发布1，已发布2，无效-1
     private Integer userId;//用户id
     private boolean isOrder = true;//默认从最早的发布时间算起
+    private Integer businessStatus;//业务状态
+    private Integer objectType;
+
+    public Integer getObjectType() {
+        return objectType;
+    }
+
+    public void setObjectType(Integer objectType) {
+        this.objectType = objectType;
+    }
+
+    public Integer getBusinessStatus() {
+        return businessStatus;
+    }
+
+    public void setBusinessStatus(Integer businessStatus) {
+        this.businessStatus = businessStatus;
+    }
 
     public Integer getUserId() {
         return userId;

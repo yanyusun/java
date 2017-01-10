@@ -1,11 +1,12 @@
 package com.dqys.sale.orm.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 public class News {
     private Integer id;
 
-    private Integer auther;//作者
+    private String auther;//作者
 
     private Integer province;//'省
 
@@ -37,6 +38,18 @@ public class News {
 
     private String mark;//'备注
 
+    private Integer operUser;//录入人
+
+    public Integer getOperUser() {
+        return operUser;
+    }
+
+    public void setOperUser(Integer operUser) {
+        this.operUser = operUser;
+    }
+
+    private List<NewsLable> lables;
+
     public String getDigest() {
         return digest;
     }
@@ -53,11 +66,11 @@ public class News {
         this.id = id;
     }
 
-    public Integer getAuther() {
+    public String getAuther() {
         return auther;
     }
 
-    public void setAuther(Integer auther) {
+    public void setAuther(String auther) {
         this.auther = auther;
     }
 
@@ -171,5 +184,13 @@ public class News {
 
     public void setMark(String mark) {
         this.mark = mark;
+    }
+
+    public List<NewsLable> getLables() {
+        return lables;
+    }
+
+    public void setLables(List<NewsLable> lables) {
+        this.lables = lables;
     }
 }

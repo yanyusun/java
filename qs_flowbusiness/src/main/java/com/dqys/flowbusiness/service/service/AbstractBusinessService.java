@@ -72,7 +72,7 @@ public abstract class  AbstractBusinessService implements BusinessService{
         if(business==null){
             return new Result(BusinessResultEnum.not_find);
         }
-        if(business.getStatus()!=businessLevel){
+        if(business.getStatus()!=businessLevel.intValue()){
             return new Result(BusinessResultEnum.level_error);
         }
         //查询通向的阶段 // TODO: 16-12-28 添加缓存 
@@ -101,7 +101,7 @@ public abstract class  AbstractBusinessService implements BusinessService{
     }
     private BusinesslevelUserReQuery getBusinesslevelUserRe(Integer businesslevelReId, int roleType){
         BusinesslevelUserReQuery query = new BusinesslevelUserReQuery();
-        query.setBusinesslevelReId(businesslevelReId);
+        query.setBusinesslevelreId(businesslevelReId);
         query.setRoleType(roleType);
         return query;
     }
@@ -109,4 +109,9 @@ public abstract class  AbstractBusinessService implements BusinessService{
         String s = head.split(",")[0];
         return Integer.valueOf(s);
     }
+
+    // TODO: 16-12-28 录历史操作
+    protected  Result toLs(Integer id){
+        return null;
+    };
 }

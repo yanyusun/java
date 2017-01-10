@@ -109,4 +109,9 @@
         <include refid="Base_Column_List"/>
         from t_dispose WHERE asset_id=#{assetId} AND asset_type=#{objectType}
     </select>
+
+    <delete id="deleteByPrimaryKeyObject">
+        DELETE FROM t_asset_file WHERE asset_id=#{assetId} AND asset_type=#{objectType}
+    </delete>
+
 </mapper>

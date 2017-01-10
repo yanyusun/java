@@ -119,4 +119,61 @@
             AND asset_type=#{assetType}
         </if>
     </select>
+
+    <resultMap id="BaseResultMapWithObject" type="com.dqys.sale.orm.pojo.AssetUserRe" extends="BaseResultMap"
+               autoMapping="true">
+        <collection column="id" property="objectEntity" ofType="com.dqys.sale.orm.pojo.ObjectEntity">
+            <result column="objectId" property="id"/>
+            <result column="assetNo" property="assetNo"/>
+            <result column="title" property="title"/>
+            <result column="endTime" property="endTime"/>
+            <result column="createTime" property="createTime"/>
+            <result column="totalMoney" property="totalMoney"/>
+            <collection column="id" property="disposes" ofType="com.dqys.sale.orm.pojo.Dispose">
+                <result column="dispose_type" property="disposeType"></result>
+                <result column="alg" property="alg"></result>
+                <result column="value" property="value"></result>
+            </collection>
+        </collection>
+    </resultMap>
+    <sql id="Query_Object">
+        <if test="userRe.isCollection !=null">
+            AND aur.is_collection=#{userRe.isCollection}
+        </if>
+        <if test="userRe.userId !=null">
+            AND aur.user_id=#{userRe.userId}
+        </if>
+    </sql>
+    <select id="selectByUserReList" resultMap="BaseResultMapWithObject"
+            parameterType="com.dqys.sale.orm.query.AssetUserReQuery">
+        SELECT aur.*,tap.asset_no assetNo,tap.title,tap.total_money totalMoney,DATE_FORMAT(tap.end_time,'%Y-%m-%d')
+        endTime,DATE_FORMAT(tap.update_time ,'%Y-%m-%d %T') createTime,tap.id objectId,
+        dis.dispose_type,dis.alg,dis.value
+        FROM t_asset_user_re aur LEFT JOIN t_asset_package tap
+        ON tap.id=aur.asset_id LEFT JOIN t_dispose dis
+        ON dis.asset_id=tap.id
+        WHERE tap.stateflag=0 AND aur.asset_type=16 AND dis.asset_type=16
+        <include refid="Query_Object"/>
+        UNION
+        SELECT aur.*,tap.no assetNo,tap.title,tap.asset_rental totalMoney,DATE_FORMAT(tap.entrust_endtime,'%Y-%m-%d')
+        endTime,DATE_FORMAT(tap.update_time ,'%Y-%m-%d %T') createTime,tap.id objectId,
+        dis.dispose_type,dis.alg,dis.value
+        FROM t_asset_user_re aur LEFT JOIN t_fixed_asset tap
+        ON tap.id=aur.asset_id LEFT JOIN t_dispose dis
+        ON dis.asset_id=tap.id
+        WHERE tap.stateflag=0 AND aur.asset_type=10 AND dis.asset_type=10
+        <include refid="Query_Object"/>
+        UNION
+        SELECT aur.*,tap.bond_no assetNo,tap.title,tap.total_money totalMoney,DATE_FORMAT(tap.end_time,'%Y-%m-%d')
+        endTime,DATE_FORMAT(tap.update_time ,'%Y-%m-%d %T') createTime,tap.id objectId,
+        dis.dispose_type,dis.alg,dis.value
+        FROM t_asset_user_re aur LEFT JOIN t_user_bond tap
+        ON tap.id=aur.asset_id LEFT JOIN t_dispose dis
+        ON dis.asset_id=tap.id
+        WHERE tap.stateflag=0 AND aur.asset_type IN (11,12,13) AND dis.asset_type IN (11,12,13)
+        <include refid="Query_Object"/>
+        <if test="isPage">
+            Limit #{startPage},#{pageCount}
+        </if>
+    </select>
 </mapper>

@@ -86,4 +86,5 @@ public interface LenderService {
      */
     StatisticsLender getCountByStatistics(Integer objectId, Integer objectType);
 
+    JsonResponse transformLenderC(LenderListQuery lenderListQuery, Integer type);
 }

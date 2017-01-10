@@ -17,6 +17,7 @@
             <mvc:exclude-mapping path="/bond/noVerify/*"/>
             <mvc:exclude-mapping path="/asset/noVerify/*"/>
             <mvc:exclude-mapping path="/news/noVerify/*"/>
+
             <bean class="com.dqys.core.interceptor.HeaderInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>

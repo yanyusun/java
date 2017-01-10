@@ -338,6 +338,70 @@ public class AuthController extends BaseApiContorller {
         };
     }
 
+    /**
+     * @api {POST} http://{url}/c/auth/login 用户登陆(C端)
+     * @apiName login
+     * @apiGroup Auth
+     * @apiDescription 用户登录模块返回信息包含独有信息, 具体参考Login-Success-Response
+     * @apiUse RequestAccount
+     * @apiUse JsonResponse
+     * @apiUse ResponseHeader
+     * @apiSuccess {json} data
+     * @apiSuccessExample {json} Login-Success-Response:
+     * {
+     * 'x-qs-user':'SDFBSKDFNSDFNSKJFSDFNLSDFNLSDFNK=',
+     * 'x-qs-type':'0,',
+     * 'x-qs-role':'0,',
+     * 'x-qs-certified':'true,',
+     * 'x-qs-status':'0,',
+     * 'x-qs-step':'true'
+     * }
+     * 参数step说明:false:无效账户,active:激活邮箱,adminCompany:未完善信息,authentication:企业未认证,true:信息完善
+     */
+    @RequestMapping(value = "/c/login", method = RequestMethod.POST)
+    public Callable<JsonResponse> userLoginC(@RequestParam(required = false) String userName,
+                                             @RequestParam(required = false) String mobile,
+                                             @RequestParam(required = false) String email,
+                                             @RequestParam String pwd,
+                                             @RequestParam(required = false) Integer userType,
+                                             String ip,
+
+                                             HttpServletRequest request) {
+
+        return () -> {
+            if (StringUtils.isBlank(userName) && StringUtils.isBlank(mobile) && StringUtils.isBlank(email)) {
+                return JsonResponseTool.paramErr("参数无效");
+            }
+            //验证手机
+            if (StringUtils.isNotBlank(mobile)) {
+                if (!FormatValidateTool.checkMobile(mobile)) {
+                    return JsonResponseTool.paramErr("手机号无效");
+                }
+            }
+            //验证邮箱
+            if (StringUtils.isNotBlank(email)) {
+                if (!FormatValidateTool.checkEmail(email)) {
+                    return JsonResponseTool.paramErr("邮箱格式无效");
+                }
+            }
+
+            ServiceResult<UserDTO> userServiceResult = this.userService.userLogin(null, userName, mobile, email, pwd, userType);
+            if (!userServiceResult.getFlag()) {
+                return JsonResponseTool.authFailure(userServiceResult.getMessage());
+            }
+            addLoginLog(userServiceResult, request, ip);  //保存登入日志
+            return JsonResponseTool.success(ProtocolTool.createUserHeader(
+                            userServiceResult.getData().getUserId(),
+                            userServiceResult.getData().getUserTypes(),
+                            userServiceResult.getData().getRoleIds(),
+                            userServiceResult.getData().getIsCertifieds(),
+                            userServiceResult.getData().getStatus(),
+                            verifyUserStep(userServiceResult)
+                    )
+            );
+        };
+    }
+
     private void addLoginLog(ServiceResult<UserDTO> userServiceResult, HttpServletRequest request, String ip) {
         LoginLog log = new LoginLog();
         log.setUserId(userServiceResult.getData().getUserId());
@@ -781,12 +845,17 @@ public class AuthController extends BaseApiContorller {
             }
             ServiceResult<Integer> companyResult = new ServiceResult<>();
             //验证公司有效性
-            companyResult = companyService.validateCompany(credential,userType);
+            companyResult = companyService.validateCompany(credential, userType);
             if (companyResult.getFlag()) {//防止重复存在
                 //返回营业执照注册号已经注册
                 if (userInfo.getCompanyId() == null || companyResult.getData().intValue() != userInfo.getCompanyId().intValue()) {
                     return JsonResponseTool.failure("营业执照注册号已经注册");
                 }
+            }
+            ServiceResult<Integer> serviceResult = userService.validateUser(null, mobile, null, userType);
+            if (serviceResult.getFlag()) {//防止重复存在
+                //返回该类型手机号已经注册
+                return JsonResponseTool.failure("该手机号已经注册");
             }
             //验证手机短信验证码
             ServiceResult codeValidResult = this.captchaService.validSmsCaptcha(mobile, smsCode);

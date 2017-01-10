@@ -7,6 +7,7 @@ import com.dqys.sale.orm.query.UserBondQuery;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mkfeng on 2016/12/22.
@@ -56,5 +57,10 @@ public class UserBondMapperImpl extends SaleBaseDao implements UserBondMapper {
     @Override
     public Integer listCount(UserBondQuery query) {
         return super.getSqlSession().getMapper(UserBondMapper.class).listCount(query);
+    }
+
+    @Override
+    public Map getUserBondCount(Integer bondType) {
+        return super.getSqlSession().getMapper(UserBondMapper.class).getUserBondCount(bondType);
     }
 }

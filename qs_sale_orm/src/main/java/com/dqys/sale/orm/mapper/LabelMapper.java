@@ -12,4 +12,5 @@ public interface LabelMapper extends BaseMapper<Label> {
 
     List<Label> getLableList(String name);
 
+    List<Label> selectByLable(Label label);
 }

@@ -11,4 +11,6 @@ public interface LabelReMapper extends BaseMapper<LabelRe> {
 
 
     List<Dispose> selectByAssetId(@Param("assetId") Integer assetId, @Param("objectType") Integer objectType);
+
+    Integer deleteByPrimaryKeyObject(@Param("assetId") Integer assetId, @Param("objectType") Integer objectType);
 }

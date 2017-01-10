@@ -1,6 +1,7 @@
 package com.dqys.sale.service.facade;
 
 import com.dqys.core.model.JsonResponse;
+import com.dqys.sale.orm.pojo.AssetUserRe;
 import com.dqys.sale.service.dto.FixedAssetDTO;
 import com.dqys.sale.orm.pojo.AssetFile;
 import com.dqys.sale.orm.pojo.Dispose;
@@ -8,6 +9,7 @@ import com.dqys.sale.orm.pojo.Label;
 import com.dqys.sale.orm.query.FixedAssetQuery;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mkfeng on 2016/12/21.
@@ -21,6 +23,8 @@ public interface FixedAssetService {
      */
     JsonResponse fixedList(FixedAssetQuery fixedAssetQuery);
 
+    AssetUserRe getAssetUserRe(Integer objectId, Integer objectType);
+
     /**
      * 固定资产详情
      *
@@ -28,6 +32,8 @@ public interface FixedAssetService {
      * @return
      */
     JsonResponse getDetail(Integer fixedAssetId);
+
+    void getDisposeAndCollect(Integer id, Integer type, Map map);
 
     /**
      * 添加固定资产

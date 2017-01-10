@@ -10,6 +10,7 @@ import com.dqys.sale.orm.query.UserBondQuery;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2016/12/23.
@@ -25,6 +26,11 @@ public class AssetPackageMapperImpl extends SaleBaseDao implements AssetPackageM
     @Override
     public Integer listCount(AssetPackageQuery query) {
         return super.getSqlSession().getMapper(AssetPackageMapper.class).listCount(query);
+    }
+
+    @Override
+    public Map getAssetPackageCount() {
+        return super.getSqlSession().getMapper(AssetPackageMapper.class).getAssetPackageCount();
     }
 
     @Override

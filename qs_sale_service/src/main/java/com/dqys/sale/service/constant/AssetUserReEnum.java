@@ -6,8 +6,9 @@ package com.dqys.sale.service.constant;
 public enum AssetUserReEnum {
     is_collection_no(0, "未收藏"),
     is_collection_yes(1, "已收藏"),
+    is_collection_invalid(2, "无效"),
     is_dispose_no(0, "未申请处置"),
-    is_dispose_yes(0, "已申请处置");
+    is_dispose_yes(1, "已申请处置");
     private Integer value;
     private String name;
 

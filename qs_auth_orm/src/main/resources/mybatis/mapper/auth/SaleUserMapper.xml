@@ -18,10 +18,24 @@
         <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
         <result column="sex" property="sex" jdbcType="INTEGER"/>
     </resultMap>
+    <resultMap id="ResultMapWithUserTag" type="com.dqys.auth.orm.pojo.saleUser.SaleUser" extends="BaseResultMap">
+        <collection column="id" property="userTag" ofType="com.dqys.auth.orm.pojo.saleUser.SaleUserTag">
+            <result column="province" property="province"/>
+            <result column="city" property="city"/>
+            <result column="area" property="area"/>
+        </collection>
+    </resultMap>
     <sql id="Base_Column_List">
     id, name, account, email, mobile, password, salt, status, role_type, user_type, create_at,
     update_at, version, stateflag,sex
   </sql>
+    <sql id="Base_Column_PART">
+        su.id, su.name, su.account, su.email, su.mobile, su.status, su.role_type, su.user_type, su.create_at,
+    su.update_at,su.sex
+    </sql>
+    <sql id="Base_Column_PART_TAG">
+        sut.province,sut.city,sut.area
+    </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
         <include refid="Base_Column_List"/>
@@ -29,7 +43,7 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from t_sale_user
+    UPDATE t_sale_user set stateflag=now()
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.dqys.auth.orm.pojo.saleUser.SaleUser">
@@ -222,8 +236,9 @@
     </insert>
     <!--获取用户个人信息-->
     <select id="getUserDetail" resultType="com.dqys.auth.orm.pojo.saleUser.dto.UserDetailDTO">
-       SELECT su.id,su.name,su.account,su.email,su.mobile,su.status,su.role_type roleType,su.user_type userType,
-        DATE_FORMAT(su.create_at,'%Y-%m-%d %H:%i:%s') createTime,sut.province,sut.city,sut.area,log.ip,DATE_FORMAT(log.time,'%Y-%m-%d %H:%i:%s') loginTime FROM t_sale_user su LEFT JOIN t_sale_user_tag sut
+       SELECT su.id,su.name,su.account,su.email,su.mobile,su.status,su.role_type roleType,su.user_type userType,su.sex,
+        DATE_FORMAT(su.create_at,'%Y-%m-%d %H:%i:%s') createTime,sut.province,sut.city,sut.area,log.ip,DATE_FORMAT(log.time,'%Y-%m-%d %H:%i:%s') loginTime
+         FROM t_sale_user su LEFT JOIN t_sale_user_tag sut
         ON sut.user_id=su.id LEFT JOIN (SELECT * from t_login_log log WHERE log.user_id=#{userId} ORDER BY log.time desc LIMIT 1,1) log
         ON log.user_id=su.id
         WHERE  su.stateflag=0 AND su.id=#{userId}
@@ -232,5 +247,62 @@
     <insert id="insetUserBusTotal">
     INSERT INTO t_user_bus_total(user_id,on_business,on_collection,has_publish) VALUES(#{userId},0,0,0)
     </insert>
+
+
+    <sql id="Query_Where">
+        <if test="ids!=null and ids.size>0">
+            AND su.id IN
+            <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="account !=null">
+            AND su.account LIKE CONCAT('%',#{email},'%')
+        </if>
+        <if test="email !=null">
+            AND su.email LIKE CONCAT('%',#{email},'%')
+        </if>
+        <if test="mobile !=null">
+            AND su.mobile LIKE CONCAT('%',#{email},'%')
+        </if>
+        <if test="userId !=null">
+            AND su.id=#{userId}
+        </if>
+    </sql>
+    <select id="list" parameterType="com.dqys.auth.orm.query.SaleUserQuery"
+            resultMap="ResultMapWithUserTag">
+        select
+        <include refid="Base_Column_PART"/>,
+        <include refid="Base_Column_PART_TAG"/>
+        from t_sale_user su LEFT JOIN t_sale_user_tag sut
+        ON sut.user_id=su.id
+        where su.stateflag=0
+        <include refid="Query_Where"/>
+        ORDER BY su.create_at DESC
+        Limit #{startPage},#{pageCount}
+    </select>
+    <select id="listCount" parameterType="com.dqys.auth.orm.query.SaleUserQuery"
+            resultType="int">
+        select
+        COUNT(su.id)
+        from t_sale_user su
+        where su.stateflag=0
+        <include refid="Query_Where"/>
+    </select>
+
+    <select id="getAdmin" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from t_sale_user
+        where stateflag=0 AND user_type=1
+        limit 0,1
+    </select>
+
+    <update id="updateStatusByIds">
+        UPDATE t_sale_user SET status=#{status} WHERE stateflag=0 AND id IN
+        <foreach collection="ids" index="index" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 
 </mapper>

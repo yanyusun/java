@@ -1,6 +1,9 @@
 package com.dqys.sale.orm.pojo;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
+import java.util.List;
 
 public class AssetPackage {
     private Integer id;
@@ -8,7 +11,9 @@ public class AssetPackage {
     private String assetNo;//编号
 
     private String title;//标题
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startTime;//委托开始时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endTime;//委托结束时间
     private Integer isSpecial;//是否专项（0否1是）
 
@@ -55,6 +60,7 @@ public class AssetPackage {
     private Date updateTime;//
 
     private Integer operUser;//操作人员
+    private String operUserName;//操作人员姓名
     private String describes;//描述',
     private String remark;//备注',
     private Integer collectionNum;//收藏数量
@@ -62,6 +68,51 @@ public class AssetPackage {
     private Integer disposeStatus;// 处置状态（0待处置1处置中2已处置）
     private Integer checkStatus;//0待审核1审核未通过2审核已通过
     private Integer enable;//'是否无效0不是,1是
+
+    private List<Label> labels;//标签
+    private List<Dispose> disposes;//处置方式
+    private List<AssetFile> assetFiles;//文件
+    private List<Business> business;//业务与对象关系表
+
+    public List<Business> getBusiness() {
+        return business;
+    }
+
+    public void setBusiness(List<Business> business) {
+        this.business = business;
+    }
+
+    public List<Label> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<Label> labels) {
+        this.labels = labels;
+    }
+
+    public List<Dispose> getDisposes() {
+        return disposes;
+    }
+
+    public void setDisposes(List<Dispose> disposes) {
+        this.disposes = disposes;
+    }
+
+    public List<AssetFile> getAssetFiles() {
+        return assetFiles;
+    }
+
+    public void setAssetFiles(List<AssetFile> assetFiles) {
+        this.assetFiles = assetFiles;
+    }
+
+    public String getOperUserName() {
+        return operUserName;
+    }
+
+    public void setOperUserName(String operUserName) {
+        this.operUserName = operUserName;
+    }
 
     public Date getStartTime() {
         return startTime;

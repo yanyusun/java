@@ -7,6 +7,7 @@ import com.dqys.flowbusiness.service.constant.saleBusiness.businessLevel.AssetOp
  * Created by yan on 16-12-22.
  */
 public class AssetBusiness {
+    // TODO: 16-12-28 改成单列
 
     /**
      * 业务类型

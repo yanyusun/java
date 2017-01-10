@@ -2,22 +2,25 @@ package com.dqys.sale.controller;
 
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
+import com.dqys.core.utils.JsonResponseTool;
 import com.dqys.sale.orm.query.NewsQuery;
-import com.dqys.sale.orm.query.UserBondQuery;
 import com.dqys.sale.service.dto.NewsDTO;
-import com.dqys.sale.service.dto.UserBondDTO;
+import com.dqys.sale.service.dto.news.NewsDtoY;
+import com.dqys.sale.service.dto.news.SecondLevelDtoList;
 import com.dqys.sale.service.facade.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 新闻管理
  * Created by mkfeng on 2016/12/24.
  */
-@Controller
+@RestController
 @RequestMapping("/news")
 public class NewsController {
     @Autowired
@@ -31,7 +34,7 @@ public class NewsController {
      * @apiParam {int} [isRefer] 是否推荐1是0否
      * @apiParam {int} [isHeadline] 是否头条1是0否
      * @apiParam {boolean} [isOrder] //默认true从大到小 false 是从小到大
-     * @apiGroup　 news
+     * @apiGroup　 SaleNews
      * @apiSuccessExample {json} Data-Response:
      * {
      * "code": 2000,
@@ -88,17 +91,16 @@ public class NewsController {
      * }
      */
     @RequestMapping("/noVerify/newsList")
-    @ResponseBody
     public JsonResponse newsList(NewsQuery query) {
-        query.setStatus(1);
-        return newsService.newsList(query);
+//        query.setStatus(1);
+        return newsService.indexList(query);
     }
 
     /**
      * @api {post} news/noVerify/getDetail 获取新闻详情
      * @apiName news/noVerify/getDetail
      * @apiSampleRequest news/noVerify/getDetail
-     * @apiGroup　 news
+     * @apiGroup　 SaleNews
      * @apiSuccessExample {json} Data-Response:
      * {
      * "code": 2000,
@@ -139,20 +141,19 @@ public class NewsController {
      * }
      */
     @RequestMapping("/noVerify/getDetail")
-    @ResponseBody
     public JsonResponse getDetail(Integer newsId) {
         return newsService.getDetail(newsId);
     }
 
     /**
-     * @api {post} news/noVerify/newsList 获取新闻列表
-     * @apiName news/noVerify/newsList
-     * @apiSampleRequest news/noVerify/newsList
+     * @api {post} news/list 获取新闻列表
+     * @apiName news/list
+     * @apiSampleRequest news/list
      * @apiParam {int} [type] 类别:新闻资讯0，行业动态1，业务信息2
      * @apiParam {int} [isRefer] 是否推荐1是0否
      * @apiParam {int} [isHeadline] 是否头条1是0否
      * @apiParam {boolean} [isOrder] //默认true从大到小 false 是从小到大
-     * @apiGroup　 news
+     * @apiGroup　 SaleNews
      * @apiSuccessExample {json} Data-Response:
      * {
      * "code": 2000,
@@ -209,7 +210,6 @@ public class NewsController {
      * }
      */
     @RequestMapping("/list")
-    @ResponseBody
     public JsonResponse list(NewsQuery query) {
         query.setUserId(UserSession.getCurrent().getUserId());
         return newsService.newsList(query);
@@ -220,7 +220,7 @@ public class NewsController {
      * @api {post} news/addOrUpdateNews 添加或修改新闻
      * @apiName news/addOrUpdateNews
      * @apiSampleRequest news/addOrUpdateNews
-     * @apiGroup　 news
+     * @apiGroup　 SaleNews
      * @apiSuccessExample {json} Data-Response:
      * {
      * "code": 2000,
@@ -229,9 +229,47 @@ public class NewsController {
      * }
      */
     @RequestMapping("/addOrUpdateNews")
-    @ResponseBody
     public JsonResponse addOrUpdateNews(@ModelAttribute NewsDTO newsDTO) {
         return newsService.addOrUpdateNews_tx(newsDTO);
+    }
+
+    /**
+     * @api {post} news/delNews 删除新闻
+     * @apiName news/delNews
+     * @apiSampleRequest news/delNews
+     * @apiGroup　 SaleNews
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {}
+     * }
+     */
+    @RequestMapping("/delNews")
+    public JsonResponse delNews(@RequestParam Integer newsId) {
+        return newsService.delNews(newsId);
+    }
+
+    /**
+     * 二级页面
+     *
+     * @return
+     */
+    @RequestMapping("/noVerify/secondLeveL")
+    public JsonResponse getSecondLevelDto() {
+        SecondLevelDtoList secondLevelDtoList = newsService.sencondLevelPage();
+        return JsonResponseTool.success(secondLevelDtoList);
+    }
+
+    /**
+     * 二级页面的列表
+     *
+     * @return
+     */
+    @RequestMapping("/noVerify/secondNewsList")
+    public JsonResponse getSecondLevelDto(int type, int page) {
+        List<NewsDtoY> newsDtoYList = newsService.sencondNewsList(type, page);
+        return JsonResponseTool.success(newsDtoYList);
     }
 
 }

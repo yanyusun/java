@@ -3,6 +3,7 @@ package com.dqys.sale.orm.pojo;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 public class UserBond {
     private Integer id;
@@ -101,7 +102,7 @@ public class UserBond {
 
     private String bondContactsIdcode;//债权方联系人证件号
 
-    private Integer debtType;//债务方类型
+    private Integer debtType;//债务方类型(0企业1个人)
 
     private Integer debtIsAddress;//债务方住址是否清楚（0不清楚1清楚）
 
@@ -109,7 +110,7 @@ public class UserBond {
 
     private String debtPhone;//债务方联系电话
 
-    private Integer debtIsOperate;//债务方经营地址是否清楚（0不清楚1清楚）
+    private Integer debtIsOperate;//债务方经营地址是否清楚（0清楚1不清楚）
 
     private String debtIdcode;//债务方证件号
 
@@ -142,11 +143,57 @@ public class UserBond {
     private Date createTime;
     private Date updateTime;
     private Integer operUser;//操作人
+    private String operUserName;//操作人姓名
     private Integer collectionNum;//收藏数量
     private Integer disposeNum;//申请处置数量
     private Integer disposeStatus;// 处置状态（0待处置1处置中2已处置）
     private Integer checkStatus;//0待审核1审核未通过2审核已通过
     private Integer enables;//'是否无效0不是,1是
+
+    private List<Label> labels;//标签
+    private List<Dispose> disposes;//处置方式
+    private List<AssetFile> assetFiles;//文件
+    private List<Business> business;//业务与对象关系表
+
+    public List<Label> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<Label> labels) {
+        this.labels = labels;
+    }
+
+    public List<Dispose> getDisposes() {
+        return disposes;
+    }
+
+    public void setDisposes(List<Dispose> disposes) {
+        this.disposes = disposes;
+    }
+
+    public List<AssetFile> getAssetFiles() {
+        return assetFiles;
+    }
+
+    public void setAssetFiles(List<AssetFile> assetFiles) {
+        this.assetFiles = assetFiles;
+    }
+
+    public List<Business> getBusiness() {
+        return business;
+    }
+
+    public void setBusiness(List<Business> business) {
+        this.business = business;
+    }
+
+    public String getOperUserName() {
+        return operUserName;
+    }
+
+    public void setOperUserName(String operUserName) {
+        this.operUserName = operUserName;
+    }
 
     public String getDebtName() {
         return debtName;

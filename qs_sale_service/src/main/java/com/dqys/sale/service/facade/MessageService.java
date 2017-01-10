@@ -93,4 +93,14 @@ public interface MessageService {
 
     Integer insertMessageNoByOperinfo(MessageOperinfo messageOperinfo);
 
+    /**
+     * 业务状态操作发送的通知消息和短信
+     *
+     * @param sendUserId
+     * @param receiveUserId
+     * @param operType
+     * @return
+     */
+    Integer addMessageAndSendSMS(Integer sendUserId, Integer receiveUserId, Integer businessId, Integer businessType, Integer businessLevel, Integer operType);
+
 }

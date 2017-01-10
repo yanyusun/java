@@ -7,6 +7,7 @@ import com.dqys.sale.orm.query.FixedAssetQuery;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mkfeng on 2016/12/21.
@@ -56,5 +57,10 @@ public class FixedAssetMapperImpl extends SaleBaseDao implements FixedAssetMappe
     @Override
     public Integer fixedListCount(FixedAssetQuery query) {
         return super.getSqlSession().getMapper(FixedAssetMapper.class).fixedListCount(query);
+    }
+
+    @Override
+    public Map getFixedAssetCount() {
+        return super.getSqlSession().getMapper(FixedAssetMapper.class).getFixedAssetCount();
     }
 }

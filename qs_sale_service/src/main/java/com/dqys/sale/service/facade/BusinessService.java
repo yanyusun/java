@@ -1,5 +1,7 @@
 package com.dqys.sale.service.facade;
 
+import com.dqys.sale.orm.query.AssetUserReQuery;
+
 import java.util.Map;
 
 /**
@@ -36,12 +38,20 @@ public interface BusinessService {
      *
      * @return
      */
-    Map release(Integer reqUserId,Integer businessId, Integer businessLevel, Integer operType);
+    Map release(Integer reqUserId, Integer businessId, Integer businessLevel, Integer operType);
 
     /**
      * 处置>>平台同意处置,用户可以跟进
      *
      * @return
      */
-    Map dispose(Integer reqUserId,Integer businessId, Integer businessLevel, Integer operType);
+    Map dispose(Integer reqUserId, Integer businessId, Integer businessLevel, Integer operType);
+
+    /**
+     * 获取当前用户的收藏和收藏无效信息
+     *
+     * @param status
+     * @return
+     */
+    Map collectionList(AssetUserReQuery query);
 }

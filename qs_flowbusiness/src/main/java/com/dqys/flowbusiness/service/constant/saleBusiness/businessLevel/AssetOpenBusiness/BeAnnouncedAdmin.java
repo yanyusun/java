@@ -17,4 +17,5 @@ public class BeAnnouncedAdmin implements BusinessLevel {
         return "待发布";//平台待发布
     }
     public static final int AnnounceOperType= BusinessOperTypeEnum.announce.getValue();
+    public static final int unable=BusinessOperTypeEnum.unable.getValue();
 }

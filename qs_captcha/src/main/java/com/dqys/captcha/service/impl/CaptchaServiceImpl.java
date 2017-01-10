@@ -119,7 +119,7 @@ public class CaptchaServiceImpl implements CaptchaService {
 
         NoSQLWithRedisTool.setHashObject(SMSCODE_KEY + mobile + smsType, SUB_RETRY, ((Integer) o) + 1);
 
-        return ServiceResult.failure("验证码错误", ObjectUtils.NULL);
+        return ServiceResult.failure("手机验证码输入错误", ObjectUtils.NULL);
     }
 
     @Override

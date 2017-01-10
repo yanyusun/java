@@ -3,12 +3,11 @@ package com.dqys.sale.controller;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.sale.orm.query.AssetUserReQuery;
 import com.dqys.sale.service.facade.BusinessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -35,6 +34,9 @@ public class BusinessController {
     @RequestMapping("/collect")
     @ResponseBody
     public JsonResponse collect(Integer status, Integer objectId, Integer objectType) {
+        if (status == null || objectId == null || objectType == null) {
+            return JsonResponseTool.failure("参数缺少");
+        }
         Map map = businessService.collect(status, objectId, objectType);
         return CommonUtil.jsonResponse(map);
     }
@@ -56,13 +58,12 @@ public class BusinessController {
     }
 
     /**
-     * @api {post} /business/release 发业务操作
+     * @api {post} /business/release 发布业务操作
      * @apiName /business/release
      * @apiSampleRequest /business/release
      * @apiGroup　 businessSale
      * @apiParam {int} [reqUserId] 请求者id
      * @apiParam {int} businessId 业务id
-     * @apiParam {int} businessType 业务类型
      * @apiParam {int} businessLevel 业务所在位置
      * @apiParam {int} operType 操作
      */
@@ -74,7 +75,7 @@ public class BusinessController {
     }
 
     /**
-     * @api {post} /business/dispose 发业务操作
+     * @api {post} /business/dispose 处置业务操作
      * @apiName /business/dispose
      * @apiSampleRequest /business/dispose
      * @apiGroup　 businessSale
@@ -87,6 +88,20 @@ public class BusinessController {
     @ResponseBody
     public JsonResponse dispose(Integer reqUserId, @RequestParam Integer businessId, @RequestParam Integer businessLevel, @RequestParam Integer operType) {
         Map map = businessService.dispose(reqUserId, businessId, businessLevel, operType);
+        return CommonUtil.jsonResponse(map);
+    }
+
+    /**
+     * @api {post} /business/collectionList 收藏或无效的对象
+     * @apiName /business/collectionList
+     * @apiSampleRequest /business/collectionList
+     * @apiGroup　 businessSale
+     * @apiParam {int} status 状态（1收藏2无效）
+     */
+    @RequestMapping("/collectionList")
+    @ResponseBody
+    public JsonResponse collectionList(@ModelAttribute AssetUserReQuery query) {
+        Map map = businessService.collectionList(query);
         return CommonUtil.jsonResponse(map);
     }
 

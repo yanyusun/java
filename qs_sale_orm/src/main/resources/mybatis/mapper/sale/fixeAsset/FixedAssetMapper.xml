@@ -27,6 +27,7 @@
         <result column="is_judgement" property="isJudgement" jdbcType="INTEGER"/>
         <result column="asset_describe" property="assetDescribe" jdbcType="VARCHAR"/>
         <result column="righter_name" property="righterName" jdbcType="VARCHAR"/>
+        <result column="righter_phone" property="righterPhone" jdbcType="VARCHAR"/>
         <result column="righter_address" property="righterAddress" jdbcType="VARCHAR"/>
         <result column="righter_province" property="righterProvince" jdbcType="INTEGER"/>
         <result column="righter_city" property="righterCity" jdbcType="INTEGER"/>
@@ -52,7 +53,7 @@
     house_nature, house_size, has_house_certificate, is_pledge, is_law, is_judgement, 
     asset_describe, righter_name, righter_address, righter_province, righter_city, righter_area, 
     righter_contact_phone, righter_contact_name, righter_type, mark, collection_num, 
-    dispose_num, no,check_status,enable,title,create_time,update_time,oper_user,dispose_status
+    dispose_num, no,check_status,enable,title,create_time,update_time,oper_user,dispose_status,righter_phone
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -61,7 +62,7 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from t_fixed_asset
+    UPDATE t_fixed_asset SET stateflag=now()
     where id = #{id,jdbcType=INTEGER}
   </delete>
     <insert id="insert" parameterType="com.dqys.sale.orm.pojo.FixedAsset" useGeneratedKeys="true"
@@ -213,6 +214,9 @@
             <if test="operUser != null">
                 oper_user,
             </if>
+            <if test="righterPhone !=null">
+                righter_phone,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -331,6 +335,9 @@
             <if test="operUser != null">
                 #{operUser,jdbcType=VARCHAR},
             </if>
+            <if test="righterPhone !=null">
+                #{righterPhone,jdbcType=VARCHAR},
+            </if>
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.dqys.sale.orm.pojo.FixedAsset">
@@ -445,6 +452,9 @@
                 title = #{title,jdbcType=VARCHAR},
             </if>
             update_time=now(),
+            <if test="righterPhone != null">
+                righter_phone = #{righterPhone,jdbcType=VARCHAR},
+            </if>
         </set>
         where id = #{id,jdbcType=INTEGER}
     </update>
@@ -529,53 +539,136 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
+
+    <resultMap id="BaseResultMapWithAll" type="com.dqys.sale.orm.pojo.FixedAsset" extends="BaseResultMap"
+               autoMapping="true">
+        <collection column="id" property="labels" ofType="com.dqys.sale.orm.pojo.Label">
+            <result column="type" property="type"/>
+            <result column="name" property="name"/>
+        </collection>
+        <collection column="id" property="disposes" ofType="com.dqys.sale.orm.pojo.Dispose">
+            <result column="dispose_type" property="disposeType"/>
+            <result column="alg" property="alg"/>
+            <result column="value" property="value"/>
+        </collection>
+        <collection column="id" property="assetFiles" ofType="com.dqys.sale.orm.pojo.AssetFile">
+            <result column="filename" property="filename"/>
+            <result column="file_type" property="type"/>
+        </collection>
+        <collection column="id" property="business" ofType="com.dqys.sale.orm.pojo.Business">
+            <result column="business_id" property="id"/>
+            <result column="create_id" property="createId"/>
+            <result column="createName" property="createName"/>
+        </collection>
+    </resultMap>
+
     <sql id="Query_Where">
+        AND tap.stateflag=0
         <if test="ids!=null and ids.size>0">
-            AND id IN
+            AND tap.id IN
             <foreach collection="ids" item="id" index="index" open="(" separator="," close=")">
                 #{id}
             </foreach>
         </if>
         <if test="isHomePage !=null">
-            AND is_home_page = #{isHomePage}
+            AND tap.is_home_page = #{isHomePage}
         </if>
         <if test="checkStatus !=null">
-            AND check_status=#{checkStatus}
+            AND tap.check_status=#{checkStatus}
         </if>
         <if test="enable !=null">
-            AND enable=#{enable}
+            AND tap.enable=#{enable}
         </if>
-        <if test="userId !=null">
-            AND oper_user=#{userId}
-        </if>
-    </sql>
-    <select id="fixedList" parameterType="com.dqys.sale.orm.query.FixedAssetQuery"
-            resultMap="BaseResultMap">
-        SELECT tap.* FROM t_business_obj_re bor LEFT JOIN business b
-        ON b.id=bor.business_id LEFT JOIN (SELECT
-        <include refid="Base_Column_List"/>
-        FROM t_fixed_asset WHERE 1=1
-        <include refid="Query_Where"/>) tap
-        ON tap.id=bor.object_id
-        WHERE  bor.object_type=#{objectType}
         <if test="businessStatus !=null">
             AND b.status=#{businessStatus}
         </if>
+        <if test="userId !=null">
+            AND b.create_id=#{userId}
+        </if>
+
+        <if test="comfrom !=null">
+            AND tap.comfrom=#{comfrom}
+        </if>
+        <if test="floor !=null">
+            AND tap.floor=#{floor}
+        </if>
+        <if test="orientation !=null">
+            AND tap.orientation=#{orientation}
+        </if>
+        <if test="year !=null">
+            AND tap.year=#{year}
+        </if>
+        <if test="houseSizeBegin !=null and houseSizeEnd !=null">
+            AND (tap.house_size BETWEEN #{houseSizeBegin} AND #{houseSizeEnd})
+        </if>
+        <if test="assetRentalBegin !=null and assetRentalEnd !=null">
+            AND (tap.asset_rental BETWEEN #{assetRentalBegin} AND #{assetRentalEnd})
+        </if>
+        <if test="usedYear !=null">
+            AND tap.used_year=#{usedYear}
+        </if>
+        <if test="province !=null">
+            AND tap.province=#{province}
+        </if>
+        <if test="city !=null">
+            AND tap.city=#{city}
+        </if>
+        <if test="area !=null">
+            AND tap.area=#{area}
+        </if>
+        <if test="disposeStatus !=null">
+            AND tap.dispose_status=#{disposeStatus}
+        </if>
+        <if test="disposes !=null">
+            AND dis.dispose_type=#{disposes}
+        </if>
+        <if test="collectionNumSort !=null and collectionNumSort==1">
+            ORDER BY tap.collection_num DESC
+        </if>
+        <if test="collectionNumSort !=null and collectionNumSort==2">
+            ORDER BY tap.collection_num ASC
+        </if>
+        <if test="disposeStatusSort !=null and disposeStatusSort==1">
+            ORDER BY tap.dispose_status DESC
+        </if>
+        <if test="disposeStatusSort !=null and disposeStatusSort==2">
+            ORDER BY tap.dispose_status ASC
+        </if>
+    </sql>
+    <select id="fixedList" parameterType="com.dqys.sale.orm.query.FixedAssetQuery"
+            resultMap="BaseResultMapWithAll">
+        SELECT tap.*,(SELECT su.name FROM t_sale_user su WHERE id=tap.oper_user)
+        operUserName,dis.dispose_type,dis.alg,dis.value,taf.type file_type,taf.filename,lab.name lable_name,
+        lab.type lable_type,b.id business_id,b.create_id,(SELECT su.name FROM t_sale_user su WHERE id=b.create_id)
+        createName
+        FROM t_business_obj_re bor LEFT JOIN business b
+        ON b.id=bor.business_id LEFT JOIN t_fixed_asset tap
+        ON tap.id=bor.object_id LEFT JOIN t_dispose dis
+        ON dis.asset_id=tap.id AND dis.asset_type=#{objectType} LEFT JOIN t_asset_file taf
+        ON taf.asset_id=tap.id AND taf.asset_type=#{objectType} LEFT JOIN
+        (SELECT lar.id,lar.asset_type,lar.assset_id,l.name,l.type FROM t_label_asset_re lar,t_label l WHERE
+        l.id=lar.label_id) lab
+        ON lab.assset_id=tap.id AND lab.asset_type=#{objectType}
+        WHERE bor.object_type=#{objectType}
+        <include refid="Query_Where"/>
         Limit #{startPage},#{pageCount}
     </select>
     <select id="fixedListCount" parameterType="com.dqys.sale.orm.query.FixedAssetQuery"
             resultType="int">
-        SELECT  count(tap.id) FROM t_business_obj_re bor LEFT JOIN business b
-        ON b.id=bor.business_id LEFT JOIN (SELECT
-        <include refid="Base_Column_List"/>
-        FROM t_fixed_asset WHERE 1=1
-        <include refid="Query_Where"/>) tap
+        SELECT count(tap.id) FROM t_business_obj_re bor LEFT JOIN business b
+        ON b.id=bor.business_id LEFT JOIN t_fixed_asset tap
         ON tap.id=bor.object_id
-        WHERE tap.id is not null AND bor.object_type=#{objectType}
-        <if test="businessStatus !=null">
-            AND b.status=#{businessStatus}
-        </if>
+        WHERE bor.object_type=#{objectType}
+        <include refid="Query_Where"/>
     </select>
 
+    <!--统计数据-->
+    <select id="getFixedAssetCount" resultType="java.util.Map">
+        SELECT (SELECT count(ub1.id) FROM t_fixed_asset ub1
+        WHERE ub1.stateflag=0 AND DATE_SUB(CURDATE(), INTERVAL 7 DAY) &lt; ub1.create_time) addCount,
+        (SELECT count(ub2.id) FROM t_fixed_asset ub2
+        WHERE ub2.stateflag=0 ) totalCount
+        FROM DUAL
+    </select>
 
 </mapper>

@@ -52,4 +52,9 @@ public class AssetFileMapperImpl extends SaleBaseDao implements AssetFileMapper 
     public List<AssetFile> selectByAssetId(@Param("assetId") Integer assetId, @Param("objectType") Integer objectType) {
         return super.getSqlSession().getMapper(AssetFileMapper.class).selectByAssetId(assetId, objectType);
     }
+
+    @Override
+    public Integer deleteByPrimaryKeyObject(@Param("assetId") Integer assetId, @Param("objectType") Integer objectType) {
+        return super.getSqlSession().getMapper(AssetFileMapper.class).deleteByPrimaryKeyObject(assetId, objectType);
+    }
 }

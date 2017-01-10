@@ -3,6 +3,7 @@ package com.dqys.sale.orm.mapper.business.impl;
 import com.dqys.core.base.SaleBaseDao;
 import com.dqys.sale.orm.mapper.business.AssetUserReMapper;
 import com.dqys.sale.orm.pojo.AssetUserRe;
+import com.dqys.sale.orm.query.AssetUserReQuery;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -51,5 +52,10 @@ public class AssetUserReMapperImpl extends SaleBaseDao implements AssetUserReMap
     @Override
     public List<AssetUserRe> selectByUserRe(AssetUserRe userRe) {
         return super.getSqlSession().getMapper(AssetUserReMapper.class).selectByUserRe(userRe);
+    }
+
+    @Override
+    public List<AssetUserRe> selectByUserReList(AssetUserReQuery query) {
+        return super.getSqlSession().getMapper(AssetUserReMapper.class).selectByUserReList(query);
     }
 }

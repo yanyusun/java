@@ -22,6 +22,8 @@ public interface UserService {
      */
     ServiceResult<Integer> validateUser(String account, String mobile, String email) throws Exception;
 
+    ServiceResult<Integer> validateUser(String account, String mobile, String email, Integer userType) throws Exception;
+
     /**
      * 注册用户信息
      *
@@ -46,6 +48,8 @@ public interface UserService {
      * @throws Exception
      */
     ServiceResult<UserDTO> userLogin(Integer uid, String userName, String mobile, String email, String pwd) throws Exception;
+
+    ServiceResult<UserDTO> userLogin(Integer uid, String userName, String mobile, String email, String pwd, Integer userType) throws Exception;
 
     /**
      * 用户重置
@@ -111,6 +115,9 @@ public interface UserService {
 
     /* 验证用户存在性 */
     TUserInfo queryUser(String account, String mobile, String email) throws Exception;
+
+    /* 验证用户存在性 */
+    TUserInfo queryUser(String account, String mobile, String email, Integer userType) throws Exception;
 
     //人员角色
     String getRoleNameToString(Integer userId);

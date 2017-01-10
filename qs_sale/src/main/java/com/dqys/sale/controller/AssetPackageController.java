@@ -1,7 +1,9 @@
 package com.dqys.sale.controller;
 
+import com.dqys.core.constant.AuthHeaderEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
+import com.dqys.core.utils.ProtocolTool;
 import com.dqys.flowbusiness.service.constant.saleBusiness.AssetBusiness;
 import com.dqys.sale.orm.query.AssetPackageQuery;
 import com.dqys.sale.service.dto.AssetPackageDTO;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 资产包管理
@@ -30,7 +34,14 @@ public class AssetPackageController {
      */
     @RequestMapping("/noVerify/assetList")
     @ResponseBody
-    public JsonResponse assetList(AssetPackageQuery query) {
+    public JsonResponse assetList(AssetPackageQuery query, HttpServletRequest httpServletRequest) throws Exception {
+        ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+        );
         query.setBusinessStatus(AssetBusiness.getHasAnnouncedLevel().getLevel());
         return assetPackageService.assetList(query);
     }
@@ -39,11 +50,19 @@ public class AssetPackageController {
      * @api {post} asset/noVerify/getDetail 获取资产包详情
      * @apiName asset/noVerify/getDetail
      * @apiSampleRequest asset/noVerify/getDetail
+     * @apiParam {int} assetId 资产包id
      * @apiGroup　 asset
      */
     @RequestMapping("/noVerify/getDetail")
     @ResponseBody
-    public JsonResponse getDetail(Integer assetId) {
+    public JsonResponse getDetail(Integer assetId, HttpServletRequest httpServletRequest) throws Exception {
+        Integer userId = ProtocolTool.validateUser(
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_USER.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_TYPE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_ROLE.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_CERTIFIED.getValue()),
+                httpServletRequest.getHeader(AuthHeaderEnum.X_QS_STATUS.getValue())
+        );
         return assetPackageService.getDetail(assetId);
     }
 
@@ -56,7 +75,9 @@ public class AssetPackageController {
     @RequestMapping("/list")
     @ResponseBody
     public JsonResponse list(AssetPackageQuery query) {
-        query.setUserId(UserSession.getCurrent().getUserId());
+        if (!UserSession.getCurrent().getUserType().equals("1,")) {
+            query.setUserId(UserSession.getCurrent().getUserId());
+        }
         return assetPackageService.list(query);
     }
 

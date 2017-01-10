@@ -5,6 +5,7 @@ package com.dqys.auth.orm.pojo.saleUser.dto;
  */
 public class UserDetailDTO {
     private Integer id;
+    private Integer sex;//性别
     private String name;//用户真实姓名
     private String account;//用户名
     private String email;//邮箱
@@ -21,6 +22,14 @@ public class UserDetailDTO {
     private String areaName;
     private String ip;//最后一次登入ip
     private String loginTime;//最后一次登入时间
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
 
     public Integer getId() {
         return id;
