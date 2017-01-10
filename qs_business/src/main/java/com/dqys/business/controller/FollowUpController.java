@@ -166,7 +166,7 @@ public class FollowUpController extends BaseApiContorller {
     }
     }
      */
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @RequestMapping(value = {"add","c/add"}, method = RequestMethod.POST)
     @ResponseBody
     public JsonResponse add(FollowUpMessageDTO followUpMessageDTO) throws IOException{
         if (followUpMessageDTO.getObjectId() == null || followUpMessageDTO.getObjectType() == null || followUpMessageDTO.getLiquidateStage() == null) {
@@ -182,6 +182,11 @@ public class FollowUpController extends BaseApiContorller {
         followUpMessageService.insert(followUpMessageDTO);
         return JsonResponseTool.success(followUpMessageDTO);
     }
+
+
+
+
+
 
     /**
      * @api {GET} http://{url}/follow_up/unread_count 读取未读的数量
