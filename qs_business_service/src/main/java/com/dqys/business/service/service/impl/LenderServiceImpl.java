@@ -736,7 +736,7 @@ public class LenderServiceImpl implements LenderService {
                 return response;
             }
             map.put("data", cdtos);
-            return JsonResponseTool.success(null);
+            return JsonResponseTool.success(map);
         } else {
             return response;
         }

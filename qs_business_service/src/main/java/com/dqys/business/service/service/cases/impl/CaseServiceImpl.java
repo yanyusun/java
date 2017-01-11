@@ -421,24 +421,33 @@ public class CaseServiceImpl implements CaseService {
     @Override
     public void receivePawn(Integer id, Integer type) {
         if (ObjectTypeEnum.PAWN.getValue().intValue() == type) {
-            CaseDTO dto = new CaseDTO();
-            try {
-                dto.setPawnId(id);
-                List<IOUInfo> iouInfos = iouInfoMapper.findByPawnId(id);
-                if (iouInfos != null && iouInfos.size() > 0) {
-                    String iouIds = "";
-                    for (int i = 0; i < iouInfos.size(); i++) {
-                        iouIds += iouInfos.get(i).getId();
-                        if (i < iouInfos.size() - 1) {
-                            iouIds += ",";
-                        }
-                    }
-                    dto.setIouIds(iouIds);
-                }
-                addCase(dto);
-            } catch (BusinessLogException e) {
-                e.printStackTrace();
+            createCase(id);
+        } else if (ObjectTypeEnum.LENDER.getValue().intValue() == type) {
+            List<PawnInfo> pawnInfoList = pawnInfoMapper.listByLenderId(id);
+            for (PawnInfo info : pawnInfoList) {
+                createCase(info.getId());
             }
+        }
+    }
+
+    private void createCase(Integer id) {
+        CaseDTO dto = new CaseDTO();
+        try {
+            dto.setPawnId(id);
+            List<IOUInfo> iouInfos = iouInfoMapper.findByPawnId(id);
+            if (iouInfos != null && iouInfos.size() > 0) {
+                String iouIds = "";
+                for (int i = 0; i < iouInfos.size(); i++) {
+                    iouIds += iouInfos.get(i).getId();
+                    if (i < iouInfos.size() - 1) {
+                        iouIds += ",";
+                    }
+                }
+                dto.setIouIds(iouIds);
+            }
+            addCase(dto);
+        } catch (BusinessLogException e) {
+            e.printStackTrace();
         }
     }
 }
