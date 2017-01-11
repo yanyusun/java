@@ -32,7 +32,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yvan on 16/7/12.
@@ -308,6 +310,24 @@ public class IouServiceImpl implements IouService {
             iouDTOList.add(changeToDTO(iouInfo));
         }
         return CommonUtil.responseBack(iouDTOList);
+    }
+
+    @Override
+    public JsonResponse listIouByLenderIdC(Integer id) {
+        List<Map> list = new ArrayList<>();
+        JsonResponse response = listIouByLenderId(id);
+        if (response.getCode() == ResponseCodeEnum.SUCCESS.getValue().intValue()) {
+            List<IouDTO> dtos = (List<IouDTO>) response.getData();
+            for (IouDTO dto : dtos) {
+                Map map = new HashMap<>();
+                map.put("id", dto.getId());
+                map.put("name", dto.getIouName());
+                list.add(map);
+            }
+        } else {
+            return response;
+        }
+        return JsonResponseTool.success(list);
     }
 
     /**

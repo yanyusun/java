@@ -391,6 +391,39 @@ public class CoordinatorController {
     }
 
     /**
+     * @api {post} coordinator/c/isPause 借款人或资产包暂停无效操作（C端）
+     * @apiParam {int} objectId 对象id
+     * @apiParam {int} objectType 对象类型(10资产包11借款人16资产源)
+     * @apiParam {int} status 状态（0开启1暂停2无效）
+     * @apiSampleRequest coordinator/c/isPause
+     * @apiGroup Coordinator
+     * @apiName coordinator/c/isPause
+     */
+    @RequestMapping("/c/isPause")
+    @ResponseBody
+    public JsonResponse isPauseC(Integer objectId, Integer objectType, Integer status) throws Exception {
+
+        Integer userId = UserSession.getCurrent().getUserId();
+        Map map = new HashMap<>();
+        if (CommonUtil.checkParam(objectType, objectId, status)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if (objectType != ObjectTypeEnum.LENDER.getValue() && objectType != ObjectTypeEnum.ASSETPACKAGE.getValue() &&
+                objectType != ObjectTypeEnum.ASSETSOURCE.getValue()) {
+            return JsonResponseTool.paramErr("对象类型有误");
+        }
+        if (status != 0 && status != 1 && status != 2) {
+            return JsonResponseTool.paramErr("状态有误");
+        }
+        coordinatorService.isPause(map, objectId, objectType, status, userId);
+        if (MessageUtils.transMapToString(map, "result").equals("yes")) {
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
+        }
+    }
+
+    /**
      * @api {post} coordinator/delUser 协作器删除参与人
      * @apiParam {int} teamUserId 原参与处置的人userId
      * @apiParam {int} userTeamId 团队协作器id

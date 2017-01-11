@@ -149,7 +149,7 @@ public class PawnController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/c/listPawnC")
+    @RequestMapping(value = "/c/listPawn")
     @ResponseBody
     public JsonResponse listPawnC(@RequestParam Integer id) {
         if (CommonUtil.checkParam(id)) {

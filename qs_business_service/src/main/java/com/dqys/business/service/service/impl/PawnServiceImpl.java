@@ -40,6 +40,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -211,8 +212,21 @@ public class PawnServiceImpl implements PawnService {
 
     @Override
     public JsonResponse listPawnByLenderIdC(Integer lenderId) {
-        List<Map> maps = pawnInfoMapper.listPawnByLenderIdC(lenderId);
-        return JsonResponseTool.success(maps);
+//        List<Map> maps = pawnInfoMapper.listPawnByLenderIdC(lenderId);
+        List<Map> list = new ArrayList<>();
+        JsonResponse response = listPawnByLenderId(lenderId);
+        if (response.getCode() == ResponseCodeEnum.SUCCESS.getValue().intValue()) {
+            List<PawnDTO> dtos = (List<PawnDTO>) response.getData();
+            for (PawnDTO dto : dtos) {
+                Map map = new HashMap<>();
+                map.put("id", dto.getId());
+                map.put("name", dto.getPawnName());
+                list.add(map);
+            }
+        } else {
+            return response;
+        }
+        return JsonResponseTool.success(list);
     }
 
 

@@ -67,4 +67,5 @@ public interface IouService {
     JsonResponse listIouByLenderId(Integer id);
 
 
+    JsonResponse listIouByLenderIdC(Integer id);
 }
