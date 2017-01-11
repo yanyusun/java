@@ -940,7 +940,7 @@ public class DistributionServiceImpl implements DistributionService {
                     String reg = UserSession.getCurrent() == null ? "" : UserSession.getCurrent().getUserType();
                     //是律所公司身份的流转需要把抵押物转变为案件
                     if (UserInfoEnum.USER_TYPE_JUDICIARY.getValue().toString().equals(reg.substring(0, reg.lastIndexOf(",")))) {
-                        caseService.receivePawn(id, companyTeam.getObjectType());//律所公司接受业务流转的抵押物添加到案件信息
+                        caseService.receivePawn(companyTeam.getObjectId(), companyTeam.getObjectType());//律所公司接受业务流转的抵押物添加到案件信息
                     }
                 }
             }
