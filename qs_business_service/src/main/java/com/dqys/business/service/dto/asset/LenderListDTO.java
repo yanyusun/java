@@ -38,6 +38,34 @@ public class LenderListDTO {
     private StatisticsLender statisticsLender;//统计数量
     private Integer acceptStatus;//null不在协作器，0待接收，1已接受，2已拒绝
 
+    private Integer isCollection;//催收是否介入（0否1是）
+    private Integer isLawyer;//催收是否介入（0否1是）
+    private Integer isAgent;//催收是否介入（0否1是）
+
+    public Integer getIsCollection() {
+        return isCollection;
+    }
+
+    public void setIsCollection(Integer isCollection) {
+        this.isCollection = isCollection;
+    }
+
+    public Integer getIsLawyer() {
+        return isLawyer;
+    }
+
+    public void setIsLawyer(Integer isLawyer) {
+        this.isLawyer = isLawyer;
+    }
+
+    public Integer getIsAgent() {
+        return isAgent;
+    }
+
+    public void setIsAgent(Integer isAgent) {
+        this.isAgent = isAgent;
+    }
+
     public Integer getAcceptStatus() {
         return acceptStatus;
     }

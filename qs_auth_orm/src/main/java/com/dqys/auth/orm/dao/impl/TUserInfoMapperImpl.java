@@ -46,7 +46,7 @@ public class TUserInfoMapperImpl extends BaseDao implements TUserInfoMapper {
 
     @Override
     public List<TUserInfo> verifyUser2(@Param("account") String account, @Param("mobile") String mobile, @Param("email") String email,
-                                      @Param("userType") Integer userType) {
+                                       @Param("userType") Integer userType) {
         return super.getSqlSession().getMapper(TUserInfoMapper.class).verifyUser2(account, mobile, email, userType);
     }
 
@@ -104,5 +104,10 @@ public class TUserInfoMapperImpl extends BaseDao implements TUserInfoMapper {
     @Override
     public Integer getUserByCompanyAdmin(Integer companyId) {
         return super.getSqlSession().getMapper(TUserInfoMapper.class).getUserByCompanyAdmin(companyId);
+    }
+
+    @Override
+    public List<Map> getUserByCompanyId(Integer companyId) {
+        return super.getSqlSession().getMapper(TUserInfoMapper.class).getUserByCompanyId(companyId);
     }
 }

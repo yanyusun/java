@@ -308,13 +308,16 @@ public class LenderServiceUtils {
         lenderListDTO.setUrgeType(lenderInfo.getUrgeType());
         lenderListDTO.setEvaluateExcellent(lenderInfo.getEvaluateExcellent());
         lenderListDTO.setEvaluateLevel(lenderInfo.getEvaluateLevel());
+        lenderListDTO.setIsCollection(lenderInfo.getIsCollection());
+        lenderListDTO.setIsLawyer(lenderInfo.getIsLawyer());
+        lenderListDTO.setIsAgent(lenderInfo.getIsAgent());
         Calendar calendar = Calendar.getInstance();
         lenderListDTO.setSourceType(lenderInfo.getEntrustBornType());// 来源类型
         if (lenderInfo.getEndAt() == null) {
             lenderInfo.setEndAt(new Date());
         }
         if (calendar.getTime().compareTo(lenderInfo.getEndAt()) > 0) {
-            // 逾期
+            // 剩余委托时间
             lenderListDTO.setLessDay(0);
         } else {
             long timeMirr = lenderInfo.getEndAt().getTime() - calendar.getTime().getTime();
