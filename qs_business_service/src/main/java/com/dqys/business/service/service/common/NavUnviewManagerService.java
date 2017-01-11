@@ -50,6 +50,16 @@ public interface NavUnviewManagerService {
      */
     boolean hasNavUnviewOperAuth(Integer navId,Integer object,Integer objectId,Integer userId);
 
+    /**
+     * 设置默认不可见的状态:
+     * 1.处置机构:其他处置机构不可见
+     * @param navId
+     * @param object
+     * @param objectId
+     * @param userId
+     */
+    void setDefalutNavUnview(Integer navId,Integer object,Integer objectId,Integer userId);
+
 
 
 }

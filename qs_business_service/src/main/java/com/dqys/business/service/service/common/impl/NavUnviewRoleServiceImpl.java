@@ -59,11 +59,13 @@ public class NavUnviewRoleServiceImpl extends AbstractNavUnview implements NavUn
 
     @Override
     public void add(Integer navId, Integer object, Integer objectId, Integer reId) {
+        Integer userId = UserSession.getCurrent().getUserId();
         NavUnviewRole nav = new NavUnviewRole();
         nav.setRoleType(reId);
         nav.setNavId(navId);
         nav.setObject(object);
         nav.setObjectId(objectId);
+        nav.setOperUser(userId);
         navUnviewRoleMapper.insertSelective(nav);
     }
 

@@ -10,6 +10,8 @@ public class NavUnviewUserInfo {
 
     private Integer objectId;
 
+    private Integer operUser;
+
     public Integer getObject() {
         return object;
     }
@@ -48,5 +50,13 @@ public class NavUnviewUserInfo {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getOperUser() {
+        return operUser;
+    }
+
+    public void setOperUser(Integer operUser) {
+        this.operUser = operUser;
     }
 }

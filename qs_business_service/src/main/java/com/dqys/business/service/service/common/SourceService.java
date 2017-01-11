@@ -27,7 +27,7 @@ public interface SourceService {
     List<SelectDTOList> listNavigation(Integer lenderId, Integer estatesId, Integer type);
 
     /**
-     * 新增一个分类列表
+     * 新增一个借款人的分类列表
      *
      * @param sourceNavigation
      * @return

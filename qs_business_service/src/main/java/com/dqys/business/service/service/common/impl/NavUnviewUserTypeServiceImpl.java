@@ -71,11 +71,13 @@ public class NavUnviewUserTypeServiceImpl extends AbstractNavUnview implements N
 
     @Override
     public void add(Integer navId, Integer object, Integer objectId, Integer reId) {
+        Integer userId = UserSession.getCurrent().getUserId();
         NavUnviewUserType nav = new NavUnviewUserType();
         nav.setUserType(reId);
         nav.setNavId(navId);
         nav.setObject(object);
         nav.setObjectId(objectId);
+        nav.setOperUser(userId);
         navUnviewUserTypeMapper.insertSelective(nav);
     }
 

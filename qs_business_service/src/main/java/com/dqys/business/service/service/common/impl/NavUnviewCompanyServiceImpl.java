@@ -58,11 +58,13 @@ public class NavUnviewCompanyServiceImpl extends AbstractNavUnview implements Na
 
     @Override
     public void add(Integer navId, Integer object, Integer objectId, Integer reId) {
+        Integer userId = UserSession.getCurrent().getUserId();
         NavUnviewCompany nav = new NavUnviewCompany();
         nav.setCompanyId(reId);
         nav.setNavId(navId);
         nav.setObject(object);
         nav.setObjectId(objectId);
+        nav.setOperUser(userId);
         navUnviewCompanyMapper.insertSelective(nav);
     }
 

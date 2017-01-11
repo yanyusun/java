@@ -75,4 +75,11 @@ public interface TUserInfoMapper {
      * @return
      */
     Integer getUserByCompanyAdmin(Integer companyId);
+
+    /**
+     * 根据id得到用户信息
+     * @param id
+     * @return
+     */
+    TUserInfo get(int id);
 }

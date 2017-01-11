@@ -10,6 +10,8 @@ public class NavUnviewRole {
 
     private Integer objectId;
 
+    private Integer operUser;
+
     public Integer getObject() {
         return object;
     }
@@ -48,5 +50,13 @@ public class NavUnviewRole {
 
     public void setRoleType(Integer roleType) {
         this.roleType = roleType;
+    }
+
+    public Integer getOperUser() {
+        return operUser;
+    }
+
+    public void setOperUser(Integer operUser) {
+        this.operUser = operUser;
     }
 }

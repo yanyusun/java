@@ -12,6 +12,8 @@ public class NavUnviewCompany extends BaseModel {
 
     private Integer objectId;
 
+    private Integer operUser;
+
     public Integer getObject() {
         return object;
     }
@@ -42,5 +44,13 @@ public class NavUnviewCompany extends BaseModel {
 
     public void setCompanyId(Integer companyId) {
         this.companyId = companyId;
+    }
+
+    public Integer getOperUser() {
+        return operUser;
+    }
+
+    public void setOperUser(Integer operUser) {
+        this.operUser = operUser;
     }
 }

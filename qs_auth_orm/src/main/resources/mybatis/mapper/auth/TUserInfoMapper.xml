@@ -375,4 +375,9 @@
          WHERE  tui.stateflag=0 AND tut.role_id=1 AND tui.company_id=#{companyId}
     </select>
 
+    <select id="get" parameterType="int" resultType="com.dqys.auth.orm.pojo.UserDetail">
+        SELECT  <include refid="Base_Column_List"/> FROM  t_user_info
+        WHERE id=#{id}
+    </select>
+
 </mapper>

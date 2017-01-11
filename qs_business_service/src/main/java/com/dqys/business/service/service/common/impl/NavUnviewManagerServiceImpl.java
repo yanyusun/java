@@ -8,11 +8,11 @@ import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.common.NavUnviewCompanyMapper;
 import com.dqys.business.orm.mapper.common.NavUnviewUserInfoMapper;
+import com.dqys.business.orm.mapper.common.SourceNavigationMapper;
 import com.dqys.business.orm.mapper.coordinator.CoordinatorMapper;
 import com.dqys.business.orm.mapper.zcy.ZcyEstatesMapper;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.orm.pojo.zcy.ZcyEstates;
-import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.business.service.dto.sourceAuth.SelectDto;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.dto.sourceAuth.UnviewReIdMap;
@@ -21,6 +21,7 @@ import com.dqys.business.service.utils.common.NavUnviewServerAgent;
 import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.constant.RoleTypeEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.core.model.UserSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -57,6 +58,8 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
     private ZcyEstatesMapper zcyEstatesMapper;
     @Autowired
     private CoordinatorMapper coordinatorMapper;
+    @Autowired
+    private SourceNavigationMapper sourceNavigationMapper;
 
     /**
      * 所有可以选择的用户类型
@@ -121,7 +124,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         NavUnviewServerAgent userTypeAgent = new NavUnviewServerAgent(navUnviewUserTypeService);
         UserSession userSession = UserSession.getCurrent();
         int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
-        if (hasSourceSourceAuth(userTypeAgent, userType, navId, object, objectId)) {//如果有人员类型权限
+        if (hasUserTypeSourceSourceAuth(userTypeAgent, userType, navId, object, objectId,userId)) {//如果有人员类型权限
             NavUnviewServerAgent roleAgent = new NavUnviewServerAgent(navUnviewRoleService);
             int userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());
             if (hasSourceSourceAuth(roleAgent, userRole, navId, object, objectId)) {//如果有角色权限
@@ -138,15 +141,7 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         return false;
     }
 
-    private boolean hasSourceSourceAuth(NavUnviewServerAgent navUnviewServerAgent, int reId, Integer navId, Integer object, Integer objectId) {
-        List<SelectDto> list = navUnviewServerAgent.getUnview(navId, object, objectId);
-        for (SelectDto selectDto : list) {
-            if (selectDto.getReId().intValue() == reId) {
-                return false;
-            }
-        }
-        return true;
-    }
+
 
     //// TODO: 16-11-9 mkf 1.判断是否与录入是同一家公司的人员 2.如果为管理者或者管理员放回true 3.是不是协作器中的所属人
     @Override
@@ -214,21 +209,6 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
 
     private List<SelectDto> getUserTypeInitList() {
             userTypeInitList = new ArrayList<>();
-            //普通人员
-//            SelectDto commonSelectDto = new SelectDto();
-//            commonSelectDto.setReId(UserInfoEnum.USER_TYPE_COMMON.getValue());
-//            commonSelectDto.setShowName("普通人员");
-//            userTypeInitList.add(commonSelectDto);
-            //平台
-//            SelectDto adminSelectDto = new SelectDto();
-//            adminSelectDto.setReId(UserInfoEnum.USER_TYPE_ADMIN.getValue());
-//            adminSelectDto.setShowName("平台");
-//            userTypeInitList.add(adminSelectDto);
-            //委托
-//            SelectDto entrustSelectDto = new SelectDto();
-//            entrustSelectDto.setReId(UserInfoEnum.USER_TYPE_ENTRUST.getValue());
-//            entrustSelectDto.setShowName("委托");
-//            userTypeInitList.add(entrustSelectDto);
             //催收
             SelectDto collectionSelectDto = new SelectDto();
             collectionSelectDto.setReId(UserInfoEnum.USER_TYPE_COLLECTION.getValue());
@@ -335,6 +315,13 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         return dtos;
     }
 
+    @Override
+    public void setDefalutNavUnview(Integer navId, Integer object, Integer objectId, Integer userId) {
+        navUnviewUserTypeService.add(navId,object,objectId,UserInfoEnum.USER_TYPE_COLLECTION.getValue());
+        navUnviewUserTypeService.add(navId,object,objectId,UserInfoEnum.USER_TYPE_JUDICIARY.getValue());
+        navUnviewUserTypeService.add(navId,object,objectId,UserInfoEnum.USER_TYPE_INTERMEDIARY.getValue());
+    }
+
     /**
      * 根据key过滤掉不包含key信息的对象
      *
@@ -352,5 +339,35 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
         }
 
     }
+
+    private boolean hasSourceSourceAuth(NavUnviewServerAgent navUnviewServerAgent, int reId, Integer navId, Integer object, Integer objectId) {
+        List<SelectDto> list = navUnviewServerAgent.getUnview(navId, object, objectId);
+        for (SelectDto selectDto : list) {
+            if (selectDto.getReId().intValue() == reId) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 机构是否拥有权限
+     * @param navUnviewServerAgent
+     * @param reId
+     * @param navId
+     * @param objectType
+     * @param objectId
+     * @param userId
+     * @return
+     */
+    private boolean hasUserTypeSourceSourceAuth(NavUnviewServerAgent navUnviewServerAgent, int reId, Integer navId, Integer objectType, Integer objectId,Integer userId) {
+        //如果是同一家公司的人员忽略判断
+        Integer createId=sourceNavigationMapper.get(navId).getUserId();
+        if(tUserInfoMapper.get(userId).getCompanyId()==tUserInfoMapper.get(createId).getCompanyId().intValue()){
+            return true;
+        }
+        return hasSourceSourceAuth(navUnviewServerAgent,reId,navId,objectType,objectId);
+    }
+
 
 }

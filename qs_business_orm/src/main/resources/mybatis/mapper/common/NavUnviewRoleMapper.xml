@@ -7,9 +7,10 @@
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="nav_id" jdbcType="INTEGER" property="navId"/>
         <result column="role_type" jdbcType="INTEGER" property="roleType"/>
+        <result column="oper_user" property="operUser" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
-    id, nav_id, role_type
+    id, nav_id, role_type,oper_user
   </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
         select
@@ -45,6 +46,9 @@
             <if test="objectId != null">
                 object_id,
             </if>
+            <if test="operUser != null">
+                oper_user,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -61,6 +65,9 @@
             </if>
             <if test="objectId != null">
                 #{objectId,jdbcType=INTEGER},
+            </if>
+            <if test="operUser != null">
+                #{operUser,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>

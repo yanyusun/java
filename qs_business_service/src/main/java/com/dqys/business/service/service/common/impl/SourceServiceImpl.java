@@ -82,7 +82,9 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     public JsonResponse addNavigation(SourceNavigation sourceNavigation) {
+        Integer userId = UserSession.getCurrent().getUserId();
         Integer result = sourceNavigationMapper.insert(sourceNavigation);
+        navUnviewManagerService.setDefalutNavUnview(sourceNavigation.getId(), ObjectTypeEnum.LENDER.getValue(),sourceNavigation.getLenderId(),userId);
         if (CommonUtil.checkResult(result)) {
             return JsonResponseTool.failure("添加失败");
         } else {

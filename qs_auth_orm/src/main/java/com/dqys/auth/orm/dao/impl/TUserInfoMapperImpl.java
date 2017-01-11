@@ -105,4 +105,9 @@ public class TUserInfoMapperImpl extends BaseDao implements TUserInfoMapper {
     public Integer getUserByCompanyAdmin(Integer companyId) {
         return super.getSqlSession().getMapper(TUserInfoMapper.class).getUserByCompanyAdmin(companyId);
     }
+
+    @Override
+    public TUserInfo get(int id) {
+        return super.getSqlSession().getMapper(TUserInfoMapper.class).get(id);
+    }
 }
