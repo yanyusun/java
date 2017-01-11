@@ -280,6 +280,14 @@ public class LenderServiceUtils {
         lenderQuery.setCanContact(lenderListQuery.isCanContact() ? 1 : null);
         lenderQuery.setIsWorth(lenderListQuery.isWorth() ? 0 : null); // 0表示资不抵债
         lenderQuery.setEntrustName(lenderListQuery.getEntrustName());
+        lenderQuery.setProvince(lenderListQuery.getProvince());
+        lenderQuery.setCity(lenderListQuery.getCity());
+        lenderQuery.setArea(lenderListQuery.getArea());
+        lenderQuery.setTotalMoneyStart(lenderListQuery.getTotalMoneyStart());
+        lenderQuery.setTotalMoneyEnd(lenderListQuery.getTotalMoneyEnd());
+        lenderQuery.setTotalPriceSort(lenderListQuery.getTotalPriceSort());
+        lenderQuery.setAcreageSort(lenderListQuery.getAcreageSort());
+        lenderQuery.setLatelyPulishSort(lenderListQuery.getLatelyPulishSort());
         return lenderQuery;
     }
 

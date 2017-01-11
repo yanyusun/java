@@ -60,7 +60,7 @@ public interface PawnService {
      */
     JsonResponse listAdd(List<PawnDTO> pawnDTOList) throws BusinessLogException;
 
-
+    JsonResponse listPawnByLenderIdC(Integer lenderId);
 
 
 //

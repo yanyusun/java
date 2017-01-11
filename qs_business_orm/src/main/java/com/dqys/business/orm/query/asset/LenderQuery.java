@@ -42,6 +42,79 @@ public class LenderQuery extends BaseQuery {
     private boolean stop = false; // 是否暂停
     private boolean noTakePart; // 暂未其他处置方
 
+    private Integer province;//区县省份
+    private Integer city;//市
+    private Integer area;//区县
+    private Double totalMoneyStart;//欠款总额最小值
+    private Double totalMoneyEnd;//欠款总额最大值
+    private Integer totalPriceSort;//欠款总额（0倒序1正序）
+    private Integer acreageSort;//面积大小（0倒序1正序）
+    private Integer latelyPulishSort;//最近发布时间（0倒序1正序）
+
+    public Integer getProvince() {
+        return province;
+    }
+
+    public void setProvince(Integer province) {
+        this.province = province;
+    }
+
+    public Integer getCity() {
+        return city;
+    }
+
+    public void setCity(Integer city) {
+        this.city = city;
+    }
+
+    public Integer getArea() {
+        return area;
+    }
+
+    public void setArea(Integer area) {
+        this.area = area;
+    }
+
+    public Double getTotalMoneyStart() {
+        return totalMoneyStart;
+    }
+
+    public void setTotalMoneyStart(Double totalMoneyStart) {
+        this.totalMoneyStart = totalMoneyStart;
+    }
+
+    public Double getTotalMoneyEnd() {
+        return totalMoneyEnd;
+    }
+
+    public void setTotalMoneyEnd(Double totalMoneyEnd) {
+        this.totalMoneyEnd = totalMoneyEnd;
+    }
+
+    public Integer getTotalPriceSort() {
+        return totalPriceSort;
+    }
+
+    public void setTotalPriceSort(Integer totalPriceSort) {
+        this.totalPriceSort = totalPriceSort;
+    }
+
+    public Integer getAcreageSort() {
+        return acreageSort;
+    }
+
+    public void setAcreageSort(Integer acreageSort) {
+        this.acreageSort = acreageSort;
+    }
+
+    public Integer getLatelyPulishSort() {
+        return latelyPulishSort;
+    }
+
+    public void setLatelyPulishSort(Integer latelyPulishSort) {
+        this.latelyPulishSort = latelyPulishSort;
+    }
+
     public List<Integer> getAssetIds() {
         return assetIds;
     }

@@ -7,6 +7,7 @@ import com.dqys.business.orm.query.coordinator.ZcyListQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 public interface PawnInfoMapper {
     /**
@@ -104,4 +105,12 @@ public interface PawnInfoMapper {
      * @return
      */
     List<PawnInfo> findByIouId(Integer iouId);
+
+    /**
+     * 只是查询借款人下的抵押物返回字段（名称,id）
+     *
+     * @param lenderId
+     * @return
+     */
+    List<Map> listPawnByLenderIdC(Integer lenderId);
 }

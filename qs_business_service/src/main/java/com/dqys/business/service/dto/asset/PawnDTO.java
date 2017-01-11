@@ -1,5 +1,6 @@
 package com.dqys.business.service.dto.asset;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -17,15 +18,19 @@ public class PawnDTO {
     private String evaluateLevel;  // 评级
     private String size;  // 规模大小
     private Integer province;  //省
+    private String provinceName;
     private Integer city;  // 市
+    private String cityName;
     private Integer district;  // 区
+    private String districtName;
     private String address;  // 详细地址
     private Double pawnRate;  // 抵押率
     private String disposeStatus;  // 处置状态
-    private Double worth;  // 价值
+    private Double worth;  // 抵押物估值
     private String memo;  // 备注
 
-
+    private String operator;//录入人姓名
+    private Date createAt; // 录入时间
     private Integer lenderId;  // 借款人基础信息ID
 
     private String iouIds;
@@ -36,6 +41,46 @@ public class PawnDTO {
     private Integer lawyer; // 代理
 
     private Map coord;//参与人员》协作器
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
+    }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getDistrictName() {
+        return districtName;
+    }
+
+    public void setDistrictName(String districtName) {
+        this.districtName = districtName;
+    }
 
     public Map getCoord() {
         return coord;

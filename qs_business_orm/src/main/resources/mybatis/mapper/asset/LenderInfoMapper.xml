@@ -72,107 +72,120 @@
     <sql id="Query_Condition">
         <where>
             <if test="stateflag != null and stateflag != 0">
-                AND stateflag != 0
+                AND len.stateflag != 0
             </if>
             <if test="stateflag == null">
-                AND stateflag = 0
+                AND len.stateflag = 0
             </if>
             <if test="assetId != null">
-                AND asset_id = #{assetId,jdbcType=INTEGER}
+                AND len.asset_id = #{assetId,jdbcType=INTEGER}
             </if>
             <if test="assetIds != null">
-                AND asset_id IN
+                AND len.asset_id IN
                 <foreach collection="assetIds" item="assetId" separator="," open="(" close=")" index="index">
                     #{assetId}
                 </foreach>
             </if>
             <if test="lenderId != null">
-                AND id = #{lenderId,jdbcType=INTEGER}
+                AND len.id = #{lenderId,jdbcType=INTEGER}
             </if>
             <if test="canContact != null">
-                AND can_contact = #{canContact,jdbcType=INTEGER}
+                AND len.can_contact = #{canContact,jdbcType=INTEGER}
             </if>
             <if test="isWorth != null">
-                AND is_worth = #{isWorth,jdbcType=INTEGER}
+                AND len.is_worth = #{isWorth,jdbcType=INTEGER}
             </if>
             <if test="entrustName != null">
-                AND entrust_name LIKE CONCAT('%',#{entrustName,jdbcType=VARCHAR},'%')
+                AND len.entrust_name LIKE CONCAT('%',#{entrustName,jdbcType=VARCHAR},'%')
             </if>
             <if test="repayStatus != null">
-                AND repay_status = #{repayStatus,jdbcType=INTEGER}
+                AND len.repay_status = #{repayStatus,jdbcType=INTEGER}
             </if>
             <if test="operator != null">
-                AND operator = #{operator,jdbcType=INTEGER}
+                AND len.operator = #{operator,jdbcType=INTEGER}
             </if>
             <if test="stopStatus != null">
-                AND is_stop = #{stopStatus,jdbcType=INTEGER}
+                AND len.is_stop = #{stopStatus,jdbcType=INTEGER}
             </if>
 
 
             <if test="startAt != null">
-                <![CDATA[ AND create_at >= #{startAt} ]]>
+                <![CDATA[ AND len.create_at >= #{startAt} ]]>
             </if>
             <if test="endAt != null">
-                <![CDATA[ AND create_at <= #{endAt} ]]>
+                <![CDATA[ AND len.create_at <= #{endAt} ]]>
             </if>
             <if test="followDate != null">
-                <![CDATA[ AND belong_follow_time < #{followDate} ]]>
+                <![CDATA[ AND len.belong_follow_time < #{followDate} ]]>
             </if>
 
 
             <if test="over">
-                AND accrual = 0 AND loan = 0
+                AND len.accrual = 0 AND len.loan = 0
             </if>
             <if test="asset">
-                AND asset_id > 0
+                AND len.asset_id > 0
             </if>
             <if test="collection">
-                AND is_collection > 0
+                AND len.is_collection > 0
             </if>
             <if test="agent">
-                AND is_agent > 0
+                AND len.is_agent > 0
             </if>
             <if test="lawyer">
-                AND is_lawyer > 0
+                AND len.is_lawyer > 0
             </if>
             <if test="notAsset">
-                AND asset_id is NULL
+                AND len.asset_id is NULL
             </if>
             <if test="stop">
-                AND is_stop = 1
+                AND len.is_stop = 1
             </if>
             <if test="takePart">
-                AND (is_collection = 1 OR is_lawyer = 1 OR is_agent = 1)
+                AND (len.is_collection = 1 OR len.is_lawyer = 1 OR len.is_agent = 1)
             </if>
             <if test="noTakePart">
-                AND is_collection = 0 AND is_lawyer = 0 AND is_agent = 0
+                AND len.is_collection = 0 AND len.is_lawyer = 0 AND len.is_agent = 0
             </if>
             <if test="outTime !=null and outTime==true">
-                AND CURRENT_TIME > end_at
+                AND CURRENT_TIME > len.end_at
             </if>
             <if test="outTime !=null and outTime==false">
-                AND CURRENT_TIME &lt;= end_at
+                AND CURRENT_TIME &lt;= len.end_at
             </if>
 
             <if test="listSearch != null">
-                AND (memo LIKE CONCAT('%', #{listSearch,jdbcType=VARCHAR} ,'%')
-                OR lender_no LIKE CONCAT('%', #{listSearch,jdbcType=VARCHAR} ,'%'))
+                AND (len.memo LIKE CONCAT('%', #{listSearch,jdbcType=VARCHAR} ,'%')
+                OR len.lender_no LIKE CONCAT('%', #{listSearch,jdbcType=VARCHAR} ,'%'))
             </if>
 
             <if test="id !=null ">
-                AND id=#{id}
+                AND len.id=#{id}
             </if>
             <if test="ids != null and ids.size() > 0">
-                AND id in
+                AND len.id in
                 <foreach collection="ids" item="i" open="(" close=")" separator=",">
                     #{i}
                 </foreach>
             </if>
             <if test="exceptIds != null and exceptIds.size() > 0">
-                AND id NOT in
+                AND len.id NOT in
                 <foreach collection="exceptIds" item="i" open="(" close=")" separator=",">
                     #{i}
                 </foreach>
+            </if>
+
+            <if test="province !=null">
+                AND len.province=#{province}
+            </if>
+            <if test="city !=null">
+                AND len.city=#{city}
+            </if>
+            <if test="area !=null">
+                AND len.area=#{area}
+            </if>
+            <if test="totalMoneyStart !=null and totalMoneyEnd !=null">
+                AND (#{totalMoneyStart} > len.loan AND len.loan &lt;= #{totalMoneyEnd})
             </if>
 
         </where>
@@ -628,9 +641,23 @@
 
     <!-- 条件搜索借款人 -->
     <select id="queryList" parameterType="com.dqys.business.orm.query.asset.LenderQuery" resultMap="BaseResultMap">
-        SELECT * from bt_lender
+        SELECT len.*,(SELECT MAX(out_days) FROM bt_iou WHERE stateflag=0 AND lender_id=len.id) limitDay from bt_lender
+        len
         <include refid="Query_Condition"/>
-        ORDER BY update_at DESC
+        ORDER BY
+        <if test="acreageSort !=null and acreageSort==1">
+            limitDay ASC,
+        </if>
+        <if test="acreageSort !=null and acreageSort==0">
+            limitDay DESC,
+        </if>
+        <if test="totalPriceSort !=null and totalPriceSort==1">
+            len.loan ASC
+        </if>
+        <if test="totalPriceSort !=null and totalPriceSort==0">
+            len.loan DESC
+        </if>
+        len.update_at DESC
         <if test="isPaging">
             limit #{startPageNum,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER}
         </if>
@@ -638,7 +665,7 @@
 
     <select id="queryCount" resultType="java.lang.Integer"
             parameterType="com.dqys.business.orm.query.asset.LenderQuery">
-        SELECT COUNT(id) FROM bt_lender
+        SELECT COUNT(id) FROM bt_lender len
         <include refid="Query_Condition"/>
     </select>
 
