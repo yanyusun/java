@@ -47,6 +47,7 @@ import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.DateFormatTool;
 import com.dqys.core.utils.SmsUtil;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -1940,6 +1941,56 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         } else if (result == 0) {
             map.put("msg", "发布失败，稍后请重试！");
         }
+    }
+
+    @Override
+    public Map participantList(Integer lenderId) throws BusinessLogException {
+        Map map = new HashMap<>();
+        map.put("result", "no");
+        //获取清收案组
+        DistributionDTO distributionDTO = distributionService.listDistribution_tx(ObjectTypeEnum.LENDER.getValue(), lenderId);
+        if (distributionDTO != null) {
+            List<Map> maps = new ArrayList<>();
+            List<CompanyTeamReDTO> companyTeamReDTOs = distributionDTO.getCompanyTeamReDTOList();//分配器成员
+            List<BusinessServiceDTO> businessServiceDTOs = distributionDTO.getBusinessServiceDTOList();//业务流转对象
+            //循环参与公司，获取需要团队
+            for (CompanyTeamReDTO dto : companyTeamReDTOs) {
+                if (dto.getStateflag() == 0) {
+                    getParticipant(lenderId, maps, dto.getCompanyId(), dto.getUserType(), dto.getCompanyName());
+                }
+            }
+            for (BusinessServiceDTO dto : businessServiceDTOs) {
+                if (dto.getStateflag() == 0) {
+                    getParticipant(lenderId, maps, dto.getCompanyId(), dto.getUserType(), dto.getCompanyName());
+                }
+            }
+            map.put("result", "yes");
+            map.put("data", maps);
+            return map;
+        }
+        map.put("msg", "查询的信息不存在");
+        return map;
+    }
+
+    private void getParticipant(Integer lenderId, List<Map> maps, Integer companyId, Integer userType, String companyName) {
+        Map dtoMap = new HashMap<>();
+        List<Map> dtoList = new ArrayList<>();
+        UserTeam userTeam = new UserTeam();
+        userTeam.setCompanyId(companyId);
+        userTeam.setObjectId(lenderId);
+        userTeam.setObjectType(ObjectTypeEnum.LENDER.getValue());
+        List<TeamDTO> list = getTeamDTOs(userTeam.getCompanyId(), userTeam);//协作器团队信息
+        //循环团队信息，获取需要的数据
+        for (TeamDTO teamDTO : list) {
+            Map team = new HashMap<>();
+            team.put("name", teamDTO.getRealName());
+            team.put("id", teamDTO.getUserId());
+            dtoList.add(team);
+        }
+        dtoMap.put("dtoList", dtoList);//当前公司的所有参与的用户信息
+        dtoMap.put("companyName", companyName);//公司名称
+        dtoMap.put("type", userType);//公司类型
+        maps.add(dtoMap);
     }
 
 

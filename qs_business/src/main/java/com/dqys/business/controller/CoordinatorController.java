@@ -2,6 +2,7 @@ package com.dqys.business.controller;
 
 import com.dqys.business.orm.constant.business.BusinessStatusEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.AssetService;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.MessageService;
@@ -559,6 +560,18 @@ public class CoordinatorController {
         } else {
             return JsonResponseTool.failure(MessageUtils.transMapToString(map, "msg"));
         }
+    }
+
+    /**
+     * 获取参与者，每个公司参与到清收案组中的案组展示
+     *
+     * @return
+     */
+    @RequestMapping("/c/participantList")
+    @ResponseBody
+    public JsonResponse participantList(@RequestParam Integer lenderId) throws BusinessLogException {
+        Map map = coordinatorService.participantList(lenderId);
+        return CommonUtil.jsonResponse(map);
     }
 
 

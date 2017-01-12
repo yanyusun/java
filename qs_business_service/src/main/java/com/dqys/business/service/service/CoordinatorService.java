@@ -248,4 +248,6 @@ public interface CoordinatorService {
      * @param status
      */
     void publish(Map map, Integer userId, Integer objectId, Integer objectType, Integer status);
+
+    Map participantList(Integer lenderId) throws BusinessLogException;
 }

@@ -185,7 +185,7 @@
                 AND len.area=#{area}
             </if>
             <if test="totalMoneyStart !=null and totalMoneyEnd !=null">
-                AND (#{totalMoneyStart} > len.loan AND len.loan &lt;= #{totalMoneyEnd})
+                AND (#{totalMoneyStart} &lt;(len.loan+len.accrual) AND (len.loan+len.accrual) &lt;= #{totalMoneyEnd})
             </if>
 
         </where>
@@ -645,17 +645,17 @@
         len
         <include refid="Query_Condition"/>
         ORDER BY
-        <if test="acreageSort !=null and acreageSort==1">
+        <if test="overdueSort !=null and overdueSort==1">
             limitDay ASC,
         </if>
-        <if test="acreageSort !=null and acreageSort==0">
+        <if test="overdueSort !=null and overdueSort==0">
             limitDay DESC,
         </if>
         <if test="totalPriceSort !=null and totalPriceSort==1">
-            len.loan ASC
+            len.loan ASC,
         </if>
         <if test="totalPriceSort !=null and totalPriceSort==0">
-            len.loan DESC
+            len.loan DESC,
         </if>
         len.update_at DESC
         <if test="isPaging">

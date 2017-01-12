@@ -264,7 +264,7 @@ public class LenderServiceUtils {
         if (lenderQuery.getId() == null && lenderListQuery.getId() != null) {
             lenderQuery.setId(lenderListQuery.getId());
         }
-        if (lenderListQuery.isOutTime()) {
+        if (lenderListQuery.getOutTime()) {
             lenderQuery.setOutTime(true);
         }
         if (lenderListQuery.isOwn()) {
@@ -286,7 +286,7 @@ public class LenderServiceUtils {
         lenderQuery.setTotalMoneyStart(lenderListQuery.getTotalMoneyStart());
         lenderQuery.setTotalMoneyEnd(lenderListQuery.getTotalMoneyEnd());
         lenderQuery.setTotalPriceSort(lenderListQuery.getTotalPriceSort());
-        lenderQuery.setAcreageSort(lenderListQuery.getAcreageSort());
+        lenderQuery.setOverdueSort(lenderListQuery.getOverdueSort());
         lenderQuery.setLatelyPulishSort(lenderListQuery.getLatelyPulishSort());
         return lenderQuery;
     }

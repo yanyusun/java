@@ -29,12 +29,14 @@ public class NavigationController {
 
     @Autowired
     private NavigationService navigationService;
-    @Autowired  @Qualifier("b_loginService")
+    @Autowired
+    @Qualifier("b_loginService")
     private UserService userService;
 
 
     /**
      * 增加导航栏
+     *
      * @param navigation
      * @return
      */
@@ -49,6 +51,7 @@ public class NavigationController {
 
     /**
      * 删除导航栏
+     *
      * @param id
      * @return
      */
@@ -63,6 +66,7 @@ public class NavigationController {
 
     /**
      * 修改导航栏
+     *
      * @param navigation
      * @return
      */
@@ -77,6 +81,7 @@ public class NavigationController {
 
     /**
      * 获取导航栏
+     *
      * @param id
      * @return
      */
@@ -96,6 +101,7 @@ public class NavigationController {
 
     /**
      * 获取初始导航栏
+     *
      * @return
      */
     @RequestMapping(value = "/getTop")
@@ -116,6 +122,7 @@ public class NavigationController {
 
     /**
      * 根据导航栏key获取子导航栏
+     *
      * @param id
      * @return
      */
@@ -131,6 +138,31 @@ public class NavigationController {
             return JsonResponseTool.success(navigationDTOList);
         } else {
             return JsonResponseTool.success(navigationDTOList);
+        }
+    }
+
+    /**
+     * 根据导航栏key获取子导航栏(C端)
+     *
+     * @return
+     */
+    @RequestMapping(value = "/c/listById")
+    @ResponseBody
+    public JsonResponse listByIdC() {
+        int id = 72;
+        List<NavigationDTO> navigationDTOList = listChild(id);
+        List<NavigationDTO> dtos = new ArrayList<>();
+        if (navigationDTOList != null && navigationDTOList.size() > 0) {
+            for (NavigationDTO dto : navigationDTOList) {
+                //去掉录入和全部两个
+                if (dto.getPath().indexOf("/all") > -1 || dto.getPath().indexOf("/create") > -1) {
+                    continue;
+                }
+                dtos.add(dto);
+            }
+            return JsonResponseTool.success(dtos);
+        } else {
+            return JsonResponseTool.success(dtos);
         }
     }
 
