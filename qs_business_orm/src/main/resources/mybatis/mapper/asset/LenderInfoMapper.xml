@@ -71,6 +71,7 @@
      -->
     <sql id="Query_Condition">
         <where>
+            bcon.mode=11 AND bcon.type=1
             <if test="stateflag != null and stateflag != 0">
                 AND len.stateflag != 0
             </if>
@@ -176,16 +177,16 @@
             </if>
 
             <if test="province !=null">
-                AND len.province=#{province}
+                AND bcon.province=#{province}
             </if>
             <if test="city !=null">
-                AND len.city=#{city}
+                AND bcon.city=#{city}
             </if>
             <if test="area !=null">
-                AND len.area=#{area}
+                AND bcon.area=#{area}
             </if>
             <if test="totalMoneyStart !=null and totalMoneyEnd !=null">
-                AND (#{totalMoneyStart} > len.loan AND len.loan &lt;= #{totalMoneyEnd})
+                AND (#{totalMoneyStart} &lt;(len.loan+len.accrual) AND (len.loan+len.accrual) &lt;= #{totalMoneyEnd})
             </if>
 
         </where>
@@ -642,20 +643,21 @@
     <!-- 条件搜索借款人 -->
     <select id="queryList" parameterType="com.dqys.business.orm.query.asset.LenderQuery" resultMap="BaseResultMap">
         SELECT len.*,(SELECT MAX(out_days) FROM bt_iou WHERE stateflag=0 AND lender_id=len.id) limitDay from bt_lender
-        len
+        len LEFT JOIN bt_contact bcon
+        ON bcon.mode_id=len.id
         <include refid="Query_Condition"/>
         ORDER BY
-        <if test="acreageSort !=null and acreageSort==1">
+        <if test="overdueSort !=null and overdueSort==1">
             limitDay ASC,
         </if>
-        <if test="acreageSort !=null and acreageSort==0">
+        <if test="overdueSort !=null and overdueSort==0">
             limitDay DESC,
         </if>
         <if test="totalPriceSort !=null and totalPriceSort==1">
-            len.loan ASC
+            len.loan ASC,
         </if>
         <if test="totalPriceSort !=null and totalPriceSort==0">
-            len.loan DESC
+            len.loan DESC,
         </if>
         len.update_at DESC
         <if test="isPaging">
@@ -665,7 +667,8 @@
 
     <select id="queryCount" resultType="java.lang.Integer"
             parameterType="com.dqys.business.orm.query.asset.LenderQuery">
-        SELECT COUNT(id) FROM bt_lender len
+        SELECT COUNT(len.id) FROM bt_lender len LEFT JOIN bt_contact bcon
+        ON bcon.mode_id=len.id
         <include refid="Query_Condition"/>
     </select>
 

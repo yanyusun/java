@@ -22,8 +22,8 @@ public interface TUserInfoMapper {
                                @Param("email") String email);
 
     List<TUserInfo> verifyUser2(@Param("account") String account,
-                               @Param("mobile") String mobile,
-                               @Param("email") String email, @Param("userType") Integer userType);
+                                @Param("mobile") String mobile,
+                                @Param("email") String email, @Param("userType") Integer userType);
 
 
     Integer queryCount(TUserQuery tUserQuery);
@@ -82,4 +82,12 @@ public interface TUserInfoMapper {
      * @return
      */
     TUserInfo get(int id);
+
+    /**
+     * Map中的属性(id用户id,userName用户名,avg头像地址)
+     *
+     * @param companyId
+     * @return
+     */
+    List<Map> getUserByCompanyId(Integer companyId);
 }

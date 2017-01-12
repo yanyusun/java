@@ -48,8 +48,16 @@ public class LenderQuery extends BaseQuery {
     private Double totalMoneyStart;//欠款总额最小值
     private Double totalMoneyEnd;//欠款总额最大值
     private Integer totalPriceSort;//欠款总额（0倒序1正序）
-    private Integer acreageSort;//面积大小（0倒序1正序）
+    private Integer overdueSort;//逾期天数大小（0倒序1正序）
     private Integer latelyPulishSort;//最近发布时间（0倒序1正序）
+
+    public Boolean getOutTime() {
+        return outTime;
+    }
+
+    public void setOutTime(Boolean outTime) {
+        this.outTime = outTime;
+    }
 
     public Integer getProvince() {
         return province;
@@ -99,12 +107,13 @@ public class LenderQuery extends BaseQuery {
         this.totalPriceSort = totalPriceSort;
     }
 
-    public Integer getAcreageSort() {
-        return acreageSort;
+
+    public Integer getOverdueSort() {
+        return overdueSort;
     }
 
-    public void setAcreageSort(Integer acreageSort) {
-        this.acreageSort = acreageSort;
+    public void setOverdueSort(Integer overdueSort) {
+        this.overdueSort = overdueSort;
     }
 
     public Integer getLatelyPulishSort() {
@@ -241,14 +250,6 @@ public class LenderQuery extends BaseQuery {
 
     public void setListSearch(String listSearch) {
         this.listSearch = listSearch;
-    }
-
-    public Boolean isOutTime() {
-        return outTime;
-    }
-
-    public void setOutTime(Boolean outTime) {
-        this.outTime = outTime;
     }
 
     public boolean isOver() {

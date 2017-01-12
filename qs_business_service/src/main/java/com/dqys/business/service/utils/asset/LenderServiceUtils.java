@@ -264,7 +264,7 @@ public class LenderServiceUtils {
         if (lenderQuery.getId() == null && lenderListQuery.getId() != null) {
             lenderQuery.setId(lenderListQuery.getId());
         }
-        if (lenderListQuery.isOutTime()) {
+        if (lenderListQuery.getOutTime()) {
             lenderQuery.setOutTime(true);
         }
         if (lenderListQuery.isOwn()) {
@@ -286,7 +286,7 @@ public class LenderServiceUtils {
         lenderQuery.setTotalMoneyStart(lenderListQuery.getTotalMoneyStart());
         lenderQuery.setTotalMoneyEnd(lenderListQuery.getTotalMoneyEnd());
         lenderQuery.setTotalPriceSort(lenderListQuery.getTotalPriceSort());
-        lenderQuery.setAcreageSort(lenderListQuery.getAcreageSort());
+        lenderQuery.setOverdueSort(lenderListQuery.getOverdueSort());
         lenderQuery.setLatelyPulishSort(lenderListQuery.getLatelyPulishSort());
         return lenderQuery;
     }
@@ -308,13 +308,16 @@ public class LenderServiceUtils {
         lenderListDTO.setUrgeType(lenderInfo.getUrgeType());
         lenderListDTO.setEvaluateExcellent(lenderInfo.getEvaluateExcellent());
         lenderListDTO.setEvaluateLevel(lenderInfo.getEvaluateLevel());
+        lenderListDTO.setIsCollection(lenderInfo.getIsCollection());
+        lenderListDTO.setIsLawyer(lenderInfo.getIsLawyer());
+        lenderListDTO.setIsAgent(lenderInfo.getIsAgent());
         Calendar calendar = Calendar.getInstance();
         lenderListDTO.setSourceType(lenderInfo.getEntrustBornType());// 来源类型
         if (lenderInfo.getEndAt() == null) {
             lenderInfo.setEndAt(new Date());
         }
         if (calendar.getTime().compareTo(lenderInfo.getEndAt()) > 0) {
-            // 逾期
+            // 剩余委托时间
             lenderListDTO.setLessDay(0);
         } else {
             long timeMirr = lenderInfo.getEndAt().getTime() - calendar.getTime().getTime();

@@ -16,6 +16,43 @@ public class LenderCDTO {
     private String organizationConpany;//公司机构
     private String deadline;//截至日期
     private String rate;//比率
+    private Integer isCollection;//催收是否介入（0否1是）
+    private Integer isLawyer;//催收是否介入（0否1是）
+    private Integer isAgent;//催收是否介入（0否1是）
+
+    private StatisticsLender statisticsLender;//统计数量
+
+    public StatisticsLender getStatisticsLender() {
+        return statisticsLender;
+    }
+
+    public void setStatisticsLender(StatisticsLender statisticsLender) {
+        this.statisticsLender = statisticsLender;
+    }
+
+    public Integer getIsCollection() {
+        return isCollection;
+    }
+
+    public void setIsCollection(Integer isCollection) {
+        this.isCollection = isCollection;
+    }
+
+    public Integer getIsLawyer() {
+        return isLawyer;
+    }
+
+    public void setIsLawyer(Integer isLawyer) {
+        this.isLawyer = isLawyer;
+    }
+
+    public Integer getIsAgent() {
+        return isAgent;
+    }
+
+    public void setIsAgent(Integer isAgent) {
+        this.isAgent = isAgent;
+    }
 
     public Integer getLenderId() {
         return lenderId;

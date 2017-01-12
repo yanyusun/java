@@ -7,7 +7,9 @@ import java.io.Serializable;
  */
 public class UserDetail implements Serializable {
     private Integer id;//用户id
+    private String avg;//头像
     private String realName;//用户的真实姓名
+    private String userName;//用户名（昵称）
     private String mobile;//用户的手机号
     private Integer rold;//用户的角色
     private Integer userType;//用户的帐号类型
@@ -16,7 +18,77 @@ public class UserDetail implements Serializable {
     private String email;//用户邮箱
     private Integer companyId;//用户所在公司id
     private String account;//用户帐号
-    private String accountCode;//清搜号
+    private String accountCode;//清搜号(公司的)
+    private Integer sex;//性别（1男0女）
+    private Integer province;//公司所在省份
+    private Integer city;//公司所在城市
+    private Integer area;//公司所在区县
+    private String address;//公司所在具体地址
+    private String licence;//营业执照扫描件
+
+    public String getLicence() {
+        return licence;
+    }
+
+    public void setLicence(String licence) {
+        this.licence = licence;
+    }
+
+    public Integer getProvince() {
+        return province;
+    }
+
+    public void setProvince(Integer province) {
+        this.province = province;
+    }
+
+    public Integer getCity() {
+        return city;
+    }
+
+    public void setCity(Integer city) {
+        this.city = city;
+    }
+
+    public Integer getArea() {
+        return area;
+    }
+
+    public void setArea(Integer area) {
+        this.area = area;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getAvg() {
+        return avg;
+    }
+
+    public void setAvg(String avg) {
+        this.avg = avg;
+    }
 
     public String getAccountCode() {
         return accountCode;

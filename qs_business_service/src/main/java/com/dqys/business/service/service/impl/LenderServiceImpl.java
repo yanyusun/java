@@ -747,6 +747,10 @@ public class LenderServiceImpl implements LenderService {
         cdto.setAvg(dto.getAvg());
         cdto.setName(dto.getName());
         cdto.setSex(dto.getSex());
+        cdto.setIsAgent(dto.getIsAgent());
+        cdto.setIsLawyer(dto.getIsLawyer());
+        cdto.setIsCollection(dto.getIsCollection());
+        cdto.setStatisticsLender(dto.getStatisticsLender());
         cdto.setRate("");
         cdto.setDeadline("");
         cdto.setOverdueNum(0);
