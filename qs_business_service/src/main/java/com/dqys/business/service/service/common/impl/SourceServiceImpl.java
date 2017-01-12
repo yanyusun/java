@@ -16,6 +16,7 @@ import com.dqys.business.orm.pojo.zcy.ZcyEstates;
 import com.dqys.business.service.constant.ObjectEnum.InformationEnum;
 import com.dqys.business.service.dto.common.NavUnviewDTO;
 import com.dqys.business.service.dto.common.SelectDTOList;
+import com.dqys.business.service.dto.common.SourceEditDto;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.dto.sourceAuth.SourceNavOperType;
@@ -354,5 +355,10 @@ public class SourceServiceImpl implements SourceService {
             return JsonResponseTool.success(operTypes);
         }
         return JsonResponseTool.failure(null);
+    }
+
+    @Override
+    public void renameSource(SourceEditDto sourceEditDto) {
+
     }
 }

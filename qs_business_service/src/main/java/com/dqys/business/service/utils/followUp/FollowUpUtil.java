@@ -1,7 +1,9 @@
 package com.dqys.business.service.utils.followUp;
 
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
+import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
+import com.dqys.business.service.dto.followUp.FollowUpSourceDTO;
 
 /**
  * Created by yan on 16-8-15.
@@ -31,5 +33,15 @@ public class FollowUpUtil {
         }
 
         return followUpMessage;
+    }
+    public static FollowUpSource toFollowUpSource(FollowUpSourceDTO followUpSourceDTO){
+        FollowUpSource followUpSource = new FollowUpSource();
+        followUpSource.setPathFilename(followUpSourceDTO.getPathFilename());
+        followUpSource.setShowFilename(followUpSourceDTO.getShowFilename());
+        followUpSource.setFollowUpMessageId(followUpSourceDTO.getFollowUpMessageId());
+        followUpSource.setType(followUpSourceDTO.getType());
+        followUpSource.setObjectType(followUpSourceDTO.getObjectType());
+        followUpSource.setObjectId(followUpSourceDTO.getObjectId());
+        return followUpSource;
     }
 }

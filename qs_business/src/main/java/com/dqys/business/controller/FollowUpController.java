@@ -3,8 +3,10 @@ package com.dqys.business.controller;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
+import com.dqys.business.service.dto.followUp.FollowUpSourceDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
+import com.dqys.business.service.service.followUp.FollowUpSourceService;
 import com.dqys.business.service.service.objectUserRelation.ObjectUserRelationService;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.base.BaseApiContorller;
@@ -12,12 +14,10 @@ import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +35,10 @@ public class FollowUpController extends BaseApiContorller {
 
     @Autowired
     private ObjectUserRelationService objectUserRelationService;
+
+    @Autowired
+    private FollowUpSourceService followUpSourceService;
+
 
 
     /**
@@ -133,8 +137,72 @@ public class FollowUpController extends BaseApiContorller {
     }
 
     /**
-     * @api {POST} http://{url}/follow_up/add 增加跟进信息,状态为未发送
+     * @api {GET} http://{url}/follow_up/unread_count 读取未读的数量
+     * @apiName unread_count
+     * @apiGroup followUp
+     * @apiParam {number} objectId 对象id
+     * @apiParam {number} objectType 对象类型
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": [
+     * {
+     * "count": 2,
+     * "moment": 111
+     * },
+     * {
+     * "count": 1,
+     * "moment": 222
+     * }
+     * ]
+     * }
+     */
+    @RequestMapping(value = "/unread_count", method = RequestMethod.GET)
+    @ResponseBody
+    public JsonResponse unReadCount(int objectId, int objectType) {
+        List<Map<String, String>> countMap = followUpReadStatusService.getCountMap(objectId, objectType);
+        return JsonResponseTool.success(countMap);
+    }
+
+
+    /**
+     * @api {POST} http://{url}/follow_up/add "增加跟进信息,状态为未发送
      * @apiName add
+     * @apiGroup followUp
+     * @apiUse FollowUpMessageDTO
+     * @apiSuccessExample {json} Data-Response:
+    {
+    "code": 2000,
+    "msg": "成功",
+    "data": {
+    "id": null,
+    "objectId": 111,
+    "objectType": 111,
+    "secondObjectId": 11,
+    "secondObjectType": 11,
+    "content": "11",
+    "liquidateStage": 11,
+    "secondLiquidateStage": 11,
+    "fileList": [
+    {
+    "id": null,
+    "version": null,
+    "stateflag": null,
+    "createAt": null,
+    "updateAt": null,
+    "remark": null,
+    "pathFilename": "aaa.jpg",
+    "showFilename": "p.jpg",
+    "followUpMessageId": 18
+    }
+    ]
+    }
+    }
+     */
+    /**
+     * @api {POST} http://{url}/follow_up/c/add "增加跟进信息,状态为未发送
+     * @apiName c_add
      * @apiGroup followUp
      * @apiUse FollowUpMessageDTO
      * @apiSuccessExample {json} Data-Response:
@@ -184,37 +252,71 @@ public class FollowUpController extends BaseApiContorller {
     }
 
 
-
-
-
+    /**
+     * @api {POST} http://{url}/follow_up/c/addSource 增加跟进信息,状态为未发送
+     * @apiName c_addSource
+     * @apiGroup followUp
+     * @apiUse FollowUpSourceDTO
+     */
+    @RequestMapping(value ="c/addSource", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse addSource(FollowUpSourceDTO followUpSourceDTO) throws IOException{
+        UserSession userSession = UserSession.getCurrent();
+        int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
+        int userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());
+        if(!UserServiceUtils.isPlatBoolean(userType,userRole)
+                &&!objectUserRelationService.hasOnlyOneRelation(followUpSourceDTO.getObjectType(),followUpSourceDTO.getObjectId(),userSession.getUserId())){
+            return JsonResponseTool.failure("对不起,您暂无该权限");
+        }
+        followUpSourceService.add(followUpSourceDTO);
+        return JsonResponseTool.success(followUpSourceDTO);
+    }
 
     /**
-     * @api {GET} http://{url}/follow_up/unread_count 读取未读的数量
-     * @apiName unread_count
+     * @api {GET} http://{url}/follow_up/c/sourceList 增加跟进信息,状态为未发送
+     * @apiName c_addSource
      * @apiGroup followUp
-     * @apiParam {number} objectId 对象id
-     * @apiParam {number} objectType 对象类型
-     * @apiSuccessExample {json} Data-Response:
-     * {
-     * "code": 2000,
-     * "msg": "成功",
-     * "data": [
-     * {
-     * "count": 2,
-     * "moment": 111
-     * },
-     * {
-     * "count": 1,
-     * "moment": 222
-     * }
-     * ]
-     * }
+     * @apiUse FollowUpSourceDTO
+     *
      */
-    @RequestMapping(value = "/unread_count", method = RequestMethod.GET)
+    @RequestMapping(value ="c/sourceList", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse unReadCount(int objectId, int objectType) {
-        List<Map<String, String>> countMap = followUpReadStatusService.getCountMap(objectId, objectType);
-        return JsonResponseTool.success(countMap);
+    public JsonResponse sourceList(@RequestParam(defaultValue = "0") Integer pid,Integer objectType,Integer objectId) throws IOException{
+        UserSession userSession = UserSession.getCurrent();
+        int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
+        int userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());
+        if(!UserServiceUtils.isPlatBoolean(userType,userRole)
+                &&!objectUserRelationService.hasOnlyOneRelation(objectType,objectId,userSession.getUserId())){
+            return JsonResponseTool.failure("对不起,您暂无该权限");
+        }
+        List<FollowUpSourceDTO> list=followUpSourceService.list(pid);
+        list=new ArrayList<>();
+        FollowUpSourceDTO followUpSourceDTO = new FollowUpSourceDTO();
+        followUpSourceDTO.setShowFilename("ttt");
+        followUpSourceDTO.setType(10);
+        list.add(followUpSourceDTO);
+        FollowUpSourceDTO followUpSourceDTO1 = new FollowUpSourceDTO();
+        followUpSourceDTO1.setShowFilename("ttt");
+        followUpSourceDTO1.setType(20);
+        followUpSourceDTO1.setPathFilename("xxxx.jpg");
+        list.add(followUpSourceDTO1);
+        return JsonResponseTool.success(list);
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

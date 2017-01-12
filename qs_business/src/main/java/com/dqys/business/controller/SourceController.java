@@ -2,6 +2,8 @@ package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.service.dto.common.NavUnviewDTO;
+import com.dqys.business.service.dto.common.SourceDelDTO;
+import com.dqys.business.service.dto.common.SourceEditDto;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.service.common.SourceService;
@@ -169,9 +171,34 @@ public class SourceController extends BaseApiContorller {
      * }
      */
     @RequestMapping(value = "/getSourceType", method = RequestMethod.POST)
-    @ResponseBody
     public JsonResponse getSourceType(Integer navId, @RequestParam Integer objectId, @RequestParam Integer objectType) {
         return sourceService.getSourceType(navId, objectId, objectType);
     }
+
+
+
+    /**
+     * @api {POST} http://{url}/source/c/rename 增加跟进信息,状态为未发送
+     * @apiName c_rename
+     * @apiGroup source
+     * @apiUse SourceEditDto
+     */
+    @RequestMapping(value ={"rename","c/rename"}, method = RequestMethod.POST)
+    public JsonResponse renameSource(SourceEditDto sourceEditDto){
+
+        return JsonResponseTool.success(sourceEditDto);
+    }
+
+    /**
+     * @api {DELETE} http://{url}/source/c/del 增加跟进信息,状态为未发送
+     * @apiName c_del
+     * @apiGroup source
+     * @apiUse SourceDelDTO
+     */
+    @RequestMapping(value ="c/del", method = RequestMethod.DELETE)
+    public JsonResponse delSource(SourceDelDTO sourceDelDTO){
+        return JsonResponseTool.success(sourceDelDTO);
+    }
+
 
 }

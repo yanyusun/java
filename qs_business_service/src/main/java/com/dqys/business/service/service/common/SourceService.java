@@ -3,6 +3,7 @@ package com.dqys.business.service.service.common;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.service.dto.common.NavUnviewDTO;
 import com.dqys.business.service.dto.common.SelectDTOList;
+import com.dqys.business.service.dto.common.SourceEditDto;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.core.model.JsonResponse;
@@ -93,4 +94,6 @@ public interface SourceService {
 //
 //    }
     JsonResponse getSourceType(Integer navId, Integer objectId, Integer objectType);
+
+    void renameSource(SourceEditDto sourceEditDto);
 }
