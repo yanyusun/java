@@ -40,96 +40,95 @@ public class FollowUpController extends BaseApiContorller {
     private FollowUpSourceService followUpSourceService;
 
 
-
     /**
      * @api {GET} http://{url}/follow_up/list 查询更进信息,并去除对应阶段的未读数据
      * @apiName list
      * @apiGroup followUp
      * @apiUse FollowUpMessageQuery
      * @apiSuccessExample {json} Data-Response:
-    {
-    "code": 2000,
-    "msg": "成功",
-    "data": [
-    {
-    "id": 18,
-    "version": null,
-    "stateflag": null,
-    "createAt": "2016-09-22",
-    "updateAt": null,
-    "remark": null,
-    "objectId": null,
-    "objectType": null,
-    "userId": null,
-    "teamId": null,
-    "content": "11",
-    "secondObjectId": null,
-    "secondObjectType": null,
-    "liquidateStage": 11,
-    "secondLiquidateStage": null,
-    "sendStatus": null,
-    "userInfo": {
-    "id": null,
-    "version": null,
-    "stateflag": null,
-    "createAt": null,
-    "updateAt": null,
-    "remark": null,
-    "userName": "zs",
-    "realName": null,
-    "account": null,
-    "wechat": null,
-    "avg": null,
-    "sex": true,
-    "mobile": null,
-    "email": null,
-    "password": null,
-    "salt": null,
-    "identity": null,
-    "companyId": null,
-    "status": null,
-    "qq": null
-    },
-    "teammateRe": null,
-    "companyInfo": {
-    "id": null,
-    "version": null,
-    "stateflag": null,
-    "createAt": null,
-    "updateAt": null,
-    "remark": null,
-    "companyName": "test",
-    "credential": null,
-    "licence": null,
-    "legalPerson": null,
-    "province": null,
-    "city": null,
-    "area": null,
-    "address": null,
-    "isAuth": null,
-    "type": null
-    },
-    "fileList": [
-    {
-    "id": null,
-    "version": null,
-    "stateflag": null,
-    "createAt": null,
-    "updateAt": null,
-    "remark": null,
-    "pathFilename": "aaa.jpg",
-    "showFilename": "p.jpg",
-    "followUpMessageId": null
-    }
-    ]
-    }
-    ]
-    }
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": [
+     * {
+     * "id": 18,
+     * "version": null,
+     * "stateflag": null,
+     * "createAt": "2016-09-22",
+     * "updateAt": null,
+     * "remark": null,
+     * "objectId": null,
+     * "objectType": null,
+     * "userId": null,
+     * "teamId": null,
+     * "content": "11",
+     * "secondObjectId": null,
+     * "secondObjectType": null,
+     * "liquidateStage": 11,
+     * "secondLiquidateStage": null,
+     * "sendStatus": null,
+     * "userInfo": {
+     * "id": null,
+     * "version": null,
+     * "stateflag": null,
+     * "createAt": null,
+     * "updateAt": null,
+     * "remark": null,
+     * "userName": "zs",
+     * "realName": null,
+     * "account": null,
+     * "wechat": null,
+     * "avg": null,
+     * "sex": true,
+     * "mobile": null,
+     * "email": null,
+     * "password": null,
+     * "salt": null,
+     * "identity": null,
+     * "companyId": null,
+     * "status": null,
+     * "qq": null
+     * },
+     * "teammateRe": null,
+     * "companyInfo": {
+     * "id": null,
+     * "version": null,
+     * "stateflag": null,
+     * "createAt": null,
+     * "updateAt": null,
+     * "remark": null,
+     * "companyName": "test",
+     * "credential": null,
+     * "licence": null,
+     * "legalPerson": null,
+     * "province": null,
+     * "city": null,
+     * "area": null,
+     * "address": null,
+     * "isAuth": null,
+     * "type": null
+     * },
+     * "fileList": [
+     * {
+     * "id": null,
+     * "version": null,
+     * "stateflag": null,
+     * "createAt": null,
+     * "updateAt": null,
+     * "remark": null,
+     * "pathFilename": "aaa.jpg",
+     * "showFilename": "p.jpg",
+     * "followUpMessageId": null
+     * }
+     * ]
+     * }
+     * ]
+     * }
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @ResponseBody
     public JsonResponse list(FollowUpMessageQuery followUpMessageQuery) throws Exception {
-        if(followUpMessageQuery.getObjectId()==null||followUpMessageQuery.getObjectType()==null||followUpMessageQuery.getLiquidateStage()==null){
+        if (followUpMessageQuery.getObjectId() == null || followUpMessageQuery.getObjectType() == null || followUpMessageQuery.getLiquidateStage() == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
         List<FollowUpMessage> list = followUpMessageService.listAndCancelUnread(followUpMessageQuery);
@@ -206,45 +205,45 @@ public class FollowUpController extends BaseApiContorller {
      * @apiGroup followUp
      * @apiUse FollowUpMessageDTO
      * @apiSuccessExample {json} Data-Response:
-    {
-    "code": 2000,
-    "msg": "成功",
-    "data": {
-    "id": null,
-    "objectId": 111,
-    "objectType": 111,
-    "secondObjectId": 11,
-    "secondObjectType": 11,
-    "content": "11",
-    "liquidateStage": 11,
-    "secondLiquidateStage": 11,
-    "fileList": [
-    {
-    "id": null,
-    "version": null,
-    "stateflag": null,
-    "createAt": null,
-    "updateAt": null,
-    "remark": null,
-    "pathFilename": "aaa.jpg",
-    "showFilename": "p.jpg",
-    "followUpMessageId": 18
-    }
-    ]
-    }
-    }
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {
+     * "id": null,
+     * "objectId": 111,
+     * "objectType": 111,
+     * "secondObjectId": 11,
+     * "secondObjectType": 11,
+     * "content": "11",
+     * "liquidateStage": 11,
+     * "secondLiquidateStage": 11,
+     * "fileList": [
+     * {
+     * "id": null,
+     * "version": null,
+     * "stateflag": null,
+     * "createAt": null,
+     * "updateAt": null,
+     * "remark": null,
+     * "pathFilename": "aaa.jpg",
+     * "showFilename": "p.jpg",
+     * "followUpMessageId": 18
+     * }
+     * ]
+     * }
+     * }
      */
-    @RequestMapping(value = {"add","c/add"}, method = RequestMethod.POST)
+    @RequestMapping(value = {"add", "c/add"}, method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse add(FollowUpMessageDTO followUpMessageDTO) throws IOException{
+    public JsonResponse add(FollowUpMessageDTO followUpMessageDTO) throws IOException {
         if (followUpMessageDTO.getObjectId() == null || followUpMessageDTO.getObjectType() == null || followUpMessageDTO.getLiquidateStage() == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
         UserSession userSession = UserSession.getCurrent();
         int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
         int userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());
-        if(!UserServiceUtils.isPlatBoolean(userType,userRole)
-                &&!objectUserRelationService.hasOnlyOneRelation(followUpMessageDTO.getObjectType(),followUpMessageDTO.getObjectId(),userSession.getUserId())){
+        if (!UserServiceUtils.isPlatBoolean(userType, userRole)
+                && !objectUserRelationService.hasOnlyOneRelation(followUpMessageDTO.getObjectType(), followUpMessageDTO.getObjectId(), userSession.getUserId())) {
             return JsonResponseTool.failure("对不起,您暂无该权限");
         }
         followUpMessageService.insert(followUpMessageDTO);
@@ -258,14 +257,14 @@ public class FollowUpController extends BaseApiContorller {
      * @apiGroup followUp
      * @apiUse FollowUpSourceDTO
      */
-    @RequestMapping(value ="c/addSource", method = RequestMethod.POST)
+    @RequestMapping(value = "c/addSource", method = RequestMethod.POST)
     @ResponseBody
-    public JsonResponse addSource(FollowUpSourceDTO followUpSourceDTO) throws IOException{
+    public JsonResponse addSource(FollowUpSourceDTO followUpSourceDTO) throws IOException {
         UserSession userSession = UserSession.getCurrent();
         int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
         int userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());
-        if(!UserServiceUtils.isPlatBoolean(userType,userRole)
-                &&!objectUserRelationService.hasOnlyOneRelation(followUpSourceDTO.getObjectType(),followUpSourceDTO.getObjectId(),userSession.getUserId())){
+        if (!UserServiceUtils.isPlatBoolean(userType, userRole)
+                && !objectUserRelationService.hasOnlyOneRelation(followUpSourceDTO.getObjectType(), followUpSourceDTO.getObjectId(), userSession.getUserId())) {
             return JsonResponseTool.failure("对不起,您暂无该权限");
         }
         followUpSourceService.add(followUpSourceDTO);
@@ -277,20 +276,44 @@ public class FollowUpController extends BaseApiContorller {
      * @apiName c_addSource
      * @apiGroup followUp
      * @apiUse FollowUpSourceDTO
-     *
+     * @apiSuccessExample {json} Data-Response:
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": [
+     * {
+     * "id": null,
+     * "pathFilename": null,
+     * "showFilename": "ttt",
+     * "followUpMessageId": null,
+     * "type": 10,
+     * "objectType": null,
+     * "objectId": null
+     * },
+     * {
+     * "id": null,
+     * "pathFilename": "xxxx.jpg",
+     * "showFilename": "ttt",
+     * "followUpMessageId": null,
+     * "type": 20,
+     * "objectType": null,
+     * "objectId": null
+     * }
+     * ]
+     * }
      */
-    @RequestMapping(value ="c/sourceList", method = RequestMethod.POST)
+    @RequestMapping(value = "c/sourceList", method = RequestMethod.GET)
     @ResponseBody
-    public JsonResponse sourceList(@RequestParam(defaultValue = "0") Integer pid,Integer objectType,Integer objectId) throws IOException{
-        UserSession userSession = UserSession.getCurrent();
-        int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
-        int userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());
-        if(!UserServiceUtils.isPlatBoolean(userType,userRole)
-                &&!objectUserRelationService.hasOnlyOneRelation(objectType,objectId,userSession.getUserId())){
-            return JsonResponseTool.failure("对不起,您暂无该权限");
-        }
-        List<FollowUpSourceDTO> list=followUpSourceService.list(pid);
-        list=new ArrayList<>();
+    public JsonResponse sourceList(@RequestParam(defaultValue = "0") Integer pid, Integer objectType, Integer objectId) throws IOException {
+//        UserSession userSession = UserSession.getCurrent();
+//        int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
+//        int userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());
+//        if(!UserServiceUtils.isPlatBoolean(userType,userRole)
+//                &&!objectUserRelationService.hasOnlyOneRelation(objectType,objectId,userSession.getUserId())){
+//            return JsonResponseTool.failure("对不起,您暂无该权限");
+//        }
+        List<FollowUpSourceDTO> list = followUpSourceService.list(pid);
+        list = new ArrayList<>();
         FollowUpSourceDTO followUpSourceDTO = new FollowUpSourceDTO();
         followUpSourceDTO.setShowFilename("ttt");
         followUpSourceDTO.setType(10);
@@ -302,21 +325,6 @@ public class FollowUpController extends BaseApiContorller {
         list.add(followUpSourceDTO1);
         return JsonResponseTool.success(list);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
