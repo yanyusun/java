@@ -130,7 +130,7 @@
 
     </select>
 
-    <select id="selectByNavId" resultType="BaseResultMap">
+    <select id="selectByNavId" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         from bt_source_info
