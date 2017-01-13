@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.followUp;
 
 
 import com.dqys.business.orm.pojo.followUp.FollowUpSource;
+import com.dqys.business.orm.query.followUp.FollowUpSourceQuery;
 
 import java.util.List;
 
@@ -18,5 +19,5 @@ public interface FollowUpSourceMapper {
 
     int updateByPrimaryKey(FollowUpSource record);
 
-    List<FollowUpSource> list(FollowUpSource followUpSource);
+    List<FollowUpSource> list(FollowUpSourceQuery query);
 }

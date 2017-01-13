@@ -5,6 +5,9 @@ import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.dto.followUp.FollowUpSourceDTO;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by yan on 16-8-15.
  */
@@ -43,5 +46,19 @@ public class FollowUpUtil {
         followUpSource.setObjectType(followUpSourceDTO.getObjectType());
         followUpSource.setObjectId(followUpSourceDTO.getObjectId());
         return followUpSource;
+    }
+    public static List<FollowUpSourceDTO> toFollowUpSourceDTOList(List<FollowUpSource> followUpSourceList){
+        List<FollowUpSourceDTO> followUpSourceDTOList = new ArrayList<>();
+        for(FollowUpSource followUpSource : followUpSourceList){
+            FollowUpSourceDTO followUpSourceDTO = new FollowUpSourceDTO();
+            followUpSourceDTO.setPathFilename(followUpSource.getPathFilename());
+            followUpSourceDTO.setShowFilename(followUpSource.getShowFilename());
+            followUpSourceDTO.setFollowUpMessageId(followUpSource.getFollowUpMessageId());
+            followUpSourceDTO.setObjectType(followUpSource.getObjectType());
+            followUpSourceDTO.setObjectId(followUpSource.getObjectId());
+            followUpSourceDTO.setPid(followUpSource.getPid());
+            followUpSourceDTOList.add(followUpSourceDTO);
+        }
+        return followUpSourceDTOList;
     }
 }

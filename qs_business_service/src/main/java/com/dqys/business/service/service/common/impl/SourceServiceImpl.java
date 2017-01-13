@@ -14,16 +14,17 @@ import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.common.SourceSource;
 import com.dqys.business.orm.pojo.zcy.ZcyEstates;
 import com.dqys.business.service.constant.ObjectEnum.InformationEnum;
-import com.dqys.business.service.dto.common.NavUnviewDTO;
-import com.dqys.business.service.dto.common.SelectDTOList;
-import com.dqys.business.service.dto.common.SourceEditDto;
-import com.dqys.business.service.dto.common.SourceInfoDTO;
+import com.dqys.business.service.constant.source.SourceTypeEnum;
+import com.dqys.business.service.dto.common.*;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.dto.sourceAuth.SourceNavOperType;
+import com.dqys.business.service.exception.bean.SourceEditException;
 import com.dqys.business.service.service.common.NavUnviewManagerService;
 import com.dqys.business.service.service.common.SourceService;
+import com.dqys.business.service.service.followUp.FollowUpSourceService;
 import com.dqys.business.service.utils.common.NavUtil;
 import com.dqys.business.service.utils.common.SourceServiceUtls;
+import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.constant.RoleTypeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -44,6 +45,9 @@ import java.util.List;
 @Repository
 @Primary
 public class SourceServiceImpl implements SourceService {
+    private static final int allNav = 1;//所有navList
+    private static final int personNav = 2;//个人nav
+    private static final int commonNav = 3;//公共nav
 
     @Autowired
     private SourceNavigationMapper sourceNavigationMapper;
@@ -59,10 +63,27 @@ public class SourceServiceImpl implements SourceService {
     private ZcyEstatesMapper zcyEstatesMapper;
     @Autowired
     private TUserInfoMapper tUserInfoMapper;
+    @Autowired
+    private FollowUpSourceService followUpSourceService;
 
 
     @Override
     public List<SelectDTOList> listNavigation(Integer lenderId, Integer estatesId, Integer type) {
+        return getSelectDTOList(lenderId, estatesId, type, allNav);
+    }
+
+
+    @Override
+    public List<SelectDTOList> listNavigationPerson(Integer lenderId, Integer estatesId, Integer type) {
+        return getSelectDTOList(lenderId, estatesId, type, personNav);
+    }
+
+    @Override
+    public List<SelectDTOList> listNavigationCommon(Integer lenderId, Integer estatesId, Integer type) {
+        return getSelectDTOList(lenderId, estatesId, type, commonNav);
+    }
+
+    private List<SelectDTOList> getSelectDTOList(Integer lenderId, Integer estatesId, Integer type, int navType) {
         if (CommonUtil.checkParam(type)) {
             return null;
         }
@@ -75,18 +96,26 @@ public class SourceServiceImpl implements SourceService {
             objectType = ObjectTypeEnum.ASSETSOURCE.getValue();
             objectId = estatesId;
         }
-        List<SourceNavigation> navigationList = NavUtil.getCommonSourceNavigation(type);
-        navigationList.addAll(sourceNavigationMapper.listByTypeAndLenderId(lenderId, estatesId, type));
+        List<SourceNavigation> navigationList = null;
+        if (navType == allNav) {
+            navigationList = NavUtil.getCommonSourceNavigation(type);
+            navigationList.addAll(sourceNavigationMapper.listByTypeAndLenderId(lenderId, estatesId, type));
+        } else if (navType == personNav) {
+            navigationList = sourceNavigationMapper.listByTypeAndLenderId(lenderId, estatesId, type);
+        } else if (navType == commonNav) {
+            navigationList = NavUtil.getCommonSourceNavigation(type);
+        }
         UserSession userSession = UserSession.getCurrent();
-        return SourceServiceUtls.toSelect(navigationList,navUnviewManagerService, objectType, objectId, userSession.getUserId());
+        return SourceServiceUtls.toSelect(navigationList, navUnviewManagerService, objectType, objectId, userSession.getUserId());
     }
+
 
     @Override
     public JsonResponse addNavigation(SourceNavigation sourceNavigation) {
         Integer userId = UserSession.getCurrent().getUserId();
         sourceNavigation.setUserId(userId);
         Integer result = sourceNavigationMapper.insert(sourceNavigation);
-        navUnviewManagerService.setDefalutNavUnview(sourceNavigation.getId(), ObjectTypeEnum.LENDER.getValue(),sourceNavigation.getLenderId(),userId);
+        navUnviewManagerService.setDefalutNavUnview(sourceNavigation.getId(), ObjectTypeEnum.LENDER.getValue(), sourceNavigation.getLenderId(), userId);
         if (CommonUtil.checkResult(result)) {
             return JsonResponseTool.failure("添加失败");
         } else {
@@ -131,8 +160,8 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public JsonResponse addSource(SourceInfoDTO sourceInfoDTO) {
         SourceInfo data = sourceInfoMapper.getByNavIdAndLenderId(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId(), sourceInfoDTO.getEstatesId());
-        if(data != null){//去更新(原为直接返回错误信息)
-            if(sourceInfoDTO.getLenderId() != null||sourceInfoDTO.getEstatesId() != null){
+        if (data != null) {//去更新(原为直接返回错误信息)
+            if (sourceInfoDTO.getLenderId() != null || sourceInfoDTO.getEstatesId() != null) {
                 int oldId = data.getId();
                 sourceInfoDTO.setId(oldId);
                 updateSource(sourceInfoDTO);
@@ -163,17 +192,26 @@ public class SourceServiceImpl implements SourceService {
     }
 
     @Override
-    public JsonResponse c_addSource(SourceInfoDTO sourceInfoDTO) {
+    public JsonResponse c_addSource(CSourceInfoDTO sourceInfoDTO) {
         //新建文件夹
-        //插入文件信息
-        //新建文件
-        SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO);
-        if (sourceInfo == null) {
-            return JsonResponseTool.failure("参数转化失败");
+        SourceNavigation sourceNavigation = SourceServiceUtls.toSourceNav(sourceInfoDTO);
+        JsonResponse<String> navResult = addNavigation(sourceNavigation);
+        Integer navId = Integer.parseInt(navResult.getData());
+        //新建文件信息
+        Integer sourceInfoId = null;
+        if (navResult.getCode() == ResponseCodeEnum.SUCCESS.getValue().intValue()) {
+            SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO, navId);
+            sourceInfoMapper.insert(sourceInfo);
+            //新建文件
+            sourceInfoId = sourceInfo.getId();
+            SourceSource sourceSource = SourceServiceUtls.toSourceSource(sourceInfoDTO, sourceInfoId);
+            sourceSourceMapper.insert(sourceSource);
+        } else {
+            return JsonResponseTool.failure("创建文件失败!");
         }
-
-        return null;
+        return JsonResponseTool.success(sourceInfoId);
     }
+
 
     /**
      * @param navId
@@ -191,7 +229,7 @@ public class SourceServiceImpl implements SourceService {
             return null;
         }
         SourceInfo sourceInfo = sourceInfoMapper.getByNavIdAndLenderId(navId, lenderId, estatesId);//根据借款人id或是资产源id查询资料实堪
-        if (sourceInfo == null&&hasNavUnviewOperAuth(navId, lenderId, estatesId, userSession.getUserId())) {//未上传资料有操作权限
+        if (sourceInfo == null && hasNavUnviewOperAuth(navId, lenderId, estatesId, userSession.getUserId())) {//未上传资料有操作权限
             return SourceServiceUtls.toSourceInfoDTO(getNavAuthAll(navId, lenderId, estatesId));//只返回操作权限列表
         }
         Integer sourceId = sourceInfo.getId();
@@ -377,7 +415,38 @@ public class SourceServiceImpl implements SourceService {
     }
 
     @Override
-    public void renameSource(SourceEditDto sourceEditDto) {
+    public void renameSource(SourceEditDto sourceEditDto) throws SourceEditException {
+        int type = sourceEditDto.getType().intValue();
+        if (type == SourceTypeEnum.follow_up_file.getValue() || type == SourceTypeEnum.follow_up_folder.getValue()) {
+            followUpSourceService.rename(sourceEditDto.getId(), sourceEditDto.getName());
+        } else if (type == SourceTypeEnum.source_file.getValue()) {
+            SourceSource sourceSource = new SourceSource();
+            sourceSource.setId(sourceEditDto.getId());
+            sourceSource.setName(sourceEditDto.getName());
+            sourceSourceMapper.update(sourceSource);
+        } else if (type == SourceTypeEnum.source_folder.getValue()) {
+            SourceNavigation sourceNavigation = new SourceNavigation();
+            sourceNavigation.setId(sourceEditDto.getId());
+            sourceNavigation.setName(sourceEditDto.getName());
+            sourceNavigationMapper.update(sourceNavigation);
+        } else {
+            throw new SourceEditException("没有该类型的参数:" + type, SourceEditException.TYPE_ERROR);
+        }
+    }
 
+    @Override
+    public void delSource(SourceDelDTO sourceDelDTO) throws SourceEditException {
+        List<SourceEditDto> list = new ArrayList<>();
+        for (SourceEditDto sourceEditDto : list) {
+            int type = sourceEditDto.getType().intValue();
+            Integer id = sourceEditDto.getId();
+            if (type == SourceTypeEnum.follow_up_file.getValue() || type == SourceTypeEnum.follow_up_folder.getValue()) {
+                followUpSourceService.del(id);
+            } else if (type == SourceTypeEnum.source_file.getValue() || type == SourceTypeEnum.source_folder.getValue()) {
+                deleteNavigation(id);
+            } else {
+                throw new SourceEditException("没有该类型的参数:" + type, SourceEditException.TYPE_ERROR);
+            }
+        }
     }
 }

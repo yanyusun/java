@@ -1,11 +1,9 @@
 package com.dqys.business.service.service.common;
 
 import com.dqys.business.orm.pojo.common.SourceNavigation;
-import com.dqys.business.service.dto.common.NavUnviewDTO;
-import com.dqys.business.service.dto.common.SelectDTOList;
-import com.dqys.business.service.dto.common.SourceEditDto;
-import com.dqys.business.service.dto.common.SourceInfoDTO;
+import com.dqys.business.service.dto.common.*;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
+import com.dqys.business.service.exception.bean.SourceEditException;
 import com.dqys.core.model.JsonResponse;
 
 import java.util.List;
@@ -26,6 +24,24 @@ public interface SourceService {
      * @return
      */
     List<SelectDTOList> listNavigation(Integer lenderId, Integer estatesId, Integer type);
+
+    /**
+     * 获取借款人的分类列表(私有部分)
+     * @param lenderId
+     * @param estatesId
+     * @param type
+     * @return
+     */
+    List<SelectDTOList> listNavigationPerson(Integer lenderId, Integer estatesId, Integer type);
+
+    /**
+     * 获取借款人的分类列表(公共部分)
+     * @param lenderId
+     * @param estatesId
+     * @param type
+     * @return
+     */
+    List<SelectDTOList> listNavigationCommon(Integer lenderId, Integer estatesId, Integer type);
 
     /**
      * 新增一个借款人的分类列表
@@ -56,7 +72,7 @@ public interface SourceService {
      * @param sourceInfoDTO
      * @return
      */
-    JsonResponse c_addSource(SourceInfoDTO sourceInfoDTO);
+     JsonResponse c_addSource(CSourceInfoDTO sourceInfoDTO);
 
     /**
      * 根据分类列表获取数据
@@ -102,5 +118,7 @@ public interface SourceService {
 //    }
     JsonResponse getSourceType(Integer navId, Integer objectId, Integer objectType);
 
-    void renameSource(SourceEditDto sourceEditDto);
+    void renameSource (SourceEditDto sourceEditDto)throws SourceEditException;
+
+    void delSource(SourceDelDTO sourceDelDTO) throws SourceEditException;
 }

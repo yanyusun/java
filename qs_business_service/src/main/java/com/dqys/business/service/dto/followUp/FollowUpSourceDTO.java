@@ -85,4 +85,12 @@ public class FollowUpSourceDTO {
     public void setObjectId(Integer objectId) {
         this.objectId = objectId;
     }
+
+    public Integer getPid() {
+        return pid;
+    }
+
+    public void setPid(Integer pid) {
+        this.pid = pid;
+    }
 }

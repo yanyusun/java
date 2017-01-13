@@ -14,7 +14,7 @@ public class SourceNavigation extends BaseModel {
     private Integer type; // 实勘1|证件合同0(默认)
     private Integer estatesId; // 资产源id
     private Integer userId;
-    private Integer filePathName;
+    private String filePathName;
 
     public Integer getEstatesId() {
         return estatesId;
@@ -72,11 +72,11 @@ public class SourceNavigation extends BaseModel {
         this.userId = userId;
     }
 
-    public Integer getFilePathName() {
+    public String getFilePathName() {
         return filePathName;
     }
 
-    public void setFilePathName(Integer filePathName) {
+    public void setFilePathName(String filePathName) {
         this.filePathName = filePathName;
     }
 }

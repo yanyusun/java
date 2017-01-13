@@ -217,7 +217,7 @@ public class FollowUpController extends BaseApiContorller {
 
 
     /**
-     * @api {POST} http://{url}/follow_up/c/addSource 增加跟进信息,状态为未发送
+     * @api {POST} http://{url}/follow_up/c/addSource 增加跟进资源
      * @apiName c_addSource
      * @apiGroup followUp
      * @apiUse FollowUpSourceDTO
@@ -226,8 +226,6 @@ public class FollowUpController extends BaseApiContorller {
     @ResponseBody
     public JsonResponse addSource(FollowUpSourceDTO followUpSourceDTO) throws IOException {
         //// TODO: 17-1-12 权限验证
-        
-        
         UserSession userSession = UserSession.getCurrent();
         int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
         int userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());

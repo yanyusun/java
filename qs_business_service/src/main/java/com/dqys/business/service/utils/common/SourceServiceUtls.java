@@ -3,11 +3,13 @@ package com.dqys.business.service.utils.common;
 import com.dqys.business.orm.pojo.common.SourceInfo;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.common.SourceSource;
+import com.dqys.business.service.dto.common.CSourceInfoDTO;
 import com.dqys.business.service.dto.common.SelectDTOList;
 import com.dqys.business.service.dto.common.SourceDTO;
 import com.dqys.business.service.dto.common.SourceInfoDTO;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.service.common.NavUnviewManagerService;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 
 import java.util.*;
@@ -223,6 +225,33 @@ public class SourceServiceUtls {
         sourceDTO.setSourceId(sourceSource.getSourceInfoId());
 
         return sourceDTO;
+    }
+
+    public static SourceNavigation toSourceNav(CSourceInfoDTO sourceInfoDTO) {
+        Integer userId = UserSession.getCurrent().getUserId();
+        SourceNavigation sourceNavigation = new SourceNavigation();
+        sourceNavigation.setUserId(userId);
+        sourceNavigation.setName(sourceInfoDTO.getFileShowName());
+        sourceNavigation.setFilePathName(sourceInfoDTO.getFilePathName());
+        sourceNavigation.setLenderId(sourceInfoDTO.getLenderId());
+        sourceNavigation.setEstatesId(sourceInfoDTO.getEstatesId());
+        sourceNavigation.setType(sourceInfoDTO.getType());
+        sourceNavigation.setPid(sourceInfoDTO.getpNavId());
+        return sourceNavigation;
+    }
+    public static SourceInfo toSourceInfo(CSourceInfoDTO sourceInfoDTO,Integer navId) {
+        SourceInfo sourceInfo = new SourceInfo();
+        sourceInfo.setNavId(navId);
+        sourceInfo.setEstatesId(sourceInfoDTO.getEstatesId());
+        sourceInfo.setLenderId(sourceInfoDTO.getLenderId());
+        return sourceInfo;
+    }
+    public static SourceSource toSourceSource(CSourceInfoDTO sourceInfoDTO,Integer sourceInfoId){
+        SourceSource sourceSource = new SourceSource();
+        sourceSource.setName(sourceInfoDTO.getFileShowName());
+        sourceSource.setSourceInfoId(sourceInfoId);
+        sourceSource.setPath(sourceInfoDTO.getFilePathName());
+        return  sourceSource;
     }
 
 }

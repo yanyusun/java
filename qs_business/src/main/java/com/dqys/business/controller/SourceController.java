@@ -1,11 +1,9 @@
 package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.common.SourceNavigation;
-import com.dqys.business.service.dto.common.NavUnviewDTO;
-import com.dqys.business.service.dto.common.SourceDelDTO;
-import com.dqys.business.service.dto.common.SourceEditDto;
-import com.dqys.business.service.dto.common.SourceInfoDTO;
+import com.dqys.business.service.dto.common.*;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
+import com.dqys.business.service.exception.bean.SourceEditException;
 import com.dqys.business.service.service.common.SourceService;
 import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.model.JsonResponse;
@@ -40,15 +38,45 @@ public class SourceController extends BaseApiContorller {
     }
 
     /**
+     * 分类列表
+     */
+    @RequestMapping(value = "c/listNavigationPerson")
+    public JsonResponse listNavigationPerson(Integer lenderId, Integer estatesId, @RequestParam(defaultValue = "0") Integer type) {
+        if (CommonUtil.checkParam(type)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if ((lenderId == null && estatesId == null) || (lenderId != null && estatesId != null)) {
+            return JsonResponseTool.paramErr("资产源或借款人参数错误");
+        }
+        return JsonResponseTool.success(sourceService.listNavigationPerson(lenderId, estatesId, type));
+    }
+
+    /**
+     * 分类列表
+     */
+    @RequestMapping(value = "c/listNavigationSys")
+    public JsonResponse listNavigationCommon(Integer lenderId, Integer estatesId, @RequestParam(defaultValue = "0") Integer type) {
+        if (CommonUtil.checkParam(type)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if ((lenderId == null && estatesId == null) || (lenderId != null && estatesId != null)) {
+            return JsonResponseTool.paramErr("资产源或借款人参数错误");
+        }
+        return JsonResponseTool.success(sourceService.listNavigationCommon(lenderId, estatesId, type));
+    }
+
+
+    /**
      * 增加分类
      *
      * @param sourceNavigation
      * @return
      */
-    @RequestMapping(value = "/addNavigation", method = RequestMethod.POST)
+    @RequestMapping(value = {"addNavigation", "c/addNavigation"}, method = RequestMethod.POST)
     public JsonResponse addNavigation(@ModelAttribute SourceNavigation sourceNavigation) {
         return sourceService.addNavigation(sourceNavigation);
     }
+
 
     /**
      * 删除分类
@@ -92,19 +120,21 @@ public class SourceController extends BaseApiContorller {
      * @param sourceInfoDTO
      * @return
      */
-    @RequestMapping(value = "/c/add", method = RequestMethod.POST)
-    public JsonResponse uploadFile(@ModelAttribute SourceInfoDTO sourceInfoDTO) {
-        if (CommonUtil.checkParam(sourceInfoDTO,sourceInfoDTO.getSourceDTOList(), sourceInfoDTO.getSourceDTOList().get(0),sourceInfoDTO.getSourceDTOList().get(0).getFileName())) {
+    @RequestMapping(value = "c/add", method = RequestMethod.POST)
+    public JsonResponse uploadFile(@ModelAttribute CSourceInfoDTO sourceInfoDTO) {
+        if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getFilePathName(), sourceInfoDTO.getFileShowName(), sourceInfoDTO.getType())) {
             return JsonResponseTool.paramErr("参数错误");
         }
         if ((sourceInfoDTO.getLenderId() == null && sourceInfoDTO.getEstatesId() == null) || (sourceInfoDTO.getLenderId() != null && sourceInfoDTO.getEstatesId() != null)) {
             return JsonResponseTool.paramErr("资产源或借款人参数错误");
         }
         Integer userId = UserSession.getCurrent().getUserId();
-        if (!sourceService.hasSourceAuth(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId(), sourceInfoDTO.getEstatesId(), userId)) {
-            return JsonResponseTool.authFailure("对不起,您不具备增加该导航下资产源的权限");
+        if (sourceInfoDTO.getpNavId() != null) {
+            if (!sourceService.hasSourceAuth(sourceInfoDTO.getpNavId(), sourceInfoDTO.getLenderId(), sourceInfoDTO.getEstatesId(), userId)) {
+                return JsonResponseTool.authFailure("对不起,您不具备增加该导航下资产源的权限");
+            }
         }
-        return sourceService.addSource(sourceInfoDTO);
+        return sourceService.c_addSource(sourceInfoDTO);
     }
 
     /**
@@ -197,16 +227,15 @@ public class SourceController extends BaseApiContorller {
     }
 
 
-
     /**
      * @api {POST} http://{url}/source/c/rename 增加跟进信息,状态为未发送
      * @apiName c_rename
      * @apiGroup source
      * @apiUse SourceEditDto
      */
-    @RequestMapping(value ={"rename","c/rename"}, method = RequestMethod.POST)
-    public JsonResponse renameSource(SourceEditDto sourceEditDto){
-
+    @RequestMapping(value = {"rename", "c/rename"}, method = RequestMethod.POST)
+    public JsonResponse renameSource(SourceEditDto sourceEditDto) throws SourceEditException {
+        sourceService.renameSource(sourceEditDto);
         return JsonResponseTool.success(sourceEditDto);
     }
 
@@ -216,8 +245,9 @@ public class SourceController extends BaseApiContorller {
      * @apiGroup source
      * @apiUse SourceDelDTO
      */
-    @RequestMapping(value ="c/del", method = RequestMethod.DELETE)
-    public JsonResponse delSource(SourceDelDTO sourceDelDTO){
+    @RequestMapping(value = "c/del", method = RequestMethod.DELETE)
+    public JsonResponse delSource(SourceDelDTO sourceDelDTO) throws SourceEditException {
+        sourceService.delSource(sourceDelDTO);
         return JsonResponseTool.success(sourceDelDTO);
     }
 

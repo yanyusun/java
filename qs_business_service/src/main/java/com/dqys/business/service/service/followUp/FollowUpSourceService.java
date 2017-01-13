@@ -9,5 +9,16 @@ import java.util.List;
  */
 public interface FollowUpSourceService {
     void add(FollowUpSourceDTO followUpSourceDTO);
-    List<FollowUpSourceDTO> listByPid(Integer pid,Integer objectType,Integer objectId);
+
+    List<FollowUpSourceDTO> listByPid(Integer pid, Integer objectType, Integer objectId);
+
+    /**
+     * 修改文件显示名称
+     *
+     * @param id
+     * @param name 显示名
+     */
+    void rename(Integer id, String name);
+
+    void del(Integer id);
 }
