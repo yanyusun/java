@@ -2,6 +2,7 @@ package com.dqys.business.service.service.common.impl;
 
 import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
 import com.dqys.auth.orm.pojo.TUserInfo;
+import com.dqys.auth.orm.pojo.UserDetail;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.common.SourceInfoMapper;
@@ -24,18 +25,23 @@ import com.dqys.business.service.service.common.NavUnviewManagerService;
 import com.dqys.business.service.service.common.SourceService;
 import com.dqys.business.service.utils.common.NavUtil;
 import com.dqys.business.service.utils.common.SourceServiceUtls;
+import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.RoleTypeEnum;
+import com.dqys.core.constant.SysPropertyTypeEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.JsonResponseTool;
+import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -78,7 +84,7 @@ public class SourceServiceImpl implements SourceService {
         List<SourceNavigation> navigationList = NavUtil.getCommonSourceNavigation(type);
         navigationList.addAll(sourceNavigationMapper.listByTypeAndLenderId(lenderId, estatesId, type));
         UserSession userSession = UserSession.getCurrent();
-        return SourceServiceUtls.toSelect(navigationList,navUnviewManagerService, objectType, objectId, userSession.getUserId());
+        return SourceServiceUtls.toSelect(navigationList, navUnviewManagerService, objectType, objectId, userSession.getUserId());
     }
 
     @Override
@@ -86,7 +92,7 @@ public class SourceServiceImpl implements SourceService {
         Integer userId = UserSession.getCurrent().getUserId();
         sourceNavigation.setUserId(userId);
         Integer result = sourceNavigationMapper.insert(sourceNavigation);
-        navUnviewManagerService.setDefalutNavUnview(sourceNavigation.getId(), ObjectTypeEnum.LENDER.getValue(),sourceNavigation.getLenderId(),userId);
+        navUnviewManagerService.setDefalutNavUnview(sourceNavigation.getId(), ObjectTypeEnum.LENDER.getValue(), sourceNavigation.getLenderId(), userId);
         if (CommonUtil.checkResult(result)) {
             return JsonResponseTool.failure("添加失败");
         } else {
@@ -106,15 +112,44 @@ public class SourceServiceImpl implements SourceService {
             return JsonResponseTool.paramErr("参数错误！请确定分类列表");
         }
         SourceNavigation sourceNavigation = sourceNavigationMapper.get(navId);
-        if (sourceNavigation == null || sourceNavigation.getLenderId().equals(0)) {
+        if (sourceNavigation.getIsCustom() == 1 || sourceNavigation == null || sourceNavigation.getLenderId().equals(0)) {
             // 分类不存在或者该分类属于公共模块的分类
             return JsonResponseTool.failure("删除失败！该分类不存在或者属于公共分类无法删除");
         }
+        Integer userId = UserSession.getCurrent().getUserId();
+        UserDetail detail = tUserInfoMapper.getUserDetail(userId);
+        Integer adminId = tUserInfoMapper.getUserByCompanyAdmin(detail.getCompanyId());
+        if (sourceNavigation.getUserId() != userId && userId != adminId &&
+                detail.getUserType() != UserInfoEnum.USER_TYPE_ADMIN.getValue() && detail.getRold() != RoleTypeEnum.ADMIN.getValue()) {
+            return JsonResponseTool.failure("删除失败！无权限");
+        }
+        List<SourceInfo> sourceInfos = sourceInfoMapper.selectByNavId(navId);
+        for (SourceInfo info : sourceInfos) {
+            List<SourceSource> sources = sourceSourceMapper.listBySourceId(info.getId());
+            sourceSourceMapper.deleteByPrimaryKeyBySourceId(info.getId());
+            //删除盘符的文件
+            delFile(sources);
+        }
+        sourceInfoMapper.deleteByPrimaryKeyByNavId(navId);
+
+        //删除操作
         Integer result = sourceNavigationMapper.deleteByPrimaryKey(navId);
-        if (CommonUtil.checkResult(result)) {
+        if (CommonUtil.checkResult(result))
+
+        {
             return JsonResponseTool.failure("删除失败,请重新再试");
-        } else {
+        } else
+
+        {
             return JsonResponseTool.success(null);
+        }
+
+    }
+
+    private void delFile(List<SourceSource> sources) {
+        for (SourceSource source : sources) {
+            //定时删除
+            FileTool.addDeleteScheduler(FileTool.getFile(source.getPath(), false), new Date());
         }
     }
 
@@ -131,8 +166,8 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public JsonResponse addSource(SourceInfoDTO sourceInfoDTO) {
         SourceInfo data = sourceInfoMapper.getByNavIdAndLenderId(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId(), sourceInfoDTO.getEstatesId());
-        if(data != null){//去更新(原为直接返回错误信息)
-            if(sourceInfoDTO.getLenderId() != null||sourceInfoDTO.getEstatesId() != null){
+        if (data != null) {//去更新(原为直接返回错误信息)
+            if (sourceInfoDTO.getLenderId() != null || sourceInfoDTO.getEstatesId() != null) {
                 int oldId = data.getId();
                 sourceInfoDTO.setId(oldId);
                 updateSource(sourceInfoDTO);
@@ -191,7 +226,7 @@ public class SourceServiceImpl implements SourceService {
             return null;
         }
         SourceInfo sourceInfo = sourceInfoMapper.getByNavIdAndLenderId(navId, lenderId, estatesId);//根据借款人id或是资产源id查询资料实堪
-        if (sourceInfo == null&&hasNavUnviewOperAuth(navId, lenderId, estatesId, userSession.getUserId())) {//未上传资料有操作权限
+        if (sourceInfo == null && hasNavUnviewOperAuth(navId, lenderId, estatesId, userSession.getUserId())) {//未上传资料有操作权限
             return SourceServiceUtls.toSourceInfoDTO(getNavAuthAll(navId, lenderId, estatesId));//只返回操作权限列表
         }
         Integer sourceId = sourceInfo.getId();

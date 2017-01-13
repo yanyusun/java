@@ -1125,6 +1125,41 @@ public class AuthController extends BaseApiContorller {
     }
 
     /**
+     * @api {POST} http://{url}/auth/c/updatePaw 根据原密码进行修改密码(C端)
+     * @apiName updatePaw
+     * @apiGroup Auth
+     * @apiParam {string} oldPaw 旧密码
+     * @apiParam {string} newPaw 新密码
+     */
+    @RequestMapping(value = "/c/updatePaw", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResponse updatePawC(@RequestParam String oldPaw, @RequestParam String newPaw) throws Exception {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        TUserInfo info = tUserInfoMapper.selectByPrimaryKey(userId);
+        if (info == null) {
+            return JsonResponseTool.failure("用户不存在，请重新登入");
+        }
+        if (!SignatureTool.md5Encode(SignatureTool.md5Encode(oldPaw, "utf-8") + info.getSalt(), "utf-8").equals(info.getPassword())) {
+            return JsonResponseTool.failure("原密码填写错误，请重新填写");
+        }
+        info.setPassword(SignatureTool.md5Encode(SignatureTool.md5Encode(newPaw, "utf-8") + info.getSalt(), "utf-8"));
+        tUserInfoMapper.updateByPrimaryKeySelective(info);
+        //登录
+        ServiceResult<UserDTO> userServiceResult = this.userService.userLogin(info.getId(), null, null, null, newPaw);
+        if (!userServiceResult.getFlag()) {
+            return JsonResponseTool.authFailure(userServiceResult.getMessage());
+        }
+        return JsonResponseTool.success(ProtocolTool.createUserHeader(
+                userServiceResult.getData().getUserId(),
+                userServiceResult.getData().getUserTypes(),
+                userServiceResult.getData().getRoleIds(),
+                userServiceResult.getData().getIsCertifieds(),
+                userServiceResult.getData().getStatus(),
+                verifyUserStep(userServiceResult)
+        ));
+    }
+
+    /**
      * @api {POST} http://{url}/auth/resetMobile 根据邮箱进行手机验证码重置密码
      * @apiName resetMobile
      * @apiGroup Auth

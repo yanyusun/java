@@ -130,4 +130,16 @@
 
     </select>
 
+    <select id="selectByNavId" resultType="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from bt_source_info
+        WHERE
+        stateflag = 0 AND nav_id=#{navId}
+    </select>
+
+    <delete id="deleteByPrimaryKeyByNavId">
+        DELETE FROM bt_source_info WHERE nav_id=#{navId}
+    </delete>
+
 </mapper>

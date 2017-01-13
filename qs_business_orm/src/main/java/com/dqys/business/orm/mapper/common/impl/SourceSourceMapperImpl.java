@@ -39,4 +39,9 @@ public class SourceSourceMapperImpl extends BaseDao implements SourceSourceMappe
     public List<SourceSource> listBySourceId(Integer id) {
         return super.getSqlSession().getMapper(SourceSourceMapper.class).listBySourceId(id);
     }
+
+    @Override
+    public Integer deleteByPrimaryKeyBySourceId(Integer id) {
+        return super.getSqlSession().getMapper(SourceSourceMapper.class).deleteByPrimaryKeyBySourceId(id);
+    }
 }

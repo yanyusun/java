@@ -5,6 +5,8 @@ import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.core.base.BaseDao;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by yan on 16-9-22.
  */
@@ -38,5 +40,10 @@ public class FollowUpSourceMapperImp extends BaseDao implements FollowUpSourceMa
     @Override
     public int updateByPrimaryKey(FollowUpSource record) {
         return 0;
+    }
+
+    @Override
+    public List<FollowUpSource> list(FollowUpSource followUpSource) {
+        return null;
     }
 }

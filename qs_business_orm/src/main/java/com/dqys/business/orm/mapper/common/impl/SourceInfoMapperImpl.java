@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Created by Yvan on 16/7/29.
  */
@@ -35,7 +37,17 @@ public class SourceInfoMapperImpl extends BaseDao implements SourceInfoMapper {
     }
 
     @Override
-    public SourceInfo getByNavIdAndLenderId(@Param("navId") Integer navId, @Param("lenderId") Integer lenderId,@Param("estatesId")Integer estatesId) {
-        return super.getSqlSession().getMapper(SourceInfoMapper.class).getByNavIdAndLenderId(navId, lenderId,estatesId);
+    public SourceInfo getByNavIdAndLenderId(@Param("navId") Integer navId, @Param("lenderId") Integer lenderId, @Param("estatesId") Integer estatesId) {
+        return super.getSqlSession().getMapper(SourceInfoMapper.class).getByNavIdAndLenderId(navId, lenderId, estatesId);
+    }
+
+    @Override
+    public List<SourceInfo> selectByNavId(Integer navId) {
+        return super.getSqlSession().getMapper(SourceInfoMapper.class).selectByNavId(navId);
+    }
+
+    @Override
+    public Integer deleteByPrimaryKeyByNavId(Integer navId) {
+        return super.getSqlSession().getMapper(SourceInfoMapper.class).deleteByPrimaryKeyByNavId(navId);
     }
 }
