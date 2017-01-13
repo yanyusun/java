@@ -9,5 +9,5 @@ import java.util.List;
  */
 public interface FollowUpSourceService {
     void add(FollowUpSourceDTO followUpSourceDTO);
-    List<FollowUpSourceDTO> list(Integer pid);
+    List<FollowUpSourceDTO> listByPid(Integer pid,Integer objectType,Integer objectId);
 }

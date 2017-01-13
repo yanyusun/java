@@ -21,6 +21,8 @@ public class SourceInfoDTO {
     private Integer open; // 对外公开(默认1公开)
     private String memo; // 详情信息
     private Integer estatesId; // 资产源ID
+    private Integer pNavId;//父文件夹id
+
 
     private SelectDtoMap selectDtoMap;//资料实勘不可见权限关系
 
@@ -120,5 +122,13 @@ public class SourceInfoDTO {
 
     public void setSelectDtoMap(SelectDtoMap selectDtoMap) {
         this.selectDtoMap = selectDtoMap;
+    }
+
+    public Integer getpNavId() {
+        return pNavId;
+    }
+
+    public void setpNavId(Integer pNavId) {
+        this.pNavId = pNavId;
     }
 }

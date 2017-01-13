@@ -9,10 +9,12 @@
         <result column="lender_id" property="lenderId" jdbcType="INTEGER"/>
         <result column="type" property="type" jdbcType="INTEGER"/>
         <result column="estates_id" property="estatesId" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="file_path_name" property="filePathName" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, name, pid, lender_id, type,estates_id
+    id, name, pid, lender_id, type,estates_id,user_id,file_path_name
   </sql>
 
     <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer">
@@ -46,6 +48,12 @@
             <if test="estatesId != null">
                 estates_id,
             </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="filePathName != null">
+                file_path_name,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">
@@ -62,6 +70,12 @@
             </if>
             <if test="estatesId != null">
               #{estatesId,jdbcType=INTEGER},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="filePathName != null">
+                #{filePathName,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>

@@ -29,7 +29,10 @@ public class FollowUpSourceImpl implements FollowUpSourceService{
     }
 
     @Override
-    public List<FollowUpSourceDTO> list(Integer pid) {
+    public List<FollowUpSourceDTO> listByPid(Integer pid, Integer objectType, Integer objectId) {
+        //更进录入+c端录入
+
+
         return null;
     }
 }

@@ -17,6 +17,8 @@ public class FollowUpSource extends BaseModel{
 
     private Integer objectId;
 
+    private Integer pid;
+
     public Integer getId() {
         return id;
     }
@@ -71,5 +73,13 @@ public class FollowUpSource extends BaseModel{
 
     public void setObjectId(Integer objectId) {
         this.objectId = objectId;
+    }
+
+    public Integer getPid() {
+        return pid;
+    }
+
+    public void setPid(Integer pid) {
+        this.pid = pid;
     }
 }

@@ -87,6 +87,27 @@ public class SourceController extends BaseApiContorller {
     }
 
     /**
+     * 增加资源(为了c端b端保持一致,新建文件的同时新建文件夹)
+     *
+     * @param sourceInfoDTO
+     * @return
+     */
+    @RequestMapping(value = "/c/add", method = RequestMethod.POST)
+    public JsonResponse uploadFile(@ModelAttribute SourceInfoDTO sourceInfoDTO) {
+        if (CommonUtil.checkParam(sourceInfoDTO,sourceInfoDTO.getSourceDTOList(), sourceInfoDTO.getSourceDTOList().get(0),sourceInfoDTO.getSourceDTOList().get(0).getFileName())) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        if ((sourceInfoDTO.getLenderId() == null && sourceInfoDTO.getEstatesId() == null) || (sourceInfoDTO.getLenderId() != null && sourceInfoDTO.getEstatesId() != null)) {
+            return JsonResponseTool.paramErr("资产源或借款人参数错误");
+        }
+        Integer userId = UserSession.getCurrent().getUserId();
+        if (!sourceService.hasSourceAuth(sourceInfoDTO.getNavId(), sourceInfoDTO.getLenderId(), sourceInfoDTO.getEstatesId(), userId)) {
+            return JsonResponseTool.authFailure("对不起,您不具备增加该导航下资产源的权限");
+        }
+        return sourceService.addSource(sourceInfoDTO);
+    }
+
+    /**
      * 获取资源信息
      *
      * @param lenderId

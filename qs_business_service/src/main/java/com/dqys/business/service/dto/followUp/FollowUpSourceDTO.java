@@ -10,6 +10,7 @@ package com.dqys.business.service.dto.followUp;
  * @apiParam {string} showFilename 文件展示名
  * @apiParam {number} [type] 对象类型:10资料实勘文件夹,11跟进文件夹,20资料实勘文件,21跟进文件
  * @apiParam {number} [followUpMessageId] 跟进信息id
+ * @apiParam {number} [pid] 父文件夹id
  */
 public class FollowUpSourceDTO {
 
@@ -26,6 +27,8 @@ public class FollowUpSourceDTO {
     private Integer objectType;
 
     private Integer objectId;
+
+    private Integer pid;
 
     public Integer getId() {
         return id;

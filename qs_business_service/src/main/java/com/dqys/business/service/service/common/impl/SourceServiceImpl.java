@@ -84,6 +84,7 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public JsonResponse addNavigation(SourceNavigation sourceNavigation) {
         Integer userId = UserSession.getCurrent().getUserId();
+        sourceNavigation.setUserId(userId);
         Integer result = sourceNavigationMapper.insert(sourceNavigation);
         navUnviewManagerService.setDefalutNavUnview(sourceNavigation.getId(), ObjectTypeEnum.LENDER.getValue(),sourceNavigation.getLenderId(),userId);
         if (CommonUtil.checkResult(result)) {
@@ -95,6 +96,11 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     public JsonResponse deleteNavigation(Integer navId) {
+        //// TODO mkf: 17-1-13
+        //1.做公共navid不让删除的教研
+        //2.做人员权限教研,只有该nav的创建人,nav创建人的管理员,平台管理员有权限删除 ,如果创建人id为0,只有平台管理员可以删除
+        //3.删除分类对应的soureInfo,sourceSource,navUnview关联信息,
+        //4.删除关联的文件
         // TODO 这里需要做权限校验
         if (CommonUtil.checkParam(navId)) {
             return JsonResponseTool.paramErr("参数错误！请确定分类列表");
@@ -154,6 +160,19 @@ public class SourceServiceImpl implements SourceService {
             });
             return JsonResponseTool.success(sourceInfoId);
         }
+    }
+
+    @Override
+    public JsonResponse c_addSource(SourceInfoDTO sourceInfoDTO) {
+        //新建文件夹
+        //插入文件信息
+        //新建文件
+        SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO);
+        if (sourceInfo == null) {
+            return JsonResponseTool.failure("参数转化失败");
+        }
+
+        return null;
     }
 
     /**

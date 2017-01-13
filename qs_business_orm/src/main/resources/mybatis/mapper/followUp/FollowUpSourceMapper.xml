@@ -13,10 +13,11 @@
     <result column="type" property="type" jdbcType="INTEGER" />
     <result column="object_type" property="objectType" jdbcType="INTEGER" />
     <result column="object_id" property="objectId" jdbcType="INTEGER" />
+    <result column="pid" property="pid" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, path_filename, show_filename, follow_up_message_id, create_at, update_at, stateflag, 
-    version,type,object_type,object_id
+    version,type,object_type,object_id,pid
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -72,6 +73,9 @@
       <if test="objectId != null" >
         object_id,
       </if>
+      <if test="pid != null" >
+        pid,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -107,6 +111,9 @@
       <if test="objectId != null" >
         #{objectId,jdbcType=INTEGER},
       </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=INTEGER},
+      </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpSource" >
@@ -133,6 +140,7 @@
       <if test="version != null" >
         version = #{version,jdbcType=INTEGER},
       </if>
+
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>

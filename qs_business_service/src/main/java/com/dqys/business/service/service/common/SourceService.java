@@ -52,6 +52,13 @@ public interface SourceService {
     JsonResponse addSource(SourceInfoDTO sourceInfoDTO);
 
     /**
+     * 新增一条资源数据
+     * @param sourceInfoDTO
+     * @return
+     */
+    JsonResponse c_addSource(SourceInfoDTO sourceInfoDTO);
+
+    /**
      * 根据分类列表获取数据
      *
      * @param navId

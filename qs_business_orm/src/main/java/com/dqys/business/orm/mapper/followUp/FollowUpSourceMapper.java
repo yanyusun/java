@@ -3,6 +3,8 @@ package com.dqys.business.orm.mapper.followUp;
 
 import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 
+import java.util.List;
+
 public interface FollowUpSourceMapper {
     int deleteByPrimaryKey(Integer id);
 
@@ -15,4 +17,6 @@ public interface FollowUpSourceMapper {
     int updateByPrimaryKeySelective(FollowUpSource record);
 
     int updateByPrimaryKey(FollowUpSource record);
+
+    List<FollowUpSource> list(FollowUpSource followUpSource);
 }
