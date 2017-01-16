@@ -260,7 +260,7 @@ public class SourceServiceImpl implements SourceService {
             return JsonResponseTool.paramErr("参数错误！请确定分类列表");
         }
         SourceNavigation sourceNavigation = sourceNavigationMapper.get(navId);
-        if (sourceNavigation.getIsCustom() == 1 || sourceNavigation == null || sourceNavigation.getLenderId().equals(0)) {
+        if (sourceNavigation == null || sourceNavigation.getIsCustom() == 1 || sourceNavigation.getLenderId().equals(0)) {
             // 分类不存在或者该分类属于公共模块的分类
             return JsonResponseTool.failure("删除失败！该分类不存在或者属于公共分类无法删除");
         }

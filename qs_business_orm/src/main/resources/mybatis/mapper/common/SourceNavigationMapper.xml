@@ -12,10 +12,11 @@
         <result column="user_id" property="userId" jdbcType="INTEGER"/>
         <result column="file_path_name" property="filePathName" jdbcType="VARCHAR"/>
         <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
+        <result column="is_custom" property="isCustom" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, name, pid, lender_id, type,estates_id,user_id,file_path_name,create_at
+    id, name, pid, lender_id, type,estates_id,user_id,file_path_name,create_at,is_custom
   </sql>
 
     <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer">
