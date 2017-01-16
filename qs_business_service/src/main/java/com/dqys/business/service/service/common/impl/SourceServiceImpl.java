@@ -222,8 +222,9 @@ public class SourceServiceImpl implements SourceService {
     public JsonResponse c_addSource(CSourceInfoDTO sourceInfoDTO) {
         //新建文件夹
         SourceNavigation sourceNavigation = SourceServiceUtls.toSourceNav(sourceInfoDTO);
-        JsonResponse<String> navResult = addNavigation(sourceNavigation);
-        Integer navId = Integer.parseInt(navResult.getData());
+        JsonResponse<Integer> navResult = addNavigation(sourceNavigation);
+
+        Integer navId = navResult.getData();
         //新建文件信息
         Integer sourceInfoId = null;
         if (navResult.getCode() == ResponseCodeEnum.SUCCESS.getValue().intValue()) {

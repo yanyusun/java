@@ -134,6 +134,22 @@ public class FollowUpController extends BaseApiContorller {
         return JsonResponseTool.success(list);
     }
 
+//    @RequestMapping(value = "c/list", method = RequestMethod.GET)
+//    @ResponseBody
+//    public JsonResponse list(FollowUpMessageQuery followUpMessageQuery) throws Exception {
+//        if (followUpMessageQuery.getObjectId() == null || followUpMessageQuery.getObjectType() == null || followUpMessageQuery.getLiquidateStage() == null) {
+//            return JsonResponseTool.paramErr("参数错误");
+//        }
+//        List<FollowUpMessage> list = followUpMessageService.listAndCancelUnread(followUpMessageQuery);
+//        return JsonResponseTool.success(list);
+//    }
+
+
+
+
+
+
+
     /**
      * @api {GET} http://{url}/follow_up/unread_count 读取未读的数量
      * @apiName unread_count

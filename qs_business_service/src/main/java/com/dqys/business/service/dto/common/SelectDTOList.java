@@ -9,6 +9,7 @@ public class SelectDTOList {
     private Integer pid;
     private String key;
     private String title;
+    private String filePathName;
     private List<SelectDTOList> children;
 
     public String getKey() {
@@ -41,5 +42,13 @@ public class SelectDTOList {
 
     public void setPid(Integer pid) {
         this.pid = pid;
+    }
+
+    public String getFilePathName() {
+        return filePathName;
+    }
+
+    public void setFilePathName(String filePathName) {
+        this.filePathName = filePathName;
     }
 }

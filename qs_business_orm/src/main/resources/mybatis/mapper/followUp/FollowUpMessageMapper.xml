@@ -310,6 +310,9 @@
 
 
 
+
+
+
     <update id="updateBySendStatus" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage">
         UPDATE t_follow_up_message SET  send_status=#{sendStatus} WHERE object_id=#{objectId} and object_type=#{objectType} and user_id=#{userId}
     </update>

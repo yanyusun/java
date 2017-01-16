@@ -363,8 +363,10 @@ public class NavUnviewManagerServiceImpl implements NavUnviewManagerService {
     private boolean hasUserTypeSourceSourceAuth(NavUnviewServerAgent navUnviewServerAgent, int reId, Integer navId, Integer objectType, Integer objectId,Integer userId) {
         //如果是同一家公司的人员忽略判断
         Integer createId=sourceNavigationMapper.get(navId).getUserId();
-        if(tUserInfoMapper.get(userId).getCompanyId()==tUserInfoMapper.get(createId).getCompanyId().intValue()){
-            return true;
+        if(createId!=null&&createId!=0){
+            if(tUserInfoMapper.get(userId).getCompanyId()==tUserInfoMapper.get(createId).getCompanyId().intValue()){
+                return true;
+            }
         }
         return hasSourceSourceAuth(navUnviewServerAgent,reId,navId,objectType,objectId);
     }

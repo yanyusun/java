@@ -71,6 +71,7 @@ public class SourceServiceUtls {
         selectDTOList.setKey(sourceNavigation.getId().toString());
         selectDTOList.setTitle(sourceNavigation.getName());
         selectDTOList.setPid(sourceNavigation.getPid());
+        selectDTOList.setFilePathName(sourceNavigation.getFilePathName());
         return selectDTOList;
     }
 
