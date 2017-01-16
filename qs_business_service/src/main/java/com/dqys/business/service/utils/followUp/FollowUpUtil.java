@@ -63,9 +63,12 @@ public class FollowUpUtil {
             followUpSourceDTO.setObjectId(followUpSource.getObjectId());
             followUpSourceDTO.setPid(followUpSource.getPid());
             followUpSourceDTO.setDate(DateFormatTool.format(followUpSource.getCreateAt(), DateFormatTool.DATE_FORMAT_19));
-            File file = FileTool.getFile(followUpSource.getPathFilename(), false);
-            String size = FileTool.convertFileSize(file.length());
-            followUpSourceDTO.setSize(size);
+            String pathFileName = followUpSource.getPathFilename();
+            if(pathFileName!=null){
+                File file = FileTool.getFile(pathFileName, false);
+                String size = FileTool.convertFileSize(file.length());
+                followUpSourceDTO.setSize(size);
+            }
             followUpSourceDTOList.add(followUpSourceDTO);
         }
         return followUpSourceDTOList;

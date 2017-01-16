@@ -8,6 +8,8 @@ public class CSourceNavDTO {
     private Integer id;
     private String name;
     private String filePathName;
+    private String date;
+    private String fileSize;
 
     public Integer getPid() {
         return pid;
@@ -39,5 +41,21 @@ public class CSourceNavDTO {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(String fileSize) {
+        this.fileSize = fileSize;
     }
 }

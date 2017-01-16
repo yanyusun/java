@@ -8,7 +8,10 @@ import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.service.common.NavUnviewManagerService;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
+import com.dqys.core.utils.DateFormatTool;
+import com.dqys.core.utils.FileTool;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -264,9 +267,14 @@ public class SourceServiceUtls {
         cSourceNavDTO.setId(sourceNavigation.getId());
         cSourceNavDTO.setPid(sourceNavigation.getPid());
         cSourceNavDTO.setName(sourceNavigation.getName());
-        //cSourceNavDTO.set
-
-
+        String date=DateFormatTool.format(sourceNavigation.getCreateAt(),DateFormatTool.DATE_FORMAT_19);
+        cSourceNavDTO.setDate(date);
+        String path=sourceNavigation.getFilePathName();
+        if(path!=null){
+            File file = FileTool.getFile(path, false);
+            String size = FileTool.convertFileSize(file.length());
+            cSourceNavDTO.setFileSize(size);
+        }
         return  cSourceNavDTO;
     }
 

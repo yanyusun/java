@@ -269,7 +269,9 @@ public class FollowUpController extends BaseApiContorller {
      * "followUpMessageId": null,
      * "type": 10,
      * "objectType": null,
-     * "objectId": null
+     * "objectId": null,
+     *  "size":454mb,
+     * "date":2015-12-15 12:30
      * },
      * {
      * "id": null,
@@ -278,7 +280,9 @@ public class FollowUpController extends BaseApiContorller {
      * "followUpMessageId": null,
      * "type": 20,
      * "objectType": null,
-     * "objectId": null
+     * "objectId": null,
+     * "size":454mb,
+     * "date":2015-12-15 12:30
      * }
      * ]
      * }
