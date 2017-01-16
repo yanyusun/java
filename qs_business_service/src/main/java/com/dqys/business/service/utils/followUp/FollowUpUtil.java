@@ -4,7 +4,10 @@ import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.dto.followUp.FollowUpSourceDTO;
+import com.dqys.core.utils.DateFormatTool;
+import com.dqys.core.utils.FileTool;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,13 +15,13 @@ import java.util.List;
  * Created by yan on 16-8-15.
  */
 public class FollowUpUtil {
-    public static FollowUpMessage toFollowUpMessage(FollowUpMessageDTO followUpMessageDTO){
-        FollowUpMessage followUpMessage= new FollowUpMessage();
+    public static FollowUpMessage toFollowUpMessage(FollowUpMessageDTO followUpMessageDTO) {
+        FollowUpMessage followUpMessage = new FollowUpMessage();
         followUpMessage.setObjectId(followUpMessageDTO.getObjectId());
         followUpMessage.setContent(followUpMessageDTO.getContent());
         followUpMessage.setObjectType(followUpMessageDTO.getObjectType());
         followUpMessage.setLiquidateStage(followUpMessageDTO.getLiquidateStage());
-        if(null!=followUpMessageDTO.getSecondLiquidateStage()){
+        if (null != followUpMessageDTO.getSecondLiquidateStage()) {
             followUpMessage.setSecondLiquidateStage(followUpMessageDTO.getSecondLiquidateStage());
         }
         //// TODO: 16-11-18 为了保证前端没有id传入也能显示展示修改成如下
@@ -28,16 +31,17 @@ public class FollowUpUtil {
 //            followUpMessage.setSecondObjectId(followUpMessageDTO.getSecondObjectId());
 //        }
         //改后
-        if(null!=followUpMessageDTO.getSecondObjectId()){
+        if (null != followUpMessageDTO.getSecondObjectId()) {
             followUpMessage.setSecondObjectId(followUpMessageDTO.getSecondObjectId());
         }
-        if(null!=followUpMessageDTO.getSecondObjectType()){
+        if (null != followUpMessageDTO.getSecondObjectType()) {
             followUpMessage.setSecondObjectType(followUpMessageDTO.getSecondObjectType());
         }
 
         return followUpMessage;
     }
-    public static FollowUpSource toFollowUpSource(FollowUpSourceDTO followUpSourceDTO){
+
+    public static FollowUpSource toFollowUpSource(FollowUpSourceDTO followUpSourceDTO) {
         FollowUpSource followUpSource = new FollowUpSource();
         followUpSource.setPathFilename(followUpSourceDTO.getPathFilename());
         followUpSource.setShowFilename(followUpSourceDTO.getShowFilename());
@@ -47,9 +51,10 @@ public class FollowUpUtil {
         followUpSource.setObjectId(followUpSourceDTO.getObjectId());
         return followUpSource;
     }
-    public static List<FollowUpSourceDTO> toFollowUpSourceDTOList(List<FollowUpSource> followUpSourceList){
+
+    public static List<FollowUpSourceDTO> toFollowUpSourceDTOList(List<FollowUpSource> followUpSourceList) {
         List<FollowUpSourceDTO> followUpSourceDTOList = new ArrayList<>();
-        for(FollowUpSource followUpSource : followUpSourceList){
+        for (FollowUpSource followUpSource : followUpSourceList) {
             FollowUpSourceDTO followUpSourceDTO = new FollowUpSourceDTO();
             followUpSourceDTO.setPathFilename(followUpSource.getPathFilename());
             followUpSourceDTO.setShowFilename(followUpSource.getShowFilename());
@@ -57,6 +62,10 @@ public class FollowUpUtil {
             followUpSourceDTO.setObjectType(followUpSource.getObjectType());
             followUpSourceDTO.setObjectId(followUpSource.getObjectId());
             followUpSourceDTO.setPid(followUpSource.getPid());
+            followUpSourceDTO.setDate(DateFormatTool.format(followUpSource.getCreateAt(), DateFormatTool.DATE_FORMAT_19));
+            File file = FileTool.getFile(followUpSource.getPathFilename(), false);
+            String size = FileTool.convertFileSize(file.length());
+            followUpSourceDTO.setSize(size);
             followUpSourceDTOList.add(followUpSourceDTO);
         }
         return followUpSourceDTOList;

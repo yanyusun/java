@@ -30,6 +30,10 @@ public class FollowUpSourceDTO {
 
     private Integer pid;
 
+    private String date;
+
+    private String size;
+
     public Integer getId() {
         return id;
     }
@@ -92,5 +96,21 @@ public class FollowUpSourceDTO {
 
     public void setPid(Integer pid) {
         this.pid = pid;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 }

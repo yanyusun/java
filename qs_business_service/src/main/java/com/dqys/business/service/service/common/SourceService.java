@@ -43,6 +43,44 @@ public interface SourceService {
      */
     List<SelectDTOList> listNavigationCommon(Integer lenderId, Integer estatesId, Integer type);
 
+
+    /**
+     * 获取借款人的分类列表(私有部分)
+     * @param lenderId
+     * @param estatesId
+     * @param type
+     * @param pid 父id
+     * @return
+     */
+    List<CSourceNavDTO> listNavigation(Integer lenderId, Integer estatesId, Integer type,Integer pid);
+
+    /**
+     * 获取借款人的分类列表(公共部分)
+     * @param lenderId
+     * @param estatesId
+     * @param type
+     * @param pid 父id
+     * @return
+     */
+    List<CSourceNavDTO> listNavigationCommon(Integer lenderId, Integer estatesId, Integer type,Integer pid);
+
+    /**
+     * 获取借款人的分类列表(公共部分)
+     * @param lenderId
+     * @param estatesId
+     * @param type
+     * @param pid 父id
+     * @return
+     */
+    List<CSourceNavDTO> listNavigationPerson(Integer lenderId, Integer estatesId, Integer type,Integer pid);
+
+
+
+
+
+
+
+
     /**
      * 新增一个借款人的分类列表
      *

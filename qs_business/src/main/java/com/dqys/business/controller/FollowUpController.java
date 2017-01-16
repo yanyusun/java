@@ -257,7 +257,6 @@ public class FollowUpController extends BaseApiContorller {
      * @api {GET} http://{url}/follow_up/c/sourceList 信息列表
      * @apiName c_addSource
      * @apiGroup followUp
-     * @apiUse FollowUpSourceDTO
      * @apiSuccessExample {json} Data-Response:
      * {
      * "code": 2000,

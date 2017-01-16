@@ -33,7 +33,7 @@ public class FollowUpSourceImpl implements FollowUpSourceService{
     public List<FollowUpSourceDTO> listByPid(Integer pid, Integer objectType, Integer objectId) {
         FollowUpSourceQuery followUpSourceQuery = new FollowUpSourceQuery();
         followUpSourceQuery.setPid(pid);
-        followUpSourceQuery.setObjectType(objectId);
+        followUpSourceQuery.setObjectId(objectId);
         followUpSourceQuery.setObjectType(objectType);
         List<FollowUpSource> list=followUpSourceMapper.list(followUpSourceQuery);
         return FollowUpUtil.toFollowUpSourceDTOList(list);

@@ -14,8 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @author by pan on 16-4-20.
@@ -161,5 +159,22 @@ public class FileTool implements ApplicationContextAware {
                     KeyEnum.SYS_FILE_PIC_NOTFIND_PATH).getPropertyValue());
         }
         return file;
+    }
+
+    public static String convertFileSize(long size) {
+        long kb = 1024;
+        long mb = kb * 1024;
+        long gb = mb * 1024;
+
+        if (size >= gb) {
+            return String.format("%.1f GB", (float) size / gb);
+        } else if (size >= mb) {
+            float f = (float) size / mb;
+            return String.format(f > 100 ? "%.0f MB" : "%.1f MB", f);
+        } else if (size >= kb) {
+            float f = (float) size / kb;
+            return String.format(f > 100 ? "%.0f KB" : "%.1f KB", f);
+        } else
+            return String.format("%d B", size);
     }
 }

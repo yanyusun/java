@@ -51,6 +51,7 @@ public class SourceServiceImpl implements SourceService {
     private static final int allNav = 1;//所有navList
     private static final int personNav = 2;//个人nav
     private static final int commonNav = 3;//公共nav
+    private static final int rootNavId = 0;//更目录id
 
     @Autowired
     private SourceNavigationMapper sourceNavigationMapper;
@@ -99,17 +100,143 @@ public class SourceServiceImpl implements SourceService {
             objectType = ObjectTypeEnum.ASSETSOURCE.getValue();
             objectId = estatesId;
         }
-        List<SourceNavigation> navigationList = null;
-        if (navType == allNav) {
-            navigationList = NavUtil.getCommonSourceNavigation(type);
-            navigationList.addAll(sourceNavigationMapper.listByTypeAndLenderId(lenderId, estatesId, type));
-        } else if (navType == personNav) {
-            navigationList = sourceNavigationMapper.listByTypeAndLenderId(lenderId, estatesId, type);
-        } else if (navType == commonNav) {
-            navigationList = NavUtil.getCommonSourceNavigation(type);
-        }
+        List<SourceNavigation> navigationList = new ArrayList<>();
+        ;
         UserSession userSession = UserSession.getCurrent();
-        return SourceServiceUtls.toSelect(navigationList, navUnviewManagerService, objectType, objectId, userSession.getUserId());
+        List<SourceNavigation> comList = NavUtil.getCommonSourceNavigation(type);
+        navigationList.addAll(comList);
+        navigationList.addAll(sourceNavigationMapper.listByTypeAndLenderId(lenderId, estatesId, type));
+        if (navType == allNav) {
+            return SourceServiceUtls.toSelect(navigationList, navUnviewManagerService, objectType, objectId, userSession.getUserId());
+        } else if (navType == personNav) {
+            return SourceServiceUtls.toSelect(getSourceNavigation(objectType, objectId, navigationList, userSession, comList, false),
+                    navUnviewManagerService, objectType, objectId, userSession.getUserId());
+        } else if (navType == commonNav) {
+            //公共文件+公共文件下的文件
+            comList.addAll(getSourceNavigation(objectType, objectId, navigationList, userSession, comList, true));
+            return SourceServiceUtls.toSelect(comList, navUnviewManagerService, objectType, objectId, userSession.getUserId());
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<CSourceNavDTO> listNavigation(Integer lenderId, Integer estatesId, Integer type, Integer pid) {
+        List<SourceNavigation> list = getComList(type, pid);
+        List<SourceNavigation> navigationList = sourceNavigationMapper.listByTypeAndLenderIdAndPid(lenderId, estatesId, type, pid);
+        list.addAll(navigationList);
+        return SourceServiceUtls.toCSourceNavDTOList(getAuthList(list, lenderId, estatesId));
+    }
+
+    private List<SourceNavigation> getComList(Integer type, int pid) {
+        List<SourceNavigation> list = new ArrayList<>();
+        List<SourceNavigation> comList = NavUtil.getCommonSourceNavigation(type);
+        for(SourceNavigation sourceNavigation:comList){
+            if(sourceNavigation.getPid()==pid){
+                list.add(sourceNavigation);
+            }
+        }
+        return list;
+    }
+
+    @Override
+    public List<CSourceNavDTO> listNavigationCommon(Integer lenderId, Integer estatesId, Integer type, Integer pid) {
+        if(pid==rootNavId){//直接返回返回缓存中的数据
+            List<SourceNavigation> list = getComList(type, rootNavId);
+            return SourceServiceUtls.toCSourceNavDTOList(getAuthList(list, lenderId, estatesId));
+        }else{
+            return listNavigation(lenderId,estatesId,type,pid);
+        }
+    }
+
+    @Override
+    public List<CSourceNavDTO> listNavigationPerson(Integer lenderId, Integer estatesId, Integer type, Integer pid) {
+        List<SourceNavigation> navigationList = sourceNavigationMapper.listByTypeAndLenderIdAndPid(lenderId, estatesId, type, pid);
+        return SourceServiceUtls.toCSourceNavDTOList(getAuthList(navigationList, lenderId, estatesId));
+    }
+
+    /**
+     * 得到具有查看权限的navlist
+     *
+     * @param navigationList
+     * @return
+     */
+    private List<SourceNavigation> getAuthList(List<SourceNavigation> navigationList, Integer lenderId, Integer estatesId) {
+        Integer objectType = null;
+        Integer objectId = null;
+        if (lenderId != null) {
+            objectType = ObjectTypeEnum.LENDER.getValue();
+            objectId = lenderId;
+        } else if (estatesId != null) {
+            objectType = ObjectTypeEnum.ASSETSOURCE.getValue();
+            objectId = estatesId;
+        }
+        List<SourceNavigation> list = new ArrayList<>();
+        Integer userId = UserSession.getCurrent().getUserId();
+        for (SourceNavigation sourceNavigation : navigationList) {
+            if (navUnviewManagerService.hasSourceSourceAuth(sourceNavigation.getId(), objectType, objectId, userId)) {
+                list.add(sourceNavigation);
+            }
+        }
+        return list;
+    }
+
+
+    /**
+     * @param objectType
+     * @param objectId
+     * @param navigationList
+     * @param userSession
+     * @param comList
+     * @param isSys          是否时系统文件
+     * @return
+     */
+    private List<SourceNavigation> getSourceNavigation(Integer objectType, Integer objectId, List<SourceNavigation> navigationList, UserSession userSession, List<SourceNavigation> comList, boolean isSys) {
+        List<SourceNavigation> list = new ArrayList<>();
+        list.addAll(navigationList);
+        List<SourceNavigation> selectNavlist = new ArrayList<>();
+        for (SourceNavigation sourceNavigation : navigationList) {
+            SourceNavigation headSourceNavigation = getHeadList(list, sourceNavigation, rootNavId);
+            if (isSysNav(comList, headSourceNavigation) == isSys) {
+                selectNavlist.add(sourceNavigation);
+            }
+        }
+        return selectNavlist;
+
+    }
+
+    /**
+     * 返回上级目录
+     *
+     * @param list
+     * @param sourceNavigation
+     * @param lastPid          返回目录的上级目录id
+     * @return
+     */
+    private SourceNavigation getHeadList(List<SourceNavigation> list, SourceNavigation sourceNavigation, int lastPid) {
+        if (sourceNavigation.getPid() == lastPid) {
+            return sourceNavigation;
+        } else {
+            for (SourceNavigation sourceNavigation1 : list) {
+                if (sourceNavigation1.getId().intValue() == sourceNavigation.getPid()) {
+                    getHeadList(list, sourceNavigation1, lastPid);
+                    break;
+                }
+            }
+            return null;
+        }
+    }
+
+    private boolean isSysNav(List<SourceNavigation> comList, SourceNavigation headNavigation) {
+        for (SourceNavigation sourceNavigation : comList) {
+//            if(headNavigation==null||headNavigation.getId()==null||sourceNavigation.getId()==null){
+//                return false;
+//            }
+            if (sourceNavigation.getId() == headNavigation.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -464,7 +591,7 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     public void delSource(SourceDelDTO sourceDelDTO) throws SourceEditException {
-        List<SourceEditDto> list = new ArrayList<>();
+        List<SourceEditDto> list = sourceDelDTO.getList();
         for (SourceEditDto sourceEditDto : list) {
             int type = sourceEditDto.getType().intValue();
             Integer id = sourceEditDto.getId();

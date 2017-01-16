@@ -19,6 +19,12 @@
     id, path_filename, show_filename, follow_up_message_id, create_at, update_at, stateflag, 
     version,type,object_type,object_id,pid
   </sql>
+
+  <sql id="Base_Column_List_re" >
+     s.id,s.path_filename,s.show_filename,s.follow_up_message_id,s.create_at,s.update_at,s.type,s.object_type,s.object_id,s.pid
+  </sql>
+
+
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
     <include refid="Base_Column_List" />
@@ -155,4 +161,34 @@
       version = #{version,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+  <select id="list" parameterType="com.dqys.business.orm.query.followUp.FollowUpSourceQuery" resultMap="BaseResultMap">
+  select * FROM (
+      SELECT   <include refid="Base_Column_List_re"/>
+      FROM t_follow_up_source s where
+      <if test="objectId != null">
+        AND s.object_id = #{objectId,jdbcType=INTEGER}
+      </if>
+      <if test="objectType != null">
+        AND s.object_type = #{objectType,jdbcType=INTEGER}
+      </if>
+      <if test="pid != null">
+        AND s.pid = #{pid,jdbcType=INTEGER}
+      </if>
+      UNION all
+      select   <include refid="Base_Column_List_re"/>
+      from t_follow_up_source s , t_follow_up_message m where
+      s.follow_up_message_id= m.id
+      <if test="objectId != null">
+        AND m.object_id = #{objectId,jdbcType=INTEGER}
+      </if>
+      <if test="objectType != null">
+        AND m.object_type = #{objectType,jdbcType=INTEGER}
+      </if>
+    ) as toa ORDER BY create_at DESC
+  </select>
+
+
+
 </mapper>
