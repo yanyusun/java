@@ -41,10 +41,10 @@ public class IouDTO {
     private Double arrears;  // 欠款合计
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date endAt;  // 欠款截止日期
-    private Double worth;  // 价值
+    private Double worth;  // 抵押物银行价值
     private Double advanceCorpus;  // 提前偿还本金
     private String evaluateExcellent;  // 评优
-    private String evaluateLevel;  // 评级
+    private String evaluateLevel;  // 评级·
     private String memo;  // 备注
 
     private Integer lenderId;  // 借款基础信息ID

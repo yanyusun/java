@@ -307,9 +307,11 @@ public class PawnServiceImpl implements PawnService {
                     if (pawnDTO.getIouNames() == null) {
                         pawnDTO.setIouIds("" + iouInfo.getId());
                         pawnDTO.setIouNames(iouInfo.getName());
+                        pawnDTO.setIouCodes(iouInfo.getIouCode());
                     } else {
                         pawnDTO.setIouIds("," + iouInfo.getId());
                         pawnDTO.setIouNames("," + iouInfo.getName());
+                        pawnDTO.setIouCodes("," + iouInfo.getIouCode());
                     }
                 }
             });

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +102,51 @@ public class MessageController {
     }
 
     /**
+     * 消息列表（C端）
+     *
+     * @param messageQuery
+     * @return
+     */
+    @RequestMapping("/c/pageList")
+    @ResponseBody
+    public JsonResponse messageListC(@ModelAttribute MessageQuery messageQuery) {
+        Message message = MessageUtils.transToMessage(messageQuery);
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        message.setReceiveId(userId);
+        Map<String, Object> map = new HashMap<>();
+        List<Message> list = messageService.selectByMessage(message);
+        List<Map> messList = new ArrayList<>();
+        for (Message mess : list) {
+            Map messMap = new HashMap<>();
+            messMap.put("type", mess.getType());
+            messMap.put("typeName", MessageEnum.getEnumByValue(mess.getType()));
+            messMap.put("title", mess.getType());
+            messMap.put("time", mess.getSendTime());
+            messMap.put("status", mess.getStatus());
+            messList.add(messMap);
+        }
+        map.put("list", messList);
+        map.put("count", messageService.selectCount(message));//条件查询消息数量
+        return JsonResponseTool.success(map);
+    }
+
+    /**
+     * 消息详情（C端）
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping("/c/get")
+    @ResponseBody
+    public JsonResponse get(@RequestParam Integer id) {
+        Message message = messageService.get(id);
+        if (message == null) {
+            return JsonResponseTool.failure("查不到详情信息");
+        }
+        return JsonResponseTool.success(message);
+    }
+
+    /**
      * @api {post} message/read 标记为已读(单个或批量)
      * @apiParam {int[]} id  消息id
      * @apiDescription 标记为已读(单个或批量)
@@ -108,7 +154,7 @@ public class MessageController {
      * @apiGroup Message
      * @apiName message/read
      */
-    @RequestMapping("/read")
+    @RequestMapping({"/read", "/c/read"})
     @ResponseBody
     public JsonResponse readMessage(@RequestParam("id") Integer... id) {
         Integer result = messageService.readMessage(id);
