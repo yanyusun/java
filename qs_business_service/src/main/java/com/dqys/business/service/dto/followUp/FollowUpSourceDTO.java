@@ -8,7 +8,7 @@ package com.dqys.business.service.dto.followUp;
  * @apiParam {number} [objectId]对象id
  * @apiParam {string} pathFilename 上传后返回的文件名
  * @apiParam {string} showFilename 文件展示名
- * @apiParam {number} [type] 对象类型:10资料实勘文件夹,11跟进文件夹,20资料实勘文件,21跟进文件
+ * @apiParam {number} [type] 对象类型:11跟进文件夹,21跟进文件
  * @apiParam {number} [followUpMessageId] 跟进信息id
  * @apiParam {number} [pid] 父文件夹id
  */

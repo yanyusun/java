@@ -5,7 +5,6 @@ package com.dqys.business.service.dto.common;
  */
 public class CSourceInfoDTO {
     private Integer lenderId; // 借款人的ID
-    private String userIds; // 操作人员
     private Integer estatesId; // 资产源ID
     private Integer pNavId;//父文件夹id
     private Integer type;//分类类型
@@ -60,11 +59,4 @@ public class CSourceInfoDTO {
         this.estatesId = estatesId;
     }
 
-    public String getUserIds() {
-        return userIds;
-    }
-
-    public void setUserIds(String userIds) {
-        this.userIds = userIds;
-    }
 }

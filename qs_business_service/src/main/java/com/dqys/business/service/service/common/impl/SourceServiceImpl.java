@@ -26,16 +26,13 @@ import com.dqys.business.service.service.followUp.FollowUpSourceService;
 import com.dqys.business.service.utils.common.NavUtil;
 import com.dqys.business.service.utils.common.SourceServiceUtls;
 import com.dqys.core.constant.ResponseCodeEnum;
-import com.dqys.core.constant.KeyEnum;
 import com.dqys.core.constant.RoleTypeEnum;
-import com.dqys.core.constant.SysPropertyTypeEnum;
 import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.FileTool;
 import com.dqys.core.utils.JsonResponseTool;
-import com.dqys.core.utils.SysPropertyTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
@@ -131,11 +128,6 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     public JsonResponse deleteNavigation(Integer navId) {
-        //// TODO mkf: 17-1-13
-        //1.做公共navid不让删除的教研
-        //2.做人员权限教研,只有该nav的创建人,nav创建人的管理员,平台管理员有权限删除 ,如果创建人id为0,只有平台管理员可以删除
-        //3.删除分类对应的soureInfo,sourceSource,navUnview关联信息,
-        //4.删除关联的文件
         // TODO 这里需要做权限校验
         if (CommonUtil.checkParam(navId)) {
             return JsonResponseTool.paramErr("参数错误！请确定分类列表");
