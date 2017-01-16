@@ -44,6 +44,8 @@ public interface SourceNavigationMapper {
      */
     List<SourceNavigation> listByTypeAndLenderId(@Param("lenderId") Integer lenderId,@Param("estatesId") Integer estatesId, @Param("type")Integer type);
 
+    List<SourceNavigation> listByTypeAndLenderIdAndPid(@Param("lenderId") Integer lenderId,@Param("estatesId") Integer estatesId, @Param("type")Integer type,@Param("pid") Integer pid);
+
     /**
      * 查询自定义或者公共的导航栏
      * @return

@@ -42,6 +42,11 @@ public class SourceNavigationMapperImpl extends BaseDao implements SourceNavigat
     }
 
     @Override
+    public List<SourceNavigation> listByTypeAndLenderIdAndPid(@Param("lenderId") Integer lenderId, @Param("estatesId") Integer estatesId, @Param("type") Integer type, @Param("pid") Integer pid) {
+        return super.getSqlSession().getMapper(SourceNavigationMapper.class).listByTypeAndLenderIdAndPid(lenderId,estatesId, type,pid);
+    }
+
+    @Override
     public List<SourceNavigation> ListByIsCustom(Integer isCustom) {
         return super.getSqlSession().getMapper(SourceNavigationMapper.class).ListByIsCustom(isCustom);
     }

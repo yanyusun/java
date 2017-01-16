@@ -2,6 +2,8 @@ package com.dqys.business.orm.pojo.common;
 
 import com.dqys.core.base.BaseModel;
 
+import java.util.Date;
+
 /**
  * 资料实勘分类对象
  */
@@ -16,6 +18,8 @@ public class SourceNavigation extends BaseModel {
     private Integer userId;
     private String filePathName;
     private Integer isCustom;//'是否用户自定义:0是,1不是;默认0
+    private Integer fileSize;
+    private Date createAt;
 
     public Integer getIsCustom() {
         return isCustom;
@@ -87,5 +91,23 @@ public class SourceNavigation extends BaseModel {
 
     public void setFilePathName(String filePathName) {
         this.filePathName = filePathName;
+    }
+
+    public Integer getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(Integer fileSize) {
+        this.fileSize = fileSize;
+    }
+
+    @Override
+    public Date getCreateAt() {
+        return createAt;
+    }
+
+    @Override
+    public void setCreateAt(Date createAt) {
+        this.createAt = createAt;
     }
 }

@@ -41,28 +41,28 @@ public class SourceController extends BaseApiContorller {
      * 分类列表
      */
     @RequestMapping(value = "c/listNavigationPerson")
-    public JsonResponse listNavigationPerson(Integer lenderId, Integer estatesId, @RequestParam(defaultValue = "0") Integer type) {
+    public JsonResponse listNavigationPerson(Integer lenderId, Integer estatesId, @RequestParam(defaultValue = "0") Integer type,@RequestParam(defaultValue = "0") Integer pid) {
         if (CommonUtil.checkParam(type)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         if ((lenderId == null && estatesId == null) || (lenderId != null && estatesId != null)) {
             return JsonResponseTool.paramErr("资产源或借款人参数错误");
         }
-        return JsonResponseTool.success(sourceService.listNavigationPerson(lenderId, estatesId, type));
+        return JsonResponseTool.success(sourceService.listNavigationPerson(lenderId, estatesId, type,pid));
     }
 
     /**
      * 分类列表
      */
     @RequestMapping(value = "c/listNavigationSys")
-    public JsonResponse listNavigationCommon(Integer lenderId, Integer estatesId, @RequestParam(defaultValue = "0") Integer type) {
+    public JsonResponse listNavigationCommon(Integer lenderId, Integer estatesId, @RequestParam(defaultValue = "0") Integer type,@RequestParam(defaultValue = "0") Integer pid) {
         if (CommonUtil.checkParam(type)) {
             return JsonResponseTool.paramErr("参数错误");
         }
         if ((lenderId == null && estatesId == null) || (lenderId != null && estatesId != null)) {
             return JsonResponseTool.paramErr("资产源或借款人参数错误");
         }
-        return JsonResponseTool.success(sourceService.listNavigationCommon(lenderId, estatesId, type));
+        return JsonResponseTool.success(sourceService.listNavigationCommon(lenderId, estatesId, type,pid));
     }
 
 
@@ -145,7 +145,7 @@ public class SourceController extends BaseApiContorller {
      * @param navId
      * @return
      */
-    @RequestMapping(value = "/get")
+    @RequestMapping(value = {"get", "c/get"})
     public JsonResponse get(Integer lenderId, Integer estatesId, @RequestParam Integer navId) {
         if (CommonUtil.checkParam(navId)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -155,6 +155,10 @@ public class SourceController extends BaseApiContorller {
         }
         return JsonResponseTool.success(sourceService.getSource(navId, lenderId, estatesId));
     }
+
+
+
+
 
     /**
      * 修改资源信息
@@ -245,7 +249,7 @@ public class SourceController extends BaseApiContorller {
      * @apiGroup source
      * @apiUse SourceDelDTO
      */
-    @RequestMapping(value = "c/del", method = RequestMethod.DELETE)
+    @RequestMapping(value = "c/del", method = RequestMethod.POST)
     public JsonResponse delSource(SourceDelDTO sourceDelDTO) throws SourceEditException {
         sourceService.delSource(sourceDelDTO);
         return JsonResponseTool.success(sourceDelDTO);

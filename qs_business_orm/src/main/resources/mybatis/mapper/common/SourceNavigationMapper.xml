@@ -11,10 +11,11 @@
         <result column="estates_id" property="estatesId" jdbcType="INTEGER"/>
         <result column="user_id" property="userId" jdbcType="INTEGER"/>
         <result column="file_path_name" property="filePathName" jdbcType="VARCHAR"/>
+        <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-    id, name, pid, lender_id, type,estates_id,user_id,file_path_name
+    id, name, pid, lender_id, type,estates_id,user_id,file_path_name,create_at
   </sql>
 
     <select id="get" resultMap="BaseResultMap" parameterType="java.lang.Integer">
@@ -112,6 +113,22 @@
         </if>
         <if test="estatesId !=null">
             AND estates_id = #{estatesId,jdbcType=INTEGER}
+        </if>
+    </select>
+
+    <select id="listByTypeAndLenderIdAndPid" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM bt_source_nav
+        WHERE type = #{type,jdbcType=INTEGER}
+        <if test="lenderId !=null">
+            AND lender_id = #{lenderId,jdbcType=INTEGER}
+        </if>
+        <if test="estatesId !=null">
+            AND estates_id = #{estatesId,jdbcType=INTEGER}
+        </if>
+        <if test="pid !=null">
+            AND pid = #{pid,jdbcType=INTEGER}
         </if>
     </select>
 

@@ -3,10 +3,7 @@ package com.dqys.business.service.utils.common;
 import com.dqys.business.orm.pojo.common.SourceInfo;
 import com.dqys.business.orm.pojo.common.SourceNavigation;
 import com.dqys.business.orm.pojo.common.SourceSource;
-import com.dqys.business.service.dto.common.CSourceInfoDTO;
-import com.dqys.business.service.dto.common.SelectDTOList;
-import com.dqys.business.service.dto.common.SourceDTO;
-import com.dqys.business.service.dto.common.SourceInfoDTO;
+import com.dqys.business.service.dto.common.*;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.service.common.NavUnviewManagerService;
 import com.dqys.core.model.UserSession;
@@ -65,6 +62,12 @@ public class SourceServiceUtls {
             }
         }
     }
+
+
+
+
+
+
 
     public static SelectDTOList toSelectDTOList(SourceNavigation sourceNavigation) {
         SelectDTOList selectDTOList = new SelectDTOList();
@@ -253,6 +256,26 @@ public class SourceServiceUtls {
         sourceSource.setSourceInfoId(sourceInfoId);
         sourceSource.setPath(sourceInfoDTO.getFilePathName());
         return  sourceSource;
+    }
+
+    public static CSourceNavDTO toCSourceNavDTO(SourceNavigation sourceNavigation){
+        CSourceNavDTO cSourceNavDTO = new CSourceNavDTO();
+        cSourceNavDTO.setFilePathName(sourceNavigation.getFilePathName());
+        cSourceNavDTO.setId(sourceNavigation.getId());
+        cSourceNavDTO.setPid(sourceNavigation.getPid());
+        cSourceNavDTO.setName(sourceNavigation.getName());
+        //cSourceNavDTO.set
+
+
+        return  cSourceNavDTO;
+    }
+
+    public static List<CSourceNavDTO> toCSourceNavDTOList(List<SourceNavigation> list){
+        List<CSourceNavDTO> cSourceNavDTOlist = new ArrayList<>();
+        for(SourceNavigation sourceNavigation:list){
+            cSourceNavDTOlist.add(toCSourceNavDTO(sourceNavigation));
+        }
+        return cSourceNavDTOlist;
     }
 
 }
