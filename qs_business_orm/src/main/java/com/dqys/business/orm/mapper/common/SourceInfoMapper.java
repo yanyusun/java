@@ -3,6 +3,8 @@ package com.dqys.business.orm.mapper.common;
 import com.dqys.business.orm.pojo.common.SourceInfo;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 public interface SourceInfoMapper {
 
     /**
@@ -39,10 +41,14 @@ public interface SourceInfoMapper {
 
     /**
      * 根据借款人ID查询当前分类的资源数据
+     *
      * @param navId
      * @param lenderId
      * @return
      */
-    SourceInfo getByNavIdAndLenderId(@Param("navId")Integer navId, @Param("lenderId")Integer lenderId,@Param("estatesId")Integer estatesId);
+    SourceInfo getByNavIdAndLenderId(@Param("navId") Integer navId, @Param("lenderId") Integer lenderId, @Param("estatesId") Integer estatesId);
 
+    List<SourceInfo> selectByNavId(Integer navId);
+
+    Integer deleteByPrimaryKeyByNavId(Integer navId);
 }

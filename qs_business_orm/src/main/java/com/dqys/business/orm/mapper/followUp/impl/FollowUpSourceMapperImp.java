@@ -15,7 +15,7 @@ import java.util.List;
 public class FollowUpSourceMapperImp extends BaseDao implements FollowUpSourceMapper{
     @Override
     public int deleteByPrimaryKey(Integer id) {
-        return super.getSqlSession().getMapper(FollowUpSourceMapper.class).deleteByPrimaryKey(id);
+        return 0;
     }
 
     @Override

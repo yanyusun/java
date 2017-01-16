@@ -40,9 +40,12 @@ public interface SourceSourceMapper {
 
     /**
      * 根据资源信息获取文件信息
+     *
      * @param id
      * @return
      */
     List<SourceSource> listBySourceId(Integer id);
+
+    Integer deleteByPrimaryKeyBySourceId(Integer id);
 
 }

@@ -15,6 +15,15 @@ public class SourceNavigation extends BaseModel {
     private Integer estatesId; // 资产源id
     private Integer userId;
     private String filePathName;
+    private Integer isCustom;//'是否用户自定义:0是,1不是;默认0
+
+    public Integer getIsCustom() {
+        return isCustom;
+    }
+
+    public void setIsCustom(Integer isCustom) {
+        this.isCustom = isCustom;
+    }
 
     public Integer getEstatesId() {
         return estatesId;
