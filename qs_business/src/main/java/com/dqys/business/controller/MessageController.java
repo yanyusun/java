@@ -120,9 +120,10 @@ public class MessageController {
             Map messMap = new HashMap<>();
             messMap.put("type", mess.getType());
             messMap.put("typeName", MessageEnum.getEnumByValue(mess.getType()));
-            messMap.put("title", mess.getType());
+            messMap.put("title", mess.getTitle());
             messMap.put("time", mess.getSendTime());
             messMap.put("status", mess.getStatus());
+            messMap.put("id", mess.getId());
             messList.add(messMap);
         }
         map.put("list", messList);

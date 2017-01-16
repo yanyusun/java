@@ -245,7 +245,7 @@ public class SourceController extends BaseApiContorller {
      * @apiGroup source
      * @apiUse SourceDelDTO
      */
-    @RequestMapping(value = "c/del", method = RequestMethod.DELETE)
+    @RequestMapping(value = "c/del", method = RequestMethod.POST)
     public JsonResponse delSource(SourceDelDTO sourceDelDTO) throws SourceEditException {
         sourceService.delSource(sourceDelDTO);
         return JsonResponseTool.success(sourceDelDTO);
