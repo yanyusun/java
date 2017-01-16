@@ -35,12 +35,21 @@ public class PawnDTO {
 
     private String iouIds;
     private String iouNames; // 借据的名称集合
+    private String iouCodes; // 原始借据号集合
 
     private Integer agent; // 中介
     private Integer urge; // 催收
     private Integer lawyer; // 代理
 
     private Map coord;//参与人员》协作器
+
+    public String getIouCodes() {
+        return iouCodes;
+    }
+
+    public void setIouCodes(String iouCodes) {
+        this.iouCodes = iouCodes;
+    }
 
     public String getOperator() {
         return operator;

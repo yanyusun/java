@@ -201,4 +201,5 @@ public interface MessageService {
 
     Integer insertMessageNoByOperinfo(MessageOperinfo messageOperinfo);
 
+    Message get(Integer id);
 }

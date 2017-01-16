@@ -56,6 +56,7 @@ public class LenderDTO {
     private String name; // 借款人姓名
     private Integer sex; // 借款人性别
     private String lenderNo; // 借款人编号
+    private String avg;//借款人头像
     // 查全信息时有用
     private String currentAddress; // 当前地址
     private Integer overdueDay; // 逾期天数
@@ -66,6 +67,15 @@ public class LenderDTO {
 
     private String subsidiary;//所属机构
     private String sourceWay;//来源方式
+
+
+    public String getAvg() {
+        return avg;
+    }
+
+    public void setAvg(String avg) {
+        this.avg = avg;
+    }
 
     public String getSourceWay() {
         return sourceWay;

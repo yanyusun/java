@@ -409,6 +409,11 @@ public class MessageServiceImpl implements MessageService {
         return messageMapper.insertMessageNoByOperinfo(messageOperinfo);
     }
 
+    @Override
+    public Message get(Integer id) {
+        return messageMapper.get(id);
+    }
+
     private boolean setJiGou(Integer objectId, Integer objectType, Integer flowId, Integer flowType, Integer userId, String operation,
                              Integer onStatus, Integer userType, boolean modify, Integer flowBusinessId) {
         boolean flag = coordinatorService.verdictOrganization(flowId, flowType, onStatus, userType, modify);
