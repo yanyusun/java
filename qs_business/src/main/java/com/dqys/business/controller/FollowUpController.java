@@ -130,7 +130,6 @@ public class FollowUpController extends BaseApiContorller {
         if (followUpMessageQuery.getObjectId() == null || followUpMessageQuery.getObjectType() == null || followUpMessageQuery.getLiquidateStage() == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        followUpMessageService.objectList(followUpMessageQuery);
         List<FollowUpMessage> list = followUpMessageService.listAndCancelUnread(followUpMessageQuery);
         return JsonResponseTool.success(list);
     }
