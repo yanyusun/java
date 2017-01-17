@@ -22,36 +22,36 @@
 
     <resultMap id="MessageWithUserAndTeam" type="com.dqys.business.orm.pojo.followUp.FollowUpMessage"
                extends="BaseResultMap">
-        <association property="userInfo" javaType="com.dqys.auth.orm.pojo.TUserInfo">
+        <association property="userInfo" javaType="com.dqys.auth.orm.pojo.TUserInfo" column="user_id">
             <result column="user_name" property="userName"/>
             <result column="sex" property="sex"/>
-            <result column="user_id" property="id"/>
             <result column="user_type" property="userType"/>
             <result column="role_id" property="roleId"/>
         </association>
         <association property="teammateRe" javaType="com.dqys.business.orm.pojo.coordinator.TeammateRe">
             <result column="type" property="type"/>
         </association>
-        <association property="companyInfo" javaType="com.dqys.auth.orm.pojo.TCompanyInfo">
+        <association property="companyInfo" javaType="com.dqys.auth.orm.pojo.TCompanyInfo" column="company_id">
             <result column="company_name" property="companyName"/>
-            <result column="company_id" property="id"/>
         </association>
     </resultMap>
 
     <resultMap id="messageWithALL" type="com.dqys.business.orm.pojo.followUp.FollowUpMessage"
                extends="BaseResultMap">
-        <association property="userInfo" javaType="com.dqys.auth.orm.pojo.TUserInfo">
+        <association property="userInfo" javaType="com.dqys.auth.orm.pojo.TUserInfo" column="user_id">
             <result column="user_name" property="userName"/>
             <result column="sex" property="sex"/>
             <result column="avg" property="avg"/>
             <result column="user_type" property="userType"/>
             <result column="role_id" property="roleId"/>
+            <result column="user_id" property="id"/>
         </association>
         <association property="teammateRe" javaType="com.dqys.business.orm.pojo.coordinator.TeammateRe">
             <result column="type" property="type"/>
         </association>
-        <association property="companyInfo" javaType="com.dqys.auth.orm.pojo.TCompanyInfo">
+        <association property="companyInfo" javaType="com.dqys.auth.orm.pojo.TCompanyInfo" column="company_id">
             <result column="company_name" property="companyName"/>
+            <result column="company_id" property="id"/>
         </association>
         <collection column="id" property="fileList" ofType="com.dqys.business.orm.pojo.followUp.FollowUpSource">
             <result column="path_filename" property="pathFilename"/>
@@ -294,16 +294,16 @@
         LEFT JOIN t_user_tag tag on tag.user_id=u.id
         WHERE 1=1
         <if test="objectId != null">
-            AND object_id = #{objectId,jdbcType=INTEGER}
+            AND m.object_id = #{objectId,jdbcType=INTEGER}
         </if>
         <if test="objectType != null">
-            AND object_type = #{objectType,jdbcType=INTEGER}
+            AND m.object_type = #{objectType,jdbcType=INTEGER}
         </if>
         <if test="secondObjectId != null">
-            AND second_object_id = #{secondObjectId,jdbcType=INTEGER}
+            AND m.second_object_id = #{secondObjectId,jdbcType=INTEGER}
         </if>
         <if test="secondObjectType != null">
-            AND second_object_type = #{secondObjectType,jdbcType=INTEGER}
+            AND m.second_object_type = #{secondObjectType,jdbcType=INTEGER}
         </if>
         <if test="liquidateStage != null">
             AND m.liquidate_stage = #{liquidateStage,jdbcType=INTEGER}

@@ -95,6 +95,8 @@ public class FollowUpUtil {
             cFollowUpMessageDTO.setUserId(userInfo.getId());
             cFollowUpMessageDTO.setUsername(userInfo.getUserName());
             cFollowUpMessageDTO.setUserType(userInfo.getUserType());
+            cFollowUpMessageDTO.setRoleId(userInfo.getRoleId());
+            cFollowUpMessageDTO.setAvg(userInfo.getAvg());
             if(followUpMessage.getUserId()==userId){
                 cFollowUpMessageDTO.setMyself(true);
             }

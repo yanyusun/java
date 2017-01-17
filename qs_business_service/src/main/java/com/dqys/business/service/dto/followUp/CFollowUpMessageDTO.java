@@ -38,6 +38,8 @@ public class CFollowUpMessageDTO {
 
     private Integer roleId;
 
+    private String avg;
+
     public Integer getId() {
         return id;
     }
@@ -172,5 +174,13 @@ public class CFollowUpMessageDTO {
 
     public void setRoleId(Integer roleId) {
         this.roleId = roleId;
+    }
+
+    public String getAvg() {
+        return avg;
+    }
+
+    public void setAvg(String avg) {
+        this.avg = avg;
     }
 }

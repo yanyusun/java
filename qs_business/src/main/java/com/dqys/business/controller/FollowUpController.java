@@ -25,8 +25,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import static com.dqys.business.service.utils.followUp.FollowUpUtil.toIndexCFollowUpMessageDTOList;
-
 /**
  * Created by yan on 16-8-12.
  */
