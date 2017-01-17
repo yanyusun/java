@@ -196,6 +196,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
 
     @Override
     public List<FollowUpObject> objectList(FollowUpMessageQuery query) {
+        query.setUserId(UserSession.getCurrent().getUserId());
         List<FollowUpObject> objects = followUpMessageMapper.objectList(query);
         return objects;
     }
