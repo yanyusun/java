@@ -2,7 +2,6 @@ package com.dqys.core.utils;
 
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
-import com.sun.scenario.effect.impl.ImagePool;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
