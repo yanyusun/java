@@ -23,5 +23,5 @@ public interface FollowUpSourceService {
 
     void del(Integer id);
 
-    FollowUpSource get(Integer id);
+    FollowUpSource getDetail(Integer id);
 }

@@ -61,7 +61,7 @@ public class FollowUpSourceImpl implements FollowUpSourceService{
     }
 
     @Override
-    public FollowUpSource get(Integer id) {
-        return followUpSourceMapper.selectByPrimaryKey(id);
+    public FollowUpSource getDetail(Integer id) {
+        return followUpSourceMapper.selectDetail(id);
     }
 }
