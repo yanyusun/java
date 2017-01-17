@@ -158,6 +158,9 @@ public class FollowUpController extends BaseApiContorller {
 
 
 
+
+
+
     /**
      * @api {GET} http://{url}/follow_up/unread_count 读取未读的数量
      * @apiName unread_count
@@ -305,5 +308,9 @@ public class FollowUpController extends BaseApiContorller {
         return JsonResponseTool.success(list);
     }
 
-
+    @RequestMapping(value = "c/source", method = RequestMethod.GET)
+    public JsonResponse getSource(Integer id) throws Exception {
+        followUpSourceService.get(id);
+        return null;
+    }
 }

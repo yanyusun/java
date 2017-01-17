@@ -14,14 +14,15 @@
     <result column="object_type" property="objectType" jdbcType="INTEGER" />
     <result column="object_id" property="objectId" jdbcType="INTEGER" />
     <result column="pid" property="pid" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, path_filename, show_filename, follow_up_message_id, create_at, update_at, stateflag, 
-    version,type,object_type,object_id,pid
+    version,type,object_type,object_id,pid,user_id
   </sql>
 
   <sql id="Base_Column_List_re" >
-     s.id,s.path_filename,s.show_filename,s.follow_up_message_id,s.create_at,s.update_at,s.type,s.object_type,s.object_id,s.pid
+     s.id,s.path_filename,s.show_filename,s.follow_up_message_id,s.create_at,s.update_at,s.type,s.object_type,s.object_id,s.pid,s.user_id
   </sql>
 
 

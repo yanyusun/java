@@ -1,6 +1,9 @@
 package com.dqys.business.service.dto.followUp;
 
+import com.dqys.business.orm.pojo.followUp.FollowUpSource;
+
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by pan on 17-1-17.
@@ -39,6 +42,8 @@ public class CFollowUpMessageDTO {
     private Integer roleId;
 
     private String avg;
+
+    private List<FollowUpSource> fileList;
 
     public Integer getId() {
         return id;
@@ -182,5 +187,13 @@ public class CFollowUpMessageDTO {
 
     public void setAvg(String avg) {
         this.avg = avg;
+    }
+
+    public List<FollowUpSource> getFileList() {
+        return fileList;
+    }
+
+    public void setFileList(List<FollowUpSource> fileList) {
+        this.fileList = fileList;
     }
 }

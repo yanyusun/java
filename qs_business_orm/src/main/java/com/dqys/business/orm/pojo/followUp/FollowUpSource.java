@@ -19,6 +19,10 @@ public class FollowUpSource extends BaseModel{
 
     private Integer pid;
 
+    private Integer userId;
+
+    private Integer userName;
+
     public Integer getId() {
         return id;
     }
@@ -81,5 +85,13 @@ public class FollowUpSource extends BaseModel{
 
     public void setPid(Integer pid) {
         this.pid = pid;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

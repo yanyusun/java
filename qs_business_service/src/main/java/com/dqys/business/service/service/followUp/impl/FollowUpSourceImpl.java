@@ -59,4 +59,9 @@ public class FollowUpSourceImpl implements FollowUpSourceService{
         }
         followUpSourceMapper.deleteByPrimaryKey(id);
     }
+
+    @Override
+    public FollowUpSource get(Integer id) {
+        return followUpSourceMapper.selectByPrimaryKey(id);
+    }
 }

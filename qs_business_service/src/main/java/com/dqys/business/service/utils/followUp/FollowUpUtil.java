@@ -57,6 +57,20 @@ public class FollowUpUtil {
         return followUpSource;
     }
 
+    public static FollowUpSourceDTO toFollowUpSourceCDetial(FollowUpSource followUpSource) {
+        FollowUpSourceDTO followUpSourceDTO = new FollowUpSourceDTO();
+        String pathFileName = followUpSource.getPathFilename();
+        followUpSourceDTO.setFilePathName(pathFileName);
+        followUpSourceDTO.setName(followUpSource.getShowFilename());
+        followUpSourceDTO.setDate(DateFormatTool.format(followUpSource.getCreateAt(), DateFormatTool.DATE_FORMAT_19));
+        File file = FileTool.getFile(pathFileName, false);
+        String size = FileTool.convertFileSize(file.length());
+        followUpSourceDTO.setSize(size);
+        //file
+        return followUpSourceDTO;
+    }
+
+
     public static List<FollowUpSourceDTO> toFollowUpSourceDTOList(List<FollowUpSource> followUpSourceList) {
         List<FollowUpSourceDTO> followUpSourceDTOList = new ArrayList<>();
         for (FollowUpSource followUpSource : followUpSourceList) {
@@ -70,7 +84,7 @@ public class FollowUpUtil {
             followUpSourceDTO.setPid(followUpSource.getPid());
             followUpSourceDTO.setDate(DateFormatTool.format(followUpSource.getCreateAt(), DateFormatTool.DATE_FORMAT_19));
             String pathFileName = followUpSource.getPathFilename();
-            if(pathFileName!=null){
+            if (pathFileName != null) {
                 File file = FileTool.getFile(pathFileName, false);
                 String size = FileTool.convertFileSize(file.length());
                 followUpSourceDTO.setSize(size);
@@ -80,7 +94,7 @@ public class FollowUpUtil {
         return followUpSourceDTOList;
     }
 
-    public static CFollowUpMessageDTO toCFollowUpMessageDTO(FollowUpMessage followUpMessage,int userId){
+    public static CFollowUpMessageDTO toCFollowUpMessageDTO(FollowUpMessage followUpMessage, int userId) {
         CFollowUpMessageDTO cFollowUpMessageDTO = new CFollowUpMessageDTO();
         cFollowUpMessageDTO.setId(followUpMessage.getId());
         cFollowUpMessageDTO.setCreateAt(followUpMessage.getCreateAt());
@@ -91,49 +105,52 @@ public class FollowUpUtil {
         cFollowUpMessageDTO.setLiquidateStage(followUpMessage.getLiquidateStage());
         cFollowUpMessageDTO.setSecondLiquidateStage(followUpMessage.getSecondLiquidateStage());
         TUserInfo userInfo = followUpMessage.getUserInfo();
-        if(userInfo!=null){
+        if (userInfo != null) {
             cFollowUpMessageDTO.setUserId(userInfo.getId());
             cFollowUpMessageDTO.setUsername(userInfo.getUserName());
             cFollowUpMessageDTO.setUserType(userInfo.getUserType());
             cFollowUpMessageDTO.setRoleId(userInfo.getRoleId());
             cFollowUpMessageDTO.setAvg(userInfo.getAvg());
-            if(followUpMessage.getUserId()==userId){
+            if (followUpMessage.getUserId() == userId) {
                 cFollowUpMessageDTO.setMyself(true);
             }
         }
         TCompanyInfo companyInfo = followUpMessage.getCompanyInfo();
-        if(companyInfo!=null){
+        if (companyInfo != null) {
             cFollowUpMessageDTO.setCompanyId(companyInfo.getId());
             cFollowUpMessageDTO.setCompanyName(companyInfo.getCompanyName());
+        }
+        if (followUpMessage.getFileList() != null) {
+            cFollowUpMessageDTO.setFileList(followUpMessage.getFileList());
         }
         cFollowUpMessageDTO.setContent(followUpMessage.getContent());
 
         return cFollowUpMessageDTO;
     }
 
-    public static List<CFollowUpMessageDTO> toCFollowUpMessageDTOList(List<FollowUpMessage> followUpMessageList){
+    public static List<CFollowUpMessageDTO> toCFollowUpMessageDTOList(List<FollowUpMessage> followUpMessageList) {
         Integer userId = UserSession.getCurrent().getUserId();
         List<CFollowUpMessageDTO> cFollowUpMessageDTOList = new ArrayList<>();
-        for(FollowUpMessage followUpMessage:followUpMessageList){
-            CFollowUpMessageDTO  cFollowUpMessageDTO = toCFollowUpMessageDTO(followUpMessage,userId);
+        for (FollowUpMessage followUpMessage : followUpMessageList) {
+            CFollowUpMessageDTO cFollowUpMessageDTO = toCFollowUpMessageDTO(followUpMessage, userId);
             cFollowUpMessageDTOList.add(cFollowUpMessageDTO);
         }
         return cFollowUpMessageDTOList;
     }
 
-    public static CFollowUpMessageDTO toIndexFollowUpMessageDTO(FollowUpObject followUpObject,int userId){
+    public static CFollowUpMessageDTO toIndexFollowUpMessageDTO(FollowUpObject followUpObject, int userId) {
         List<FollowUpMessage> list = followUpObject.getFollowUpMessages();
         FollowUpMessage followUpMessage = list.get(0);
-        CFollowUpMessageDTO cFollowUpMessageDTO=toCFollowUpMessageDTO(followUpMessage,userId);
+        CFollowUpMessageDTO cFollowUpMessageDTO = toCFollowUpMessageDTO(followUpMessage, userId);
         cFollowUpMessageDTO.setUnreadNum(list.size());
         return cFollowUpMessageDTO;
     }
 
-    public static List<CFollowUpMessageDTO> toIndexCFollowUpMessageDTOList(List<FollowUpObject> followUpObjectList){
+    public static List<CFollowUpMessageDTO> toIndexCFollowUpMessageDTOList(List<FollowUpObject> followUpObjectList) {
         Integer userId = UserSession.getCurrent().getUserId();
         List<CFollowUpMessageDTO> cFollowUpMessageDTOList = new ArrayList<>();
-        for(FollowUpObject followUpMessage:followUpObjectList){
-            CFollowUpMessageDTO cFollowUpMessageDTO = toIndexFollowUpMessageDTO(followUpMessage,userId);
+        for (FollowUpObject followUpMessage : followUpObjectList) {
+            CFollowUpMessageDTO cFollowUpMessageDTO = toIndexFollowUpMessageDTO(followUpMessage, userId);
             cFollowUpMessageDTOList.add(cFollowUpMessageDTO);
         }
         return cFollowUpMessageDTOList;
