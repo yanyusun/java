@@ -11,10 +11,13 @@
         <result column="create_at" property="createAt" jdbcType="TIMESTAMP"/>
         <result column="update_at" property="updateAt" jdbcType="TIMESTAMP"/>
         <result column="stateflag" property="stateflag" jdbcType="BIGINT"/>
+        <result column="second_object_id" property="secondObjectId" jdbcType="INTEGER"/>
+        <result column="second_object_type" property="secondObjectType" jdbcType="INTEGER"/>
+        <result column="second_liquidate_stage" property="secondLiquidateStage" jdbcType="INTEGER"/>
     </resultMap>
     <sql id="Base_Column_List">
     id, object_id, object_type, moment, has_read_num, version, create_at, update_at, 
-    stateflag,user_id
+    stateflag,user_id,second_object_id,second_object_type,second_liquidate_stage
   </sql>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         select
@@ -29,11 +32,12 @@
     <insert id="insert" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus">
     insert into t_follow_up_readstatus (id, user_id,object_id, object_type,
       moment, version,
-      create_at, update_at, stateflag
+      create_at, update_at, stateflag,second_object_id,second_object_type,second_liquidate_stage
       )
     values (#{id,jdbcType=INTEGER},  #{userId,jdbcType=INTEGER},#{objectId,jdbcType=INTEGER}, #{objectType,jdbcType=INTEGER},
       #{moment,jdbcType=INTEGER}, #{version,jdbcType=INTEGER},
-      #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, #{stateflag,jdbcType=BIGINT}
+      #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, #{stateflag,jdbcType=BIGINT},
+      #{secondObjectId,jdbcType=INTEGER},#{secondObjectType,jdbcType=INTEGER},#{secondLiquidateStage,jdbcType=INTEGER}
       )
   </insert>
     <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus">
@@ -66,6 +70,16 @@
             <if test="stateflag != null">
                 stateflag,
             </if>
+            <if test="secondObjectId != null">
+                second_object_id,
+            </if>
+            <if test="secondObjectType != null">
+                second_object_type,
+            </if>
+            <if test="secondLiquidateStage != null">
+                second_liquidate_stage,
+            </if>
+
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -94,6 +108,15 @@
             </if>
             <if test="stateflag != null">
                 #{stateflag,jdbcType=BIGINT},
+            </if>
+            <if test="secondObjectId != null">
+                #{secondObjectId,jdbcType=INTEGER},
+            </if>
+            <if test="secondObjectType != null">
+                #{secondObjectType,jdbcType=INTEGER},
+            </if>
+            <if test="secondLiquidateStage != null">
+                #{secondLiquidateStage,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>

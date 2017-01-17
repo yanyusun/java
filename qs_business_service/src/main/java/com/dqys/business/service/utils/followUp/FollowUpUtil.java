@@ -1,10 +1,14 @@
 package com.dqys.business.service.utils.followUp;
 
+import com.dqys.auth.orm.pojo.TCompanyInfo;
+import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
+import com.dqys.business.orm.pojo.followUp.FollowUpObject;
 import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.business.service.dto.followUp.CFollowUpMessageDTO;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.dto.followUp.FollowUpSourceDTO;
+import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.DateFormatTool;
 import com.dqys.core.utils.FileTool;
 
@@ -76,7 +80,7 @@ public class FollowUpUtil {
         return followUpSourceDTOList;
     }
 
-    public static CFollowUpMessageDTO toCFollowUpMessageDTO(FollowUpMessage followUpMessage){
+    public static CFollowUpMessageDTO toCFollowUpMessageDTO(FollowUpMessage followUpMessage,int userId){
         CFollowUpMessageDTO cFollowUpMessageDTO = new CFollowUpMessageDTO();
         cFollowUpMessageDTO.setId(followUpMessage.getId());
         cFollowUpMessageDTO.setCreateAt(followUpMessage.getCreateAt());
@@ -86,13 +90,19 @@ public class FollowUpUtil {
         cFollowUpMessageDTO.setSecondObjectType(followUpMessage.getSecondObjectType());
         cFollowUpMessageDTO.setLiquidateStage(followUpMessage.getLiquidateStage());
         cFollowUpMessageDTO.setSecondLiquidateStage(followUpMessage.getSecondLiquidateStage());
-        if(followUpMessage.getUserInfo()!=null){
-            cFollowUpMessageDTO.setUserId(followUpMessage.getUserInfo().getId());
-            cFollowUpMessageDTO.setUsername(followUpMessage.getUserInfo().getUserName());
+        TUserInfo userInfo = followUpMessage.getUserInfo();
+        if(userInfo!=null){
+            cFollowUpMessageDTO.setUserId(userInfo.getId());
+            cFollowUpMessageDTO.setUsername(userInfo.getUserName());
+            cFollowUpMessageDTO.setUserType(userInfo.getUserType());
+            if(followUpMessage.getUserId()==userId){
+                cFollowUpMessageDTO.setMyself(true);
+            }
         }
-        if(followUpMessage.getCompanyInfo()!=null){
-            cFollowUpMessageDTO.setCompanyId(followUpMessage.getCompanyInfo().getId());
-            cFollowUpMessageDTO.setCompanyName(followUpMessage.getCompanyInfo().getCompanyName());
+        TCompanyInfo companyInfo = followUpMessage.getCompanyInfo();
+        if(companyInfo!=null){
+            cFollowUpMessageDTO.setCompanyId(companyInfo.getId());
+            cFollowUpMessageDTO.setCompanyName(companyInfo.getCompanyName());
         }
         cFollowUpMessageDTO.setContent(followUpMessage.getContent());
 
@@ -100,9 +110,28 @@ public class FollowUpUtil {
     }
 
     public static List<CFollowUpMessageDTO> toCFollowUpMessageDTOList(List<FollowUpMessage> followUpMessageList){
+        Integer userId = UserSession.getCurrent().getUserId();
         List<CFollowUpMessageDTO> cFollowUpMessageDTOList = new ArrayList<>();
         for(FollowUpMessage followUpMessage:followUpMessageList){
-            CFollowUpMessageDTO  cFollowUpMessageDTO = toCFollowUpMessageDTO(followUpMessage);
+            CFollowUpMessageDTO  cFollowUpMessageDTO = toCFollowUpMessageDTO(followUpMessage,userId);
+            cFollowUpMessageDTOList.add(cFollowUpMessageDTO);
+        }
+        return cFollowUpMessageDTOList;
+    }
+
+    public static CFollowUpMessageDTO toIndexFollowUpMessageDTO(FollowUpObject followUpObject,int userId){
+        List<FollowUpMessage> list = followUpObject.getFollowUpMessages();
+        FollowUpMessage followUpMessage = list.get(0);
+        CFollowUpMessageDTO cFollowUpMessageDTO=toCFollowUpMessageDTO(followUpMessage,userId);
+        cFollowUpMessageDTO.setUnreadNum(list.size());
+        return cFollowUpMessageDTO;
+    }
+
+    public static List<CFollowUpMessageDTO> toIndexCFollowUpMessageDTOList(List<FollowUpObject> followUpObjectList){
+        Integer userId = UserSession.getCurrent().getUserId();
+        List<CFollowUpMessageDTO> cFollowUpMessageDTOList = new ArrayList<>();
+        for(FollowUpObject followUpMessage:followUpObjectList){
+            CFollowUpMessageDTO cFollowUpMessageDTO = toIndexFollowUpMessageDTO(followUpMessage,userId);
             cFollowUpMessageDTOList.add(cFollowUpMessageDTO);
         }
         return cFollowUpMessageDTOList;

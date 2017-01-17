@@ -25,12 +25,16 @@
         <association property="userInfo" javaType="com.dqys.auth.orm.pojo.TUserInfo">
             <result column="user_name" property="userName"/>
             <result column="sex" property="sex"/>
+            <result column="user_id" property="id"/>
+            <result column="user_type" property="userType"/>
+            <result column="role_id" property="roleId"/>
         </association>
         <association property="teammateRe" javaType="com.dqys.business.orm.pojo.coordinator.TeammateRe">
             <result column="type" property="type"/>
         </association>
         <association property="companyInfo" javaType="com.dqys.auth.orm.pojo.TCompanyInfo">
             <result column="company_name" property="companyName"/>
+            <result column="company_id" property="id"/>
         </association>
     </resultMap>
 
@@ -40,6 +44,8 @@
             <result column="user_name" property="userName"/>
             <result column="sex" property="sex"/>
             <result column="avg" property="avg"/>
+            <result column="user_type" property="userType"/>
+            <result column="role_id" property="roleId"/>
         </association>
         <association property="teammateRe" javaType="com.dqys.business.orm.pojo.coordinator.TeammateRe">
             <result column="type" property="type"/>
@@ -279,11 +285,13 @@
     <select id="getlistWithALL" resultMap="messageWithALL"
             parameterType="com.dqys.business.orm.query.followUp.FollowUpMessageQuery">
         SELECT
-        m.id,m.content,m.create_at,m.liquidate_stage,u.user_name,u.sex,c.company_name,s.path_filename,s.show_filename,m.user_id,u.avg
+        m.id,m.content,m.create_at,m.liquidate_stage,u.user_name,u.sex,c.company_name,s.path_filename,s.show_filename,m.user_id,u.avg,u.company_id,u.id user_id,
+        tag.user_type,tag.role_id
         FROM t_follow_up_message m
         LEFT JOIN t_user_info u ON m.user_id = u.id
         LEFT JOIN t_company_info c on u.company_id =c.id
         LEFT JOIN t_follow_up_source s on s.follow_up_message_id=m.id
+        LEFT JOIN t_user_tag tag on tag.user_id=u.id
         WHERE 1=1
         <if test="objectId != null">
             AND object_id = #{objectId,jdbcType=INTEGER}
@@ -319,6 +327,10 @@
     <resultMap id="WithBaseResultMap" type="com.dqys.business.orm.pojo.followUp.FollowUpObject">
         <result column="object_id" property="objectId"></result>
         <result column="object_type" property="objectType"></result>
+        <result column="second_object_id" property="secondObjectId" jdbcType="INTEGER"/>
+        <result column="second_object_type" property="secondObjectType" jdbcType="INTEGER"/>
+        <result column="liquidate_stage" property="liquidateStage" jdbcType="INTEGER"/>
+        <result column="second_liquidate_stage" property="secondLiquidateStage" jdbcType="INTEGER"/>
         <collection column="object_id" property="followUpMessages"
                     ofType="com.dqys.business.orm.pojo.followUp.FollowUpMessage">
             <result column="id" property="id"></result>
@@ -342,16 +354,31 @@
     </resultMap>
     <select id="objectList" resultMap="WithBaseResultMap"
             parameterType="com.dqys.business.orm.query.followUp.FollowUpMessageQuery">
-        SELECT tm.*,fur.user_id currentId,tui.real_name,tci.company_name
+        <!--SELECT tm.*,fur.user_id currentId,tui.real_name,tci.company_name-->
+        <!--FROM (SELECT fum.*-->
+        <!--FROM object_user_relation our,t_follow_up_message fum-->
+        <!--WHERE fum.object_id=our.object_id AND fum.object_type=our.object_type AND our.user_id=#{userId}) tm-->
+        <!--LEFT JOIN (SELECT object_id,object_type,user_id FROM t_follow_up_readstatus WHERE user_id=#{userId} GROUP BY-->
+        <!--object_id,object_type,user_id)fur-->
+        <!--ON tm.object_id=fur.object_id AND fur.object_type=tm.object_type AND fur.user_id=#{userId} LEFT JOIN t_user_info-->
+        <!--tui-->
+        <!--ON tui.id=tm.user_id LEFT JOIN t_company_info tci-->
+        <!--ON tci.id=tui.company_id-->
+        <!--ORDER BY fur.user_id desc,tm.create_at desc-->
+        <!--<if test="isPaging">-->
+            <!--limit #{pageNo},#{pageSize}-->
+        <!--</if>-->
+        SELECT tm.*,tui.real_name,tci.company_name,tag.user_type,tag.role_id
         FROM (SELECT fum.*
         FROM object_user_relation our,t_follow_up_message fum
         WHERE fum.object_id=our.object_id AND fum.object_type=our.object_type AND our.user_id=#{userId}) tm
-        LEFT JOIN (SELECT object_id,object_type,user_id FROM t_follow_up_readstatus WHERE user_id=#{userId} GROUP BY
-        object_id,object_type,user_id)fur
-        ON tm.object_id=fur.object_id AND fur.object_type=tm.object_type AND fur.user_id=#{userId} LEFT JOIN t_user_info
-        tui
-        ON tui.id=tm.user_id LEFT JOIN t_company_info tci
-        ON tci.id=tui.company_id
+        LEFT JOIN (SELECT object_id,object_type,user_id, second_liquidate_stage,second_object_id,second_object_type,moment FROM t_follow_up_readstatus WHERE user_id=#{userId}  )fur
+        ON tm.object_id=fur.object_id AND fur.object_type=tm.object_type
+        AND  fur.moment = tm.liquidate_stage  AND fur. second_liquidate_stage = tm.second_liquidate_stage and tm. second_object_id = fur. second_object_id AND  tm.second_object_type AND fur. second_object_type
+        AND fur.user_id=#{userId}
+        LEFT JOIN t_user_info tui ON tui.id=tm.user_id
+        LEFT JOIN t_company_info tci ON tci.id=tui.company_id
+        LEFT JOIN t_user_tag tag  ON tui.id=tag.user_id
         ORDER BY fur.user_id desc,tm.create_at desc
         <if test="isPaging">
             limit #{pageNo},#{pageSize}

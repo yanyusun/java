@@ -15,6 +15,12 @@ public class FollowUpReadstatus extends BaseModel  {
 
     private Integer moment;
 
+    private Integer secondObjectId;
+
+    private Integer secondObjectType;
+
+    private Integer secondLiquidateStage;
+
     private Integer version;
 
     private Date createAt;
@@ -95,4 +101,27 @@ public class FollowUpReadstatus extends BaseModel  {
         this.userId = userId;
     }
 
+    public Integer getSecondObjectId() {
+        return secondObjectId;
+    }
+
+    public void setSecondObjectId(Integer secondObjectId) {
+        this.secondObjectId = secondObjectId;
+    }
+
+    public Integer getSecondObjectType() {
+        return secondObjectType;
+    }
+
+    public void setSecondObjectType(Integer secondObjectType) {
+        this.secondObjectType = secondObjectType;
+    }
+
+    public Integer getSecondLiquidateStage() {
+        return secondLiquidateStage;
+    }
+
+    public void setSecondLiquidateStage(Integer secondLiquidateStage) {
+        this.secondLiquidateStage = secondLiquidateStage;
+    }
 }

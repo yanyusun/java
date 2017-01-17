@@ -32,6 +32,12 @@ public class CFollowUpMessageDTO {
 
     private Integer companyId;
 
+    private boolean isMyself=false; //是不是自己发的信息
+
+    private Integer userType;
+
+    private Integer roleId;
+
     public Integer getId() {
         return id;
     }
@@ -142,5 +148,29 @@ public class CFollowUpMessageDTO {
 
     public void setCompanyId(Integer companyId) {
         this.companyId = companyId;
+    }
+
+    public boolean isMyself() {
+        return isMyself;
+    }
+
+    public void setMyself(boolean myself) {
+        isMyself = myself;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 }

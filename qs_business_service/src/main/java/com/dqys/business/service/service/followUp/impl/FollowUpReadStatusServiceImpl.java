@@ -50,6 +50,9 @@ public class FollowUpReadStatusServiceImpl implements FollowUpReadStatusService 
                 record.setObjectId(MessageUtils.transStringToInt(msg[0]));
                 record.setObjectType(MessageUtils.transStringToInt(msg[1]));
                 record.setMoment(MessageUtils.transStringToInt(msg[2]));
+                record.setSecondObjectId(MessageUtils.transStringToInt(msg[3]));
+                record.setSecondObjectType(MessageUtils.transStringToInt(msg[4]));
+                record.setSecondLiquidateStage(MessageUtils.transStringToInt(msg[5]));
                 insert(record);
                 FollowUpMessage followUpMessage = new FollowUpMessage();
                 followUpMessage.setObjectType(record.getObjectType());
