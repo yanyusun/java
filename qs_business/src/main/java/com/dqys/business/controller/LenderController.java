@@ -1,6 +1,8 @@
 package com.dqys.business.controller;
 
 import com.dqys.auth.orm.constant.CompanyTypeEnum;
+import com.dqys.business.orm.constant.company.ObjectTypeEnum;
+import com.dqys.business.orm.query.asset.ContactQuery;
 import com.dqys.business.service.constant.asset.LenderTypeEnum;
 import com.dqys.business.service.constant.asset.ObjectTabEnum;
 import com.dqys.business.service.dto.asset.LenderInsertDTO;
@@ -170,6 +172,7 @@ public class LenderController {
         }
         return lenderService.get(id);
     }
+
     /**
      * 获取借款人信息(C端)
      *
@@ -184,6 +187,27 @@ public class LenderController {
         }
         return lenderService.get(id);
     }
+
+    /**
+     * 获取借款人的相关联系人信息(C端)
+     *
+     * @param type 借款人类型(1借款人|2共同借款人|3担保方|4银行客户经理|5其他)
+     * @param id   借款人id
+     * @return
+     */
+    @RequestMapping(value = "/c/getContact")
+    @ResponseBody
+    public JsonResponse getContactC(@RequestParam(required = true) Integer id, Integer type) {
+        if (CommonUtil.checkParam(id)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        ContactQuery query = new ContactQuery();
+        query.setType(type);
+        query.setMode(ObjectTypeEnum.LENDER.getValue().toString());
+        query.setModeId(id);
+        return lenderService.getContactC(query);
+    }
+
     /**
      * 获取联系人所有相关信息
      *
@@ -196,7 +220,6 @@ public class LenderController {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.success("参数错误");
         }
-        ExcelUtilAsset.uploadExcel("1_430_7758258.xls");
         return lenderService.getLenderAll(id);
     }
 
