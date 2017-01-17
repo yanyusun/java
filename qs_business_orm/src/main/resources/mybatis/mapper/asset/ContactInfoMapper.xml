@@ -315,6 +315,7 @@
     SELECT * from bt_contact
     where stateflag = 0 AND mode = #{model,jdbcType=VARCHAR}
     AND mode_id = #{id,jdbcType=INTEGER} AND type = #{type,jdbcType=INTEGER}
+    limit 0,1
   </select>
 
 

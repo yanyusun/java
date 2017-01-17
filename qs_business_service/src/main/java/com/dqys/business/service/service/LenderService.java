@@ -1,6 +1,7 @@
 package com.dqys.business.service.service;
 
 import com.dqys.business.orm.pojo.asset.LenderInfo;
+import com.dqys.business.orm.query.asset.ContactQuery;
 import com.dqys.business.service.dto.asset.ContactDTO;
 import com.dqys.business.service.dto.asset.LenderDTO;
 import com.dqys.business.service.dto.asset.StatisticsLender;
@@ -87,4 +88,6 @@ public interface LenderService {
     StatisticsLender getCountByStatistics(Integer objectId, Integer objectType);
 
     JsonResponse transformLenderC(LenderListQuery lenderListQuery, Integer type);
+
+    JsonResponse getContactC(ContactQuery query);
 }
