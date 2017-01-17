@@ -743,6 +743,17 @@ public class LenderServiceImpl implements LenderService {
         }
     }
 
+    @Override
+    public JsonResponse getContactC(ContactQuery query) {
+        List<ContactInfo> contactInfoList = contactInfoMapper.queryList(query);
+        Map map = new HashMap<>();
+        if (contactInfoList == null || contactInfoList.size() == 0) {
+            return JsonResponseTool.successNullList();
+        }
+        map.put("contactInfoList", contactInfoList);
+        return JsonResponseTool.success(map);
+    }
+
     private void setDto(LenderListDTO dto, LenderCDTO cdto) {
         ContactInfo info = contactInfoMapper.getByModel(ObjectTypeEnum.LENDER.getValue().toString(), ContactTypeEnum.LENDER.getValue(), dto.getLenderId());
         cdto.setAvg(dto.getAvg());
