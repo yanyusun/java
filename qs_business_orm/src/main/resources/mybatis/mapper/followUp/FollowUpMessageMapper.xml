@@ -47,7 +47,7 @@
         <association property="companyInfo" javaType="com.dqys.auth.orm.pojo.TCompanyInfo">
             <result column="company_name" property="companyName"/>
         </association>
-       <collection column="id" property="fileList"  ofType="com.dqys.business.orm.pojo.followUp.FollowUpSource">
+        <collection column="id" property="fileList" ofType="com.dqys.business.orm.pojo.followUp.FollowUpSource">
             <result column="path_filename" property="pathFilename"/>
             <result column="show_filename" property="showFilename"/>
         </collection>
@@ -68,7 +68,8 @@
     delete from t_follow_up_message
     where id = #{id,jdbcType=INTEGER}
   </delete>
-    <insert id="insert" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage"  useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage" useGeneratedKeys="true"
+            keyProperty="id">
     insert into t_follow_up_message (id, object_id, object_type, 
       user_id, team_id, content, 
       version, create_at, update_at, 
@@ -82,7 +83,8 @@
       #{liquidateStage,jdbcType=INTEGER}, #{secondLiquidateStage,jdbcType=INTEGER}, #{sendStatus,jdbcType=INTEGER}
       )
   </insert>
-    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertSelective" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage"
+            useGeneratedKeys="true" keyProperty="id">
         insert into t_follow_up_message
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -274,21 +276,23 @@
     </select>
 
     <!--得到更进所有信息-->
-    <select id="getlistWithALL" resultMap="messageWithALL" parameterType="com.dqys.business.orm.query.followUp.FollowUpMessageQuery">
-        SELECT m.id,m.content,m.create_at,m.liquidate_stage,u.user_name,u.sex,c.company_name,s.path_filename,s.show_filename,m.user_id,u.avg
+    <select id="getlistWithALL" resultMap="messageWithALL"
+            parameterType="com.dqys.business.orm.query.followUp.FollowUpMessageQuery">
+        SELECT
+        m.id,m.content,m.create_at,m.liquidate_stage,u.user_name,u.sex,c.company_name,s.path_filename,s.show_filename,m.user_id,u.avg
         FROM t_follow_up_message m
         LEFT JOIN t_user_info u ON m.user_id = u.id
         LEFT JOIN t_company_info c on u.company_id =c.id
         LEFT JOIN t_follow_up_source s on s.follow_up_message_id=m.id
         WHERE 1=1
         <if test="objectId != null">
-           AND object_id = #{objectId,jdbcType=INTEGER}
+            AND object_id = #{objectId,jdbcType=INTEGER}
         </if>
         <if test="objectType != null">
             AND object_type = #{objectType,jdbcType=INTEGER}
         </if>
         <if test="secondObjectId != null">
-           AND second_object_id = #{secondObjectId,jdbcType=INTEGER}
+            AND second_object_id = #{secondObjectId,jdbcType=INTEGER}
         </if>
         <if test="secondObjectType != null">
             AND second_object_type = #{secondObjectType,jdbcType=INTEGER}
@@ -309,15 +313,31 @@
     </select>
 
 
-
-
-
-
     <update id="updateBySendStatus" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage">
         UPDATE t_follow_up_message SET  send_status=#{sendStatus} WHERE object_id=#{objectId} and object_type=#{objectType} and user_id=#{userId}
     </update>
-
-
+    <resultMap id="WithBaseResultMap" type="com.dqys.business.orm.pojo.followUp.FollowUpObject">
+        <result column="object_id" property="objectId"></result>
+        <result column="object_type" property="objectType"></result>
+        <collection column="object_id" property="followUpMessages"
+                    ofType="com.dqys.business.orm.pojo.followUp.FollowUpMessage">
+            <result column="id" property="id"></result>
+            <result column="content" property="content"></result>
+            <result column="create_at" property="createAt"></result>
+            <result column="user_id" property="userId"></result>
+        </collection>
+        <collection column="object_id" property="followUpReadstatuses"
+                    ofType="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus">
+            <result column="currentId" property="userId"></result>
+        </collection>
+    </resultMap>
+    <select id="objectList" resultMap="WithBaseResultMap"
+            parameterType="com.dqys.business.orm.query.followUp.FollowUpMessageQuery">
+        SELECT tm.*,fur.user_id currentId FROM (SELECT fum.id,fum.object_id,fum.object_type,fum.content,fum.user_id,fum.create_at FROM object_user_relation our,t_follow_up_message fum
+        WHERE fum.object_id=our.object_id AND fum.object_type=our.object_type AND our.user_id=299) tm LEFT JOIN (SELECT object_id,object_type,user_id FROM t_follow_up_readstatus WHERE user_id=299 GROUP BY object_id,object_type,user_id)fur
+        ON tm.object_id=fur.object_id AND fur.object_type=tm.object_type AND fur.user_id=299
+        ORDER BY fur.user_id desc,tm.create_at desc
+    </select>
 
 
 </mapper>

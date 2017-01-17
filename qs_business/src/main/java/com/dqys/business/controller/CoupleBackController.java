@@ -41,7 +41,21 @@ public class CoupleBackController {
         Map map = coupleBackService.addCoupleBack(coupleBack);
         return CommonUtil.jsonResponse(map);
     }
-
+    /**
+     * @api {post} back/c/addCoupleBack 添加反馈信息
+     * @apiUse CoupleBack
+     * @apiSampleRequest back/addCoupleBack
+     * @apiGroup CoupleBack
+     * @apiName back/addCoupleBack
+     */
+    @RequestMapping("/c/addCoupleBack")
+    @ResponseBody
+    public JsonResponse addCoupleBackC(CoupleBack coupleBack) {
+        Integer userId = UserSession.getCurrent() == null ? 0 : UserSession.getCurrent().getUserId();
+        coupleBack.setCreateUser(userId);
+        Map map = coupleBackService.addCoupleBack(coupleBack);
+        return CommonUtil.jsonResponse(map);
+    }
     /**
      * @api {post} back/delCoupleBack 删除反馈信息
      * @apiParam {int} id 反馈信息id

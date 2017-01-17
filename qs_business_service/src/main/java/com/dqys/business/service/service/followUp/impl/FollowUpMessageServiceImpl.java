@@ -15,6 +15,7 @@ import com.dqys.business.orm.pojo.coordinator.OURelation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
+import com.dqys.business.orm.pojo.followUp.FollowUpObject;
 import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
@@ -155,16 +156,16 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             int teamId = getTeamId(followUpMessageQuery.getObjectId(), followUpMessageQuery.getObjectType(), userId);
             followUpMessageQuery.setTeamId(teamId);
             followUpMessages = followUpMessageMapper.getlistWithALL(followUpMessageQuery);
-            if(followUpMessages!=null&&followUpMessages.size()>0){
+            if (followUpMessages != null && followUpMessages.size() > 0) {
                 Iterator<FollowUpMessage> intIter = followUpMessages.iterator();
                 while (intIter.hasNext()) {
                     FollowUpMessage followUpMessage = intIter.next();
-                    if (followUpMessage.getUserId()==userId) {
+                    if (followUpMessage.getUserId() == userId) {
                         intIter.remove();
                     }
                 }
             }
-        }else{
+        } else {
             followUpMessages = followUpMessageMapper.getlistWithALL(followUpMessageQuery);
         }
         // TODO: 16-10-27 预留字段目前需求不必使用也能完成 
@@ -190,6 +191,12 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             //// TODO: 16-9-23 前端测试完必后去掉注释 
             FileTool.saveFileSync(followUpSource.getPathFilename());
         }
+    }
+
+    @Override
+    public List<FollowUpObject> objectList(FollowUpMessageQuery query) {
+        List<FollowUpObject> objects = followUpMessageMapper.objectList(query);
+        return objects;
     }
 
     /**
