@@ -47,4 +47,9 @@ public class FollowUpSourceMapperImp extends BaseDao implements FollowUpSourceMa
     public List<FollowUpSource> list(FollowUpSourceQuery query) {
         return super.getSqlSession().getMapper(FollowUpSourceMapper.class).list(query);
     }
+
+    @Override
+    public FollowUpSource selectDetail(Integer id) {
+        return null;
+    }
 }

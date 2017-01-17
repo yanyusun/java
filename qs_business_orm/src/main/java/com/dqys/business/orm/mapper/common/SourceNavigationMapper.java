@@ -59,4 +59,6 @@ public interface SourceNavigationMapper {
      */
     List<SourceNavigation> ListByIsCustom(Integer isCustom);
 
+    SourceNavigation selectDetail(Integer id);
+
 }
