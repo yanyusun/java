@@ -58,7 +58,7 @@ public interface SourceNavigationMapper {
      * @return
      */
     List<SourceNavigation> ListByIsCustom(Integer isCustom);
-    //// TODO: 17-1-17 mkf 
+    //// TODO: 17-1-17 mkf
     SourceNavigation selectDetail(Integer id);
 
 }

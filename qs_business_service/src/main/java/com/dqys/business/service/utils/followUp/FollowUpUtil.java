@@ -66,7 +66,7 @@ public class FollowUpUtil {
         File file = FileTool.getFile(pathFileName, false);
         String size = FileTool.convertFileSize(file.length());
         followUpSourceDTO.setSize(size);
-        //file
+        followUpSourceDTO.setUserId(followUpSource.getUserId());
         return followUpSourceDTO;
     }
 

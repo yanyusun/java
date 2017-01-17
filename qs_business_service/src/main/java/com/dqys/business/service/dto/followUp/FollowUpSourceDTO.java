@@ -34,7 +34,7 @@ public class FollowUpSourceDTO {
 
     private String size;
 
-    private String userId;
+    private Integer userId;
 
     private String userName;
 
@@ -118,11 +118,11 @@ public class FollowUpSourceDTO {
         this.size = size;
     }
 
-    public String getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
