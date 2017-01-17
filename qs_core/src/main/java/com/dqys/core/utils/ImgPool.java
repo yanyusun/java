@@ -1,13 +1,10 @@
 package com.dqys.core.utils;
 
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageEncoder;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
@@ -110,24 +107,39 @@ public class ImgPool {
      * @param w int 新宽度
      * @param h int 新高度
      */
+//    public void resize(int w, int h) throws IOException {
+//        // SCALE_SMOOTH 的缩略算法 生成缩略图片的平滑度的 优先级比速度高 生成的图片质量比较好 但速度慢
+//        BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+//        image.getGraphics().drawImage(img, 0, 0, w, h, null); // 绘制缩小后的图
+//        File destFile = new File(path);
+//        FileOutputStream out = new FileOutputStream(destFile); // 输出到文件流
+//         //可以正常实现bmp、png、gif转jpg
+//        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+//       encoder.encode(image); // JPEG编码
+//        out.close();
+//    }
+
     public void resize(int w, int h) throws IOException {
         // SCALE_SMOOTH 的缩略算法 生成缩略图片的平滑度的 优先级比速度高 生成的图片质量比较好 但速度慢
         BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         image.getGraphics().drawImage(img, 0, 0, w, h, null); // 绘制缩小后的图
-        File destFile = new File(path);
-        FileOutputStream out = new FileOutputStream(destFile); // 输出到文件流
-        // 可以正常实现bmp、png、gif转jpg
-        JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
-        encoder.encode(image); // JPEG编码
-        out.close();
+        String formatName = path.substring(path.lastIndexOf(".") + 1);
+        ImageIO.write(image, /*"GIF"*/ formatName /* format desired */ , new File(path) /* target */ );
     }
 
-    public static void main(String[] args) {
-        try {
-            ImgPool imgPool = new ImgPool("F://11.png", "F://22.png");
-            imgPool.resizeByWidth(200);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
+
+
+
+
+
+
+//    public static void main(String[] args) {
+//        try {
+//            ImgPool imgPool = new ImgPool("F://11.png", "F://22.png");
+//            imgPool.resizeByWidth(200);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }
