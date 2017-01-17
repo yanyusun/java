@@ -130,6 +130,7 @@ public class FollowUpController extends BaseApiContorller {
         if (followUpMessageQuery.getObjectId() == null || followUpMessageQuery.getObjectType() == null || followUpMessageQuery.getLiquidateStage() == null) {
             return JsonResponseTool.paramErr("参数错误");
         }
+        followUpMessageService.objectList(followUpMessageQuery);
         List<FollowUpMessage> list = followUpMessageService.listAndCancelUnread(followUpMessageQuery);
         return JsonResponseTool.success(list);
     }
@@ -143,11 +144,6 @@ public class FollowUpController extends BaseApiContorller {
 //        List<FollowUpMessage> list = followUpMessageService.listAndCancelUnread(followUpMessageQuery);
 //        return JsonResponseTool.success(list);
 //    }
-
-
-
-
-
 
 
     /**
@@ -186,33 +182,33 @@ public class FollowUpController extends BaseApiContorller {
      * @apiGroup followUp
      * @apiUse FollowUpMessageDTO
      * @apiSuccessExample {json} Data-Response:
-    {
-    "code": 2000,
-    "msg": "成功",
-    "data": {
-    "id": null,
-    "objectId": 111,
-    "objectType": 111,
-    "secondObjectId": 11,
-    "secondObjectType": 11,
-    "content": "11",
-    "liquidateStage": 11,
-    "secondLiquidateStage": 11,
-    "fileList": [
-    {
-    "id": null,
-    "version": null,
-    "stateflag": null,
-    "createAt": null,
-    "updateAt": null,
-    "remark": null,
-    "pathFilename": "aaa.jpg",
-    "showFilename": "p.jpg",
-    "followUpMessageId": 18
-    }
-    ]
-    }
-    }
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {
+     * "id": null,
+     * "objectId": 111,
+     * "objectType": 111,
+     * "secondObjectId": 11,
+     * "secondObjectType": 11,
+     * "content": "11",
+     * "liquidateStage": 11,
+     * "secondLiquidateStage": 11,
+     * "fileList": [
+     * {
+     * "id": null,
+     * "version": null,
+     * "stateflag": null,
+     * "createAt": null,
+     * "updateAt": null,
+     * "remark": null,
+     * "pathFilename": "aaa.jpg",
+     * "showFilename": "p.jpg",
+     * "followUpMessageId": 18
+     * }
+     * ]
+     * }
+     * }
      */
     @RequestMapping(value = {"add", "c/add"}, method = RequestMethod.POST)
     @ResponseBody
@@ -293,11 +289,11 @@ public class FollowUpController extends BaseApiContorller {
         UserSession userSession = UserSession.getCurrent();
         int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
         int userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());
-        if(!UserServiceUtils.isPlatBoolean(userType,userRole)
-                &&!objectUserRelationService.hasOnlyOneRelation(objectType,objectId,userSession.getUserId())){
+        if (!UserServiceUtils.isPlatBoolean(userType, userRole)
+                && !objectUserRelationService.hasOnlyOneRelation(objectType, objectId, userSession.getUserId())) {
             return JsonResponseTool.failure("对不起,您暂无该权限");
         }
-        List<FollowUpSourceDTO> list = followUpSourceService.listByPid(pid,objectType,objectId);
+        List<FollowUpSourceDTO> list = followUpSourceService.listByPid(pid, objectType, objectId);
         return JsonResponseTool.success(list);
     }
 

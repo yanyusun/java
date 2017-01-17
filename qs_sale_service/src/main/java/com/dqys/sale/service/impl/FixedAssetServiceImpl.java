@@ -117,6 +117,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         faDto.setRighterType(asset.getRighterType());
         faDto.setTitle(asset.getTitle());
         faDto.setYear(asset.getYear());
+        faDto.setSource(asset.getSource());
     }
 
     private List<FixedAssetDTO> getFixedAssetDTOs(FixedAssetQuery query) {

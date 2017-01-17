@@ -9,6 +9,7 @@ import java.util.Date;
 public class FADto {
     private Integer id;
     private Integer assetType;//资产类型:房产0设备1土地2
+    private Integer source;//评分
     private Integer isSpecial;//是否专项:0是，1不是
     private Date entrustBegintime;//开始委托时间
     private Date entrustEndtime;//委托结束时间
@@ -22,6 +23,15 @@ public class FADto {
     private String no;//固定资产编号:自动生成，生成方案参考"实体id代号管理"+b端规则
     private String title;//标题
     private Integer orientation;//房朝向：0南北，1东南，2西南，3东北，4西北，5东，6西，7南，8北
+
+
+    public Integer getSource() {
+        return source;
+    }
+
+    public void setSource(Integer source) {
+        this.source = source;
+    }
 
     public String getAddress() {
         return address;

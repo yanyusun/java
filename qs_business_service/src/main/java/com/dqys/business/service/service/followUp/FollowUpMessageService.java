@@ -2,6 +2,7 @@ package com.dqys.business.service.service.followUp;
 
 
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
+import com.dqys.business.orm.pojo.followUp.FollowUpObject;
 import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
@@ -15,6 +16,7 @@ import java.util.List;
 public interface FollowUpMessageService {
     /**
      * 增加跟进信息并且增加跟进次数
+     *
      * @param followUpMessageDTO
      * @return
      */
@@ -22,6 +24,7 @@ public interface FollowUpMessageService {
 
     /**
      * 查询跟进信息
+     *
      * @param followUpMessageQuery
      * @return
      */
@@ -29,14 +32,16 @@ public interface FollowUpMessageService {
 
     /**
      * 查询跟进信息,级联公司与用户
-    * @param followUpMessageQuery
-    * @return
-            */
+     *
+     * @param followUpMessageQuery
+     * @return
+     */
     List<FollowUpMessage> getlistWithUserAndTeam(FollowUpMessageQuery followUpMessageQuery);
 
 
     /**
      * 查询跟进并取消未读
+     *
      * @param followUpMessageQuery
      * @return
      */
@@ -44,6 +49,7 @@ public interface FollowUpMessageService {
 
     /**
      * 查询跟进信息,级联公司,用户,资源
+     *
      * @param followUpMessageQuery
      * @return
      */
@@ -51,8 +57,11 @@ public interface FollowUpMessageService {
 
     /**
      * 批量插入上传的资源
+     *
      * @param fileList
      */
-    void insertBatchInsertSource(List<FollowUpSource> fileList,Integer followUpId) throws IOException;
+    void insertBatchInsertSource(List<FollowUpSource> fileList, Integer followUpId) throws IOException;
+
+    List<FollowUpObject> objectList(FollowUpMessageQuery query);
 
 }

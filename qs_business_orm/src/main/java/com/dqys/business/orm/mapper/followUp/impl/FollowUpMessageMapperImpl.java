@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.followUp.impl;
 
 import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
+import com.dqys.business.orm.pojo.followUp.FollowUpObject;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
@@ -65,7 +66,12 @@ public class FollowUpMessageMapperImpl extends BaseDao implements FollowUpMessag
     }
 
     @Override
+    public List<FollowUpObject> objectList(FollowUpMessageQuery query) {
+        return super.getSqlSession().getMapper(FollowUpMessageMapper.class).objectList(query);
+    }
+
+    @Override
     public List<FollowUpMessage> getlistWithALL(FollowUpMessageQuery query) {
-        return  super.getSqlSession().getMapper(FollowUpMessageMapper.class).getlistWithALL(query);
+        return super.getSqlSession().getMapper(FollowUpMessageMapper.class).getlistWithALL(query);
     }
 }
