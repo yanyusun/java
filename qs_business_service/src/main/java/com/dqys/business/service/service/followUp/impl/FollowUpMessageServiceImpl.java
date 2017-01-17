@@ -128,6 +128,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             insertBatchInsertSource(fileList, followUpMessage.getId());
         }
         //向mq中增加未读信息
+       // String[] unReadMessage = {followUpMessage.getObjectId().toString(), followUpMessage.getObjectType().toString(), followUpMessage.getLiquidateStage().toString()};
         String[] unReadMessage = {followUpMessage.getObjectId().toString(), followUpMessage.getObjectType().toString(), followUpMessage.getLiquidateStage().toString()};
         RabbitMQProducerTool.addToFollowUnReadMessage(unReadMessage);
         return followUpMessage.getId();

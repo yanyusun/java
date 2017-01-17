@@ -590,16 +590,17 @@ public class SourceServiceImpl implements SourceService {
         int type = sourceEditDto.getType().intValue();
         if (type == SourceTypeEnum.follow_up_file.getValue() || type == SourceTypeEnum.follow_up_folder.getValue()) {
             followUpSourceService.rename(sourceEditDto.getId(), sourceEditDto.getName());
-        } else if (type == SourceTypeEnum.source_file.getValue()) {
-            SourceSource sourceSource = new SourceSource();
-            sourceSource.setId(sourceEditDto.getId());
-            sourceSource.setName(sourceEditDto.getName());
-            sourceSourceMapper.update(sourceSource);
-        } else if (type == SourceTypeEnum.source_folder.getValue()) {
+//        } else if (type == SourceTypeEnum.source_file.getValue()) {
+//            SourceSource sourceSource = new SourceSource();
+//            sourceSource.setId(sourceEditDto.getId());
+//            sourceSource.setName(sourceEditDto.getName());
+//            sourceSourceMapper.update(sourceSource);
+        } else if (type == SourceTypeEnum.source_folder.getValue()||type == SourceTypeEnum.source_file.getValue()) {
+            //只改文件夹
             SourceNavigation sourceNavigation = new SourceNavigation();
             sourceNavigation.setId(sourceEditDto.getId());
             sourceNavigation.setName(sourceEditDto.getName());
-            sourceNavigationMapper.update(sourceNavigation);
+            sourceNavigationMapper.updateByPrimaryKeySelective(sourceNavigation);
         } else {
             throw new SourceEditException("没有该类型的参数:" + type, SourceEditException.TYPE_ERROR);
         }
@@ -613,6 +614,7 @@ public class SourceServiceImpl implements SourceService {
             Integer id = sourceEditDto.getId();
             if (type == SourceTypeEnum.follow_up_file.getValue() || type == SourceTypeEnum.follow_up_folder.getValue()) {
                 followUpSourceService.del(id);
+
             } else if (type == SourceTypeEnum.source_file.getValue() || type == SourceTypeEnum.source_folder.getValue()) {
                 deleteNavigation(id);
             } else {

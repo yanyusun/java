@@ -36,7 +36,7 @@ public interface SourceNavigationMapper {
      * @param record
      * @return
      */
-    Integer update(SourceNavigation record);
+    Integer updateByPrimaryKeySelective(SourceNavigation record);
 
     /**
      * 获取借款人的可视化资料实勘分类列表

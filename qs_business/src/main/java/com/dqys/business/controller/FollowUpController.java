@@ -2,12 +2,14 @@ package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
+import com.dqys.business.service.dto.followUp.CFollowUpMessageDTO;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.dto.followUp.FollowUpSourceDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.business.service.service.followUp.FollowUpReadStatusService;
 import com.dqys.business.service.service.followUp.FollowUpSourceService;
 import com.dqys.business.service.service.objectUserRelation.ObjectUserRelationService;
+import com.dqys.business.service.utils.followUp.FollowUpUtil;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.model.JsonResponse;
@@ -17,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +41,7 @@ public class FollowUpController extends BaseApiContorller {
 
     @Autowired
     private FollowUpSourceService followUpSourceService;
+
 
 
     /**
@@ -125,7 +130,6 @@ public class FollowUpController extends BaseApiContorller {
      * }
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    @ResponseBody
     public JsonResponse list(FollowUpMessageQuery followUpMessageQuery) throws Exception {
         if (followUpMessageQuery.getObjectId() == null || followUpMessageQuery.getObjectType() == null || followUpMessageQuery.getLiquidateStage() == null) {
             return JsonResponseTool.paramErr("参数错误");
@@ -133,6 +137,40 @@ public class FollowUpController extends BaseApiContorller {
         List<FollowUpMessage> list = followUpMessageService.listAndCancelUnread(followUpMessageQuery);
         return JsonResponseTool.success(list);
     }
+    @RequestMapping(value = "c/list", method = RequestMethod.GET)
+    public JsonResponse c_list(FollowUpMessageQuery followUpMessageQuery) throws Exception {
+        if (followUpMessageQuery.getObjectId() == null || followUpMessageQuery.getObjectType() == null || followUpMessageQuery.getLiquidateStage() == null) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        List<FollowUpMessage> list = followUpMessageService.listAndCancelUnread(followUpMessageQuery);
+        return JsonResponseTool.success(FollowUpUtil.toCFollowUpMessageDTOList(list));
+    }
+
+    @RequestMapping(value = "c/index", method = RequestMethod.GET)
+    public JsonResponse c_Index() throws Exception {
+       // List<FollowUpMessage> list = followUpMessageService.listAndCancelUnread(followUpMessageQuery);
+        List<CFollowUpMessageDTO> cFollowUpMessageDTOs = new ArrayList<>();
+        CFollowUpMessageDTO cFollowUpMessageDTO = new CFollowUpMessageDTO();
+        cFollowUpMessageDTO.setId(1);
+        cFollowUpMessageDTO.setCreateAt(new Date());
+        cFollowUpMessageDTO.setObjectId(32);
+        cFollowUpMessageDTO.setObjectType(11);
+        cFollowUpMessageDTO.setSecondObjectId(3443);
+        cFollowUpMessageDTO.setSecondObjectType(16);
+        cFollowUpMessageDTO.setLiquidateStage(323);
+        cFollowUpMessageDTO.setSecondLiquidateStage(323);
+
+            cFollowUpMessageDTO.setUsername("esdsdsd");
+
+
+            cFollowUpMessageDTO.setCompanyName("fdfdfd");
+
+        cFollowUpMessageDTO.setContent("dsds");
+        cFollowUpMessageDTOs.add(cFollowUpMessageDTO);
+        return JsonResponseTool.success(cFollowUpMessageDTOs);
+    }
+
+
 
 //    @RequestMapping(value = "c/list", method = RequestMethod.GET)
 //    @ResponseBody
@@ -173,7 +211,6 @@ public class FollowUpController extends BaseApiContorller {
      * }
      */
     @RequestMapping(value = "/unread_count", method = RequestMethod.GET)
-    @ResponseBody
     public JsonResponse unReadCount(int objectId, int objectType) {
         List<Map<String, String>> countMap = followUpReadStatusService.getCountMap(objectId, objectType);
         return JsonResponseTool.success(countMap);
@@ -215,7 +252,6 @@ public class FollowUpController extends BaseApiContorller {
     }
      */
     @RequestMapping(value = {"add", "c/add"}, method = RequestMethod.POST)
-    @ResponseBody
     public JsonResponse add(FollowUpMessageDTO followUpMessageDTO) throws IOException {
         if (followUpMessageDTO.getObjectId() == null || followUpMessageDTO.getObjectType() == null || followUpMessageDTO.getLiquidateStage() == null) {
             return JsonResponseTool.paramErr("参数错误");
@@ -239,7 +275,6 @@ public class FollowUpController extends BaseApiContorller {
      * @apiUse FollowUpSourceDTO
      */
     @RequestMapping(value = "c/addSource", method = RequestMethod.POST)
-    @ResponseBody
     public JsonResponse addSource(FollowUpSourceDTO followUpSourceDTO) throws IOException {
         //// TODO: 17-1-12 权限验证
         UserSession userSession = UserSession.getCurrent();
@@ -288,7 +323,6 @@ public class FollowUpController extends BaseApiContorller {
      * }
      */
     @RequestMapping(value = "c/sourceList", method = RequestMethod.GET)
-    @ResponseBody
     public JsonResponse sourceList(@RequestParam(defaultValue = "0") Integer pid, Integer objectType, Integer objectId) throws IOException {
         UserSession userSession = UserSession.getCurrent();
         int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());

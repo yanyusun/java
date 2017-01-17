@@ -2,6 +2,7 @@ package com.dqys.business.service.utils.followUp;
 
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.pojo.followUp.FollowUpSource;
+import com.dqys.business.service.dto.followUp.CFollowUpMessageDTO;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.dto.followUp.FollowUpSourceDTO;
 import com.dqys.core.utils.DateFormatTool;
@@ -43,8 +44,8 @@ public class FollowUpUtil {
 
     public static FollowUpSource toFollowUpSource(FollowUpSourceDTO followUpSourceDTO) {
         FollowUpSource followUpSource = new FollowUpSource();
-        followUpSource.setPathFilename(followUpSourceDTO.getPathFilename());
-        followUpSource.setShowFilename(followUpSourceDTO.getShowFilename());
+        followUpSource.setPathFilename(followUpSourceDTO.getFilePathName());
+        followUpSource.setShowFilename(followUpSourceDTO.getName());
         followUpSource.setFollowUpMessageId(followUpSourceDTO.getFollowUpMessageId());
         followUpSource.setType(followUpSourceDTO.getType());
         followUpSource.setObjectType(followUpSourceDTO.getObjectType());
@@ -56,8 +57,9 @@ public class FollowUpUtil {
         List<FollowUpSourceDTO> followUpSourceDTOList = new ArrayList<>();
         for (FollowUpSource followUpSource : followUpSourceList) {
             FollowUpSourceDTO followUpSourceDTO = new FollowUpSourceDTO();
-            followUpSourceDTO.setPathFilename(followUpSource.getPathFilename());
-            followUpSourceDTO.setShowFilename(followUpSource.getShowFilename());
+            followUpSourceDTO.setId(followUpSource.getId());
+            followUpSourceDTO.setFilePathName(followUpSource.getPathFilename());
+            followUpSourceDTO.setName(followUpSource.getShowFilename());
             followUpSourceDTO.setFollowUpMessageId(followUpSource.getFollowUpMessageId());
             followUpSourceDTO.setObjectType(followUpSource.getObjectType());
             followUpSourceDTO.setObjectId(followUpSource.getObjectId());
@@ -72,5 +74,37 @@ public class FollowUpUtil {
             followUpSourceDTOList.add(followUpSourceDTO);
         }
         return followUpSourceDTOList;
+    }
+
+    public static CFollowUpMessageDTO toCFollowUpMessageDTO(FollowUpMessage followUpMessage){
+        CFollowUpMessageDTO cFollowUpMessageDTO = new CFollowUpMessageDTO();
+        cFollowUpMessageDTO.setId(followUpMessage.getId());
+        cFollowUpMessageDTO.setCreateAt(followUpMessage.getCreateAt());
+        cFollowUpMessageDTO.setObjectId(followUpMessage.getObjectId());
+        cFollowUpMessageDTO.setObjectType(followUpMessage.getObjectType());
+        cFollowUpMessageDTO.setSecondObjectId(followUpMessage.getSecondObjectId());
+        cFollowUpMessageDTO.setSecondObjectType(followUpMessage.getSecondObjectType());
+        cFollowUpMessageDTO.setLiquidateStage(followUpMessage.getLiquidateStage());
+        cFollowUpMessageDTO.setSecondLiquidateStage(followUpMessage.getSecondLiquidateStage());
+        if(followUpMessage.getUserInfo()!=null){
+            cFollowUpMessageDTO.setUserId(followUpMessage.getUserInfo().getId());
+            cFollowUpMessageDTO.setUsername(followUpMessage.getUserInfo().getUserName());
+        }
+        if(followUpMessage.getCompanyInfo()!=null){
+            cFollowUpMessageDTO.setCompanyId(followUpMessage.getCompanyInfo().getId());
+            cFollowUpMessageDTO.setCompanyName(followUpMessage.getCompanyInfo().getCompanyName());
+        }
+        cFollowUpMessageDTO.setContent(followUpMessage.getContent());
+
+        return cFollowUpMessageDTO;
+    }
+
+    public static List<CFollowUpMessageDTO> toCFollowUpMessageDTOList(List<FollowUpMessage> followUpMessageList){
+        List<CFollowUpMessageDTO> cFollowUpMessageDTOList = new ArrayList<>();
+        for(FollowUpMessage followUpMessage:followUpMessageList){
+            CFollowUpMessageDTO  cFollowUpMessageDTO = toCFollowUpMessageDTO(followUpMessage);
+            cFollowUpMessageDTOList.add(cFollowUpMessageDTO);
+        }
+        return cFollowUpMessageDTOList;
     }
 }

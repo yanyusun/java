@@ -6,10 +6,12 @@ import com.dqys.business.orm.query.followUp.FollowUpSourceQuery;
 import com.dqys.business.service.dto.followUp.FollowUpSourceDTO;
 import com.dqys.business.service.service.followUp.FollowUpSourceService;
 import com.dqys.business.service.utils.followUp.FollowUpUtil;
+import com.dqys.core.utils.FileTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,6 +51,12 @@ public class FollowUpSourceImpl implements FollowUpSourceService{
 
     @Override
     public void del(Integer id) {
+        FollowUpSource followUpSource=followUpSourceMapper.selectByPrimaryKey(id);
+        String path = followUpSource.getPathFilename();
+        if(path!=null){
+            //定时删除
+            FileTool.addDeleteScheduler(FileTool.getFile(path, false), new Date());
+        }
         followUpSourceMapper.deleteByPrimaryKey(id);
     }
 }

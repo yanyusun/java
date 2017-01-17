@@ -16,9 +16,9 @@ public class FollowUpSourceDTO {
 
     private Integer id;
 
-    private String pathFilename;
+    private String filePathName;
 
-    private String showFilename;
+    private String name;
 
     private Integer followUpMessageId;
 
@@ -42,20 +42,20 @@ public class FollowUpSourceDTO {
         this.id = id;
     }
 
-    public String getPathFilename() {
-        return pathFilename;
+    public String getFilePathName() {
+        return filePathName;
     }
 
-    public void setPathFilename(String pathFilename) {
-        this.pathFilename = pathFilename;
+    public void setFilePathName(String filePathName) {
+        this.filePathName = filePathName;
     }
 
-    public String getShowFilename() {
-        return showFilename;
+    public String getName() {
+        return name;
     }
 
-    public void setShowFilename(String showFilename) {
-        this.showFilename = showFilename;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Integer getFollowUpMessageId() {

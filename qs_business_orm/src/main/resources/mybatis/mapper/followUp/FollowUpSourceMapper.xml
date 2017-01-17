@@ -166,7 +166,7 @@
   <select id="list" parameterType="com.dqys.business.orm.query.followUp.FollowUpSourceQuery" resultMap="BaseResultMap">
   select * FROM (
       SELECT   <include refid="Base_Column_List_re"/>
-      FROM t_follow_up_source s where
+      FROM t_follow_up_source s where 1=1
       <if test="objectId != null">
         AND s.object_id = #{objectId,jdbcType=INTEGER}
       </if>

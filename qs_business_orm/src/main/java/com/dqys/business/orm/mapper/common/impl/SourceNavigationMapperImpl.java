@@ -32,8 +32,8 @@ public class SourceNavigationMapperImpl extends BaseDao implements SourceNavigat
     }
 
     @Override
-    public Integer update(SourceNavigation record) {
-        return super.getSqlSession().getMapper(SourceNavigationMapper.class).update(record);
+    public Integer updateByPrimaryKeySelective(SourceNavigation record) {
+        return super.getSqlSession().getMapper(SourceNavigationMapper.class).updateByPrimaryKeySelective(record);
     }
 
     @Override
