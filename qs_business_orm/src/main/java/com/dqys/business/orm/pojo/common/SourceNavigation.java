@@ -17,7 +17,7 @@ public class SourceNavigation extends BaseModel {
     private String filePathName;
     private Integer isCustom;//'是否用户自定义:0是,1不是;默认0
     private Integer site; //显示位置,默认0,1为只在手机端显示
-    private Integer userName;
+    private String userName;
 
     public Integer getIsCustom() {
         return isCustom;
@@ -99,11 +99,11 @@ public class SourceNavigation extends BaseModel {
         this.site = site;
     }
 
-    public Integer getUserName() {
+    public String getUserName() {
         return userName;
     }
 
-    public void setUserName(Integer userName) {
+    public void setUserName(String userName) {
         this.userName = userName;
     }
 }

@@ -5,6 +5,7 @@ import com.dqys.business.service.dto.common.*;
 import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.exception.bean.SourceEditException;
 import com.dqys.business.service.service.common.SourceService;
+import com.dqys.business.service.utils.common.SourceServiceUtls;
 import com.dqys.core.base.BaseApiContorller;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
@@ -255,5 +256,17 @@ public class SourceController extends BaseApiContorller {
         return JsonResponseTool.success(sourceDelDTO);
     }
 
+
+    /**
+     * @api {DELETE} http://{url}/source/c/del 增加跟进信息,状态为未发送
+     * @apiName c_del
+     * @apiGroup source
+     * @apiUse SourceDelDTO
+     */
+    //// TODO: 17-1-17 权限控制 
+    @RequestMapping(value = "c/source", method = RequestMethod.POST)
+    public JsonResponse getSource(Integer id) throws SourceEditException {
+        return JsonResponseTool.success(SourceServiceUtls.toCSourceNavDTODetail(sourceService.getDetail(id)));
+    }
 
 }
