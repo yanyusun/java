@@ -52,7 +52,8 @@ public class SourceServiceImpl implements SourceService {
     private static final int personNav = 2;//个人nav
     private static final int commonNav = 3;//公共nav
     private static final int rootNavId = 0;//更目录id
-
+    private static final int c_site = 1;//只在手机端显示
+    private static final int all_site = 0;//在全部位置显示
     @Autowired
     private SourceNavigationMapper sourceNavigationMapper;
     @Autowired
@@ -73,21 +74,21 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     public List<SelectDTOList> listNavigation(Integer lenderId, Integer estatesId, Integer type) {
-        return getSelectDTOList(lenderId, estatesId, type, allNav);
+        return getSelectDTOList(lenderId, estatesId, type, allNav,all_site);
     }
 
 
     @Override
     public List<SelectDTOList> listNavigationPerson(Integer lenderId, Integer estatesId, Integer type) {
-        return getSelectDTOList(lenderId, estatesId, type, personNav);
+        return getSelectDTOList(lenderId, estatesId, type, personNav,all_site);
     }
 
     @Override
     public List<SelectDTOList> listNavigationCommon(Integer lenderId, Integer estatesId, Integer type) {
-        return getSelectDTOList(lenderId, estatesId, type, commonNav);
+        return getSelectDTOList(lenderId, estatesId, type, commonNav,all_site);
     }
 
-    private List<SelectDTOList> getSelectDTOList(Integer lenderId, Integer estatesId, Integer type, int navType) {
+    private List<SelectDTOList> getSelectDTOList(Integer lenderId, Integer estatesId, Integer type, int navType,Integer site) {
         if (CommonUtil.checkParam(type)) {
             return null;
         }
@@ -105,7 +106,7 @@ public class SourceServiceImpl implements SourceService {
         UserSession userSession = UserSession.getCurrent();
         List<SourceNavigation> comList = NavUtil.getCommonSourceNavigation(type);
         navigationList.addAll(comList);
-        navigationList.addAll(sourceNavigationMapper.listByTypeAndLenderId(lenderId, estatesId, type));
+        navigationList.addAll(sourceNavigationMapper.listByTypeAndLenderIdSite(lenderId, estatesId, type,site));
         if (navType == allNav) {
             return SourceServiceUtls.toSelect(navigationList, navUnviewManagerService, objectType, objectId, userSession.getUserId());
         } else if (navType == personNav) {
@@ -131,8 +132,8 @@ public class SourceServiceImpl implements SourceService {
     private List<SourceNavigation> getComList(Integer type, int pid) {
         List<SourceNavigation> list = new ArrayList<>();
         List<SourceNavigation> comList = NavUtil.getCommonSourceNavigation(type);
-        for(SourceNavigation sourceNavigation:comList){
-            if(sourceNavigation.getPid()==pid){
+        for (SourceNavigation sourceNavigation : comList) {
+            if (sourceNavigation.getPid() == pid) {
                 list.add(sourceNavigation);
             }
         }
@@ -141,11 +142,11 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     public List<CSourceNavDTO> listNavigationCommon(Integer lenderId, Integer estatesId, Integer type, Integer pid) {
-        if(pid==rootNavId){//直接返回返回缓存中的数据
+        if (pid == rootNavId) {//直接返回返回缓存中的数据
             List<SourceNavigation> list = getComList(type, rootNavId);
             return SourceServiceUtls.toCSourceNavDTOList(getAuthList(list, lenderId, estatesId));
-        }else{
-            return listNavigation(lenderId,estatesId,type,pid);
+        } else {
+            return listNavigation(lenderId, estatesId, type, pid);
         }
     }
 
@@ -330,6 +331,7 @@ public class SourceServiceImpl implements SourceService {
         if (CommonUtil.checkResult(result)) {
             return JsonResponseTool.failure("添加失败");
         } else {
+            Integer userId = UserSession.getCurrent().getUserId();
             Integer sourceInfoId = sourceInfo.getId();
             List<SourceSource> sourceList = SourceServiceUtls.toSourceSource(sourceInfoId, sourceInfoDTO);
             sourceList.forEach(sourceSource -> {
@@ -339,6 +341,20 @@ public class SourceServiceImpl implements SourceService {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+                //新建文件夹,只在手机端显示,使两个平台能够兼容
+                SourceNavigation sourceNavigation = new SourceNavigation();
+                sourceNavigation.setName(sourceSource.getPath());
+                sourceNavigation.setFilePathName(sourceSource.getPath());
+                if (sourceInfoDTO.getEstatesId() != null) {
+                    sourceNavigation.setType(ObjectTypeEnum.ASSETSOURCE.getValue());
+                    sourceNavigation.setLenderId(sourceInfoDTO.getEstatesId());
+                } else {
+                    sourceNavigation.setType(ObjectTypeEnum.LENDER.getValue());
+                    sourceNavigation.setLenderId(sourceInfoDTO.getLenderId());
+                }
+                sourceNavigation.setUserId(userId);
+                sourceNavigation.setSite(c_site);
+                addNavigation(sourceNavigation);
                 sourceSourceMapper.insert(sourceSource);
             });
             return JsonResponseTool.success(sourceInfoId);
