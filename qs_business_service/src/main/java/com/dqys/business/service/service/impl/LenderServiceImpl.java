@@ -515,6 +515,7 @@ public class LenderServiceImpl implements LenderService {
         if (contactInfo != null) {
             lenderDTO.setName(contactInfo.getName());
             lenderDTO.setSex(contactInfo.getGender());
+            lenderDTO.setAvg(contactInfo.getAvg());
         }
         //添加录入人姓名
         com.dqys.auth.orm.pojo.UserDetail detail = userInfoMapper.getUserDetail(lenderDTO.getOperatorId());

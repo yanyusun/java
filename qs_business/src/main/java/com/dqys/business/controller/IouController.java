@@ -1,10 +1,14 @@
 package com.dqys.business.controller;
 
+import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
+import com.dqys.business.orm.pojo.asset.LenderInfo;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.dto.asset.IouDTOList;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.IouService;
+import com.dqys.business.service.service.LenderService;
 import com.dqys.business.service.utils.asset.IouServiceUtils;
+import com.dqys.core.constant.ResponseCodeEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.utils.CommonUtil;
 import com.dqys.core.utils.JsonResponseTool;
@@ -21,6 +25,7 @@ public class IouController {
 
     @Autowired
     private IouService iouService;
+    ;
 
     /**
      * 删除借据
@@ -122,7 +127,7 @@ public class IouController {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
-        return iouService.get(id);
+       return iouService.getC(id);
     }
 
     /**

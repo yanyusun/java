@@ -1,5 +1,7 @@
 package com.dqys.business.service.service.impl;
 
+import com.dqys.auth.orm.dao.facade.TUserInfoMapper;
+import com.dqys.auth.orm.pojo.UserDetail;
 import com.dqys.business.orm.constant.business.ObjectBusinessEnum;
 import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.OURelationEnum;
@@ -11,17 +13,17 @@ import com.dqys.business.orm.pojo.business.ObjectUserRelation;
 import com.dqys.business.orm.query.asset.RelationQuery;
 import com.dqys.business.orm.query.business.ObjectUserRelationQuery;
 import com.dqys.business.service.constant.ObjectEnum.IouEnum;
-import com.dqys.business.service.dto.asset.PawnDTO;
-import com.dqys.business.service.utils.message.MessageUtils;
-import com.dqys.core.constant.UserInfoEnum;
+import com.dqys.business.service.constant.asset.ContactTypeEnum;
 import com.dqys.business.service.dto.asset.IouDTO;
 import com.dqys.business.service.exception.bean.BusinessLogException;
 import com.dqys.business.service.service.BusinessLogService;
 import com.dqys.business.service.service.BusinessService;
 import com.dqys.business.service.service.IouService;
 import com.dqys.business.service.utils.asset.IouServiceUtils;
+import com.dqys.business.service.utils.message.MessageUtils;
 import com.dqys.business.service.utils.user.UserServiceUtils;
 import com.dqys.core.constant.ResponseCodeEnum;
+import com.dqys.core.constant.UserInfoEnum;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.CommonUtil;
@@ -61,6 +63,10 @@ public class IouServiceImpl implements IouService {
     private CoordinatorMapper coordinatorMapper;
     @Autowired
     private ObjectUserRelationMapper objectUserRelationMapper;
+    @Autowired
+    private TUserInfoMapper tUserInfoMapper;
+    @Autowired
+    private ContactInfoMapper contactInfoMapper;
 
     @Override
     public JsonResponse delete_tx(Integer id) throws BusinessLogException {
@@ -328,6 +334,24 @@ public class IouServiceImpl implements IouService {
             return response;
         }
         return JsonResponseTool.success(list);
+    }
+
+    @Override
+    public JsonResponse getC(Integer id) {
+        JsonResponse response = get(id);
+        if (response.getCode() == ResponseCodeEnum.SUCCESS.getValue()) {
+            IouDTO iouDTO = (IouDTO) response.getData();
+            LenderInfo info = lenderInfoMapper.get(iouDTO.getLenderId());
+            iouDTO.setOperTime(info.getCreateAt());
+            iouDTO.setLenderNo(info.getLenderNo());
+            UserDetail detail = tUserInfoMapper.getUserDetail(info.getOperator());
+            iouDTO.setOperator(detail.getRealName());
+            ContactInfo contactInfo = contactInfoMapper.getByModel(ObjectTypeEnum.LENDER.getValue().toString(), ContactTypeEnum.LENDER.getValue(), info.getId());
+            iouDTO.setLenderName(contactInfo.getName());
+            return JsonResponseTool.success(iouDTO);
+        } else {
+            return response;
+        }
     }
 
     /**
