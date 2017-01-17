@@ -183,11 +183,6 @@ public class FollowUpController extends BaseApiContorller {
 //    }
 
 
-
-
-
-
-
     /**
      * @api {GET} http://{url}/follow_up/unread_count 读取未读的数量
      * @apiName unread_count
@@ -223,33 +218,33 @@ public class FollowUpController extends BaseApiContorller {
      * @apiGroup followUp
      * @apiUse FollowUpMessageDTO
      * @apiSuccessExample {json} Data-Response:
-    {
-    "code": 2000,
-    "msg": "成功",
-    "data": {
-    "id": null,
-    "objectId": 111,
-    "objectType": 111,
-    "secondObjectId": 11,
-    "secondObjectType": 11,
-    "content": "11",
-    "liquidateStage": 11,
-    "secondLiquidateStage": 11,
-    "fileList": [
-    {
-    "id": null,
-    "version": null,
-    "stateflag": null,
-    "createAt": null,
-    "updateAt": null,
-    "remark": null,
-    "pathFilename": "aaa.jpg",
-    "showFilename": "p.jpg",
-    "followUpMessageId": 18
-    }
-    ]
-    }
-    }
+     * {
+     * "code": 2000,
+     * "msg": "成功",
+     * "data": {
+     * "id": null,
+     * "objectId": 111,
+     * "objectType": 111,
+     * "secondObjectId": 11,
+     * "secondObjectType": 11,
+     * "content": "11",
+     * "liquidateStage": 11,
+     * "secondLiquidateStage": 11,
+     * "fileList": [
+     * {
+     * "id": null,
+     * "version": null,
+     * "stateflag": null,
+     * "createAt": null,
+     * "updateAt": null,
+     * "remark": null,
+     * "pathFilename": "aaa.jpg",
+     * "showFilename": "p.jpg",
+     * "followUpMessageId": 18
+     * }
+     * ]
+     * }
+     * }
      */
     @RequestMapping(value = {"add", "c/add"}, method = RequestMethod.POST)
     public JsonResponse add(FollowUpMessageDTO followUpMessageDTO) throws IOException {
@@ -327,11 +322,11 @@ public class FollowUpController extends BaseApiContorller {
         UserSession userSession = UserSession.getCurrent();
         int userType = UserServiceUtils.headerStringToInt(userSession.getUserType());
         int userRole = UserServiceUtils.headerStringToInt(userSession.getRoleId());
-        if(!UserServiceUtils.isPlatBoolean(userType,userRole)
-                &&!objectUserRelationService.hasOnlyOneRelation(objectType,objectId,userSession.getUserId())){
+        if (!UserServiceUtils.isPlatBoolean(userType, userRole)
+                && !objectUserRelationService.hasOnlyOneRelation(objectType, objectId, userSession.getUserId())) {
             return JsonResponseTool.failure("对不起,您暂无该权限");
         }
-        List<FollowUpSourceDTO> list = followUpSourceService.listByPid(pid,objectType,objectId);
+        List<FollowUpSourceDTO> list = followUpSourceService.listByPid(pid, objectType, objectId);
         return JsonResponseTool.success(list);
     }
 
