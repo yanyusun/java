@@ -21,7 +21,7 @@ public class FollowUpSource extends BaseModel{
 
     private Integer userId;
 
-    private Integer userName;
+    private String userName;
 
     public Integer getId() {
         return id;
@@ -93,5 +93,13 @@ public class FollowUpSource extends BaseModel{
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
