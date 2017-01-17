@@ -129,7 +129,20 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             insertBatchInsertSource(fileList, followUpMessage.getId());
         }
         //向mq中增加未读信息
-        String[] unReadMessage = {followUpMessage.getObjectId().toString(), followUpMessage.getObjectType().toString(), followUpMessage.getLiquidateStage().toString()};
+       // String[] unReadMessage = {followUpMessage.getObjectId().toString(), followUpMessage.getObjectType().toString(), followUpMessage.getLiquidateStage().toString()};
+        String secondObjectId = null;
+        if(followUpMessage.getSecondObjectId()!=null){
+            secondObjectId=followUpMessage.getSecondObjectId().toString();
+        }
+        String secondObjectType = null;
+        if(followUpMessage.getSecondObjectType()!=null){
+            secondObjectType=followUpMessage.getSecondObjectType().toString();
+        }
+        String secondLiquidateStage = null;
+        if(followUpMessage.getSecondLiquidateStage()!=null){
+            secondLiquidateStage=followUpMessage.getSecondLiquidateStage().toString();
+        }
+        String[] unReadMessage = {followUpMessage.getObjectId().toString(), followUpMessage.getObjectType().toString(), followUpMessage.getLiquidateStage().toString(),secondObjectId,secondObjectType,secondLiquidateStage};
         RabbitMQProducerTool.addToFollowUnReadMessage(unReadMessage);
         return followUpMessage.getId();
     }

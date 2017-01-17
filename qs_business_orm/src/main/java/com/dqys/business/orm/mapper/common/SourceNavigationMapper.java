@@ -36,13 +36,20 @@ public interface SourceNavigationMapper {
      * @param record
      * @return
      */
-    Integer update(SourceNavigation record);
+    Integer updateByPrimaryKeySelective(SourceNavigation record);
 
     /**
      * 获取借款人的可视化资料实勘分类列表
      * @return
      */
     List<SourceNavigation> listByTypeAndLenderId(@Param("lenderId") Integer lenderId,@Param("estatesId") Integer estatesId, @Param("type")Integer type);
+
+    /**
+     * 获取借款人的可视化资料实勘分类列表
+     * @return
+     */
+    List<SourceNavigation> listByTypeAndLenderIdSite(@Param("lenderId") Integer lenderId,@Param("estatesId") Integer estatesId, @Param("type")Integer type,@Param("site")Integer site);
+
 
     List<SourceNavigation> listByTypeAndLenderIdAndPid(@Param("lenderId") Integer lenderId,@Param("estatesId") Integer estatesId, @Param("type")Integer type,@Param("pid") Integer pid);
 

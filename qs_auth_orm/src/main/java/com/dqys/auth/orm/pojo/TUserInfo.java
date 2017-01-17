@@ -32,6 +32,10 @@ public class TUserInfo extends BaseModel implements Serializable {
     private Integer status;
     private Integer useStatus;
 
+    private Integer roleId;
+
+    private Integer userType;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getUseStatus() {
@@ -156,5 +160,21 @@ public class TUserInfo extends BaseModel implements Serializable {
 
     public void setAvg(String avg) {
         this.avg = avg;
+    }
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
     }
 }
