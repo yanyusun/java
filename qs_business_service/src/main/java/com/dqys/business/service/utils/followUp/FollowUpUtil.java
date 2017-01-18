@@ -54,6 +54,7 @@ public class FollowUpUtil {
         followUpSource.setType(followUpSourceDTO.getType());
         followUpSource.setObjectType(followUpSourceDTO.getObjectType());
         followUpSource.setObjectId(followUpSourceDTO.getObjectId());
+        followUpSource.setPid(followUpSourceDTO.getPid());
         return followUpSource;
     }
 

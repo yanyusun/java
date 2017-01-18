@@ -14,6 +14,8 @@ import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 /**
  * Created by Yvan on 16/8/1.
  */
@@ -122,7 +124,7 @@ public class SourceController extends BaseApiContorller {
      * @return
      */
     @RequestMapping(value = "c/add", method = RequestMethod.POST)
-    public JsonResponse uploadFile(@ModelAttribute CSourceInfoDTO sourceInfoDTO) {
+    public JsonResponse uploadFile(@ModelAttribute CSourceInfoDTO sourceInfoDTO) throws IOException{
         if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getFilePathName(), sourceInfoDTO.getFileShowName(), sourceInfoDTO.getType())) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -146,7 +148,7 @@ public class SourceController extends BaseApiContorller {
      * @param navId
      * @return
      */
-    @RequestMapping(value = {"get", "c/get"})
+    @RequestMapping(value = "get")
     public JsonResponse get(Integer lenderId, Integer estatesId, @RequestParam Integer navId) {
         if (CommonUtil.checkParam(navId)) {
             return JsonResponseTool.paramErr("参数错误");

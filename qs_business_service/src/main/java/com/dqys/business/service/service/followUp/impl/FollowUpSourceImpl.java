@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -26,9 +27,12 @@ public class FollowUpSourceImpl implements FollowUpSourceService{
 
 
     @Override
-    public void add(FollowUpSourceDTO followUpSourceDTO) {
+    public void add(FollowUpSourceDTO followUpSourceDTO) throws IOException{
         FollowUpSource followUpSource=FollowUpUtil.toFollowUpSource(followUpSourceDTO);
         followUpSourceMapper.insertSelective(followUpSource);
+        if(followUpSourceDTO.getFilePathName()!=null){
+            FileTool.saveFileSync(followUpSourceDTO.getFilePathName());
+        }
     }
 
     @Override
