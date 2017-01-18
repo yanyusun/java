@@ -155,7 +155,7 @@ public class RepayController {
         if (money <= 0 || !money.toString().matches("\\d*([.]\\d{1,2})?")) {
             return JsonResponseTool.paramErr("金额输入有误");
         }
-        if (objectType != RepayEnum.OBJECT_IOU.getValue() && objectType != RepayEnum.OBJECT_PAWN.getValue()&& objectType != RepayEnum.OBJECT_UNLIMITED.getValue()) {
+        if (objectType != RepayEnum.OBJECT_IOU.getValue() && objectType != RepayEnum.OBJECT_PAWN.getValue() && objectType != RepayEnum.OBJECT_UNLIMITED.getValue()) {
             return JsonResponseTool.paramErr("对象类型错误");
         }
         if (repayType != RepayEnum.TYPE_ACCRUAL.getValue() && repayType != RepayEnum.TYPE_PRINCIPAL.getValue() && repayType != RepayEnum.TYPE_A_P.getValue()) {
@@ -384,7 +384,7 @@ public class RepayController {
      * @apiParam {string} [file] 单据图片
      * @apiGroup Repay
      */
-    @RequestMapping("/lenderRepayMoney")
+    @RequestMapping({"/lenderRepayMoney", "/c/lenderRepayMoney"})
     @ResponseBody
     public JsonResponse lenderRepayMoney(@RequestParam Integer lenderId, String file, String remark) throws Exception {
         if (file != null && "".equals(file.trim())) {
