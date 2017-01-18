@@ -622,4 +622,9 @@ public class SourceServiceImpl implements SourceService {
             }
         }
     }
+
+    @Override
+    public SourceNavigation getDetail(Integer id) {
+        return sourceNavigationMapper.selectDetail(id);
+    }
 }

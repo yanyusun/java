@@ -20,4 +20,8 @@ public interface FollowUpSourceMapper {
     int updateByPrimaryKey(FollowUpSource record);
 
     List<FollowUpSource> list(FollowUpSourceQuery query);
+    
+    //// TODO: 17-1-17  mkf
+    FollowUpSource selectDetail(Integer id);
+    
 }

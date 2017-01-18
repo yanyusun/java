@@ -286,6 +286,24 @@ public class SourceServiceUtls {
         return cSourceNavDTOlist;
     }
 
+    public static CSourceNavDTO toCSourceNavDTODetail(SourceNavigation sourceNavigation){
+        CSourceNavDTO cSourceNavDTO = new CSourceNavDTO();
+        cSourceNavDTO.setFilePathName(sourceNavigation.getFilePathName());
+        cSourceNavDTO.setId(sourceNavigation.getId());
+        cSourceNavDTO.setName(sourceNavigation.getName());
+        String date=DateFormatTool.format(sourceNavigation.getCreateAt(),DateFormatTool.DATE_FORMAT_19);
+        cSourceNavDTO.setDate(date);
+        String path=sourceNavigation.getFilePathName();
+        if(path!=null){
+            File file = FileTool.getFile(path, false);
+            String size = FileTool.convertFileSize(file.length());
+            cSourceNavDTO.setFileSize(size);
+        }
+        cSourceNavDTO.setUserName(sourceNavigation.getUserName());
+        cSourceNavDTO.setUserId(sourceNavigation.getUserId());
+        return  cSourceNavDTO;
+    }
+
 
 
 }

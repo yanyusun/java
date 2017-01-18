@@ -159,4 +159,6 @@ public interface SourceService {
     void renameSource (SourceEditDto sourceEditDto)throws SourceEditException;
 
     void delSource(SourceDelDTO sourceDelDTO) throws SourceEditException;
+
+    SourceNavigation getDetail(Integer id);
 }

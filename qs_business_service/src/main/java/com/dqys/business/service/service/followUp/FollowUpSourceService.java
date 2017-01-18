@@ -1,5 +1,6 @@
 package com.dqys.business.service.service.followUp;
 
+import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.business.service.dto.followUp.FollowUpSourceDTO;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface FollowUpSourceService {
     void rename(Integer id, String name);
 
     void del(Integer id);
+
+    FollowUpSource getDetail(Integer id);
 }

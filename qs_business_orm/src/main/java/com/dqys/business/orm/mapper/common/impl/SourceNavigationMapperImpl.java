@@ -55,4 +55,9 @@ public class SourceNavigationMapperImpl extends BaseDao implements SourceNavigat
     public List<SourceNavigation> ListByIsCustom(Integer isCustom) {
         return super.getSqlSession().getMapper(SourceNavigationMapper.class).ListByIsCustom(isCustom);
     }
+
+    @Override
+    public SourceNavigation selectDetail(Integer id) {
+        return null;
+    }
 }
