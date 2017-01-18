@@ -65,7 +65,7 @@ public class FollowUpUtil {
         followUpSourceDTO.setDate(DateFormatTool.format(followUpSource.getCreateAt(), DateFormatTool.DATE_FORMAT_19));
         File file = FileTool.getFile(pathFileName, false);
         String size = FileTool.convertFileSize(file.length());
-        followUpSourceDTO.setSize(size);
+        followUpSourceDTO.setFileSize(size);
         followUpSourceDTO.setUserId(followUpSource.getUserId());
         followUpSourceDTO.setUserName(followUpSource.getUserName());
         return followUpSourceDTO;
@@ -88,7 +88,7 @@ public class FollowUpUtil {
             if (pathFileName != null) {
                 File file = FileTool.getFile(pathFileName, false);
                 String size = FileTool.convertFileSize(file.length());
-                followUpSourceDTO.setSize(size);
+                followUpSourceDTO.setFileSize(size);
             }
             followUpSourceDTOList.add(followUpSourceDTO);
         }
