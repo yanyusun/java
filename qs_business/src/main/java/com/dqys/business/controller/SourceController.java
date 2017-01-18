@@ -264,7 +264,7 @@ public class SourceController extends BaseApiContorller {
      * @apiUse SourceDelDTO
      */
     //// TODO: 17-1-17 权限控制 
-    @RequestMapping(value = "c/source", method = RequestMethod.POST)
+    @RequestMapping(value = "c/source", method = RequestMethod.GET)
     public JsonResponse getSource(Integer id) throws SourceEditException {
         return JsonResponseTool.success(SourceServiceUtls.toCSourceNavDTODetail(sourceService.getDetail(id)));
     }
