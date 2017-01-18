@@ -354,6 +354,7 @@ public class SourceServiceImpl implements SourceService {
                 }
                 sourceNavigation.setUserId(userId);
                 sourceNavigation.setSite(c_site);
+                sourceNavigation.setPid(sourceInfo.getNavId());
                 addNavigation(sourceNavigation);
                 sourceSourceMapper.insert(sourceSource);
             });
