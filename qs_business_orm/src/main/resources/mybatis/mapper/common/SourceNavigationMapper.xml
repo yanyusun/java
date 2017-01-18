@@ -74,7 +74,7 @@
                 #{type,jdbcType=INTEGER},
             </if>
             <if test="estatesId != null">
-              #{estatesId,jdbcType=INTEGER},
+                #{estatesId,jdbcType=INTEGER},
             </if>
             <if test="userId != null">
                 #{userId,jdbcType=INTEGER},
@@ -158,6 +158,15 @@
         <include refid="Base_Column_List"/>
         FROM bt_source_nav
         WHERE is_custom = #{isCustom,jdbcType=INTEGER}
+    </select>
+    <resultMap id="WithBaseResultMap" type="com.dqys.business.orm.pojo.common.SourceNavigation" extends="BaseResultMap">
+        <result column="userName" property="userName"></result>
+    </resultMap>
+    <select id="selectDetail" resultMap="WithBaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>,(SELECT tui.user_name FROM t_user_info tui WHERE tui.id=user_id) userName
+        FROM bt_source_nav
+        WHERE id = #{id,jdbcType=INTEGER}
     </select>
 
 </mapper>

@@ -190,6 +190,14 @@
     ) as toa ORDER BY create_at DESC
   </select>
 
-
+  <resultMap id="WithBaseResultMap" type="com.dqys.business.orm.pojo.followUp.FollowUpSource" extends="BaseResultMap">
+    <result column="userName" property="userName"></result>
+  </resultMap>
+  <select id="selectDetail" resultMap="WithBaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>,(SELECT tui.user_name FROM t_user_info tui WHERE tui.id=user_id) userName
+    FROM t_follow_up_source
+    WHERE id = #{id,jdbcType=INTEGER}
+  </select>
 
 </mapper>
