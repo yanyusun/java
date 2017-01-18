@@ -50,8 +50,10 @@ public class MyUserController {
      * @return
      */
     @RequestMapping("/c/myAccount")
-    public JsonResponse myAccount() {
-        Integer userId = UserSession.getCurrent().getUserId();
+    public JsonResponse myAccount(Integer userId) {
+        if (userId == null) {
+            userId = UserSession.getCurrent().getUserId();
+        }
         UserDetail detail = tUserInfoMapper.getUserDetail(userId);
         Map map = new HashMap<>();
         map.put("roleType", detail.getRold());//角色（1管理员2管理者3员工）
@@ -81,7 +83,12 @@ public class MyUserController {
         map.put("sex", detail.getSex());//性别（1男0女）
         map.put("phone", detail.getMobile());//手机号
         StringBuilder builder = getStringBuilderByAddress(detail);
-        map.put("address", builder.toString());
+        map.put("address", builder.toString());//地址
+        map.put("roleType", detail.getRold());//角色
+        map.put("companyName", detail.getCompanyName());//公司
+        map.put("companyId", detail.getCompanyId());//公司id
+        map.put("weChat", detail.getWechat());//微信
+        map.put("email", detail.getEmail());//邮箱
         return JsonResponseTool.success(map);
     }
 
@@ -108,18 +115,21 @@ public class MyUserController {
      * @return
      */
     @RequestMapping("/c/myCompany")
-    public JsonResponse myCompany() {
-        Integer userId = UserSession.getCurrent().getUserId();
-        UserDetail detail = tUserInfoMapper.getUserDetail(userId);
+    public JsonResponse myCompany(Integer companyId) {
+        if (companyId == null) {
+            Integer userId = UserSession.getCurrent().getUserId();
+            UserDetail detail = tUserInfoMapper.getUserDetail(userId);
+            companyId = detail.getCompanyId();
+        }
         Map map = new HashMap<>();
-        map.put("licence", detail.getLicence());//营业执照地址
-        UserDetail admin = tUserInfoMapper.getUserDetail(tUserInfoMapper.getUserByCompanyAdmin(detail.getCompanyId()));//管理员信息
+        UserDetail admin = tUserInfoMapper.getUserDetail(tUserInfoMapper.getUserByCompanyAdmin(companyId));//管理员信息
+        map.put("licence", admin.getLicence());//营业执照地址
         map.put("phone", admin.getMobile());//电话
-        map.put("address", getStringBuilderByAddress(detail).toString());//地址
-        map.put("companyName", detail.getCompanyName());//公司名称
-        map.put("companyId", detail.getCompanyId());//公司id
+        map.put("address", getStringBuilderByAddress(admin).toString());//地址
+        map.put("companyName", admin.getCompanyName());//公司名称
+        map.put("companyId", admin.getCompanyId());//公司id
         TUserQuery query = new TUserQuery();
-        query.setCompanyId(detail.getCompanyId());
+        query.setCompanyId(companyId);
         map.put("companyPeopleNum", tUserInfoMapper.queryCount(query));//公司人数
         return JsonResponseTool.success(map);
     }
@@ -130,7 +140,7 @@ public class MyUserController {
      * @return
      */
     @RequestMapping("/c/myUserListByCompanyId")
-    public JsonResponse myCompany(Integer companyId) {
+    public JsonResponse myCompanyUser(Integer companyId) {
         if (companyId == null) {
             UserDetail detail = tUserInfoMapper.getUserDetail(UserSession.getCurrent().getUserId());
             companyId = detail.getCompanyId();
@@ -138,7 +148,6 @@ public class MyUserController {
         List<Map> list = tUserInfoMapper.getUserByCompanyId(companyId);
         return JsonResponseTool.success(list);
     }
-
 
 
 }
