@@ -16,6 +16,8 @@ public class UserDetail implements Serializable {
     private String companyName;//用户所在的公司名称
     private Integer companyType;//用户所在公司的公司类型
     private String email;//用户邮箱
+    private String wechat;//用户微信帐号
+    private String QQ;//用户微信帐号
     private Integer companyId;//用户所在公司id
     private String account;//用户帐号
     private String accountCode;//清搜号(公司的)
@@ -25,6 +27,22 @@ public class UserDetail implements Serializable {
     private Integer area;//公司所在区县
     private String address;//公司所在具体地址
     private String licence;//营业执照扫描件
+
+    public String getWechat() {
+        return wechat;
+    }
+
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
+    }
+
+    public String getQQ() {
+        return QQ;
+    }
+
+    public void setQQ(String QQ) {
+        this.QQ = QQ;
+    }
 
     public String getLicence() {
         return licence;

@@ -51,10 +51,12 @@ import com.dqys.core.constant.*;
 import com.dqys.core.model.JsonResponse;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -752,6 +754,55 @@ public class LenderServiceImpl implements LenderService {
         }
         map.put("contactInfoList", contactInfoList);
         return JsonResponseTool.success(map);
+    }
+
+    @Override
+    public JsonResponse getLenderAddress(ContactQuery query) {
+        List<ContactInfo> contactInfoList = contactInfoMapper.queryList(query);
+        Map map = new HashMap<>();
+        if (contactInfoList == null || contactInfoList.size() == 0) {
+            return JsonResponseTool.successNullList();
+        }
+        List<Map> mapList = new ArrayList<>();
+        ContactInfo info = contactInfoList.get(0);
+        Map address1 = new HashMap<>();
+        address1.put("address", setAddress(info.getProvince(), info.getCity(), info.getDistrict(), info.getAddress()));
+        mapList.add(address1);
+        if (info.getOtherAddress() != null) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                List<Map> infos = objectMapper.readValue(info.getOtherAddress(), List.class);
+                if (infos != null && infos.size() > 0) {
+                    for (Map en : infos) {
+                        Map address2 = new HashMap<>();
+                        address2.put("address", setAddress(MessageUtils.transMapToInt(en, "province"),
+                                MessageUtils.transMapToInt(en, "city"), MessageUtils.transMapToInt(en, "district"), MessageUtils.transMapToString(en, "address")));
+                        mapList.add(address2);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        map.put("addressList", mapList);
+        return JsonResponseTool.success(map);
+    }
+
+    private String setAddress(Integer pro, Integer city, Integer area, String address) {
+        StringBuilder builder = new StringBuilder();
+        if (pro != null) {
+            builder.append(AreaTool.getAreaById(pro).getLabel());
+        }
+        if (city != null) {
+            builder.append(AreaTool.getAreaById(city).getLabel());
+        }
+        if (area != null) {
+            builder.append(AreaTool.getAreaById(area).getLabel());
+        }
+        if (address != null) {
+            builder.append(address);
+        }
+        return builder.toString();
     }
 
     private void setDto(LenderListDTO dto, LenderCDTO cdto) {

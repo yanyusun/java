@@ -351,7 +351,7 @@
             SELECT tui.id,tui.mobile,tui.real_name realName,tut.role_id rold,
             tut.user_type userType,tci.company_name companyName,tci.type companyType,
             tui.email,tui.company_id companyId,tui.account,tci.account_code accountCode,tui.avg,tui.user_name userName,
-            tui.sex,tci.province,tci.city,tci.area,tci.address,tci.licence
+            tui.sex,tci.province,tci.city,tci.area,tci.address,tci.licence,tui.wechat,tui.QQ
             from t_user_info tui LEFT JOIN t_user_tag tut
             ON tut.user_id=tui.id LEFT JOIN t_company_info tci
             ON tci.id=tui.company_id
@@ -382,7 +382,9 @@
     </select>
 
     <select id="get" parameterType="int" resultMap="BaseResultMap">
-        SELECT  <include refid="Base_Column_List"/> FROM  t_user_info
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_user_info
         WHERE id=#{id}
     </select>
 
