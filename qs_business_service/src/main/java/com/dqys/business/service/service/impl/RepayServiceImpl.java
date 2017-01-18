@@ -88,7 +88,7 @@ public class RepayServiceImpl implements RepayService {
     public Map repayMoney(Integer userId, Integer objectId, Integer objectType, Integer repayType, Integer repayWay, Double money, String remark, String file) throws Exception {
         Map map = new HashMap<>();
         //还款金额为0就返回无需还款操作
-        if (money <= 0) {
+        if (money != null && money <= 0) {
             map.put("result", "no");
             map.put("msg", "还款金额输入有误，无效还款");
             return map;
