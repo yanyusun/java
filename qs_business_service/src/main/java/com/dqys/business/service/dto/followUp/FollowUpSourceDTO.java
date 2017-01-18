@@ -1,5 +1,7 @@
 package com.dqys.business.service.dto.followUp;
 
+import com.dqys.business.service.dto.base.SourceDTOBase;
+
 /**
  * Created by yan on 17-1-12.
  *
@@ -12,13 +14,7 @@ package com.dqys.business.service.dto.followUp;
  * @apiParam {number} [followUpMessageId] 跟进信息id
  * @apiParam {number} [pid] 父文件夹id
  */
-public class FollowUpSourceDTO {
-
-    private Integer id;
-
-    private String filePathName;
-
-    private String name;
+public class FollowUpSourceDTO extends SourceDTOBase{
 
     private Integer followUpMessageId;
 
@@ -29,38 +25,6 @@ public class FollowUpSourceDTO {
     private Integer objectId;
 
     private Integer pid;
-
-    private String date;
-
-    private String size;
-
-    private Integer userId;
-
-    private String userName;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getFilePathName() {
-        return filePathName;
-    }
-
-    public void setFilePathName(String filePathName) {
-        this.filePathName = filePathName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public Integer getFollowUpMessageId() {
         return followUpMessageId;
@@ -102,35 +66,4 @@ public class FollowUpSourceDTO {
         this.pid = pid;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 }

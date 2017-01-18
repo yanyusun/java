@@ -258,7 +258,7 @@ public class SourceController extends BaseApiContorller {
 
 
     /**
-     * @api {DELETE} http://{url}/source/c/del 增加跟进信息,状态为未发送
+     * @api {DELETE} http://{url}/source/c/source 增加跟进信息,状态为未发送
      * @apiName c_del
      * @apiGroup source
      * @apiUse SourceDelDTO
