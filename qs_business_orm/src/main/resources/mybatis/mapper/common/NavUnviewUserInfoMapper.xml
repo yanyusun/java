@@ -166,7 +166,7 @@
                 #{id}
             </foreach>
         </if>
-        <if test="companyIds ==null">
+        <if test="companyIds ==null || companyIds.size==0">
             (0)
         </if>
         <if test="their !=null and their.objectId !=null and their.objectType !=null">
@@ -180,7 +180,7 @@
                     #{id}
                 </foreach>
             </if>
-            <if test="companyIds ==null">
+            <if test="companyIds ==null || companyIds.size==0">
                 (0)
             </if>
             AND tut.object_id=#{their.objectId} AND tut.object_type=#{their.objectType} AND ttr.type=1
