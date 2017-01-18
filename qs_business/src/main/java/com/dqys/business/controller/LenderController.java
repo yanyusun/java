@@ -209,6 +209,25 @@ public class LenderController {
     }
 
     /**
+     * 获取借款人的相关地址(C端)
+     *
+     * @param id 借款人id
+     * @return
+     */
+    @RequestMapping(value = "/c/getLenderAddress")
+    @ResponseBody
+    public JsonResponse getLenderAddress(@RequestParam(required = true) Integer id) {
+        if (CommonUtil.checkParam(id)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        ContactQuery query = new ContactQuery();
+        query.setType(1);
+        query.setMode(ObjectTypeEnum.LENDER.getValue().toString());
+        query.setModeId(id);
+        return lenderService.getLenderAddress(query);
+    }
+
+    /**
      * 获取联系人所有相关信息
      *
      * @param id

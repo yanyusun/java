@@ -90,4 +90,6 @@ public interface LenderService {
     JsonResponse transformLenderC(LenderListQuery lenderListQuery, Integer type);
 
     JsonResponse getContactC(ContactQuery query);
+
+    JsonResponse getLenderAddress(ContactQuery query);
 }
