@@ -12,7 +12,7 @@ import java.util.List;
  * Created by yan on 16-9-22.
  */
 @Repository
-public class FollowUpSourceMapperImp extends BaseDao implements FollowUpSourceMapper{
+public class FollowUpSourceMapperImp extends BaseDao implements FollowUpSourceMapper {
     @Override
     public int deleteByPrimaryKey(Integer id) {
         return super.getSqlSession().getMapper(FollowUpSourceMapper.class).deleteByPrimaryKey(id);
@@ -50,6 +50,6 @@ public class FollowUpSourceMapperImp extends BaseDao implements FollowUpSourceMa
 
     @Override
     public FollowUpSource selectDetail(Integer id) {
-        return null;
+        return super.getSqlSession().getMapper(FollowUpSourceMapper.class).selectDetail(id);
     }
 }

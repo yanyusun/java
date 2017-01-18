@@ -58,6 +58,6 @@ public class SourceNavigationMapperImpl extends BaseDao implements SourceNavigat
 
     @Override
     public SourceNavigation selectDetail(Integer id) {
-        return null;
+        return super.getSqlSession().getMapper(SourceNavigationMapper.class).selectDetail(id);
     }
 }
