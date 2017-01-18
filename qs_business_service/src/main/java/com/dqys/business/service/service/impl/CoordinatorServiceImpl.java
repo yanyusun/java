@@ -1984,10 +1984,11 @@ public class CoordinatorServiceImpl implements CoordinatorService {
         for (TeamDTO teamDTO : list) {
             Map team = new HashMap<>();
             team.put("name", teamDTO.getRealName());
+            team.put("avg", teamDTO.getAvg());
             team.put("id", teamDTO.getUserId());
             dtoList.add(team);
         }
-        dtoMap.put("dtoList", dtoList);//当前公司的所有参与的用户信息
+        dtoMap.put("userList", dtoList);//当前公司的所有参与的用户信息
         dtoMap.put("companyName", companyName);//公司名称
         dtoMap.put("type", userType);//公司类型
         maps.add(dtoMap);
