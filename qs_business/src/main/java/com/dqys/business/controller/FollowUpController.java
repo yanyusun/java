@@ -3,6 +3,7 @@ package com.dqys.business.controller;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
 import com.dqys.business.orm.pojo.followUp.FollowUpObject;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
+import com.dqys.business.service.dto.followUp.CFollowUpMessageDTO;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.dto.followUp.FollowUpSourceDTO;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +44,6 @@ public class FollowUpController extends BaseApiContorller {
 
     @Autowired
     private FollowUpSourceService followUpSourceService;
-
 
 
     /**
@@ -138,6 +139,7 @@ public class FollowUpController extends BaseApiContorller {
         List<FollowUpMessage> list = followUpMessageService.listAndCancelUnread(followUpMessageQuery);
         return JsonResponseTool.success(list);
     }
+
     @RequestMapping(value = "c/list", method = RequestMethod.GET)
     public JsonResponse c_list(FollowUpMessageQuery followUpMessageQuery) throws Exception {
         if (followUpMessageQuery.getObjectId() == null || followUpMessageQuery.getObjectType() == null || followUpMessageQuery.getLiquidateStage() == null) {
@@ -148,17 +150,19 @@ public class FollowUpController extends BaseApiContorller {
     }
 
     @RequestMapping(value = "c/index", method = RequestMethod.GET)
-    public JsonResponse c_Index() throws Exception {
-        FollowUpMessageQuery query = new FollowUpMessageQuery();
-        List<FollowUpObject> list=followUpMessageService.objectList(query);
-        return JsonResponseTool.success(FollowUpUtil.toIndexCFollowUpMessageDTOList(list));
+    public JsonResponse c_Index(FollowUpMessageQuery query) throws Exception {
+
+        List<FollowUpObject> list = followUpMessageService.objectList(query);
+        List<CFollowUpMessageDTO> dtoList= FollowUpUtil.toIndexCFollowUpMessageDTOList(list,followUpMessageService);
+        if (query.getIsPaging()) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("total", followUpMessageService.objectListCount(query));
+            map.put("data",dtoList);
+            return JsonResponseTool.success(map);
+        } else {
+            return JsonResponseTool.success(dtoList);
+        }
     }
-
-
-
-
-
-
 
 
     /**
@@ -278,7 +282,7 @@ public class FollowUpController extends BaseApiContorller {
      * "type": 10,
      * "objectType": null,
      * "objectId": null,
-     *  "size":454mb,
+     * "size":454mb,
      * "date":2015-12-15 12:30
      * },
      * {
@@ -310,6 +314,7 @@ public class FollowUpController extends BaseApiContorller {
 
     /**
      * 查询资源详情
+     *
      * @param id 跟进资源id
      * @return
      * @throws Exception
@@ -317,6 +322,6 @@ public class FollowUpController extends BaseApiContorller {
     //// TODO: 17-1-17  增加权限控制
     @RequestMapping(value = "c/source", method = RequestMethod.GET)
     public JsonResponse getSource(Integer id) throws Exception {
-        return JsonResponseTool.success(FollowUpUtil.toFollowUpSourceCDetial( followUpSourceService.getDetail(id)));
+        return JsonResponseTool.success(FollowUpUtil.toFollowUpSourceCDetial(followUpSourceService.getDetail(id)));
     }
 }

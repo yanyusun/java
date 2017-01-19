@@ -4,7 +4,9 @@ import com.dqys.business.orm.constant.company.ObjectTypeEnum;
 import com.dqys.business.orm.constant.coordinator.OURelationEnum;
 import com.dqys.business.orm.constant.coordinator.TeammateReEnum;
 import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
+import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
+import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.coordinator.OURelationMapper;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
@@ -48,9 +50,6 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
     private FollowUpReadStatusService followUpReadStatusService;
 
     @Autowired
-    private LenderInfoMapper lenderInfoMapper;
-
-    @Autowired
     private TeammateReMapper teammateReMapper;
 
     @Autowired
@@ -64,6 +63,16 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
 
     @Autowired
     private CoordinatorService coordinatorService;
+
+    @Autowired
+    private LenderInfoMapper lenderInfoMapper;
+
+    @Autowired
+    private IOUInfoMapper iOUInfoMapper;
+
+    @Autowired
+    private PawnInfoMapper pawnInfoMapper;
+
 
     @Override
     public int insert(FollowUpMessageDTO followUpMessageDTO) throws IOException {
@@ -213,6 +222,13 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
         return objects;
     }
 
+
+    @Override
+    public Integer objectListCount(FollowUpMessageQuery query) {
+        query.setUserId(UserSession.getCurrent().getUserId());
+        return followUpMessageMapper.objectListCount(query);
+    }
+
     /**
      * 得到团队id
      *
@@ -228,5 +244,22 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             teamid = userTeam.getId();
         }
         return teamid;
+    }
+
+    //// TODO: 17-1-19 完善以后要用到的所有总类
+    @Override
+    public String getObjectShowName(Integer id, Integer type) {
+        ObjectTypeEnum e =ObjectTypeEnum.getObjectTypeEnum(type);
+        String showName;
+        switch (e){
+            case LENDER:
+               // showName =lenderInfoMapper.get(id).get;
+            break;
+            case PAWN:
+            break;
+            case IOU:
+            break;
+        }
+        return null;
     }
 }

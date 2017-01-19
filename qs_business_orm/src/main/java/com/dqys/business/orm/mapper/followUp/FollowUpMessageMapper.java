@@ -41,4 +41,6 @@ public interface FollowUpMessageMapper {
     void updateBySendStatus(FollowUpMessage followUpMessage);
 
     List<FollowUpObject> objectList(FollowUpMessageQuery query);
+
+    Integer objectListCount(FollowUpMessageQuery query);
 }

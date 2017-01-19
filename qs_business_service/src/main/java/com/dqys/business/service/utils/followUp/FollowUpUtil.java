@@ -8,6 +8,7 @@ import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.business.service.dto.followUp.CFollowUpMessageDTO;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.dto.followUp.FollowUpSourceDTO;
+import com.dqys.business.service.service.followUp.FollowUpMessageService;
 import com.dqys.core.model.UserSession;
 import com.dqys.core.utils.DateFormatTool;
 import com.dqys.core.utils.FileTool;
@@ -140,19 +141,23 @@ public class FollowUpUtil {
         return cFollowUpMessageDTOList;
     }
 
-    public static CFollowUpMessageDTO toIndexFollowUpMessageDTO(FollowUpObject followUpObject, int userId) {
+    public static CFollowUpMessageDTO toIndexFollowUpMessageDTO(FollowUpObject followUpObject, int userId,FollowUpMessageService service) {
         List<FollowUpMessage> list = followUpObject.getFollowUpMessages();
         FollowUpMessage followUpMessage = list.get(0);
         CFollowUpMessageDTO cFollowUpMessageDTO = toCFollowUpMessageDTO(followUpMessage, userId);
         cFollowUpMessageDTO.setUnreadNum(list.size());
+        //拼接对象名称
+//        if(service.){
+//
+//        }
         return cFollowUpMessageDTO;
     }
 
-    public static List<CFollowUpMessageDTO> toIndexCFollowUpMessageDTOList(List<FollowUpObject> followUpObjectList) {
+    public static List<CFollowUpMessageDTO> toIndexCFollowUpMessageDTOList(List<FollowUpObject> followUpObjectList,FollowUpMessageService service) {
         Integer userId = UserSession.getCurrent().getUserId();
         List<CFollowUpMessageDTO> cFollowUpMessageDTOList = new ArrayList<>();
         for (FollowUpObject followUpMessage : followUpObjectList) {
-            CFollowUpMessageDTO cFollowUpMessageDTO = toIndexFollowUpMessageDTO(followUpMessage, userId);
+            CFollowUpMessageDTO cFollowUpMessageDTO = toIndexFollowUpMessageDTO(followUpMessage, userId,service);
             cFollowUpMessageDTOList.add(cFollowUpMessageDTO);
         }
         return cFollowUpMessageDTOList;
