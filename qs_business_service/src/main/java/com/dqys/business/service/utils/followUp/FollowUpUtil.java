@@ -156,7 +156,7 @@ public class FollowUpUtil {
         }
         //拼接对象名称
         String objectShowName = service.getObjectShowName(followUpMessage.getObjectId(), followUpMessage.getObjectType());
-        if (followUpMessage.getSecondObjectId() != null) {
+        if (followUpMessage.getSecondObjectId() != null&&followUpMessage.getSecondObjectId()!=0) {
             objectShowName +=" " + service.getObjectShowName(followUpMessage.getSecondObjectId(),followUpMessage.getSecondObjectType());
         }
         cFollowUpMessageDTO.setObjectShowName(objectShowName);

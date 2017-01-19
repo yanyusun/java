@@ -257,7 +257,7 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
         String showName = null;
         switch (e){
             case LENDER:
-                showName ="借款人 "+lenderInfoMapper.get(id).getContactInfo().getName();
+                showName ="借款人 "+lenderInfoMapper.getWithLenderContact(id).getContactInfo().getName();
             break;
             case PAWN:
                 showName="抵押物 "+pawnInfoMapper.get(id).getName();
