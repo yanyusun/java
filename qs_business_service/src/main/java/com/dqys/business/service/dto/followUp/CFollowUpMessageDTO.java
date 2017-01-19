@@ -15,13 +15,9 @@ public class CFollowUpMessageDTO {
 
     private Integer objectType;
 
-    private String objectShowName;
-
     private Integer secondObjectId;
 
     private Integer secondObjectType;
-
-    private Integer secondObjectShowName;
 
     private Integer liquidateStage;
 
@@ -33,7 +29,7 @@ public class CFollowUpMessageDTO {
 
     private String content;
 
-    private Integer unreadNum;//同类未读信息
+    private Integer unreadNum=0;//同类未读信息
 
     private Integer userId;
 
@@ -47,6 +43,7 @@ public class CFollowUpMessageDTO {
 
     private String avg;
 
+    private String objectShowName;
 
     private List<FollowUpSource> fileList;
 
@@ -208,13 +205,5 @@ public class CFollowUpMessageDTO {
 
     public void setObjectShowName(String objectShowName) {
         this.objectShowName = objectShowName;
-    }
-
-    public Integer getSecondObjectShowName() {
-        return secondObjectShowName;
-    }
-
-    public void setSecondObjectShowName(Integer secondObjectShowName) {
-        this.secondObjectShowName = secondObjectShowName;
     }
 }

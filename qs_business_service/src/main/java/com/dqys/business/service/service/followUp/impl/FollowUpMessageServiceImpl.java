@@ -10,6 +10,7 @@ import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
 import com.dqys.business.orm.mapper.coordinator.OURelationMapper;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
+import com.dqys.business.orm.mapper.followUp.FollowUpReadstatusMapper;
 import com.dqys.business.orm.mapper.followUp.FollowUpSourceMapper;
 import com.dqys.business.orm.pojo.asset.AssetInfo;
 import com.dqys.business.orm.pojo.asset.LenderInfo;
@@ -17,9 +18,9 @@ import com.dqys.business.orm.pojo.coordinator.OURelation;
 import com.dqys.business.orm.pojo.coordinator.TeammateRe;
 import com.dqys.business.orm.pojo.coordinator.UserTeam;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
-import com.dqys.business.orm.pojo.followUp.FollowUpObject;
 import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
+import com.dqys.business.orm.query.followUp.FollowUpReadstatusQuery;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.service.CoordinatorService;
 import com.dqys.business.service.service.followUp.FollowUpMessageService;
@@ -72,6 +73,9 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
 
     @Autowired
     private PawnInfoMapper pawnInfoMapper;
+
+    @Autowired
+    private FollowUpReadstatusMapper followUpReadstatusMapper;
 
 
     @Override
@@ -216,9 +220,9 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
     }
 
     @Override
-    public List<FollowUpObject> objectList(FollowUpMessageQuery query) {
+    public List<FollowUpMessage> objectList(FollowUpMessageQuery query) {
         query.setUserId(UserSession.getCurrent().getUserId());
-        List<FollowUpObject> objects = followUpMessageMapper.objectList(query);
+        List<FollowUpMessage> objects = followUpMessageMapper.objectList(query);
         return objects;
     }
 
@@ -250,16 +254,23 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
     @Override
     public String getObjectShowName(Integer id, Integer type) {
         ObjectTypeEnum e =ObjectTypeEnum.getObjectTypeEnum(type);
-        String showName;
+        String showName = null;
         switch (e){
             case LENDER:
-               // showName =lenderInfoMapper.get(id).get;
+                showName ="借款人 "+lenderInfoMapper.get(id).getContactInfo().getName();
             break;
             case PAWN:
+                showName="抵押物 "+pawnInfoMapper.get(id).getName();
             break;
             case IOU:
+                showName="借据 "+iOUInfoMapper.get(id).getName();
             break;
         }
-        return null;
+        return showName;
+    }
+
+    @Override
+    public int getUnreadNum(FollowUpReadstatusQuery query) {
+        return followUpReadstatusMapper.queryCount(query);
     }
 }

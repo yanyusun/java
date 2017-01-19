@@ -18,6 +18,7 @@
         <result column="second_liquidate_stage" property="secondLiquidateStage" jdbcType="INTEGER"/>
         <result column="send_status" property="sendStatus" jdbcType="INTEGER"/>
         <result column="source_info_id" property="sourceInfoId" jdbcType="INTEGER"/>
+        <result column="r_create_at" property="readstatusCreateAt" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <resultMap id="MessageWithUserAndTeam" type="com.dqys.business.orm.pojo.followUp.FollowUpMessage"
@@ -85,7 +86,7 @@
       )
     values (#{id,jdbcType=INTEGER}, #{objectId,jdbcType=INTEGER}, #{objectType,jdbcType=INTEGER}, 
       #{userId,jdbcType=INTEGER}, #{teamId,jdbcType=INTEGER}, #{content,jdbcType=VARCHAR}, 
-      #{version,jdbcType=INTEGER}, #{createAt,jdbcType=TIMESTAMP}, #{updateAt,jdbcType=TIMESTAMP}, 
+      #{version,jdbcType=INTEGER}, now(), #{updateAt,jdbcType=TIMESTAMP},
       #{stateflag,jdbcType=BIGINT}, #{secondObjectId,jdbcType=INTEGER}, #{secondObjectType,jdbcType=INTEGER}, 
       #{liquidateStage,jdbcType=INTEGER}, #{secondLiquidateStage,jdbcType=INTEGER}, #{sendStatus,jdbcType=INTEGER}
       )
@@ -115,9 +116,7 @@
             <if test="version != null">
                 version,
             </if>
-            <if test="createAt != null">
                 create_at,
-            </if>
             <if test="updateAt != null">
                 update_at,
             </if>
@@ -162,9 +161,7 @@
             <if test="version != null">
                 #{version,jdbcType=INTEGER},
             </if>
-            <if test="createAt != null">
-                #{createAt,jdbcType=TIMESTAMP},
-            </if>
+                now(),
             <if test="updateAt != null">
                 #{updateAt,jdbcType=TIMESTAMP},
             </if>
@@ -325,58 +322,76 @@
     <update id="updateBySendStatus" parameterType="com.dqys.business.orm.pojo.followUp.FollowUpMessage">
         UPDATE t_follow_up_message SET  send_status=#{sendStatus} WHERE object_id=#{objectId} and object_type=#{objectType} and user_id=#{userId}
     </update>
-    <resultMap id="WithBaseResultMap" type="com.dqys.business.orm.pojo.followUp.FollowUpObject">
-        <result column="object_id" property="objectId"/>
-        <result column="object_type" property="objectType"/>
-        <result column="second_object_id" property="secondObjectId" jdbcType="INTEGER"/>
-        <result column="second_object_type" property="secondObjectType" jdbcType="INTEGER"/>
-        <result column="liquidate_stage" property="liquidateStage" jdbcType="INTEGER"/>
-        <result column="second_liquidate_stage" property="secondLiquidateStage" jdbcType="INTEGER"/>
-        <collection column="object_id" property="followUpMessages"
-                    ofType="com.dqys.business.orm.pojo.followUp.FollowUpMessage">
-            <result column="id" property="id"></result>
-            <result column="content" property="content"></result>
-            <result column="create_at" property="createAt"></result>
-            <result column="user_id" property="userId"></result>
-            <result column="object_id" property="objectId"/>
-            <result column="object_type" property="objectType"/>
-            <result column="second_object_id" property="secondObjectId" jdbcType="INTEGER"/>
-            <result column="second_object_type" property="secondObjectType" jdbcType="INTEGER"/>
-            <result column="liquidate_stage" property="liquidateStage"></result>
-            <result column="second_liquidate_stage" property="secondLiquidateStage"></result>
-            <result column="send_status" property="sendStatus"></result>
-            <collection column="id" property="userInfo" ofType="com.dqys.auth.orm.pojo.TUserInfo">
-                <result column="user_name" property="userName"></result>
-                <result column="user_type" property="userType"></result>
-                <result column="user_id" property="roleId"></result>
-            </collection>
-            <collection column="id" property="companyInfo" ofType="com.dqys.auth.orm.pojo.TCompanyInfo">
-                <result column="company_name" property="companyName"></result>
-            </collection>
-        </collection>
-        <collection column="object_id" property="followUpReadstatuses"
-                    ofType="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus">
-            <result column="currentId" property="userId"></result>
-        </collection>
-    </resultMap>
-    <select id="objectList" resultMap="WithBaseResultMap"
+    <!--<resultMap id="WithBaseResultMap" type="com.dqys.business.orm.pojo.followUp.FollowUpObject">-->
+        <!--<result column="object_id" property="objectId"/>-->
+        <!--<result column="object_type" property="objectType"/>-->
+        <!--<result column="second_object_id" property="secondObjectId" jdbcType="INTEGER"/>-->
+        <!--<result column="second_object_type" property="secondObjectType" jdbcType="INTEGER"/>-->
+        <!--<result column="liquidate_stage" property="liquidateStage" jdbcType="INTEGER"/>-->
+        <!--<result column="second_liquidate_stage" property="secondLiquidateStage" jdbcType="INTEGER"/>-->
+        <!--<collection column="object_id" property="followUpMessages"-->
+                    <!--ofType="com.dqys.business.orm.pojo.followUp.FollowUpMessage">-->
+            <!--<result column="id" property="id"></result>-->
+            <!--<result column="content" property="content"></result>-->
+            <!--<result column="create_at" property="createAt"></result>-->
+            <!--<result column="user_id" property="userId"></result>-->
+            <!--<result column="object_id" property="objectId"/>-->
+            <!--<result column="object_type" property="objectType"/>-->
+            <!--<result column="second_object_id" property="secondObjectId" jdbcType="INTEGER"/>-->
+            <!--<result column="second_object_type" property="secondObjectType" jdbcType="INTEGER"/>-->
+            <!--<result column="liquidate_stage" property="liquidateStage"></result>-->
+            <!--<result column="second_liquidate_stage" property="secondLiquidateStage"></result>-->
+            <!--<result column="send_status" property="sendStatus"></result>-->
+            <!--<collection column="id" property="userInfo" ofType="com.dqys.auth.orm.pojo.TUserInfo">-->
+                <!--<result column="user_name" property="userName"></result>-->
+                <!--<result column="user_type" property="userType"></result>-->
+                <!--<result column="user_id" property="roleId"></result>-->
+            <!--</collection>-->
+            <!--<collection column="id" property="companyInfo" ofType="com.dqys.auth.orm.pojo.TCompanyInfo">-->
+                <!--<result column="company_name" property="companyName"></result>-->
+            <!--</collection>-->
+        <!--</collection>-->
+        <!--<collection column="object_id" property="followUpReadstatuses"-->
+                    <!--ofType="com.dqys.business.orm.pojo.followUp.FollowUpReadstatus">-->
+            <!--<result column="currentId" property="userId"></result>-->
+        <!--</collection>-->
+    <!--</resultMap>-->
+    <!--<select id="objectList" resultMap="WithBaseResultMap"-->
+            <!--parameterType="com.dqys.business.orm.query.followUp.FollowUpMessageQuery">-->
+         <!--SELECT tm.*,tui.user_name,tci.company_name,tag.user_type,tag.role_id-->
+         <!--FROM (SELECT fum.*-->
+         <!--FROM object_user_relation our,t_follow_up_message fum         WHERE fum.object_id=our.object_id AND fum.object_type=our.object_type AND our.user_id=#{userId}) tm-->
+         <!--LEFT JOIN (SELECT object_id,object_type,user_id, second_liquidate_stage,second_object_id,second_object_type,moment FROM t_follow_up_readstatus WHERE user_id=#{userId}  )fur-->
+        <!--ON tm.object_id=fur.object_id AND fur.object_type=tm.object_type-->
+        <!--AND  fur.moment = tm.liquidate_stage  AND fur. second_liquidate_stage = tm.second_liquidate_stage and tm. second_object_id = fur. second_object_id AND  tm.second_object_type AND fur. second_object_type-->
+         <!--AND fur.user_id=#{userId}-->
+        <!--LEFT JOIN t_user_info tui ON tui.id=tm.user_id-->
+         <!--LEFT JOIN t_company_info tci ON tci.id=tui.company_id-->
+        <!--LEFT JOIN t_user_tag tag  ON tui.id=tag.user_id-->
+         <!--ORDER BY fur.user_id desc,tm.create_at desc-->
+        <!--<if test="isPaging">-->
+            <!--limit #{pageNo},#{pageSize}-->
+        <!--</if>-->
+    <!--</select>-->
+    <select id="objectList" resultMap="messageWithALL"
             parameterType="com.dqys.business.orm.query.followUp.FollowUpMessageQuery">
-        SELECT tm.*,tui.user_name,tci.company_name,tag.user_type,tag.role_id
-        FROM (SELECT fum.*
-        FROM object_user_relation our,t_follow_up_message fum
-        WHERE fum.object_id=our.object_id AND fum.object_type=our.object_type AND our.user_id=#{userId}) tm
-        LEFT JOIN (SELECT object_id,object_type,user_id, second_liquidate_stage,second_object_id,second_object_type,moment FROM t_follow_up_readstatus WHERE user_id=#{userId}  )fur
+        select  tm.*,fur.create_at  r_create_at,tui.user_name,tag.user_type,tag.role_id from(
+        select message.* FROM t_follow_up_message message WHERE message.create_at  in(
+        SELECT max(create_at) FROM t_follow_up_message
+        WHERE user_id=#{userId} and message.object_id=object_id  and message.object_type=object_type and message.liquidate_stage = liquidate_stage
+        GROUP BY object_id,object_type,second_object_id,second_object_type,liquidate_stage,second_liquidate_stage)  )tm
+        LEFT JOIN (SELECT object_id,object_type,user_id, second_liquidate_stage,second_object_id,second_object_type,moment ,create_at FROM t_follow_up_readstatus WHERE user_id=#{userId}  )fur
         ON tm.object_id=fur.object_id AND fur.object_type=tm.object_type
         AND  fur.moment = tm.liquidate_stage  AND fur. second_liquidate_stage = tm.second_liquidate_stage and tm. second_object_id = fur. second_object_id AND  tm.second_object_type AND fur. second_object_type
-        AND fur.user_id=#{userId}
         LEFT JOIN t_user_info tui ON tui.id=tm.user_id
-        LEFT JOIN t_company_info tci ON tci.id=tui.company_id
         LEFT JOIN t_user_tag tag  ON tui.id=tag.user_id
-        ORDER BY fur.user_id desc,tm.create_at desc
+        ORDER BY fur.create_at desc,tm.create_at desc
         <if test="isPaging">
             limit #{pageNo},#{pageSize}
         </if>
     </select>
+
+
 
 
     <select id="objectListCount" resultType="java.lang.Integer"

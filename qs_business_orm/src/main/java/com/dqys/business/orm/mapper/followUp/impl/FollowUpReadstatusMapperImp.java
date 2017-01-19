@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.followUp.impl;
 
 import com.dqys.business.orm.mapper.followUp.FollowUpReadstatusMapper;
 import com.dqys.business.orm.pojo.followUp.FollowUpReadstatus;
+import com.dqys.business.orm.query.followUp.FollowUpReadstatusQuery;
 import com.dqys.core.base.BaseDao;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -64,5 +65,10 @@ public class FollowUpReadstatusMapperImp extends BaseDao implements FollowUpRead
                                      @Param("userId") Integer userId) {
         return super.getSqlSession().getMapper(FollowUpReadstatusMapper.class)
                 .countByTypeIdUser(objectId, objectType, userId);
+    }
+
+    @Override
+    public int queryCount(FollowUpReadstatusQuery query) {
+        return super.getSqlSession().getMapper(FollowUpReadstatusMapper.class).queryCount(query);
     }
 }

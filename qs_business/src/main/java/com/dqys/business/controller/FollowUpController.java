@@ -1,7 +1,6 @@
 package com.dqys.business.controller;
 
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
-import com.dqys.business.orm.pojo.followUp.FollowUpObject;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import com.dqys.business.service.dto.followUp.CFollowUpMessageDTO;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
@@ -152,7 +151,7 @@ public class FollowUpController extends BaseApiContorller {
     @RequestMapping(value = "c/index", method = RequestMethod.GET)
     public JsonResponse c_Index(FollowUpMessageQuery query) throws Exception {
 
-        List<FollowUpObject> list = followUpMessageService.objectList(query);
+        List<FollowUpMessage> list = followUpMessageService.objectList(query);
         List<CFollowUpMessageDTO> dtoList= FollowUpUtil.toIndexCFollowUpMessageDTOList(list,followUpMessageService);
         if (query.getIsPaging()) {
             Map<String, Object> map = new HashMap<>();

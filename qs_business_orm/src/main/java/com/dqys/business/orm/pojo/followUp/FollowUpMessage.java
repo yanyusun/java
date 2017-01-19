@@ -39,12 +39,15 @@ public class FollowUpMessage  extends BaseModel {
 
     private Integer sendStatus;
 
+    private Date readstatusCreateAt;//未读数据时间
+
     private TUserInfo userInfo;
 
     private TeammateRe teammateRe;
 
     //private UserTeam userTeam;
     private TCompanyInfo companyInfo;
+
 
     private List<FollowUpSource> fileList;
 
@@ -207,5 +210,13 @@ public class FollowUpMessage  extends BaseModel {
 
     public void setFileList(List<FollowUpSource> fileList) {
         this.fileList = fileList;
+    }
+
+    public Date getReadstatusCreateAt() {
+        return readstatusCreateAt;
+    }
+
+    public void setReadstatusCreateAt(Date readstatusCreateAt) {
+        this.readstatusCreateAt = readstatusCreateAt;
     }
 }

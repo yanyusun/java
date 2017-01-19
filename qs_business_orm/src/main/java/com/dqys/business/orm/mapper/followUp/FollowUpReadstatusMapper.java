@@ -2,6 +2,7 @@ package com.dqys.business.orm.mapper.followUp;
 
 
 import com.dqys.business.orm.pojo.followUp.FollowUpReadstatus;
+import com.dqys.business.orm.query.followUp.FollowUpReadstatusQuery;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -45,4 +46,6 @@ public interface FollowUpReadstatusMapper {
      */
     Integer countByTypeIdUser(@Param("objectId")Integer objectId, @Param("objectType")Integer objectType,
                               @Param("userId")Integer userId);
+
+    int queryCount(FollowUpReadstatusQuery query);
 }

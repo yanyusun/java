@@ -3,8 +3,8 @@ package com.dqys.business.service.utils.followUp;
 import com.dqys.auth.orm.pojo.TCompanyInfo;
 import com.dqys.auth.orm.pojo.TUserInfo;
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
-import com.dqys.business.orm.pojo.followUp.FollowUpObject;
 import com.dqys.business.orm.pojo.followUp.FollowUpSource;
+import com.dqys.business.orm.query.followUp.FollowUpReadstatusQuery;
 import com.dqys.business.service.dto.followUp.CFollowUpMessageDTO;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 import com.dqys.business.service.dto.followUp.FollowUpSourceDTO;
@@ -141,23 +141,33 @@ public class FollowUpUtil {
         return cFollowUpMessageDTOList;
     }
 
-    public static CFollowUpMessageDTO toIndexFollowUpMessageDTO(FollowUpObject followUpObject, int userId,FollowUpMessageService service) {
-        List<FollowUpMessage> list = followUpObject.getFollowUpMessages();
-        FollowUpMessage followUpMessage = list.get(0);
+    public static CFollowUpMessageDTO toIndexFollowUpMessageDTO(FollowUpMessage followUpMessage, int userId, FollowUpMessageService service) {
         CFollowUpMessageDTO cFollowUpMessageDTO = toCFollowUpMessageDTO(followUpMessage, userId);
-        cFollowUpMessageDTO.setUnreadNum(list.size());
+        FollowUpReadstatusQuery query = new FollowUpReadstatusQuery();
+        if(followUpMessage.getReadstatusCreateAt()!=null){
+            query.setUserId(followUpMessage.getUserId());
+            query.setObjectType(followUpMessage.getObjectType());
+            query.setObjectId(followUpMessage.getObjectId());
+            query.setMoment(followUpMessage.getLiquidateStage());
+            query.setSecondObjectType(followUpMessage.getSecondObjectType());
+            query.setSecondObjectId(followUpMessage.getSecondObjectId());
+            query.setSecondLiquidateStage(followUpMessage.getSecondLiquidateStage());
+            cFollowUpMessageDTO.setUnreadNum(service.getUnreadNum(query));
+        }
         //拼接对象名称
-//        if(service.){
-//
-//        }
+        String objectShowName = service.getObjectShowName(followUpMessage.getObjectId(), followUpMessage.getObjectType());
+        if (followUpMessage.getSecondObjectId() != null) {
+            objectShowName +=" " + service.getObjectShowName(followUpMessage.getSecondObjectId(),followUpMessage.getSecondObjectType());
+        }
+        cFollowUpMessageDTO.setObjectShowName(objectShowName);
         return cFollowUpMessageDTO;
     }
 
-    public static List<CFollowUpMessageDTO> toIndexCFollowUpMessageDTOList(List<FollowUpObject> followUpObjectList,FollowUpMessageService service) {
+    public static List<CFollowUpMessageDTO> toIndexCFollowUpMessageDTOList(List<FollowUpMessage> followUpObjectList, FollowUpMessageService service) {
         Integer userId = UserSession.getCurrent().getUserId();
         List<CFollowUpMessageDTO> cFollowUpMessageDTOList = new ArrayList<>();
-        for (FollowUpObject followUpMessage : followUpObjectList) {
-            CFollowUpMessageDTO cFollowUpMessageDTO = toIndexFollowUpMessageDTO(followUpMessage, userId,service);
+        for (FollowUpMessage followUpMessage : followUpObjectList) {
+            CFollowUpMessageDTO cFollowUpMessageDTO = toIndexFollowUpMessageDTO(followUpMessage, userId, service);
             cFollowUpMessageDTOList.add(cFollowUpMessageDTO);
         }
         return cFollowUpMessageDTOList;

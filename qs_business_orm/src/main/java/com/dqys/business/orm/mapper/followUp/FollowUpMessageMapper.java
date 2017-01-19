@@ -2,7 +2,6 @@ package com.dqys.business.orm.mapper.followUp;
 
 
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
-import com.dqys.business.orm.pojo.followUp.FollowUpObject;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
 import org.apache.ibatis.annotations.Param;
 
@@ -40,7 +39,7 @@ public interface FollowUpMessageMapper {
 
     void updateBySendStatus(FollowUpMessage followUpMessage);
 
-    List<FollowUpObject> objectList(FollowUpMessageQuery query);
+    List<FollowUpMessage> objectList(FollowUpMessageQuery query);
 
     Integer objectListCount(FollowUpMessageQuery query);
 }

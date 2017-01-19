@@ -2,9 +2,9 @@ package com.dqys.business.service.service.followUp;
 
 
 import com.dqys.business.orm.pojo.followUp.FollowUpMessage;
-import com.dqys.business.orm.pojo.followUp.FollowUpObject;
 import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.business.orm.query.followUp.FollowUpMessageQuery;
+import com.dqys.business.orm.query.followUp.FollowUpReadstatusQuery;
 import com.dqys.business.service.dto.followUp.FollowUpMessageDTO;
 
 import java.io.IOException;
@@ -62,7 +62,7 @@ public interface FollowUpMessageService {
      */
     void insertBatchInsertSource(List<FollowUpSource> fileList, Integer followUpId) throws IOException;
 
-    List<FollowUpObject> objectList(FollowUpMessageQuery query);
+    List<FollowUpMessage> objectList(FollowUpMessageQuery query);
 
     Integer objectListCount(FollowUpMessageQuery query);
 
@@ -73,5 +73,7 @@ public interface FollowUpMessageService {
      * @return
      */
     String getObjectShowName(Integer id ,Integer type);
+
+    int getUnreadNum(FollowUpReadstatusQuery query);
 
 }
