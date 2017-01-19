@@ -799,4 +799,38 @@
         WHERE b.stateflag=0 AND our.stateflag=0 AND b.status=#{status} AND our.object_type=#{objectType} AND our.user_id=#{userId}
     </select>
 
+    <resultMap id="WithContactBaseResultMap" type="com.dqys.business.orm.pojo.asset.LenderInfo" extends="BaseResultMap">
+        <collection column="id" property="contactInfo" ofType="com.dqys.business.orm.pojo.asset.ContactInfo">
+            <id column="conId" property="id" jdbcType="INTEGER" />
+            <result column="conRemark" property="remark" jdbcType="VARCHAR" />
+            <result column="mode" property="mode" jdbcType="VARCHAR" />
+            <result column="mode_id" property="modeId" jdbcType="INTEGER" />
+            <result column="name" property="name" jdbcType="VARCHAR" />
+            <result column="conType" property="type" jdbcType="INTEGER" />
+            <result column="avg" property="avg" jdbcType="VARCHAR" />
+            <result column="gender" property="gender" jdbcType="VARCHAR" />
+            <result column="idcard" property="idCard" jdbcType="VARCHAR" />
+            <result column="company" property="company" jdbcType="VARCHAR" />
+            <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+            <result column="home_tel" property="homeTel" jdbcType="VARCHAR" />
+            <result column="office_tel" property="officeTel" jdbcType="VARCHAR" />
+            <result column="email" property="email" jdbcType="VARCHAR" />
+            <result column="province" property="province" jdbcType="VARCHAR" />
+            <result column="city" property="city" jdbcType="VARCHAR" />
+            <result column="district" property="district" jdbcType="VARCHAR" />
+            <result column="address" property="address" jdbcType="VARCHAR" />
+            <result column="code" property="code" jdbcType="VARCHAR" />
+            <result column="other_address" property="otherAddress" jdbcType="LONGVARCHAR" />
+            <result column="conMemo" property="memo" jdbcType="VARCHAR" />
+        </collection>
+    </resultMap>
+
+    <select id="getWithLenderContact" resultMap="WithContactBaseResultMap">
+        SELECT len.*,con.id conId,con.remark conRemark,con.mode,con.mode_id,con.name,con.code,con.type conType,con.avg,con.gender
+        ,con.idcard,con.company,con.mobile,con.home_tel,con.office_tel,con.email,con.province,con.city,con.district,con.address,con.memo conMemo,con.other_address
+         from bt_lender len LEFT JOIN bt_contact con
+        ON con.mode=11 AND con.type=1 AND con.mode_id=len.id AND con.stateflag=0
+        WHERE len.id=#{id}
+    </select>
+
 </mapper>
