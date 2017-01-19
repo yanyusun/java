@@ -109,6 +109,6 @@ public class LenderInfoMapperImpl extends BaseDao implements LenderInfoMapper {
 
     @Override
     public LenderInfo getWithLenderContact(Integer id) {
-        return null;
+        return super.getSqlSession().getMapper(LenderInfoMapper.class).getWithLenderContact(id);
     }
 }
