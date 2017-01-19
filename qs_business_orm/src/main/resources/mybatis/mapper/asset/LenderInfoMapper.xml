@@ -71,7 +71,7 @@
      -->
     <sql id="Query_Condition">
         <where>
-            bcon.mode=11 AND bcon.type=1
+            bcon.mode=11 AND bcon.type=1 AND bcon.stateflag=0
             <if test="stateflag != null and stateflag != 0">
                 AND len.stateflag != 0
             </if>
