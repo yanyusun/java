@@ -2,7 +2,6 @@ package com.dqys.business.orm.pojo.asset;
 
 import com.dqys.core.base.BaseModel;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -56,6 +55,8 @@ public class LenderInfo extends BaseModel {
 
     private Integer assetId; // 资产包Id
     private String lenderNo; // 借款人编号
+
+    private ContactInfo contactInfo;
 
     @Override
     public String toString() {
@@ -426,5 +427,13 @@ public class LenderInfo extends BaseModel {
 
     public void setBelongFollowTime(Date belongFollowTime) {
         this.belongFollowTime = belongFollowTime;
+    }
+
+    public ContactInfo getContactInfo() {
+        return contactInfo;
+    }
+
+    public void setContactInfo(ContactInfo contactInfo) {
+        this.contactInfo = contactInfo;
     }
 }

@@ -64,4 +64,14 @@ public interface FollowUpMessageService {
 
     List<FollowUpObject> objectList(FollowUpMessageQuery query);
 
+    Integer objectListCount(FollowUpMessageQuery query);
+
+    /**
+     * 得到对象显示名称
+     * @param id
+     * @param type
+     * @return
+     */
+    String getObjectShowName(Integer id ,Integer type);
+
 }

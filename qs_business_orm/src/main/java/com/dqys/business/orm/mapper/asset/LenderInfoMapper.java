@@ -131,4 +131,6 @@ public interface LenderInfoMapper {
      * 待发布
      */
     List<Integer> getObjectIdByUserIdAndStatus(@Param("userId") Integer userId, @Param("objectType") Integer objectType, @Param("status") Integer status);
+
+    LenderInfo getWithLenderContact(Integer id);
 }

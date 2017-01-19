@@ -15,9 +15,13 @@ public class CFollowUpMessageDTO {
 
     private Integer objectType;
 
+    private String objectShowName;
+
     private Integer secondObjectId;
 
     private Integer secondObjectType;
+
+    private Integer secondObjectShowName;
 
     private Integer liquidateStage;
 
@@ -42,6 +46,7 @@ public class CFollowUpMessageDTO {
     private Integer roleId;
 
     private String avg;
+
 
     private List<FollowUpSource> fileList;
 
@@ -195,5 +200,21 @@ public class CFollowUpMessageDTO {
 
     public void setFileList(List<FollowUpSource> fileList) {
         this.fileList = fileList;
+    }
+
+    public String getObjectShowName() {
+        return objectShowName;
+    }
+
+    public void setObjectShowName(String objectShowName) {
+        this.objectShowName = objectShowName;
+    }
+
+    public Integer getSecondObjectShowName() {
+        return secondObjectShowName;
+    }
+
+    public void setSecondObjectShowName(Integer secondObjectShowName) {
+        this.secondObjectShowName = secondObjectShowName;
     }
 }

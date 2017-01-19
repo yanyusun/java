@@ -326,8 +326,8 @@
         UPDATE t_follow_up_message SET  send_status=#{sendStatus} WHERE object_id=#{objectId} and object_type=#{objectType} and user_id=#{userId}
     </update>
     <resultMap id="WithBaseResultMap" type="com.dqys.business.orm.pojo.followUp.FollowUpObject">
-        <result column="object_id" property="objectId"></result>
-        <result column="object_type" property="objectType"></result>
+        <result column="object_id" property="objectId"/>
+        <result column="object_type" property="objectType"/>
         <result column="second_object_id" property="secondObjectId" jdbcType="INTEGER"/>
         <result column="second_object_type" property="secondObjectType" jdbcType="INTEGER"/>
         <result column="liquidate_stage" property="liquidateStage" jdbcType="INTEGER"/>
@@ -338,11 +338,17 @@
             <result column="content" property="content"></result>
             <result column="create_at" property="createAt"></result>
             <result column="user_id" property="userId"></result>
+            <result column="object_id" property="objectId"/>
+            <result column="object_type" property="objectType"/>
+            <result column="second_object_id" property="secondObjectId" jdbcType="INTEGER"/>
+            <result column="second_object_type" property="secondObjectType" jdbcType="INTEGER"/>
             <result column="liquidate_stage" property="liquidateStage"></result>
             <result column="second_liquidate_stage" property="secondLiquidateStage"></result>
             <result column="send_status" property="sendStatus"></result>
             <collection column="id" property="userInfo" ofType="com.dqys.auth.orm.pojo.TUserInfo">
-                <result column="real_name" property="realName"></result>
+                <result column="user_name" property="userName"></result>
+                <result column="user_type" property="userType"></result>
+                <result column="user_id" property="roleId"></result>
             </collection>
             <collection column="id" property="companyInfo" ofType="com.dqys.auth.orm.pojo.TCompanyInfo">
                 <result column="company_name" property="companyName"></result>
@@ -355,21 +361,7 @@
     </resultMap>
     <select id="objectList" resultMap="WithBaseResultMap"
             parameterType="com.dqys.business.orm.query.followUp.FollowUpMessageQuery">
-        <!--SELECT tm.*,fur.user_id currentId,tui.real_name,tci.company_name-->
-        <!--FROM (SELECT fum.*-->
-        <!--FROM object_user_relation our,t_follow_up_message fum-->
-        <!--WHERE fum.object_id=our.object_id AND fum.object_type=our.object_type AND our.user_id=#{userId}) tm-->
-        <!--LEFT JOIN (SELECT object_id,object_type,user_id FROM t_follow_up_readstatus WHERE user_id=#{userId} GROUP BY-->
-        <!--object_id,object_type,user_id)fur-->
-        <!--ON tm.object_id=fur.object_id AND fur.object_type=tm.object_type AND fur.user_id=#{userId} LEFT JOIN t_user_info-->
-        <!--tui-->
-        <!--ON tui.id=tm.user_id LEFT JOIN t_company_info tci-->
-        <!--ON tci.id=tui.company_id-->
-        <!--ORDER BY fur.user_id desc,tm.create_at desc-->
-        <!--<if test="isPaging">-->
-            <!--limit #{pageNo},#{pageSize}-->
-        <!--</if>-->
-        SELECT tm.*,tui.real_name,tci.company_name,tag.user_type,tag.role_id
+        SELECT tm.*,tui.user_name,tci.company_name,tag.user_type,tag.role_id
         FROM (SELECT fum.*
         FROM object_user_relation our,t_follow_up_message fum
         WHERE fum.object_id=our.object_id AND fum.object_type=our.object_type AND our.user_id=#{userId}) tm
@@ -384,6 +376,17 @@
         <if test="isPaging">
             limit #{pageNo},#{pageSize}
         </if>
+    </select>
+
+
+    <select id="objectListCount" resultType="java.lang.Integer"
+            parameterType="com.dqys.business.orm.query.followUp.FollowUpMessageQuery">
+        SELECT COUNT(*)
+        FROM (
+          SELECT fum.object_id ,fum.object_type,fum.liquidate_stage,fum.second_liquidate_stage,fum.second_object_id,fum.second_object_type FROM object_user_relation our,t_follow_up_message fum
+          WHERE fum.object_id=our.object_id AND fum.object_type=our.object_type AND our.user_id=#{userId}
+          GROUP BY fum.object_id ,fum.object_type,fum.liquidate_stage,fum.second_liquidate_stage,fum.second_object_id,fum.second_object_type
+        )as total
     </select>
 
 
