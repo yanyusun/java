@@ -14,6 +14,8 @@ import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 /**
  * Created by Yvan on 16/8/1.
  */
@@ -122,7 +124,7 @@ public class SourceController extends BaseApiContorller {
      * @return
      */
     @RequestMapping(value = "c/add", method = RequestMethod.POST)
-    public JsonResponse uploadFile(@ModelAttribute CSourceInfoDTO sourceInfoDTO) {
+    public JsonResponse uploadFile(@ModelAttribute CSourceInfoDTO sourceInfoDTO) throws IOException{
         if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getFilePathName(), sourceInfoDTO.getFileShowName(), sourceInfoDTO.getType())) {
             return JsonResponseTool.paramErr("参数错误");
         }
@@ -146,7 +148,7 @@ public class SourceController extends BaseApiContorller {
      * @param navId
      * @return
      */
-    @RequestMapping(value = {"get", "c/get"})
+    @RequestMapping(value = "get")
     public JsonResponse get(Integer lenderId, Integer estatesId, @RequestParam Integer navId) {
         if (CommonUtil.checkParam(navId)) {
             return JsonResponseTool.paramErr("参数错误");
@@ -258,13 +260,13 @@ public class SourceController extends BaseApiContorller {
 
 
     /**
-     * @api {DELETE} http://{url}/source/c/del 增加跟进信息,状态为未发送
+     * @api {DELETE} http://{url}/source/c/source 增加跟进信息,状态为未发送
      * @apiName c_del
      * @apiGroup source
      * @apiUse SourceDelDTO
      */
     //// TODO: 17-1-17 权限控制 
-    @RequestMapping(value = "c/source", method = RequestMethod.POST)
+    @RequestMapping(value = "c/source", method = RequestMethod.GET)
     public JsonResponse getSource(Integer id) throws SourceEditException {
         return JsonResponseTool.success(SourceServiceUtls.toCSourceNavDTODetail(sourceService.getDetail(id)));
     }

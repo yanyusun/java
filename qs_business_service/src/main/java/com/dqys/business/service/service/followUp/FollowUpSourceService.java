@@ -3,13 +3,14 @@ package com.dqys.business.service.service.followUp;
 import com.dqys.business.orm.pojo.followUp.FollowUpSource;
 import com.dqys.business.service.dto.followUp.FollowUpSourceDTO;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
  * Created by yan on 17-1-12.
  */
 public interface FollowUpSourceService {
-    void add(FollowUpSourceDTO followUpSourceDTO);
+    void add(FollowUpSourceDTO followUpSourceDTO) throws IOException;
 
     List<FollowUpSourceDTO> listByPid(Integer pid, Integer objectType, Integer objectId);
 

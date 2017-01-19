@@ -354,6 +354,7 @@ public class SourceServiceImpl implements SourceService {
                 }
                 sourceNavigation.setUserId(userId);
                 sourceNavigation.setSite(c_site);
+                sourceNavigation.setPid(sourceInfo.getNavId());
                 addNavigation(sourceNavigation);
                 sourceSourceMapper.insert(sourceSource);
             });
@@ -362,7 +363,7 @@ public class SourceServiceImpl implements SourceService {
     }
 
     @Override
-    public JsonResponse c_addSource(CSourceInfoDTO sourceInfoDTO) {
+    public JsonResponse c_addSource(CSourceInfoDTO sourceInfoDTO) throws IOException {
         //新建文件夹
         SourceNavigation sourceNavigation = SourceServiceUtls.toSourceNav(sourceInfoDTO);
         JsonResponse<Integer> navResult = addNavigation(sourceNavigation);
@@ -377,6 +378,7 @@ public class SourceServiceImpl implements SourceService {
             sourceInfoId = sourceInfo.getId();
             SourceSource sourceSource = SourceServiceUtls.toSourceSource(sourceInfoDTO, sourceInfoId);
             sourceSourceMapper.insert(sourceSource);
+            FileTool.saveFileSync(sourceSource.getPath());
         } else {
             return JsonResponseTool.failure("创建文件失败!");
         }

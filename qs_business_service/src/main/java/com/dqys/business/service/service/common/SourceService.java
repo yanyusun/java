@@ -6,6 +6,7 @@ import com.dqys.business.service.dto.sourceAuth.SelectDtoMap;
 import com.dqys.business.service.exception.bean.SourceEditException;
 import com.dqys.core.model.JsonResponse;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -110,7 +111,7 @@ public interface SourceService {
      * @param sourceInfoDTO
      * @return
      */
-     JsonResponse c_addSource(CSourceInfoDTO sourceInfoDTO);
+     JsonResponse c_addSource(CSourceInfoDTO sourceInfoDTO) throws IOException;
 
     /**
      * 根据分类列表获取数据
