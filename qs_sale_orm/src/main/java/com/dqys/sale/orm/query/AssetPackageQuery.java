@@ -34,11 +34,18 @@ public class AssetPackageQuery extends PageEntity implements Serializable {
     private Integer isBank;//是否银行类金融机构(0银行类1非银行类）
 
     private Integer collectionNumSort;//收藏数量 排序 1倒叙  2正叙
+    private Integer disposeNumSort;// 申请处置数量 排序 1倒叙  2正叙
+    private Integer totalMoneySort;//资产总额 排序 1倒叙  2正叙
     private Integer disposeStatus; //处置状态
-    private Integer disposeStatusSort;// 处置状态（0待处置1处置中2已处置） 1倒叙  2正叙
-
     private Integer disposes;//处置方式
 
+    public Integer getTotalMoneySort() {
+        return totalMoneySort;
+    }
+
+    public void setTotalMoneySort(Integer totalMoneySort) {
+        this.totalMoneySort = totalMoneySort;
+    }
 
     public Integer getObjectType() {
         return objectType;
@@ -112,12 +119,12 @@ public class AssetPackageQuery extends PageEntity implements Serializable {
         this.disposes = disposes;
     }
 
-    public Integer getDisposeStatusSort() {
-        return disposeStatusSort;
+    public Integer getDisposeNumSort() {
+        return disposeNumSort;
     }
 
-    public void setDisposeStatusSort(Integer disposeStatusSort) {
-        this.disposeStatusSort = disposeStatusSort;
+    public void setDisposeNumSort(Integer disposeNumSort) {
+        this.disposeNumSort = disposeNumSort;
     }
 
     public Integer getDisposeStatus() {

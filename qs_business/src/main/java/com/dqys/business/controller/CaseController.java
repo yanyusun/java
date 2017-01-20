@@ -10,8 +10,10 @@ import com.dqys.core.utils.JsonResponseTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Yvan on 16/7/26.
@@ -181,13 +183,38 @@ public class CaseController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/listByLender")
+    @RequestMapping("/listByLender")
     public JsonResponse listByLender(Integer id) {
         if (CommonUtil.checkParam(id)) {
             return JsonResponseTool.paramErr("参数错误");
         }
 
         return JsonResponseTool.success(caseService.listByLender(id));
+    }
+
+    /**
+     * 根据借款人信息查询案件信息(C端)
+     *
+     * @param id
+     * @return
+     */
+    @RequestMapping("/c/listByLender")
+    public JsonResponse listByLenderC(Integer id) {
+        if (CommonUtil.checkParam(id)) {
+            return JsonResponseTool.paramErr("参数错误");
+        }
+        List<CaseDTO> list = caseService.listByLender(id);
+        if (list == null || list.size() == 0) {
+            return JsonResponseTool.successNullList();
+        }
+        List<Map> mapList = new ArrayList<>();
+        for (CaseDTO dto : list) {
+            Map map = new HashMap<>();
+            map.put("name", dto.getCaseName());
+            map.put("caseId", dto.getId());
+            mapList.add(map);
+        }
+        return JsonResponseTool.success(mapList);
     }
 
     /**

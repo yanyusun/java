@@ -41,7 +41,33 @@ public class UserBondQuery extends PageEntity implements Serializable {
     private String loanType;//贷款类型
 
     private Integer disposes;//处置方式
+    private Integer disposeStatus;// 处置状态
+    private Integer collectionNumSort;//收藏数量 排序 1倒叙  2正叙
+    private Integer disposeNumSort;//申请处置数量 排序 1倒叙  2正叙
 
+    public Integer getDisposeStatus() {
+        return disposeStatus;
+    }
+
+    public void setDisposeStatus(Integer disposeStatus) {
+        this.disposeStatus = disposeStatus;
+    }
+
+    public Integer getCollectionNumSort() {
+        return collectionNumSort;
+    }
+
+    public void setCollectionNumSort(Integer collectionNumSort) {
+        this.collectionNumSort = collectionNumSort;
+    }
+
+    public Integer getDisposeNumSort() {
+        return disposeNumSort;
+    }
+
+    public void setDisposeNumSort(Integer disposeNumSort) {
+        this.disposeNumSort = disposeNumSort;
+    }
 
     public Integer getObjectType() {
         return objectType;

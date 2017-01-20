@@ -189,7 +189,10 @@ public class LenderServiceUtils {
         lenderDTO.setType(lenderInfo.getType());
         lenderDTO.setEntrustName(lenderInfo.getEntrustName());
         lenderDTO.setAttribute(lenderInfo.getAttribute());
-
+        lenderDTO.setIsStop(lenderInfo.getIsStop());
+        lenderDTO.setIsAgent(lenderInfo.getIsAgent());
+        lenderDTO.setIsLawyer(lenderInfo.getIsLawyer());
+        lenderDTO.setIsCollection(lenderInfo.getIsCollection());
         return lenderDTO;
     }
 

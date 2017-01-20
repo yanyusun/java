@@ -647,11 +647,23 @@
         <if test="collectionNumSort !=null and collectionNumSort==2">
             tap.collection_num ASC,
         </if>
-        <if test="disposeStatusSort !=null and disposeStatusSort==1">
-            tap.dispose_status DESC,
+        <if test="disposeNumSort !=null and disposeNumSort==1">
+            tap.dispose_num DESC,
         </if>
-        <if test="disposeStatusSort !=null and disposeStatusSort==2">
-            tap.dispose_status ASC,
+        <if test="disposeNumSort !=null and disposeNumSort==2">
+            tap.dispose_num ASC,
+        </if>
+        <if test="assetRentalSort !=null and assetRentalSort==1">
+            tap.asset_rental DESC,
+        </if>
+        <if test="assetRentalSort !=null and assetRentalSort==2">
+            tap.asset_rental ASC,
+        </if>
+        <if test="houseSizeSort !=null and houseSizeSort==1">
+            tap.house_size DESC,
+        </if>
+        <if test="houseSizeSort !=null and houseSizeSort==2">
+            tap.house_size ASC,
         </if>
         tap.create_time DESC
     </select>
