@@ -72,6 +72,7 @@ public class FixedAssetServiceImpl implements FixedAssetService {
 
     @Override
     public JsonResponse fixedList(FixedAssetQuery fixedAssetQuery) {
+        fixedAssetQuery.setPageCount(1);
         List<FixedAssetDTO> dtos = getFixedAssetDTOs(fixedAssetQuery);
         for (FixedAssetDTO dto : dtos) {
             FADto faDto = new FADto();
@@ -124,10 +125,20 @@ public class FixedAssetServiceImpl implements FixedAssetService {
         query.setStartPage(query.getStartPage());
         query.setObjectType(ObjectTypeEnum.fixed_asset.getValue());
         List<FixedAsset> fixedAssetList = fixedAssetMapper.fixedList(query);
-        Integer count = fixedAssetMapper.fixedListCount(query);
+        Integer count = fixedAssetList.size();
         query.setTotalCount(count);
+        List<FixedAsset> fixedAssetListNew = new ArrayList<>();
+        if (fixedAssetList != null && fixedAssetList.size() > 0) {
+            int size = query.getStartPage() + query.getPageCount();
+            if (size > query.getTotalCount()) {
+                size = query.getTotalCount();
+            }
+            for (int i = query.getStartPage(); i < size; i++) {
+                fixedAssetListNew.add(fixedAssetList.get(i));
+            }
+        }
         List<FixedAssetDTO> dtos = new ArrayList<>();
-        for (FixedAsset entity : fixedAssetList) {
+        for (FixedAsset entity : fixedAssetListNew) {
             FixedAssetDTO dto = new FixedAssetDTO();
             dto.setLabels(entity.getLabels());
             dto.setFixedAsset(entity);

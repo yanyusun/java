@@ -752,6 +752,17 @@ public class LenderServiceImpl implements LenderService {
         if (contactInfoList == null || contactInfoList.size() == 0) {
             return JsonResponseTool.successNullList();
         }
+        for (ContactInfo info : contactInfoList) {
+            if (info.getProvince() != null) {
+                info.setProvinceName(AreaTool.getAreaById(info.getProvince()).getLabel());
+            }
+            if (info.getCity() != null) {
+                info.setCityName(AreaTool.getAreaById(info.getCity()).getLabel());
+            }
+            if (info.getDistrict() != null) {
+                info.setDistrictName(AreaTool.getAreaById(info.getDistrict()).getLabel());
+            }
+        }
         map.put("contactInfoList", contactInfoList);
         return JsonResponseTool.success(map);
     }

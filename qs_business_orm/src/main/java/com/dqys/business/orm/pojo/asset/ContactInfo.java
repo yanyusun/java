@@ -22,8 +22,11 @@ public class ContactInfo extends BaseModel {
     private String officeTel;  // 办公电话
     private String email;  // 电子邮件
     private Integer province;  // 省
+    private String provinceName;  // 省
     private Integer city;  // 市
+    private String cityName;
     private Integer district;  // 区
+    private String districtName;
     private String address;  // 详细地址
     private String code; // 工号
     private String otherAddress; // 其他地址
@@ -39,6 +42,30 @@ public class ContactInfo extends BaseModel {
                 + ",code:" + code + ",mode:" + mode + ",modeId:" + modeId;
         string += "]";
         return string;
+    }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getDistrictName() {
+        return districtName;
+    }
+
+    public void setDistrictName(String districtName) {
+        this.districtName = districtName;
     }
 
     public String getMemo() {

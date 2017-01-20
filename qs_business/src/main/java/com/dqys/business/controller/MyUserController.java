@@ -123,7 +123,7 @@ public class MyUserController {
         }
         Map map = new HashMap<>();
         UserDetail admin = tUserInfoMapper.getUserDetail(tUserInfoMapper.getUserByCompanyAdmin(companyId));//管理员信息
-        map.put("licence", admin.getLicence());//营业执照地址
+        map.put("avg", admin.getAvg());//管理员头像
         map.put("phone", admin.getMobile());//电话
         map.put("address", getStringBuilderByAddress(admin).toString());//地址
         map.put("companyName", admin.getCompanyName());//公司名称

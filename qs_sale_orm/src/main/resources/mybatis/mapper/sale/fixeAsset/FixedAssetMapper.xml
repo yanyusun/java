@@ -622,18 +622,7 @@
         <if test="disposes !=null">
             AND dis.dispose_type=#{disposes}
         </if>
-        <if test="collectionNumSort !=null and collectionNumSort==1">
-            ORDER BY tap.collection_num DESC
-        </if>
-        <if test="collectionNumSort !=null and collectionNumSort==2">
-            ORDER BY tap.collection_num ASC
-        </if>
-        <if test="disposeStatusSort !=null and disposeStatusSort==1">
-            ORDER BY tap.dispose_status DESC
-        </if>
-        <if test="disposeStatusSort !=null and disposeStatusSort==2">
-            ORDER BY tap.dispose_status ASC
-        </if>
+
     </sql>
     <select id="fixedList" parameterType="com.dqys.sale.orm.query.FixedAssetQuery"
             resultMap="BaseResultMapWithAll">
@@ -651,13 +640,32 @@
         ON lab.assset_id=tap.id AND lab.asset_type=#{objectType}
         WHERE bor.object_type=#{objectType}
         <include refid="Query_Where"/>
-        Limit #{startPage},#{pageCount}
+        ORDER BY
+        <if test="collectionNumSort !=null and collectionNumSort==1">
+            tap.collection_num DESC,
+        </if>
+        <if test="collectionNumSort !=null and collectionNumSort==2">
+            tap.collection_num ASC,
+        </if>
+        <if test="disposeStatusSort !=null and disposeStatusSort==1">
+            tap.dispose_status DESC,
+        </if>
+        <if test="disposeStatusSort !=null and disposeStatusSort==2">
+            tap.dispose_status ASC,
+        </if>
+        tap.create_time DESC
     </select>
     <select id="fixedListCount" parameterType="com.dqys.sale.orm.query.FixedAssetQuery"
             resultType="int">
-        SELECT count(tap.id) FROM t_business_obj_re bor LEFT JOIN business b
+        SELECT count(tap.id)
+        FROM t_business_obj_re bor LEFT JOIN business b
         ON b.id=bor.business_id LEFT JOIN t_fixed_asset tap
-        ON tap.id=bor.object_id
+        ON tap.id=bor.object_id LEFT JOIN t_dispose dis
+        ON dis.asset_id=tap.id AND dis.asset_type=#{objectType} LEFT JOIN t_asset_file taf
+        ON taf.asset_id=tap.id AND taf.asset_type=#{objectType} LEFT JOIN
+        (SELECT lar.id,lar.asset_type,lar.assset_id,l.name,l.type FROM t_label_asset_re lar,t_label l WHERE
+        l.id=lar.label_id) lab
+        ON lab.assset_id=tap.id AND lab.asset_type=#{objectType}
         WHERE bor.object_type=#{objectType}
         <include refid="Query_Where"/>
     </select>
