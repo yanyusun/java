@@ -30,10 +30,15 @@
         where id = #{id,jdbcType=INTEGER}
     </select>
 
-    <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    UPDATE bt_source_info SET stateflag = 0
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+    <!--<update id="deleteByPrimaryKey" parameterType="java.lang.Integer">-->
+    <!--UPDATE bt_source_info SET stateflag = 0-->
+    <!--where id = #{id,jdbcType=INTEGER}-->
+  <!--</update>-->
+
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM bt_source_info  where id = #{id,jdbcType=INTEGER}
+    </delete>
 
     <insert id="insert" parameterType="com.dqys.business.orm.pojo.common.SourceInfo" useGeneratedKeys="true"
             keyProperty="id">

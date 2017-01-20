@@ -965,7 +965,7 @@ public class DistributionServiceImpl implements DistributionService {
                     ObjectBusinessEnum.PAWN_ON_BUSINESS.getValue(), ObjectBusinessEnum.IOU_ON_BUSINESS.getValue());
             if (status == ObjectAcceptTypeEnum.accept.getValue() && companyTeam.getObjectType() == ObjectTypeEnum.LENDER.getValue().intValue()) {
                 //创建协作器
-                LenderInfo lenderInfo = lenderInfoMapper.get(companyTeam.getObjectType());
+                LenderInfo lenderInfo = lenderInfoMapper.get(companyTeam.getObjectId());
                 lenderInfo.setOperator(UserSession.getCurrent().getUserId());
                 lenderService.addCoordinator(lenderInfo);
             }

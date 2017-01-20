@@ -23,10 +23,14 @@
         where id = #{id,jdbcType=INTEGER} AND stateflag = 0
     </select>
 
-    <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    UPDATE bt_source_source SET stateflag = CURRENT_TIMESTAMP
-    where id = #{id,jdbcType=INTEGER} AND stateflag = 0
-  </update>
+    <!--<update id="deleteByPrimaryKey" parameterType="java.lang.Integer">-->
+    <!--UPDATE bt_source_source SET stateflag = CURRENT_TIMESTAMP-->
+    <!--where id = #{id,jdbcType=INTEGER} AND stateflag = 0-->
+  <!--</update>-->
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        DELETE FROM  bt_source_source where id = #{id,jdbcType=INTEGER}
+    </delete>
 
     <insert id="insert" parameterType="com.dqys.business.orm.pojo.common.SourceSource" useGeneratedKeys="true"
             keyProperty="id">

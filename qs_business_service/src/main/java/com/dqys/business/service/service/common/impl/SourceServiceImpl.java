@@ -416,8 +416,19 @@ public class SourceServiceImpl implements SourceService {
 
     @Override
     public JsonResponse updateSource(SourceInfoDTO sourceInfoDTO) {
-        if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getId(), sourceInfoDTO.getSourceDTOList())) {
+        if (CommonUtil.checkParam(sourceInfoDTO, sourceInfoDTO.getId())) {
             return JsonResponseTool.paramErr("参数错误");
+        }
+        List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceInfoDTO.getId()); // 数据库数据
+        if(sourceInfoDTO.getSourceDTOList()==null){//删除目录下所有的资源
+            sourceSourceMapper.deleteByPrimaryKeyBySourceId(sourceInfoDTO.getId());
+            sourceInfoMapper.deleteByPrimaryKey(sourceInfoDTO.getId());
+            for(SourceSource sourceSource:sourceList){
+                //定时删除
+                FileTool.addDeleteScheduler(FileTool.getFile(sourceSource.getPath(), false), new Date());
+                return JsonResponseTool.success(sourceInfoDTO.getId());
+            }
+
         }
         boolean flag = false; // 判断是否有做修改
         SourceInfo sourceInfo = SourceServiceUtls.toSourceInfo(sourceInfoDTO);
@@ -428,7 +439,7 @@ public class SourceServiceImpl implements SourceService {
         if (!CommonUtil.checkResult(update)) {
             flag = true;
         }
-        List<SourceSource> sourceList = sourceSourceMapper.listBySourceId(sourceInfo.getId()); // 数据库数据
+
         List<SourceSource> sourceSources = SourceServiceUtls.toSourceSource(sourceInfo.getId(), sourceInfoDTO); // 新数据
         for (SourceSource sourceSource : sourceList) {
             boolean isExit = true;
@@ -457,6 +468,8 @@ public class SourceServiceImpl implements SourceService {
             if (isExit) {
                 // 说明该文件已经被删除了
                 sourceSourceMapper.deleteByPrimaryKey(sourceSource.getId());
+                //定时删除
+                FileTool.addDeleteScheduler(FileTool.getFile(sourceSource.getPath(), false), new Date());
                 flag = true;
             }
         }
