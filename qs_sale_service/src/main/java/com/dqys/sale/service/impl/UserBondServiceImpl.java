@@ -108,11 +108,21 @@ public class UserBondServiceImpl implements UserBondService {
     private List<UserBondDTO> getUserBondDTOs(UserBondQuery query) {
         query.setStartPage(query.getStartPage());
         query.setObjectType(query.getBondType());
-        List<UserBond> userBonds = userBondMapper.list(query);
-        Integer count = userBondMapper.listCount(query);
+        List<UserBond> list = userBondMapper.list(query);
+        Integer count = list.size();
         query.setTotalCount(count);
+        List<UserBond> listNew = new ArrayList<>();
+        if (list != null && list.size() > 0) {
+            int size = query.getStartPage() + query.getPageCount();
+            if (size > query.getTotalCount()) {
+                size = query.getTotalCount();
+            }
+            for (int i = query.getStartPage(); i < size; i++) {
+                listNew.add(list.get(i));
+            }
+        }
         List<UserBondDTO> dtos = new ArrayList<>();
-        for (UserBond entity : userBonds) {
+        for (UserBond entity : listNew) {
             UserBondDTO dto = new UserBondDTO();
             dto.setLabels(entity.getLabels());
             dto.setUserBond(entity);

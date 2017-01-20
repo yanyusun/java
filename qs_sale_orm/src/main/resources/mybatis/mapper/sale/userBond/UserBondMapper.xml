@@ -1006,11 +1006,8 @@
         <if test="disposes !=null">
             AND dis.dispose_type=#{disposes}
         </if>
-        <if test="gradeSort!=null and gradeSort==1">
-            GROUP BY tap.grade DESC
-        </if>
-        <if test="gradeSort!=null and gradeSort==1">
-            GROUP BY tap.grade ASC
+        <if test="disposeStatus !=null">
+            AND tap.dispose_status=#{disposeStatus}
         </if>
     </sql>
     <select id="list" parameterType="com.dqys.sale.orm.query.UserBondQuery"
@@ -1028,7 +1025,26 @@
         ON lab.assset_id=tap.id AND lab.asset_type=#{objectType}
         WHERE bor.object_type=#{objectType}
         <include refid="Query_Where"/>
-        Limit #{startPage},#{pageCount}
+        ORDER BY
+        <if test="collectionNumSort !=null and collectionNumSort==1">
+            tap.collection_num DESC,
+        </if>
+        <if test="collectionNumSort !=null and collectionNumSort==2">
+            tap.collection_num ASC,
+        </if>
+        <if test="disposeNumSort !=null and disposeNumSort==1">
+            tap.dispose_num DESC,
+        </if>
+        <if test="disposeNumSort !=null and disposeNumSort==2">
+            tap.dispose_num ASC,
+        </if>
+        <if test="gradeSort!=null and gradeSort==1">
+            tap.grade DESC,
+        </if>
+        <if test="gradeSort!=null and gradeSort==2">
+            tap.grade ASC,
+        </if>
+        tap.create_time DESC
     </select>
     <select id="listBusiness" parameterType="com.dqys.sale.orm.query.UserBondQuery"
             resultMap="BaseResultMapWithAll">

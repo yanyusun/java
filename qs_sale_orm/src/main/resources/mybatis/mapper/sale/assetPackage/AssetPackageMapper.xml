@@ -472,18 +472,7 @@
         <if test="disposes !=null">
             AND dis.dispose_type=#{disposes}
         </if>
-        <if test="collectionNumSort !=null and collectionNumSort==1">
-            ORDER BY tap.collection_num DESC
-        </if>
-        <if test="collectionNumSort !=null and collectionNumSort==2">
-            ORDER BY tap.collection_num ASC
-        </if>
-        <if test="disposeStatusSort !=null and disposeStatusSort==1">
-            ORDER BY tap.dispose_status DESC
-        </if>
-        <if test="disposeStatusSort !=null and disposeStatusSort==2">
-            ORDER BY tap.dispose_status ASC
-        </if>
+
     </sql>
     <select id="list" parameterType="com.dqys.sale.orm.query.AssetPackageQuery"
             resultMap="BaseResultMapWithAll">
@@ -501,7 +490,26 @@
         ON lab.assset_id=tap.id AND lab.asset_type=#{objectType}
         WHERE bor.object_type=#{objectType}
         <include refid="Query_Where"/>
-        Limit #{startPage},#{pageCount}
+        ORDER BY
+        <if test="collectionNumSort !=null and collectionNumSort==1">
+             tap.collection_num DESC,
+        </if>
+        <if test="collectionNumSort !=null and collectionNumSort==2">
+            tap.collection_num ASC,
+        </if>
+        <if test="disposeNumSort !=null and disposeNumSort==1">
+            tap.dispose_num DESC,
+        </if>
+        <if test="disposeNumSort !=null and disposeNumSort==2">
+            tap.dispose_num ASC,
+        </if>
+        <if test="totalMoneySort !=null and totalMoneySort==1">
+            tap.total_money DESC,
+        </if>
+        <if test="totalMoneySort !=null and totalMoneySort==2">
+            tap.total_money ASC,
+        </if>
+        tap.create_time DESC
     </select>
     <select id="listCount" parameterType="com.dqys.sale.orm.query.AssetPackageQuery"
             resultType="int">

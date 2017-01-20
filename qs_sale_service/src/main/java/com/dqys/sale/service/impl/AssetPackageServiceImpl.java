@@ -109,10 +109,20 @@ public class AssetPackageServiceImpl implements AssetPackageService {
         query.setStartPage(query.getStartPage());
         query.setObjectType(ObjectTypeEnum.asset_package.getValue());
         List<AssetPackage> list = assetPackageMapper.list(query);
-        Integer count = assetPackageMapper.listCount(query);
+        Integer count = list.size();
         query.setTotalCount(count);
+        List<AssetPackage> listNew = new ArrayList<>();
+        if (list != null && list.size() > 0) {
+            int size = query.getStartPage() + query.getPageCount();
+            if (size > query.getTotalCount()) {
+                size = query.getTotalCount();
+            }
+            for (int i = query.getStartPage(); i < size; i++) {
+                listNew.add(list.get(i));
+            }
+        }
         List<AssetPackageDTO> dtos = new ArrayList<>();
-        for (AssetPackage entity : list) {
+        for (AssetPackage entity : listNew) {
             AssetPackageDTO dto = new AssetPackageDTO();
             dto.setLabels(entity.getLabels());
             dto.setAssetPackage(entity);

@@ -40,15 +40,37 @@ public class FixedAssetQuery extends PageEntity implements Serializable {
 
     private Double houseSizeEnd;//房产面积： 平方米
 
-
     private Integer collectionNumSort;//收藏数量 排序 1倒叙  2正叙
-
+    private Integer disposeNumSort;//申请处置数量 排序 1倒叙  2正叙
+    private Integer assetRentalSort;//资产总额 排序 1倒叙  2正叙
+    private Integer houseSizeSort;//房产面积 排序 1倒叙  2正叙
     private Integer disposeStatus;// 处置状态
 
-    private Integer disposeStatusSort;// 处置状态（0待处置1处置中2已处置） 1倒叙  2正叙
-
-
     private Integer disposes;//处置方式
+
+    public Integer getAssetRentalSort() {
+        return assetRentalSort;
+    }
+
+    public void setAssetRentalSort(Integer assetRentalSort) {
+        this.assetRentalSort = assetRentalSort;
+    }
+
+    public Integer getHouseSizeSort() {
+        return houseSizeSort;
+    }
+
+    public void setHouseSizeSort(Integer houseSizeSort) {
+        this.houseSizeSort = houseSizeSort;
+    }
+
+    public Integer getDisposeNumSort() {
+        return disposeNumSort;
+    }
+
+    public void setDisposeNumSort(Integer disposeNumSort) {
+        this.disposeNumSort = disposeNumSort;
+    }
 
     public Integer getComfrom() {
         return comfrom;
@@ -56,14 +78,6 @@ public class FixedAssetQuery extends PageEntity implements Serializable {
 
     public void setComfrom(Integer comfrom) {
         this.comfrom = comfrom;
-    }
-
-    public Integer getDisposeStatusSort() {
-        return disposeStatusSort;
-    }
-
-    public void setDisposeStatusSort(Integer disposeStatusSort) {
-        this.disposeStatusSort = disposeStatusSort;
     }
 
     public Integer getCollectionNumSort() {
@@ -145,7 +159,6 @@ public class FixedAssetQuery extends PageEntity implements Serializable {
     public void setProvince(Integer province) {
         this.province = province;
     }
-
 
 
     public Integer getObjectType() {

@@ -72,7 +72,6 @@ public class FixedAssetServiceImpl implements FixedAssetService {
 
     @Override
     public JsonResponse fixedList(FixedAssetQuery fixedAssetQuery) {
-        fixedAssetQuery.setPageCount(1);
         List<FixedAssetDTO> dtos = getFixedAssetDTOs(fixedAssetQuery);
         for (FixedAssetDTO dto : dtos) {
             FADto faDto = new FADto();
