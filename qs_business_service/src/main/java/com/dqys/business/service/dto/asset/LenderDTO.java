@@ -52,7 +52,7 @@ public class LenderDTO {
     private Integer operatorId;  // 操作人Id
     private String operator;//录入人姓名
     private Integer assetId; // 资产包ID
-
+    private Integer isStop;//是否暂停（0默认1暂停2无效）
     private String name; // 借款人姓名
     private Integer sex; // 借款人性别
     private String lenderNo; // 借款人编号
@@ -64,10 +64,43 @@ public class LenderDTO {
     private Date lastFollow; // 最后跟进
     private Date createAt; // 录入时间
     private String assetCode; //资产包编号
-
+    private Integer isCollection;//催收是否介入（0否1是）
+    private Integer isLawyer;//'律所是否介入
+    private Integer isAgent;//中介是否介入
     private String subsidiary;//所属机构
     private String sourceWay;//来源方式
 
+    public Integer getIsCollection() {
+        return isCollection;
+    }
+
+    public void setIsCollection(Integer isCollection) {
+        this.isCollection = isCollection;
+    }
+
+    public Integer getIsLawyer() {
+        return isLawyer;
+    }
+
+    public void setIsLawyer(Integer isLawyer) {
+        this.isLawyer = isLawyer;
+    }
+
+    public Integer getIsAgent() {
+        return isAgent;
+    }
+
+    public void setIsAgent(Integer isAgent) {
+        this.isAgent = isAgent;
+    }
+
+    public Integer getIsStop() {
+        return isStop;
+    }
+
+    public void setIsStop(Integer isStop) {
+        this.isStop = isStop;
+    }
 
     public String getAvg() {
         return avg;
