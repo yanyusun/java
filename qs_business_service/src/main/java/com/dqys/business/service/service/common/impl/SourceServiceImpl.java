@@ -342,14 +342,15 @@ public class SourceServiceImpl implements SourceService {
                     e.printStackTrace();
                 }
                 //新建文件夹,只在手机端显示,使两个平台能够兼容
+
+                SourceNavigation pSourceNavigation=sourceNavigationMapper.get(sourceInfo.getNavId()); //得父目录
                 SourceNavigation sourceNavigation = new SourceNavigation();
+                sourceNavigation.setType(pSourceNavigation.getType()); //根据父目录设置文件类型
                 sourceNavigation.setName(sourceSource.getPath());
                 sourceNavigation.setFilePathName(sourceSource.getPath());
                 if (sourceInfoDTO.getEstatesId() != null) {
-                    sourceNavigation.setType(ObjectTypeEnum.ASSETSOURCE.getValue());
                     sourceNavigation.setLenderId(sourceInfoDTO.getEstatesId());
                 } else {
-                    sourceNavigation.setType(ObjectTypeEnum.LENDER.getValue());
                     sourceNavigation.setLenderId(sourceInfoDTO.getLenderId());
                 }
                 sourceNavigation.setUserId(userId);
