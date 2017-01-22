@@ -1098,7 +1098,7 @@ public class LenderServiceImpl implements LenderService {
                 ids.add(objectUserRelation.getObjectId());
             });
             if (isUrgeOrLawyer || isPlatformOrEntrust) {
-                lenderQuery.setIds(CommonUtil.unionList(ids, businessIds));
+                lenderQuery.setIds(CommonUtil.pickList(ids, businessIds));
                 if (lenderQuery.getIds() == null) {
                     lenderQuery.setId(0);
                 }
