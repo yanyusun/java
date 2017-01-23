@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -53,6 +54,8 @@ public class FollowUpReadStatusServiceImpl implements FollowUpReadStatusService 
                 record.setSecondObjectId(MessageUtils.transStringToInt(msg[3]));
                 record.setSecondObjectType(MessageUtils.transStringToInt(msg[4]));
                 record.setSecondLiquidateStage(MessageUtils.transStringToInt(msg[5]));
+                record.setVersion(1);
+                record.setCreateAt(new Date());
                 insert(record);
                 FollowUpMessage followUpMessage = new FollowUpMessage();
                 followUpMessage.setObjectType(record.getObjectType());

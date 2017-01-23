@@ -68,7 +68,7 @@ public class FollowUpReadstatusMapperImp extends BaseDao implements FollowUpRead
     }
 
     @Override
-    public int queryCount(FollowUpReadstatusQuery query) {
+    public Integer queryCount(FollowUpReadstatusQuery query) {
         return super.getSqlSession().getMapper(FollowUpReadstatusMapper.class).queryCount(query);
     }
 }

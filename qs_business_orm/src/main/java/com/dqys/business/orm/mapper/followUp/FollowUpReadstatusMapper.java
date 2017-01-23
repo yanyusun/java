@@ -47,5 +47,5 @@ public interface FollowUpReadstatusMapper {
     Integer countByTypeIdUser(@Param("objectId")Integer objectId, @Param("objectType")Integer objectType,
                               @Param("userId")Integer userId);
 
-    int queryCount(FollowUpReadstatusQuery query);
+    Integer queryCount(FollowUpReadstatusQuery query);
 }

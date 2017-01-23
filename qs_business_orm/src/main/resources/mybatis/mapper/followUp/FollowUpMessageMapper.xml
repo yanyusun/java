@@ -315,7 +315,14 @@
         <if test="userId != null">
             AND m.user_id = #{userId,jdbcType=INTEGER}
         </if>
-        ORDER BY m.create_at DESC
+        <choose>
+            <when test="createAtSort == false">
+                ORDER BY m.create_at DESC
+            </when>
+            <otherwise>
+                ORDER BY m.create_at ASC
+            </otherwise>
+        </choose>
     </select>
 
 
@@ -377,9 +384,9 @@
             parameterType="com.dqys.business.orm.query.followUp.FollowUpMessageQuery">
         select  tm.*,fur.create_at  r_create_at,tui.user_name,tag.user_type,tag.role_id from(
         select message.* FROM t_follow_up_message message WHERE message.create_at  in(
-        SELECT max(create_at) FROM t_follow_up_message
-        WHERE user_id=#{userId} and message.object_id=object_id  and message.object_type=object_type and message.liquidate_stage = liquidate_stage
-        GROUP BY object_id,object_type,second_object_id,second_object_type,liquidate_stage,second_liquidate_stage)  )tm
+        SELECT  max(fum.create_at)  FROM t_follow_up_message  fum,object_user_relation our
+        WHERE fum.object_id=our.object_id AND fum.object_type=our.object_type  AND our.user_id=#{userId}
+        GROUP BY fum.object_id,fum.object_type,fum.second_object_id,fum.second_object_type,fum.liquidate_stage,fum.second_liquidate_stage)  )tm
         LEFT JOIN (SELECT object_id,object_type,user_id, second_liquidate_stage,second_object_id,second_object_type,moment ,create_at FROM t_follow_up_readstatus WHERE user_id=#{userId}  )fur
         ON tm.object_id=fur.object_id AND fur.object_type=tm.object_type
         AND  fur.moment = tm.liquidate_stage  AND fur. second_liquidate_stage = tm.second_liquidate_stage and tm. second_object_id = fur. second_object_id AND  tm.second_object_type AND fur. second_object_type

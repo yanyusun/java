@@ -58,6 +58,8 @@ public class FollowUpMessageQuery extends BaseQuery {
 
     private boolean judiciary;
 
+    private boolean createAtSort; //false 倒叙;true正序
+
     @Override
     public Integer getId() {
         return id;
@@ -178,6 +180,14 @@ public class FollowUpMessageQuery extends BaseQuery {
 
     public void setJudiciary(boolean judiciary) {
         this.judiciary = judiciary;
+    }
+
+    public boolean isCreateAtSort() {
+        return createAtSort;
+    }
+
+    public void setCreateAtSort(boolean createAtSort) {
+        this.createAtSort = createAtSort;
     }
 }
 

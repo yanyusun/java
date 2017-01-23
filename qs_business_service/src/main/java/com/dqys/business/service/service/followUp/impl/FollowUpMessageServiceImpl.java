@@ -7,6 +7,7 @@ import com.dqys.business.orm.mapper.asset.AssetInfoMapper;
 import com.dqys.business.orm.mapper.asset.IOUInfoMapper;
 import com.dqys.business.orm.mapper.asset.LenderInfoMapper;
 import com.dqys.business.orm.mapper.asset.PawnInfoMapper;
+import com.dqys.business.orm.mapper.cases.CaseInfoMapper;
 import com.dqys.business.orm.mapper.coordinator.OURelationMapper;
 import com.dqys.business.orm.mapper.coordinator.TeammateReMapper;
 import com.dqys.business.orm.mapper.followUp.FollowUpMessageMapper;
@@ -76,6 +77,9 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
 
     @Autowired
     private FollowUpReadstatusMapper followUpReadstatusMapper;
+
+    @Autowired
+    private  CaseInfoMapper caseInfoMapper;
 
 
     @Override
@@ -264,6 +268,13 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
             break;
             case IOU:
                 showName="借据 "+iOUInfoMapper.get(id).getName();
+                break;
+            case CASE:
+                String caseName=caseInfoMapper.get(id).getName();
+                if(caseName==null){
+                    caseName="";
+                }
+                showName="案件 "+caseName;
             break;
         }
         return showName;
@@ -271,6 +282,8 @@ public class FollowUpMessageServiceImpl implements FollowUpMessageService {
 
     @Override
     public int getUnreadNum(FollowUpReadstatusQuery query) {
+        Integer i=followUpReadstatusMapper.queryCount(query);
+
         return followUpReadstatusMapper.queryCount(query);
     }
 }

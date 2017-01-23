@@ -145,7 +145,7 @@ public class FollowUpUtil {
         CFollowUpMessageDTO cFollowUpMessageDTO = toCFollowUpMessageDTO(followUpMessage, userId);
         FollowUpReadstatusQuery query = new FollowUpReadstatusQuery();
         if(followUpMessage.getReadstatusCreateAt()!=null){
-            query.setUserId(followUpMessage.getUserId());
+            query.setUserId(userId);
             query.setObjectType(followUpMessage.getObjectType());
             query.setObjectId(followUpMessage.getObjectId());
             query.setMoment(followUpMessage.getLiquidateStage());
